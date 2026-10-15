@@ -1,0 +1,50 @@
+@import 'tailwindcss';
+
+/* Design tokens: verdict colours carry the meaning; the accent is a cool slate-teal. */
+@theme {
+  --font-display: 'Source Serif 4', Georgia, serif;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --color-bg: #f7f8f9;
+  --color-surface: #ffffff;
+  --color-fg: #1d2328;
+  --color-muted: #5d6872;
+  --color-line: #dde2e6;
+  --color-accent: #1f6f78;
+  --color-right: #2e7d4f;
+  --color-partly: #a66a00;
+  --color-wrong: #b3261e;
+  --color-other: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #12161a;
+    --color-surface: #1a2026;
+    --color-fg: #e4e8eb;
+    --color-muted: #9aa5ae;
+    --color-line: #2c343b;
+    --color-accent: #5fb3bb;
+    --color-right: #5cc285;
+    --color-partly: #e0a640;
+    --color-wrong: #ef6b62;
+    --color-other: #9aa3ad;
+    color-scheme: dark;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-bg font-sans text-[15px] leading-[1.55] text-fg;
+  }
+  h1,
+  h2 {
+    @apply font-display text-balance;
+  }
+  a {
+    @apply text-accent;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+}

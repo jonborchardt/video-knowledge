@@ -1,0 +1,27 @@
+---
+import type { ClaimView } from '../lib/topics';
+import VerdictBadge from './VerdictBadge.astro';
+
+interface Props {
+  claim: ClaimView;
+}
+const { claim: c } = Astro.props;
+const decided = c.decidedBy
+  ? `decided by study: ${c.decidedBy}${c.studies > 1 ? ` (+${c.studies - 1} more)` : ''}`
+  : c.studies
+    ? `AI guess stands; ${c.studies} ${c.studies > 1 ? 'studies' : 'study'} as context`
+    : 'AI guess only';
+---
+
+<div
+  class="grid gap-1 border-t border-line py-3"
+  data-verdict={c.verdict ?? 'unknown'}
+  data-search={`${c.text} ${c.note}`.toLowerCase()}
+>
+  <div class="flex items-baseline justify-between gap-2.5">
+    <p>{c.text}</p>
+    <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
+  </div>
+  <p class="text-sm text-muted">{c.note}</p>
+  <span class="font-mono text-xs text-muted tabular-nums">asserted {c.asserted} · denied {c.denied} · {decided}</span>
+</div>

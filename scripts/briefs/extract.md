@@ -47,12 +47,18 @@ npm run watcher -- next --json --store <topic>/store     # "extract" entries →
 Write `<topic>/work/hN.json`:
 
 ```json
-[{"video":"<id>","sum":"...","as":[
-  {"c":"<existing slug without the topic/ prefix>","q":"quote"},
-  {"c":"<slug>","s":"d","q":"quote"},
-  {"n":"New canonical claim text","q":"quote","v":["partly",0.5,"reason"],"l":"skeptic"},
-  {"n2":"Exact text of a claim you created with n in an earlier source","q":"quote"}
-]}]
+[
+  {
+    "video": "<id>",
+    "sum": "...",
+    "as": [
+      { "c": "<existing slug without the topic/ prefix>", "q": "quote" },
+      { "c": "<slug>", "s": "d", "q": "quote" },
+      { "n": "New canonical claim text", "q": "quote", "v": ["partly", 0.5, "reason"], "l": "skeptic" },
+      { "n2": "Exact text of a claim you created with n in an earlier source", "q": "quote" }
+    ]
+  }
+]
 ```
 
 - Every `c` slug must exist in claims.txt exactly (copy it; don't guess).

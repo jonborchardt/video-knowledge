@@ -1,0 +1,348 @@
+---
+import Base from '../../layouts/Base.astro';
+import ClaimCard from '../../components/ClaimCard.astro';
+import SourceLink from '../../components/SourceLink.astro';
+import SurpriseItem from '../../components/SurpriseItem.astro';
+import VerdictBadge from '../../components/VerdictBadge.astro';
+import { loadTopic, topicNames, type Topic } from '../../lib/topics';
+
+export function getStaticPaths() {
+  return topicNames().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
+}
+const { t } = Astro.props as { t: Topic };
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const tabs = [
+  { id: 'recap', label: 'Recap' },
+  { id: 'top', label: 'Top 5' },
+  ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'What studies changed' }] : []),
+  ...(t.superseded.length ? [{ id: 'minds', label: 'Changed minds' }] : []),
+  { id: 'wrong-claims', label: `Wrong (${t.wrong.length})` },
+  { id: 'contested-claims', label: `Contested (${t.contested.length})` },
+  { id: 'claims', label: `All claims (${t.claims.length})` },
+  { id: 'sources', label: `Videos & posts (${t.counted})` },
+];
+const filters = (['right', 'partly', 'wrong', 'untestable', 'unknown'] as const)
+  .map((v) => ({ v, n: t.claims.filter((c) => (c.verdict ?? 'unknown') === v).length }))
+  .filter((f) => f.n);
+const scoreColour = (s: number | null) =>
+  s === 2 ? 'text-right' : s === 1 ? 'text-accent' : s === -1 ? 'text-wrong' : 'text-muted';
+const h2 = 'mb-3 text-[1.35rem]';
+const h3 = 'mt-4 mb-2 font-sans text-base font-semibold';
+const small = 'text-[13px] text-muted';
+const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
+---
+
+<Base title={`${t.label} · claims`} description={t.bottomLine ?? undefined}>
+  <nav class="font-mono text-[13px] text-muted">
+    <a class="text-muted" href={`${base}/`}>All subjects</a> / {t.label}
+  </nav>
+  <header>
+    <div class="font-mono text-xs tracking-[.04em] text-muted uppercase">{t.name}</div>
+    <h1 class="text-[2.1rem] leading-[1.15] max-sm:text-[1.7rem]">
+      What {t.counted} videos and posts claim about {t.label}
+    </h1>
+    <p class="mt-2 max-w-[65ch] text-muted">
+      {t.claims.length} canonical claims from {t.videos} YouTube videos and {t.posts} blog posts{
+        t.noCaptions ? ` (${t.noCaptions} more videos had no captions)` : ''
+      }. Every claim has an AI guess: a verdict from the AI's general knowledge, with a one-line reason.{
+        t.studies > 0 &&
+          ` Claims that the ${t.studies} studies and reports in the sources folder speak to also carry study verdicts that cite line ranges.`
+      }
+    </p>
+  </header>
+
+  <!-- Tabs: hidden until the script runs, so without JavaScript every section simply shows. -->
+  <div
+    id="tabbar"
+    role="tablist"
+    aria-label="Report sections"
+    hidden
+    class="sticky top-0 z-10 -mb-4 flex [scrollbar-width:none] gap-1 overflow-x-auto border-b border-line bg-bg pt-2 [&::-webkit-scrollbar]:hidden"
+  >
+    {
+      tabs.map((tab) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${tab.id}`}
+          aria-controls={tab.id}
+          class="flex-none cursor-pointer rounded-t-md border border-b-0 border-transparent bg-transparent px-3 py-2 text-[13px] font-semibold whitespace-nowrap text-muted hover:text-fg aria-selected:-mb-px aria-selected:border-line aria-selected:bg-surface aria-selected:text-accent"
+        >
+          {tab.label}
+        </button>
+      ))
+    }
+  </div>
+
+  <section id="recap" aria-labelledby="tab-recap">
+    <h2 class={h2}>Recap</h2>
+    <p>
+      {t.counted} videos and posts making {t.claims.length} distinct claims{
+        t.studies
+          ? `, checked against ${t.studies} studies and reports. Studies decide ${t.decided} claims; the rest use an AI guess, which counts for at most 50% confidence. ${t.changed.length} AI guesses were overturned by a study.`
+          : '. No studies have been checked yet, so every verdict is an AI guess.'
+      }
+    </p>
+    {
+      t.bottomLine && (
+        <>
+          <p class="mt-3">
+            <strong>Bottom line:</strong> {t.bottomLine}
+          </p>
+          <p class:list={[small, 'mt-3']}>
+            The verdicts below update automatically as evidence is added; the bottom line is a hand-written summary of
+            them.
+          </p>
+        </>
+      )
+    }
+    {
+      t.recap.map((g) => (
+        <>
+          <h3 class={h3}>{g.title}</h3>
+          <ul class={list}>
+            {g.claims.map((c) => (
+              <li>
+                {c.text} <VerdictBadge verdict={c.verdict} confidence={c.confidence} />{' '}
+                <span class={small}>
+                  ·{' '}
+                  {c.decidedBy
+                    ? `${c.decidedBy}${c.studies > 1 ? ` + ${c.studies - 1} more` : ''}`
+                    : `AI guess${c.studies ? ` (${c.studies} weaker ${c.studies > 1 ? 'studies' : 'study'} as context)` : ''}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      ))
+    }
+  </section>
+
+  <section id="top" aria-labelledby="tab-top">
+    <h2 class={h2}>Five most worth your time</h2>
+    <p class:list={[small, 'mb-3']}>
+      Ranked by score, then novelty (rare claims that hold up, weighted by verdict confidence).
+    </p>
+    <ol class="grid list-decimal gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]">
+      {
+        t.top.map((s) => (
+          <li>
+            <SourceLink source={s} />{' '}
+            <span class={small}>
+              ({s.channel} · novelty {s.novelty.toFixed(2)})
+            </span>
+            . {s.summary}
+          </li>
+        ))
+      }
+    </ol>
+    {
+      t.next.length > 0 && (
+        <p class:list={[small, 'mt-3']}>
+          Next:{' '}
+          {t.next.map((s, i) => (
+            <>
+              {i > 0 && ', '}
+              <SourceLink source={s} /> ({s.novelty.toFixed(2)})
+            </>
+          ))}
+          .
+        </p>
+      )
+    }
+  </section>
+
+  {
+    t.changed.length + t.held.length > 0 && (
+      <section id="studies" aria-labelledby="tab-studies">
+        <h2 class={h2}>What the studies changed</h2>
+        <p class={small}>
+          Each claim first got an <em>AI guess</em>, then was checked against the studies. Listed: claims where a study
+          pointed a different way. An AI guess counts for at most 50% confidence; a study at least that confident
+          replaces it, a weaker one is shown as context. Biggest changes first.
+        </p>
+        <h3 class={h3}>Verdict changed by a study ({t.changed.length})</h3>
+        <ul class={list}>
+          {t.changed.map((s) => (
+            <SurpriseItem s={s} />
+          ))}
+        </ul>
+        {t.held.length > 0 && (
+          <details class="mt-3">
+            <summary class={small}>
+              {t.held.length} more where a study disagreed but was less confident, so the AI guess stands
+            </summary>
+            <ul class:list={[list, 'mt-3']}>
+              {t.held.map((s) => (
+                <SurpriseItem s={s} />
+              ))}
+            </ul>
+          </details>
+        )}
+      </section>
+    )
+  }
+
+  {
+    t.superseded.length > 0 && (
+      <section id="minds" aria-labelledby="tab-minds">
+        <h2 class={h2}>Changed minds</h2>
+        <p class:list={[small, 'mb-3']}>
+          When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts
+          toward claims or novelty. Evidence recorded on it still counts.
+        </p>
+        <ul class={list}>
+          {t.superseded.map((s) => (
+            <li>
+              {s.title} → superseded by {s.by}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section id="wrong-claims" aria-labelledby="tab-wrong-claims">
+    <h2 class={h2}>Judged wrong</h2>
+    <p class:list={[small, 'mb-3']}>
+      The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.
+    </p>
+    {t.wrong.map((c) => <ClaimCard claim={c} />)}
+    {t.wrong.length === 0 && <p class={small}>None.</p>}
+  </section>
+
+  <section id="contested-claims" aria-labelledby="tab-contested-claims">
+    <h2 class={h2}>Contested</h2>
+    <p class:list={[small, 'mb-3']}>Claims some sources assert and others deny.</p>
+    {t.contested.map((c) => <ClaimCard claim={c} />)}
+    {t.contested.length === 0 && <p class={small}>None.</p>}
+  </section>
+
+  <section id="claims" aria-labelledby="tab-claims">
+    <h2 class={h2}>All claims</h2>
+    <div class="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter by verdict" data-filters>
+      <input
+        id="q"
+        type="search"
+        placeholder="Search claims"
+        aria-label="Search claims"
+        class="min-w-0 flex-[1_1_200px] rounded border border-line bg-surface px-2.5 py-1.5 text-[13px] text-fg"
+      />
+      {
+        [{ v: 'all', n: t.claims.length }, ...filters].map((f) => (
+          <button
+            type="button"
+            data-filter={f.v}
+            aria-pressed={f.v === 'all' ? 'true' : 'false'}
+            class="cursor-pointer rounded border border-line bg-surface px-2.5 py-1.5 text-[13px] text-fg aria-pressed:border-accent aria-pressed:font-semibold aria-pressed:text-accent"
+          >
+            {f.v} ({f.n})
+          </button>
+        ))
+      }
+    </div>
+    <div data-claims>
+      {t.claims.map((c) => <ClaimCard claim={c} />)}
+    </div>
+    <p class={small} data-none hidden>No claims match.</p>
+  </section>
+
+  <section id="sources" aria-labelledby="tab-sources">
+    <h2 class={h2}>Videos and posts</h2>
+    <p class:list={[small, 'mb-3']}>
+      Score: −1 mostly wrong, 0 mixed, 1 mostly right, 2 right, from the verdicts on the claims each source makes.
+      Novelty adds up, for each claim a source gets right or correctly refutes, the verdict's confidence divided by how
+      many sources take the same stance; 1 is about one unique, well-supported point.
+    </p>
+    <div class="overflow-x-auto">
+      <table
+        class="w-full border-collapse text-sm [&_td]:border-t [&_td]:border-line [&_td]:px-1.5 [&_td]:py-2 [&_td]:align-top [&_th]:px-1.5 [&_th]:py-2 [&_th]:text-left [&_th]:font-mono [&_th]:text-xs [&_th]:font-normal [&_th]:tracking-[.04em] [&_th]:text-muted [&_th]:uppercase"
+      >
+        <thead>
+          <tr><th>Score</th><th>Source</th><th>Novelty</th><th class="max-sm:hidden">Verdict</th></tr>
+        </thead>
+        <tbody>
+          {
+            t.sources.map((s) => (
+              <tr class:list={[s.superseded && 'opacity-55']}>
+                <td class:list={['font-mono font-semibold whitespace-nowrap tabular-nums', scoreColour(s.score)]}>
+                  {s.score == null ? '–' : `${s.score > 0 ? '+' : ''}${s.score}`}
+                </td>
+                <td>
+                  <SourceLink source={s} />
+                  <br />
+                  <span class={small}>{s.channel}</span>
+                </td>
+                <td class="font-mono whitespace-nowrap tabular-nums">{s.novelty.toFixed(2)}</td>
+                <td class:list={[small, 'max-sm:hidden']}>{s.worthWatching}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Tabs: one section at a time; the URL hash holds the tab (deep links, back button); arrow keys move.
+  const bar = document.getElementById('tabbar')!;
+  const tabs = [...bar.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+  const panels = tabs.map((b) => document.getElementById(b.getAttribute('aria-controls')!)!);
+  panels.forEach((p) => p.setAttribute('role', 'tabpanel'));
+  bar.hidden = false;
+  function show(id: string) {
+    if (!panels.some((p) => p.id === id)) id = panels[0].id;
+    panels.forEach((p, i) => {
+      const on = p.id === id;
+      p.hidden = !on;
+      tabs[i].setAttribute('aria-selected', String(on));
+      tabs[i].tabIndex = on ? 0 : -1;
+    });
+    tabs
+      .find((b) => b.getAttribute('aria-selected') === 'true')
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+  tabs.forEach((b, i) => {
+    b.addEventListener('click', () => {
+      history.replaceState(null, '', '#' + panels[i].id);
+      show(panels[i].id);
+    });
+    b.addEventListener('keydown', (e) => {
+      const to = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+      if (to === undefined) return;
+      e.preventDefault();
+      const next = tabs[(to + tabs.length) % tabs.length];
+      next.focus();
+      next.click();
+    });
+  });
+  addEventListener('hashchange', () => show(location.hash.slice(1)));
+  show(location.hash.slice(1));
+
+  // Claim filter and search: the cards are already on the page; this only hides the ones that don't match.
+  const q = document.getElementById('q') as HTMLInputElement;
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-claims] > [data-verdict]')];
+  const none = document.querySelector<HTMLElement>('[data-none]')!;
+  let filter = 'all';
+  function apply() {
+    const s = q.value.toLowerCase();
+    let shown = 0;
+    for (const c of cards) {
+      const on = (filter === 'all' || c.dataset.verdict === filter) && (!s || c.dataset.search!.includes(s));
+      c.hidden = !on;
+      shown += Number(on);
+    }
+    none.hidden = shown > 0;
+  }
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      filter = b.dataset.filter!;
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      apply();
+    }),
+  );
+  q.addEventListener('input', apply);
+</script>

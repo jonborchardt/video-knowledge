@@ -4,18 +4,40 @@
   "type": "module",
   "description": "Topic knowledge stores built from YouTube videos with the watcher library (linked from ../retire-sim/watcher).",
   "scripts": {
-    "watcher": "tsx node_modules/watcher/src/cli.ts",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "validate": "npm run typecheck && npm run lint && npm run format:check && npm run build && npm run test",
+    "watcher": "node scripts/watcher.mjs",
     "report": "node scripts/report.mjs",
-    "site": "node scripts/build-site.mjs",
     "record": "node scripts/record.mjs",
     "record-sources": "node scripts/record-sources.mjs",
-    "merge-claims": "node scripts/merge-claims.mjs",
-    "test": "node --test scripts/build-site.test.mjs"
-  },
-  "dependencies": {
-    "watcher": "file:../retire-sim/watcher"
+    "merge-claims": "node scripts/merge-claims.mjs"
   },
   "devDependencies": {
-    "tsx": "^4.23.11"
+    "@astrojs/check": "^0.9.10",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.5",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^3.2.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tsx": "^4.23.11",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^4.1.11"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.8",
+    "tailwindcss": "^4.3.3"
   }
 }

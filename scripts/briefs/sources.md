@@ -34,7 +34,15 @@ citations refer to the `.txt`.
 Write `<topic>/work/sv_G.json`:
 
 ```json
-[{"claim":"<topic>/<slug>","verdict":"partly","confidence":0.6,"note":"...","source":"<topic>/sources/<file>.txt#L10-L24"}]
+[
+  {
+    "claim": "<topic>/<slug>",
+    "verdict": "partly",
+    "confidence": 0.6,
+    "note": "...",
+    "source": "<topic>/sources/<file>.txt#L10-L24"
+  }
+]
 ```
 
 - Every claim id must exist in the claims list exactly. Valid JSON, written with the Write tool.

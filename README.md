@@ -4,7 +4,7 @@ Knowledge stores about topics, built from YouTube videos and blog posts with the
 
 Site: https://jonborchardt.github.io/video-knowledge/
 
-The library is linked from `../retire-sim/watcher`, which must be checked out on a branch that has it.
+The library lives in `../retire-sim/watcher`, which must be checked out next to this repo on a branch that has it (or point `WATCHER_DIR` at it).
 
 ## Setup
 
@@ -52,14 +52,18 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3â
 
 ## Website
 
-Each topic with a `report.json` becomes a page, linked from a home page.
+An [Astro](https://astro.build) site with Tailwind. Each topic with a `report.json` becomes a page (`src/pages/[topic]/index.astro`), linked from a home page. Pages are rendered at build time; the only client script is the tab bar and the claim search.
 
 ```
-npm run report   # refresh <topic>/report.json from the stores (needs the watcher library, so run locally)
-npm run site     # build _site/ (no dependencies); open _site/index.html to preview
-npm test         # build and check every page: no template leaks, scripts parse, links resolve
+npm run report     # refresh <topic>/report.json from the stores (needs the watcher checkout, so run locally)
+npm run dev        # live preview at http://localhost:4321/video-knowledge/
+npm run build      # build dist/
+npm run validate   # typecheck + lint + format check + build + tests (what CI runs)
+npm run format     # prettier --write
 ```
 
-Pushing to `main` runs `.github/workflows/pages.yml`, which tests, builds `_site/` from the committed files and deploys it.
+Pushing to `main` runs `.github/workflows/pages.yml`: `npm ci`, `npm run validate`, deploy `dist/`.
+
+The data scripts (`report`, `record`, `record-sources`, `watcher`) run the watcher CLI from `../retire-sim/watcher` (or `$WATCHER_DIR`). It isn't an npm dependency, so CI, which only builds the site, doesn't need it.
 
 The watcher's agent contract is `.claude/skills/watcher/SKILL.md`, a copy of `../retire-sim/watcher/SKILL.md`. Re-copy it when the library changes.

@@ -6,15 +6,19 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const [mergeFile, ...files] = process.argv.slice(2);
-if (!mergeFile || !files.length) { console.error('usage: node scripts/merge-claims.mjs <merges.json> <batches.json> [...]'); process.exit(1); }
+if (!mergeFile || !files.length) {
+  console.error('usage: node scripts/merge-claims.mjs <merges.json> <batches.json> [...]');
+  process.exit(1);
+}
 const merges = JSON.parse(readFileSync(mergeFile, 'utf8'));
 for (const f of files) {
   const batches = JSON.parse(readFileSync(f, 'utf8'));
   let n = 0;
   for (const b of batches) {
     const seen = new Set();
-    b.as = b.as.flatMap(x => {
-      const text = x.n ?? x.n2, to = text && merges[text];
+    b.as = b.as.flatMap((x) => {
+      const text = x.n ?? x.n2,
+        to = text && merges[text];
       if (to && to !== '=' + text) {
         n++;
         const keep = { ...(x.s ? { s: x.s } : {}), ...(x.q ? { q: x.q } : {}) };

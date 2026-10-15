@@ -1,0 +1,25 @@
+---
+import type { Verdict } from '../lib/topics';
+
+interface Props {
+  verdict: Verdict | null;
+  confidence?: number | null;
+}
+const { verdict, confidence } = Astro.props;
+const colour = {
+  right: 'text-right',
+  partly: 'text-partly',
+  wrong: 'text-wrong',
+  untestable: 'text-other',
+  unknown: 'text-other',
+};
+---
+
+<span
+  class:list={[
+    'inline-block rounded-[3px] border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase',
+    colour[verdict ?? 'unknown'],
+  ]}
+>
+  {verdict ?? 'unjudged'}{confidence != null && ` ${Math.round(confidence * 100)}%`}
+</span>

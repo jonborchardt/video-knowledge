@@ -22,13 +22,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      # The site is built from the committed <subject>/report.json files and stores; no npm install needed.
-      - run: npm test
-      - run: npm run site
+          cache: npm
+      - run: npm ci
+      # Typecheck, lint, format check, build dist/ from the committed <topic>/report.json files, then test the build.
+      - run: npm run validate
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: dist
 
   deploy:
     needs: build

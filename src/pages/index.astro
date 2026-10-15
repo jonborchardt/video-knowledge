@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadTopic, topicNames } from '../lib/topics';
+
+const topics = topicNames().map(loadTopic);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const firstSentence = (s: string) => s[0].toUpperCase() + s.slice(1).split('. ')[0] + '.';
+---
+
+<Base title="Video knowledge">
+  <header>
+    <div class="font-mono text-xs tracking-[.04em] text-muted uppercase">Video knowledge</div>
+    <h1 class="text-[2.1rem] leading-[1.15] max-sm:text-[1.7rem]">
+      What videos and posts claim, checked against the evidence
+    </h1>
+    <p class="mt-2 max-w-[65ch] text-muted">
+      Each subject collects YouTube videos and blog posts, extracts the claims they make, and judges every claim: first
+      by an AI guess, then against studies where they exist. Pick a subject.
+    </p>
+  </header>
+  <section class="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
+    {
+      topics.map((t) => (
+        <a
+          class="grid gap-2 rounded-lg border border-line bg-surface p-[18px] text-inherit no-underline hover:border-accent"
+          href={`${base}/${t.name}/`}
+        >
+          <h2 class="m-0 text-[1.2rem] text-accent">{t.label}</h2>
+          <span class="font-mono text-xs text-muted">
+            {t.counted} sources · {t.claims.length} claims · {t.studies} studies
+          </span>
+          {t.bottomLine && <span class="text-[13px] text-muted">{firstSentence(t.bottomLine)}</span>}
+        </a>
+      ))
+    }
+    {topics.length === 0 && <p class="text-[13px] text-muted">No subjects have a report yet. Run npm run report.</p>}
+  </section>
+</Base>
