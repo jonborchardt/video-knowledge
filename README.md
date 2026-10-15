@@ -12,13 +12,13 @@ npm install
 
 ```
 <topic>/
-  videos.txt   one URL per line (blank and # lines ignored; "# --- <Label>, ..." starts a batch)
+  videos.txt   one URL per line (blank and # lines ignored)
   blogs.txt    optional: blog/article URLs, same format
   sources/     reference material the agent checks claims against
   store/       created by the CLI; commit it (store/transcripts/ is a gitignored cache)
   report.json  written by `npm run report`; commit it (the site is built from it)
-  lean.json    optional: claim id → pro | pro-hype | calibrating | skeptic | neutral (the lean panel)
-  site.json    optional: recap claims and bottom line, batch labels, study display names
+  lean.json    optional: claim id → pro | pro-hype | calibrating | skeptic | neutral (counts sweeping claims for the recap)
+  site.json    optional: recap claims and bottom line, study display names
 ```
 
 ## Website

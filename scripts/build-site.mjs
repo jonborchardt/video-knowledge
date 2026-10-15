@@ -1,14 +1,12 @@
 // node scripts/build-site.mjs — build the static site into _site/ (no dependencies).
 // One page per subject folder that has a <subject>/report.json (written by `npm run report`), plus a home page.
-// Per subject, optional: site.json (recap, batch and document names), lean.json (claim lean tags),
-// videos.txt / blogs.txt (batch sections are "# --- <Label>, ..." headers).
+// Per subject, optional: site.json (recap and study display names), lean.json (claim lean tags; counts sweeping claims for the recap).
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const OUT = join(ROOT, '_site');
 const readJson = (p, fallback) => (existsSync(p) ? JSON.parse(readFileSync(p, 'utf8')) : fallback);
-const readText = p => (existsSync(p) ? readFileSync(p, 'utf8') : '');
 const he = s => String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
 const esc = s => s.replace(/</g, '\\u003c');
 
@@ -95,16 +93,6 @@ ${script}
 </html>
 `;
 
-// Sections of a list file: "# --- <Label>, rest" starts one; text before the first header is section 0.
-function listSections(text, firstLabel) {
-  const parts = text.split(/^# --- /m);
-  return parts.map((s, i) => ({
-    label: i === 0 ? firstLabel : s.split('\n')[0].split(/[,.:(]/)[0].trim(),
-    urls: new Set(s.match(/https?:\/\/[^\s#]+(#\S*)?/g) ?? []),
-    vids: new Set((s.match(/v=([\w-]{11})/g) ?? []).map(x => x.slice(2))),
-  })).filter(s => s.urls.size);
-}
-
 function buildSubject(dir, name) {
   const r = readJson(join(dir, 'report.json'));
   const t = r.topics[0];
@@ -166,43 +154,8 @@ function buildSubject(dir, name) {
   const decided = claims.filter(c => c.src).length;
   const docsUsed = new Set(claims.flatMap(c => c.srcs)).size;
 
-  // Lean panel (only with lean.json).
-  let leanHtml = '';
-  if (lean) {
-    const FLIP = { pro: 'skeptic', 'pro-hype': 'calibrating', calibrating: 'pro', skeptic: 'pro', neutral: 'neutral' };
-    const GROUP = { pro: 'fav', 'pro-hype': 'fav', calibrating: 'cal', skeptic: 'sk', neutral: 'neu' };
-    const leanOf = a => GROUP[a.stance === 'denies' ? FLIP[lean[a.claim]] : lean[a.claim]];
-    const tally = vs => { const c = { fav: 0, neu: 0, cal: 0, sk: 0, untagged: 0 }; for (const v of vs) for (const a of v.assertions ?? []) c[leanOf(a) ?? 'untagged']++; return c; };
-    const stanceOf = v => { const c = tally([v]); return c.fav > c.sk ? 'fav' : c.sk > c.fav ? 'sk' : 'bal'; };
-    const names = cfg.batches ?? {};
-    const rows = new Map();
-    for (const s of [...listSections(readText(join(dir, 'videos.txt')), 'Initial list'), ...listSections(readText(join(dir, 'blogs.txt')), 'Initial posts')]) {
-      const label = names[s.label] ?? s.label;
-      const vs = used.filter(v => s.vids.has(v.id) || (v.url && !/^[\w-]{11}$/.test(v.id) && s.urls.has(v.url)));
-      rows.set(label, [...(rows.get(label) ?? []), ...vs]);
-    }
-    rows.set('All', used);
-    const bar = c => { const n = c.fav + c.neu + c.cal + c.sk || 1, p = x => Math.round(100 * x / n);
-      return '<div class="lean" role="img" aria-label="' + p(c.fav) + '% favourable, ' + p(c.neu) + '% neutral, ' + p(c.cal) + '% calibrating, ' + p(c.sk) + '% skeptical">'
-        + '<span class="l-pro" style="width:' + p(c.fav) + '%"></span><span class="l-neu" style="width:' + p(c.neu) + '%"></span><span class="l-cal" style="width:' + p(c.cal) + '%"></span><span class="l-sk" style="width:' + p(c.sk) + '%"></span></div>'
-        + '<span class="small">' + p(c.fav) + '% favourable · ' + p(c.neu) + '% neutral · ' + p(c.cal) + '% calibrating · ' + p(c.sk) + '% skeptical (' + n + ' claims made)</span>'; };
-    const stances = vs => { const s = { fav: 0, bal: 0, sk: 0 }; for (const v of vs) s[stanceOf(v)]++; return s.fav + ' favourable · ' + s.bal + ' balanced · ' + s.sk + ' skeptical'; };
-    const table = [...rows].filter(([, vs]) => vs.length).map(([k, vs]) => '<tr><td>' + he(k) + ' <span class="small">(' + vs.length + ')</span></td><td>' + bar(tally(vs)) + '</td><td class="small">' + stances(vs) + '</td></tr>').join('');
-    const LEANNAME = { pro: 'Favourable', 'pro-hype': 'Favourable, sweeping', calibrating: 'Calibrating', skeptic: 'Skeptical', neutral: 'Neutral' };
-    const outcome = l => { const cs = claims.filter(c => lean[c.id] === l), n = cs.length || 1, p = x => Math.round(100 * cs.filter(c => c.v === x).length / n);
-      return cs.length ? '<tr><td>' + LEANNAME[l] + ' <span class="small">(' + cs.length + ')</span></td><td class="num">' + p('right') + '%</td><td class="num">' + p('partly') + '%</td><td class="num">' + p('wrong') + '%</td></tr>' : ''; };
-    const untagged = claims.filter(c => !lean[c.id]).length;
-    leanHtml = `<section>
-  <h2>Which way the corpus leans</h2>
-  <p class="small">Each claim is tagged by which way it would cut <em>if true</em>. <span style="color:var(--right)">Favourable</span>: more capable or beneficial. <span style="color:var(--partly)">Calibrating</span>: a benefit is real but smaller or mismeasured. <span style="color:var(--wrong)">Skeptical</span>: harm, risk, cost or a real limit. Neutral: practice, tools and framing. Denying a claim flips it; denying a sweeping favourable claim counts as calibrating. This shows what gets <em>talked about</em>, not what is true. The last column rates each source by its favourable minus skeptical claims.</p>
-  <div class="table"><table><thead><tr><th>Batch</th><th>Claims made</th><th>Sources</th></tr></thead><tbody>${table}</tbody></table></div>
-  <h3>How each kind of claim holds up</h3>
-  <div class="table"><table><thead><tr><th>Claims</th><th>Right</th><th>Partly</th><th>Wrong</th></tr></thead><tbody>${['pro', 'pro-hype', 'calibrating', 'skeptic', 'neutral'].map(outcome).join('')}</tbody></table></div>
-  <p class="small">Sweeping favourable claims are where most "wrong" verdicts land; skeptical and calibrating claims are mostly "this risk exists" or "smaller than claimed", which are easy to be right about.${untagged ? ' ' + untagged + ' newer claims are not tagged yet.' : ''}</p>
-</section>`;
-  }
   const superseded = recs.filter(v => v.supersededBy);
-  const supHtml = superseded.length ? '<h3>Changed minds</h3><p class="small">When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts toward claims, novelty or the lean. Evidence recorded on it still counts.</p><ul>'
+  const supHtml = superseded.length ? '<h3>Changed minds</h3><p class="small">When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts toward claims or novelty. Evidence recorded on it still counts.</p><ul>'
     + superseded.map(v => '<li>' + he(v.title) + ' → superseded by ' + he(recOf[v.supersededBy]?.title ?? v.supersededBy) + '</li>').join('') + '</ul>' : '';
 
   const ids = x => (x || []).map(c => (typeof c === 'string' ? c : c.id));
@@ -241,7 +194,6 @@ ${changed.map(surpLi).join('\n')}
   ${held.length ? '<details><summary class="small">' + held.length + ' more where a study disagreed but was less confident, so the AI guess stands</summary><ul>\n' + held.map(surpLi).join('\n') + '\n</ul></details>' : ''}
 </section>` : ''}
 
-${leanHtml}
 ${supHtml ? '<section>' + supHtml + '</section>' : ''}
 
 <section>
