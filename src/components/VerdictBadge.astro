@@ -7,17 +7,17 @@ interface Props {
 }
 const { verdict, confidence } = Astro.props;
 const colour = {
-  right: 'text-right',
-  partly: 'text-partly',
-  wrong: 'text-wrong',
-  untestable: 'text-other',
-  unknown: 'text-other',
+  right: 'text-success',
+  partly: 'text-warning',
+  wrong: 'text-destructive',
+  untestable: 'text-muted-foreground',
+  unknown: 'text-muted-foreground',
 };
 ---
 
 <span
   class:list={[
-    'inline-block rounded-[3px] border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase',
+    'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase',
     colour[verdict ?? 'unknown'],
   ]}
 >

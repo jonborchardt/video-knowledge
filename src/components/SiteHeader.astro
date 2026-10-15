@@ -1,0 +1,30 @@
+---
+import { site } from '../config/site';
+import { href } from '../lib/url';
+import ThemeToggle from './ThemeToggle.astro';
+// The blog's logo, inlined (no extra request; theme-independent colours).
+import logo from '../assets/logo.svg?raw';
+---
+
+<header class="border-b print:hidden">
+  <div class="mx-auto flex max-w-page flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
+    <a href={href('/')} class="flex items-center gap-2 font-semibold tracking-tight no-underline">
+      <span class="inline-block h-8 w-8 [&>svg]:h-full [&>svg]:w-full" aria-hidden="true" set:html={logo} />
+      <span>{site.name}</span>
+    </a>
+    <nav aria-label="Main">
+      <ul class="flex items-center gap-1 text-sm">
+        {
+          site.nav.map((item) => (
+            <li>
+              <a href={item.href} class="rounded-sm px-2 py-1 text-muted-foreground no-underline hover:text-foreground">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li><ThemeToggle /></li>
+      </ul>
+    </nav>
+  </div>
+</header>

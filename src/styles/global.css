@@ -1,50 +1,143 @@
 @import 'tailwindcss';
 
-/* Design tokens: verdict colours carry the meaning; the accent is a cool slate-teal. */
-@theme {
-  --font-display: 'Source Serif 4', Georgia, serif;
-  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --color-bg: #f7f8f9;
-  --color-surface: #ffffff;
-  --color-fg: #1d2328;
-  --color-muted: #5d6872;
-  --color-line: #dde2e6;
-  --color-accent: #1f6f78;
-  --color-right: #2e7d4f;
-  --color-partly: #a66a00;
-  --color-wrong: #b3261e;
-  --color-other: #6b7280;
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design tokens, shared with the blog (jonborchardt/blog src/styles/global.css): same variable names,
+ * same cool-neutral oklch palette with one teal-blue primary. This site adds verdict colours:
+ * success (right), warning (partly), destructive (wrong); unknown/untestable use muted-foreground.
+ */
+@theme inline {
+  --font-heading: var(--font-sans);
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --color-ring: var(--ring);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #12161a;
-    --color-surface: #1a2026;
-    --color-fg: #e4e8eb;
-    --color-muted: #9aa5ae;
-    --color-line: #2c343b;
-    --color-accent: #5fb3bb;
-    --color-right: #5cc285;
-    --color-partly: #e0a640;
-    --color-wrong: #ef6b62;
-    --color-other: #9aa3ad;
-    color-scheme: dark;
-  }
+@theme {
+  /* Content widths → max-w-prose | max-w-wide | max-w-page */
+  --container-prose: 42rem;
+  --container-wide: 56rem;
+  --container-page: 72rem;
+  /* Display heading size → text-display (h1); section heading → text-featured; card title → text-title */
+  --text-display: 2.25rem;
+  --text-display--line-height: 1.15;
+  --text-display--letter-spacing: -0.02em;
+  --text-featured: 1.5rem;
+  --text-featured--line-height: 1.25;
+  --text-featured--letter-spacing: -0.02em;
+  --text-title: 1.125rem;
+  --text-title--line-height: 1.375;
+  --text-title--letter-spacing: -0.02em;
+}
+
+/* Small uppercase label above a heading. Colour is set at the call site. */
+@utility eyebrow {
+  @apply text-xs font-medium tracking-wide uppercase;
+}
+
+/* Tailwind's built-in max-w-prose is a fixed 65ch; point it at our token instead. */
+@utility max-w-prose {
+  max-width: var(--container-prose);
+}
+
+:root {
+  --background: oklch(0.99 0.003 240);
+  --foreground: oklch(0.2 0.015 250);
+  --card: oklch(0.99 0.003 240);
+  --card-foreground: oklch(0.2 0.015 250);
+  --primary: oklch(0.48 0.12 225);
+  --primary-foreground: oklch(0.99 0 0);
+  --muted: oklch(0.96 0.005 240);
+  --muted-foreground: oklch(0.48 0.02 250);
+  --accent: oklch(0.94 0.02 225);
+  --accent-foreground: oklch(0.2 0.015 250);
+  --destructive: oklch(0.55 0.2 27);
+  --warning: oklch(0.6 0.15 70);
+  --success: oklch(0.52 0.13 150);
+  --border: oklch(0.9 0.008 240);
+  --ring: oklch(0.48 0.12 225);
+  --radius: 0.375rem;
+  color-scheme: light;
+}
+
+.dark {
+  --background: oklch(0.16 0.012 250);
+  --foreground: oklch(0.94 0.006 240);
+  --card: oklch(0.2 0.012 250);
+  --card-foreground: oklch(0.94 0.006 240);
+  --primary: oklch(0.8 0.1 225);
+  --primary-foreground: oklch(0.18 0.02 250);
+  --muted: oklch(0.22 0.012 250);
+  --muted-foreground: oklch(0.72 0.02 250);
+  --accent: oklch(0.26 0.03 225);
+  --accent-foreground: oklch(0.94 0.006 240);
+  --destructive: oklch(0.7 0.18 22);
+  --warning: oklch(0.8 0.15 80);
+  --success: oklch(0.78 0.14 150);
+  --border: oklch(1 0 0 / 12%);
+  --ring: oklch(0.8 0.1 225);
+  color-scheme: dark;
 }
 
 @layer base {
-  body {
-    @apply bg-bg font-sans text-[15px] leading-[1.55] text-fg;
+  * {
+    @apply border-border;
   }
-  h1,
-  h2 {
-    @apply font-display text-balance;
+  html {
+    @apply font-sans;
+    font-size: 100%;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (min-width: 48rem) {
+    html {
+      font-size: 106.25%; /* 17px */
+    }
+    :root {
+      --text-display: 2.75rem;
+      --text-featured: 1.875rem;
+    }
+  }
+  body {
+    @apply bg-background text-foreground;
+    text-rendering: optimizeLegibility;
   }
   a {
-    @apply text-accent;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-accent;
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

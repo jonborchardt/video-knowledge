@@ -1,19 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
 import { loadTopic, topicNames } from '../lib/topics';
+import { href } from '../lib/url';
 
 const topics = topicNames().map(loadTopic);
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const firstSentence = (s: string) => s[0].toUpperCase() + s.slice(1).split('. ')[0] + '.';
 ---
 
-<Base title="Video knowledge">
+<Base title={site.name}>
   <header>
-    <div class="font-mono text-xs tracking-[.04em] text-muted uppercase">Video knowledge</div>
-    <h1 class="text-[2.1rem] leading-[1.15] max-sm:text-[1.7rem]">
-      What videos and posts claim, checked against the evidence
-    </h1>
-    <p class="mt-2 max-w-[65ch] text-muted">
+    <div class="eyebrow text-muted-foreground">{site.name}</div>
+    <h1 class="mt-1 text-display font-semibold">What videos and posts claim, checked against the evidence</h1>
+    <p class="mt-3 max-w-prose text-muted-foreground">
       Each subject collects YouTube videos and blog posts, extracts the claims they make, and judges every claim: first
       by an AI guess, then against studies where they exist. Pick a subject.
     </p>
@@ -22,17 +21,21 @@ const firstSentence = (s: string) => s[0].toUpperCase() + s.slice(1).split('. ')
     {
       topics.map((t) => (
         <a
-          class="grid gap-2 rounded-lg border border-line bg-surface p-[18px] text-inherit no-underline hover:border-accent"
-          href={`${base}/${t.name}/`}
+          class="grid gap-2 rounded-lg border bg-card p-4 text-card-foreground no-underline hover:border-primary"
+          href={href(`/${t.name}/`)}
         >
-          <h2 class="m-0 text-[1.2rem] text-accent">{t.label}</h2>
-          <span class="font-mono text-xs text-muted">
+          <h2 class="text-title font-semibold text-primary">{t.label}</h2>
+          <span class="font-mono text-xs text-muted-foreground">
             {t.counted} sources · {t.claims.length} claims · {t.studies} studies
           </span>
-          {t.bottomLine && <span class="text-[13px] text-muted">{firstSentence(t.bottomLine)}</span>}
+          {t.bottomLine && <span class="text-sm text-muted-foreground">{firstSentence(t.bottomLine)}</span>}
         </a>
       ))
     }
-    {topics.length === 0 && <p class="text-[13px] text-muted">No subjects have a report yet. Run npm run report.</p>}
+    {
+      topics.length === 0 && (
+        <p class="text-sm text-muted-foreground">No subjects have a report yet. Run npm run report.</p>
+      )
+    }
   </section>
 </Base>

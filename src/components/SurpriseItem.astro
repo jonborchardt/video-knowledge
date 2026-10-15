@@ -10,12 +10,12 @@ const { s } = Astro.props;
 
 <li>
   <strong>{s.text}</strong>{' '}
-  <span class="text-[13px] text-muted">(said by {s.saidBy})</span>
+  <span class="text-sm text-muted-foreground">(said by {s.saidBy})</span>
   <br />
   AI guess: <VerdictBadge verdict={s.prior} confidence={s.priorConfidence} /> · Study: <VerdictBadge
     verdict={s.evidence}
     confidence={s.evidenceConfidence}
   />
   <br />
-  <span class="text-[13px] text-muted">{s.note} ({s.study})</span>
+  <span class="text-sm text-muted-foreground">{s.note} ({s.study})</span>
 </li>

@@ -5,12 +5,12 @@ import SourceLink from '../../components/SourceLink.astro';
 import SurpriseItem from '../../components/SurpriseItem.astro';
 import VerdictBadge from '../../components/VerdictBadge.astro';
 import { loadTopic, topicNames, type Topic } from '../../lib/topics';
+import { href } from '../../lib/url';
 
 export function getStaticPaths() {
   return topicNames().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
 }
 const { t } = Astro.props as { t: Topic };
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const tabs = [
   { id: 'recap', label: 'Recap' },
@@ -26,23 +26,21 @@ const filters = (['right', 'partly', 'wrong', 'untestable', 'unknown'] as const)
   .map((v) => ({ v, n: t.claims.filter((c) => (c.verdict ?? 'unknown') === v).length }))
   .filter((f) => f.n);
 const scoreColour = (s: number | null) =>
-  s === 2 ? 'text-right' : s === 1 ? 'text-accent' : s === -1 ? 'text-wrong' : 'text-muted';
-const h2 = 'mb-3 text-[1.35rem]';
-const h3 = 'mt-4 mb-2 font-sans text-base font-semibold';
-const small = 'text-[13px] text-muted';
-const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
+  s === 2 ? 'text-success' : s === 1 ? 'text-primary' : s === -1 ? 'text-destructive' : 'text-muted-foreground';
+const h2 = 'mb-3 text-featured font-semibold';
+const h3 = 'mt-5 mb-2 text-title font-semibold';
+const small = 'text-sm text-muted-foreground';
+const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
 ---
 
-<Base title={`${t.label} · claims`} description={t.bottomLine ?? undefined}>
-  <nav class="font-mono text-[13px] text-muted">
-    <a class="text-muted" href={`${base}/`}>All subjects</a> / {t.label}
+<Base title={`${t.label} · ${t.counted} sources checked`} description={t.bottomLine ?? undefined}>
+  <nav class="text-sm text-muted-foreground" aria-label="Breadcrumb">
+    <a class="text-muted-foreground" href={href('/')}>All subjects</a> / {t.label}
   </nav>
   <header>
-    <div class="font-mono text-xs tracking-[.04em] text-muted uppercase">{t.name}</div>
-    <h1 class="text-[2.1rem] leading-[1.15] max-sm:text-[1.7rem]">
-      What {t.counted} videos and posts claim about {t.label}
-    </h1>
-    <p class="mt-2 max-w-[65ch] text-muted">
+    <div class="eyebrow text-muted-foreground">{t.name}</div>
+    <h1 class="mt-1 text-display font-semibold">What {t.counted} videos and posts claim about {t.label}</h1>
+    <p class="mt-3 max-w-prose text-muted-foreground">
       {t.claims.length} canonical claims from {t.videos} YouTube videos and {t.posts} blog posts{
         t.noCaptions ? ` (${t.noCaptions} more videos had no captions)` : ''
       }. Every claim has an AI guess: a verdict from the AI's general knowledge, with a one-line reason.{
@@ -58,7 +56,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
     role="tablist"
     aria-label="Report sections"
     hidden
-    class="sticky top-0 z-10 -mb-4 flex [scrollbar-width:none] gap-1 overflow-x-auto border-b border-line bg-bg pt-2 [&::-webkit-scrollbar]:hidden"
+    class="sticky top-0 z-10 -mb-4 flex [scrollbar-width:none] gap-1 overflow-x-auto border-b bg-background pt-2 [&::-webkit-scrollbar]:hidden"
   >
     {
       tabs.map((tab) => (
@@ -67,7 +65,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
           role="tab"
           id={`tab-${tab.id}`}
           aria-controls={tab.id}
-          class="flex-none cursor-pointer rounded-t-md border border-b-0 border-transparent bg-transparent px-3 py-2 text-[13px] font-semibold whitespace-nowrap text-muted hover:text-fg aria-selected:-mb-px aria-selected:border-line aria-selected:bg-surface aria-selected:text-accent"
+          class="flex-none cursor-pointer rounded-t-md border border-b-0 border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap text-muted-foreground hover:text-foreground aria-selected:-mb-px aria-selected:border-border aria-selected:bg-card aria-selected:text-primary"
         >
           {tab.label}
         </button>
@@ -75,7 +73,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
     }
   </div>
 
-  <section id="recap" aria-labelledby="tab-recap">
+  <section id="recap">
     <h2 class={h2}>Recap</h2>
     <p>
       {t.counted} videos and posts making {t.claims.length} distinct claims{
@@ -119,12 +117,12 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
     }
   </section>
 
-  <section id="top" aria-labelledby="tab-top">
+  <section id="top">
     <h2 class={h2}>Five most worth your time</h2>
     <p class:list={[small, 'mb-3']}>
       Ranked by score, then novelty (rare claims that hold up, weighted by verdict confidence).
     </p>
-    <ol class="grid list-decimal gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]">
+    <ol class="grid list-decimal gap-2.5 pl-[1.2em] [&>li]:max-w-prose">
       {
         t.top.map((s) => (
           <li>
@@ -155,7 +153,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
 
   {
     t.changed.length + t.held.length > 0 && (
-      <section id="studies" aria-labelledby="tab-studies">
+      <section id="studies">
         <h2 class={h2}>What the studies changed</h2>
         <p class={small}>
           Each claim first got an <em>AI guess</em>, then was checked against the studies. Listed: claims where a study
@@ -170,7 +168,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
         </ul>
         {t.held.length > 0 && (
           <details class="mt-3">
-            <summary class={small}>
+            <summary class:list={[small, 'cursor-pointer']}>
               {t.held.length} more where a study disagreed but was less confident, so the AI guess stands
             </summary>
             <ul class:list={[list, 'mt-3']}>
@@ -186,7 +184,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
 
   {
     t.superseded.length > 0 && (
-      <section id="minds" aria-labelledby="tab-minds">
+      <section id="minds">
         <h2 class={h2}>Changed minds</h2>
         <p class:list={[small, 'mb-3']}>
           When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts
@@ -203,7 +201,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
     )
   }
 
-  <section id="wrong-claims" aria-labelledby="tab-wrong-claims">
+  <section id="wrong-claims">
     <h2 class={h2}>Judged wrong</h2>
     <p class:list={[small, 'mb-3']}>
       The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.
@@ -212,14 +210,14 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
     {t.wrong.length === 0 && <p class={small}>None.</p>}
   </section>
 
-  <section id="contested-claims" aria-labelledby="tab-contested-claims">
+  <section id="contested-claims">
     <h2 class={h2}>Contested</h2>
     <p class:list={[small, 'mb-3']}>Claims some sources assert and others deny.</p>
     {t.contested.map((c) => <ClaimCard claim={c} />)}
     {t.contested.length === 0 && <p class={small}>None.</p>}
   </section>
 
-  <section id="claims" aria-labelledby="tab-claims">
+  <section id="claims">
     <h2 class={h2}>All claims</h2>
     <div class="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter by verdict" data-filters>
       <input
@@ -227,7 +225,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
         type="search"
         placeholder="Search claims"
         aria-label="Search claims"
-        class="min-w-0 flex-[1_1_200px] rounded border border-line bg-surface px-2.5 py-1.5 text-[13px] text-fg"
+        class="min-w-0 flex-[1_1_200px] rounded-md border bg-card px-2.5 py-1.5 text-sm"
       />
       {
         [{ v: 'all', n: t.claims.length }, ...filters].map((f) => (
@@ -235,7 +233,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
             type="button"
             data-filter={f.v}
             aria-pressed={f.v === 'all' ? 'true' : 'false'}
-            class="cursor-pointer rounded border border-line bg-surface px-2.5 py-1.5 text-[13px] text-fg aria-pressed:border-accent aria-pressed:font-semibold aria-pressed:text-accent"
+            class="cursor-pointer rounded-md border bg-card px-2.5 py-1.5 text-sm aria-pressed:border-primary aria-pressed:font-medium aria-pressed:text-primary"
           >
             {f.v} ({f.n})
           </button>
@@ -248,7 +246,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
     <p class={small} data-none hidden>No claims match.</p>
   </section>
 
-  <section id="sources" aria-labelledby="tab-sources">
+  <section id="sources">
     <h2 class={h2}>Videos and posts</h2>
     <p class:list={[small, 'mb-3']}>
       Score: −1 mostly wrong, 0 mixed, 1 mostly right, 2 right, from the verdicts on the claims each source makes.
@@ -257,7 +255,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
     </p>
     <div class="overflow-x-auto">
       <table
-        class="w-full border-collapse text-sm [&_td]:border-t [&_td]:border-line [&_td]:px-1.5 [&_td]:py-2 [&_td]:align-top [&_th]:px-1.5 [&_th]:py-2 [&_th]:text-left [&_th]:font-mono [&_th]:text-xs [&_th]:font-normal [&_th]:tracking-[.04em] [&_th]:text-muted [&_th]:uppercase"
+        class="w-full border-collapse text-sm [&_td]:border-t [&_td]:px-1.5 [&_td]:py-2 [&_td]:align-top [&_th]:px-1.5 [&_th]:py-2 [&_th]:text-left [&_th]:font-mono [&_th]:text-xs [&_th]:font-normal [&_th]:tracking-[.04em] [&_th]:text-muted-foreground [&_th]:uppercase"
       >
         <thead>
           <tr><th>Score</th><th>Source</th><th>Novelty</th><th class="max-sm:hidden">Verdict</th></tr>
@@ -287,10 +285,15 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-[70ch]';
 
 <script>
   // Tabs: one section at a time; the URL hash holds the tab (deep links, back button); arrow keys move.
+  // The tabpanel roles are set here, not in the markup, so without JavaScript the sections stay plain sections.
   const bar = document.getElementById('tabbar')!;
   const tabs = [...bar.querySelectorAll<HTMLButtonElement>('[role=tab]')];
-  const panels = tabs.map((b) => document.getElementById(b.getAttribute('aria-controls')!)!);
-  panels.forEach((p) => p.setAttribute('role', 'tabpanel'));
+  const panels = tabs.map((b, i) => {
+    const p = document.getElementById(b.getAttribute('aria-controls')!)!;
+    p.setAttribute('role', 'tabpanel');
+    p.setAttribute('aria-labelledby', tabs[i].id);
+    return p;
+  });
   bar.hidden = false;
   function show(id: string) {
     if (!panels.some((p) => p.id === id)) id = panels[0].id;

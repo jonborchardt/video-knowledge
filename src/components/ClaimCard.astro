@@ -14,7 +14,7 @@ const decided = c.decidedBy
 ---
 
 <div
-  class="grid gap-1 border-t border-line py-3"
+  class="grid gap-1 border-t py-3"
   data-verdict={c.verdict ?? 'unknown'}
   data-search={`${c.text} ${c.note}`.toLowerCase()}
 >
@@ -22,6 +22,8 @@ const decided = c.decidedBy
     <p>{c.text}</p>
     <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
   </div>
-  <p class="text-sm text-muted">{c.note}</p>
-  <span class="font-mono text-xs text-muted tabular-nums">asserted {c.asserted} · denied {c.denied} · {decided}</span>
+  <p class="text-sm text-muted-foreground">{c.note}</p>
+  <span class="font-mono text-xs text-muted-foreground tabular-nums">
+    asserted {c.asserted} · denied {c.denied} · {decided}
+  </span>
 </div>
