@@ -10,14 +10,6 @@ const readJson = (p, fallback) => (existsSync(p) ? JSON.parse(readFileSync(p, 'u
 const he = s => String(s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m]));
 const esc = s => s.replace(/</g, '\\u003c');
 
-// Same rule as watcher's strongest(): latest per (method, document), then judgment > confidence (an AI guess counts
-// at most 0.5) > method > date. Mirrored here so the page can show which verdict decides without the library.
-const RANK = { prior: 0, source: 1, empirical: 2 };
-const W = x => (x.method === 'prior' ? Math.min(x.confidence ?? 0, 0.5) : (x.confidence ?? 0));
-const J = x => (['right', 'wrong', 'partly'].includes(x.verdict) ? 1 : 0);
-const best = xs => [...xs].sort((a, b) => J(b) - J(a) || W(b) - W(a) || RANK[b.method] - RANK[a.method] || (b.date > a.date ? 1 : b.date < a.date ? -1 : 0))[0];
-const latestPerDoc = vs => { const m = new Map(); for (const x of vs) { const k = x.method + '|' + (x.source?.split('#')[0] ?? ''); if (!m.has(k) || x.date >= m.get(k).date) m.set(k, x); } return [...m.values()]; };
-
 const ICON = {
   video: '<svg class="ic" viewBox="0 0 16 16" role="img" aria-label="Video"><rect x="1" y="3" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M6.5 5.8v4.4L10.3 8z" fill="currentColor"/></svg>',
   post: '<svg class="ic" viewBox="0 0 16 16" role="img" aria-label="Blog post"><path d="M3.5 1.5h6l3 3v10h-9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.5 7.5h5M5.5 10h5M5.5 12.5h3" stroke="currentColor" stroke-width="1.2"/></svg>',
@@ -62,9 +54,6 @@ td.num{font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:now
 a{color:var(--accent)}
 .small{font-size:13px;color:var(--muted)}
 .ic{width:1em;height:1em;vertical-align:-0.15em;margin-right:6px;color:var(--muted)}
-.lean{display:flex;height:10px;border-radius:3px;overflow:hidden;background:var(--line);margin:4px 0 2px;max-width:420px}
-.lean span{display:block;height:100%}
-.l-pro{background:var(--right)}.l-neu{background:var(--other);opacity:.45}.l-cal{background:var(--partly)}.l-sk{background:var(--wrong)}
 tr.sup td{opacity:.55}
 .tabs{position:sticky;top:0;z-index:2;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 0 0;margin-bottom:-16px}
 .tabs button{flex:none;font:600 13px var(--body);padding:8px 12px;border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;background:none;color:var(--muted);cursor:pointer;white-space:nowrap}
@@ -108,20 +97,13 @@ function buildSubject(dir, name) {
   const lean = readJson(join(dir, 'lean.json'), null);
   const recs = readdirSync(join(dir, 'store', 'videos')).map(f => JSON.parse(readFileSync(join(dir, 'store', 'videos', f), 'utf8')));
   const recOf = Object.fromEntries(recs.map(v => [v.id, v]));
-  const srcPrefix = name + '/sources/';
   const DOC = cfg.docs ?? {};
   const docName = src => { const f = (src ?? '').split('#')[0].split('/').pop(); return DOC[f] ?? f; };
 
-  const byClaim = {};
-  for (const v of recs) for (const a of v.assertions ?? []) (byClaim[a.claim] ??= []).push(...a.verdicts);
-  const claims = t.claims.map(c => {
-    const all = latestPerDoc(byClaim[c.id] ?? []);
-    const s = best(all), e = best(all.filter(x => x.method !== 'prior'));
-    const srcs = [...new Set(all.filter(x => x.source).map(x => x.source.split('#')[0].split('/').pop()))];
-    return { id: c.id, text: c.text, a: c.asserted, n: c.denied, v: c.effective,
-      conf: s && J(s) ? W(s) : null, note: s?.note ?? '', src: s?.source ? docName(s.source) : null, srcs,
-      ev: e && { conf: e.confidence ?? null, note: e.note ?? '', src: docName(e.source) }, pr: best(all.filter(x => x.method === 'prior')) };
-  });
+  // The report already says which verdict decides each claim (watcher's strongest(); an AI guess counts at most 50%).
+  const claims = t.claims.map(c => ({ id: c.id, text: c.text, a: c.asserted, n: c.denied, v: c.effective,
+    conf: ['right', 'wrong', 'partly'].includes(c.effective) ? c.confidence : null, note: c.note ?? '',
+    src: c.source ? docName(c.source) : null, srcs: c.documents }));
   const cOf = Object.fromEntries(claims.map(c => [c.id, c]));
 
   const videos = r.videos.filter(v => v.assertions).map(v => {
@@ -140,11 +122,11 @@ function buildSubject(dir, name) {
   // What the studies changed.
   const VAL = { right: 1, partly: 0.5, wrong: -1 };
   const pct = x => (x == null ? '' : ' ' + Math.round(x * 100) + '%');
-  const surp = (t.surprises ?? []).map(s => ({ ...s, c: cOf[s.claim.id], move: Math.abs(VAL[s.evidence] - VAL[s.prior]) }))
+  const surp = (t.surprises ?? []).map(s => ({ ...s, move: Math.abs(VAL[s.evidence] - VAL[s.prior]) }))
     .sort((a, b) => b.move - a.move || (b.claim.asserted + b.claim.denied) - (a.claim.asserted + a.claim.denied));
   const surpLi = s => '<li><strong>' + he(s.claim.text) + '</strong> <span class="small">(said by ' + (s.claim.asserted + s.claim.denied) + ')</span><br>'
-    + 'AI guess: <span class="v v-' + s.prior + '">' + s.prior + pct(s.c.pr?.confidence) + '</span> · Study: <span class="v v-' + s.evidence + '">' + s.evidence + pct(s.c.ev?.conf) + '</span><br>'
-    + '<span class="small">' + he(s.c.ev?.note ?? '') + ' (' + he(s.c.ev?.src ?? '') + ')</span></li>';
+    + 'AI guess: <span class="v v-' + s.prior + '">' + s.prior + pct(s.priorRecord.confidence) + '</span> · Study: <span class="v v-' + s.evidence + '">' + s.evidence + pct(s.evidenceRecord.confidence) + '</span><br>'
+    + '<span class="small">' + he(s.evidenceRecord.note ?? '') + ' (' + he(docName(s.evidenceRecord.source)) + ')</span></li>';
   const changed = surp.filter(s => s.overrides), held = surp.filter(s => !s.overrides);
 
   // Recap: configured headline claims (or the most-discussed ones), each with its live verdict and decider.
@@ -165,8 +147,7 @@ function buildSubject(dir, name) {
   const supHtml = superseded.length ? '<h2>Changed minds</h2><p class="small">When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts toward claims or novelty. Evidence recorded on it still counts.</p><ul>'
     + superseded.map(v => '<li>' + he(v.title) + ' → superseded by ' + he(recOf[v.supersededBy]?.title ?? v.supersededBy) + '</li>').join('') + '</ul>' : '';
 
-  const ids = x => (x || []).map(c => (typeof c === 'string' ? c : c.id));
-  const data = { claims: claims.map(({ ev, pr, ...c }) => c), videos, wrong: ids(t.commonlyWrong), contested: ids(t.contested) };
+  const data = { claims, videos, wrong: t.commonlyWrong.map(c => c.id), contested: t.contested.map(c => c.id) };
   const label = t.label ?? name;
   const body = `<nav class="crumbs"><a href="../index.html">All subjects</a> / ${he(label)}</nav>
 <header>
@@ -205,13 +186,13 @@ ${changed.map(surpLi).join('\n')}
 
 ${supHtml ? '<section id="minds" data-tab="Changed minds">' + supHtml + '</section>' : ''}
 
-<section id="wrong-claims" data-tab="Wrong (${ids(t.commonlyWrong).length})">
+<section id="wrong-claims" data-tab="Wrong (${t.commonlyWrong.length})">
   <h2>Judged wrong</h2>
   <p class="small">The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.</p>
   <div id="wrong"></div>
 </section>
 
-<section id="contested-claims" data-tab="Contested (${ids(t.contested).length})">
+<section id="contested-claims" data-tab="Contested (${t.contested.length})">
   <h2>Contested</h2>
   <p class="small">Claims some sources assert and others deny.</p>
   <div id="contested"></div>

@@ -23,7 +23,8 @@ jobs:
         with:
           node-version: 22
       # The site is built from the committed <subject>/report.json files and stores; no npm install needed.
-      - run: node scripts/build-site.mjs
+      - run: npm test
+      - run: npm run site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -57,8 +57,9 @@ Each topic with a `report.json` becomes a page, linked from a home page.
 ```
 npm run report   # refresh <topic>/report.json from the stores (needs the watcher library, so run locally)
 npm run site     # build _site/ (no dependencies); open _site/index.html to preview
+npm test         # build and check every page: no template leaks, scripts parse, links resolve
 ```
 
-Pushing to `main` runs `.github/workflows/pages.yml`, which builds `_site/` from the committed files and deploys it.
+Pushing to `main` runs `.github/workflows/pages.yml`, which tests, builds `_site/` from the committed files and deploys it.
 
 The watcher's agent contract is `.claude/skills/watcher/SKILL.md`, a copy of `../retire-sim/watcher/SKILL.md`. Re-copy it when the library changes.
