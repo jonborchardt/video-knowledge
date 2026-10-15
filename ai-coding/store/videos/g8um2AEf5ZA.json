@@ -1,0 +1,125 @@
+{
+  "id": "g8um2AEf5ZA",
+  "title": "AI Dev 26 x SF: Andrew Ng: The Future of Software Engineering",
+  "channel": "DeepLearningAI",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCcIXc5mJsHVYTZR1maL5l9w",
+  "durationSec": 1161,
+  "thumbnail": "https://i.ytimg.com/vi/g8um2AEf5ZA/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gVihlMA8=&rs=AOn4CLDyTkbA_nTpbptfHKydkAXH-HLCQA",
+  "summary": "Andrew Ng at AI Dev 26: near-100% AI-written code, product management as the new bottleneck, small generalist teams, Context Hub and Code Dream.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "denies",
+      "quote": "if I got to review the code, then I become the bottleneck, and it also doesn't work",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The paper recommends careful review of AI code whatever the tool, along with static analysis, tests, security checks, and monitoring after merge.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L934-L945",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/moving-most-nearly-all-code-written",
+      "stance": "asserts",
+      "quote": "getting only 80% of the way there feels very different",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Removing the last human-written fraction removes a serial bottleneck for some teams, but it relies on reduced review; no controlled evidence, and risk rises for critical code.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeds-coding-deciding-what-build-product",
+      "stance": "asserts",
+      "quote": "deciding what to build or the product management work becomes the new bottleneck",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent with Amdahl-style reasoning and reports of shifting PM:engineer ratios; evidence is mostly anecdotal from AI-native teams.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/shrinking-engineering-team-sizes",
+      "stance": "asserts",
+      "quote": "very small teams, they're all kind of generalists",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Some companies report smaller teams and AI-native startups run lean, but industry-wide team-size data are thin and confounded by cost cutting.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/accelerating-merger-testing-operations-product-work",
+      "stance": "asserts",
+      "quote": "engineers who shape products or product managers that can code can move really fast",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "The trend toward 'product engineers' and DevOps ownership predates AI; AI plausibly speeds it, but evidence is anecdotal.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/will-transform-software-engineering-jobs-rather",
+      "stance": "asserts",
+      "quote": "the job apocalypse is not being nearly as bad as people are hyping it up to be",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Through 2026 evidence points to role change and slower junior hiring, not elimination of the profession; long-run is uncertain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llms-propose-outdated-library-versions-models",
+      "stance": "asserts",
+      "quote": "if you ask Claude Code to call the OpenAI API, it will use the chat completions API, which is older and deprecated",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Training cutoffs reliably cause stale version and model suggestions; checking against current docs is necessary.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

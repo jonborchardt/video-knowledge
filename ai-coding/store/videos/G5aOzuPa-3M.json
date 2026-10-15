@@ -1,0 +1,164 @@
+{
+  "id": "G5aOzuPa-3M",
+  "title": "Anthropic Economic Index 2026—Measuring Claude Usage with “Economic Primitives” Metrics",
+  "channel": "CosmoX",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCviY8ejfPGxPQizSm5aQvNw",
+  "durationSec": 401,
+  "thumbnail": "https://i.ytimg.com/vi/G5aOzuPa-3M/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGFsgZShiMA8=&rs=AOn4CLB5WGwGaMQBiO6Y1W8TMKW6tzxQfQ",
+  "summary": "Summary of Anthropic's 2026 Economic Index: usage concentrated in coding, larger speedups but lower success on complex tasks, net deskilling, and a modest productivity estimate.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/usage-concentrated-software-mathematical-tasks",
+      "stance": "asserts",
+      "quote": "A whopping 34% of all tasks are in computer and mathematical fields. We're talking coding, software development, that kind of thing.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Anthropic's own usage data and other usage studies consistently find coding is the largest single category.",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/adopted-much-faster-earlier-major-technologies",
+      "stance": "asserts",
+      "quote": "AI is spreading like wildfire, about 10 times faster than major technologies from the last century.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Survey data show unusually fast uptake of generative AI, though comparisons with past technologies depend on how adoption is defined.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-shrink-task-complexity-codebase",
+      "stance": "denies",
+      "quote": "The data shows that AI gives the biggest speed boosts on the hard stuff, the more complex, higher-skill work.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent across Stanford's data, METR's mature-repo slowdown and long-context degradation results.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/task-success-rates-fall-complexity-rises",
+      "stance": "asserts",
+      "quote": "The success rate actually drops. It goes from 70% on simpler stuff down to 66% on the hard stuff.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks, METR task-horizon work and usage studies all show success falling with task length and complexity.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025, qualitative: developers say AI does worse in complex settings, e.g. a refactor that was 'too big' where AI 'introduced as many errors as it fixed', and failures tied to file size. These are anecdotes, not success rates.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L986-L993",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Airbnb: simple files passed with a few retries, complex ones needed rich context, and the last ~100 files hit a ceiling after 50-100 retries and were fixed by hand.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L22-L24",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "GPT-4 alone solved all five easy experiment tasks but got two of five harder APPS interview/competition tasks wrong, and the AI-assisted accuracy gain shrank on the harder set (tiny task sample).",
+          "source": "ai-coding/sources/4859137.txt#L1279-L1282",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/net-deskilling-jobs-taking-over-their",
+      "stance": "asserts",
+      "quote": "Right now, the net effect across the entire economy is actually deskilling.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "This is a model-based estimate from one vendor's usage data; independent labor-market evidence on deskilling versus upskilling is not yet clear.",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/could-add-around-one-percentage-point",
+      "stance": "asserts",
+      "quote": "once you adjust for how often AI actually succeeds in the real world, the number comes down to a more realistic 1%.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "This is a projection built on model-estimated task speedups; macro productivity data has not yet confirmed effects of this size.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/organizational-adoption-needs-active-enablement-training",
+      "stance": "asserts",
+      "quote": "Just giving everyone access to AI isn't going to cut it. That's not enough.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Adoption and gains vary widely across teams and DORA finds organizational practices matter, but evidence isolating training effects is mostly observational.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "With access alone only 8.5% of Microsoft's treated developers signed up in two weeks; reminder emails lifted it to 42.5%, Accenture's training plus manager encouragement sped adoption, and 30-40% never tried the tool despite free access.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L317-L380",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Developers varied in how effectively they used AI (habitual users got the CodeHealth benefit), which authors take to mean training developers in these tools remains important; this is about individual skill, not organizational rollout.",
+          "source": "ai-coding/sources/2507.00788.txt#L2549-L2551",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google notes that bespoke AI use has a hidden cost of training engineers in the techniques and that tooling to hide AI is costly to maintain, which only touches on enablement.",
+          "source": "ai-coding/sources/2501.06972.txt#L635-L643",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

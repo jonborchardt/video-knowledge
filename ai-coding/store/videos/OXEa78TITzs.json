@@ -1,0 +1,159 @@
+{
+  "id": "OXEa78TITzs",
+  "title": "Agentic coding changes everything | Thorsten Ball from Sourcegraph Amp",
+  "channel": "Changelog",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCZbtcRQHGpU_tt2yM4C7k0A",
+  "durationSec": 6441,
+  "thumbnail": "https://i.ytimg.com/vi/OXEa78TITzs/sddefault.jpg",
+  "summary": "Sourcegraph Amp developer explains how simple agent loops are, argues for giving models tools and tokens freely, and describes generating most tests and one-off tooling with agents.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/working-coding-agent-just-llm-calling",
+      "stance": "asserts",
+      "quote": "And it's only 300 lines of code.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Minimal agent loops (read file, list dir, run shell) are well documented to work with modern tool-calling models; production harnesses add much more but the core loop is small.",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/heavy-prompt-guardrails-constrain-agents-can",
+      "stance": "asserts",
+      "quote": "So when the model gets better and bigger and stronger, the scaffolding falls away",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Vendors advise removing over-prescriptive instructions as models improve; but guardrails still prevent real failures. Plausible, weakly evidenced.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-work-best-when-they",
+      "stance": "asserts",
+      "quote": "forget about accepting each change forget about not giving the model real access to the file system.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Removing per-edit approval cuts friction and works with version control and good tests; in risky environments, permission gates and sandboxing still matter.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "here's how you get feedback about your work. You know, here's the command you have to run to get llinter output or compiler errors",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "asserts",
+      "quote": "when have you ever become more productive with a tool after using it for just a single day? Like you have to put some effort",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/implementation-gets-cheap-product-taste-judgment",
+      "stance": "asserts",
+      "quote": "But what to build and when and how to say organize it, how to architect it ... That's now super valuable.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Plausible economic logic and widely argued, but not measured; execution, distribution and maintenance still matter.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "I would say the test suite 90% of that is generated, right? Like oh cover all of these cases.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI speeds drafting tests and docs, but generated tests often assert implementation details or weak properties and need review.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-code-generation-makes-one-off",
+      "stance": "asserts",
+      "quote": "you can build stuff that you never would have attempted before",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small standalone throwaway tools are where AI generation is most reliable, and many practitioners report building debugging aids they previously skipped.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-should-restructured-legible-agents-smaller",
+      "stance": "asserts",
+      "quote": "people change the code base to leverage AI more.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Clear structure and smaller units plausibly help agents (and humans), but controlled evidence on how much restructuring improves agent results is thin.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/handles-routine-coding-well-but-struggles",
+      "stance": "asserts",
+      "quote": "if you work on a distributed storage layer at Google an agent is not going to take your job in the next two years",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks and field studies show strong performance on well-specified, common tasks and weaker results on context-heavy, novel logic.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

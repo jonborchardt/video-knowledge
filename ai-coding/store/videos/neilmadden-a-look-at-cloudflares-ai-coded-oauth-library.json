@@ -1,0 +1,69 @@
+{
+  "id": "neilmadden-a-look-at-cloudflares-ai-coded-oauth-library",
+  "title": "A look at CloudFlare’s AI-coded OAuth library",
+  "channel": "Neil Madden",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://neilmadden.blog/2025/06/06/a-look-at-cloudflares-ai-coded-oauth-library/",
+  "summary": "An OAuth expert reviews Cloudflare's Claude-written OAuth library: decent structure but thin tests, spec bugs and biased token generation, showing how much expertise reviewing LLM output needs.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "What this interaction shows is how much knowledge you need to bring when you interact with an LLM.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+      "stance": "asserts",
+      "quote": "the code that generates token IDs is not sound: it generates biased output",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/developers-often-ship-generated-code-without",
+      "stance": "asserts",
+      "quote": "there were 21 commits directly to main on the first day from one developer, no sign of any code review at all",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-test-suites-cover-basic-functionality",
+      "stance": "asserts",
+      "quote": "they are woefully inadequate for what I would expect of a critical auth service",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Generated tests often favor happy paths unless prompted, but this depends heavily on the prompt and the reviewer.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-generated-code-reproduces-common-mistakes",
+      "stance": "asserts",
+      "quote": "Many of these same mistakes can be found in popular Stack Overflow answers, which is probably where Claude learnt them from too.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Studies of generated code show it reproduces insecure patterns common in public code, though attributing a specific bug to its source is speculative.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/security-data-critical-code-auth-payments",
+      "stance": "asserts",
+      "quote": "for important things, like my fucking auth system, I’d much rather do it myself",
+      "verdicts": []
+    }
+  ]
+}

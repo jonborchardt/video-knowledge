@@ -1,0 +1,724 @@
+                                        How much does AI impact development speed?
+                                        An enterprise-based randomized controlled trial
+
+                                                                       Elise Paradis, Kate Grey, Quinn Madison, Daye Nam,
+                                                    Andrew Macvean, Vahid Meimand, Nan Zhang, Ben Ferrari-Church, Satish Chandra
+
+                                                                                                           Google
+                                         {eparadis, kategrey, qmadison, dayenam, amacvean, vahidzm, nanzh, ferrarichurch, chandrasatish}@google.com
+
+arXiv:2410.12944v3 [cs.SE] 11 Nov 2024     Abstract--How much does AI assistance impact developer                  found a 56% speed increase for developers using GitHub
+                                        productivity? To date, the software engineering literature has             Copilot--an AI code assistant--, compared to those not using
+                                        provided a range of answers, targeting a diversity of outcomes:            it. Another enterprise-specific estimate comes from a pooled
+                                        from perceived productivity to speed on task and developer                 analysis of three field experiments (n = 4, 867) conducted by
+                                        throughput. Our randomized controlled trial with 96 full-time              Cui et al. [13], where developers either had access to Copilot
+                                        Google software engineers contributes to this literature by                or did not have access to it in their daily activities. The authors
+                                        sharing an estimate of the impact of three AI features on the              found a 26% increase in throughput (measured as an increase
+                                        time developers spent on a complex, enterprise-grade task. We              in the number of pull requests) for developers using Copilot.
+                                        found that AI significantly shortened the time developers spent
+                                        on task. Our best estimate of the size of this effect, controlling for        Although these studies provide valuable insights and help
+                                        factors known to influence developer time on task, stands at about         quantify the speed improvements offered by one AI-enhanced
+                                        21%, although our confidence interval is large. We also found              developer tool, gaps remain in estimating the overall impact of
+                                        an interesting effect whereby developers who spend more hours              different coding assistants and across industry settings. Other
+                                        on code-related activities per day were faster with AI. Product            shortcomings include missing nuance or understanding of the
+                                        and future research considerations are discussed. In particular,           impact of AI tools by developer- or task-level contexts (e.g.,
+                                        we invite further research that explores the impact of AI at the           [13]), limited tool and task complexity in experimental settings
+                                        ecosystem level and across multiple suites of AI-enhanced tools,           (e.g., using GitHub Classroom rather than a more naturalistic
+                                        since we cannot assume that the effect size obtained in our lab            developer environment [12]), and small sample sizes (e.g.,
+                                        study will necessarily apply more broadly, or that the effect of           only 32 participants in [15], 24 participants in [16], or 21
+                                        AI found using internal Google tooling in the summer of 2024               participants in [17]). Altogether, the rapidly-changing status
+                                        will translate across tools and over time.                                 of AI-enhanced developer tools, combined with the partial
+                                                                                                                   portraits provided by current studies at this very early stage
+                                                                  I. INTRODUCTION                                  in the empirical study of AI tools in production, requires
+                                                                                                                   continued inquiry.
+                                           Seven years after the rise of LLM architecture [1] and two
+                                        years after the start of the "chatbot revolution" [2], signifi-               In this paper, we complement this recent literature by pro-
+                                        cant investments have been made to AI-enhanced products,                   viding an estimate for the impact of AI in an enterprise context
+                                        including in the software developer space. Since the release               (as per [13]) and applying it to speed on task (as per [12]).
+                                        of GitHub Copilot [3], numerous developer tools offering                   To simulate the enterprise context in the study, we designed a
+                                        code editing and generation support have been built for the                task covering multiple aspects of software development, from
+                                        general developer community [4], [5], [6], [7]. Researchers and            writing and editing code, to updating build files and to testing,
+                                        educators have also developed prototype tools to assist novice             within our proprietary internal infrastructure at Google. We
+                                        programmers and students. Furthermore, substantial effort has              aimed to answer the following questions specifically for our
+                                        been invested in building tools for internal use, such as at               internal developer tools at Google:
+                                        Meta [8] and Google [9], [10], [11].
+                                                                                                                      · RQ1: What impact does AI have on time spent complet-
+                                           However, there is still much to investigate to answer how                     ing an enterprise-grade development task?
+                                        useful these tools are in helping developers, specifically in
+                                        improving their productivity. Truly understanding the pro-                    · RQ2: How do developer and task characteristics influence
+                                        ductivity benefits of AI enhanced coding tools remains a                         our estimates of the impact of AI assistance on time spent
+                                        nascent field. While some research has shown improvements                        on task?
+                                        in coding speed [12], developer throughput [13], and perceived
+                                        productivity [14], more work must be done to validate these                   · RQ3: How do developer and task characteristics interact
+                                        assertions across, for example, tasks, developer contexts, user                  with the use of AI to accelerate or slow down certain
+                                        groups, and more.                                                                developers and not others?
+
+                                           To date, very few estimates of the impact of AI-enhanced                   Providing a robust estimate for the impact of AI-enhanced
+                                        developer tools on time spent on task in an enterprise context             tools on development speed is critical to the long term adop-
+                                        have been published. One much-discussed study was a ran-                   tion and success of these tools across the industry. Continued
+                                        domized controlled trial by Peng et al. [12] (n = 95), which
+
+                                                                                                                1
+investment in, and adoption of, these tools is dependent not          and the user experience. Significant effort has also been in-
+only on how developers feel about them; it is critical to be able     vested in developing AI-enhanced software development tools
+to evaluate their business impact in terms of greater output or       for internal use, such as at Meta [8] and Google [9], [10],
+time gains for the organization. The second and third research        [11], tailored to their developers' workflows and proprietary
+questions unlock important new understandings around how to           codebases.
+design and develop AI-enhanced developer tools in a product
+and user-centric manner. When we understand our users, we                The increasing prevalence of AI-enhanced developer tools
+can better cater to their needs.                                      has spurred significant research into their benefits and draw-
+                                                                      backs across various contexts, including computer science
+   In this study, we ran a controlled trial with 96 Google            education, open source projects, and industry settings. Recent
+software engineers who were randomly assigned either to               work has explored the potential of these tools to assist students
+use (experimental condition) or not use (control group) three         and novice programmers [19], [20], [21], as well as program-
+AI-enhanced features for code (AI Code Completion, Smart              mers' perceptions of [22], [23], [24] and trust in [25], [26],
+Paste, and Natural Language to Code; see Section III for more         [27] AI tools.
+details) to complete an enterprise-grade task. We analyzed data
+using t-tests and linear regressions on time on task data to             A key question surrounding these tools in industry is
+evaluate the impact of AI on speed on task. We ascertained            their potential to enhance developer productivity, leading to
+the robustness of our estimate using multivariate regressions         improved software quality and reduced development effort and
+based on a theoretical framework [18].                                cost. While some studies have investigated the perceived use-
+                                                                      fulness of AI-enhanced developer tools (e.g., [14], [28], [29]),
+   Then, we answered our research questions by testing hy-            quantifying actual productivity or speed gains has proven more
+potheses we built based on the theoretical framework and the          challenging, due to difficulties in accessing and analyzing
+literature. For RQ1, we tested, "H1: Participants randomly            unbiased, real-world usage data. Moreover, understanding de-
+assigned to the AI condition will spend less time on task",           veloper productivity itself requires considering multiple factors
+and for RQ2, we tested "H2: Controlling for developer-level           beyond simple metrics such as lines of code, and existing
+and task-level factors, participants randomly assigned to the         research attempting to quantify developer productivity--even
+AI condition will still spend less time on task." Finally, for        outside the context of AI tools--highlights the complexities
+RQ3, we tested hypotheses 3-5, "There will be a negative              involved.
+and significant interaction effect between the experimental
+condition and average daily hours spent coding (H3), seniority           Despite these challenges, some studies have attempted to
+(H4), and the frequency with which developers use AI coding           measure the impact of AI tools on actual developer produc-
+tools (H5)".                                                          tivity. For instance, Ziegler et al. [14] analyzed telemetry
+                                                                      data to investigate the productivity benefit of GitHub Copilot,
+   Our study shows that developers who used AI were about             and reported over one-fifth of suggestions were accepted by
+21% faster than those who did not, controlling for other fac-         developers, which correlated with their perceived productivity.
+tors. We also found that more senior developers and developers        Similarly, two studies have documented increased throughput
+who code more hours per day were significantly faster on the          for AI in a controlled environment on information-gathering
+task than those who are more junior or code less, daily. Finally,     tasks [15] and in a large, pooled analysis of multiple field
+we found a large but not significant interaction effect between       experiments, and therefore in enterprise contexts [13]. The
+use of AI and average hours spent coding per day, suggesting          most relevant study here, however, is [12], which reports on a
+that developers who code more are faster when using AI than           randomized controlled experiment comparing developers with
+those who code less.                                                  and without access to GitHub Copilot, and finds a statistically
+                                                                      significant reduction in task completion time. However, the
+   These findings support continued use of and investment             latter study's reliance on GitHub Classroom and on partic-
+in AI-enhanced feature, and invite further research into the          ipants recruited from Upwork limits its generalizability to
+mechanisms that lead to differentiated speed gains for devel-         real-world, enterprise software development workflows. For
+opers who code less daily. They also encourage further product        instance, about 45% of their sample participants were self-
+development work to explore how we enable all developers to           employed, and about 5% unemployed; and about 50% earned
+benefit optimally from our AI-enhanced tools.                         less than $10,000 a year. Our work complements their estimate
+                                                                      by studying Google software engineers as they complete a task
+                         II. RELATED WORK                             in a development environment that they know well.
+
+   In recent years, driven by significant improvements in large          The "SPACE" framework [30]­encompassing Satisfaction,
+language models (LLMs), many developer tools have been                Performance, Activity, Communication, and Efficiency--­
+built upon or incorporated LLMs. GitHub Copilot [3] is one            provides a valuable lens for understanding developer produc-
+of the earliest LLM-powered developer tools, suggesting code          tivity holistically, beyond merely lines of code [31]. It em-
+in real time, based on context. Other examples include Alpha-         phasizes that productivity extends beyond individual metrics,
+Code [4] from DeepMind, CodeWhisperer [5] from Amazon,                encompassing multiple dimensions. Similarly, Murphy-Hill et
+Tabnine [6], and Cursor [7]. These tools primarily offer code         al. [32] highlights the diverse factors influencing developers'
+completion, editing, and generation, often with additional chat       self-perceived productivity. Acknowledging the multifaceted
+functionality or context integration to improve code quality
+
+                                                                   2
+nature of developer productivity, and the potential influence of     Fig. 1. AI Code Completion in Cider V. When a user starts typing code,
+AI tools on different aspects of productivity, our study focuses     the feature auto-completes the code block in light-grey font based on the
+on time on task, as encouraged by Herna´ndez-Lo´pez and              context provided. After typing the first line of a new function to be evaluated
+colleagues, who found it to be one of the dominant measures          at compile time, the user starts to type the return logic and the AI Code
+of productivity in the software engineering literature [33].         Completion makes a suggestion based on the entered parameters in light-grey
+We also investigate the moderating effects of both developer-        text. Pressing TAB accepts the suggestion.
+level and task-level characteristics on the relationship between
+use of AI and time on task, to minimize the likelihood that
+what we would attribute to AI would actually be the effect of
+unobserved characteristics. Our full theoretical framework can
+be found in Section IV-B.
+
+III. SOFTWARE DEVELOPMENT AT GOOGLE AND
+        FEATURES INCLUDED IN THE STUDY
+
+   Software development at Google happens in a monolithic            Fig. 2. Smart Paste feature in Cider V. When a user pastes code, Smart
+source-code repository (or "monorepo") called Piper [10].            Paste provides an automatic adjustment to the code, then shows the inline
+Google developers have access to multiple integrated devel-          diff highlights the removal of tryfromenv (strikethrough) and the insertion of
+opment environments (IDEs), including Cider V, a variant             flagfile (italic and lower opacity). The user can accept the adjustment using
+of the VS Code IDE by Microsoft [34]. To commit new                  the established TAB shortcut.
+code, developers patch changelists (or "CLs" for short), the
+equivalent of "pull requests" in the Git ecosystem, and of
+"diffs" at Meta. CLs can be "patched" to edit the code. Once
+the CL is patched, developers can read and edit code, and
+changes are tracked and documented as the CL is submitted
+for review (see [10] for more details).
+
+   The features we included in this study were all in production
+and thus available to all Googlers in Cider V at study time.
+These features were as follows:
+
+· AI Code Completion. This feature is a novel,                       Fig. 3. Natural language to code feature in Cider V. When users need help
+   transformer-based hybrid semantic AI code completion              to write code, they can move their cursor to where the code can be inserted,
+   that enables single- and multi-line code suggestions as           and trigger the feature so that a pop-up window hovers above the code, and
+   developers type, highlighting the recommendations in              they can enter their query. The prompt here is "implement also for days", and
+   light-grey text. Our version [35] resembles that built            the feature suggests the code that would match the prompt. The user can then
+   elsewhere in the industry [36]. See Figure 1 for a visual         review the suggestion and click a button to add the code to their file.
+   representation of the feature.
+                                                                                         IV. RESEARCH APPROACH
+· Smart Paste. This feature uses AI to enable context-
+   aware adjustment to code that is pasted from one area to             To answer our research questions, we designed a random-
+   another in the IDE [37]. It works in ways that are similar        ized controlled trial (RCT). RCTs are a type of scientific
+   to the well-known copy/paste shortcuts, and displays only         experiment designed to assess the effectiveness of a treatment
+   suggestions that are high-confidence using light-grey font        condition by exposing some participants to the treatment
+   for the recommendation, and crossing out the text that            (the "experimental condition") and some not (the "control
+   will be removed. The suggestion is accepted using the             group"). RCTs are often considered an empirical standard
+   "tab" key, and ignored otherwise. See Figure 2 for a              for establishing causal links between an intervention and its
+   visual overview of the feature.                                   associated effect, observed empirically, and provide unbiased
+                                                                     estimates [38].
+· Natural Language to Code. This feature leverages an
+   AI-assistant trained in Python, Java, Go, C++, TypeScript            Our randomized controlled trial was executed as follows
+   and JavaScript. To activate, developers move their cursor         (see Figure 4). In June and July 2024, full-time software
+   to (or select) the code area that they want to change.            engineers from across Google were recruited via email by
+   A natural-language to code prompting window enables               a team that was independent from the research team, and
+   connection to the model, which makes a suggestion for             were accepted into the study if they met the following basic
+   code fixes (see Figure 3 and [11] for more detail). They          criteria: they had been working at Google for at least one year,
+   can then review the suggestion and either choose to apply         they were proficient in C++, submitted code to Piper, used
+   or reject it.
+
+                                                                  3
+Fig. 4. Study design: Activities and randomization
+
+Cider V as their main IDE, and had some experience with the           pragmatic: the task also had to be feasible within the context
+task domain (see Section III above for details on the software        of this lab study.
+development workflow at Google). Once they were recruited,
+holds were placed on their calendars to book time for the study          The coding task required participants to start from a pre-
+tasks: a pre-task questionnaire (up to 30 min), an intervention       existing change list (CL) that contained ten files and 474 lines
+where all participants were trained on the tools included in the      of code, which participants had to edit based on instructions.1
+study (up to 30 min), completion of a standardized enterprise-        Instructions first described how to enable or disable AI features
+grade task (more below in Section IV-A), and a post-task              in the IDE, then shared the task goal: to first patch and then
+questionnaire (up to 30 min). Participants were randomly              edit the CL to implement a new service to log messages
+assigned to either the experimental or control group after they       from a fake product onto our proprietary internal file storage
+had completed both the pre-task questionnaire and the tool            infrastructure. Participants were given specific instructions for
+training. We elected to train all developers to use our AI-           both the server side and log format for messages. To complete
+enhanced coding tools to allow us to provide an additional            the task, participants had to update their build, data structure,
+incentive for participation in this extensive trial.                  and test files to align with the rest of their code and meet task
+                                                                      specifications, then build and test their code. The task was
+   The questionnaires were created after a review of                  considered "completed" when all tests passed.
+previously-published questions about experience and attitudes
+towards AI and were tested cognitively following the "think              The task was complex enough that it required a fair amount
+aloud" paradigm identified by Beatty and Willis [39]: we tested       of infrastructure knowledge, code search, code editing, code
+participants' understanding of the questions, ability to retrieve     writing from scratch, and refactoring of test plans, which
+the expected information and map their answers to the answer          parallels the typical workflow of developers who need to
+scale, as well as their comfort reporting an answer to the            add a data logging component to a new product feature in
+question. Participants were randomly assigned to either the           our enterprise context. Moreover, since developers were not
+AI or no-AI condition after they had completed the pre-task           familiar with the code that they had to patch and edit, and since
+questionnaire and reviewed the AI features. The coding task           they had varied levels of familiarity with the task domain (i.e.
+was identical for the AI and no-AI condition, except for the          the creation of product-specific data logging infrastructure at
+setup steps, which instructed participants to either enable or        Google), they needed to familiarize themselves with the code
+disable AI features in their IDE, respectively. As noted above,       and with Google standards for such infrastructure, using our
+these features were all in production and commonly available          internal tools.
+to all developers across the company before the task, but had
+varied usage rates.                                                      To ensure feasibility, this task was pre-tested with 8 software
+                                                                      engineers, half with and half without AI tools, and expected to
+                                                                      take between 30 minutes and 2.5 hours of development time.
+
+A. Coding task                                                        B. Theoretical framework, variables and hypotheses
+
+   The coding task was designed by a team of engineers in                Since RCTs do not eliminate the need to include control
+collaboration with the research team. We started with the task        variables in analyses [38], we created a theoretical frame-
+administered by Peng et al. [12], and brainstormed similar            work [18] that connects our dependent variable (time spent
+tasks that would be truly an "enterprise-grade" task. To meet         on task) with the intervention as well as developer- and task-
+this bar, we needed a task that (1) would accurately reflect          level factors. We created a theoretical framework describing
+the type of task that our internal Google developers do on            the predicted relationships among multiple components of the
+a regular basis and (2) would leverage the full range of our
+developer tools. These two criteria were met with a third, more          1Readers interested in obtaining a copy of the task instructions can reach
+                                                                      out to the authors.
+
+                                                                   4
+Fig. 5. Theoretical framework: Factors predicting time on task
+
+developer experience and their impact on time on task (see               H2: Controlling for developer-level and task-level fac-
+Figure 5). Theoretical frameworks are a "logically developed          tors, participants randomly assigned to the AI condition
+and connected set of concepts and premises . . . that a re-           will still spend less time on task than those assigned to
+searcher creates to scaffold a study" [18]. Our framework was         the control group. Covariates should not eliminate the main
+influenced by a recent systematic review of the different factors     effect of AI on time spent on task in the IDE, but could be
+that influence AI adoption [40] and the literature on developer       independent predictors.
+productivity [32]. Using these papers, our internal metrics
+framework, and a review of the literature on attitudes towards           3) Moderators at the developer level: At the developer
+AI (which included [41], [42], [43], [44], [45]), we generated        level, we expected three factors to influence time on task. First,
+a list of concepts that we then either instrumentalized through       we expected that the average number of hours a developer
+survey questions or telemetry measures. As noted above,               spends on coding activities, daily (var: AvgProgHrsDay),
+survey questions were then tested through two rounds of "think        would influence how quickly they complete the task, and
+aloud" cognitive testing [39].                                        we therefore used this variable as a control variable. We
+                                                                      implemented this self-reported variable as an ordinal variable
+   1) Dependent variable: Time spent on task: Our dependent           dichotomized into: 0 = zero to four hours on coding activities
+variable was defined as time spent on task. We measured this          or 1 = five or more hours spent coding daily. Importantly,
+as the time research participants spent in Cider V working in         current AI features rely on coding expertise to be maximally
+the study-specific workspace they created at the beginning of         helpful, since developers using them must still engage in
+the coding task, and on adjoining development surfaces related        coding, code editing, and code review [46]. Based on this,
+to coding tasks such as code search and use of debugging tools.       we generated the following hypothesis:
+The total time spent on task started when they created the
+study-specific workspace, and ended when their last interaction          H3: There will be a negative and significant interaction
+with the IDE was observed.                                            effect between the experimental condition and average
+                                                                      daily hours spent coding, such that those who spend more
+   2) Experimental condition: Use of AI: Participants were            time coding will be faster with AI tools than those who code
+randomly assigned to either the control or experimental group.        less.
+The control group was asked to complete the task without
+the help of AI features (identified by ExpCon = 0), while                Second, we expected that seniority at the company should
+those in the experimental group were asked to enable and              influence developer speed on task. In the context of software
+then use the three AI coding features available in the IDE            development, coding expertise accrues with level, but likely
+(identified by ExpCon = 1). Given the estimates of 56% speed          asymptotically, since with every level change there is an
+gain attributable to AI published by Peng et al. [12] and the         increase in meeting and supervision loads. We instrumen-
+26% increased throughput measured by Cui et al. [13], we              talized this variable using our internal data table with level
+generated the following hypothesis:                                   information. This variable (var: Level) ranges from 3 to 7,
+                                                                      where 3 is early career and 7 is a level just below the first
+   H1: Participants randomly assigned to the AI condition             executive level at Google. Seniority is a reflection of not only
+will spend less time on task (main effect) than those assigned        years of experience, but also of deliberate practice [47], as it
+to the control group. We expect our AI tools to decrease time         is only with deliberate practice that one reaches expert levels.
+on task, in line with published estimates [12], [13].                 We therefore used this variable as a control.
+
+   Given that the aforementioned estimates came from a ran-              Previous research about the interaction between the impact
+domized controlled trial and a field experiment, respectively,        of AI tools and seniority is mixed: some evidence suggests
+we expected that the effect attributable to AI to be robust when      that beginners might benefit more than more experienced
+controlling for other factors, and therefore for the following        developers [48], but other research suggests that professionals
+hypothesis to hold true:                                              might be faster than students when using an AI-enhanced
+
+                                                                   5
+tool for code understanding [15]. We therefore drafted the           C. Analytic approach
+following hypothesis:
+                                                                        We ran a two-tailed Student t-test ( = 0.05) on logged time
+   H4: There will be a negative and significant interaction          on task, comparing mean time for participants in the control
+effect between the experimental condition and seniority,             versus experimental groups.
+such that more senior people will be faster with AI than more
+junior people. We make this prediction based on the fact that           To explore the robustness of our estimate and test our
+in pure software engineering terms, developers who work at           theoretical model, we ran three follow up linear regressions:
+Google--a top-five tech company--can hardly be claimed to            one with the complete framework, i.e. with the experimental
+be novices at coding.                                                condition, developer-level factors, and task-level factors on
+                                                                     logged time on task; one with only the experimental condition
+   Thirdly, we expected that participants' previous experience       and developer-level factors; and one with only the experimen-
+with AI tools might enable them to work more quickly with            tal condition and task-level factors.
+our AI tools. While experience with AI tools in itself might
+not directly influence someone's speed on task overall, for             The full framework can be represented by the following
+both the control and experimental group, we predicted that           equation:
+a developer's previous experience with AI tools might give
+them a later advantage when using those tools, compared to             LogT oT = 1  ExpCon + 2  AvgP rogHrsDay
+less experienced developers.
+                                                                                   + 3  Level + 4  N brHighF reqAreas
+   We therefore proposed the following hypothesis, positing
+an interaction effect between experience with AI and speed                         + 5  T opLangCpp + 6  DataLogExp + 
+on task when using AI:
+                                                                        Given the logged dependent variable, the effect of a vari-
+   H5: There will be a negative and significant interac-             able n on time on task in percentages is represented by
+tion effect between the experimental condition and the               (1-exp(n))100. The impact of AI on time on task (our Ex-
+frequency with which developers use AI coding tools.                 pCon variable), expressed in percentages, is thus represented
+Developers who use AI tools more often will be faster with           by (1 - exp(1))  100. We did not use hierarchical linear
+the AI coding tools in the study than those who use them less        modeling given the absence of nesting between constructs in
+often, as they have learned to use them.                             our theoretical model.
+
+   We instrumentalized this construct as self-reported fre-             Finally, to explore interaction effects between experimental
+quency of AI coding tool use across 13 areas of the software         condition and developer-level factors, we ran three separate
+development lifecycle (var: NbrHighFreqAreas). The 13 areas          linear regressions with interaction effects, one for each covari-
+were: writing code, commenting on code, debugging, code              ate: average hours coded daily, level (seniority), and frequency
+explanation, learning a new code base, testing code, preparing       of use of AI tooling.
+change lists, reviewing code, deploying changes, monitoring
+changes, planning, writing documents, and collaborating with            To identify the best model, we used adjusted R2 values and
+others. We recoded each of the 13 areas into a binary variable,      model-level p values.
+where each area was coded as 0 if AI tools were reported as
+used once a week or less in that area, or as 1 if they were                                     V. LIMITATIONS
+reportedly used more than once a week. The NbrHighFreqAr-
+eas variable is a linear sum of these indicator variables, and          We are still very early in the evolution of genAI-based tools
+ranges from 0 to 13.                                                 for code, and therefore early in the evaluation of their impact.
+                                                                     Consequently, we might expect greater impact from these tools
+   4) Moderators at the task level: Among task-level factors,        over time as the quality and pervasiveness of LLMs and AI-
+we expected self-reported task language proficiency and self-        enhanced developer tools increase, and as developers increase
+reported familiarity with the task domain to be predictors of        their proficiency with them. Documenting the evolution of
+speed on task. We instrumentalized task language proficiency         their impact will therefore be critical, since a "true estimate"
+as self-reported use of C++ (the task language) as one of devel-     of the contribution of AI tools to developer speed will be a
+opers' top-three most-used languages (variable: TopLangCpp).         moving target. This study is therefore only the beginning of
+We used an indicator variable where 0 = not in top 3 languages       an answer to the impact of AI on developer workflows.
+and 1 = in top 3 languages. We instrumentalized domain
+expertise as self-reported expertise with the task domain (i.e.         While this study was adequately powered to test our main
+data logging infrastructure at Google) on a 4-point expertise        effect of the AI feature impact on developer speed, further
+scale where 0 = `Learner' and 3 = `Expert' in the task domain        analyses are needed with larger sample sizes to ascertain
+(variable: DataLogExp). We used both as control variables, but       interaction effects between use of AI tools and other factors
+posited no interaction effects between task-level factors and        that are known to be relevant to developer speed. A/B tests or
+use of AI.                                                           field experiments might be best suited to calculate such effects
+                                                                     with a much larger sample size.
+
+                                                                        There may be external validity constraints on our estimates
+                                                                     given how participants were all Google employees, a leading
+                                                                     global tech company. Findings may therefore not be directly
+                                                                     comparable to those obtained from studies with other devel-
+                                                                     oper populations, particularly for studies with developers who
+                                                                     do not code for a living.
+
+                                                                  6
+          Fig. 6. Distribution of time spent on study task (n = 96                     Fig. 7. Box and whisker plot of time spent on task by experimental condition.
+                                                                                       The dotted lines represent the first and fourth quartiles, the box represents the
+                                       TABLE I                                         interquartile range, and the vertical line in the middle represents the average
+MEANS, STANDARD DEVIATIONS, AND CORRELATIONS AMONG STUDY                               time on task for each group. Outliers are identified with circles.
+
+                                               VARIABLES
+
+Variable       Count M SD 1 2 3 4 5 6                                                                                       TABLE II
+                                                                                       MEANS, STANDARD DEVIATIONS, AND T-TESTS RESULTS FOR STUDY
+1. LogToT      96 4.46 0.69
+                                                                                                      COVARIATES, BY EXPERIMENTAL CONDITION
+
+2. ExpCon      96 0.50 0.50 -.21*                                                                     Control Experiment
+                                                                                                      M SD M SD Difference p-value
+3. AvgProgHrsDay 96 0.36 0.48 -.25* .17
+
+4. Level       96 4.38 0.89 -.14 -.02 -.21*
+
+5. NbrHighFreqAreas 96 3.30 2.73 -.06 .12 .13 .01                                      3. AvgProgHrsDay 0.28 0.45 0.44 0.50     -1.64  0.104
+                                                                                                                                0.23   0.819
+6. TopLangCpp  95 0.62 0.49 .03 .01 -.01 -.17 -.09                                     4. Level       4.40 0.87 4.35 0.91       -1.16  0.249
+                                                                                                                                -0.08  0.937
+7. DataLogExp  96 1.31 0.82 -.01 .10 .08 .07 .33** -.23*                               5. NbrHighFreqAreas 2.98 2.60 3.62 2.86  -0.99  0.325
+
+M and SD are used to represent mean and standard deviation, respectively.              6. TopLangCpp  0.62 0.49 0.63 0.49
+                                        * indicates p < .05. ** indicates p < .01.
+                                                                                       7. DataLogExp  1.23 0.88 1.40 0.77
+
+                                                                                       M and SD are used to represent mean and standard deviation, respectively.
+                                                                                           T-tests values (Difference) were not statistically significant (all p > .1)
+
+   We have attempted to eliminate most sources of bias with                            with a mean of 104.4 minutes (Standard Error (or SE) of the
+our randomization process. We cannot, however, fully elim-                             mean = 60.3). 93 participants (96.9%) who started the task
+inate the risk associated with us evaluating our own team's                            also completed it. Figure 6 shows the overall distribution of
+developer tools. Given the fact that our tools are not available                       time spent on task.
+to external developers, however, it was impossible to run the
+study with developers outside of Google, and also difficult to                         A. Pre-analysis sample examination
+delegate this work to an outside vendor because of constraints
+associated with Google's intellectual property.                                           Before running the two-tailed student t-test and the linear
+                                                                                       regressions to test our hypotheses, we first examined whether
+   We strove to make the study environment approximate                                 there exists substantial biases within the data.
+developers' everyday work environment, and created an
+enterprise-grade task that aligns closely with what software                              First, we used descriptive statistics to examine the charac-
+developers at Google do on the daily. However, experiments                             teristics of the sample and the distribution of key variables, as
+like the one we conducted cannot perfectly match the complex-                          well as correlations among study variables (see Table I). Our
+ity of developers' real-world work, which often has no obvious                         dependent variable was significantly and negatively correlated
+nor definitive solution. Similarly, the feasibility constraint on                      with our experimental condition, and developers' average
+our task--which was designed to require no more than 3                                 number of hours spent on programming tasks, daily. As ex-
+hours of work--also limits the potential generalizability of                           pected, a negative and significant correlation existed between
+our findings to the broader company or ecosystem levels.                               a person's level and average hours spent coding per day, as
+                                                                                       well as between C++ expertise (TopLangCpp) and expertise
+                             VI. RESULTS                                               with data logging infrastructure at Google (DataLogExp). A
+                                                                                       positive and significant correlation was found between exper-
+   A total of 96 participants worked on the task. Of these,                            tise with data logging infrastructure at Google (DataLogExp)
+48 were assigned to each condition. Time spent on coding
+activities related to the study ranged from 4.4 to 271.1 minutes,
+
+                                                                                    7
+and the number of areas where developers use AI in their                                                       TABLE III
+workflows (NbrHighFreqAreas).                                              SUMMARIES OF REGRESSIONS USING LOGTOT AS THE DEPENDENT
+                                                                          VARIABLE, N = 96. UNSTANDARDIZED ESTIMATES PROVIDED, ALONG
+   We also conducted Welch two-sample t-tests (see Table II
+for details) for all study covariates by experimental condition.                WITH STANDARD ERROR OF THE MEAN (IN PARENTHESES).
+As expected given the random assignment of participants to
+experimental conditions, we found no statistically significant                              Complete Dev     T ask   I nteraction
+differences between control and experimental groups on our                                     (1) (2)          (3)     (4)
+covariates (p values ranged from .10 to .94).                                                                             4.66
+                                                                          Constant           5.36 5.41 4.55              (0.11)
+B. RQ1: Impact of AI tools on developer task speed                                          (0.42) (0.37) (0.19)        -0.14
+                                                                                                                         (0.17)
+   Figure 7 shows the time distribution by experimental con-              ExpCon            -0.25. -0.24. -0.30         -0.16
+dition in a box and whisker plot. On average, developers who                                 (0.14) (0.14) (0.14)        (0.22)
+were exposed to AI features completed the task in 96 min
+(N = 47, SE = 9.3), compared to 114 min (N = 46, SE =                     AvgProgHrsDay     -0.38 -0.38                 -0.29
+8.1) for developers in the no-AI condition. We conducted                                     (0.15) (0.15)               (0.29)
+a Student's t-test on log time on task to assess the main
+effect impact of the experimental condition assignment (AI                Level             -0.16. -0.16
+vs no-AI exposure). Results of this analysis indicated that                                  (0.08) (0.08)
+developers who were in the AI exposure condition (Mean
+LogT oT = 4.6) were significantly faster at completing the                NbrHighFreqAreas  -0.01     0.00
+task (t(83.6) = 2.11, p = .038), compared to those who were                                  (0.03)  (0.03)
+in the no-AI exposure condition (Mean LogT oT = 4.3).
+                                                                          TopLangCpp         0.02             0.06
+      Hypothesis 1: Supported                                                               (0.15)           (0.15)
+
+    Using AI was associated with a shorter time on task                   DataLogExp         0.05             0.02
+    (p < 0.05).                                                                             (0.09)           (0.09)
+
+C. RQ2: Impact of covariates on main effect                               EC:APHD
+
+   Table III summarizes the regression findings. When con-                Adj. R2           0.078    0.095   0.017   0.075
+trolling for other factors in our theoretical framework, we find          p value           0.040    0.011   0.209   0.018
+that estimates for the impact of the experimental condition
+on logged time on task range between -0.30 to -0.24 (1 for                                                  .: p <.1 *: p <.05. **: p <.01. ***: p <0.001
+ExpCon for Models 1-3 in Table III), suggesting a relatively               Note: Estimates are for our logged dependent variable. The effect of each
+consistent and negative downward pressure on time on task.                covariate on time on task can be calculated by exponentiating the estimate.
+Controlling for the developer- and task-level factors described
+in our theoretical framework (see Section IV-B), we found that            example) being associated with a 15% ( = -0.16) decrease
+this main effect was robust to covariates, making developers              in time spent on task.
+between 21% and 26% faster.2 However, our confidence inter-
+vals are large, and as a result the estimate is not statistically            Other covariates were not significantly associated with time
+significant at the p < 0.05 level (estimate of experimental               spent on task. As seen in Table III, the best fit model was
+condition on best-fit Model 2, 1 = -0.24; 95%CI =                         Model 2 with developer-level factors only, as evidenced by
+[-0.51, 0.03], p = 0.086, NS). Our second hypothesis is                   higher adjusted R2 and lower p-value. While the total variance
+therefore only partially supported.                                       accounted for by Model 2 was low, the model was statistically
+                                                                          significant (p = 0.011), suggesting an adequate fit to our data.
+   Controlling for experimental condition and other model co-
+variates, average programming hours per day was significantly                   Hypothesis 2: Partially Supported
+associated with time spent on task, with participants reporting
+five or more hours of development work per day being 32%                      Controlling for other factors, using AI remained as-
+( = -0.38) faster than participants reporting zero to four                    sociated with a shorter time on task but lost its
+hours of development work per day. Similarly, higher levels                   significance (p = NS).
+of seniority were also associated with a decrease in time on
+task, with one increased level (from 4 to 5, or 5 to 6, for               D. RQ3: Interaction effects between experimental condition
+                                                                          and other factors
+   2From Model 2, where 1 = -0.24, and therefore the effect of AI =
+(1 - exp(1))  100 = 21% (with 95% CI = [-0.51, 0.03]). Similarly, 26%        Finally, we tested interaction effects between the experimen-
+from Model 3, where 1 = -0.30.                                            tal condition and developer-level factors to identify meaningful
+                                                                          patterns whereby some developers with specific characteristics
+                                                                          might be differently impacted by the use of AI features. Hy-
+                                                                          pothesis 3 predicted an interaction effect between experimental
+                                                                          condition and average hours of programming per day. While
+                                                                          none of the covariates were significant, the model itself was
+                                                                          significant (see Table 3, Model 4; p = 0.018), and the effect
+                                                                          size of the coefficient on the interaction term was large and
+                                                                          negative ( = -0.29). These data tentatively suggest that
+                                                                          those who spend five or more hours on development tasks
+
+                                                                       8
+per day might benefit more from AI than those who spend               is no surprise, then, that our estimate is closer to that offered
+less time programming, daily.                                         by [13], which focused on enterprise users.
+
+      Hypothesis 3: Partially supported                                  When it comes to the impact of the time participants spend
+                                                                      on coding tasks daily on their speed on our task, our data
+    Interaction effect was large and negative but not sta-            suggest that developers who code more hours per day may
+    tistically significant, and model fit for Model 4 was             be faster with AI tools than those who code less. While our
+    significant (Adjusted R2 = 0.075; p = 0.018).                     interaction effect was not significant ( = -0.29), the effect
+                                                                      size was large, negative, and the model itself was significant
+   The interaction between experimental condition and se-             (p = 0.018). This might be because our current AI tools
+niority was not statistically significant (model not shown;           require that developers spend a lot of time verifying and
+p = 0.706), but it was negative, suggesting that participants in      editing code generated by AI, which may confer an advantage
+our sample with increased levels of seniority were faster with        to developers who spend more time working with code.
+AI than those with lower levels of seniority. Similarly, the
+interaction effect between experimental condition and higher             Importantly for the future of AI-enhanced developer tools as
+frequency of usage of AI tools was negative but not statistically     products serving very diverse subsets of developers, our data
+significant (model not shown; p = 0.235). These results reject        suggest that more senior developers, as defined by their level,
+both Hypotheses 4 and 5.                                              may work even faster with our AI tools. This is in contrast
+                                                                      with some findings in the literature, which suggest that more
+      Hypothesis 4 and 5: Rejected                                    junior developers stand to benefit more from AI [48], but
+                                                                      aligns with other work by Nam and colleagues, who found
+    Interaction effects between the use of AI features and            that coding experience might amplify the value gained from
+    the seniority or the frequency with which developers              AI [15]. We believe that this may be because AI is not yet able
+    use AI coding tools were both negative but not statis-            to close a skill gap when applied to complex tasks such as the
+    tically significant.                                              one on which we tested our participants. To bridge skill gaps,
+                                                                      more research and development work will be needed--along
+             VII. DISCUSSION AND IMPLICATIONS                         the lines of personalization, perhaps--to make more junior
+                                                                      developers even faster with AI.
+   In this study, we aimed to quantify the impact of using AI
+coding features on the time developers take to complete an               While the exact mechanisms connecting hours spent coding
+enterprise-grade, standardized task.                                  and seniority with increased task velocity with AI tools are
+                                                                      still unclear, approaches like the one proposed by Mozannar
+   Our analyses found that developers who used AI features            and colleagues [46] are likely to be a viable path forward
+were statistically significantly faster than those who did not.       in identifying what is truly going on at the intersection of
+This suggests that the AI-enhanced features included in the           expertise and speed with AI. Indeed, the code generated by
+study (see Section III) do indeed make developers faster, and         our AI features in such a context is still complex; users
+thus supports our first hypothesis (t(83.6) = 2.11, p = .038).        might therefore still need to understand highly-nuanced, large-
+                                                                      scale systems to be effective while using these features. More
+   When controlling for other factors in our theoretical frame-       detailed, logs-based analyses might circumvent the issues we
+work, we obtained a similar effect size for AI, but the effect        faced with statistical significance within our trial data.
+did not meet the p < .05 significance threshold. At this stage,
+we estimate a roughly 21% increase in development speed                  We found no statistically significant evidence that more
+attributable to AI, controlling for other important predictors        frequent use of AI coding tools in participants' software
+(i.e. the effect attributable to AI in our best-fit model, Model      development workflow increased their speed when using AI
+2). This estimate is significantly smaller than the 56% estimate      during our task. This might be attributable to one of four
+shared by Peng and colleagues about GitHub Copilot [12], but          reasons, beyond inadequate statistical power to detect such
+aligns with the 26% productivity increase attributed to Copilot       a difference with the variance on our outcome variable. First,
+by Cui and colleagues [13].                                           our tools might have a ceiling effect and might not enable an
+                                                                      "expert" mode that would support greater velocity for those
+   The difference between our estimate of developer speed             who have reached that expert level, compared to newcomers.
+gained through AI and that published in [12] is likely at-            Second, our tools might have a low usability floor: benefits
+tributable to two main factors. There may be important dif-           might accrue very quickly if there is not a high bar to entry.
+ferences between our suite of AI-enhanced tools and those             Third, our tools might not be cohesive enough to support
+used by GitHub Copilot. More likely, however, the difference          knowledge transfer from one set of tools to another across
+is caused by differences in the underlying populations we             the development workflow. Finally, while some of our features
+recruited from. Indeed, Peng et al. [12] recruited from Upwork        such as Smart Paste and AI Code Completion will be familiar
+(a freelancing platform), while we only sampled full-time             to developers, others require a steeper learning curve: Natural
+Googlers. Their sample is therefore likely much more diverse          Language to Code in particular requires familiarity with LLMs
+than ours when it comes to coding experience and expertise. It        and prompting, skills which might not be universal at this
+                                                                      time, despite the training we offered participants ahead of
+
+                                                                   9
+task completion (see also [31]). Here again we find product             history of AI-enhanced developer tools and since questions
+implications: while we should celebrate the low floor to                about return on investment in AI and comparison across
+usability of some of our tools, we can likely do better with both       developer suites will continue to arise, it is critical for the
+giving access to the more complex features for newcomers,               field to keep researching and publishing these estimates and
+and with giving access to more advanced features or "expert             pull the field forward.
+modes" to those who want to go even faster.
+                                                                                            IX. ACKNOWLEDGEMENTS
+   There may also be profound educational implications to
+these technologies and our findings, in particular: How might              The authors wish to acknowledge the contributions of the
+we up-level those who do not yet have the knowledge and                 following people: Don Eriko Anselmo, Paige Bailey, Rico
+skills to leverage AI successfully, especially with our more            Cruz, Sarah D'Angelo, Tao Dong, Madhura Dudhgaonkar,
+complex tools? How might we safeguard against deskilling,               Brett Durrett, Mona El Mahdy, Mike Giardina, Shivani Govil,
+and ensure that our developers retain the critical skills--             Matthew Hughes, Joshua Katz, Min Kim, Angelo Luo, Dan
+critical thinking, systems knowledge, coding knowledge--that            Mcclary, Ryan McGarry, Cody Miller, Kristof Molnar, Ambar
+they need to be successful as developers over the course of             Murilo, Nicole Ortiz, Sara Ortloff, Mauli Pandey, Robin
+their careers? And how might we convince the most resistant             Savinar, Johann Scheidt, Niranjan Tulpule, and all study
+and least trusting [27] among our workforce to embrace this             participants.
+technology, so that they are not left behind and can also benefit
+from AI? These concerns over knowledge, equity, and quality
+might be particularly important at Google scale, in enterprise
+contexts, and for highly complex tasks, where the full power
+of AI might be manifested.
+
+   Finally, the insignificance of task-level factors as predictors
+of task speed is worth further exploration. It is unclear why
+expertise with the task domain and coding language were not
+significant predictors of time spent on task. Our sample might
+have been too homogeneous to detect such effects. Further
+research here might also be needed.
+
+                         VIII. CONCLUSION
+
+   While our team is bullish on the speed gains that will be
+realized by AI-enhanced coding tools, questions of equity are
+not settled by our study, and questions about the impact of AI
+on code quality were not explored. Much more research and
+development is required to explore and potentially remedy the
+differentiated impact that AI-enhanced tools might have on
+people of diverse seniority levels. While our study hinted to
+the positive impact of AI tools on more senior developers,
+other research has found contradictory effects [15], [48]. The
+future might see the targeting of different tools to different
+types of developers, or learn directly from developers what is
+optimal for their own specific needs and developmental stages,
+and provide personalized experiences.
+
+   Importantly, there is a growing literature suggesting that
+while coding assistants might be increasing the total number
+of code contributions [13], [49], AI might be lowering code
+quality at the ecosystem level [50], might increase code
+churn [17], and might not have reached a quality bar--either
+on the model or UI side--that improves task completion
+rates [16], [51]. Careful research and development work that
+balances the sometimes-contradictory incentives to move fast
+and guarantee high-quality code will ensure the long-term
+success of AI in the developer space, especially if such work
+focuses on where developers might optimally trust AI and
+therefore want to delegate more work [22], [52].
+
+   Finally: since this research provides only one data point,
+gleaned from one lab study and at a very specific point in the
+
+                                                                    10
+                             REFERENCES                                                [23] J. T. Liang, C. Yang, and B. A. Myers, "A large-scale survey on
+                                                                                             the usability of ai programming assistants: Successes and challenges,"
+ [1] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N.                        in Proceedings of the IEEE/ACM 46th International Conference on
+      Gomez, L. Kaiser, and I. Polosukhin, "Attention is all you need," 2023.                Software Engineering, 2024.
+      [Online]. Available: https://arxiv.org/abs/1706.03762
+                                                                                       [24] S. Chatterjee, C. L. Liu, G. Rowland, and T. Hogarth, "The impact of
+ [2] C. Thorbecke, "A year after ChatGPT's release, the AI                                   ai tool on engineering at anz bank an emperical study on github copilot
+      revolution is just beginning," https://www.cnn.com/2023/11/30/                         within coporate environment," arXiv preprint arXiv:2402.05636, 2024.
+      tech/chatgpt-openai-revolution-one-year/index.html, 2023, accessed:
+      2024-06-24.                                                                      [25] M. Amoozadeh, D. Daniels, S. Chen, D. Nam, A. Kumar, M. Hilton,
+                                                                                             M. A. Alipour, and S. S. Ragavan, "Towards characterizing trust in
+ [3] "Copilot," https://github.com/features/copilot, accessed: 2024-10-07.                   generative artificial intelligence among students," in Proceedings of the
+ [4] "Alphacode," https://alphacode.deepmind.com/, accessed: 2024-10-07.                     2023 ACM Conference on International Computing Education Research
+ [5] "Codewhisperer," https://docs.aws.amazon.com/codewhisperer/latest/                      - Volume 2, 2023, p. 3­4.
+
+      userguide/what-is-cwspr.html, accessed: 2024-10-07.                              [26] R. Wang, R. Cheng, D. Ford, and T. Zimmermann, "Investigating and
+ [6] "Tabnine," https://www.tabnine.com/, accessed: 2024-10-07.                              designing for trust in ai-powered code generation tools," in Proceedings
+ [7] "Cursor," https://www.cursor.com/, accessed: 2024-10-07.                                of the 2024 ACM Conference on Fairness, Accountability, and Trans-
+ [8] J. Bader, S. S. Kim, F. S. Luan, S. Chandra, and E. Meijer, "Ai in                      parency, 2024, p. 1475­1493.
+
+      software engineering at facebook," IEEE Software, vol. 38, no. 4, pp.            [27] A. Brown, S. D'Angelo, A. Murillo, C. Jaspan, and C. Green, "Identify-
+      52­61, 2021.                                                                           ing the factors that influence trust in ai code completion," in Proceedings
+ [9] S. Garg, R. Z. Moghaddam, C. B. Clement, N. Sundaresan, and C. Wu,                      of the 1st ACM International Conference on AI-Powered Software, 2024,
+      "Deepdev-perf: a deep learning-based approach for improving software                   pp. 1­9.
+      performance," in Proceedings of the 30th ACM Joint European Software
+      Engineering Conference and Symposium on the Foundations of Software              [28] C. Bird, D. Ford, T. Zimmermann, N. Forsgren, E. Kalliamvakou,
+      Engineering, 2022, p. 948­958.                                                         T. Lowdermilk, and I. Gazit, "Taking flight with copilot," Commun.
+[10] A. Froemmgen, J. Austin, P. Choy, N. Ghelani, L. Kharatyan, G. Surita,                  ACM, vol. 66, no. 6, p. 56­62, May 2023.
+      E. Khrapko, P. Lamblin, P.-A. Manzagol, M. Revaj, M. Tabachnyk,
+      D. Tarlow, K. Villela, D. Zheng, S. Chandra, and P. Maniatis, "Resolving         [29] A. Murillo, A. Macvean, I. Chu, Q. Madison, and S. D'Angelo, ""if it's
+      code review comments with machine learning," in Proceedings of                         what i wanted that's great, but if it's not, i just wasted time": Unpacking
+      the 46th International Conference on Software Engineering: Software                    the perceived costs/benefits of ml enhanced developer tooling." in Proc.
+      Engineering in Practice, 2024, p. 204­215.                                             Deep Learning 4 Code Workshop, 2023, pp. 1­9.
+[11] S. Chandra and M. Tabachnyk, "AI in software engineering at
+      google: Progress and the path ahead," https://research.google/blog/              [30] N. Forsgren, M.-A. Storey, C. Maddila, T. Zimmermann, B. Houck, and
+      ai-in-software-engineering-at-google-progress-and-the-path-ahead/,                     J. Butler, "The space of developer productivity: There's more to it than
+      Google, 2024, accessed: 2024-07-10.                                                    you think." Queue, vol. 19, no. 1, p. 20­48, mar 2021.
+[12] S. Peng, E. Kalliamvakou, P. Cihon, and M. Demirer, "The impact of ai
+      on developer productivity: Evidence from github copilot," arXiv preprint         [31] T. Weber, M. Brandmaier, A. Schmidt, and S. Mayer, "Significant
+      arXiv:2302.06590, 2023.                                                                productivity gains through programming with large language models,"
+[13] Z. K. Cui, M. Demirer, S. Jaffe, L. Musolff, S. Peng, and T. Salz, "The                 Proceedings of the ACM on Human-Computer Interaction, vol. 8, no.
+      effects of generative ai on high skilled work: Evidence from three field               EICS, pp. 1­29, 2024.
+      experiments with software developers," Available at SSRN, 2024.
+[14] A. Ziegler, E. Kalliamvakou, X. A. Li, A. Rice, D. Rifkin, S. Simister,           [32] E. Murphy-Hill, C. Jaspan, C. Sadowski, D. Shepherd, M. Phillips,
+      G. Sittampalam, and E. Aftandilian, "Productivity assessment of neural                 C. Winter, A. Knight, E. Smith, and M. Jorde, "What predicts software
+      code completion," in Proceedings of the 6th ACM SIGPLAN Interna-                       developers' productivity?" IEEE Transactions on Software Engineering,
+      tional Symposium on Machine Programming, 2022, pp. 21­29.                              vol. 47, no. 3, pp. 582­594, 2019.
+[15] D. Nam, A. Macvean, V. Hellendoorn, B. Vasilescu, and B. Myers,
+      "Using an llm to help with code understanding," in Proceedings of                [33] A. Herna´ndez-Lo´pez, R. Colomo-Palacios, and A´ . Garc´ia-Crespo, "Soft-
+      the IEEE/ACM 46th International Conference on Software Engineering,                    ware engineering job productivity--a systematic review," International
+      2024.                                                                                  Journal of Software Engineering and Knowledge Engineering, vol. 23,
+[16] P. Vaithilingam, T. Zhang, and E. L. Glassman, "Expectation vs. experi-                 no. 03, pp. 387­406, 2013.
+      ence: Evaluating the usability of code generation tools powered by large
+      language models," in Extended Abstracts of the 2022 CHI Conference               [34] V. S. Code, "Visual studio code," https://code.visualstudio.com/, ac-
+      on Human Factors in Computing Systems, 2022.                                           cessed: 2024-10-03.
+[17] S. Imai, "Is github copilot a substitute for human pair-programming?
+      an empirical study," in 2022 IEEE/ACM 44th International Conference              [35] M. Tabachnyk, "Ml-enhanced code completion im-
+      on Software Engineering: Companion Proceedings (ICSE-Companion),                       proves developer productivity," https://research.google/blog/
+      2022, pp. 319­321.                                                                     ml-enhanced-code-completion-improves-developer-productivity/,
+[18] L. Varpio, E. Paradis, S. Uijtdehaage, and M. Young, "The distinctions                  2024, accessed: 2024-10-03.
+      between theory, theoretical framework, and conceptual framework,"
+      Academic medicine, vol. 95, no. 7, pp. 989­994, 2020.                            [36] O. Dunay, D. Cheng, A. Tait, P. Thakkar, P. C. Rigby, A. Chiu, I. Ahmad,
+[19] J. Prather, B. N. Reeves, P. Denny, B. A. Becker, J. Leinonen, A. Luxton-               A. Ganesan, C. Maddila, V. Murali et al., "Multi-line ai-assisted code
+      Reilly, G. Powell, J. Finnie-Ansley, and E. A. Santos, ""it's weird that it            authoring," in Companion Proceedings of the 32nd ACM International
+      knows what i want": Usability and interactions with copilot for novice                 Conference on the Foundations of Software Engineering, 2024, pp. 150­
+      programmers," ACM Trans. Comput.-Hum. Interact., vol. 31, no. 1, Nov.                  160.
+      2023.
+[20] S. Nguyen, H. M. Babe, Y. Zi, A. Guha, C. J. Anderson, and M. Q.                  [37] S. Forte, "Smart paste for context-aware adjust-
+      Feldman, "How beginning programmers and code llms (mis)read each                       ments to pasted code," https://research.google/blog/
+      other," in Proceedings of the 2024 CHI Conference on Human Factors                     smart-paste-for-context-aware-adjustments-to-pasted-code/, 2024,
+      in Computing Systems, 2024.                                                            accessed: 2024-10-03.
+[21] M. Kazemitabaar, J. Chow, C. K. T. Ma, B. J. Ericson, D. Weintrop, and
+      T. Grossman, "Studying the effect of ai code generators on supporting            [38] A. Deaton and N. Cartwright, "Understanding and misunderstanding
+      novice learners in introductory programming," in Proceedings of the                    randomized controlled trials," Social Science & Medicine, vol. 210, pp.
+      2023 CHI Conference on Human Factors in Computing Systems, 2023,                       2­21, 2018, randomized Controlled Trials and Evidence-based Policy:
+      pp. 1­23.                                                                              A Multidisciplinary Dialogue.
+[22] S. D'Angelo, A. Murillo, S. Chandra, and A. Macvean, "What do
+      developers want from ai?" IEEE Software, vol. 41, no. 3, pp. 11­15,              [39] P. C. Beatty and G. B. Willis, "Research synthesis: The practice of
+      2024.                                                                                  cognitive interviewing," Public Opinion Quarterly, vol. 71, no. 2, pp.
+                                                                                             287­311, 05 2007.
+
+                                                                                       [40] S. Kelly, S.-A. Kaye, and O. Oviedo-Trespalacios, "What factors con-
+                                                                                             tribute to the acceptance of artificial intelligence? a systematic review,"
+                                                                                             Telematics and Informatics, vol. 77, p. 101925, 2023.
+
+                                                                                       [41] J. Bergdahl, R. Latikka, M. Celuch, I. Savolainen, E. Soares Mantere,
+                                                                                             N. Savela, and A. Oksanen, "Self-determination and attitudes toward
+                                                                                             artificial intelligence: Cross-national and longitudinal perspectives,"
+                                                                                             Telematics and Informatics, vol. 82, p. 102013, 2023.
+
+                                                                                       [42] CoderPad, "Coderpad state of tech hiring," https://coderpad.io/
+                                                                                             survey-reports/coderpad-and-codingame-state-of-tech-hiring-2024/,
+                                                                                             2024, accessed: 2024-07-10.
+
+                                                                                   11
+[43] J. T. I. Lab, "Jetbrains the state of developer ecosystem 2023," https:         [48] B. G. Edelman, J. Bono, S. Peng, R. Rodriguez, and S. Ho, "Random-
+      //www.jetbrains.com/lp/devecosystem-2023/, JetBrains, 2023, accessed:                ized controlled trial for microsoft security copilot," Available at SSRN
+      2024-07-10.                                                                          4648700, 2023.
+
+[44] L.-M. Neudert, A. Knuutila, and P. N. Howard, "Global attitudes towards         [49] D. Yeverechyahu, R. Mayya, and G. Oestreicher-Singer, "The impact of
+      ai, machine learning & automated decision making­implications for                    large language models on open-source innovation: Evidence from github
+      involving artificial intelligence in public service and good governance,"            copilot," arXiv preprint arXiv:2409.08379, 2024.
+      https://perma.cc/6PB6-X56B, 2023, accessed: 2024-07-10.
+                                                                                     [50] W. Harding and M. Kloster, "Coding on copilot: 2023 data suggests
+[45] A. Schepman and P. Rodway, "Initial validation of the general attitudes               downward pressure on code quality," https://www.gitclear.com/coding
+      towards artificial intelligence scale," Computers in Human Behavior                  on copilot data shows ais downward pressure on code quality/,
+      Reports, vol. 1, p. 100014, 2020.                                                    2024, accessed: 2024-07-10.
+
+[46] H. Mozannar, G. Bansal, A. Fourney, and E. Horvitz, "Reading between            [51] B. Zhang, P. Liang, X. Zhou, A. Ahmad, and M. Waseem, "Practices and
+      the lines: Modeling user behavior and costs in ai-assisted programming,"             challenges of using github copilot: An empirical study," in Proceedings
+      in Proceedings of the 2024 CHI Conference on Human Factors in                        of the 35th International Conference on Software Engineering and
+      Computing Systems, New York, NY, USA, 2024.                                          Knowledge Engineering, vol. 2023, jul 2023, p. 124­129.
+
+[47] K. A. Ericsson, R. T. Krampe, and C. Tesch-Ro¨mer, "The role of delib-          [52] A. Sergeyuk, Y. Golubev, T. Bryksin, and I. Ahmed, "Using ai-based
+      erate practice in the acquisition of expert performance." Psychological              coding assistants in practice: State of affairs, perceptions, and ways
+      review, vol. 100, no. 3, p. 363, 1993.                                               forward," arXiv preprint arXiv:2406.07765, 2024.
+
+                                                                                 12
+

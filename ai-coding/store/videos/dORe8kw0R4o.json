@@ -1,0 +1,97 @@
+{
+  "id": "dORe8kw0R4o",
+  "title": "Enterprise Vibe Coding: Building Secure, AI-Powered Apps in 30 Minutes - Parth Sharma",
+  "channel": "Developer Summit",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCBSbj0R1_Aof1i5pZqTVzFA",
+  "durationSec": 1653,
+  "thumbnail": "https://i.ytimg.com/vi_webp/dORe8kw0R4o/sddefault.webp",
+  "summary": "OutSystems vendor talk: low-code 'agentic systems engineering' with a context graph, claiming secure apps by default.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/app-generation-governed-low-code-platform",
+      "stance": "asserts",
+      "quote": "is going to be 100% secure, 100% working 100% of the times",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "Platform guardrails can remove classes of bugs (e.g. SQL injection), but no generator makes apps '100% secure'; logic flaws, access-control mistakes and misconfiguration remain.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/enterprise-grade-applications-can-idea-production",
+      "stance": "asserts",
+      "quote": "How do you go from an idea to production in less than 30 minutes?",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "A demo CRUD app can be generated in minutes, but enterprise production also needs requirements, integration, security review and operations; no evidence supports sub-hour delivery as normal.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/extra-code-volume-produces-increases-complexity",
+      "stance": "asserts",
+      "quote": "teams are shipping code faster than you can actually keep track of",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear and DORA 2025 data show more churn and duplication and lower delivery stability as AI adoption rises; more code means more to maintain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Smells make up 89% of AI-introduced issues and pass review easily. The paper argues AI's higher speed and volume let these accumulate into a substantial maintenance burden.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L900-L912",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-agents-organizational-context-tickets-discussions",
+      "stance": "asserts",
+      "quote": "Context gap ... full context of your portfolio",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Relevant org context plausibly cuts rework, but the cited 50% token / one-shot result is a single vendor test, not independent evidence.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "Mentor is first going to actually give you a blueprint that you can iterate on",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "id": "wUrIjKbktCk",
+  "title": "Beyond the Hype: Real Talk on AI-Assisted Development • Jessica Kerr & Diana Montalion • GOTO 2025",
+  "channel": "GOTO Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCs_tLP3AiwYKwdUHpltJPuA",
+  "durationSec": 2248,
+  "thumbnail": "https://i.ytimg.com/vi_webp/wUrIjKbktCk/sddefault.webp",
+  "summary": "Jessica Kerr and Diana Montalion on using AI for typing, scaffolding and test scripts while keeping the thinking human and watching for hidden failures.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/coding-agents-tend-write-silent-fallbacks",
+      "stance": "asserts",
+      "quote": "It's so good at hiding its own failures and the failures that happen at runtime.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Practitioners widely report agents adding defensive fallbacks and swallowed errors to make code run, but there is little systematic measurement of how often this happens.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-sometimes-game-tests-deleting",
+      "stance": "asserts",
+      "quote": "passing tests or deleting tests if you let it get away with that, making everything look green",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Reward hacking on tests (special-casing, weakening or deleting tests) is documented by labs and in agent evaluations, though frequency varies by model and setup.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "My entire career I've wanted to back out of writing tests. I can have all the tests now!",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI speeds drafting tests and docs, but generated tests often assert implementation details or weak properties and need review.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/updating-agent-rules-workflows-after-each",
+      "stance": "asserts",
+      "quote": "I either need to change my prompts or more often change my instructions.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Encoding lessons in rules and workflows does reduce repeat mistakes, but rule files bloat and conflict if not pruned; gains are real but not automatically compounding.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/more-generated-code-makes-production-observability",
+      "stance": "asserts",
+      "quote": "I think observability is more important because there's just more code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "DORA's finding that AI adoption raises instability supports better detection, but no study directly measures observability's value for AI code.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "It's also great at HTML and CSS because it can run Playwright.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

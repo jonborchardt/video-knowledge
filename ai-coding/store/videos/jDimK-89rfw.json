@@ -1,0 +1,103 @@
+{
+  "id": "jDimK-89rfw",
+  "title": "vulnerability research just got easier (scarier?)",
+  "channel": "Low Level",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UC6biysICWOJ-C3P4Tyeggzg",
+  "durationSec": 1850,
+  "thumbnail": "https://i.ytimg.com/vi_webp/jDimK-89rfw/sddefault.webp",
+  "summary": "A security engineer walks through how OpenAI's o3 found a Linux kernel SMB use-after-free zero-day, stressing its high false-positive rate and how much context size matters.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/frontier-models-now-highly-effective-finding",
+      "stance": "asserts",
+      "quote": "the chance of getting correct results is sufficiently high that it is worth your time and your effort to try to use on real problems",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "By 2025-26 AI systems (Big Sleep, AIxCC entrants, lab red-team reports) found many confirmed real vulnerabilities, though false positives remain common and human triage is still needed.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/tools-confidently-report-security-vulnerabilities-not",
+      "stance": "asserts",
+      "quote": "in the remaining 28 of the reports, there are false positives",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Documented across curl's public HackerOne reports and other projects: fabricated stack traces, nonexistent functions, already-fixed CVEs.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "03 finds the Keraros off bug one out of 100 times with this larger number of input tokens.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-model-right-minimal-context-matters",
+      "stance": "asserts",
+      "quote": "You're giving it like random utility functions that like the user can't even access.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "As models improved, output depends more on relevant, high-signal context than phrasing; consistent with Anthropic/Cursor guidance and long-context degradation evidence.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-bogus-security-reports-flooding-open",
+      "stance": "asserts",
+      "quote": "there's a lot of AI generated bug reports that are just not correct that is basically clogging up the machine",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "curl's public data and statements from other maintainers (Python, Django, FFmpeg) document a sharp rise in fabricated AI reports; curl ended its bug bounty in 2026 partly because of it.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/tools-correctly-find-bugs-still-usually",
+      "stance": "denies",
+      "quote": "it had realized that setting session user equal to null was insufficient to fix the issue",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Maintainers widely report poor auto-fixes, and fix quality lags detection in evaluations; but auto-fix quality has improved and varies by bug type.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

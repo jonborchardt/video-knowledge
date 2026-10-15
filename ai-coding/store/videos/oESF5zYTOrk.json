@@ -1,0 +1,159 @@
+{
+  "id": "oESF5zYTOrk",
+  "title": "The AI-Native Data Engineer featuring Fabric, dbt, VSCode devcontainers and copilot",
+  "channel": "Microsoft Reactor",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCkm6luGCS3hD25jcEhvRMIA",
+  "durationSec": 3678,
+  "thumbnail": "https://i.ytimg.com/vi/oESF5zYTOrk/sddefault.jpg?v=6a734cf6",
+  "summary": "A Microsoft data engineer shows how dbt, testable Spark interfaces, local dev containers and parallel Copilot agents keep AI-written data pipelines reliable.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/agents-work-better-widely-used-standard",
+      "stance": "asserts",
+      "quote": "align on things that are industry standards, like DBT, that everybody in the world recognizes",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Models do measurably better on libraries well represented in training data, and bespoke frameworks must be explained in context, though good docs narrow the gap.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "by the time it's done learning what you built, you've already filled up your context window",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-duplicates-existing-utilities-types",
+      "stance": "asserts",
+      "quote": "I don't want the LM to like take the entire wheel and reinvent it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "First, you as the data engineer have to become competent of what you're trying to do.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies show novices accept incorrect AI code more often; verifying output requires domain and code literacy.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+      "stance": "asserts",
+      "quote": "Ralph, until the steak is cooked exactly to the precise temperature with this thermometer that I've asked you for, do not stop.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Goal/loop features keep agents going through backlogs, but unattended runs drift or game checks without good verification; works when acceptance tests are strong.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/running-coding-agents-parallel-requires-isolating",
+      "stance": "asserts",
+      "quote": "I can go ahead and have 10 different Git work trees and Visual Studio Code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Shared files and databases cause collisions; worktrees or containers per agent are the standard approach, and Codex and Claude apps build this in.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "if you do not have test coverage and you're throwing LLMs at writing more code, at some point it's going to become sloppy",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/extra-code-volume-produces-increases-complexity",
+      "stance": "asserts",
+      "quote": "I don't want the LLM to go and generate like 10,000 lines of Scala, right?",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear and DORA 2025 data show more churn and duplication and lower delivery stability as AI adoption rises; more code means more to maintain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-built-deep-modules-small-interfaces",
+      "stance": "asserts",
+      "quote": "you want to have it in a function which is called transform, which takes in a data frame and spits out a data frame",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear module boundaries help both humans and agents navigate and test; consistent with Ousterhout and practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "I'm going to be the one that writes the the commit. I'm going to be the one that pushes it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

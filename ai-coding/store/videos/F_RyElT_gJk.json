@@ -1,0 +1,203 @@
+{
+  "id": "F_RyElT_gJk",
+  "title": "The emerging skillset of wielding coding agents — Beyang Liu, Sourcegraph / Amp",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 2105,
+  "thumbnail": "https://i.ytimg.com/vi_webp/F_RyElT_gJk/sddefault.webp",
+  "summary": "Beyang Liu (Sourcegraph/Amp) on the agent era: design choices for agent-first tools and power-user practices like long prompts, feedback loops and agent-assisted review.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/best-practices-coding-tools-stale-within",
+      "stance": "asserts",
+      "quote": "the number one mistake ... is they're trying to use coding agents the same way they're using AI coding tools six months ago",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tool-use and long-horizon capability jumps in 2025 changed effective workflows (chat-with-RAG to agentic loops); consistent with practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-work-best-when-they",
+      "stance": "asserts",
+      "quote": "the agent should just make edits to your files. It shouldn't ask you at every turn",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Removing per-edit approval cuts friction and works with version control and good tests; in risky environments, permission gates and sandboxing still matter.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/ide-based-assistants-like-cursor-obsolete",
+      "stance": "asserts",
+      "quote": "do we still need a thick client ... do we still need a fork VS code?",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "IDE products added full agents, background agents and CLIs of their own; usage data show both forms widely used. Many experts (e.g. Karpathy) argue visual diff UIs are key for verification.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/models-perform-best-inside-their-own",
+      "stance": "asserts",
+      "quote": "swapping out a different model and expecting similar results is is very different",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/flat-rate-pricing-pushes-coding-agent",
+      "stance": "asserts",
+      "quote": "my incentive now is to push the inference cost as low as possible. And the easiest way to do that is to use dumber models",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "The incentive is real and some vendors route to cheaper models under load, but competition on quality and usage caps limit it.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "a lot of the power users were very writing very long prompts",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "constructing these like front-end feedback loops ... playwright ... storybook",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-can-help-developers-understand",
+      "stance": "asserts",
+      "quote": "They're actually using agents to better understand the code ... to do more thorough code reviews",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Agents do speed onboarding and PR summarization, but surveys and the Anthropic learning study show many users skip understanding; outcome depends on use.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic: 42% use Claude daily for code understanding, the Security team uses Claude Code mainly (48.9%) to analyze unfamiliar code, and some say it lets them test more thoroughly.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L32-L32",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/delegating-research-subagents-their-own-context",
+      "stance": "asserts",
+      "quote": "the sub agent allows you to essentially preserve the context window",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Subagents return summaries rather than raw exploration; Anthropic reports gains from multi-agent research, at higher token cost.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "Sonnet 4 has a context window of 200K, but we see degradation typically around like 120 or 130K",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/running-many-coding-agents-parallel-not",
+      "stance": "denies",
+      "quote": "the very very very top 1% of the 1% ... run multiple of these things in parallel",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Review and merge overhead limits parallel agents for most people today, but structured setups (worktrees, independent tasks) are productive for some.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "asserts",
+      "quote": "I think it is a high ceiling skill",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "There was no improvement across the first 50 hours of Cursor use, and dropping early tasks didn't change the slowdown. One developer with more than 50 hours did speed up, so a high skill ceiling is plausible but underpowered.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1205-L1230",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

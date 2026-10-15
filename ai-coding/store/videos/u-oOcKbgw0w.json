@@ -1,0 +1,150 @@
+{
+  "id": "u-oOcKbgw0w",
+  "title": "Does AI Secretly Slow Developers Down?",
+  "channel": "The AI Daily Brief: Artificial Intelligence News",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCKelCK4ZaO6HeEI1KQjqzWA",
+  "durationSec": 971,
+  "thumbnail": "https://i.ytimg.com/vi_webp/u-oOcKbgw0w/sddefault.webp?v=6876a884",
+  "summary": "AI Daily Brief critique of the METR study: learning curve, older models, expert/large-repo mismatch and media amplification.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+      "stance": "asserts",
+      "quote": "the study actually found that they were 19% less productive",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L11-L27",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "even after the study concluded thought that AI had made them 20% more productive",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+      "stance": "asserts",
+      "quote": "all of the models that people use to code are much advanced from the ones that they were using in this study",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Newer models may help, but METR attributed much of the slowdown to context, review overhead and repo familiarity, not model quality alone; METR's own later follow-up was mixed.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "The paper tests only Feb-June 2025 tools. It says more reliable or better-elicited systems could speed up developers, and that early agents already make progress, but it doesn't test newer models.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L587-L599",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "asserts",
+      "quote": "these productivity gains are not free. They come with a learning curve",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "There was no improvement across the first 50 hours of Cursor use, and dropping early tasks didn't change the slowdown. One developer with more than 50 hours did speed up, so a high skill ceiling is plausible but underpowered.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1205-L1230",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+      "stance": "asserts",
+      "quote": "Expert developers working in large code bases is known to be the setting where AI can help least",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Field experiments (Microsoft/Accenture RCTs, Brynjolfsson) found the largest gains for less-experienced or less-familiar workers and routine tasks; METR found slowdowns for deep-familiarity experts.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Slowdown is larger when developers have high prior task exposure. Developers report AI helps on unfamiliar issues and not where they're experts, and the paper expects speedups in unfamiliar or greenfield settings.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L960-L984",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/idle-distracted-time-while-waiting-generations",
+      "stance": "asserts",
+      "quote": "people spend 30 minutes scrolling while quote unquote waiting for their 30-second generation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "METR's screen recordings showed more idle/waiting time with AI and participants reported distraction; how much of the slowdown it explains is unquantified.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Screen recordings show AI-allowed work spends time prompting, waiting on generations and somewhat more time idle. Idle time is one contributor, not shown to be the main one.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L432-L441",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

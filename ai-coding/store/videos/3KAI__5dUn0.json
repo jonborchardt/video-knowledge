@@ -1,0 +1,141 @@
+{
+  "id": "3KAI__5dUn0",
+  "title": "Context Engineering & Coding Agents with Cursor",
+  "channel": "OpenAI",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCXZCJLdBC09xxGZ6gcdrc6A",
+  "durationSec": 1122,
+  "thumbnail": "https://i.ytimg.com/vi/3KAI__5dUn0/sddefault.jpg",
+  "summary": "Cursor team on context engineering: retrieval tools, semantic search, planning, review bots, parallel agents.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "Models get worse at recalling information as the size of the context increases",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-model-right-minimal-context-matters",
+      "stance": "asserts",
+      "quote": "it's more about giving the models the right context",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "As models improved, output depends more on relevant, high-signal context than phrasing; consistent with Anthropic/Cursor guidance and long-context degradation evidence.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google: telling the model about too many change locations sometimes did worse than naming one place and asking it to apply the change holistically, so context shape matters, though they also packed whole clusters into Gemini's large context.",
+          "source": "ai-coding/sources/2501.06972.txt#L351-L356",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Airbnb: the main success driver was choosing the right related files rather than perfecting prompt wording (supports 'right context over wording'), but the context was very large rather than minimal.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L44-L45",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/combining-semantic-embedding-code-search-grep",
+      "stance": "asserts",
+      "quote": "you likely want both GP and semantic search for the best results",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Cursor's own A/B results support it, but Claude Code and others do well with agentic grep alone; benefit is real but tool- and codebase-dependent.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "significantly improves the quality of the code generated",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google migration team found LLM planning capabilities 'often not needed' and a complexity to avoid, favoring agentless localize-edit-validate steps, though this is only for well-defined migrations. (Narrow setting, so it limits the claim rather than refuting it.)",
+          "source": "ai-coding/sources/2501.06972.txt#L619-L626",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-tools-catch-real-bugs",
+      "stance": "asserts",
+      "quote": "it actually caught a lot of bugs that we missed on code reviews",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/running-many-coding-agents-parallel-not",
+      "stance": "asserts",
+      "quote": "are we really being productive running nine CLIs in parallel? Probably not",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Review and merge overhead limits parallel agents for most people today, but structured setups (worktrees, independent tasks) are productive for some.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "the agent needs to be able to run the code, test it, and then verify it's actually working",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

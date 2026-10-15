@@ -1,0 +1,113 @@
+{
+  "id": "4qcWgPb-8Fk",
+  "title": "AWS re:Invent 2025 - Spec-driven development with Kiro  (DEV314)",
+  "channel": "AWS Events",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCdoadna9HFHsxXWhafhNvKw",
+  "durationSec": 2955,
+  "thumbnail": "https://i.ytimg.com/vi/4qcWgPb-8Fk/sddefault.jpg",
+  "summary": "AWS re:Invent code talk building a job-interview app in Kiro with spec-driven development, hooks and property-based tests.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "planning upfront really helped the models focus and produce better output",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/deriving-property-based-tests-structured-requirements",
+      "stance": "asserts",
+      "quote": "adding these property-based testing makes the output of your code at a much higher quality and oftentimes less bugs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Property-based testing is a strong verification technique and pairs well with explicit invariants; vendor-reported gains, and property quality still depends on how well they're written.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "you have to read it and pay attention to what it's doing. Because otherwise it will do things that we don't expect",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The paper recommends careful review of AI code whatever the tool, along with static analysis, tests, security checks, and monitoring after merge.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L934-L945",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Human-in-the-loop review is recommended by 48% of 33 safeguard sources, but the review says few studies show whether such safeguards actually reduce risk, so they are 'recommended rather than proven'.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1636-L1662",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "In Google's practice humans review LLM-generated code like any other code, and in the int64 migration humans had to revert some incorrect or unnecessary model changes in most cases.",
+          "source": "ai-coding/sources/2501.06972.txt#L226-L242",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-should-implement-work-thin-vertical",
+      "stance": "asserts",
+      "quote": "you first start with a skateboard and move to a bike and then build a car ... you always have something that's workable",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tracer-bullet/vertical slicing gives earlier integration feedback; applies to agents as to humans.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "the agent is able to read it ... ever since we've added this diagnostics tool, it's been really great",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

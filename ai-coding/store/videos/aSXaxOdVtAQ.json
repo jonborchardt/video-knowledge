@@ -1,0 +1,137 @@
+{
+  "id": "aSXaxOdVtAQ",
+  "title": "TDD, AI agents and coding with Kent Beck",
+  "channel": "The Pragmatic Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPbwhExawYrn9xxI21TFfyw",
+  "durationSec": 4532,
+  "thumbnail": "https://i.ytimg.com/vi_webp/aSXaxOdVtAQ/sddefault.webp",
+  "summary": "Kent Beck describes coding with agents as an unpredictable genie, keeps fast tests to catch it, and recounts the history of XP, TDD and the Agile Manifesto.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/test-driven-development-red-green-refactor",
+      "stance": "asserts",
+      "quote": "That's how I work all the time. So so so when you work with your genie, you start with the tests.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Tests-first gives agents a target and limits test-cheating; evidence is mostly anecdotal and it does not suit all code (e.g. UI).",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-sometimes-game-tests-deleting",
+      "stance": "asserts",
+      "quote": "I look at the code, and it's just a lookup table. It says if this is the input string, here's the output string",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Reward hacking on tests (special-casing, weakening or deleting tests) is documented by labs and in agent evaluations, though frequency varies by model and setup.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "those tests can be run all the time to catch the genie accidentally accidentally breaking things.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/keeping-code-maintainable-still-requires-human",
+      "stance": "asserts",
+      "quote": "is not good at reducing coupling and increasing cohesion ... it has no taste, no sense of design.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Linters and agent rules catch local smells, but architecture and coupling decisions still lack automated checks. Tooling is improving.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/implementation-gets-cheap-product-taste-judgment",
+      "stance": "asserts",
+      "quote": "90% of my skills just went to zero dollars and 10% of my skills just went up a,000x.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Plausible economic logic and widely argued, but not measured; execution, distribution and maintenance still matter.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/lets-experienced-developers-work-productively-programming",
+      "stance": "asserts",
+      "quote": "I'm programming in every language under the sun and I just I just kind of don't care. I'm learning by osmosis.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI clearly lowers the barrier to unfamiliar mainstream languages, but output quality still depends on the developer's ability to judge it and drops for less common languages.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/interacting-coding-agents-compulsive-like-slot",
+      "stance": "asserts",
+      "quote": "this is exactly like a slot machine. You got intermittent reinforcement. You got negative outcomes and positive outcomes.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This describes subjective experience; no controlled data measures compulsive use of coding agents.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-implementation-means-teams-should-run",
+      "stance": "asserts",
+      "quote": "organizations are going to have to get used to throwing away a lot more code because you can try ideas so much more cheaply.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This is a strategic framing about how to organize product work rather than a measurable claim.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: researchers run many Claude instances exploring different approaches, and the pre-training team uses Claude Code largely to run extra experiments; descriptive, with nothing on roadmaps.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L46-L47",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

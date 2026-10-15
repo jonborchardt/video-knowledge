@@ -1,0 +1,279 @@
+{
+  "id": "FoXHScf1mjA",
+  "title": "The AI-Native Software Engineer | Addy Osmani",
+  "channel": "JavaScript Conferences by GitNation",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCQM428Hwrvxla8DCgjGONSQ",
+  "durationSec": 1481,
+  "thumbnail": "https://i.ytimg.com/vi/FoXHScf1mjA/sddefault.jpg",
+  "summary": "Addy Osmani: AI-native engineering, context engineering, the review bottleneck, the 70% problem, and protecting junior skills.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/software-engineers-shifting-implementing-code-orchestrating",
+      "stance": "asserts",
+      "quote": "every engineer is going to evolve from a pure implementer to an orchestrator of agents",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Background and parallel agents are increasingly used, but most developers still work interactively with one agent; enterprise adoption of orchestration is early.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review documents a role shift toward supervising and validating AI output. Multi-agent orchestration specifically is barely studied.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1920-L1928",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic interviews: many engineers describe moving from writing code to managing AIs, some constantly running several Claude instances; self-reported by early adopters at an AI lab.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L115-L115",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-model-right-minimal-context-matters",
+      "stance": "asserts",
+      "quote": "Context is king in this moment",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "As models improved, output depends more on relevant, high-signal context than phrasing; consistent with Anthropic/Cursor guidance and long-context degradation evidence.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "planning before you prompt and it's providing that clear context",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-should-able-explain-generated-code",
+      "stance": "asserts",
+      "quote": "never commit code that you can't explain to other people, or even to yourself",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Ownership and maintainability require understanding; it's a reasonable review standard rather than an empirical finding.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "AI is a multiplier. So, what helps the human can help the AI. So, invest in tests, CI, clear documentation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2025 found AI amplifies existing engineering practices; strong fundamentals predict AI benefit.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developer-trust-accuracy-generated-code-has",
+      "stance": "asserts",
+      "quote": "usage is high. It continues to go up but trust is sliding",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Stack Overflow surveys show trust in AI accuracy fell from about 40% (2024) to about 30% (2025) while usage rose.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/large-generated-pull-requests-exceed-what",
+      "stance": "asserts",
+      "quote": "PR sizes have exploded anywhere up to 154%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The SmartBear/Cisco review study found defect detection drops beyond ~200-400 LOC per session; AI makes large PRs cheap to produce.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The vibe-coding review names a verification gap between generation speed and developers' capacity to verify. It doesn't measure PR size.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1906-L1918",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Authors note Claude made 3,957 commits and ~500K added lines in Anthropic's claudes-c-compiler within weeks and infer it is unlikely all of it got thorough human review; an argument from volume, not a measurement of review effectiveness.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L143-L146",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google splits AI migration changes into small sharded changelists per code owner and caps weekly volume to avoid overwhelming reviewers, which implies very large AI changes are not reviewable as-is, though it never measures review quality.",
+          "source": "ai-coding/sources/2501.06972.txt#L377-L389",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/individual-productivity-gains-have-not-reliably",
+      "stance": "asserts",
+      "quote": "This is soaking up a lot of those individual gains ... The system moves at the speed of the slowest step",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/gets-solution-most-way-quickly-but",
+      "stance": "asserts",
+      "quote": "AI can get you about 70% of the way ... that last 30% ... is the hardest part",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Widely observed and consistent with Stanford's rework data and METR; the exact 70/30 split is a heuristic.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025 preliminary evidence: autonomous Claude 3.7 agents often implement the core functionality of study issues but fail full requirements (docs, lint/style, key tests). This fits 'most of the way'; the paper does not show that the rest stays hard.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L593-L599",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Airbnb: 75% done in 4 hours and 97% after 4 days of tuning, with the last 3% needing manual work; but the AI baselines made that residual only about a week of effort, so the tail was not that hard.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L60-L64",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/heavy-reliance-coding-assistance-erodes-developers",
+      "stance": "asserts",
+      "quote": "Our first priority is really mitigating skill erosion",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Anthropic's 2026 RCT found AI-assisted learners scored lower on mastery of a new library, and other studies show reduced engagement; effects depend on how AI is used.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review describes 'cognitive debt': deferring understanding during fast iteration raises later debugging and maintenance costs. It does not measure skill loss directly.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1906-L1913",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cutting-junior-developer-hiring-because-undermines",
+      "stance": "asserts",
+      "quote": "make sure that we don't inadvertently dry up our talent pipeline",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "A straightforward pipeline argument made by IBM and others; the long-run effect is unmeasured yet but well reasoned.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/handles-routine-coding-well-but-struggles",
+      "stance": "asserts",
+      "quote": "AI shines in low context situations ... Where it struggles right now is high context novel problems",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks and field studies show strong performance on well-specified, common tasks and weaker results on context-heavy, novel logic.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-prototypes-should-used-validate-requirements",
+      "stance": "asserts",
+      "quote": "VIP coding is a gift for prototyping",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Validating demand before building is long-standing product practice; AI lowers prototype cost, making it more attractive.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/updating-agent-rules-workflows-after-each",
+      "stance": "asserts",
+      "quote": "a learnings markdown file ... a powerful self-improving cycle",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Encoding lessons in rules and workflows does reduce repeat mistakes, but rule files bloat and conflict if not pruned; gains are real but not automatically compounding.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

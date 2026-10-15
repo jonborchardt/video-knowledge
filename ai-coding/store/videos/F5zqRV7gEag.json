@@ -1,0 +1,97 @@
+{
+  "id": "F5zqRV7gEag",
+  "title": "Context engineering for AI agents",
+  "channel": "Microsoft Developer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCsMica-v34Irf9KVTh6xx-g",
+  "durationSec": 1008,
+  "thumbnail": "https://i.ytimg.com/vi/F5zqRV7gEag/sddefault.jpg",
+  "summary": "Microsoft beginner lesson on context engineering for agents: scratchpads, memory, summarization, poisoning, tool overload.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/giving-model-right-minimal-context-matters",
+      "stance": "asserts",
+      "quote": "ensuring our AI agent has the right information at the right time",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "As models improved, output depends more on relevant, high-signal context than phrasing; consistent with Anthropic/Cursor guidance and long-context degradation evidence.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-should-keep-notes-external-scratchpad",
+      "stance": "asserts",
+      "quote": "this information can stay out of the context window and is only called when needed",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "External notes/memory files are a standard, effective pattern (Anthropic, Manus write-ups) for long tasks; adds retrieval overhead.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/summarizing-pruning-conversation-history-keeps-long",
+      "stance": "asserts",
+      "quote": "compressing context ... summarizing the context as it grows ... or pruning",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Summarization cuts cost and keeps sessions going, but lossy summaries can drop details that matter; quality depends on what is kept.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/hallucinated-content-enters-agent-context-compounds",
+      "stance": "asserts",
+      "quote": "context poisoning ... validate information before it enters the context",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Errors in context are re-used by later turns; validating tool outputs before storing them is standard agent hygiene.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "MLR codes 'cumulative context errors and iteration drift' (2 of 47 sources): misunderstandings from earlier prompts propagate and WL15 reports successive prompts amplifying earlier errors; the validate-before-context remedy is not tested.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1574-L1580",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-agent-too-many-tools-degrades",
+      "stance": "asserts",
+      "quote": "it ends up choosing the wrong one due to the number of tools",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tool-selection accuracy drops as tool count grows (e.g. Berkeley function-calling and RAG-MCP results); dynamic tool loadouts help.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

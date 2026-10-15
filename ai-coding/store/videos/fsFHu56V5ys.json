@@ -1,0 +1,114 @@
+{
+  "id": "fsFHu56V5ys",
+  "title": "The AI Code Problem Nobody's Talking About",
+  "channel": "Razorwire Cybersecurity",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCq1XP2u-oXolixToLwngF2A",
+  "durationSec": 808,
+  "thumbnail": "https://i.ytimg.com/vi_webp/fsFHu56V5ys/sddefault.webp",
+  "summary": "Security vendor monologue: vibe coding ships vulnerabilities unreviewed; pitches continuous threat exposure management.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+      "stance": "asserts",
+      "quote": "46% of AI generated code is reportedly uh contain some form of security weakness",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Veracode 2025 found ~45% of AI-generated samples failed security tests; earlier academic studies of Copilot found similar rates.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L918-L933",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1793-L1803",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-often-ship-generated-code-without",
+      "stance": "asserts",
+      "quote": "Developers admit that they often don't deeply review the AI output",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys (e.g. Sonar 2026) report many developers don't always check AI code before committing, despite saying they distrust it.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The Debt paper says AI-generated code is unlikely to all get thorough review and over-trust raises acceptance. The vibe-coding review also finds code accepted without full understanding. Both are cited, not measured, prevalence.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L143-L146",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/most-professional-developers-now-use-coding",
+      "stance": "asserts",
+      "quote": "over 70% of developers are now using some form of AI coding assistance",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Stack Overflow 2025: ~84% use or plan to use AI tools, about half of professionals daily; JetBrains and DORA report similar figures.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/continuous-automated-security-testing-ctem-only",
+      "stance": "asserts",
+      "quote": "if you're going to be doing vibe coding in the future, I think CTM is your only option",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "Continuous testing helps, but SAST in CI, dependency scanning, code review, secure defaults and threat modeling are also practical; 'only option' is a vendor pitch.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Authors recommend static analysis, security checks and continuous post-merge monitoring because AI-introduced issues persist, but they do not claim or show that continuous automated testing is the only practical approach.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L937-L944",
+          "confidence": 0.2,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "Re-judged: the Debt paper recommends static analysis, tests, security checks and post-merge monitoring together; it does not show that continuous automated security testing is the only way, so it doesn't settle this claim.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L937-L944",
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

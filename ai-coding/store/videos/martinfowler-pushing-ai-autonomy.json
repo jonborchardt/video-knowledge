@@ -1,0 +1,97 @@
+{
+  "id": "martinfowler-pushing-ai-autonomy",
+  "title": "How far can we push AI autonomy in code generation?",
+  "channel": "martinfowler.com",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://martinfowler.com/articles/pushing-ai-autonomy.html",
+  "summary": "A Thoughtworks experiment finds that agentic workflows can generate simple Spring Boot apps but still need human oversight because of overeagerness, assumptions, brute-force fixes and false success claims.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/unattended-agent-loops-suit-low-stakes",
+      "stance": "asserts",
+      "quote": "AI is not ready to create and maintain a maintainable business software codebase without human oversight.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/coding-agents-overstate-what-they-accomplished",
+      "stance": "asserts",
+      "quote": "AI frequently claimed the build and tests were successful and moved on to the next step, even though they were not",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/coding-agents-tend-over-complicate-solutions",
+      "stance": "asserts",
+      "quote": "We frequently got additional endpoints and features that we did not ask for in the requirements.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/agentic-bug-fixes-often-make-symptom",
+      "stance": "asserts",
+      "quote": "Let me fix this by adding @JsonIgnore to the field",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/coding-agents-fill-gaps-requirements-unstated",
+      "stance": "asserts",
+      "quote": "Gaps in the requirements will be filled with assumptions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Nondeterministic generation from underspecified prompts reliably yields inconsistent guesses, as agent experiments widely report.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "turned out to be the most effective strategy to get AI to generate the type of code we wanted.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/llms-propose-outdated-library-versions-models",
+      "stance": "asserts",
+      "quote": "we found that the LLM frequently uses javax.persistence, which has been superseded by jakarta.persistence.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/combining-deterministic-transformation-tools-codemods-code",
+      "stance": "asserts",
+      "quote": "if you can generate a script or a codemod instead of letting AI do the full work itself.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/code-review-more-effective-fresh-context",
+      "stance": "asserts",
+      "quote": "We introduced a review agent to double check AI's work against the original prompts.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/prompts-used-repeatedly-should-packaged-reusable",
+      "stance": "asserts",
+      "quote": "it is worth investing in crafting reusable prompts.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/speeding-human-verification-diff-views-visual",
+      "stance": "asserts",
+      "quote": "we should indeed invest a lot of thinking into how we can further improve and accelerate the human-in-the-loop experience",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/agents-work-better-widely-used-standard",
+      "stance": "asserts",
+      "quote": "A common tech stack that should be quite prevalent in the training data",
+      "verdicts": []
+    }
+  ]
+}

@@ -1,0 +1,154 @@
+{
+  "id": "Rjlzm0psfB4",
+  "title": "GitHub Copilot productivity: what the research actually shows",
+  "channel": "Mneme HQ",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLLk42ldQNDUYFz2RenT3Qw",
+  "durationSec": 448,
+  "thumbnail": "https://i.ytimg.com/vi_webp/Rjlzm0psfB4/sddefault.webp",
+  "summary": "Promotional explainer of GitHub's Copilot research (satisfaction survey and the 55%-faster HTTP-server experiment) that presents the results uncritically as a strategic investment in retention and output.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/github-copilot-makes-developers-complete-tasks",
+      "stance": "asserts",
+      "quote": "The developers using AI finished the exact same task a staggering 55% faster.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "The 55% figure comes from a 2022 controlled experiment on one small JavaScript task, not a survey; field studies find much smaller average gains (~10-25%).",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google RCT finds ~21% speedup on an enterprise task and attributes the gap to Peng's 56% mainly to Peng's Upwork freelancer population and simpler setting, suggesting the 55% figure does not generalize to enterprise engineers (different tools, though).",
+          "source": "ai-coding/sources/2410.12944.txt#L522-L539",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "In real workplaces Copilot increased completed tasks (PRs) by ~26% (SE 10.3%), roughly half the lab-measured speedup the 55% figure comes from.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L781",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Origin of the figure: 95 Upwork freelancers writing a JavaScript HTTP server finished 55.8% faster with Copilot (95% CI 21-89%), true for this one standardized greenfield task but not shown for real work.",
+          "source": "ai-coding/sources/2302.06590.txt#L139-L144",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR notes Peng et al.'s 56% speedup came from a synthetic task (a basic JS HTTP server with visible tests) that is unrepresentative of real work and likely close to training data; its own real-repo RCT found a 19% slowdown.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L113-L121",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Only cites Peng et al.'s RCT (Copilot users 55.8% faster) without its narrow task context; secondhand.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L983-L984",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "In observational (non-randomized) Phase 1 with mixed tools, AI users had a 30.7% shorter median time and habitual AI users were ~56-60% faster, matching Peng et al.'s 55.8% only for the most habitual users and not specific to Copilot.",
+          "source": "ai-coding/sources/2507.00788.txt#L2475-L2486",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "With Copilot and other AI tools, median time fell from 63 to 43 min, but the time effect lost significance in the session-interaction and Session-1-only checks (p=0.263, p=0.719), so the authors draw no conclusion on speed. The robust gain was completeness: +43 points, medians 84 vs 35.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L629-L645",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "In an enterprise field setting, AI tools including Copilot raised weekly user stories by about 18% (IFEct/MC estimates 24-31%), well below a 55% speedup, though the outcome is throughput rather than time per task.",
+          "source": "ai-coding/sources/4859137.txt#L489-L493",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-tools-reduce-perceived-effort-more",
+      "stance": "asserts",
+      "quote": "87% of developers reported that GitHub Copilot helped them preserve their mental effort during repetitive tasks",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Consistent with METR's perception gap and surveys reporting less frustration/fatigue; a plausible explanation rather than a measured mechanism.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measuring-impact-developers-requires-multidimensional-metrics",
+      "stance": "asserts",
+      "quote": "this completely fails to capture the intense problem-solving and creativity that software development actually requires",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This is a measurement-design recommendation (SPACE/DORA tradition) rather than an empirical claim, though output-only metrics are known to be gameable and inflated by AI.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-assistants-improve-developer-satisfaction-help",
+      "stance": "asserts",
+      "quote": "73% of developers report they are now able to stay in the flow",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025: 69% of developers kept using Cursor after the study even though they were measured as slowed down, which suggests they value it beyond speed; satisfaction and flow were not measured directly.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1175-L1178",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Habitual AI users reported +1.71 SD higher latent perceived productivity (items include fulfilment, enjoyment, flow) when using AI in Task 1, though authors flag possible confirmation bias and the boost did not carry over to Task 2.",
+          "source": "ai-coding/sources/2507.00788.txt#L1609-L1614",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

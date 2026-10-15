@@ -1,0 +1,249 @@
+{
+  "id": "CQmI4XKTa0U",
+  "title": "How AI will change software engineering – with Martin Fowler",
+  "channel": "The Pragmatic Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPbwhExawYrn9xxI21TFfyw",
+  "durationSec": 6533,
+  "thumbnail": "https://i.ytimg.com/vi_webp/CQmI4XKTa0U/sddefault.webp",
+  "summary": "Martin Fowler on the Pragmatic Engineer: non-determinism as the big shift, vibe coding versus learning, LLMs for legacy code, thin slices with review, refactoring, and the industry's hiring slump.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/main-change-llms-bring-programming-shift",
+      "stance": "asserts",
+      "quote": "the single biggest change ... going from deterministic systems to non-deterministic ones",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A framing about what matters most; it's a useful lens, but you can't test it as a fact.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+      "stance": "asserts",
+      "quote": "vibe coding ... fine for throwaway explorations",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/heavy-reliance-coding-assistance-erodes-developers",
+      "stance": "asserts",
+      "quote": "when you stop paying attention to the code generated you stop learning and then you stop understanding",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Anthropic's 2026 RCT found AI-assisted learners scored lower on mastery of a new library, and other studies show reduced engagement; effects depend on how AI is used.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review describes 'cognitive debt': deferring understanding during fast iteration raises later debugging and maintenance costs. It does not measure skill loss directly.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1906-L1913",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "METR 2025 raises the possibility that skills without AI atrophy as developers use AI more, which could explain the >50h speedup, but says it is unclear and that more research is needed.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1237-L1242",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "Raised as an open risk (over-reliance might erode skills); the study did not measure skill change.",
+          "source": "ai-coding/sources/2507.00788.txt#L2647-L2657",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: some engineers report skill atrophy and lost incidental learning, while others say their learning accelerated or the lost skills don't matter; these are perceptions, not measurements.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L86-L101",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "AI use lowered short-term comprehension of the participant's own code (-5.95 pp), and the authors caution that over-reliance may hinder students' deeper understanding. However, only immediate recall and explanation were measured, not lasting skill or learning.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L951-L963",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "The authors state that the study covers only short-term effects and does not address learning or skill erosion; they raise it only as a risk for future research.",
+          "source": "ai-coding/sources/4859137.txt#L1396-L1405",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/using-llms-understand-legacy-codebases-effective",
+      "stance": "asserts",
+      "quote": "using LLMs to understand legacy systems ... we put it in adopt",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Code explanation and codebase Q&A are among the most consistently reported wins, and Thoughtworks lists it under Adopt. Explanations can still be confidently wrong.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Participants reported AI helped onboarding and understanding new code, but the system was a small Java app and authors note AI may be less capable on large codebases that exceed the context window.",
+          "source": "ai-coding/sources/2507.00788.txt#L2639-L2644",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "building things in terms of small slices with the humans reviewing it is still the way to bet",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "treat it like a PR from a rather dodgy collaborator",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The paper recommends careful review of AI code whatever the tool, along with static analysis, tests, security checks, and monitoring after merge.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L934-L945",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "it comes back to feedback loops ... tighten those feedback loops",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-overstate-what-they-accomplished",
+      "stance": "asserts",
+      "quote": "always remember it's gullible and it's likely to lie to you",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Widely reported and seen in evals: agents claim tests pass or features are complete when they aren't; reading summaries critically is necessary.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheaper-software-production-will-increase-total",
+      "stance": "asserts",
+      "quote": "demand is way more than we can imagine",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Jevons effects are historically common and plausible for software, but whether demand growth outpaces productivity for developer headcount is unproven.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-specification-not-code-should",
+      "stance": "denies",
+      "quote": "I'd rather get smaller, more frequent slices than more stuff in each slice",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Specs help align agents, but code is still what runs; specs drift from implementation unless continuously maintained, and practitioners like Pocock report specs-only workflows failing.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1924-L1928",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/post-2022-drop-developer-hiring-driven",
+      "stance": "asserts",
+      "quote": "the most important thing that's hit us is not AI. It's the end of zero interest rates",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The 2022-23 decline began before ChatGPT and tracks rate hikes and over-hiring; most economists attribute it mainly to macro factors, though AI may weigh on junior roles since 2024.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

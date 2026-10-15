@@ -1,0 +1,219 @@
+{
+  "id": "vKT59uoByXc",
+  "title": "Why Coding Agents Keep Making Your Codebase Worse",
+  "channel": "Beyond Coding",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCdMz6KKEDW_1Qqas-ya7S6w",
+  "durationSec": 2715,
+  "thumbnail": "https://i.ytimg.com/vi_webp/vKT59uoByXc/sddefault.webp",
+  "summary": "Dex Horthy (HumanLayer) on why agents degrade codebases over time, why code rather than specs should be the source of truth, reading what you ship, and doing fewer things in parallel.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/coding-agents-degrade-codebase-quality-when",
+      "stance": "asserts",
+      "quote": "as the agent keeps working on the same codebase, the quality gets worse and worse",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent with long-horizon benchmarks such as SlopCodeBench and with studies of AI-code churn and duplication. Evidence is early but points the same way.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Surviving AI-introduced issues keep accumulating in real repos over time, consistent with gradual degradation; the study doesn't test repeated extension of one codebase or model generations.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L850-L854",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/keeping-code-maintainable-still-requires-human",
+      "stance": "asserts",
+      "quote": "you can't lint your way to a maintainable codebase",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Linters and agent rules catch local smells, but architecture and coupling decisions still lack automated checks. Tooling is improving.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/benchmarks-overstate-real-world-usefulness-because",
+      "stance": "asserts",
+      "quote": "the benchmarks are one shot ... that's not how real software gets built",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR's own analysis and follow-ups found many benchmark-passing patches aren't mergeable; messy, high-context work lags benchmark scores.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR concludes the field slowdown suggests in-the-wild capability may be lower than benchmarks imply, because benchmark tasks are self-contained and scored algorithmically.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L484-L489",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measuring-engineers-token-usage-leaderboards-spend",
+      "stance": "asserts",
+      "quote": "token maxing ... is the wrong thing to be optimizing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Goodhart's law applies: Orosz reports leaderboards and spend targets at large firms prompting busywork; consistent with past experience of line-of-code metrics.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-specification-not-code-should",
+      "stance": "denies",
+      "quote": "the source of truth should be the code, not the specification or the plan",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Specs help align agents, but code is still what runs; specs drift from implementation unless continuously maintained, and practitioners like Pocock report specs-only workflows failing.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "research, plan, then implement",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "do not send anyone code for review that you yourself have not read",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The paper recommends careful review of AI code whatever the tool, along with static analysis, tests, security checks, and monitoring after merge.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L934-L945",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/weakens-code-review-mentoring-channel-because",
+      "stance": "asserts",
+      "quote": "the junior just copies the review comment into Claude ... nobody learns anything",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Plausible and consistent with the Anthropic learning study on skipped understanding; evidence is anecdotal so far.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: juniors now take questions to Claude instead of seniors, so mentorship opportunities shrink (though they learn faster); this is about questions, not code-review feedback specifically.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L110-L113",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/running-many-coding-agents-parallel-not",
+      "stance": "asserts",
+      "quote": "do less things in parallel",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Review and merge overhead limits parallel agents for most people today, but structured setups (worktrees, independent tasks) are productive for some.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/background-coding-agents-assigned-routine-issues",
+      "stance": "asserts",
+      "quote": "janitor bots that run overnight and open small PRs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/major-coding-subscriptions-subsidized-below-cost",
+      "stance": "asserts",
+      "quote": "the subscriptions are subsidized",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Heavy users clearly consume more compute than flat fees cover, which is why vendors added weekly limits; whether plans are below cost on average is not public.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "stop and check every thousand lines or so",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

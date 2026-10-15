@@ -1,0 +1,111 @@
+{
+  "id": "UCgQj1ZlDqk",
+  "title": "Building the Context Engine AI Agents Need",
+  "channel": "InfoQ",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCkQX1tChV7Z7l1LFF4L9j_g",
+  "durationSec": 1855,
+  "thumbnail": "https://i.ytimg.com/vi_webp/UCgQj1ZlDqk/sddefault.webp",
+  "summary": "Unblocked DevRel pitch for an organizational context engine; argues rules files, MCPs and big windows are insufficient.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/giving-agents-organizational-context-tickets-discussions",
+      "stance": "asserts",
+      "quote": "nearly 50% less tokens used ... With context, it actually one-shot the prompt",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Relevant org context plausibly cuts rework, but the cited 50% token / one-shot result is a single vendor test, not independent evidence.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/stale-planning-docs-left-repo-mislead",
+      "stance": "asserts",
+      "quote": "static content in a repo, which is going to rot like every other documentation you ever wrote",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents treat repo docs as authoritative; outdated docs demonstrably steer them wrong.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/project-instruction-files-claude-agents-rules",
+      "stance": "denies",
+      "quote": "people think that more rules and Claude MD files will fix this ... Claude was like just completely ignored it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Persistent instruction files measurably steer agent behavior; overlong or contradictory ones reduce adherence.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-agent-too-many-tools-degrades",
+      "stance": "asserts",
+      "quote": "agents don't know actually when to call them ... it becomes a bit of a mess",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tool-selection accuracy drops as tool count grows (e.g. Berkeley function-calling and RAG-MCP results); dynamic tool loadouts help.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "if you go over 40% of the context window, you enter the dumb zone",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-shifts-developer-effort-toward",
+      "stance": "asserts",
+      "quote": "you then kind of force a problem which is a bottleneck at code review",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys and studies (e.g. Faros, Google) report increased PR volume and review load with AI adoption.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The review finds developer work shifts from writing code toward specification, supervision and validation, with the unit of work moving to the acceptance decision.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1900-L1931",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "id": "Mk87sFlUG28",
+  "title": "Context Engineering 101 - The Simple Strategy to 100x AI Coding",
+  "channel": "Cole Medin",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCMwVTLZIRRUyyVrkjDpn4pA",
+  "durationSec": 2264,
+  "thumbnail": "https://i.ytimg.com/vi_webp/Mk87sFlUG28/sddefault.webp",
+  "summary": "Cole Medin and Rasmus on the PRP (product requirement prompt) context-engineering framework, demoed building an MCP server.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "providing all information, examples, best practices, constraints to AI coding assistants upfront",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/context-engineering-delivers-order-magnitude-10x",
+      "stance": "asserts",
+      "quote": "it's going to 10x your workflow no matter what you want to make",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "No controlled study shows 10x gains; measured effects of AI coding range from a slowdown (METR) to roughly 20-50% on suitable tasks. 10x is marketing.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Airbnb's 1.5-year estimate versus 6 weeks implies a gain of about 13x on one migration, but that comes from automation, retries and context together, set against a manual estimate rather than a measured baseline.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L6-L6",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "Re-judged: Airbnb's ~13x migration speedup came from automation, validation loops and retries on one bulk migration, not from context engineering in day-to-day work, so it doesn't bear on this claim.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L6-L6",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-should-read-correct-generated-plans",
+      "stance": "asserts",
+      "quote": "read through your your PRPs before you run the execute command",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Reviewing plans catches costly mistakes early (e.g. editing secrets), but some practitioners get similar alignment through interactive Q&A and skip reading plans; value depends on task risk.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "it does quite a bit of research and architecting and planning",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/project-instruction-files-claude-agents-rules",
+      "stance": "asserts",
+      "quote": "I treat my cloud MD as where I put like the constant rules that will very rarely change",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Persistent instruction files measurably steer agent behavior; overlong or contradictory ones reduce adherence.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clearing-context-starting-fresh-beats-compacting",
+      "stance": "asserts",
+      "quote": "Typically, you want to clear the context. So, you're starting with a blank slate",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh context avoids accumulated noise, but compaction is useful when state is hard to reconstruct; it is a tradeoff, not a rule.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "validation gates ... linting, and it'll create unit tests, and it'll run those unit tests and iterate",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+      "stance": "asserts",
+      "quote": "vibe coding builds prototypes that break when you try to scale",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/newer-models-reliably-execute-much-longer",
+      "stance": "asserts",
+      "quote": "after cloud 4 I can kick off like a 500 line prompt reliably",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Instruction-following and task horizon rose sharply from Claude 3.7 to 4.x and later; METR's horizon metric shows the same trend.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic transcripts Feb->Aug 2025: max consecutive tool calls rose from 9.8 to 21.2, human turns fell from 6.2 to 4.1 and task complexity rose from 3.2 to 3.8, but usage shifts could explain part of this and reliability isn't measured.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L124-L127",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

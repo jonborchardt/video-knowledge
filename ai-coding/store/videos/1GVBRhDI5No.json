@@ -1,0 +1,125 @@
+{
+  "id": "1GVBRhDI5No",
+  "title": "How the GitHub Copilot coding agent works | GitHub Checkout",
+  "channel": "GitHub",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UC7c3Kb6jYCRj4JOHHZTxKsQ",
+  "durationSec": 418,
+  "thumbnail": "https://i.ytimg.com/vi_webp/1GVBRhDI5No/sddefault.webp",
+  "summary": "GitHub demo of the Copilot coding agent: assign issues, background PRs, MCP context, review loop.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/background-coding-agents-assigned-routine-issues",
+      "stance": "asserts",
+      "quote": "most of the time I'm going to get a PR that's good and ready to go",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-working-background-will-eliminate",
+      "stance": "asserts",
+      "quote": "Hopefully this is going to be the end of tech debt",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "Evidence so far shows AI adoption adding duplication and churn; agents can pay down some debt, but they also create it.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "AI commits fix about as many smells as they introduce, but they add more correctness and security issues than they fix, and 22.7% of introduced issues persist for months.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L918-L933",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/handles-routine-coding-well-but-struggles",
+      "stance": "asserts",
+      "quote": "let Copilot take over the boring stuff",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks and field studies show strong performance on well-specified, common tasks and weaker results on context-heavy, novel logic.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025 RCT: developers report AI lacks tacit repository knowledge (e.g. backwards-compat edge cases, where to make edits), behaving like a new contributor; qualitative support for struggling with context-dependent logic, but 'handles routine well' is not shown in this setting.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1027-L1041",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "AI commits fix slightly more code smells than they introduce (net -7,069) but introduce more correctness (+3,742 net) and security issues (+7,342 net) than they fix, which the authors read as AI handling simple, repetitive patterns but not changes needing deeper understanding of program logic; this is static-analysis evidence, not a test of business-context tasks.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L841-L846",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "AI-devs favoured simple refactorings (inline/rename variable, annotations) while non-AI devs did more structural ones (Extract Class, Move Method, Extract-and-Move only by non-AI); suggestive group-level pattern with large individual variation.",
+          "source": "ai-coding/sources/2507.00788.txt#L2070-L2080",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Expert use accelerates routine implementation while retaining architectural reasoning; domains with complex data pipelines or tightly coupled system logic are associated with correctness and verification challenges, but the domain evidence is thin (data/ML in 2 sources).",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1957-L1964",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic: engineers delegate low-complexity, self-contained work and keep tasks needing team-specific tacit knowledge, citing the 'cold start' problem as the biggest blocker.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L55-L70",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "On deliberately popular, well-trodden tasks (games, CRUD apps, REST clients) where 'modern LLMs shine', AI roughly doubled task completeness. This supports the routine-coding half only; complex, context-dependent work was not tested.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L536-L553",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "GPT-4 solved every easy task but missed 2 of 5 harder algorithmic tasks, consistent with weaker performance on complex logic. The hard tasks were competition puzzles, not business- or system-context tasks.",
+          "source": "ai-coding/sources/4859137.txt#L1279-L1282",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

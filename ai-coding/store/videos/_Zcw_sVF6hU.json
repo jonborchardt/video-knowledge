@@ -1,0 +1,232 @@
+{
+  "id": "_Zcw_sVF6hU",
+  "title": "The Friction is Your Judgment — Armin Ronacher & Cristina Poncela Cubeiro, Earendil",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 1117,
+  "thumbnail": "https://i.ytimg.com/vi_webp/_Zcw_sVF6hU/sddefault.webp?v=69eecc5e",
+  "summary": "Armin Ronacher and Cristina Poncela argue that agent speed creates review overload, brittle code and fast-growing debt, and recommend agent-legible codebases and deliberate friction.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "because we produce a lot of output very fast, we are tricked into thinking that we're actually being more efficient",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/interacting-coding-agents-compulsive-like-slot",
+      "stance": "asserts",
+      "quote": "these tools are super addictive. You never know if that next prompt is going to be the one that makes your product work",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This describes subjective experience; no controlled data measures compulsive use of coding agents.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/large-generated-pull-requests-exceed-what",
+      "stance": "asserts",
+      "quote": "this pull request that looks really daunting and has 5,000 lines of code in it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The SmartBear/Cisco review study found defect detection drops beyond ~200-400 LOC per session; AI makes large PRs cheap to produce.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-often-ship-generated-code-without",
+      "stance": "asserts",
+      "quote": "that has led to more and more code reviews being skipped, being rubber stamped.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys (e.g. Sonar 2026) report many developers don't always check AI code before committing, despite saying they distrust it.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025: among experienced OSS maintainers, 75% read every line of AI code and all of them modified it before submitting. This contradicts the claim for this high-standards group only. (Narrow setting, so it limits the claim rather than refuting it.)",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1015-L1018",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Minimal-review commits appear in only 2 of 47 sources (grey, no peer-reviewed corroboration), though the cited Fawzy et al. grey-literature review found 36% of practitioners skip quality assurance.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L2223-L2231",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Participants submitted AI-assisted code that they then explained less well, with the median dropping from 100% to 87.5% correct. This is indirect evidence that generated code gets accepted without full comprehension, gathered in a 75-minute lab task rather than real shipping.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L636-L646",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-tend-write-silent-fallbacks",
+      "stance": "asserts",
+      "quote": "tries to read a config file and if it doesn't read a config file, it loads some defaults.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Practitioners widely report agents adding defensive fallbacks and swallowed errors to make code run, but there is little systematic measurement of how often this happens.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Mining 302.6k AI-authored commits: broad exception handling is the single most common introduced issue (41,374, 8.5% of all issues; e.g. Claude Code adding a bare 'except: pass'), consistent with the claim, though there is no human-commit baseline to compare against.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L638-L647",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-degrade-codebase-quality-when",
+      "stance": "asserts",
+      "quote": "you're very quickly creating a code base of the size and complexity that the agent itself can no longer dig itself out from.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent with long-horizon benchmarks such as SlopCodeBench and with studies of AI-code churn and duplication. Evidence is early but points the same way.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-duplicates-existing-utilities-types",
+      "stance": "asserts",
+      "quote": "It's creating code in a new file that has already done somewhere else.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-perform-better-libraries-narrow",
+      "stance": "asserts",
+      "quote": "for libraries, they tend to excel a lot more ... products ... it's much harder because there are so many interacting concerns and components.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "This fits evidence that gains shrink with complexity and cross-cutting context, but no study directly compares libraries with products.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-should-restructured-legible-agents-smaller",
+      "stance": "asserts",
+      "quote": "you have to design it in the way so that it is also legible for the agent",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Clear structure and smaller units plausibly help agents (and humans), but controlled evidence on how much restructuring improves agent results is thin.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/enforcing-coding-conventions-deterministic-checks-linters",
+      "stance": "asserts",
+      "quote": "most of these we actually achieve with uh linting rules.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Deterministic checks fire every time and give agents concrete feedback, whereas instruction-file rules compete for attention and are followed inconsistently.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/security-data-critical-code-auth-payments",
+      "stance": "asserts",
+      "quote": "we don't think that a database migration should ever go in without a human making a judgment call on this",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Studies find frequent vulnerabilities in AI-generated security code, so the risk is real; but well-reviewed AI-assisted code by people who understand it can be fine.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/software-built-quickly-accumulates-more-technical",
+      "stance": "asserts",
+      "quote": "we're producing months and months of technical debt in the in the in the time of weeks, in the time of days sometimes.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Unreviewed, fast AI output does accumulate debt (GitClear duplication, churn), but debt depends on review discipline, not on whether AI was used per se.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/system-design-architecture-judgment-remain-human",
+      "stance": "asserts",
+      "quote": "system architecture, creating reliability in the system, they are not just very good at.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Humans still own constraints and tradeoffs, but models can now propose reasonable designs when given context; the gap is narrowing.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

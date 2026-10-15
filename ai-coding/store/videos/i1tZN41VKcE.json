@@ -1,0 +1,173 @@
+{
+  "id": "i1tZN41VKcE",
+  "title": "Uber: Leading engineering through an agentic shift - The Pragmatic Summit",
+  "channel": "The Pragmatic Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPbwhExawYrn9xxI21TFfyw",
+  "durationSec": 2259,
+  "thumbnail": "https://i.ytimg.com/vi/i1tZN41VKcE/sddefault.jpg",
+  "summary": "Uber's developer platform leaders describe background agents, AI code review, test generation and migration tooling, plus adoption, measurement and rising cost problems.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/github-copilot-makes-developers-complete-tasks",
+      "stance": "denies",
+      "quote": "We saw about a maybe a 10 to 15% bump in overall dev velocity.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "The 55% figure comes from a 2022 controlled experiment on one small JavaScript task, not a survey; field studies find much smaller average gains (~10-25%).",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/background-coding-agents-assigned-routine-issues",
+      "stance": "asserts",
+      "quote": "the accuracy of these tasks was much higher compared to the more ambiguous workloads.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-shifts-developer-effort-toward",
+      "stance": "asserts",
+      "quote": "They're spending more and more time in planning and code review because there's so much more code being generated",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys and studies (e.g. Faros, Google) report increased PR volume and review load with AI adoption.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-agents-organizational-context-tickets-discussions",
+      "stance": "asserts",
+      "quote": "Like these are all things that to have an effective agent have organizational memory it needs to start to get access to.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Relevant org context plausibly cuts rework, but the cited 50% token / one-shot result is a single vendor test, not independent evidence.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/purpose-built-test-generation-agents-separate",
+      "stance": "asserts",
+      "quote": "almost a 3x rate of quality versus something that would be generated from your typical generic agent.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Filtered pipelines like Meta's TestGen-LLM show real gains, but the comparative evidence is mostly company-internal.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/combining-deterministic-transformation-tools-codemods-code",
+      "stance": "asserts",
+      "quote": "we needed to run a big program to create a scalable version of how we handle large-scale change.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Migration case studies (Google, Amazon Java upgrades, Airbnb) got their scale from pairing LLMs with deterministic tooling and validation rather than free-form generation.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/top-down-usage-mandates-unrealistic-productivity",
+      "stance": "asserts",
+      "quote": "The more successful um technique that that we've applied is actually just sharing wins.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Reports of token-maxing and resentment support it, but some mandated rollouts (e.g. Shopify, Coinbase) report adoption gains; evidence is anecdotal either way.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/individual-productivity-gains-have-not-reliably",
+      "stance": "asserts",
+      "quote": "these are activity metrics, right? These are not necessarily business outcomes.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/enterprise-spending-coding-tools-growing-fast",
+      "stance": "asserts",
+      "quote": "since 2024, our our costs have gone up at least 6x.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Token-heavy agentic use has raised costs at many firms, but the figures are self-reported and vary widely by company.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/different-models-suit-coding-tasks-switching",
+      "stance": "asserts",
+      "quote": "the right model to form the plan for the uh for the project. And then, lower cost but still pretty effective models",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Model strengths do differ by task in benchmarks and practice, but the specific pairing is personal preference and shifts each release.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/best-practices-coding-tools-stale-within",
+      "stance": "asserts",
+      "quote": "these decisions need to be revisited on a pretty regular basis.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tool-use and long-horizon capability jumps in 2025 changed effective workflows (chat-with-RAG to agentic loops); consistent with practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "id": "tFffUnSq7VA",
+  "title": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
+  "channel": "AI Native Dev",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCg3pI4p6OKSFrDVZcwRIx8A",
+  "durationSec": 2521,
+  "thumbnail": "https://i.ytimg.com/vi/tFffUnSq7VA/sddefault.jpg",
+  "summary": "Thoughtworks' Birgitta Böckeler gives a balanced state-of-play on models, harnesses and context engineering, arguing for deterministic sensors and risk-based supervision while flagging rising costs in stability, review load, cognitive load and skills.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "it comes with the trade off on like how well the models are able to keep attention on all of the many instructions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/different-models-suit-coding-tasks-switching",
+      "stance": "asserts",
+      "quote": "reflection on the types of tasks that we have and then match them to different levels of power that the the models have",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Model strengths do differ by task in benchmarks and practice, but the specific pairing is personal preference and shifts each release.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/open-weight-coding-models-now-handle",
+      "stance": "asserts",
+      "quote": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "so that we can trigger immediately a self-correction loop before we even look at the code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/updating-agent-rules-workflows-after-each",
+      "stance": "asserts",
+      "quote": "anytime you find an agent makes a mistake, you take the time to engineer a solution such that the agent never makes that mistake again",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Encoding lessons in rules and workflows does reduce repeat mistakes, but rule files bloat and conflict if not pruned; gains are real but not automatically compounding.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/enforcing-coding-conventions-deterministic-checks-linters",
+      "stance": "asserts",
+      "quote": "It's much more effective to have this linting rule than to like stuff it into your context every single time the agent runs.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Deterministic checks fire every time and give agents concrete feedback, whereas instruction-file rules compete for attention and are followed inconsistently.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/combining-deterministic-transformation-tools-codemods-code",
+      "stance": "asserts",
+      "quote": "code mods being made available to AI. So that combination is really powerful",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Migration case studies (Google, Amazon Java upgrades, Airbnb) got their scale from pairing LLMs with deterministic tooling and validation rather than free-form generation.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/higher-adoption-associated-delivery-throughput-but",
+      "stance": "asserts",
+      "quote": "in the Dora report this was one of the big like let's say negative trend findings about stability actually getting worse",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-shifts-developer-effort-toward",
+      "stance": "asserts",
+      "quote": "We have higher coding throughput. But then can we if we can code faster, can we review faster",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys and studies (e.g. Faros, Google) report increased PR volume and review load with AI adoption.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/intensive-agentic-coding-raises-cognitive-load",
+      "stance": "asserts",
+      "quote": "It doesn't actually make us make our lives more relaxed. On the contrary.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Many practitioner reports and some surveys describe higher intensity and fatigue from supervising agents, but controlled evidence is thin and other studies report reduced effort on routine work.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-built-deep-modules-small-interfaces",
+      "stance": "asserts",
+      "quote": "AI can also deal with a well factored code base much better than with a messy code base",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear module boundaries help both humans and agents navigate and test; consistent with Ousterhout and practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/heavy-reliance-coding-assistance-erodes-developers",
+      "stance": "asserts",
+      "quote": "Or I can't work on this code base without AI anymore, right? That's the original cognitive surrender cognitive debt kind of definition.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Anthropic's 2026 RCT found AI-assisted learners scored lower on mastery of a new library, and other studies show reduced engagement; effects depend on how AI is used.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

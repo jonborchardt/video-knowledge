@@ -1,0 +1,239 @@
+{
+  "id": "LCEmiRjPEtQ",
+  "title": "Andrej Karpathy: Software Is Changing (Again)",
+  "channel": "Y Combinator",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCcefcZRL2oaA_uBNeo5UOWg",
+  "durationSec": 2371,
+  "thumbnail": "https://i.ytimg.com/vi/LCEmiRjPEtQ/sddefault.jpg",
+  "summary": "Karpathy's 'Software Is Changing (Again)': Software 3.0, LLMs as fallible 'people spirits', partial autonomy, keeping AI on a leash, building docs for agents.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/natural-language-prompts-have-become-new",
+      "stance": "asserts",
+      "quote": "your prompts are now programs that program the LLM ... these prompts are written in English",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A framing of how software is built rather than a testable factual claim; widely adopted as a lens.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Many sources frame vibe coding as a new paradigm with natural language as the primary interface (67% of 36 RQ1 sources use an NL-to-code framing); this reflects how it is framed, not a demonstrated paradigm shift.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L825-L832",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llms-show-jagged-intelligence-superhuman-some",
+      "stance": "asserts",
+      "quote": "They display jagged intelligence ... they will insist that 9.11 is greater than 9.9",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Well documented: uneven performance across tasks, persistent simple failures alongside expert-level output.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/partial-autonomy-tools-adjustable-level-more",
+      "stance": "asserts",
+      "quote": "it's less Iron Man robots and more Iron Man suits that you want to build",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Matches 2025-26 usage patterns (interactive agents dominate), though fully autonomous background agents have grown useful for scoped tasks.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review names a tension between agentic delegation framings and the most-recommended safeguards (HITL review, validation), concluding 'a workable balance appears to lie between the two'.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L2005-L2015",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeding-human-verification-diff-views-visual",
+      "stance": "asserts",
+      "quote": "we as humans are doing the verification. It is in our interest to make this loop go as fast as possible",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Review is the measured bottleneck (DORA, Faros); tooling that speeds verification directly addresses it.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "I always go in small incremental chunks",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/large-generated-pull-requests-exceed-what",
+      "stance": "asserts",
+      "quote": "it's not useful to me to get a diff of 10,000 lines of code to my repo ... I'm still the bottleneck",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The SmartBear/Cisco review study found defect detection drops beyond ~200-400 LOC per session; AI makes large PRs cheap to produce.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The vibe-coding review names a verification gap between generation speed and developers' capacity to verify. It doesn't measure PR size.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1906-L1918",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "spend a bit more time to be more concrete in your prompts which increases the probability of successful verification",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reliable-autonomous-agents-will-take-about",
+      "stance": "asserts",
+      "quote": "when I see things like oh 2025 is the year of agents I get very concerned ... this is the decade of agents",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A long-range forecast; consistent with autonomy history (self-driving) but not yet checkable.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+      "stance": "asserts",
+      "quote": "the code was actually the easy part ... most of it actually was when I tried to make it real",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/gets-solution-most-way-quickly-but",
+      "stance": "asserts",
+      "quote": "I had the menu genen basically demo working on my laptop in a few hours and then it took me a week",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Widely observed and consistent with Stanford's rework data and METR; the exact 70/30 split is a heuristic.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/documentation-written-llm-agents-markdown-llms",
+      "stance": "asserts",
+      "quote": "Vercel ... is replacing every occurrence of click with an equivalent curl command",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents parse markdown and commands far more reliably than GUI instructions; llms.txt and markdown docs are spreading for this reason.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-coding-agents-vulnerable-prompt-injection",
+      "stance": "asserts",
+      "quote": "they are susceptible to prompt injection risks. They might leak your data",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Repeatedly demonstrated against coding agents (malicious repos, issues, docs and MCP tool descriptions causing exfiltration or unsafe commands).",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/non-engineers-such-pms-can-now",
+      "stance": "asserts",
+      "quote": "suddenly everyone is a programmer because everyone speaks natural language",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tools like Lovable, v0, Replit let non-developers produce working prototypes; widely observed.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "45% of sources stress accessibility for novices and non-programmers. That evidence is mostly grey literature and centered on prototypes.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1393-L1400",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

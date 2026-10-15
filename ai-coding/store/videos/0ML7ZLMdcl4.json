@@ -1,0 +1,89 @@
+{
+  "id": "0ML7ZLMdcl4",
+  "title": "AI Engineering at Jane Street - John Crepezzi",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 1017,
+  "thumbnail": "https://i.ytimg.com/vi_webp/0ML7ZLMdcl4/sddefault.webp",
+  "summary": "Jane Street describes training custom models for OCaml using workspace-snapshot data, RL against build and test results, and a shared editor backend.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/helps-little-can-hurt-when-working",
+      "stance": "asserts",
+      "quote": "models themselves are just not very good at oaml",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Model quality tracks training-data volume; benchmarks such as MultiPL-E show much lower scores in less common languages.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fine-tuning-code-model-proprietary-language",
+      "stance": "asserts",
+      "quote": "you have to have the model see a bunch of examples that are in the shape of the type of question",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Supervised fine-tuning works best when training data matches the deployment input/output format, consistent with Meta's CodeCompose and general fine-tuning experience.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reinforcement-learning-against-compile-test-results",
+      "stance": "asserts",
+      "quote": "better align the model to write code that actually does compile and past tests",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "RL with verifiable rewards from execution and tests is a well-established technique behind recent coding model gains.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/evaluating-models-verifiable-coding-tasks-essential",
+      "stance": "asserts",
+      "quote": "having evaluations that are meaningful is kind of a Cornerstone of making sure that models don't go off the rails",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Without task-level evals, fine-tuning regressions go unnoticed; this is standard ML practice.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/model-agnostic-tooling-layer-lets-organizations",
+      "stance": "asserts",
+      "quote": "we're able to change it in one place Downstream of the editors and then have it available everywhere",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Decoupling tooling from a single model eases switching, which matters given fast model turnover, but it is an architecture choice with tradeoffs rather than a measured result.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

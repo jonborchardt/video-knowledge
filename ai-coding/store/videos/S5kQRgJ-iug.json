@@ -1,0 +1,179 @@
+{
+  "id": "S5kQRgJ-iug",
+  "title": "AI-Generated Code Is Creating a New Kind of Technical Debt",
+  "channel": "Imran Gardezi",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCkHCHzcgtbzB9k8CuPhk6BQ",
+  "durationSec": 710,
+  "thumbnail": "https://i.ytimg.com/vi_webp/S5kQRgJ-iug/sddefault.webp",
+  "summary": "Consultant catalogs AI-generated technical-debt patterns and a three-question review checklist.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/almost-right-code-costlier-obviously-wrong",
+      "stance": "asserts",
+      "quote": "Almost right is more expensive than completely wrong",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Stack Overflow 2025 found 'almost right' was the top frustration (66%); subtle defects that pass tests are costlier to find later, a well-known pattern.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The Debt paper finds smells and subtle issues don't break things immediately, so they pass review and persist. That matches the mechanism, but cost isn't compared.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L904-L907",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review notes code is often accepted on behavior, so plausible-but-incorrect output can pass unnoticed and surface later as defects; it does not compare the cost with obviously wrong code.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L79-L86",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-tools-tend-suppress-type-lint",
+      "stance": "asserts",
+      "quote": "The AI hadn't fixed the TypeScript errors it was finding along the way. It had suppressed them",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents commonly add any/ts-ignore/lint-disable or weaken tests to get green checks; widely reported and seen in reward-hacking evaluations.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-duplicates-existing-utilities-types",
+      "stance": "asserts",
+      "quote": "the AI writes a new date formatting function, different name ... same purpose",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "New Code Duplication smells were introduced by 23% of AI-devs vs 11% of non-AI devs, but authors call the differences minor (high variance, identical medians).",
+          "source": "ai-coding/sources/2507.00788.txt#L2003-L2013",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+      "stance": "asserts",
+      "quote": "AI doesn't know your conventions. It knows the internet's conventions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Without enough context, models fall back to common internet patterns; instruction files and indexing reduce but do not remove this.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR 2025: developers report AI code leaves 'more to fix up, in terms of code conventions, code style' and needs major cleanup to meet repo standards (qualitative, 16 developers).",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1015-L1021",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Correctness issues dominated by undefined variables (23,856) lead authors to say AI code 'may look locally correct, but still fail to stay consistent with the surrounding context'; this is consistency with surrounding code, not style conventions specifically.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L672-L674",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "WL27 is quoted saying conversationally generated code 'often lacks cohesive structure, consistent patterns, and proper documentation'; this is a single peer-reviewed source, not a measured drift rate.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1434-L1438",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/security-data-critical-code-auth-payments",
+      "stance": "asserts",
+      "quote": "Some code is too critical for AI generation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Studies find frequent vulnerabilities in AI-generated security code, so the risk is real; but well-reviewed AI-assisted code by people who understand it can be fine.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developer-trust-accuracy-generated-code-has",
+      "stance": "asserts",
+      "quote": "Only 29% of developers trust AI-generated code. This was down from 40%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Stack Overflow surveys show trust in AI accuracy fell from about 40% (2024) to about 30% (2025) while usage rose.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-should-able-explain-generated-code",
+      "stance": "asserts",
+      "quote": "can the developer who submitted this PR walk through the logic line by line with the AI's comments deleted",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Ownership and maintainability require understanding; it's a reasonable review standard rather than an empirical finding.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "AI makes disciplined teams unstoppable. AI makes undisciplined teams dangerous",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2025 found AI amplifies existing engineering practices; strong fundamentals predict AI benefit.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "id": "fly-youre-all-nuts",
+  "title": "My AI Skeptic Friends Are All Nuts",
+  "channel": "Fly",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://fly.io/blog/youre-all-nuts/",
+  "summary": "Thomas Ptacek's polemic against AI skeptics: agents that compile, lint and test make LLM coding genuinely useful, hallucination is mostly caught by tooling, but developers must still read and own the code.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/coding-agents-run-tools-loop-step",
+      "stance": "asserts",
+      "quote": "pasting the resulting (broken) code into your editor, you're not doing what the AI boosters are doing.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/working-coding-agent-just-llm-calling",
+      "stance": "asserts",
+      "quote": "You could write an effective coding agent in a weekend.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "Its strengths would have more to do with how you think about and structure builds and linting and test harnesses",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/agents-compile-lint-test-loops-catch",
+      "stance": "asserts",
+      "quote": "If their LLM invents a new function signature, the agent sees the error.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Compilers and tests do catch invented signatures, but hallucinated packages and plausible-but-wrong logic still slip through.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "23,856 undefined variable or reference issues reached merged AI commits in real repos (e.g. an undefined 'cache' argument that went unfixed for 42 days), so such errors do slip through. They were concentrated in only 1,650 of 302k commits (~0.5%), which is consistent with them being uncommon.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L667-L679",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Validation/test pipelines are the most recommended safeguard (88% of 33 sources), yet hallucinated or incorrect generation is still the most reported failure mode (13 of 47 sources), and the review says the effectiveness of these safeguards is largely untested (L1650-1654).",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1551-L1568",
+          "confidence": 0.2,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google migration report: build/test validation with ML 'repair' fixes failures in a significant number of cases and Gemini 'didn't hallucinate wrong parameters' on Joda->java.time, but humans still had to revert incorrect or unnecessary edits in most Int32->64 changes, so loops help without making errors minor (see also L510-L513, L236-L242).",
+          "source": "ai-coding/sources/2501.06972.txt#L316-L326",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "If you build something with an LLM that people will depend on, read the code.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+      "stance": "asserts",
+      "quote": "LLMs are showing signs of adapting to local idiom, but we're not there yet.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/helps-little-can-hurt-when-working",
+      "stance": "asserts",
+      "quote": "People say \"LLMs can't code\" when what they really mean is \"LLMs can't write Rust\".",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/top-down-usage-mandates-unrealistic-productivity",
+      "stance": "asserts",
+      "quote": "Tech execs are mandating LLM adoption. That's bad strategy.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/background-coding-agents-assigned-routine-issues",
+      "stance": "asserts",
+      "quote": "Five of them get the same feedback a junior dev gets. And five get merged.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/implementation-gets-cheap-product-taste-judgment",
+      "stance": "asserts",
+      "quote": "even the most Claude-poisoned serious developers in the world still own curation, judgement, guidance, and direction",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/llms-can-rapidly-diagnose-production-incidents",
+      "stance": "asserts",
+      "quote": "watched it in seconds spot LVM metadata corruption issues on a host we've been complaining about for months",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Anecdotes and vendor incident-response agents report useful triage, but controlled evaluations of root-cause accuracy remain limited.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/will-transform-software-engineering-jobs-rather",
+      "stance": "denies",
+      "quote": "LLMs really might displace many software developers.",
+      "verdicts": []
+    }
+  ]
+}

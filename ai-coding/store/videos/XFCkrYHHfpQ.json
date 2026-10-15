@@ -1,0 +1,117 @@
+{
+  "id": "XFCkrYHHfpQ",
+  "title": "How Agents Use Context Engineering",
+  "channel": "LangChain",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCC-lyoTfSrcJzA1ab3APAgw",
+  "durationSec": 1044,
+  "thumbnail": "https://i.ytimg.com/vi_webp/XFCkrYHHfpQ/sddefault.webp",
+  "summary": "LangChain's Lance on offload/reduce/isolate context principles across Claude Code, Manus and Deep Agents.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+      "stance": "asserts",
+      "quote": "the task length is doubling around every seven months",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR's 2025 time-horizon study found ~7-month doubling (faster in 2024-25); later measurements stayed on or above trend, with wide error bars.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "performance degrades with respect to context length",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-should-keep-notes-external-scratchpad",
+      "stance": "asserts",
+      "quote": "giving agents access to a file system is very useful. It lets agents save and recall information",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "External notes/memory files are a standard, effective pattern (Anthropic, Manus write-ups) for long tasks; adds retrieval overhead.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-agent-too-many-tools-degrades",
+      "stance": "asserts",
+      "quote": "keeping the function calling layer very lightweight",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tool-selection accuracy drops as tool count grows (e.g. Berkeley function-calling and RAG-MCP results); dynamic tool loadouts help.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/loading-capabilities-demand-skills-read-only",
+      "stance": "asserts",
+      "quote": "progressively disclosing actions ... without loading all that into the system prompt ahead of time",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Skills load only short descriptions until used, and deferred tool loading cuts context; this is how Claude Code, Manus and others manage large capability sets.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/summarizing-pruning-conversation-history-keeps-long",
+      "stance": "asserts",
+      "quote": "when you do summarization you necessarily lose information",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Summarization cuts cost and keeps sessions going, but lossy summaries can drop details that matter; quality depends on what is kept.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/delegating-research-subagents-their-own-context",
+      "stance": "asserts",
+      "quote": "That sub aent has its own context window ... and just return the output back to the parent agent",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Subagents return summaries rather than raw exploration; Anthropic reports gains from multi-agent research, at higher token cost.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

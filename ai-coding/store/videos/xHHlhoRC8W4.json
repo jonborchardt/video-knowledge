@@ -1,0 +1,230 @@
+{
+  "id": "xHHlhoRC8W4",
+  "title": "Measuring the impact of AI on software engineering  – with Laura Tacho",
+  "channel": "The Pragmatic Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPbwhExawYrn9xxI21TFfyw",
+  "durationSec": 4290,
+  "thumbnail": "https://i.ytimg.com/vi_webp/xHHlhoRC8W4/sddefault.webp",
+  "summary": "DX CTO Laura Tacho pushes back on AI hype with measurement data: headline code-share figures are misleading, gains depend on enablement, small batches and stability.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/large-share-code-major-companies-now",
+      "stance": "denies",
+      "quote": "those headlines suggest that 30% of Microsoft's code that's running in production was authored by AI. That is not at all realistic.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Google and Microsoft executives cite ~25-50% of new code AI-generated; the figures are self-reported and usually count accepted suggestions, not finished code.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/acceptance-rate-counts-generated-lines-poor",
+      "stance": "asserts",
+      "quote": "Do we really want to measure AI impact in terms of lines of code generated? I certainly don't. We don't recommend it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accepted suggestions are often later rewritten or deleted, and output volume has long been a poor proxy for productivity; controlled studies measure task time or delivery instead.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+      "stance": "asserts",
+      "quote": "organizationally how fast we can create code has never been the bottleneck. It's been everything around it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies of developer time show coding is a minority of work; DORA and Faros 2025 found individual coding gains often don't translate into delivery throughput.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-report-saves-more-time-debugging",
+      "stance": "asserts",
+      "quote": "stack trace analysis and refactoring existing code we're saving more time than the midloop code generation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "This comes from self-reported vendor survey data, which is known to misestimate time savings, though diagnosis tasks avoid the review overhead of generated code.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Developers praised AI for finding bugs and quick troubleshooting, but in the experiment debugging-style use lowered task output while raising accuracy. Reports of value exist, but no time saving was observed.",
+          "source": "ai-coding/sources/4859137.txt#L1157-L1171",
+          "confidence": 0.2,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/can-lower-developer-satisfaction-speeding-coding",
+      "stance": "asserts",
+      "quote": "many developers were actually feeling less satisfied because AI is accelerating the parts that they enjoy.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "DORA reported this pattern in one year's data, but other surveys find AI users report higher satisfaction, so the effect is mixed.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: some engineers miss hands-on coding and find prompting unfulfilling, but people mostly delegate boring tasks (44% of Claude work was tasks they wouldn't enjoy), which is the opposite of the claimed mechanism.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L104-L108",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/higher-adoption-has-associated-lower-team",
+      "stance": "asserts",
+      "quote": "if AI adoption increases by 25% they actually predict that it's going to be a minus 7.2% 2% reduction in delivery stability",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2024 estimated a 25% AI-adoption increase associated with ~1.5% lower throughput and ~7.2% lower stability; DORA 2025 found throughput improved but instability persisted.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "Bigger batch sizes are riskier. >> So we want to keep batch size small.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-built-deep-modules-small-interfaces",
+      "stance": "asserts",
+      "quote": "leaders re recommitting to like clean interfaces between services. I would say that's probably the top thing that comes up",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear module boundaries help both humans and agents navigate and test; consistent with Ousterhout and practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/documentation-written-llm-agents-markdown-llms",
+      "stance": "asserts",
+      "quote": "for AI, it's really good to have the coding examples. There need can't be visual dependencies.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents parse markdown and commands far more reliably than GUI instructions; llms.txt and markdown docs are spreading for this reason.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clear-policy-access-internal-data-small",
+      "stance": "asserts",
+      "quote": "they've had to be so intentional with acceptable use policies, with licensing ... And the more intentional and structured a roll out it is",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/organizational-adoption-needs-active-enablement-training",
+      "stance": "asserts",
+      "quote": "They really do need support and enablement and training",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Adoption and gains vary widely across teams and DORA finds organizational practices matter, but evidence isolating training effects is mostly observational.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measuring-impact-requires-pre-baselines-mix",
+      "stance": "asserts",
+      "quote": "combining self-reported metrics with system and workflow metrics is absolutely essential when measuring the impact of AI tools",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Self-reports alone overstate speedups (METR) and telemetry alone misses experience and quality, so triangulating against a baseline is standard measurement practice.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/combining-deterministic-transformation-tools-codemods-code",
+      "stance": "asserts",
+      "quote": "that's a really common pattern right now is using AI for migration",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Migration case studies (Google, Amazon Java upgrades, Airbnb) got their scale from pairing LLMs with deterministic tooling and validation rather than free-form generation.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-implementation-means-teams-should-run",
+      "stance": "asserts",
+      "quote": "think about it more as experiment portfolios",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This is a strategic framing about how to organize product work rather than a measurable claim.",
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

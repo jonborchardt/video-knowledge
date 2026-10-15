@@ -1,0 +1,75 @@
+{
+  "id": "rCIZflYEpEk",
+  "title": "Coding with AI episode 3: fixing a real world bug in Redis vector sets with LLMs",
+  "channel": "Salvatore Sanfilippo",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCDDG9vOcmgwlslJJpCWjqOg",
+  "durationSec": 1090,
+  "thumbnail": "https://i.ytimg.com/vi/rCIZflYEpEk/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH2CYAC0AWKAgwIABABGGwgbChsMA8=&rs=AOn4CLACNu0aaoUFxltl10bW70BB1yhAqQ",
+  "summary": "Antirez uses Claude to find a segfault introduced by his own refactor of Redis vector sets, stressing that giving the right context makes it work.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/giving-model-right-minimal-context-matters",
+      "stance": "asserts",
+      "quote": "it's very important to provide as fast as possible the right context.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "As models improved, output depends more on relevant, high-signal context than phrasing; consistent with Anthropic/Cursor guidance and long-context degradation evidence.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llms-can-quickly-pinpoint-regression-when",
+      "stance": "asserts",
+      "quote": "so it knows the version of the code when it was correct and the version of the code modified with the bug.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Localizing bugs from diffs and traces is a known LLM strength, but success depends on the cause being visible in the supplied context.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-tools-catch-real-bugs",
+      "stance": "asserts",
+      "quote": "it immediately found my bug, which was awesome.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+      "stance": "asserts",
+      "quote": "if I was less experienced at working with LLMs, I could just drop the implementation here",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Experts get more reliable results and catch errors, but several RCTs show larger measured speedups for juniors, and METR found experts slowed; contested.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

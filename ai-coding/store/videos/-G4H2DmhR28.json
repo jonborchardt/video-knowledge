@@ -1,0 +1,197 @@
+{
+  "id": "-G4H2DmhR28",
+  "title": "Can Agentic AI Develop Embedded Systems with Model-Based Design?",
+  "channel": "MATLAB",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCgdHSFcXvkN6O3NXvif0-pA",
+  "durationSec": 866,
+  "thumbnail": "https://i.ytimg.com/vi_webp/-G4H2DmhR28/sddefault.webp",
+  "summary": "MathWorks shows an agent building an inverted-pendulum controller inside a Simulink workflow, arguing that agents should follow established engineering processes, reuse verified tools and test early rather than one-shot vibe coding.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "this was a collaborative iterative process. We guided the agent step by step. We reviewed what it produced",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "if you don't think about exactly what you want in quantifiable and verifiable ways, then you don't know how to direct the agent",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Two practitioner grey sources say fuller context (requirements docs, examples, API docs, constraints) reduces ambiguity, and 40% of RQ2 sources report explicit context provisioning, but the review finds no comparison against ad-hoc prompting.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1064-L1070",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Airbnb: complex files only succeeded once prompts grew to 40-100K tokens with up to 50 related files, few-shot examples and migration guidelines, which proved 'highly effective'.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L23-L44",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/combining-deterministic-transformation-tools-codemods-code",
+      "stance": "asserts",
+      "quote": "Simulink generated embedded code from a model using well-tested, deterministic workflows. So, the same design always produces the same code.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Migration case studies (Google, Amazon Java upgrades, Airbnb) got their scale from pairing LLMs with deterministic tooling and validation rather than free-form generation.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Google migration experience report: simple LLM prompting alone only works for the simplest migrations; AST tooling, heuristics and LLMs together are needed, and AST checks catch model mistakes cheaply and deterministically.",
+          "source": "ai-coding/sources/2501.06972.txt#L619-L641",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "we were able to test early and often. We can catch errors at a point in the process where it's still easy to fix them.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "72% of 43 workflow sources put validation pipelines (tests, lint, runtime checks) at the core of the loop, and the review concludes quality 'seems to depend on the strength of the evaluation loop'; this is a frequency of mentions, and workflow comparisons are limited.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1213-L1225",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Google: every LLM edit goes through a build and unit-test loop with ML-powered repair of failures, and validation across several steps can 'recover' imperfect first attempts; this is the core of their migration pipeline.",
+          "source": "ai-coding/sources/2501.06972.txt#L316-L327",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Airbnb modelled its Enzyme->RTL migration as a state machine gated on Jest, ESLint and tsc, and retrying with the validation errors fed back fixed most simple-to-medium files within 10 attempts.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L14-L22",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "why following proven engineering workflows matter even more when AI is involved",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2025 found AI amplifies existing engineering practices; strong fundamentals predict AI benefit.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+      "stance": "asserts",
+      "quote": "The problem, though, with this approach, at least for engineering problems, is that you're skipping the process that makes the result trustworthy.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "this is something that Naren and I were able to verify was correct through our own expertise and understanding of the problem",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies show novices accept incorrect AI code more often; verifying output requires domain and code literacy.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Google RCT authors suggest heavier coders gain more from AI because current tools require spending much time verifying and editing generated code (interaction beta=-0.29, not significant), so coding skill conditions the benefit.",
+          "source": "ai-coding/sources/2410.12944.txt#L484-L493",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025: 75% of experienced developers read every line of AI code, 56% often make major cleanups, and 100% report needing to modify it; this shows correction is routinely needed, but the study does not test less-skilled users.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1015-L1021",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The Task 1 developer's Java proficiency influenced downstream outcomes more than AI use, and authors conclude human expertise still matters; qualitative quotes describe using experience to catch hacky AI suggestions.",
+          "source": "ai-coding/sources/2507.00788.txt#L2549-L2556",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic: the 'paradox of supervision' (supervising Claude needs the coding skills overuse may erode), and a security engineer saw a 'dangerously smart' proposal that only experienced judgment could catch.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L93-L94",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

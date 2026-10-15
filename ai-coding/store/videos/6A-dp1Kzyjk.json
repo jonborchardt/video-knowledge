@@ -1,0 +1,178 @@
+{
+  "id": "6A-dp1Kzyjk",
+  "title": "Measuring AI code assistants and agents with the AI Measurement Framework",
+  "channel": "DX",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPE0KPDWEDdO3VcgTc5Njjw",
+  "durationSec": 2473,
+  "thumbnail": "https://i.ytimg.com/vi_webp/6A-dp1Kzyjk/sddefault.webp",
+  "summary": "DX founders present an AI measurement framework (utilization, impact, cost), warning against acceptance-rate metrics and self-reported speedups and urging baselines.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/acceptance-rate-counts-generated-lines-poor",
+      "stance": "asserts",
+      "quote": "acceptance rate is an incredibly flawed and inaccurate metric because when developers accept code, much of that code is often then later modified or deleted",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accepted suggestions are often later rewritten or deleted, and output volume has long been a poor proxy for productivity; controlled studies measure task time or delivery instead.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR 2025 argues that lines of code and task counts can rise without productivity (more verbose code, PRs split up), and so uses fixed, pre-defined tasks with time to completion as the outcome.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L42-L48",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Authors argue acceptance rate and immediate correctness capture only what happens at introduction and miss later maintenance, where 22.7% of AI-introduced issues persist; they also cite work finding acceptance rate correlates with self-reported productivity.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L946-L951",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Authors state completion acceptance rates are 'far from' the maintainability and productivity constructs, and deliberately exclude studies relying on acceptance rate, keystrokes or LoC; assertion, not test.",
+          "source": "ai-coding/sources/2507.00788.txt#L255-L257",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google: the share of committed AI code is a good proxy for time savings in most cases, but it misses value such as an imperfect first draft that locates the change sites, so they judge success by end-to-end time saved instead.",
+          "source": "ai-coding/sources/2501.06972.txt#L182-L202",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measuring-impact-requires-pre-baselines-mix",
+      "stance": "asserts",
+      "quote": "combining both self-reported data with telemetry and systems data is the way to go as always.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Self-reports alone overstate speedups (METR) and telemetry alone misses experience and quality, so triangulating against a baseline is standard measurement practice.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic pairs surveys with 200K Claude Code transcripts and says self-reports (subject to social-desirability and recall bias) should be read alongside objective usage data, with better instruments needed.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L165-L167",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "developers uh self- reports of the fact that they were faster with AI than without it were were actually wrong in in many cases",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/self-reported-code-maintainability-tends-decline",
+      "stance": "asserts",
+      "quote": "we do see not in all cases but in many cases a decrease in code self-reported co code maintainability scores.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Vendor survey data shows some decline, but the Echoes of AI controlled study found no significant maintainability penalty, so the effect is uncertain.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "In a 272-developer follow-up using multi-item self-report scales, AI use was associated with lower code maintainability and more technical debt. This held after dropping zero-experience respondents.",
+          "source": "ai-coding/sources/4859137.txt#L1219-L1229",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/non-engineers-such-pms-can-now",
+      "stance": "asserts",
+      "quote": "giving designers and PMs some of these vibe coding tools as a way to do more rapid prototyping and exploration.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tools like Lovable, v0, Replit let non-developers produce working prototypes; widely observed.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "the key would be to have that code go through the same code reviews, the same gating quality processes as any other code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-metrics-should-aggregated-team-level",
+      "stance": "asserts",
+      "quote": "we're always talking about aggregating it on a team level. We're not ever talking about using it for individual performance management",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This is a management policy recommendation, not an empirical claim.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+      "stance": "asserts",
+      "quote": "AI is not a magic silver bullet",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The Stanford 100k-developer study and other field data put average gains around 10-20%, far below 2x-10x marketing claims.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "V2qjnBDZZ7A",
+  "title": "Playwright CLI vs MCP Server: Which is Actually BETTER for Claude Code?",
+  "channel": "Better Stack",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCkVfrGwV-iG9bSsgCbrNPxQ",
+  "durationSec": 285,
+  "thumbnail": "https://i.ytimg.com/vi_webp/V2qjnBDZZ7A/sddefault.webp",
+  "summary": "Compares Playwright CLI (as a skill) with the Playwright MCP server for Claude Code on token use and features.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/mcp-tool-definitions-consume-significant-context",
+      "stance": "asserts",
+      "quote": "already 15% of the context is being used because all of these MCP tools are being loaded",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Each MCP server injects tool schemas into context; large servers can use tens of thousands of tokens, and agents use CLIs well. Deferred tool loading has since reduced this.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/loading-capabilities-demand-skills-read-only",
+      "stance": "asserts",
+      "quote": "Notice it only takes up 68 tokens",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Skills load only short descriptions until used, and deferred tool loading cuts context; this is how Claude Code, Manus and others manage large capability sets.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

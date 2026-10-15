@@ -1,0 +1,205 @@
+{
+  "id": "Sf9vENm2GnE",
+  "title": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
+  "channel": "Stanford Digital Economy Lab",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UC3ouVBKcYMqvnYLjpOu8EjA",
+  "durationSec": 3604,
+  "thumbnail": "https://i.ytimg.com/vi_webp/Sf9vENm2GnE/sddefault.webp",
+  "summary": "METR's Joel Becker contrasts exponential time-horizon benchmark growth with the 2025 developer RCT slowdown, explains why the gap exists, and says newer uplift data is unreliable but likely shows speedup.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+      "stance": "asserts",
+      "quote": "they take 20% longer to complete tasks when they're allowed to use AI versus not.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "they say that AI made them complete tasks in 20% less time.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+      "stance": "asserts",
+      "quote": "plotted with log log scaled y- axis, it looks remarkably steady um in its exponential pattern.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR's 2025 time-horizon study found ~7-month doubling (faster in 2024-25); later measurements stayed on or above trend, with wide error bars.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/growth-agents-task-horizons-accelerated-recently",
+      "stance": "asserts",
+      "quote": "in the recent past, it looks like it's um it's accelerating or or or rising rising more quickly.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR noted a faster ~4-month doubling for 2024-25 models; later data roughly held, though the sample is small and uncertain.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/benchmarks-overstate-real-world-usefulness-because",
+      "stance": "asserts",
+      "quote": "about half of the cases that Sweetbench measures as um as as passing these algorithmic tests would be merged into Maine by these maintainers.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR's own analysis and follow-ups found many benchmark-passing patches aren't mergeable; messy, high-context work lags benchmark scores.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+      "stance": "asserts",
+      "quote": "maybe you need 99% reliability at the one hour um time horizon to get uh to get speed up on on task an hour",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "A reasonable explanation consistent with METR's 44% acceptance and review overhead; the specific threshold is conjecture.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-shrink-task-complexity-codebase",
+      "stance": "asserts",
+      "quote": "these developers are very highly familiar with their work and that these repositories are large and complex.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent across Stanford's data, METR's mature-repo slowdown and long-context degradation results.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+      "stance": "asserts",
+      "quote": "I think this is sort of significantly understating the degree to which people are sped up today.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Newer models may help, but METR attributed much of the slowdown to context, review overhead and repo familiarity, not model quality alone; METR's own later follow-up was mixed.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/randomized-uplift-studies-becoming-unreliable-because",
+      "stance": "asserts",
+      "quote": "developers who expect to be sped up very significantly are systematically dropping out of our data.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR's Feb 2026 update reported this selection problem; how much it biases estimates is uncertain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR Feb 2026: more developers declined to join because they won't work without AI, and 30-50% withheld tasks they didn't want to do without AI. METR calls its estimate a likely lower bound and is redesigning the study (pay cut from $150 to $50/h also contributed).",
+          "source": "ai-coding/sources/metr-2026-experiment-design.txt#L70-L74",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measured-task-speedup-can-greatly-overstate",
+      "stance": "asserts",
+      "quote": "speed up can can greatly overstate the the degree to which people are getting more value out of AI.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Speedup on cheap tasks need not translate into value, but AI can also enable new valuable work, so the direction is case-dependent.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The 56% lab speedup would imply nearly twice as many tasks, but real-world field experiments measured only a 26% increase in completed tasks, showing lab task speedups overstate on-the-job gains (though gains remain positive).",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR Feb 2026: developers changed task types and output quality (tests, docs) under AI, so time differences 'may not represent value-differences'. This gap can run in either direction; METR itself thinks its estimate understates uplift.",
+          "source": "ai-coding/sources/metr-2026-experiment-design.txt#L77-L79",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "A doubling of completeness came with a measurable loss in comprehension (-5.95 pp), and the tasks where AI helped most (D4) showed the steepest loss (55% vs 93% correct). The authors argue downstream costs may offset the time saved, but they did not measure those costs.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L900-L927",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-tools-reduce-perceived-effort-more",
+      "stance": "asserts",
+      "quote": "They enjoy using cursor more as a as a sort of um workflow",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Consistent with METR's perception gap and surveys reporting less frustration/fatigue; a plausible explanation rather than a measured mechanism.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

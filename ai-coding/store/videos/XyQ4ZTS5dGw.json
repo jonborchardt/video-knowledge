@@ -1,0 +1,191 @@
+{
+  "id": "XyQ4ZTS5dGw",
+  "title": "Agentic Engineering in Action with Mitchell Hashimoto",
+  "channel": "Zed Industries",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCXYwRX_RB_qQ7sij1sgW-Cg",
+  "durationSec": 3664,
+  "thumbnail": "https://i.ytimg.com/vi/XyQ4ZTS5dGw/sddefault.jpg",
+  "summary": "Mitchell Hashimoto walks through a real Ghostty fix done with Claude Code, acting as architect, cleaning up output, and noting where agents excel and where they are hopeless.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/system-design-architecture-judgment-remain-human",
+      "stance": "asserts",
+      "quote": "I'm more or less like the architect of the software project.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Humans still own constraints and tradeoffs, but models can now propose reasonable designs when given context; the gap is narrowing.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+      "stance": "asserts",
+      "quote": "the more vague and the longer you let AI spend on something, uh, the more of a mess it's going to make",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-reliable-mechanical-refactoring-such",
+      "stance": "asserts",
+      "quote": "I think that all the agents are really good at refactoring.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Refactoring is a relative strength, but studies of LLM refactorings still find behavior-changing errors, so tests or review remain needed.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "AI-co-authored commits fix about as many lint-level code smells as they introduce (439,817 vs 432,748), which the authors take as effective local cleanup; this shows smell removal, not reliability on specific refactorings like extracting functions.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L919-L922",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Observational: 72% of AI-devs resolved the Bumpy Road smell vs 46% without AI, but AI-devs fully removed Complex Method smells less often (18% vs 32%); assistants, not agents.",
+          "source": "ai-coding/sources/2507.00788.txt#L1982-L2001",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google: 87% of AI JUnit-migration code landed unchanged and the Joda migration saved about 89% of time on small clusters, but in the int64 migration humans usually reverted some changes and messy tests needed human fixes.",
+          "source": "ai-coding/sources/2501.06972.txt#L417-L423",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Airbnb automated 97% of a 3.5K-file test-framework migration while preserving test intent and coverage, but only with validation gates, many retries and heavy context, so a single pass is not reliable.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L61-L65",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/helps-little-can-hurt-when-working",
+      "stance": "asserts",
+      "quote": "anything more than trivial changes to Zig code bases. Like it's still hopeless uh with that language.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Model quality tracks training-data volume; benchmarks such as MultiPL-E show much lower scores in less common languages.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/handles-routine-coding-well-but-struggles",
+      "stance": "asserts",
+      "quote": "I only find it effective and efficient to use these agentic processes for mid to junior level problems.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks and field studies show strong performance on well-specified, common tasks and weaker results on context-heavy, novel logic.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "asserts",
+      "quote": "what tool have you ever adopted where you were immediately faster.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-tools-catch-real-bugs",
+      "stance": "asserts",
+      "quote": "oh, I actually forgot to update the code. Um, so it's found bugs that way.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/running-coding-agents-parallel-requires-isolating",
+      "stance": "asserts",
+      "quote": "they can't operate in parallel in the same folder",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Shared files and databases cause collisions; worktrees or containers per agent are the standard approach, and Codex and Claude apps build this in.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/multimodal-models-can-reproduce-screenshot-well",
+      "stance": "asserts",
+      "quote": "it's like shockingly good at this sort of multimodal like here's a picture and reproduce it in Swift UI.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Screenshot-to-code benchmarks show strong layout reproduction for common components, with fidelity dropping for complex or custom interfaces.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "still challenge yourself to understand how that works even if you're not going to write it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies show novices accept incorrect AI code more often; verifying output requires domain and code literacy.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

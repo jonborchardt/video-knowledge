@@ -1,0 +1,33 @@
+{
+  "id": "ryGJLXruUxs",
+  "title": "Claude Code Git Worktree Setup: Run Multiple Agents in Parallel",
+  "channel": "Damian Galarza",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCI9w0pAIlXrQuSYA79x0F3w",
+  "durationSec": 442,
+  "thumbnail": "https://i.ytimg.com/vi_webp/ryGJLXruUxs/sddefault.webp",
+  "summary": "Practical setup for running parallel Claude Code agents with git worktrees, symlinked secrets and per-worktree databases.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/running-coding-agents-parallel-requires-isolating",
+      "stance": "asserts",
+      "quote": "they're all pointing at the same directory. Same files, same git state, same database",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Shared files and databases cause collisions; worktrees or containers per agent are the standard approach, and Codex and Claude apps build this in.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

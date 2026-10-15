@@ -1,0 +1,156 @@
+{
+  "id": "rfd-shared-oxide-rfd-0576",
+  "title": "576 - Using LLMs at Oxide | RFD | Oxide",
+  "channel": "Oxide Computer Company",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://rfd.shared.oxide.computer/rfd/0576#_llms_as_programmers",
+  "summary": "Oxide's internal policy on LLM use: encouraged as reader, researcher, editor, reviewer and programmer, but humans stay responsible, prose is not LLM-written, and mandates are rejected.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/llms-highly-effective-reading-comprehension-tasks",
+      "stance": "asserts",
+      "quote": "LLMs are superlative at reading comprehension, able to process and meaningfully comprehend documents effectively instantly.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Summarization and document QA are among the best-validated LLM strengths, though errors and omissions on long technical documents still occur.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assistants-tend-agree-users-rather-challenge",
+      "stance": "asserts",
+      "quote": "LLMs are infamous pleasers — and you may find that the breathless praise from an LLM is in fact more sycophancy than analysis.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Sycophancy is a well-documented LLM failure mode in research and vendor reports, though newer models and prompting can reduce it.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-generated-prose-clich-recognizable-readers",
+      "stance": "asserts",
+      "quote": "At best, writing from LLMs is hackneyed and cliché-ridden; at worst, it brims with tells that reveal that the prose is in fact automatically generated.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Studies show readers rate text lower once they believe it is AI-written and LLM prose has detectable stylistic tells, but careful use can produce unremarkable prose and 'always clichéd' overstates it.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/text-detectors-such-pangram-can-identify",
+      "stance": "asserts",
+      "quote": "We use Pangram at Oxide, and have found its false positive rate to be extremely low.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Independent evaluations find Pangram among the most accurate detectors with low false positives on typical text, but detectors in general degrade on edited, short or non-native-English text.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "but that review should not be accepted as a human substitute.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeds-throwaway-prototyping-far-more-production",
+      "stance": "asserts",
+      "quote": "This is especially valuable for code that is experimental or auxiliary or otherwise throwaway.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Direction is well supported: greenfield, low-stakes work gets the biggest gains in studies and surveys. The specific multipliers are anecdote.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-should-able-explain-generated-code",
+      "stance": "asserts",
+      "quote": "LLM-generated code should not be reviewed by others if the responsible engineer has not themselves reviewed it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Ownership and maintainability require understanding; it's a reasonable review standard rather than an empirical finding.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/top-down-usage-mandates-unrealistic-productivity",
+      "stance": "asserts",
+      "quote": "Such decrees are absurd: they undermine the autonomy and mastery essential in our work.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Reports of token-maxing and resentment support it, but some mandated rollouts (e.g. Shopify, Coinbase) report adoption gains; evidence is anecdotal either way.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/authors-should-disclose-their-use-tools",
+      "stance": "denies",
+      "quote": "Note this isn’t as simple as disclosure of usage",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A norm about research and engineering practice rather than a testable claim.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/extra-code-volume-produces-increases-complexity",
+      "stance": "asserts",
+      "quote": "we do not want to become as gavage geese, being force-fed unnecessary complexity in hopes that an LLM will somehow spare us from asphyxiation.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear and DORA 2025 data show more churn and duplication and lower delivery stability as AI adoption rises; more code means more to maintain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

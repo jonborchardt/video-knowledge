@@ -1,0 +1,103 @@
+{
+  "id": "martinfowler-tdd-in-the-agent-loop",
+  "title": "TDD inside the agent loop - theater or actual value?",
+  "channel": "martinfowler.com",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://martinfowler.com/articles/exploring-gen-ai/tdd-in-the-agent-loop.html",
+  "summary": "A small exploratory eval finds that asking an agent to do TDD inside its own loop gave no better design, test or mutation scores while costing several times more tokens.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/test-driven-development-red-green-refactor",
+      "stance": "denies",
+      "quote": "there was no clearly discernable difference based on TDD workflow versus no TDD workflow",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/agents-told-follow-tdd-often-skip",
+      "stance": "asserts",
+      "quote": "agents still sometimes skipped or faked the red step, or implemented ahead of the test so that it passed immediately",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent with practitioner reports that agents struggle to follow incremental test-first discipline, though evidence is mostly anecdotal.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/running-tdd-inside-agent-loop-multiplies",
+      "stance": "asserts",
+      "quote": "TDD reliably cost several times more, how many times exactly is variable.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "More turns and tool calls mechanically raise token usage, though cache hits reduce the dollar impact.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "the non-TDD and test-first runs always created the full design (architecture, data types, edge cases, contracts) before writing any code or tests",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-tests-often-tautological-deriving-expected",
+      "stance": "asserts",
+      "quote": "tests checked the implementation's output against itself",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "A commonly observed failure mode in generated tests, but how often it occurs has not been well quantified.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-tend-over-complicate-solutions",
+      "stance": "asserts",
+      "quote": "They frequently overshot and implemented more than the current test demanded",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/heavy-prompt-guardrails-constrain-agents-can",
+      "stance": "asserts",
+      "quote": "being overly specific about how we want a model to do something is not a sustainable approach",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "That feedback should be automated wherever possible",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/mutation-testing-better-way-tdd-instructions",
+      "stance": "asserts",
+      "quote": "I monitor and improve regression quality with the help of mutation testing, instead of giving elaborate TDD instructions and hoping for the best.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Mutation testing directly measures test effectiveness, but there is little comparative evidence against TDD prompting.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

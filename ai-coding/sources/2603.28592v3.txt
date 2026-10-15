@@ -1,0 +1,1261 @@
+arXiv:2603.28592v3 [cs.SE] 13 Oct 2026  Debt Behind the AI Boom: A Large-Scale Empirical Study of
+                                        AI-Generated Code in the Wild
+
+                                        YUE LIU, Adelaide University, Australia
+                                        RATNADIRA WIDYASARI, University of Victoria, Canada
+                                        YANJIE ZHAO, Huazhong University of Science and Technology, China
+                                        IVANA CLAIRINE IRSAN, Singapore Management University, Singapore
+                                        JUNKAI CHEN, Singapore Management University, Singapore
+                                        DAVID LO, Singapore Management University, Singapore
+
+                                        AI coding assistants are now widely used in software development. Software developers increasingly integrate
+                                        AI-generated code into their codebases to improve productivity. Prior studies have shown that AI-generated
+                                        code may contain code quality issues under controlled settings. However, we still know little about the real-
+                                        world impact of AI-generated code on software quality and maintenance after it is introduced into production
+                                        repositories. In other words, it remains unclear whether such issues are quickly fixed or persist and accumulate
+                                        over time as technical debt. In this paper, we conduct a large-scale empirical study on the code quality issues
+                                        introduced by AI coding assistants in the wild. To achieve that, we built a dataset of 302.6k verified AI-authored
+                                        commits from 6,299 GitHub repositories, covering five widely used AI coding assistants. For each commit, we
+                                        run static analysis before and after the change to precisely attribute which code smells, correctness issues, and
+                                        security issues the AI introduced. We then track each introduced issue from the introducing commit to the
+                                        latest repository revision to study its lifecycle. Our results show that we identified 484,366 distinct issues, and
+                                        that code smells are by far the most common type, accounting for 89.3% of all issues. Between 7.5% and 14.8%
+                                        of each assistant's commits introduce at least one issue. More importantly, 22.7% of tracked AI-introduced
+                                        issues still survive at the latest version of the repository. These findings show that AI-generated code can
+                                        introduce long-term maintenance costs into real software projects and highlight the need for stronger quality
+                                        assurance in AI-assisted development.
+
+                                        ACM Reference Format:
+                                        Yue Liu, Ratnadira Widyasari, Yanjie Zhao, Ivana Clairine Irsan, Junkai Chen, and David Lo. 2026. Debt Behind
+                                        the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild. 1, 1 (October 2026), 22 pages.
+                                        https://doi.org/10.1145/nnnnnnn.nnnnnnn
+
+                                        1 Introduction
+
+                                        Through AI coding assistants (e.g., Cursor, Claude Code), software developers can now describe
+                                        what they want in natural language and get working code back in seconds. They significantly
+                                        improve development productivity. Thus, AI is becoming standard equipment for modern software
+                                        developers [23]. According to the 2025 Stack Overflow Developer Survey, 84% of professional
+                                        developers are using or are planning to use AI coding tools within their development processes [63].
+
+                                        Authors' Contact Information: Yue Liu, Adelaide University, Adelaide, South Australia, Australia, knox.liu@adelaide.edu.au;
+                                        Ratnadira Widyasari, University of Victoria, Victoria, Canada, ratnadiraw@uvic.ca; Yanjie Zhao, Huazhong University of
+                                        Science and Technology, Wuhan, China, yanjie_zhao@hust.edu.cn; Ivana Clairine Irsan, Singapore Management University,
+                                        Singapore, Singapore, ivanairsan@smu.edu.sg; Junkai Chen, Singapore Management University, Singapore, Singapore,
+                                        junkaichen@smu.edu.sg; David Lo, Singapore Management University, Singapore, Singapore, davidlo@smu.edu.sg.
+
+                                        Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee
+                                        provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the
+                                        full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored.
+                                        Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires
+                                        prior specific permission and/or a fee. Request permissions from permissions@acm.org.
+                                        © 2026 Copyright held by the owner/author(s). Publication rights licensed to ACM.
+                                        ACM XXXX-XXXX/2026/10-ART
+                                        https://doi.org/10.1145/nnnnnnn.nnnnnnn
+
+                                                                                                                          , Vol. 1, No. 1, Article . Publication date: October 2026.
+2 Liu et al.
+
+AI-generated code is also widely used in real-world software projects. For example, both Google
+and Microsoft disclosed in 2025 that AI now writes over 20% of their new code [45, 55]. Similarly,
+GitHub reported that more than 1.1 million public repositories used AI coding tools between 2024
+and 2025 [23]. Overall, AI-generated code has graduated from experiment to production reality,
+and it is everywhere.
+
+   Although AI coding assistants have proven effective at generating functional programs, many
+previous research studies have revealed a range of quality concerns in AI-generated code. Recent
+studies have shown that AI-generated code suffers from functional bugs, runtime errors, and
+systemic maintainability issues [35, 62]. Also, the code produced by AI coding tools poses security
+risks [36, 47, 49]. Pearce et al. [47] found that about 40% of AI-generated code in security-sensitive
+contexts contains critical vulnerabilities. However, recent research [49, 56] has found that developers
+tend to place excessive trust in the quality of AI-generated code, blindly accepting the code without
+proper validation. As a result, these unverified code snippets are merged into production codebases.
+Over time, this can cause a considerable accumulation of technical debt, which can be costly and
+time-consuming to address [27, 41].
+
+   Recognizing these risks, recent empirical studies have started to investigate code quality issues of
+AI-generated code in real-world repositories. These studies cover a range of practical concerns, such
+as security weaknesses [20, 69], project-level development velocity [28], pull request acceptance
+rates [70], and code redundancy [29]. For example, He et al. [28] found that Cursor adoption in 807
+GitHub repositories led to a transient velocity boost but persistent increases in code complexity.
+However, existing studies still have several limitations. First, most studies [28, 70] focus on a single
+tool or a narrow set of tools, which limits the generalizability of their findings. Second, many
+studies [28, 29, 70] do not identify AI-generated code at the commit level. Instead, they rely on
+project-level adoption signals, such as the presence of AI tool configuration files in a repository
+(e.g., .cursorrules or .claude/ ). These signals suggest possible AI use, but do not directly show which
+commits or files were generated by AI. Third, they mostly evaluate code at a single point in time,
+failing to capture the long-term lifecycle of the code [20, 29, 35]. Finally, in real-world repositories,
+AI-assisted code and human-written code are often mixed together, and AI usage may leave no
+reliable trace. Thus, it remains unknown how AI-generated code actually ages in production. We
+still do not know whether these code quality issues persist, get refactored, or silently accumulate
+over time.
+
+   To bridge this gap, we conduct a large-scale empirical study to investigate AI-introduced code
+quality issues in the wild. Our approach consists of three steps. First, we build a large dataset of
+verified AI-authored commits from five popular coding assistants (i.e., GitHub Copilot, Claude,
+Cursor, Gemini, and Devin) across over 6,000 GitHub repositories. We use explicit Git metadata to
+identify commits generated by AI coding tools across thousands of GitHub repositories. This design
+is analogous in spirit to research on self-admitted technical debt (SATD), which studies the subset
+of technical debt that developers explicitly document rather than the full universe of debt [11, 50].
+Similarly, we focus on the subset of AI-assisted contributions whose AI involvement is explicitly
+visible in Git metadata. Although this does not cover all AI-assisted changes, it provides a more
+reliable basis for attribution and large-scale empirical analysis. Second, we perform a commit-level
+quality analysis. For each AI-authored commit, we run static analysis tools on the source code
+immediately before and after the change. This allows us to precisely identify which code smells,
+correctness issues, and security issues the AI introduced or fixed. Third, we conduct a debt lifecycle
+analysis. We track each introduced issue to the latest repository revision (HEAD) to determine
+whether it still survives or has been resolved. Through this design, our study provides the first
+comprehensive view of how AI-generated code ages in real-world software.
+Contribution. To the best of our knowledge, this paper is the first to:
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild  3
+
+                Fig. 1. Contributor statistics for the Anthropic claudes-c-compiler repository.
+
+    · Conduct a large-scale empirical study of AI-introduced code quality issues across five major
+       AI coding assistants (i.e., GitHub Copilot, Claude, Cursor, Gemini, and Devin) and over 6,000
+       real-world GitHub repositories.
+
+    · Perform commit-level differential analysis to precisely attribute code smells, correctness
+       issues, and security issues to individual AI-authored commits.
+
+    · Track AI-introduced issues from the introducing commit to the latest repository revision,
+       revealing whether it persists or gets resolved over time.
+
+   Open Science. To support the open science initiative, we publish the study dataset and a
+replication package, which is publicly available in GitHub.1
+
+   Paper Organization. Section 2 presents the background and motivation. Section 3 describes
+our approach. Section 4 presents the experimental setup. Section 5 presents the results. Section 6
+discusses the findings and their implications. Section 7 presents the related work. Section 8 discloses
+the threats to validity. Section 9 draws the conclusions.
+
+2 Background
+2.1 AI Coding Assistants
+Modern AI coding assistants (e.g., Cursor, Claude Code, GitHub Copilot) are now deeply embedded
+in software development workflows. They help software developers write, modify, explain, test,
+or debug code using natural-language instructions and code context. Advanced agentic tools can
+now process whole functions, files, or even repositories to autonomously create pull requests with
+minimal human intervention. Driven by these improved capabilities, AI-generated code is entering
+production codebases at unprecedented speed and scale. According to GitHub, over 1.1 million
+public repositories adopted AI coding tools between 2024 and 2025 [23]. As shown in Figure 1,
+in Anthropic's claudes-c-compiler repository [5], Claude appears as the top contributor, with
+3,957 commits and nearly 500K lines of code added within just a few weeks. At this volume and
+speed, it is unlikely that all AI-generated code receives a thorough human review. This makes it
+increasingly important to understand the long-term implications of AI-generated code on software
+quality and maintenance.
+
+   In controlled (lab) settings [35, 47], the provenance of code is usually clear since researchers can
+generate the code directly. However, it is different in real-world codebases. AI-generated code and
+human-written code are often interleaved during development, and AI usage is not always explicitly
+
+1https://github.com/yueyueL/tech-debt-ai-coding
+
+                                                                                  , Vol. 1, No. 1, Article . Publication date: October 2026.
+4 Liu et al.
+
+   hysteria2 [60], hysteria2.py:L77, e277daf
+  # issue: shell=True introduces command-injection risk
+  subprocess.run(
+
+        "systemctl stop hysteria-iptables.service 2>/dev/null",
+        :sh:e:ll:=:Tr:u:e
+  )
+
+                          
+
+   hysteria2 [60], hysteria2.py:L77 d9e392d
+  #fix: ``Improve code security by removing shell=True from subprocess calls''
+  subprocess.run(
+
+        ["systemctl", "disable", "hysteria-iptables.service"],
+        stderr=subprocess.DEVNULL
+  )
+
+Fig. 2. Command injection risk introduced by GitHub Copilot in hysteria2 (1.7K stars) [60] and later
+removed in a Copilot-assisted fix commit [58].
+
+   librealsense [53], test-fps-performance.py:L168, 5535b8a
+  # issue: undefined constant used before definition
+  t:i:m:e.:s:le:e:p:(D:E:VI:C:E_:I:N:IT:_:SL:E:EP:_:SE:C:)
+
+                          
+
+   librealsense [53], test-fps-performance.py:L37, 14026c8
+  # fix: ``Add missing constants & fixed 6fps bug for live/FPS weekly CI''
+  DEVICE_INIT_SLEEP_SEC = 3
+  time.sleep(DEVICE_INIT_SLEEP_SEC)
+
+Fig. 3. Undefined variables introduced by GitHub Copilot in librealsense (8.6K stars) [53], causing a
+runtime error. A human maintainer committed a fix three weeks later [30].
+
+recorded in the repository history. This makes it harder to attribute code changes reliably and to
+observe the long-term impact of AI-generated code after it is merged into production codebases.
+
+2.2 Technical Debt
+Technical debt refers to design or implementation choices that prioritize short-term speed over
+long-term quality [9]. These shortcuts may help in the short term, but they increase the future cost
+of maintaining and evolving the software [6, 33]. Its costs can accumulate over time if not addressed.
+This concern becomes more important as AI coding assistants are widely adopted. AI coding
+assistants help developers work faster and produce more code. Previous studies have shown that
+AI-generated code contains code smells, correctness issues, and security vulnerabilities [20, 35, 47].
+In this study, we focus on these three categories as code-level technical debt: code smells that
+reduce maintainability, correctness issues that affect program behavior, and security issues that
+may expose systems to risk. When such issues are accepted into production repositories, they can
+accumulate as technical debt in the codebase.
+
+2.3 Motivation
+The technical debt introduced by AI coding assistants is not just a theoretical risk. Such issues
+are becoming increasingly common in real-world codebases. Figure 2 and 3 show two exam-
+ples. In Figure 2, a GitHub Copilot-authored commit introduced a shell=True subprocess call in
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild                                               5
+
+1 Data Collection                               2 Commit-Level Quality Analysis               3 Debt Lifecycle Analysis
+
+                     GitHub Archive (BigQuery)                           AI-Authored Commits   Commit                      File
+                                                                                              Messages                  Changes
+                Repository Discovery
+ AI Actor Login Author Email                             Code            Code
+                                                        (Before)         (After)
+            Author Name Commit Message
+                         Candidate Repos                Static Analysis                                     Subsequent  HEAD (Latest
+                                                                                                                        Revision)
+                                                                                                          Co...mmits
+                                                Pylint  ESnjLsisnctan    Semgrep
+                                                                                              Introduced
+                                                                           Issues             Issues
+                                                                           (After)
+                                                 Issues                                                 Static Analysis at HEAD
+                                                (Before)
+
+   Clone Full Scan All   Identify AI-                   Compare & Classify                    Compare & Classify
+Commit History Branches   Authored
+                          Commits
+
+Filtering (e.g., 100 stars)
+
+Repositories & AI-Authored Commits                      Fixed            Introduced           Surviving                  Resolved
+                                                        Issues             Issues              Issues                     Issues
+
+                                                Fig. 4. Overview of our approach.
+
+hysteria2.py [59]. This pattern increases security risk by allowing command injection if user
+input is involved. A human developer later fixed it, noting in the commit message: "Improve code
+security by removing shell=True from subprocess calls" [58]. Figure 3 shows a bug from Intel's
+librealsense [53]. In another case, GitHub Copilot replaced a literal value with a named constant,
+but never defined the constant [31]. The buggy code remained in the repository for over three
+weeks before the maintainer committed a fix adding the missing definition [30].
+
+   These two examples highlight the motivation of our study. AI coding assistants can generate
+functional code, but they may introduce quality issues into production codebases. Developers also
+tend to over-trust and accept AI suggestions without thorough review [49, 56]. These issues may
+be fixed later, or they may persist for a long time, or even create long-term maintenance challenges.
+Recent studies [20, 28, 35, 44, 62, 69, 70] have examined the AI-generated code, but they have several
+limitations. Most prior studies focus on a single tool, a small set of tasks, or controlled settings. For
+example, Watanabe et al. [70] measured the initial acceptance rate of AI-authored code in a single
+repository. We still know little about the long-term implications of AI-generated code on software
+quality and maintenance. Thus, we study the code quality issues introduced by various AI coding
+assistants in the wild: how often it is introduced, what kinds of issues appear, and whether those
+issues still remain in the codebase over time.
+
+3 Approach
+
+Figure 4 provides an overview of our approach. We first collect AI-authored commits from GitHub
+repositories at scale (Section 3.1). We then analyze each AI-authored commit at the code level to
+determine which quality issues it introduced or fixed (Section 3.2). Finally, we track the lifecycle
+of both the issues and the code itself to determine whether AI-introduced debt persists or gets
+resolved over time (Section 3.3).
+
+3.1 Data Collection
+
+This step aims to identify candidate GitHub repositories that contain AI-authored commits.
+Repository Discovery. We use the GitHub Archive dataset [21], which records public GitHub
+events (e.g., PushEvent), to identify repositories with potential AI-authored code. The dataset is
+publicly available through Google BigQuery [22], which allows large-scale querying over historical
+events. We scan PushEvent records from January 2024 to March 2026, focusing on repositories
+
+                                                                                  , Vol. 1, No. 1, Article . Publication date: October 2026.
+6 Liu et al.
+
+with recent development activity. From each event, we extract four metadata fields: actor login,
+author name, author email, and commit message. We then match these fields against our curated
+AI-attribution rules (described in the next section) to identify potential AI-authored commits. Only
+repositories with at least one matching event are retained. To improve coverage of active and
+popular repositories, we also query the GitHub REST API [25] for top-starred repositories and
+apply the same attribution rules through full-history repository scanning. This step helps us ensure
+that repositories with substantial AI-authored activity are not missed during the discovery stage.
+AI Attribution Rules. We build attribution rules for widely adopted AI coding tools (e.g., Cursor,
+GitHub Copilot, Claude Code) identified in the 2025 Stack Overflow Developer Survey [63]. We
+identify AI-authored commits using explicit signals in Git metadata. Our approach covers AI-
+authored commits only when the use of an AI coding tool leaves explicit traces in Git metadata.
+The rules are based on four sources of evidence: (1) actor logins (e.g., copilot-swe-agent[bot]),
+(2) author emails (e.g., noreply@anthropic.com), (3) author names (e.g., Cursor Agent), and
+(4) Co-authored-by trailers in commit messages. These rules rely on explicit machine-readable
+signals in Git metadata. To finalize the rule list, two authors manually reviewed candidate patterns
+and verified that they provided reliable evidence of AI coding tool involvement. In total, 29 AI
+coding tools left identifiable traces in the repositories we collected. The full list of tools and detection
+rules is included in our replication package.
+Full-History Commit Scanning. The discovery stage captures only push-event metadata. How-
+ever, it provides only partial evidence about AI-authored activity in a repository. To obtain a more
+complete set of AI-authored commits, we perform a bare clone of each candidate repository. We
+then scan the full commit history across all branches and apply the same attribution rules to every
+commit. For each commit, we extract the SHA, author and committer metadata, timestamp, and
+full commit message. This step allows us to identify AI-authored commits that are not directly
+visible during repository discovery (e.g., commits on non-default branches, commits outside the
+observation window).
+Filtering. To focus on established open-source projects, we filter out repositories that do not meet
+our study criteria. We keep only repositories with at least 100 GitHub stars. We also require at least
+one confirmed AI-authored commit. Our downstream analysis is restricted to production Python,
+JavaScript, and TypeScript source files, since these are among the most widely used programming
+languages [63] and are well supported by static analysis tools. We therefore exclude repositories
+that do not contain any source files in these languages. In total, the discovery stage identified
+587,118 candidate repositories. After applying the star threshold, 12,770 repositories remained.
+After full-history scanning and language filtering, we obtained 6,699 repositories with confirmed
+AI-authored commits.
+
+3.2 Commit-Level Quality Analysis
+
+To understand the impact of AI coding tools, we avoid evaluating a repository snapshot at a
+single point in time. For each AI-authored commit , we analyze two versions of the source
+code: the version at 's parent revision (before the commit is applied) and the version at  itself
+(after the commit is applied). Comparing these two versions allows us to determine which quality
+issues the commit introduced or fixed. Our analysis focuses on source files written in Python,
+JavaScript, and TypeScript. We exclude files that are unlikely to reflect production code quality
+(e.g., tests, documentation, configuration files, auto-built artifacts, and vendored dependencies).
+Files are classified based on their paths and naming patterns (e.g., files under test/ or __tests__/
+directories, or matching *_test.py). The full classification rules are included in our replication
+package.
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild       7
+
+Repository: superagent-ai/superagent
+Commit: 46695d1 (author: Claude)
+File: node/src/server.js
+Detector: ESLint
+Rule: no-dupe-keys
+Line: 86
+Message: Duplicate key `lazyConnect'.
+
+    Fig. 5. Example of a recorded issue detected by ESLint in a Claude-authored commit [64].
+
+Static Analysis. For each AI-authored commit  that modifies a source file  , we check out two
+
+versions of  (i.e., the version at 's parent commit (before) and the version after applying  (after)).
+
+We run the same static analysis toolchain on both versions to identify potential code issues. We
+
+use ESLint (for JavaScript and TypeScript) [15] and Pylint (for Python) [52] to detect code smells
+
+and correctness issues. For security-related issues, we use Semgrep [61], which provides a unified
+
+framework for multi-language static analysis. For each detected issue, we record its rule identifier,
+
+line number, detector, and message. Figure 5 shows one such record, where ESLint flags a duplicate
+
+object key in a Claude-authored commit [64]. This produces two issue sets  : the issue set before
+
+the commit, denoted by  -, and the issue set after the commit, denoted by  +.
+
+                                           
+
+Differential Attribution. To find out which issues commit  introduced or fixed, we compare
+
+ -  and  +. We also use git  diff to extract the set of changed lines, denoted by  . However, not
+
+            
+
+all differences between  - and  + (i.e., issues in  + \  - or  - \  +) represent real changes. When a
+                                           
+
+commit inserts or deletes lines, it can cause existing issues to shift line numbers. To address this, we
+
+first match issues across the two sets. An issue  is considered matched if the same rule and message
+appear in both  - and  + at the same or nearby line number. After matching, the remaining issues
+
+                            
+
+are classified as follows. An unmatched issue    + is classified as introduced only if its line falls
+
+                                                                                     
+
+within  . This means the issue exists only after the commit, on a line that the commit actually
+changed. An unmatched issue    - is classified as fixed. This means the issue existed before the
+
+                                                           
+
+commit but is no longer present afterward.
+
+3.3 Debt Lifecycle Analysis
+
+Detecting technical debt at the time of introduction is only half the picture. An issue that is quickly
+resolved has a very different cost than one that lingers for months. We therefore track whether
+AI-introduced issues persist or get resolved over time.
+Issue Survival. For each issue introduced by an AI-authored commit, we check whether it still
+exists at the repository's latest revision (i.e., HEAD). If the file has been renamed, we follow its history
+using git log ­follow. We then run static analysis on the corresponding file at HEAD. Next, we
+look for the same issue in the analysis results. We do not rely on the line number alone, since
+the location of the issue may move as the file changes. Instead, we match issues using their rule
+identifier together with a small amount of surrounding code context. If a match is found, the issue
+is classified as surviving. Otherwise, it is classified as not surviving. In other words, an introduced
+issue is counted as surviving only if the same issue is still present at HEAD. If the original issue
+disappears and a different issue appears later, the original issue is treated as not surviving.
+
+   At the same time, we also record whether files touched by AI-authored commits are modified
+again before HEAD. We trace the subsequent commit history of each affected file to understand how
+
+                                          , Vol. 1, No. 1, Article . Publication date: October 2026.
+8 Liu et al.
+
+Table 1. Summary of AI-authored commits by coding tool.
+
+AI Coding Tool # AI Commits # Repos Avg. Commits/Repo
+
+GitHub Copilot  118,012  4,487                           26.3
+Claude          138,249  2,434                           56.8
+Cursor           19,587                                  27.4
+Gemini           12,429    714                           18.3
+Devin            14,302    681                           48.0
+                           298
+
+Total           302,579 6,299*                           48.0
+
+Each name groups all variants of the tool (e.g., Claude includes Claude Code and its different model versions).
+                          *Repositories may use more than one tool; the total is deduplicated.
+
+actively it is maintained after the AI-authored change. This additional context helps us interpret
+the survival results and understand the maintenance patterns around AI-introduced debt.
+
+4 Experimental Setup
+
+In this section, we describe the experimental setup for our study.
+
+4.1 Dataset Summary
+
+We collected our dataset by mining GitHub and applying filtering criteria described in Section 3.1.
+After repository-level filtering, we obtained 6,699 repositories with confirmed AI-authored commits,
+covering 29 AI coding tools. However, some tools have very few commits, which may not provide
+reliable data for comparison. Thus, we focus on the five assistants with more than 10,000 attributed
+commits: GitHub Copilot [24], Claude [4], Cursor [10], Gemini [26], and Devin [7]. This results in
+6,412 repositories with 317.4K AI-attributed commits. For the commit-level quality analysis, we
+further exclude cases that cannot be analyzed reliably such as repositories that became unavailable,
+deletion-only commits, and commits that do not modify production Python, JavaScript, or Type-
+Script source files. Our final analysis dataset therefore includes 6,299 public GitHub repositories
+with 302.6K analyzed AI-attributed commits. Table 1 summarizes the distribution of commits across
+the five AI coding assistants in our dataset. Figure 6a shows the monthly growth of AI-authored
+commits, with a sharp increase starting from mid-2025. Figure 6b shows that our dataset covers
+repositories with a wide range of popularity levels.
+
+4.2 Research Questions
+
+Our study focuses on the following research questions:
+RQ1: What kinds of technical debt are introduced by AI coding assistants? This question
+investigates the basic characteristics of AI-introduced technical debt. We study what types of debt
+they introduce, including code smells, correctness issues, and security issues. We also analyze how
+these issues are distributed across languages, rules, and AI coding assistants.
+RQ2: How does technical debt vary across AI coding assistants? This question compares
+different AI coding assistants at the commit level. We examine whether some assistants introduce
+more technical debt than others, and whether the kinds of issues they introduce differ. This helps
+us understand whether technical debt patterns are tool-specific.
+RQ3: To what extent does AI-introduced technical debt persist in the codebase? Introducing
+debt is not necessarily a problem if it gets fixed quickly. The real concern is debt that persists
+unnoticed. We compare the number of issues introduced and fixed by AI-authored commits to
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild                  9
+
+              70k                                               50K+, 1.6%                                                                    5
+              60k
+N of Commits  50k                                                        10K-50K,        100-500, 44.1%                                              10K-5
+              40k                                                          11.4%                                                                       11.4
+              30k
+              20k                                                5K-10K,                                                                      5K-10K,
+              10k                                                  8.6%                                                                        8.6%
+
+                 0                                              1K-5K, 21.2%                                1K-5K, 21.2%
+
+2025-04                                                         500-1K,
+    2025-07                                                     13.4%
+        2025-10
+            2026-01
+                      2024-01
+                          2024-04
+                              2024-07
+                                  2024-10
+                                      2025-01
+                                          2025-04
+                                              2025-07
+                                                  2025-10
+                                                       2026-01
+
+                    (a) Monthly commits.                        (b) Repository distribution.
+
+Fig. 6. Overview of our dataset: (a) growth of AI-authored commits over time, and (b) distribution of reposi-
+tories by GitHub star count as of March 2026.
+
+assess the net impact. We study whether introduced issues remain in the latest version of the
+repository or disappear over time.
+
+4.3 Evaluation Metrics
+
+We use the following metrics to support our three research questions. For issue introduction (RQ1,
+RQ2), we report the total number of issues introduced by AI-authored commits, the percentage of
+commits that introduce at least one issue, and the average number of issues per commit. We break
+these down by issue type, programming language, rule, and AI coding assistant.
+
+   For the debt lifecycle (RQ3), we use two metrics. First, we compute the net impact by comparing
+the number of issues introduced and fixed by AI-authored commits. Second, we measure the
+survival rate of introduced issues:
+
+                                 Survival Rate = # issues surviving at HEAD
+                                                            # issues tracked
+
+4.4 Validation
+
+To assess the reliability of our pipeline, two authors independently inspected random samples of
+AI-attributed commits and detected issues.
+
+   We randomly sampled 100 AI-attributed commits. For each commit, we manually verified whether
+it was correctly attributed to the claimed AI coding assistant using the Git metadata and commit
+message described in Section 3.1. One sampled case could not be verified because the corresponding
+repository was no longer available. For the remaining 99 verifiable commits, both authors indepen-
+dently labeled all cases, and all 99 were confirmed as correctly attributed after manual inspection.
+This yields a conservative attribution precision of 99.0% over the full sample, or 100% over the
+verifiable subset.
+
+                                                                                  , Vol. 1, No. 1, Article . Publication date: October 2026.
+10 Liu et al.
+
+Table 2. Overview of AI-introduced technical debt by issue type.
+
+Type                # Introduced # Repos # Commits % of Issues
+
+Code Smells         432,748  3,812                                        25,740  89.3%
+Correctness Issues   28,931    665                                         1,650   6.0%
+Security Issues      22,687                                                5,142   4.7%
+                             1,643
+
+All Issues          484,366 3,946                                         27,677  -
+
+ ArchiveBox [3], core/models.py:L594:598, d360798
+
+# issue: broad exception handler silently swallows JSON-loading failures
+try:
+
+      with o:p:e:n(:j:so:n:_:pa:t:h): as f:
+            data = json.load(f)
+
+e:x:c:ep:t::
+      pass
+
+Listing 1. Code smell: broad exception handling and missing file encoding in ArchiveBox [1] (Claude Code).
+
+   We also randomly sampled 100 introduced issues from manually verified AI-attributed commits
+and validated two aspects of each: (1) whether the reported issue was a real issue, rather than a
+false positive from the static analysis tools; and (2) whether the survival classification at HEAD was
+correct (i.e., whether the issue was correctly labeled as surviving or not surviving). After excluding
+one case with unavailable or incomplete validation context, both authors independently labeled
+99 issue cases. For issue validity, the raw agreement was 95/99 = 0.960, with Cohen's  = 0.851,
+indicating almost perfect agreement. For survival classification, the raw agreement was 97/99 =
+0.980, with Cohen's  = 0.960, also indicating almost perfect agreement.
+
+   Using the adjudicated labels as reference, the pipeline achieved an accuracy of 85.9%, precision
+of 85.9%, recall of 100.0%, and F1 of 92.4% for issue validity. For survival classification, the pipeline
+achieved an accuracy of 84.8%, precision of 86.7%, recall of 81.2%, and F1 of 83.9%. These results
+suggest that our pipeline provides reliable large-scale estimates, while still leaving some room for
+noise in issue detection and lifecycle tracking.
+
+5 Results
+
+This section presents the empirical results of our study and answers the three research questions
+raised in Section 4.2.
+
+5.1 RQ1: Types and Patterns of AI-Introduced Debt
+
+Overview. Table 2 presents a summary of the technical debt introduced by AI coding assistants in
+our dataset. In total, we identified 484,366 introduced issues across 3,946 repositories (62.6% of 6,299
+repositories) and 27,677 commits (9.1% of 302,579 commits). This shows that a non-trivial portion
+of AI-authored commits introduce quality issues, and that these issues affect a large number of
+real-world repositories. Among all introduced issues, code smells, correctness issues, and security
+issues are the three main categories. Code smells are by far the most common, accounting for 89.3%
+of all introduced issues. Below, we discuss each type in detail with real-world examples.
+Code Smells. Code smells are maintainability problems that make code harder to understand,
+debug, and evolve [19]. They increase long-term maintenance costs, even if they do not cause
+immediate failures. This finding is consistent with prior work under controlled settings [35, 62],
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild              11
+
+Table 3. Top 5 most frequent rules violated by AI coding assistants for each issue type.
+
+Type                Rule                                  Count Rate
+
+Code Smells         Broad exception handling              41,374                         8.5%
+                    Unused variables or parameters        28,272                         5.8%
+                    Unused argument                       24,357                         5.0%
+                    Shadowed outer variable               20,647                         4.3%
+                    Access to protected member            19,796                         4.1%
+
+Correctness Issues  Undefined variable or reference       23,856                          4.9%
+                    Redeclared symbol                      1,888                          0.4%
+                    Possibly used before assignment         1575                          0.3%
+                    Access member before definition                                       0.2%
+                    Unsubscriptable object                   893                         0.04%
+                                                             176
+
+Security Issues     Path traversal via path.join/resolve  8,677                          1.8%
+                    Unsafe format string                  4,792                          1.0%
+                    Non-literal regular expression        1,212                          0.3%
+                    Child process execution                                              0.1%
+                    SQLAlchemy raw query execution          607                          0.1%
+                                                            591
+
+ firecrawl [17], firecrawl.py:L4004:4047, fb99747
+# issue: undefined variable "cache" causes a runtime NameError
+async def generate_llms_text(
+
+            self,
+            url: str,
+            *,
+            max_urls: Optional[int] = None,
+            show_full_text: Optional[bool] = None,
+            experimental_stream: Optional[bool] = None) -> GenerateLLMsTextStatusResponse:
+
+      response = await self.async_generate_llms_text(
+            url,
+            max_urls=max_urls,
+            show_full_text=show_full_text,
+            :ca:c:he:=:ca:c:h:e,
+            experimental_stream=experimental_stream
+
+      )
+
+     Listing 2. Correctness issues: undefined variable causing NameError in Firecrawl [18] (Devin).
+
+but our study confirms that the same pattern also appears in real-world repositories. Table 3 lists
+the top 5 most common code smell patterns (e.g., broad exception handling, unused variables or
+parameters). These issues are often small and easy to overlook during code review. Listing 1 shows
+an example from ArchiveBox [1] (>27k stars). In commit d36079829bed [3], Claude Code updated
+the metadata loading logic in ArchiveBox. But the new code introduces two code smells. First, the
+bare except: pass block catches all exceptions silently. This makes errors harder to detect and
+debug. Second, the open() function does not specify a file encoding. This can lead to inconsistent
+behavior across different platforms and locales, since the default encoding may vary [43]. These
+issues may not cause immediate failures, but they can lead to maintenance challenges and subtle
+bugs in the future.
+
+                                                                                  , Vol. 1, No. 1, Article . Publication date: October 2026.
+12                                                                                          Liu et al.
+
+   data-formulator [39], tables_routes.py:L881:889, d8549c0
+ # issue: user-controlled table name is interpolated directly into SQL
+ for source_name in source_table_names:
+
+        if source_name == updated_table_name:
+              df = pd.DataFrame(updated_table['rows'])
+
+        else:
+              with db_manager.connection(session['session_id']) as db:
+                    r:e:s:ul:t:=::d:b.:e:xe:c:ut:e:(
+                       f:":S:EL:E:CT::*:F:R:OM::{s:o:u:rc:e:_n:a:me:}:"):.:f:et:c:hd:f:():
+                    df = result
+
+Listing 3. Security issue: possible SQL injection in microsoft/data-formulator [40] (Copilot).
+
+Correctness Issues. Correctness issues are code defects that can cause the program to fail during
+execution. Compared with code smells, they are less frequent. From Table 2, 28,931 correctness issues
+are identified, which cover 665 repositories and 1,650 commits. However, their impact is more direct
+and severe than code smells. Table 3 shows the top 5 most common correctness issues, which include
+undefined variable or reference, redeclared symbol, access to member before definition, possibly
+used before assignment, and unsubscriptable object. These patterns suggest that AI-generated code
+may look locally correct, but still fail to stay consistent with the surrounding context. What is
+interesting in this table is that we identified 23,856 cases of undefined variable or reference. Listing 2
+presents one such case from firecrawl (>98k stars). In commit fb99747ba978 [17], Devin added
+a call that passes cache=cache as an argument. However, cache is never defined in the method,
+which leads to a NameError when that path is executed. The maintainer later fixed the bug by
+removing the undefined argument [16]. This example shows that AI-generated code can introduce
+real correctness issues. These errors require additional human effort to fix later.
+Security Issues. Security issues are another concern in AI-generated code. In our study, this
+
+category includes not only direct security vulnerabilities, but also insecure coding patterns that
+can be viewed as security debt. Some of these issues may be exploitable at the time they are
+introduced, while others may become security risks after later code changes or broader system
+integration. Thus, it is important to identify and fix these issues early before they accumulate in
+production repositories. As shown in Table 2, potentially insecure code patterns are detected in
+1,643 repositories and 5,142 commits. Table 3 shows that common security issues such as path
+traversal via path.join or path.resolve, unsafe format strings, non-literal regular expressions,
+and child process execution. These patterns suggest that AI-generated code can introduce unsafe
+practices in process execution, file path handling, and string formatting. A common pattern across
+these issues is unsafe handling of untrusted input, where user- or context-controlled values flow
+into security-sensitive operations without proper validation or sanitization. Figure 2 shows one such
+example from hysteria2 (>1.5k stars). A Copilot-authored commit [59] introduced a shell=True
+subprocess call. This pattern is not necessarily an exploitable vulnerability by itself in the current
+version, but it creates security debt because it can enable command injection if untrusted input
+later reaches the command string. A human developer later identified and removed the unsafe
+flag [58]. Beyond that, Listing 3 shows another example of a security issue (SQL injection) in
+data-formulator (>1.2k stars). This repository is developed by Microsoft and uses GitHub Copilot
+for code generation. In commit d8549c0 [39], Copilot added a backend endpoint that constructs
+a SQL query by directly interpolating a user-supplied table name. This creates a potential SQL
+injection vector. If an attacker can control the source_name variable, they can inject malicious
+SQL code that may lead to data breaches or unauthorized access. This issue remained in the
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild                                        13
+
+Table 4. Top 5 most frequent rules by language. Rate indicates each rule's share of all issues in that language.
+
+Language Rule                                      Count Rate
+
+Python       Broad exception handling              41,374    14.9%
+             Unused argument                       24,357     8.8%
+             Undefined variable or reference       23,856     8.6%
+             Access to protected member            19,796     7.1%
+             Unused import                         17,376     6.3%
+
+JavaScript/  Unused variables or parameters        28,272    13.6%
+TypeScript   Shadowed outer variable               18,417     8.9%
+             Block-scoped variable misuse          11,568     5.6%
+             No sequences                           9,358     4.5%
+             Path traversal via path.join/resolve   8,677     4.2%
+
+20%                      % with Issues        Total Commits                                                              140k
+18%                                                                                                                      120k
+Percentage16%                                                                                                            100k
+                                                                                                             N of Commits14%80k
+12%                      10.9%          14.8%                                                                            60k
+10%                                                                                                                      40k
+         7.5%    11.5%                             9.4%                                                                  20k
+ 8%     GitHub   Claude                                                                                                  0k
+ 6%     Copilot
+ 4%
+ 2%
+ 0%
+
+                         Cursor         Gemini     Devin
+
+Fig. 7. Percentage of commits with issues and total commit volume per AI coding assistant.
+
+repository for several weeks before the maintainer refactored the code and removed the unsafe
+SQL construction [40].
+Programming Language Differences. Table 4 compares the top 5 most frequent rules in Python
+and JavaScript/TypeScript. There are some patterns that are common in both languages. For example,
+both languages show issues related to unused code (i.e., unused arguments in Python, unused
+variables in JavaScript/TypeScript). At the same time, each language also has its own characteristic
+issues. Python's top rules are dominated by exception handling and dynamic typing problems,
+while JavaScript/TypeScript issues tend to involve scoping and variable declaration patterns. This
+observation is consistent with prior studies [35, 62], which also found that the types of issues in
+AI-generated code can vary depending on the programming language and the tools used. These
+results suggest that some debt patterns may be language-specific. However, the overall trend (e.g.,
+code smells dominate) holds across both languages.
+
+  Answer to RQ1: AI-generated code introduces technical debt in the form of code smells (89.3%),
+  correctness issues (6.0%), and security issues (4.7%). Among them, code smells are by far the most
+  common.
+
+                                 , Vol. 1, No. 1, Article . Publication date: October 2026.
+14 Liu et al.
+
+Coding Tool        All Issues   Smells Correctness     Security
+GitHub Copilot             1.3                            0.045
+Claude                          1.156           0.101     0.103
+Cursor                    1.95                              0.09
+Gemini                    1.59  1.736           0.112     0.062
+Devin                     1.39                            0.043
+                          0.89      1.47        0.03
+
+                                    1.27        0.054
+
+                                0.824           0.018
+
+Table 5. Average number of issues introduced per commit by type. Darker cells indicate higher values.
+
+Smell            Fixed by AI        Introduced by AI
+                                                       432,748 net -7,069
+             439,817
+
+Correctness              25,189 28,931                 net +3,742
+
+Security                 15,345 22,687                 net +7,342
+
+             400K  200K         0K        200K  400K
+
+Fig. 8. Net impact of AI coding assistants: issues introduced vs. fixed by issue type.
+
+5.2 RQ2: Comparison Across AI Coding Assistants
+
+In this RQ, we examine how technical debt patterns vary across AI coding assistants. Figure 7
+shows the percentage of commits with issues for each of the five AI coding assistants. Across the
+five AI coding assistants, the rates range from 7.5% for GitHub Copilot to 14.8% for Gemini. Claude,
+Cursor, and Devin have corresponding rates of 11.5%, 10.9%, and 9.4%, respectively. This suggests
+that technical debt appears across all studied tools, although the rate differs by tool. In other words,
+the problem is not limited to a single AI coding assistant.
+
+   Table 5 further compares the average number of introduced issues per commit by type. We can
+see that all five tools share a common pattern, where the code smell rate is much higher than
+the correctness and security issue rates. This is consistent with our findings in RQ1. At the same
+time, there are also differences across tools. From Table 5, we can see that Claude has the highest
+issue rate per commit (1.95), while Devin has the lowest (0.89). These differences may be due
+to differences in usage patterns and development context, rather than the tools alone. Still, it is
+apparent that the overall pattern of technical debt is consistent across all five tools.
+
+  Answer to RQ2: Technical debt patterns vary across AI coding assistants, but the overall trend is
+  consistent. Across all five tools, code smells remain the dominant form of AI-introduced debt.
+
+5.3 RQ3: Persistence of AI-Introduced Debt
+Net Impact. In RQ1 and RQ2, we focus on the technical debt introduced by AI-authored com-
+mits. However, AI coding assistants can also remove existing issues during refactoring or code
+improvement. To better understand the overall lifecycle of AI-introduced debt, we compare the
+number of issues introduced and fixed by AI commits (see Figure 8). For code smells, we can see that
+AI-authored commits fix more issues than they introduce (439,817 vs. 432,748), resulting in a net
+reduction of 7,069 code smells. In contrast, for correctness and security issues, AI commits introduce
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild         15
+
+Number of Surviving Issues at HEAD  120k   Security Issues
+                                    100k   Correctness Issues
+                                           Code Smells
+                                     80k
+                                     60k
+                                     40k
+                                     20k
+
+                                        0
+
+                                  Issue Introduction Time (Year-Month)
+Fig. 9. Cumulative growth of AI-introduced issues over time, by issue type.
+
+Table 6. Survival of AI-introduced issues by time since introduction.
+
+Time Since Introduction # Commits # Issues # Surviving Survival Rate
+
+> 9 months                                  17,612              21,421   4,893           22.8%
+6­9 months                                  56,955              89,135  17,307           19.4%
+3­6 months                                  79,986             111,551  31,492           28.2%
+< 3 months                                 147,979             242,793  51,672           21.3%
+
+All Issues                                 302,532 464,900              105,364          22.7%
+
+more issues than they fix. What is interesting is that AI introduces about 1.5 times as many security
+issues as it fixes. These findings indicate that the net impact of AI coding assistants is mixed. AI
+coding assistants can help reduce maintainability issues, which tend to follow simple and repetitive
+patterns. However, for correctness and security issues, which require a deeper understanding and
+reasoning about program logic and context, AI coding assistants introduce more problems than
+they resolve.
+Issue Survival. The net impact analysis above provides an overview of what AI coding assistants
+add and remove. But it does not show what happens to the specific issues introduced by AI. To
+answer this question, we track each AI-introduced issue to the latest repository snapshot and
+check whether it still exists at HEAD. Figure 9 shows that the cumulative number of surviving issues
+keeps growing over time. The total volume of unresolved technical debt increases rapidly, climbing
+from just a few hundred issues in early 2025 to over 100k surviving issues by February 2026. This
+suggests that as the rapid adoption of AI coding assistants continues, the amount of AI-introduced
+debt in real-world repositories is also growing significantly.
+
+   Table 6 provides an age-cohort view of issue survival. Overall, 105,364 out of 464,900 tracked
+AI-introduced issues 2 still survive at HEAD, corresponding to a survival rate of 22.7%. Surviving
+issues appear in all age cohorts, including issues introduced more than nine months earlier. For
+example, 4,893 issues introduced more than nine months ago still remain at HEAD. The survival
+rate varies across cohorts, ranging from 19.4% for issues introduced 6­9 months ago to 28.2% for
+issues introduced 3­6 months ago. This suggests that AI-introduced debt is not always removed
+
+2Table 6 reports available survival-analysis results; survival data were unavailable for 23 repositories.
+
+                                                                                  , Vol. 1, No. 1, Article . Publication date: October 2026.
+16 Liu et al.
+
+Fig. 10. A TypeScript lint issue introduced by a Claude-authored commit in Stirling-PDF was fixed one day
+later by removing the unused variable.
+
+quickly after it enters the codebase. Although the cohort-level survival rates do not show a simple
+monotonic trend, the main finding is clear: a substantial number of AI-introduced issues remain
+unresolved over time.
+
+   These aggregate results are also reflected in real-world repositories. For example, the broad
+exception handling issue in Listing 1 was fixed within hours after it was introduced [2, 3]. Similarly,
+in Stirling-PDF [67] (>75k stars), a Claude-authored commit introduced an unused variable
+filename in a TypeScript file [66]. As shown in Figure 10, the maintainer fixed it the next day
+with a commit titled "Fix TypeScript linting error" [65]. In contrast, the undefined variable bug in
+firecrawl (Listing 2) took 42 days before the maintainer fixed it [16]. In some cases, some issues
+can survive for much longer or even remain unresolved. For instance, a Devin-authored commit
+in brave_search_tool.py added a call to requests.get(...) without a timeout in December
+2024 [8]. This is a known potential security issue, because requests made without a timeout may
+block indefinitely if the remote service does not respond [51]. However, the issue still remains in
+the latest repository revision.
+
+  Answer to RQ3: AI-authored commits fix slightly more code smells than they introduce, but
+  introduce more correctness and security issues than they fix. Overall, 22.7% of tracked AI-introduced
+  issues still survive at HEAD, including issues introduced more than nine months earlier.
+
+6 Discussion
+6.1 Implications
+Our empirical study shows that AI coding assistants introduce technical debt into real software
+repositories. This is not a property of any single tool. We observed that across all five tools we
+studied, around 9% of commits introduce at least one detectable issue. These issues persist regardless
+of repository size or popularity. In this section, we discuss the implications of our findings for
+practitioners, researchers, and tool builders.
+
+   AI-assisted development creates persistent debt, not just temporary low-quality code.
+The main implication is not just that AI coding assistants may produce low-quality code. More
+importantly, AI-assisted software development changes how technical debt enters and remains
+in production systems. Prior studies have shown that developers are more likely to over-trust AI
+suggestions [56]. This over-trust can lead to a higher acceptance rate of AI-generated code, even
+when it contains issues. It means that many AI-introduced issues can accumulate in the codebase.
+Our results show that code smells are the most common type of AI-introduced debt. They often
+do not break the software system immediately, making them easy to accept during code review.
+But AI coding assistants allow developers to produce code at a much higher speed and volume.
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild  17
+
+As a result, these minor issues can accumulate into a substantial maintenance burden over time.
+Figure 9 shows that the cumulative number of surviving AI-introduced issues continues to rise
+over time, exceeding 100k by February 2026. The technical debt introduced by AI does not have to
+be a temporary side effect, but a long-term maintenance challenge for modern software systems.
+
+   Developers should be especially cautious about correctness and security issues. Our
+findings suggest that although AI coding assistants introduce technical debt, they also fix existing
+issues in the codebase. First, we observe that AI co-authored commits actually fix a similar number
+of code smell issues as they introduce. This suggests that AI coding assistants are able to perform
+local cleanup and repetitive maintenance tasks effectively. They can recognize and address surface-
+level code quality problems (e.g., formatting, naming, or simple refactoring opportunities). However,
+what is concerning is that AI coding assistants seem to be less effective at fixing correctness and
+security issues, and they even introduce more of these than they fix. Section 5.3 shows that many
+AI-introduced issues still survive at HEAD, while the net-impact analysis shows that AI commits
+introduce more correctness and security issues than they fix. This inconsistency suggests that
+AI coding assistants may struggle with changes that require a deeper understanding of program
+behavior, execution context, or security implications. Also, the practical impact of correctness and
+security issues is often more severe than that of code smells, making it more critical to address
+them effectively. Developers should not treat all AI-generated code as equally trustworthy, and they
+should pay particular attention to changes that may introduce correctness or security vulnerabilities.
+
+   Technical debt cannot be solved by switching between AI coding tools. Our cross-tool
+comparison shows that this problem cannot be solved simply by switching from one assistant to
+another. Figure 7 shows that all five tools introduce a similar pattern of issues. They all have a high
+rate of code smells, and a non-trivial rate of correctness and security issues. This suggests that the
+quality risk is a systemic issue with the current mode of AI-assisted development. Thus, developers
+and teams should carefully review AI-generated code regardless of the tool used. Static analysis,
+tests, and security checks should be part of the normal workflow. Code review should extend beyond
+the point of merge. The main reason is that our study shows that 22.7% of tracked AI-introduced
+issues still survive at HEAD, and older issues are not fully cleaned up even after months. Merging the
+AI-generated code does not mean the end of the story since debt can persist and accumulate over
+time. This makes continuous monitoring and targeted debt repayment necessary for AI-touched
+code.
+
+   Future research and tool design should target long-term code health. Our results suggest
+that future research and tool design should not just focus on generating more acceptable code.
+We also need to ask whether that code remains maintainable, correct, and secure over time. Most
+existing research studies [35, 62] focus on short-term outcomes such as task completion, acceptance
+rate, or immediate correctness. However, these measures only capture what happens when the
+code is introduced, not what happens later in maintenance. Future work needs to examine which
+factors make AI-introduced debt more likely to persist (e.g., repository maturity, review intensity,
+or task type). Our findings also suggest the need for better assistants. Future tools should make
+stronger checks for security-sensitive changes, use repository context more effectively, and clearly
+show AI provenance so reviewers can better judge the risk of a change. In the end, the key question
+is not only whether AI can produce code at scale, but whether the software engineering ecosystem
+can manage that code well over time.
+
+7 Related work
+Code Quality of AI-Generated Code. Previous studies have examined the quality and security
+of AI-generated code. Based on controlled experiments, they showed that AI coding assistants (e.g.,
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+18 Liu et al.
+
+GitHub Copilot and ChatGPT) are able to produce functional code, but the code quality varies
+widely across languages, tasks, and prompts [35, 38, 44]. AI-generated code can also contain security
+weaknesses, and developers may over-trust it and fail to properly review it [47, 49, 57]. Recent
+studies have also begun examining AI-generated code in real-world production environments.
+They show that AI-generated code is being widely adopted in platforms such as GitHub and Stack
+Overflow, and that it can carry quality and security issues [20, 62, 69]. He et al. [28] studied the
+impact of Cursor adoption on 807 repositories and observed persistent increases in code complexity.
+Watanabe et al. [70] found that most Claude Code pull requests are merged, though many require
+human revisions.
+
+   Together, these studies show that AI-generated code can contain quality and security problems
+in both controlled and real-world settings. However, these studies mainly focus on a single tool or
+a narrow set of quality issues, and they do not track how those issues evolve. In contrast, our work
+provides a comprehensive analysis of the quality and security of AI-generated code across multiple
+tools, and tracks how those issues persist in production repositories over time.
+Empirical Studies of AI-Assisted Development Practices. Recent studies have examined how
+AI coding assistants are used in real software development practice. Several studies examined
+the productivity impact of these tools. Peng et al. [48] conducted a randomized controlled trial
+and found that developers using GitHub Copilot completed tasks 55.8% faster. At industrial scale,
+Ziegler et al. [73] and Murali et al. [42] reported that suggestion acceptance rate strongly correlates
+with self-reported productivity, with acceptance rates around 22­30%. Other studies focus on
+usage patterns and developer perceptions. Liang et al. [34] surveyed 410 developers and found
+that developers mainly use AI assistants to reduce keystrokes and recall syntax, but often reject
+suggestions that fail to meet functional requirements [12]. Sabouri et al. [56] further observed
+that developers keep only 52% of AI suggestions after review, and Klemmer et al. [32] found that
+developers widely use AI assistants for security-critical tasks despite concerns about suggestion
+quality.
+
+   These studies improve our understanding of how developers use AI assistants in practice. How-
+ever, they mainly focus on adoption, usability, trust, productivity, and collaboration, rather than on
+the technical debt carried by AI-authored code. In contrast, our work examines the code-level debt
+introduced by AI coding assistants and studies whether that debt persists in production repositories
+over time.
+Technical Debt in Software Development. Technical debt has been a core topic in software
+engineering research for years. Previous work has introduced many automated methods to identify
+code smells and self-admitted technical debt in software repositories [46, 54, 71]. Beyond detection,
+many studies have also investigated the lifecycle of technical debt in human-written code. Tufano et
+al. [68] showed that code smells are often introduced during normal development. Once introduced,
+they can linger in the codebase for a long time before anyone removes them [68]. Digkas et al. [14]
+identified a similar pattern in large open-source ecosystems. Their results showed that technical
+debt mainly accumulates when new code is added [13, 14]. Other studies further suggest that
+debt is rarely removed in an intentional way, and that automated repayment is still difficult in
+practice [37, 72].
+
+   Prior studies provide a strong foundation for understanding technical debt in human-written
+software. However, it remains unclear whether AI-generated code follows the same patterns, and
+whether the same tools and techniques can be applied to it. Our work fills this gap by analyzing
+the technical debt in AI-generated code and exploring how it persists in production repositories
+over time.
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild  19
+
+8 Threats to Validity
+
+Below, we discuss threats that may impact the results of our study.
+External Validity. Our study focuses on public GitHub repositories with at least 100 stars and
+production source files in Python, JavaScript, and TypeScript. Therefore, our findings may not
+generalize to private repositories, smaller projects, or software written in other languages. In
+addition, we only analyze AI-authored commits that leave explicit traces in Git metadata (e.g., bot
+actor logins, AI author emails, or Co-authored-by trailers). AI-assisted contributions that leave
+no such trace are outside the scope of our dataset. This design is analogous in spirit to research
+on self-admitted technical debt (SATD), which studies the subset of technical debt that developers
+explicitly document rather than the full universe of debt [11, 50]. Like SATD research, our findings
+characterize a visible and attributable subset rather than the entire population of AI-assisted work.
+We also do not compare AI-authored commits against a baseline of purely human-written commits.
+Because developers may use AI without leaving any Git trace, and even AI-labeled commits may
+mix human edits, a reliable human-only baseline is difficult to construct, and comparing against
+an unreliable baseline could bias the results. We therefore focus on tracking technical debt inside
+explicitly confirmed AI-authored or co-authored commits.
+Internal Validity. Our pipeline depends on the correctness of AI attribution, issue matching,
+and lifecycle tracking. Although we use explicit Git metadata rather than proxy signals, some
+commits may still include both AI and human contributions. Similarly, matching issues across
+revisions is challenging because files evolve over time and issues may shift location. To reduce this
+risk, we compare code before and after each commit, restrict introduced issues to changed lines,
+and use rule identifiers, messages, and surrounding code context during matching. For the issue
+survival analysis, a file may be deleted or entirely rewritten between the introducing commit and
+HEAD. In such cases, the issue is classified as resolved, even though the resolution may not be a
+deliberate fix. Our reported survival rates may therefore slightly underestimate the true persistence
+of AI-introduced debt.
+Construct Validity. Technical debt is a broad concept with many possible forms. In this study, we
+operationalize technical debt mainly through code smells, correctness issues, and security issues
+detected by static analysis tools. This choice allows us to measure debt consistently at scale and track
+it over time at the commit level. However, static analysis tools can produce false positives, flagging
+code that is technically correct but matches a known risky pattern. In addition, our security findings
+include both active vulnerabilities and latent unsafe patterns (i.e., security debt). We do not separate
+these quantitatively, but Section 5.1 illustrates both cases. Static analysis also does not cover all
+forms of technical debt. Architectural debt, design erosion, documentation debt, and test adequacy
+issues are outside the scope of our tools. Our results should therefore be interpreted as evidence
+about code-level technical debt, not the full spectrum of quality challenges that AI-generated code
+may introduce.
+
+9 Conclusion and Future Work
+
+AI coding assistants are rapidly becoming part of real-world software development, but their
+long-term impact on software quality remains unclear. In this paper, we presented a large-scale
+empirical study of the technical debt introduced by AI-generated code in the wild. By mining
+302.6K AI-authored commits from 6,299 GitHub repositories, we designed a commit-level pipeline
+to identify introduced technical debt and track its later evolution in production repositories. Our
+study provides a longitudinal view of AI-generated code after it is merged. We look at what kinds
+of debt appear, how they differ across assistants, and whether they still remain at the latest revision.
+The results reveal the hidden maintenance costs behind AI coding assistants. They also show why
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+20 Liu et al.
+
+stronger quality checks are needed in AI-assisted software development. In future work, we plan to
+extend our analysis to other forms of debt (e.g., architectural, documentation, and test-related debt),
+additional programming languages, and broader development contexts. We also plan to study what
+factors make AI-introduced debt more likely to persist. Finally, we hope our findings can inform
+the design of more debt-aware AI coding assistants that help developers catch and fix quality issues
+before they enter production.
+
+References
+
+ [1] 2025. ArchiveBox. https://github.com/ArchiveBox/ArchiveBox
+ [2] 2025. Commit 762cddc: fix: address PR review comments from cubic-dev-ai. https://github.com/ArchiveBox/
+
+      ArchiveBox/commit/762cddc8c5d42095c26dda0e193fab6794fd69d5
+ [3] 2025. Commit d360798: Replace index.json with index.jsonl flat JSONL format. https://github.com/ArchiveBox/
+
+      ArchiveBox/commit/d36079829bed32d71b2a1a5e8e6019457d6a7ae7
+ [4] Anthropic. 2026. Claude Code Overview. https://code.claude.com/docs/en/overview Accessed: 2026-03-24.
+ [5] Anthropic. 2026. Claude Opus 4.6 wrote a dependency-free C compiler in Rust, with backends targeting x86 (64- and 32-
+
+      bit), ARM, and RISC-V, capable of compiling a booting Linux kernel. https://github.com/anthropics/claudes-c-compiler
+ [6] Paris Avgeriou, Philippe Kruchten, Ipek Ozkaya, and Carolyn Seaman. 2016. Managing technical debt in software
+
+      engineering (dagstuhl seminar 16162). Dagstuhl reports 6, 4 (2016), 110­138.
+ [7] Cognition AI. 2026. Introducing Devin. https://docs.devin.ai/get-started/devin-intro Accessed: 2026-03-24.
+ [8] crewAIInc. 2024. Commit 439cde1: style: apply final formatting changes. https://github.com/crewAIInc/crewAI-
+
+      tools/commit/439cde180cd69791f46dedde192c41184ca1f96f
+ [9] Ward Cunningham. 1992. The WyCash portfolio management system. ACM Sigplan Oops Messenger 4, 2 (1992), 29­30.
+[10] Cursor. 2026. Cursor Documentation. https://cursor.com/docs Accessed: 2026-03-24.
+[11] Everton da Silva Maldonado, Emad Shihab, and Nikolaos Tsantalis. 2017. Using natural language processing to
+
+      automatically detect self-admitted technical debt. IEEE Transactions on Software Engineering 43, 11 (2017), 1044­1062.
+[12] Nicole Davila, Igor Wiese, Igor Steinmacher, Lucas Lucio da Silva, André Kawamoto, Gilson Jose Peres Favaro, and
+
+      Ingrid Nunes. 2024. An industry case study on adoption of ai-based programming assistants. In Proceedings of the 46th
+      international conference on software engineering: software engineering in practice. 92­102.
+[13] George Digkas, Alexander Chatzigeorgiou, Apostolos Ampatzoglou, and Paris Avgeriou. 2020. Can clean new code
+      reduce technical debt density? IEEE Transactions on Software Engineering 48, 5 (2020), 1705­1721.
+[14] Georgios Digkas, Mircea Lungu, Paris Avgeriou, Alexander Chatzigeorgiou, and Apostolos Ampatzoglou. 2018. How do
+      developers fix issues and pay back technical debt in the apache ecosystem?. In 2018 IEEE 25th International Conference
+      on software analysis, evolution and reengineering (SANER). IEEE, 153­163.
+[15] ESLint. 2026. ESLint Documentation. https://eslint.org/docs/latest/ Accessed: 2026-03-24.
+[16] firecrawl. 2025. Commit a7aa0cb: Fix Pydantic field name shadowing issues causing import NameError. https:
+      //github.com/firecrawl/firecrawl/commit/a7aa0cb2f4496394a94b50f0013eb0328b408dc8
+[17] firecrawl. 2025. Commit fb99747: fix: revert accidental cache=True changes to preserve original cache parameter
+      handling. https://github.com/firecrawl/firecrawl/commit/fb99747ba9787683ac5722ba55c46f823461691a
+[18] firecrawl. 2026. firecrawl. https://github.com/firecrawl/firecrawl
+[19] Martin Fowler. 2018. Refactoring: improving the design of existing code. Addison-Wesley Professional.
+[20] Yujia Fu, Peng Liang, Amjed Tahir, Zengyang Li, Mojtaba Shahin, Jiaxin Yu, and Jinfu Chen. 2025. Security weaknesses
+      of copilot-generated code in github projects: An empirical study. ACM Transactions on Software Engineering and
+      Methodology 34, 8 (2025), 1­34.
+[21] GH Archive. 2026. GH Archive. https://www.gharchive.org/ Accessed: 2026-03-20.
+[22] GH Archive. 2026. GH Archive: Analyzing Event Data with BigQuery. www.gharchive.org/#bigquery Accessed:
+      2026-03-20.
+[23] GitHub. 2024. Octoverse: A new developer joins GitHub every second as AI leads TypeScript to #1. https://github.
+      blog/news-insights/octoverse/octoverse-a-new-developer-joins-github-every-second-as-ai-leads-typescript-to-1/
+[24] GitHub. 2026. GitHub Copilot. https://docs.github.com/en/copilot/get-started/what-is-github-copilot Accessed:
+      2026-03-24.
+[25] GitHub. 2026. GitHub REST API documentation. https://docs.github.com/en/rest Accessed: 2026-03-20.
+[26] Google. 2026. Gemini Code Assist Overview. https://developers.google.com/gemini-code-assist/docs/overview
+      Accessed: 2026-03-24.
+[27] William Harding and Matthew Kloster. 2024. Coding on copilot: 2023 data suggests downward pressure on code
+      quality. https://www. gitclear. com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality/ (2024).
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+Debt Behind the AI Boom: A Large-Scale Empirical Study of AI-Generated Code in the Wild  21
+
+[28] Hao He, Courtney Miller, Shyam Agarwal, Christian Kästner, and Bogdan Vasilescu. 2025. Does AI-Assisted Coding
+      Deliver? A Difference-in-Differences Study of Cursor's Impact on Software Projects. arXiv e-prints (2025), arXiv­2511.
+
+[29] Haoming Huang, Pongchai Jaisri, Shota Shimizu, Lingfeng Chen, Sota Nakashima, and Gema Rodríguez-Pérez. 2026.
+      More Code, Less Reuse: Investigating Code Quality and Reviewer Sentiment towards AI-generated Pull Requests.
+      arXiv preprint arXiv:2601.21276 (2026).
+
+[30] Intel RealSense. 2025. Commit 14026c8: Add missing constants and fix 6fps bug. https://github.com/realsenseai/
+      librealsense/commit/14026c898f790db79a0b588983c08a3108fa326e
+
+[31] Intel RealSense. 2025. Commit 5535b8a: Refactor test script with named constants. https://github.com/realsenseai/
+      librealsense/commit/5535b8a204bc759324ee89f864eb680362be5ece
+
+[32] Jan H Klemmer, Stefan Albert Horstmann, Nikhil Patnaik, Cordelia Ludden, Cordell Burton Jr, Carson Powers, Fabio
+      Massacci, Akond Rahman, Daniel Votipka, Heather Richter Lipford, et al. 2024. Using ai assistants in software
+      development: A qualitative study on security practices and concerns. In Proceedings of the 2024 on ACM SIGSAC
+      Conference on Computer and Communications Security. 2726­2740.
+
+[33] Zengyang Li, Paris Avgeriou, and Peng Liang. 2015. A systematic mapping study on technical debt and its management.
+      Journal of systems and software 101 (2015), 193­220.
+
+[34] Jenny T Liang, Chenyang Yang, and Brad A Myers. 2024. A large-scale survey on the usability of ai programming
+      assistants: Successes and challenges. In Proceedings of the 46th IEEE/ACM international conference on software engineering.
+      1­13.
+
+[35] Yue Liu, Thanh Le-Cong, Ratnadira Widyasari, Chakkrit Tantithamthavorn, Li Li, Xuan-Bach D Le, and David Lo. 2024.
+      Refining chatgpt-generated code: Characterizing and mitigating code quality issues. ACM Transactions on Software
+      Engineering and Methodology 33, 5 (2024), 1­26.
+
+[36] Yue Liu, Zhenchang Xing, Shidong Pan, and Chakkrit Tantithamthavorn. 2025. When AI Takes the Wheel: Security
+      Analysis of Framework-Constrained Program Generation. arXiv preprint arXiv:2510.16823 (2025).
+
+[37] Antonio Mastropaolo, Massimiliano Di Penta, and Gabriele Bavota. 2023. Towards automatically addressing self-
+      admitted technical debt: How far are we?. In 2023 38th IEEE/ACM International Conference on Automated Software
+      Engineering (ASE). IEEE, 585­597.
+
+[38] Antonio Mastropaolo, Luca Pascarella, Emanuela Guglielmi, Matteo Ciniselli, Simone Scalabrino, Rocco Oliveto, and
+      Gabriele Bavota. 2023. On the robustness of code generation techniques: An empirical study on github copilot. In 2023
+      IEEE/ACM 45th International Conference on Software Engineering (ICSE). IEEE, 2149­2160.
+
+[39] Microsoft. 2025. Commit d8549c0: Add refresh data feature with backend endpoint and UI components. https:
+      //github.com/microsoft/data-formulator/commit/d8549c0c8c139531ee5bf266609f7e5352384c5f
+
+[40] Microsoft. 2026. data-formulator. https://github.com/microsoft/data-formulator
+[41] Sergio Moreschini, Elvira-Maria Arvanitou, Elisavet-Persefoni Kanidou, Nikolaos Nikolaidis, Ruoyu Su, Apostolos
+
+      Ampatzoglou, Alexander Chatzigeorgiou, and Valentina Lenarduzzi. 2026. The Evolution of Technical Debt from
+      DevOps to Generative AI: A multivocal literature review. Journal of Systems and Software 231 (2026), 112599.
+[42] Vijayaraghavan Murali, Chandra Maddila, Imad Ahmad, Michael Bolin, Daniel Cheng, Negar Ghorbani, Renuka
+      Fernandez, Nachiappan Nagappan, and Peter C Rigby. 2024. Ai-assisted code authoring at scale: Fine-tuning, deploying,
+      and mixed methods evaluation. Proceedings of the ACM on Software Engineering 1, FSE (2024), 1066­1085.
+[43] Inada Naoki. 2021. PEP 597 ­ Add optional EncodingWarning. https://peps.python.org/pep-0597/
+[44] Nhan Nguyen and Sarah Nadi. 2022. An empirical evaluation of GitHub copilot's code suggestions. In Proceedings of
+      the 19th International Conference on Mining Software Repositories. 1­5.
+[45] Jordan Novet. 2025. Satya Nadella says as much as 30% of Microsoft code is written by AI. https://www.cnbc.com/
+      2025/04/29/satya-nadella-says-as-much-as-30percent-of-microsoft-code-is-written-by-ai.html
+[46] Fabio Palomba, Gabriele Bavota, Massimiliano Di Penta, Fausto Fasano, Rocco Oliveto, and Andrea De Lucia. 2018. On
+      the diffuseness and the impact on maintainability of code smells: a large scale empirical investigation. In Proceedings of
+      the 40th international conference on software engineering. 482­482.
+[47] Hammond Pearce, Baleegh Ahmad, Benjamin Tan, Brendan Dolan-Gavitt, and Ramesh Karri. 2025. Asleep at the
+      keyboard? assessing the security of github copilot's code contributions. Commun. ACM 68, 2 (2025), 96­105.
+[48] Sida Peng, Eirini Kalliamvakou, Peter Cihon, and Mert Demirer. 2023. The impact of ai on developer productivity:
+      Evidence from github copilot. arXiv preprint arXiv:2302.06590 (2023).
+[49] Neil Perry, Megha Srivastava, Deepak Kumar, and Dan Boneh. 2023. Do users write more insecure code with ai
+      assistants?. In Proceedings of the 2023 ACM SIGSAC conference on computer and communications security. 2785­2799.
+[50] Aniket Potdar and Emad Shihab. 2014. An exploratory study on self-admitted technical debt. In 2014 IEEE International
+      Conference on Software Maintenance and Evolution. IEEE, 91­100.
+[51] PyCQA. 2023. B113: Test for Missing Requests Timeout. https://bandit.readthedocs.io/en/latest/plugins/b113_request_
+      without_timeout.html
+[52] Python Code Quality Authority. 2026. Pylint Documentation. https://pylint.readthedocs.io/ Accessed: 2026-03-24.
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+22 Liu et al.
+
+[53] RealSense. 2025. librealsense. https://github.com/IntelRealSense/librealsense Accessed: 2026-01-15.
+[54] Xiaoxue Ren, Zhenchang Xing, Xin Xia, David Lo, Xinyu Wang, and John Grundy. 2019. Neural network-based
+
+      detection of self-admitted technical debt: From performance to explainability. ACM transactions on software engineering
+      and methodology (TOSEM) 28, 3 (2019), 1­45.
+[55] Kylie Robison. 2024. Google CEO Sundar Pichai says more than a quarter of the company's new code is created by AI.
+      https://fortune.com/2024/10/30/googles-code-ai-sundar-pichai/
+[56] Sadra Sabouri, Philipp Eibl, Xinyi Zhou, Morteza Ziyadi, Nenad Medvidovic, Lars Lindemann, and Souti Chattopadhyay.
+      2025. Trust dynamics in ai-assisted development: Definitions, factors, and implications. In 2025 IEEE/ACM 47th
+      International Conference on Software Engineering (ICSE). IEEE, 1678­1690.
+[57] Gustavo Sandoval, Hammond Pearce, Teo Nys, Ramesh Karri, Siddharth Garg, and Brendan Dolan-Gavitt. 2023. Lost
+      at c: A user study on the security implications of large language model code assistants. In 32nd USENIX Security
+      Symposium (USENIX Security 23). 2205­2222.
+[58] seagullz4. 2025. Commit d9e392d: Improve code security by removing shell=True. https://github.com/seagullz4/
+      hysteria2/commit/d9e392d
+[59] seagullz4. 2025. Commit e277daf: Introduce shell-based subprocess call. https://github.com/seagullz4/hysteria2/
+      commit/e277daf540dad4b5a34822f0088e70617b689587
+[60] seagullz4. 2025. hysteria2. https://github.com/seagullz4/hysteria2 Accessed: 2026-01-15.
+[61] Semgrep. 2026. Semgrep Documentation. https://semgrep.dev/docs/ Accessed: 2026-03-24.
+[62] Mohammed Latif Siddiq, Lindsay Roney, Jiahao Zhang, and Joanna Cecilia Da Silva Santos. 2024. Quality assessment
+      of chatgpt generated code and their use by developers. In Proceedings of the 21st international conference on mining
+      software repositories. 152­156.
+[63] Stack Overflow. 2025. 2025 Developer Survey. https://survey.stackoverflow.co/2025/
+[64] superagent-ai. 2025. Commit 46695d1: feat: Add Redis connection pooling for proxy caching layers. https://github.
+      com/superagent-ai/superagent/commit/46695d14622a6c5de22315ce9514964d22e4d825
+[65] Stirling Tools. 2025. Commit 00efc880: Fix TypeScript linting error in zipFileService. https://github.com/Stirling-
+      Tools/Stirling-PDF/commit/00efc8802cd4be7bdf30c746dbd7a2cb1108a601
+[66] Stirling Tools. 2025. Commit e7109bb: Convert extract-image-scans to React component. https://github.com/Stirling-
+      Tools/Stirling-PDF/commit/e7109bb4e9fbeb1fed7f10f50e5831f48da870be
+[67] Stirling Tools. 2026. Stirling-PDF. https://github.com/Stirling-Tools/Stirling-PDF
+[68] Michele Tufano, Fabio Palomba, Gabriele Bavota, Rocco Oliveto, Massimiliano Di Penta, Andrea De Lucia, and Denys
+      Poshyvanyk. 2017. When and why your code starts to smell bad (and whether the smells go away). IEEE Transactions
+      on Software Engineering 43, 11 (2017), 1063­1088.
+[69] Bin Wang, Wenjie Yu, Yilu Zhong, Hao Yu, Keke Lian, Chaohua Lu, Hongfang Zheng, Dong Zhang, and Hui Li. 2025.
+      AI Code in the Wild: Measuring Security Risks and Ecosystem Shifts of AI-Generated Code in Modern Software. arXiv
+      preprint arXiv:2512.18567 (2025).
+[70] Miku Watanabe, Hao Li, Yutaro Kashiwa, Brittany Reid, Hajimu Iida, and Ahmed E Hassan. 2026. On the use of agentic
+      coding: An empirical study of pull requests on github. ACM Transactions on Software Engineering and Methodology 35,
+      10 (2026), 1­24.
+[71] Meng Yan, Xin Xia, Emad Shihab, David Lo, Jianwei Yin, and Xiaohu Yang. 2018. Automating change-level self-admitted
+      technical debt determination. IEEE Transactions on Software Engineering 45, 12 (2018), 1211­1229.
+[72] Fiorella Zampetti, Alexander Serebrenik, and Massimiliano Di Penta. 2018. Was self-admitted technical debt removal a
+      real removal? an in-depth perspective. In Proceedings of the 15th international conference on mining software repositories.
+      526­536.
+[73] Albert Ziegler, Eirini Kalliamvakou, X Alice Li, Andrew Rice, Devon Rifkin, Shawn Simister, Ganesh Sittampalam, and
+      Edward Aftandilian. 2024. Measuring github copilot's impact on productivity. Commun. ACM 67, 3 (2024), 54­63.
+
+, Vol. 1, No. 1, Article . Publication date: October 2026.
+

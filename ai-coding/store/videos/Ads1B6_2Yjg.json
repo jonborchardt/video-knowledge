@@ -1,0 +1,139 @@
+{
+  "id": "Ads1B6_2Yjg",
+  "title": "Getting the most out of Codex",
+  "channel": "Academind",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCSJbGtTlrDami-tDGPUV9-w",
+  "durationSec": 840,
+  "thumbnail": "https://i.ytimg.com/vi/Ads1B6_2Yjg/sddefault.jpg",
+  "summary": "Maximilian Schwarzmüller on using Codex alongside Claude Code: desktop app review comments, plan mode, explicit context, skills, concise AGENTS.md, staying in control.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+      "stance": "denies",
+      "quote": "I still don't loop. I don't use the Rolf loop thing ... I stay in control",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Goal/loop features keep agents going through backlogs, but unattended runs drift or game checks without good verification; works when acceptance tests are strong.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "planning still matters ... I'm using that all the time",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-model-right-minimal-context-matters",
+      "stance": "asserts",
+      "quote": "if you do know that a certain file will matter ... you wanna point your agent at it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "As models improved, output depends more on relevant, high-signal context than phrasing; consistent with Anthropic/Cursor guidance and long-context degradation evidence.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/loading-capabilities-demand-skills-read-only",
+      "stance": "asserts",
+      "quote": "They're lazily loaded ... only the metadata is loaded into the context window",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Skills load only short descriptions until used, and deferred tool loading cuts context; this is how Claude Code, Manus and others manage large capability sets.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "You're responsible for your code. It's not the AI, it's you",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The paper recommends careful review of AI code whatever the tool, along with static analysis, tests, security checks, and monitoring after merge.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L934-L945",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+      "stance": "asserts",
+      "quote": "always make sure ... that you don't detach from it ... and then you're essentially forced to do vibe coding",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/project-instruction-files-claude-agents-rules",
+      "stance": "asserts",
+      "quote": "use that agents.md file to your advantage. Keep it concise",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Persistent instruction files measurably steer agent behavior; overlong or contradictory ones reduce adherence.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "you wanna give these tools ways of verifying their own work",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

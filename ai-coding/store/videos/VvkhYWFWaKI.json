@@ -1,0 +1,139 @@
+{
+  "id": "VvkhYWFWaKI",
+  "title": "Context Engineering SF: Advanced Context Engineering for Agents - Dex Horthy",
+  "channel": "Chroma",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCL6BAd8VmEBB16-2YCNvl2g",
+  "durationSec": 877,
+  "thumbnail": "https://i.ytimg.com/vi/VvkhYWFWaKI/sddefault.jpg",
+  "summary": "Dex Horthy on advanced context engineering: frequent intentional compaction, research/plan/implement, reviewing specs instead of code.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "our goal all the time is to keep context utilization under 40%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clearing-context-starting-fresh-beats-compacting",
+      "stance": "asserts",
+      "quote": "I think slash compact is trash. I never use it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh context avoids accumulated noise, but compaction is useful when state is hard to reconstruct; it is a tradeoff, not a rule.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-should-keep-notes-external-scratchpad",
+      "stance": "asserts",
+      "quote": "we have it write out a progress file very specifically",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "External notes/memory files are a standard, effective pattern (Anthropic, Manus write-ups) for long tasks; adds retrieval overhead.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/delegating-research-subagents-their-own-context",
+      "stance": "asserts",
+      "quote": "they're really about context control",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Subagents return summaries rather than raw exploration; Anthropic reports gains from multi-agent research, at higher token cost.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "we have three phases research, plan and implement",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reviewing-research-implementation-plans-can-replace",
+      "stance": "asserts",
+      "quote": "I still read all the tests, but I no longer read every line of code because I read the specs and I know they're right",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Plan review catches costly errors early and helps team alignment, but plans don't guarantee the code matches; most guidance and defect data still favor reviewing code, especially for security.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/errors-research-planning-cost-far-more",
+      "stance": "asserts",
+      "quote": "a bad line of research ... can be thousands of bad lines of code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The classic cost-of-defects gradient applies: requirement and design errors propagate; agents amplify this by generating large amounts of code from a flawed plan.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-shrink-task-complexity-codebase",
+      "stance": "asserts",
+      "quote": "it just doesn't work for complex tasks or brownfield tasks ... it can actually slow people down",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent across Stanford's data, METR's mature-repo slowdown and long-context degradation results.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR names repo size and maturity (10+ years, more than 1M lines) and complex edits as factors behind the slowdown, in contrast with greenfield RCTs that found speedups.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L986-L1003",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

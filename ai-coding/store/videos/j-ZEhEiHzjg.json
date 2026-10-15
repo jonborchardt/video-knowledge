@@ -1,0 +1,162 @@
+{
+  "id": "j-ZEhEiHzjg",
+  "title": "Is AI making devs SLOWER? Yes, according to this study...",
+  "channel": "Native Notify",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCcmutEKTw4CxiMV4n_w2gkA",
+  "durationSec": 498,
+  "thumbnail": "https://i.ytimg.com/vi_webp/j-ZEhEiHzjg/sddefault.webp",
+  "summary": "Summary of METR plus other studies (bugs, duplication, junior gains), ending in a product plug for up-to-date docs.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+      "stance": "asserts",
+      "quote": "experienced coders finish their work 19% slower",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L11-L27",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "they felt like they were finishing their work 20% faster",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-contains-more-defects-human",
+      "stance": "asserts",
+      "quote": "800 engineers had 41% more bugs in their pull requests using AI tools",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "CodeRabbit's 2025 PR analysis found ~1.7x more issues in AI-authored PRs, and security studies agree; results depend heavily on review and tooling, and some studies find parity.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "The Debt study explicitly does not compare AI commits with a human-only baseline, so it can't say whether AI code has more defects.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L1031-L1035",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-duplicates-existing-utilities-types",
+      "stance": "asserts",
+      "quote": "code generated with the help of AI had eight times more duplicate code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+      "stance": "asserts",
+      "quote": "26.08% increase in completed tasks ... specifically if they're less experienced developers",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Field experiments (Microsoft/Accenture RCTs, Brynjolfsson) found the largest gains for less-experienced or less-familiar workers and routine tasks; METR found slowdowns for deep-familiarity experts.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Slowdown is larger when developers have high prior task exposure. Developers report AI helps on unfamiliar issues and not where they're experts, and the paper expects speedups in unfamiliar or greenfield settings.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L960-L984",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "the time it takes to create good documentation was cut almost in half",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI speeds drafting tests and docs, but generated tests often assert implementation details or weak properties and need review.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "cut your project into smaller pieces",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llms-propose-outdated-library-versions-models",
+      "stance": "asserts",
+      "quote": "all the models out there are still trained on one to two year-old data",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Training cutoffs reliably cause stale version and model suggestions; checking against current docs is necessary.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

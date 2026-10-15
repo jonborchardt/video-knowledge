@@ -1,0 +1,166 @@
+{
+  "id": "UPTAX30ttMQ",
+  "title": "Oxide and Friends 8/5/2024 -- Pragmatic LLM usage with Nicholas Carlini",
+  "channel": "Oxide Computer Company",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCFn4S3OexFT9YhxJ8GWdUYQ",
+  "durationSec": 5592,
+  "thumbnail": "https://i.ytimg.com/vi/UPTAX30ttMQ/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGHIgSCg2MA8=&rs=AOn4CLAIZs2G1DBQFVL7oK6H6tUCFVj6fg",
+  "summary": "Nicholas Carlini on pragmatic LLM use: offload tedious, easily verified work, give up quickly when it fails, and judge tools by what they can do.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/handles-routine-coding-well-but-struggles",
+      "stance": "asserts",
+      "quote": "I want to do the 10% which is the interesting piece",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks and field studies show strong performance on well-specified, common tasks and weaker results on context-heavy, novel logic.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llms-most-useful-tasks-whose-output",
+      "stance": "asserts",
+      "quote": "there's so many things that are easier to verify than write yourself",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Verification cost largely determines whether AI help saves time; field studies find gains concentrate where outputs are cheap to check.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic: engineers delegate easily verifiable tasks ('amazing for everything where validation effort isn't large in comparison to creation effort'), and time savings came mostly from quickly verifiable tasks.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L58-L59",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/repeatedly-telling-llm-answer-wrong-same",
+      "stance": "asserts",
+      "quote": "you could just keep saying wrong and it will just it will continue to be sorry the whole way through and never fix anything",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Self-correction research shows LLMs rarely fix errors from bare 'that's wrong' feedback, but concrete external feedback such as test output does help iteration.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-llms-write-code-strongly-typed",
+      "stance": "asserts",
+      "quote": "if I ask it to write it in rough like just there's not going to be aace Condition",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Compiler checks do catch whole classes of AI errors such as type and data-race bugs, but logic errors still get through and AI does worse in less common languages.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/documentation-written-llm-agents-markdown-llms",
+      "stance": "asserts",
+      "quote": "this might be a case where you more documentation might be even better because if you can give as much help to the model",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents parse markdown and commands far more reliably than GUI instructions; llms.txt and markdown docs are spreading for this reason.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-coding-assistants-favor-libraries-well",
+      "stance": "asserts",
+      "quote": "if everyone is relying on these models to use only the things that popular",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Studies show LLMs prefer popular libraries and older APIs, but web search and in-context docs partly offset it, and the effect on adoption is not measured.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-model-right-minimal-context-matters",
+      "stance": "asserts",
+      "quote": "show the model the minimum amount of things so that you're not going to blow the budget",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "As models improved, output depends more on relevant, high-signal context than phrasing; consistent with Anthropic/Cursor guidance and long-context degradation evidence.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-tutors-help-learners-answering-basic",
+      "stance": "asserts",
+      "quote": "you can just ask the computer now like the computer's not going to judge you",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Some RCTs (e.g. a Harvard physics AI-tutor study) show learning gains when tutors are scaffolded, but hallucinations and answer-giving can undermine learning.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-hallucinations-will-largely-disappear-models",
+      "stance": "asserts",
+      "quote": "I'm hopeful that as they get better they will do this less",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Hallucination rates have fallen markedly in newer models, but they remain non-zero, especially on obscure facts, and are structurally hard to eliminate.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investment-financial-bubble-even-though-underlying",
+      "stance": "asserts",
+      "quote": "people should not confuse the coming bust for the the Technologies themselves not being useful",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A market-valuation opinion; not testable from a video's claims.",
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "id": "owmJyKVu5f8",
+  "title": "Simon Willison: Engineering practices that make coding agents work - The Pragmatic Summit",
+  "channel": "The Pragmatic Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPbwhExawYrn9xxI21TFfyw",
+  "durationSec": 1700,
+  "thumbnail": "https://i.ytimg.com/vi/owmJyKVu5f8/sddefault.jpg",
+  "summary": "Simon Willison describes the practices that make coding agents work: red-green TDD, having agents exercise running code, conformance suites, clean templates, and sandboxing against prompt injection.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/test-driven-development-red-green-refactor",
+      "stance": "asserts",
+      "quote": "the chances of you getting code that works go up so much if they're if they're if they're writing the test first.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Tests-first gives agents a target and limits test-cheating; evidence is mostly anecdotal and it does not suit all code (e.g. UI).",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "They're free now. They're effectively free.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI speeds drafting tests and docs, but generated tests often assert implementation details or weak properties and need review.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agents-exercise-running-software-start",
+      "stance": "asserts",
+      "quote": "Start the server running um in the background, and then use curl to exercise the API that you just created.\" And that works.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "End-to-end checks catch integration failures that unit tests miss, a well-established testing principle that applies to agents.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/language-agnostic-conformance-test-suites-let",
+      "stance": "asserts",
+      "quote": "you can give it to a a good agent and say, \"Write code until this test suite passes.\" And it kind of will.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Demonstrations such as spec-driven compiler and library ports show agents converge on conformance suites, though code quality can lag.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+      "stance": "denies",
+      "quote": "If you've got a code base with a bunch of patterns in, they will follow those patterns almost to a T.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Without enough context, models fall back to common internet patterns; instruction files and indexing reduce but do not remove this.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-perform-better-clean-well",
+      "stance": "asserts",
+      "quote": "there's lots to be said for having for keeping your code base high-quality, because the agent will then add to it in a high-quality way.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Practitioner reports and agent studies show agents imitate surrounding code and struggle in large messy repos, though controlled evidence is limited.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/keeping-code-maintainable-still-requires-human",
+      "stance": "asserts",
+      "quote": "having poor quality choice from code from an agent is a choice that you make.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Linters and agent rules catch local smells, but architecture and coupling decisions still lack automated checks. Tooling is improving.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+      "stance": "asserts",
+      "quote": "nobody writes any code, nobody reads any code, which is clear insanity.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-coding-agents-vulnerable-prompt-injection",
+      "stance": "asserts",
+      "quote": "there there is no way to reliably say, these are This is the data, and these are the instructions.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Repeatedly demonstrated against coding agents (malicious repos, issues, docs and MCP tool descriptions causing exfiltration or unsafe commands).",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-run-permission-prompts-disabled-should",
+      "stance": "asserts",
+      "quote": "So, I think the most important thing is sandboxing.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents have deleted files and run destructive commands when unrestricted; vendors themselves recommend containers/VMs for skip-permissions modes.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/late-2025-frontier-models-crossed-threshold",
+      "stance": "asserts",
+      "quote": "the models in November just got so good.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "METR's Feb 2026 update suggests speedups are now likely but its data is unreliable; most evidence is practitioner testimony.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR Feb 2026: through 2025 agentic tools (Claude Code, Codex) spread, and many experienced OSS developers now refuse to do half their work without AI, which is consistent with a shift; measured speedups remain small and uncertain (-18%, CI -38% to +9%).",
+          "source": "ai-coding/sources/metr-2026-experiment-design.txt#L68-L72",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/intensive-agentic-coding-raises-cognitive-load",
+      "stance": "asserts",
+      "quote": "after two hours of that I'm done for the day. Like I'm mentally exhausted",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Many practitioner reports and some surveys describe higher intensity and fatigue from supervising agents, but controlled evidence is thin and other studies report reduced effort on routine work.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/makes-cheap-submit-plausible-looking-low",
+      "stance": "asserts",
+      "quote": "projects are flooded with junk contributions at the moment to the point that people are trying to convince GitHub to disable pull requests",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Maintainers of curl, Ghostty and others document floods of low-effort AI PRs and reports, and GitHub added tooling to restrict PRs in response.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

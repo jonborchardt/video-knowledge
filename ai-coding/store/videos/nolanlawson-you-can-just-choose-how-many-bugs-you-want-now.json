@@ -1,0 +1,101 @@
+{
+  "id": "nolanlawson-you-can-just-choose-how-many-bugs-you-want-now",
+  "title": "You can just choose how many bugs you want now",
+  "channel": "Read the Tea Leaves",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://nolanlawson.com/2026/08/16/you-can-just-choose-how-many-bugs-you-want-now/",
+  "summary": "Argues AI has made finding bugs nearly free, so software quality now depends on how many bugs teams choose to fix, and that agents patch bugs with epicycles unless humans push for simplification.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/making-bug-finding-nearly-free-software",
+      "stance": "asserts",
+      "quote": "you can basically just decide how many bugs you want your software to have now.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI review tools do surface many real bugs cheaply, but they still miss many issues and fixing found bugs carries real cost, so finding is not fully solved.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/frontier-models-now-highly-effective-finding",
+      "stance": "asserts",
+      "quote": "We discovered this first with security, because of course security bugs are the most non-negotiable ones.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "By 2025-26 AI systems (Big Sleep, AIxCC entrants, lab red-team reports) found many confirmed real vulnerabilities, though false positives remain common and human triage is still needed.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-tend-over-complicate-solutions",
+      "stance": "asserts",
+      "quote": "They will happily build one epicycle per bug until the code is a spaghetti mess.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Code-bloat and duplication findings support a tendency toward verbose, over-engineered output, but it varies a lot by model and prompt.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/language-agnostic-conformance-test-suites-let",
+      "stance": "asserts",
+      "quote": "an agent could just grind through the test suite, and if it got close to 100% then I could be reasonably certain",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Demonstrations such as spec-driven compiler and library ports show agents converge on conformance suites, though code quality can lag.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/intensive-agentic-coding-raises-cognitive-load",
+      "stance": "asserts",
+      "quote": "I find myself mentally exhausted after slogging through the umpteenth AI-generated bug report",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Many practitioner reports and some surveys describe higher intensity and fatigue from supervising agents, but controlled evidence is thin and other studies report reduced effort on routine work.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cognitive-debt-loss-developers-shared-understanding",
+      "stance": "asserts",
+      "quote": "keeping a working theory of the code in my head (ala Peter Naur)",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Naur's theory-building view and early studies of AI-assisted teams support loss of understanding as a real risk, but there is no measurement yet showing it outweighs technical debt.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "id": "RhfqQKe22ZA",
+  "title": "Why Agent Hype can fall short of reality – Joel Becker, METR",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 1282,
+  "thumbnail": "https://i.ytimg.com/vi_webp/RhfqQKe22ZA/sddefault.webp?v=695203c8",
+  "summary": "METR's Joel Becker reconciles impressive benchmark trends (time horizons) with the RCT slowdown.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+      "stance": "asserts",
+      "quote": "the time horizon of models is doubling every something like six to seven months",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR's 2025 time-horizon study found ~7-month doubling (faster in 2024-25); later measurements stayed on or above trend, with wide error bars.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+      "stance": "asserts",
+      "quote": "we find that developers are slowed down by 19%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L11-L27",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "they think that it will have sped them up by something like 20%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+      "stance": "asserts",
+      "quote": "these developers are coming to these problems already knowing the solution",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Field experiments (Microsoft/Accenture RCTs, Brynjolfsson) found the largest gains for less-experienced or less-familiar workers and routine tasks; METR found slowdowns for deep-familiarity experts.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Slowdown is larger when developers have high prior task exposure. Developers report AI helps on unfamiliar issues and not where they're experts, and the paper expects speedups in unfamiliar or greenfield settings.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L960-L984",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-shrink-task-complexity-codebase",
+      "stance": "asserts",
+      "quote": "AIs might be less performant on on large and complex repositories",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent across Stanford's data, METR's mature-repo slowdown and long-context degradation results.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR names repo size and maturity (10+ years, more than 1M lines) and complex edits as factors behind the slowdown, in contrast with greenfield RCTs that found speedups.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L986-L1003",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/benchmarks-overstate-real-world-usefulness-because",
+      "stance": "asserts",
+      "quote": "SWE-bench like scoring ... versus mergeability like scoring ... the problems aren't very messy",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR's own analysis and follow-ups found many benchmark-passing patches aren't mergeable; messy, high-context work lags benchmark scores.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR concludes the field slowdown suggests in-the-wild capability may be lower than benchmarks imply, because benchmark tasks are self-contained and scored algorithmically.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L484-L489",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "30% of RQ8 sources cite the lack of standardized benchmarks that capture realistic multi-step workflows and long-horizon tasks; they do not show that benchmarks overstate usefulness.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1805-L1811",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google argues that good model-level eval performance on hermetic tasks does not guarantee good business-level outcomes, because the model is only one part of the task; this is a position statement, not a measurement.",
+          "source": "ai-coding/sources/2501.06972.txt#L619-L633",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+      "stance": "asserts",
+      "quote": "reliability needs to be very high to save time ... something like 95 99% of the time",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "A reasonable explanation consistent with METR's 44% acceptance and review overhead; the specific threshold is conjecture.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers accepted under 44% of Cursor generations and lost significant time reviewing, testing and modifying output before rejecting it. Low reliability is listed as a cause of the slowdown.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1004-L1012",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "denies",
+      "quote": "maybe the developers really are not very capable at using AI ... I'm a little skeptical of that story",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "There was no improvement across the first 50 hours of Cursor use, and dropping early tasks didn't change the slowdown. One developer with more than 50 hours did speed up, so a high skill ceiling is plausible but underpowered.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1205-L1230",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

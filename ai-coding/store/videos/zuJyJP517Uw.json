@@ -1,0 +1,189 @@
+{
+  "id": "zuJyJP517Uw",
+  "title": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
+  "channel": "Latent Space",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCxBcwypKK-W3GHd_RZ9FZrQ",
+  "durationSec": 2244,
+  "thumbnail": "https://i.ytimg.com/vi_webp/zuJyJP517Uw/sddefault.webp",
+  "summary": "Steve Yegge at AI Engineer: IDEs are obsolete, agents need ~2,000 hours to master, orchestrators and merge queues are next, 'factory farming' code.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+      "stance": "asserts",
+      "quote": "the performance difference is like 10x any way that you measure it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "Second-hand anecdote measured by lines of code and commits; controlled and large field studies find average gains of roughly 10-30%, sometimes negative.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/ide-based-assistants-like-cursor-obsolete",
+      "stance": "asserts",
+      "quote": "if you're still using an IDE to develop code by January 1st, you're a bad engineer",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "IDE products added full agents, background agents and CLIs of their own; usage data show both forms widely used. Many experts (e.g. Karpathy) argue visual diff UIs are key for verification.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "asserts",
+      "quote": "you actually have to spend 200 hours with it. You have to spend 2,000 hours with it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "There was no improvement across the first 50 hours of Cursor use, and dropping early tasks didn't change the slowdown. One developer with more than 50 hours did speed up, so a high skill ceiling is plausible but underpowered.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1205-L1230",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-given-production-access-have",
+      "stance": "asserts",
+      "quote": "It changed the password ... locked out the entire rest of the universe including my live game",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The July 2025 Replit/SaaStr incident is well documented, including the CEO's apology; similar agent-caused deletions have been reported elsewhere.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/software-engineers-shifting-implementing-code-orchestrating",
+      "stance": "asserts",
+      "quote": "it's going to be your agent orchestration dashboard",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Background and parallel agents are increasingly used, but most developers still work interactively with one agent; enterprise adoption of orchestration is early.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review documents a role shift toward supervising and validating AI output. Multi-agent orchestration specifically is barely studied.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1920-L1928",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/merging-work-many-parallel-agents-main",
+      "stance": "asserts",
+      "quote": "Merging is the ... wall that everyone is hitting right now",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Conflicts and integration do become the constraint with many concurrent agents (consistent with review-bottleneck data), but it's one of several bottlenecks alongside review and verification.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/rewriting-code-scratch-often-cheaper-modifying",
+      "stance": "asserts",
+      "quote": "It is better to just start over and rewrite it from scratch than it is to try to fix it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "True for small, well-tested components and test suites; for large systems with implicit behavior, rewrites still lose knowledge and introduce regressions.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/open-weight-coding-models-now-handle",
+      "stance": "asserts",
+      "quote": "they're seven months behind and that gap is gradually narrowing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-run-permission-prompts-disabled-should",
+      "stance": "asserts",
+      "quote": "Definitely don't touch anything production only touch code only use these things when git is your back stop",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents have deleted files and run destructive commands when unrestricted; vendors themselves recommend containers/VMs for skip-permissions modes.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/shrinking-engineering-team-sizes",
+      "stance": "asserts",
+      "quote": "maybe the ideal team size is like two or three",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Some companies report smaller teams and AI-native startups run lean, but industry-wide team-size data are thin and confounded by cost cutting.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+      "stance": "denies",
+      "quote": "beads is like living proof that you never actually have to look at the code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

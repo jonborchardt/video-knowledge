@@ -1,0 +1,189 @@
+{
+  "id": "FAb8qBUKkXc",
+  "title": "Vibe-Coding Is Killing Your AI Productivity - Benedikt Stemmildt | code.talks 2025",
+  "channel": "code.talks (ehem. Developer Conference)",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCfuj1MM5p37CRzWYPv_PsWA",
+  "durationSec": 2952,
+  "thumbnail": "https://i.ytimg.com/vi/FAb8qBUKkXc/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEUgRSh_MA8=&rs=AOn4CLBrA5Bxh8hy8-hH0lISiYogZ826Hg",
+  "summary": "Live demo of a configured Claude Code workflow (subagents, TDD, CLAUDE.md, MCP) vs vibe coding, plus PM/dev prototyping collaboration.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/delegating-research-subagents-their-own-context",
+      "stance": "asserts",
+      "quote": "our main agent ... is not polluting its context window with stuff that's not relevant",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Subagents return summaries rather than raw exploration; Anthropic reports gains from multi-agent research, at higher token cost.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/test-driven-development-red-green-refactor",
+      "stance": "asserts",
+      "quote": "implement a test first um a red test because we are doing test driven development",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Tests-first gives agents a target and limits test-cheating; evidence is mostly anecdotal and it does not suit all code (e.g. UI).",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "research ... to figure out how to implement this the right way not the wipe coded way",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/mcp-tool-definitions-consume-significant-context",
+      "stance": "asserts",
+      "quote": "if I add 10 MCP tools here my context is already full",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Each MCP server injects tool schemas into context; large servers can use tens of thousands of tokens, and agents use CLIs well. Deferred tool loading has since reduced this.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/project-instruction-files-claude-agents-rules",
+      "stance": "asserts",
+      "quote": "so that it follows your idea of of good software engineering practices",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Persistent instruction files measurably steer agent behavior; overlong or contradictory ones reduce adherence.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clearing-context-starting-fresh-beats-compacting",
+      "stance": "asserts",
+      "quote": "what is relevant? ... That's why this feature is not working very well",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh context avoids accumulated noise, but compaction is useful when state is hard to reconstruct; it is a tradeoff, not a rule.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-more-effective-fresh-context",
+      "stance": "asserts",
+      "quote": "the sub agent is kind of like a new person, right? A new context, fresh eyes",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh-context reviewers avoid self-confirmation and context bloat; plausible and commonly practiced but little hard evidence.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+      "stance": "asserts",
+      "quote": "prototyping, vip coding, totally very good to do that, but do it in a way that you know this is not your production code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/heavy-prompt-guardrails-constrain-agents-can",
+      "stance": "asserts",
+      "quote": "you kind of guard railed it down to a very specific way of doing something",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Vendors advise removing over-prescriptive instructions as models improve; but guardrails still prevent real failures. Plausible, weakly evidenced.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-prototypes-should-used-validate-requirements",
+      "stance": "asserts",
+      "quote": "we would have figured out that the user doesn't want that at all and already stopped",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Validating demand before building is long-standing product practice; AI lowers prototype cost, making it more attractive.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Vibe coding is said to support 'rapid prototyping and early validation of ideas', and the review advises using it mainly for prototyping and exploration unless validation is strong; user validation of requirements is not studied.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L2076-L2078",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/simple-self-owned-coding-workflow-works",
+      "stance": "asserts",
+      "quote": "I don't really like these frameworks ... I take the ideas and put it into into our own team's workflow",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Owning and understanding your workflow helps you debug it, and many practitioners report framework bloat; but there is no comparative evidence, and frameworks can be a good starting point.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

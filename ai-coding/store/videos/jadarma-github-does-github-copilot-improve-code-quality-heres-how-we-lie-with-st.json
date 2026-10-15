@@ -1,0 +1,93 @@
+{
+  "id": "jadarma-github-does-github-copilot-improve-code-quality-heres-how-we-lie-with-st",
+  "title": "Does GitHub Copilot Improve Code Quality? Here",
+  "channel": "Jadarma",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://jadarma.github.io/blog/posts/2024/11/does-github-copilot-improve-code-quality-heres-how-we-lie-with-statistics/",
+  "summary": "A critique of GitHub's Copilot code-quality study for its toy CRUD task, small sample and lint-style metrics, contrasted with GitClear's churn and duplication findings.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/vendor-run-studies-their-own-coding",
+      "stance": "asserts",
+      "quote": "you cannot blame me from being skeptical of a big corporation conducting a study on its own products",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Vendor studies such as GitHub's often use favorable tasks and narrow metrics, though some vendor RCTs, like Google's, are reasonably designed.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR critiques earlier speedup studies (e.g. Peng et al.'s basic HTTP-server task) for synthetic tasks that resemble training data and for outcome metrics that are not fixed in advance. That supports the easy-tasks/soft-metrics part but does not single out vendor sponsorship.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L115-L129",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Microsoft-affiliated field study, ~4,900 developers: real-world Copilot gains (26% more PRs) were much smaller than the 56% lab speed-up in Peng et al. The authors attribute the gap to easy lab tasks and to coding being only part of the job. This supports 'easy tasks overstate', though this field study is itself vendor-run.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google tested its own tools and admits it cannot rule out bias from that. Its enterprise-task estimate (~21%) is far below GitHub's 56% Upwork/GitHub Classroom result, a gap it attributes mainly to population and task differences, so vendor estimates vary a lot with task and sample.",
+          "source": "ai-coding/sources/2410.12944.txt#L522-L539",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "GitHub/Microsoft-authored Copilot RCT reporting a 55.8% speed-up. It admits it used one standardized HTTP-server task rather than large collaborative projects, did not measure code quality, and that results may not generalize.",
+          "source": "ai-coding/sources/2302.06590.txt#L208-L219",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+      "stance": "asserts",
+      "quote": "improvements were observed in the place we'd most expect.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-code-duplicates-existing-utilities-types",
+      "stance": "asserts",
+      "quote": "A significant increase in copy-paste, meaning more duplication",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/commit-counts-overstate-productivity-because-increases",
+      "stance": "asserts",
+      "quote": "A SIGNIFICANT increase in churn rate, meaning code once commited was much more likely to be altered soon thereafter",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/software-built-quickly-accumulates-more-technical",
+      "stance": "asserts",
+      "quote": "A significant decrease in moved code, meaning less refactoring, less cleaning.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "if you can't write good code without an AI, then you shouldn't use one in the first place.",
+      "verdicts": []
+    }
+  ]
+}

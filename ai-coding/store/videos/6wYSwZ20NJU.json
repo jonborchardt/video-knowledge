@@ -1,0 +1,89 @@
+{
+  "id": "6wYSwZ20NJU",
+  "title": "Open Source security in spite of AI - Daniel Stenberg",
+  "channel": "Daniel Stenberg",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCD5eL38hFtSLiVFP9cCUJEA",
+  "durationSec": 2946,
+  "thumbnail": "https://i.ytimg.com/vi/6wYSwZ20NJU/sddefault.jpg",
+  "summary": "curl's Daniel Stenberg at FOSDEM: AI slop security reports swamp maintainers, while AI analyzers and reviewers find real bugs.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/generated-bogus-security-reports-flooding-open",
+      "stance": "asserts",
+      "quote": "We used to have one in six reports were genuine ... now it's more like one in 20 or one in 30",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "curl's public data and statements from other maintainers (Python, Django, FFmpeg) document a sharp rise in fabricated AI reports; curl ended its bug bounty in 2026 partly because of it.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-tools-catch-real-bugs",
+      "stance": "asserts",
+      "quote": "I have fixed more than 100 bugs found by these tools when I started to use them",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-complements-but-does-not",
+      "stance": "asserts",
+      "quote": "they're certainly not a compliment to test cases ... test cases is still way more important",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers miss many defects that tests catch and are nondeterministic; tests remain the reliable regression check. Consistent with curl experience and review-tool benchmarks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/tools-correctly-find-bugs-still-usually",
+      "stance": "asserts",
+      "quote": "All of these AI detection tools ... offer like generate a patch to fix this, but they're never good",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Maintainers widely report poor auto-fixes, and fix quality lags detection in evaluations; but auto-fix quality has improved and varies by bug type.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/crawlers-impose-heavy-bandwidth-load-costs",
+      "stance": "asserts",
+      "quote": "they easily swallow 75 terabytes per month ... less than 0.01% of the traffic [is downloads]",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Many projects (SourceHut, GNOME, KDE, Fedora, Read the Docs) reported AI-scraper traffic overwhelming servers in 2025 and deployed blockers like Anubis.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

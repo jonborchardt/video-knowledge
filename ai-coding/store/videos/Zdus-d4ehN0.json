@@ -1,0 +1,206 @@
+{
+  "id": "Zdus-d4ehN0",
+  "title": "AI Replacing Developers Has Officially Failed",
+  "channel": "Sajjaad Khader",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UC7zZ2-Q_oxbUaoMVL0z51wg",
+  "durationSec": 888,
+  "thumbnail": "https://i.ytimg.com/vi_webp/Zdus-d4ehN0/sddefault.webp",
+  "summary": "Sensational narrative that AI replacement 'failed' and companies are boomerang-rehiring; mixes real and shaky stats.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+      "stance": "asserts",
+      "quote": "Seasoned engineers were actually 19% slower when using AI tools",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L11-L27",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/companies-cut-engineers-citing-now-rehiring",
+      "stance": "asserts",
+      "quote": "tech companies are desperate for human workers once again",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "There are reports of AI-motivated cuts being reversed (e.g. Klarna support staff) and analyst forecasts of rehiring, but broad 'boomerang' rehiring of engineers is weakly evidenced.",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/post-2022-drop-developer-hiring-driven",
+      "stance": "asserts",
+      "quote": "the tech market was utterly cooked before AI even stepped into the kitchen",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The 2022-23 decline began before ChatGPT and tracks rate hikes and over-hiring; most economists attribute it mainly to macro factors, though AI may weigh on junior roles since 2024.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-contains-more-defects-human",
+      "stance": "asserts",
+      "quote": "AI generated code has 1.7 times more errors compared to code written by human software engineers",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "CodeRabbit's 2025 PR analysis found ~1.7x more issues in AI-authored PRs, and security studies agree; results depend heavily on review and tooling, and some studies find parity.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "The Debt study explicitly does not compare AI commits with a human-only baseline, so it can't say whether AI code has more defects.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L1031-L1035",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Using build success as a quality proxy, Copilot had no negative effect at Microsoft but a negative one at Accenture (-17.4%, p<0.05); pooled -5.5% NS, so evidence of more defects is mixed and the proxy is weak.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L506-L514",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "Peng et al. state explicitly that the study does not examine AI's effect on code quality, which could go either way.",
+          "source": "ai-coding/sources/2302.06590.txt#L215-L219",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025: raw AI output often needed major cleanup, but final AI-allowed PRs looked qualitatively similar in quality, and post-review fix time differed insignificantly (15 vs 9 min). Experienced reviewers caught defects before submission.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1187-L1192",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "Defect risks are reported in 21% (10/47) of sources, discussed alongside productivity gains, but the review gives no human-written baseline and treats counts as mention frequency, not effect size.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1454-L1458",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "In the RCT, ChatGPT access raised task accuracy by 26 percentage points (0.65 to about 0.91), and directly accepting AI output did not lower accuracy. The tasks were simple (GPT-4 solved them all), so this says little about defects in real code.",
+          "source": "ai-coding/sources/4859137.txt#L836-L856",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/extra-code-volume-produces-increases-complexity",
+      "stance": "asserts",
+      "quote": "AI generated code results in 38% more code volume",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear and DORA 2025 data show more churn and duplication and lower delivery stability as AI adoption rises; more code means more to maintain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Smells make up 89% of AI-introduced issues and pass review easily. The paper argues AI's higher speed and volume let these accumulate into a substantial maintenance burden.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L900-L912",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/labs-capability-claims-inflated-fundraising-incentives",
+      "stance": "asserts",
+      "quote": "AI was a failed marketing scheme, not a full technical replacement",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Labs do have incentives and many evals are self-reported, but independent evals (METR, SWE-bench, LMArena) largely confirm capability gains.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/software-engineering-job-postings-have-recovering",
+      "stance": "asserts",
+      "quote": "Software engineering postings were up 32%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Postings rose from the 2023 trough in some trackers (TrueUp, parts of Indeed), but remain far below 2022 and junior postings stayed weak; the data are mixed.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/customer-facing-forward-deployed-engineer-roles",
+      "stance": "asserts",
+      "quote": "This is one of the fastest growing roles in tech right now",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "FDE postings grew several-fold in 2025 as AI labs and startups (OpenAI, Anthropic, Palantir-style firms) hired for them; still a small share of jobs.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/will-transform-software-engineering-jobs-rather",
+      "stance": "asserts",
+      "quote": "AI ended up creating more demand for humans not less",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Through 2026 evidence points to role change and slower junior hiring, not elimination of the profession; long-run is uncertain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

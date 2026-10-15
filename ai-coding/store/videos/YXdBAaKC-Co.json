@@ -1,0 +1,103 @@
+{
+  "id": "YXdBAaKC-Co",
+  "title": "Inside minions: how Stripe uses autonomous one-shot AI coding agents",
+  "channel": "Stripe Developers",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCd1HAa7hlN5SCQjgCcGnsxw",
+  "durationSec": 759,
+  "thumbnail": "https://i.ytimg.com/vi_webp/YXdBAaKC-Co/sddefault.webp",
+  "summary": "Stripe engineer demos 'minions', one-shot sandboxed coding agents that turn upfront context into CI-passing pull requests for human review.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/background-coding-agents-assigned-routine-issues",
+      "stance": "asserts",
+      "quote": "we have at the order of like thousands of PRs now being created by minions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "we want the agent to be given enough context to accomplish this task in one shot",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "I'm just going to ask an agent first before we kick off the one shot, just to gather some context up front.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/planning-alignment-need-human-loop-while",
+      "stance": "asserts",
+      "quote": "minions are very capable of larger feature changes that are well scoped out by the engineer in advance and then handed off to them",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Current agents are weakest at intent/requirements and strongest at well-specified implementation with verification.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-run-permission-prompts-disabled-should",
+      "stance": "asserts",
+      "quote": "the minions are, first of all, running in a sandbox developer environment",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents have deleted files and run destructive commands when unrestricted; vendors themselves recommend containers/VMs for skip-permissions modes.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "read the code myself to make sure it's a sensible change",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

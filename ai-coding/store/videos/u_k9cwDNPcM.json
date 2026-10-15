@@ -1,0 +1,181 @@
+{
+  "id": "u_k9cwDNPcM",
+  "title": "A Year of Agents | Armin Ronacher | CodeCrafts 2026",
+  "channel": "SQUER Solutions",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCu9FPyccmruGb4UueBJvx9A",
+  "durationSec": 2096,
+  "thumbnail": "https://i.ytimg.com/vi_webp/u_k9cwDNPcM/sddefault.webp?v=6a33b359",
+  "summary": "Armin Ronacher on a year of building with and building agents: real power, but agent psychosis, slop PRs, lost understanding and the need for deliberate friction.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/coding-agents-run-tools-loop-step",
+      "stance": "asserts",
+      "quote": "I said like I would be challenged if it's more than 10%. And that was that was completely invalidated",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Agentic tools clearly expanded what AI can do unaided, and METR's 2026 update suggests speedups are now likely, but measured average gains remain modest.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/makes-cheap-submit-plausible-looking-low",
+      "stance": "asserts",
+      "quote": "why do these open source projects get these random pull requests? Well, it is because it can",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Maintainers of curl, Ghostty and others document floods of low-effort AI PRs and reports, and GitHub added tooling to restrict PRs in response.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-should-able-explain-generated-code",
+      "stance": "asserts",
+      "quote": "I increasingly have a problem when infrastructure core components are being written with the power of AI and no human that understands that anymore",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Ownership and maintainability require understanding; it's a reasonable review standard rather than an empirical finding.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-often-ship-generated-code-without",
+      "stance": "asserts",
+      "quote": "a lot of stuff gets merged without reviews",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys (e.g. Sonar 2026) report many developers don't always check AI code before committing, despite saying they distrust it.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-work-best-when-tasks-decomposed",
+      "stance": "asserts",
+      "quote": "agents really are all about writing code, running code and doing that",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tool-using agents that run code beat pure text reasoning on calculation and data tasks, and verifiable coding rewards drove recent agent training gains.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google: splitting migrations into simpler, well-defined sub-steps (each validated by build/tests) speeds iteration, and LLMs are very good at fixing a well-defined problem; this supports decomposition into verifiable steps in a pipeline setting.",
+          "source": "ai-coding/sources/2501.06972.txt#L589-L603",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "how much can you throw into an LLM before it falls apart? Um not a lot it turns out",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-duplicates-existing-utilities-types",
+      "stance": "asserts",
+      "quote": "they're going to write duplicated code left and right",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-run-permission-prompts-disabled-should",
+      "stance": "asserts",
+      "quote": "the agent will do things that it shouldn't be doing, unsurprisingly",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents have deleted files and run destructive commands when unrestricted; vendors themselves recommend containers/VMs for skip-permissions modes.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/instructions-alone-such-not-touch-production",
+      "stance": "asserts",
+      "quote": "went wrong in your process if if the agent had the the power to do that",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents violate explicit instructions often enough that dev/prod separation, permissions and sandboxes are standard advice; Replit's own fix was architectural.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measuring-engineers-token-usage-leaderboards-spend",
+      "stance": "asserts",
+      "quote": "There was a leaderboard within meta who spends the most amount of tokens.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Goodhart's law applies: Orosz reports leaderboards and spend targets at large firms prompting busywork; consistent with past experience of line-of-code metrics.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-degrade-codebase-quality-when",
+      "stance": "asserts",
+      "quote": "if you take the second law of thermodynamics, everything decays towards chaos",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent with long-horizon benchmarks such as SlopCodeBench and with studies of AI-code churn and duplication. Evidence is early but points the same way.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

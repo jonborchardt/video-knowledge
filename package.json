@@ -1,0 +1,17 @@
+{
+  "name": "video-knowledge",
+  "private": true,
+  "type": "module",
+  "description": "Topic knowledge stores built from YouTube videos with the watcher library (linked from ../retire-sim/watcher).",
+  "scripts": {
+    "watcher": "tsx node_modules/watcher/src/cli.ts",
+    "report": "node scripts/report.mjs",
+    "site": "node scripts/build-site.mjs"
+  },
+  "dependencies": {
+    "watcher": "file:../retire-sim/watcher"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.11"
+  }
+}

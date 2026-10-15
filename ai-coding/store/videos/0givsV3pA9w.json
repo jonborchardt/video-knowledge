@@ -1,0 +1,122 @@
+{
+  "id": "0givsV3pA9w",
+  "title": "From MCP and Vibe Coding to Harness Engineering: How Did AI Native Engineering Evolve in One Year",
+  "channel": "InfoQ",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCkQX1tChV7Z7l1LFF4L9j_g",
+  "durationSec": 2484,
+  "thumbnail": "https://i.ytimg.com/vi/0givsV3pA9w/sddefault.jpg?sqp=-oaymwEoCIAFEOAD8quKqQMcGADwAQH4AbYIgAK4CIoCDAgAEAEYZSBSKEgwDw==&rs=AOn4CLAPdMTe1GJDg9ko1uw_bgVk5g9w6Q",
+  "summary": "Birgitta Boeckeler reviews a year of AI-native engineering: the move from MCP to skills and CLIs, context engineering, harness engineering with feedforward and feedback controls, and risk-based review.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/loading-capabilities-demand-skills-read-only",
+      "stance": "asserts",
+      "quote": "that context interface takes up less space in the context window, so you just have the description of the skill",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/mcp-tool-definitions-consume-significant-context",
+      "stance": "asserts",
+      "quote": "Why would you run another local process like an MCP server that can access the AWS cloud when you already have the CLI",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "we want to immediately give it as much feedback as possible so it can self-correct",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/enforcing-coding-conventions-deterministic-checks-linters",
+      "stance": "asserts",
+      "quote": "custom linters, stuff like that, which is now easier to build as well",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/updating-agent-rules-workflows-after-each",
+      "stance": "asserts",
+      "quote": "Every time something goes wrong, they try to improve the harness first before new code gets written.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/when-agent-writes-both-code-tests",
+      "stance": "asserts",
+      "quote": "I think that's very unsatisfying to me because the agent also generates the tests",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "A shared misreading of requirements can appear in both code and tests, and agent-written tests often assert current behavior rather than intent.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/how-much-human-review-output-gets",
+      "stance": "asserts",
+      "quote": "risk is always probability plus impact plus detectability",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A sensible risk-management heuristic rather than an empirical claim.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The review's practitioner implication is that verification effort should scale with the intended use of the artifact. It also notes that developers apply stricter verification to unfamiliar functionality than to routine tasks (L1301-1302). This is a synthesized recommendation, not a tested result.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1937-L1946",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic interviews: engineers in practice delegate easily verifiable, low-stakes or throwaway work and keep active supervision for complex or high-stakes code, matching a risk-based review practice (descriptive, not evidence that it is optimal).",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L58-L63",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/ide-based-assistants-like-cursor-obsolete",
+      "stance": "denies",
+      "quote": "I don't think it's as easy to say like Claude Code is successful because of the terminal and that's the future.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/giving-agents-organizational-context-tickets-discussions",
+      "stance": "asserts",
+      "quote": "they load the code base into a graph they also load your tickets, your Slack history, your wiki",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/combining-semantic-embedding-code-search-grep",
+      "stance": "asserts",
+      "quote": "especially when you have a large code base, where you might want some of these other approaches to have more powerful search",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/open-weight-coding-models-now-handle",
+      "stance": "denies",
+      "quote": "the smaller models usually still struggle with the tool calling.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/major-coding-subscriptions-subsidized-below-cost",
+      "stance": "asserts",
+      "quote": "it's pretty obvious that at the moment it's still very subsidized",
+      "verdicts": []
+    }
+  ]
+}

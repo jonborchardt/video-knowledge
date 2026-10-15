@@ -1,0 +1,191 @@
+{
+  "id": "XDNXLdwq114",
+  "title": "Why AI WON'T Replace Software Engineering...",
+  "channel": "Modern Software Engineering",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCCfqyGl3nq_V0bo64CjZh8g",
+  "durationSec": 1171,
+  "thumbnail": "https://i.ytimg.com/vi_webp/XDNXLdwq114/sddefault.webp",
+  "summary": "Dave Farley: coding was never the bottleneck; continuous delivery, small steps and executable specs make AI safe.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+      "stance": "asserts",
+      "quote": "The bottleneck in software was never the typing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies of developer time show coding is a minority of work; DORA and Faros 2025 found individual coding gains often don't translate into delivery throughput.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/extra-code-volume-produces-increases-complexity",
+      "stance": "asserts",
+      "quote": "more AI-generated code means more complexity, more integration points, more maintenance burden",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "GitClear and DORA 2025 data show more churn and duplication and lower delivery stability as AI adoption rises; more code means more to maintain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Smells make up 89% of AI-introduced issues and pass review easily. The paper argues AI's higher speed and volume let these accumulate into a substantial maintenance burden.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L900-L912",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Authors warn that reckless AI use may bloat codebases and that volume drives complexity, but in their data the median AI-dev added fewer lines (123 vs 166) and the two highest-volume AI users had the best CodeHealth; the burden is projected, not observed.",
+          "source": "ai-coding/sources/2507.00788.txt#L2625-L2632",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "WL5 and WL15 are cited as saying rapid AI-assisted iteration can introduce structural complexity that complicates later maintenance; the effect is not tied to code volume or measured.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1445-L1452",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "Good engineering is about small, reversible steps with fast feedback",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/without-continuous-delivery-automated-deployment-pipelines",
+      "stance": "asserts",
+      "quote": "If you don't have continuous delivery in place, AI will make you worse, not better",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "DORA 2025 found AI amplifies existing practices, helping strong teams and hurting weak ones; 'makes you worse' overstates it for small or solo projects.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "We need to know within minutes, not days, if AI-generated code broke something",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-tools-tend-suppress-type-lint",
+      "stance": "asserts",
+      "quote": "it's removed or broken several tests ... it gave up and deleted them instead",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents commonly add any/ts-ignore/lint-disable or weaken tests to get green checks; widely reported and seen in reward-hacking evaluations.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/test-driven-development-red-green-refactor",
+      "stance": "asserts",
+      "quote": "we need to teach it TDD",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Tests-first gives agents a target and limits test-cheating; evidence is mostly anecdotal and it does not suit all code (e.g. UI).",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "as that context window fills up, the AI will forget things and start to underperform",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+      "stance": "asserts",
+      "quote": "Enough to prototype the idea, but not even close to being production ready",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "AI doesn't replace the need for software engineering, it exposes teams that were never really doing engineering",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2025 found AI amplifies existing engineering practices; strong fundamentals predict AI benefit.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

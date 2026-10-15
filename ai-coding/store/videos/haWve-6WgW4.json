@@ -1,0 +1,150 @@
+{
+  "id": "haWve-6WgW4",
+  "title": "The METR Paradox. Why AI Made Senior Devs 19% Slower",
+  "channel": "Macro Lens",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCe5tJbz9LhWUa0PKKj8Hg9Q",
+  "durationSec": 572,
+  "thumbnail": "https://i.ytimg.com/vi_webp/haWve-6WgW4/sddefault.webp",
+  "summary": "Careful walkthrough of the METR RCT: methodology, perception gap, mechanisms, objections and implications for headcount decisions.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+      "stance": "asserts",
+      "quote": "they were 19% slower than when they weren't",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L11-L27",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "those same developers still believed AI had made them 20% faster",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+      "stance": "asserts",
+      "quote": "New engineers in code bases they do not know yet. And routine code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Field experiments (Microsoft/Accenture RCTs, Brynjolfsson) found the largest gains for less-experienced or less-familiar workers and routine tasks; METR found slowdowns for deep-familiarity experts.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Slowdown is larger when developers have high prior task exposure. Developers report AI helps on unfamiliar issues and not where they're experts, and the paper expects speedups in unfamiliar or greenfield settings.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L960-L984",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+      "stance": "denies",
+      "quote": "every previous generation of these tools was also sold as the one that finally cracks senior productivity ... The burden of proof is on the next study",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Newer models may help, but METR attributed much of the slowdown to context, review overhead and repo familiarity, not model quality alone; METR's own later follow-up was mixed.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "The paper tests only Feb-June 2025 tools. It says more reliable or better-elicited systems could speed up developers, and that early agents already make progress, but it doesn't test newer models.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L587-L599",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/engineering-headcount-cuts-justified-productivity-rest",
+      "stance": "asserts",
+      "quote": "they are making a claim that has never been validated in a controlled study on the population they are actually paying",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Few firms publish controlled evidence for AI-justified cuts and the best RCT points the other way for experts; but internal metrics may exist that aren't public.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Large field RCTs do validate a positive gain (~26% more completed tasks), so gains are not wholly unvalidated, but the validated size is modest and far from what would justify large cuts.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-tools-reduce-perceived-effort-more",
+      "stance": "asserts",
+      "quote": "The cognitive load drops, the clock doesn't",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Consistent with METR's perception gap and surveys reporting less frustration/fatigue; a plausible explanation rather than a measured mechanism.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The paper floats trading speed for ease; reports are mixed. One developer felt 'less effort' and another 'didn't really think about some of the problems', while a third saw no effort difference.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1165-L1173",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

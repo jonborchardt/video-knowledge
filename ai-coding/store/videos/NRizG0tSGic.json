@@ -1,0 +1,126 @@
+{
+  "id": "NRizG0tSGic",
+  "title": "Unpacking METR’s findings: Does AI slow developers down?",
+  "channel": "DX",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPE0KPDWEDdO3VcgTc5Njjw",
+  "durationSec": 2625,
+  "thumbnail": "https://i.ytimg.com/vi_webp/NRizG0tSGic/sddefault.webp",
+  "summary": "A METR study participant explains why developers overestimate AI speedup, and gives practical advice on context rot, time-boxing, idle time and mapping tasks to model strengths.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "I think everyone um estimates speed up because it's just it's so much fun to use AI.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/coding-tools-reduce-perceived-effort-more",
+      "stance": "asserts",
+      "quote": "it was en more enjoyable to talk back and forth to an AI than it was to grind myself on a bug",
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Developers said ChatGPT eased their cognitive load, yet in the follow-up experiment the ChatGPT group spent more total time (less on coding tasks, more on multiple-choice). Perceived effort fell while elapsed time did not.",
+          "source": "ai-coding/sources/4859137.txt#L1246-L1251",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "documentation, unit tests, refactoring, these things, AI oneshots",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/llms-perform-poorly-low-level-code",
+      "stance": "asserts",
+      "quote": "GPU kernels like those are kind of out of distribution for models right now.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Kernel and parallelism code remained a weak spot through 2025, though specialized models and agents improved on kernel benchmarks by 2026.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/time-boxing-attempts-get-solve-task",
+      "stance": "asserts",
+      "quote": "People need to sort of fast fail. So like sort of time box when you're working with an L.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Workflow advice that is plausible but has not been directly measured.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR: developers accepted <44% of generations, and one 'wasted at least an hour' trying with AI before reverting and doing the work by hand. That documents the sunk-cost loss, but the time-boxing remedy was not tested.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1006-L1015",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/extra-code-volume-produces-increases-complexity",
+      "stance": "asserts",
+      "quote": "you end up with this huge bloated codebase because an LLM is trying to work with kernels",
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Self-rated code complexity did not differ with workplace AI use (Table 11), but the follow-up found lower maintainability and more technical debt. The burden part is supported, the complexity part is not.",
+          "source": "ai-coding/sources/4859137.txt#L1149-L1155",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "what good code looks like makes it easier for me to realize when a model is producing, you know, bad code, bloated code",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "models start to get overwhelmed with irrelevant information and they start getting confused.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/summarizing-pruning-conversation-history-keeps-long",
+      "stance": "asserts",
+      "quote": "you feed the chat into a model to summarize it down.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/repeatedly-telling-llm-answer-wrong-same",
+      "stance": "asserts",
+      "quote": "that will be much more effective than continuing to fight within the same chat.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/idle-distracted-time-while-waiting-generations",
+      "stance": "asserts",
+      "quote": "reasoning models have made this so much worse because the response time is now solidly out of the human attention span.",
+      "verdicts": []
+    }
+  ]
+}

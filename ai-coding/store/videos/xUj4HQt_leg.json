@@ -1,0 +1,85 @@
+{
+  "id": "xUj4HQt_leg",
+  "title": "Let's put the AI in lots of little boxes - Kenton Varda, Cloudflare Connect 2025",
+  "channel": "Cloudflare Developers",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UC3QIolTSR29ba4_u15vtEUQ",
+  "durationSec": 2543,
+  "thumbnail": "https://i.ytimg.com/vi/xUj4HQt_leg/sddefault.jpg",
+  "summary": "Varda argues that AI-generated and agent code should run in lightweight sandboxes with narrow, code-level capability interfaces rather than relying on model judgment.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/llm-agents-perform-better-writing-code",
+      "stance": "asserts",
+      "quote": "They can uh call more complicated interfaces when they're calling code than when they're calling tools.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Cloudflare and Anthropic report token and accuracy gains from code-execution tool use, but the evidence is mostly vendor-reported and task-dependent.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-coding-agents-vulnerable-prompt-injection",
+      "stance": "asserts",
+      "quote": "what if this scam email starts to contain prompt injection attacks? Like we haven't figured out how to defend against those yet.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/instructions-alone-such-not-touch-production",
+      "stance": "asserts",
+      "quote": "we need to take a a uh uh technical approach to preventing them from making these mistakes.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+      "stance": "asserts",
+      "quote": "there's an important class of problems that you cannot see by just looking at it which is security bugs",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/developers-should-able-explain-generated-code",
+      "stance": "asserts",
+      "quote": "you have to already understand as a human everything that it does uh and you are responsible if there's a problem",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/splitting-agent-narrowly-scoped-sub-agents",
+      "stance": "asserts",
+      "quote": "That agent cannot leak any secrets because the only thing it knows are things that the recipients of anything it sends already know.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Information-flow designs such as dual-LLM and CaMeL can provably limit leakage, but they cost functionality and do not stop every kind of misuse.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/existing-oauth-permission-scopes-too-coarse",
+      "stance": "asserts",
+      "quote": "There is no way to issue an OOTH token that gives access to a single uh email in a Gmail inbox.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Major APIs such as Gmail offer broad scopes that cannot express per-item agent permissions, though some APIs have finer-grained scopes.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

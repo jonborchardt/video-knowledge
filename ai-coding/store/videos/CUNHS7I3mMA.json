@@ -1,0 +1,89 @@
+{
+  "id": "CUNHS7I3mMA",
+  "title": "OpenCode Review: Because I Hit Claude Code Usage Limits (Claude Code vs OpenCode vs Codex CLI)",
+  "channel": "pookie",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCTfS-XQGhM__ifiH9w4oAAw",
+  "durationSec": 1462,
+  "thumbnail": "https://i.ytimg.com/vi_webp/CUNHS7I3mMA/sddefault.webp",
+  "summary": "Developer tries OpenCode with an OpenAI subscription after hitting Claude Code limits; compares harness features.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/claude-code-more-expensive-rate-limited",
+      "stance": "asserts",
+      "quote": "after only like 30 minutes with Opus 4.5, I didn't have any usage left",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Rate-limit and cost complaints about Claude Code are common and real for heavy users, but competitors also cap usage; anecdotal, from a competitor's video.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/anthropic-restricts-claude-subscriptions-own-tools",
+      "stance": "asserts",
+      "quote": "Anthropic basically blocking the usage of your Claude Code subscription with external services ... OpenAI ... fully allow you",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "In early 2026 Anthropic blocked consumer-plan OAuth in third-party agents like OpenCode, and OpenAI announced official ChatGPT-login support there.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/opencode-offers-richer-agent-harness-openai",
+      "stance": "asserts",
+      "quote": "plan mode, LSPs, the Vim mode, the sub agents ... simply aren't included in the intentionally very simple CLI tool of Codex",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "True of features at the time (LSP, agents, plan mode); Codex CLI has since added several, and 'richer' isn't 'better results'.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/models-perform-best-inside-their-own",
+      "stance": "asserts",
+      "quote": "the model really isn't trained for the tools that open code provides",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agent-configuration-formats-instruction-files-skill",
+      "stance": "asserts",
+      "quote": "Claude uses a different format ... you will have to rename that to agents.markdown",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AGENTS.md vs CLAUDE.md vs .cursor/rules and different skill folders are documented differences; standardization is ongoing.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

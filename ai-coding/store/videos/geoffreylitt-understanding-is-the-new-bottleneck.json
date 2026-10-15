@@ -1,0 +1,132 @@
+{
+  "id": "geoffreylitt-understanding-is-the-new-bottleneck",
+  "title": "Understanding is the new bottleneck",
+  "channel": "geoffreylitt.com",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://www.geoffreylitt.com/2026/07/02/understanding-is-the-new-bottleneck",
+  "summary": "Argues developers must still understand agent-written code in order to participate creatively, and shows explainer docs, quizzes and agent-built micro-worlds as ways to build that understanding quickly.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/speeds-generation-human-attention-review-understanding",
+      "stance": "asserts",
+      "quote": "Agents are writing more and more code for us, and we all know it's getting harder to keep up.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA and field reports show review and verification load growing with AI output, consistent with instability and persistent-debt findings.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+      "stance": "asserts",
+      "quote": "Hot take: I think it's still important to understand the code that our agents write!",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cognitive-debt-loss-developers-shared-understanding",
+      "stance": "asserts",
+      "quote": "It's like tech debt: you can get away with not understanding what's going on in the short term, but it'll bite you eventually.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Naur's theory-building view and early studies of AI-assisted teams support loss of understanding as a real risk, but there is no measurement yet showing it outweighs technical debt.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Authors conclude that AI-assisted development does not appear to introduce code-level technical debt, and warn that cognitive debt is the greater concern; the warning is not empirically tested here.",
+          "source": "ai-coding/sources/2507.00788.txt#L2667-L2673",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Cognitive debt (deferred understanding of accepted code) is reported in 24% (8) of RQ3.1 sources with warnings of long-term unmaintainable systems; the review never compares its size with technical debt.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1261-L1284",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The study shows only a short-term loss of individual code comprehension right after writing, and it explicitly leaves long-term effects to future work. It makes no comparison with technical debt, so only the mechanism, not the 'bigger risk' ranking, is supported.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L957-L967",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-can-help-developers-understand",
+      "stance": "asserts",
+      "quote": "walking through the changes in a sensible order, with surrounding explanation and embedded code snippets. Faster to review than a raw diff.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Agents do speed onboarding and PR summarization, but surveys and the Anthropic learning study show many users skip understanding; outcome depends on use.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/quizzing-yourself-agent-change-before-shipping",
+      "stance": "asserts",
+      "quote": "A quiz is a speed regulator. Working with AI, it's easy for the loop to run faster than the speed of human understanding.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This is a personal workflow practice drawn from learning-science ideas; its value for code comprehension has not been measured.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Quizzes generated by o1 about the participant's own code exposed a comprehension gap after AI use, so quizzing does reveal lost understanding. The study used quizzes only to measure and did not test whether they help as an intervention; the authors propose active-review mechanisms as future work.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L957-L967",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-code-generation-makes-one-off",
+      "stance": "asserts",
+      "quote": "The point here is that agents can write bits of code that help us humans understand other code.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small standalone throwaway tools are where AI generation is most reliable, and many practitioners report building debugging aids they previously skipped.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "id": "Kz9z1ETGM8w",
+  "title": "How Google solved their code migration NIGHTMARE with AI",
+  "channel": "Code Munchies",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UC0h5tuyESHbbBMNv-od7DFg",
+  "durationSec": 93,
+  "thumbnail": "https://i.ytimg.com/vi_webp/Kz9z1ETGM8w/sddefault.webp?v=67ffe3a6",
+  "summary": "Short summary of Google's paper on using LLMs for large-scale code migrations such as int32-to-int64 IDs, JUnit upgrades and dead-flag cleanup.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/combining-deterministic-transformation-tools-codemods-code",
+      "stance": "asserts",
+      "quote": "using their AI migration tools they have been able to really increase the number of landed changelists through 2024",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Migration case studies (Google, Amazon Java upgrades, Airbnb) got their scale from pairing LLMs with deterministic tooling and validation rather than free-form generation.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/handles-routine-coding-well-but-struggles",
+      "stance": "asserts",
+      "quote": "The prompt is simple and so are the code changes but it allows devs to easily modernize 5,000 test files in a few months.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks and field studies show strong performance on well-specified, common tasks and weaker results on context-heavy, novel logic.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

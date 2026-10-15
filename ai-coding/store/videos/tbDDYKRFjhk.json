@@ -1,0 +1,127 @@
+{
+  "id": "tbDDYKRFjhk",
+  "title": "Does AI Actually Boost Developer Productivity? (100k Devs Study) - Yegor Denisov-Blanch, Stanford",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 1092,
+  "thumbnail": "https://i.ytimg.com/vi_webp/tbDDYKRFjhk/sddefault.webp?v=685a3fbf",
+  "summary": "Stanford's Yegor Denisov-Blanch on a 100k-developer study: modest average gains, rework, and where AI helps least.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+      "stance": "asserts",
+      "quote": "an average productivity gain across all industries ... of roughly about 15 to 20%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The Stanford 100k-developer study and other field data put average gains around 10-20%, far below 2x-10x marketing claims.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-shrink-task-complexity-codebase",
+      "stance": "asserts",
+      "quote": "high complexity brownfield tasks 0 to 10%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent across Stanford's data, METR's mature-repo slowdown and long-context degradation results.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR names repo size and maturity (10+ years, more than 1M lines) and complex edits as factors behind the slowdown, in contrast with greenfield RCTs that found speedups.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L986-L1003",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/helps-little-can-hurt-when-working",
+      "stance": "asserts",
+      "quote": "for low language popularity and complex tasks, AI can actually decrease productivity",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Model quality tracks training-data volume; benchmarks such as MultiPL-E show much lower scores in less common languages.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/commit-counts-overstate-productivity-because-increases",
+      "stance": "asserts",
+      "quote": "by implementing AI, you get a bunch more of rework",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Stanford and GitClear both found increased short-term churn/rework with AI, so raw commit/PR counts inflate apparent gains.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR warns that lines of code and task counts can rise without productivity (more verbose but equivalent code). Developers wrote 47% more code per hour with AI (not significant) while being slower. This doesn't cover the rework mechanism.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1122-L1130",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "asking someone how productive they think they are is almost as good as flipping a coin",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "as context length increases from 1,000 to 32,000 tokens performance decreases",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

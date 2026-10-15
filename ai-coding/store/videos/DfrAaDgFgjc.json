@@ -1,0 +1,172 @@
+{
+  "id": "DfrAaDgFgjc",
+  "title": "Nicole Forsgren: Leading high-performing engineering teams in the age of AI - The Pragmatic Summit",
+  "channel": "The Pragmatic Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPbwhExawYrn9xxI21TFfyw",
+  "durationSec": 1953,
+  "thumbnail": "https://i.ytimg.com/vi/DfrAaDgFgjc/sddefault.jpg",
+  "summary": "Nicole Forsgren explains how AI-accelerated coding exposes downstream bottlenecks in review and release, raises cognitive load through rapid feedback, and why measurement should be question-driven and multidimensional.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/individual-productivity-gains-have-not-reliably",
+      "stance": "asserts",
+      "quote": "we were getting more out, but now our systems, whether technology systems or human systems or processes, are really kind of getting overwhelmed",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-shifts-developer-effort-toward",
+      "stance": "asserts",
+      "quote": "Review ends up surfacing quite a bit, right? Because we're just we're putting so much work on it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys and studies (e.g. Faros, Google) report increased PR volume and review load with AI adoption.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/intensive-agentic-coding-raises-cognitive-load",
+      "stance": "asserts",
+      "quote": "I'm having to sometimes rebuild my mental model dozens of times in like a 30-minute period.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Many practitioner reports and some surveys describe higher intensity and fatigue from supervising agents, but controlled evidence is thin and other studies report reduced effort on routine work.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Cognitive-load changes appear in 38% of RQ3.1 sources; the discussion says the role shift 'can increase cognitive load through prompt refinement, context repair, and systematic verification', while some sources report smoother flow on routine tasks.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1906-L1914",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: some respondents spend more time on Claude-assisted tasks because of debugging and the 'cognitive overhead' of understanding code they didn't write, while most report net time savings.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L39-L40",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Developers using ChatGPT for short tasks frequently reported lower cognitive load and workload. The setting was brief chat-based help, not intensive agentic coding, so it bears only weakly on the claim.",
+          "source": "ai-coding/sources/4859137.txt#L901-L905",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "what's good for humans is good for systems. If I have well-structured code, if I have well-structured documentation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2025 found AI amplifies existing engineering practices; strong fundamentals predict AI benefit.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clear-policy-access-internal-data-small",
+      "stance": "asserts",
+      "quote": "explicit exec sponsorship makes a huge difference in not just using them, but trying new things and feeling safe to fail",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measuring-impact-developers-requires-multidimensional-metrics",
+      "stance": "asserts",
+      "quote": "What are the guardrails that you want to put in place, right? How do we want to think about quality?",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This is a measurement-design recommendation (SPACE/DORA tradition) rather than an empirical claim, though output-only metrics are known to be gameable and inflated by AI.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Google paper endorses the SPACE framework view that developer productivity spans satisfaction, performance, activity, communication and efficiency beyond lines of code (literature framing, not tested; the study itself measures only time on task).",
+          "source": "ai-coding/sources/2410.12944.txt#L114-L121",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Authors adopt SPACE because productivity is broadly agreed to be multi-dimensional and simplistic metrics are myths; a methodological stance rather than a test.",
+          "source": "ai-coding/sources/2507.00788.txt#L200-L207",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review calls for future studies to measure verification effort, context management, trust calibration and long-term maintainability, not only correctness or productivity. This is a research recommendation, not a tested claim.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L2112-L2119",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Quantity and accuracy moved independently or in opposite directions depending on usage style, and workplace quality split by dimension. The authors recommend tracking throughput together with defect density and tests passed.",
+          "source": "ai-coding/sources/4859137.txt#L1085-L1091",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assistants-tend-agree-users-rather-challenge",
+      "stance": "asserts",
+      "quote": "Also, they just agree with us constantly. I'm always so smart and I'm like I know that was dumb.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Sycophancy is a well-documented LLM failure mode in research and vendor reports, though newer models and prompting can reduce it.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

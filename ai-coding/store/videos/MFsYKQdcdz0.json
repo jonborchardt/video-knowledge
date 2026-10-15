@@ -1,0 +1,197 @@
+{
+  "id": "MFsYKQdcdz0",
+  "title": "Vibe Coding Is The Only Future - Steve Yegge",
+  "channel": "A Life Engineered",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCEHFikgnRuLd1HYKTLrae9Q",
+  "durationSec": 3085,
+  "thumbnail": "https://i.ytimg.com/vi_webp/MFsYKQdcdz0/sddefault.webp",
+  "summary": "Interview with Steve Yegge on his career and 'Vibe Coding' book: CLI agents over IDEs, engineers as team leads for agents, modularity, taste.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/experienced-engineers-using-coding-agents-can",
+      "stance": "asserts",
+      "quote": "now claims he can write 12,000 lines of production code per day using AI agents",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "Lines of code isn't a productivity measure, and controlled studies show modest gains; sustained output of that size without proportional review implies unreviewed code.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "One cited case (claudes-c-compiler) shows ~500K lines added by Claude over a few weeks, so tens of thousands of lines per day are possible, but nothing here establishes that this is production-quality code or attributes it to experienced engineers.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L143-L145",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/ide-based-assistants-like-cursor-obsolete",
+      "stance": "asserts",
+      "quote": "if you're using cursor right now and you probably love it right you're using like last year's technology",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "IDE products added full agents, background agents and CLIs of their own; usage data show both forms widely used. Many experts (e.g. Karpathy) argue visual diff UIs are key for verification.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "it will fill the entire context window with that task ... and start making panicked decisions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "you have to decompose tasks into the smallest possible conceptual move forward",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/software-engineers-shifting-implementing-code-orchestrating",
+      "stance": "asserts",
+      "quote": "you're not a programmer anymore. You're a ... team lead",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Background and parallel agents are increasingly used, but most developers still work interactively with one agent; enterprise adoption of orchestration is early.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review documents a role shift toward supervising and validating AI output. Multi-agent orchestration specifically is barely studied.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1920-L1928",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "you're responsible for the outcomes and you can't ever blame the AI for anything",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The paper recommends careful review of AI code whatever the tool, along with static analysis, tests, security checks, and monitoring after merge.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L934-L945",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-built-deep-modules-small-interfaces",
+      "stance": "asserts",
+      "quote": "modularity sits at the heart of it ... If it's too big of a monolith ... it can't do any thinking at all",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear module boundaries help both humans and agents navigate and test; consistent with Ousterhout and practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/implementation-gets-cheap-product-taste-judgment",
+      "stance": "asserts",
+      "quote": "the people with taste are the ones ... because the difficulty of producing it is going to go so far down",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Plausible economic logic and widely argued, but not measured; execution, distribution and maintenance still matter.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+      "stance": "denies",
+      "quote": "people need to stop talking about code being the bottleneck and typing typing was never the bottleneck ... they're misdirecting the conversation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies of developer time show coding is a minority of work; DORA and Faros 2025 found individual coding gains often don't translate into delivery throughput.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/major-coding-subscriptions-subsidized-below-cost",
+      "stance": "asserts",
+      "quote": "these $200 a month ... those are all loss leaders",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Heavy users clearly consume more compute than flat fees cover, which is why vendors added weekly limits; whether plans are below cost on average is not public.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-overstate-what-they-accomplished",
+      "stance": "asserts",
+      "quote": "It doesn't typically lie about what it does, right? But it grossly exaggerates the impact of what it does",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Widely reported and seen in evals: agents claim tests pass or features are complete when they aren't; reading summaries critically is necessary.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

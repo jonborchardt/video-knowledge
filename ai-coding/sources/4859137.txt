@@ -1,0 +1,1775 @@
+The Mind and the Machine: How Does Generative AI Usage Affect the Coding
+Performance of Developers?
+
+                   Forthcoming in Journal of Management Information Systems
+                                                  Guohou Shan
+
+                                   D'Amore-McKim School of Business,
+                                            Northeastern University
+
+                                360 Huntington Avenue, Boston, MA 02115
+                            Email: g.shan@northeastern.edu Tel: 240-4133783
+
+                                                 Michael Rivera
+                                              College of Business,
+                                               Lehigh University
+                                 27 Memorial Dr W, Bethlehem, PA 18015
+                          Email: michael.rivera@lehigh.edu Tel: 215-460-3855
+
+                                                Subodha Kumar*
+                                            Fox School of Business,
+
+                                               Temple University
+                              1810 North 13th Street, Philadelphia, PA 19122
+                             Email: subodha@temple.edu Tel: 215-204-5919
+
+                                             *Corresponding author
+                                                  Pawan Anand
+
+                                            Fox School of Business,
+                                               Temple University
+
+                              1810 North 13th Street, Philadelphia, PA 19122
+                          Email: pawan.anand@temple.edu Tel: 215-866-7870
+
+                                                               1
+The Mind and the Machine: How Does Generative AI Usage Affect the Coding
+Performance of Developers?
+Abstract. Generative AI (GenAI) has advanced rapidly and made significant impacts. However,
+its effect on developers remains a topic of industry debate. Companies want to know whether
+GenAI can enhance developers' coding performance, as an unclear understanding may put
+companies at a disadvantage. While the literature has begun addressing this issue, a formal
+understanding of GenAI's impact remains incomplete. Moreover, existing findings are often
+short-term, fragmented, or lack explanatory mechanisms. To fill these gaps, we designed a
+multimethod research program comprising a longitudinal field study and a randomized
+controlled experiment. In Study 1, we collaborated with a global information technology
+organization and applied a difference-in-differences approach to over 27 weeks of proprietary
+data. In Study 2, we designed a randomized experiment involving 253 software developers. From
+these studies, we find that GenAI usage affects both developers' coding quantity and quality.
+These effects, however, depend critically on how the tool is used. While reduced cognitive effort
+can be associated with diminished quality, interestingly, GenAI usage enables developers to
+produce higher-quality code with less cognitive effort. In this current study, we explain the
+paradoxical findings through cognitive load theory, showing that GenAI reduces extraneous load
+while preserving germane processing during ideation and debugging. Using a multimethod
+research design that integrates longitudinal field data with a randomized controlled experiment,
+we link observed performance effects to underlying cognitive mechanisms and usage strategies.
+We also offer guidance on effective usage styles and propose boundary conditions for realizing
+GenAI's benefits in practice.
+Keywords: Generative AI, cognitive load theory, software developers, coding performance,
+difference-in-differences, randomized controlled experiment
+
+                                                               2
+Introduction
+Since OpenAI's release of ChatGPT in November 2022, generative AI (GenAI) has grown
+rapidly and transformed industries. Market forecasts estimate GenAI's value will reach
+US$113.42 billion by 2029, highlighting its disruptive potential [16]. This growth has been
+fueled by key milestones, including Microsoft's integration of ChatGPT into Bing and the
+emergence of tools like Google's Bard (now Gemini), Anthropic's Claude, and China's
+DeepSeek AI [27].
+
+    GenAI is gaining traction in sectors such as healthcare, customer service, operations, and
+creative industries, where it improves efficiency, decision-making, and content creation. For
+example, Brynjolfsson et al. (2025) report a 14% productivity increase among customer support
+agents using GenAI tools [13]. However, concerns about reliability, bias, and interpretability
+pose challenges for responsible adoption [14].
+
+    In software development, our focal context, GenAI tools are transforming how code is
+written, reviewed, and maintained. Powered by large language models and refined through
+human feedback, these tools support context-aware code generation and streamline programming
+tasks [82]. GitHub Copilot illustrates how developers use GenAI to align code with project goals,
+boosting productivity and reducing development time [46]. With the software development
+market projected to exceed US$800 billion by 2027 [80], enhancing developer productivity
+through GenAI has become a strategic priority [11].
+
+    Despite this momentum, a key research gap persists: while industry interest is growing,
+empirical evidence on GenAI's impact on developers' coding performance, particularly code
+quality and speed, remains limited [28], [74]. Existing studies have focused on GenAI's role in
+other domains, but software development remains underexplored as a technically intensive
+
+                                                               3
+context. Developers often have greater familiarity with GenAI's underlying architectures [87],
+allowing for more complex interactions than in other knowledge work. To address this gap, our
+study poses the first research question (RQ1): Does the use of generative AI affect the quality
+and speed of developers' coding performance? This question is highly relevant to the industry,
+with firms like Amazon and MongoDB launching GenAI tools tailored for developers [2]. By
+focusing RQ1 on quality and speed, our study contributes directly to ongoing debates about
+GenAI's role in development workflows (e.g., [28], [74]). Our findings show that GenAI use is
+linked to improved coding performance, reflected in a higher volume of completed user stories
+and enhanced code quality, especially in accuracy, reusability, and testability.
+
+    While GenAI's promise in software development is compelling, it also faces scrutiny. As
+organizations adopt these tools to address developer shortages and manage complex projects,
+tensions have emerged between their benefits and limitations [28], [86]. Proponents argue that
+GenAI automates routine coding, accelerates development, and helps close skill gaps [59]. By
+freeing developers to focus on higher-order tasks, it fosters innovation and team efficiency [23].
+Analysts suggest these gains can lead to competitive advantage [20]. Still, concerns remain.
+GenAI may introduce bias, generate faulty or misleading code (`hallucinations'), and produce
+opaque outputs [84]. These risks can promote poor practices, increase technical debt, and shift
+debugging burdens to developers, potentially undermining productivity [28]. This study helps
+clarify the conditions under which GenAI enhances or hinders developer performance.
+
+    To deepen understanding of these outcomes, we introduce a second research gap: the
+mechanisms through which GenAI affects performance are still unclear. In particular, it remains
+an open question whether GenAI reduces or increases cognitive load during software tasks [74].
+This issue is critical, as developers must engage with GenAI outputs and assess their reliability.
+
+                                                               4
+Cognitive load theory provides a structured lens to examine the mental effort involved in such
+tasks [49], [62]. Applied to GenAI, it offers insight into how different use strategies shape
+cognitive demands and influence performance.
+
+    In practice, GenAI's impact depends less on its technical capabilities and more on how
+developers engage with it [88]. For example, those using GenAI as a co-creative assistant may
+experience different cognitive demands than those relying on it for isolated code generation.
+These usage patterns influence both the level and type of cognitive load. Yet the cognitive effects
+of different usage styles remain underexplored [74]. To address this gap and contribute to both
+academic research and practice [74], [88], we introduce the second research question (RQ2): To
+what extent does cognitive load explain the observed effects of generative AI on coding quality
+and speed of coding performance? This question reflects growing interest in how GenAI affects
+developers' cognitive load and how usage strategies shape its effectiveness [88]. Our findings
+show that while GenAI can reduce cognitive load and accelerate coding, outcomes depend on
+how it is used. Accepting GenAI-generated solutions improves speed without sacrificing quality.
+Using GenAI for ideation maintains speed and enhances quality, while applying it for debugging
+or refinement produces the highest quality but at the cost of reduced output. We also identify
+effective usage sequences, such as ideate, adapt, then debug, which generate the strongest gains.
+These patterns provide practical guidance for integrating GenAI into development workflows.
+
+    Our study makes both practical and theoretical contributions to understanding GenAI in
+software development. Practically, it offers evidence-based guidance for managers and team
+leads on effective implementation. By identifying usage strategies that enhance productivity and
+reduce cognitive strain, we provide actionable paths to maximize GenAI's value. Theoretically,
+we extend the Information Systems (IS) literature on GenAI (e.g., [15], [37], [42], [66], [67],
+
+                                                               5
+[75], [83], [98]) by examining its effects on coding performance and the cognitive and behavioral
+mechanisms that shape them. Methodologically, we follow [70] and design a multimethod study
+that combines longitudinal field data (Study 1) with a randomized controlled experiment (Study
+2), which allows us to (i) triangulate findings from Study 1, (ii) strengthen causal inference using
+Study 2, and (iii) link performance outcomes in Study 1 to underlying cognitive mechanisms
+unpacked in Study 2. We also contribute to research on developer productivity by identifying
+usage-specific antecedents of performance [39]. Collectively, our findings bridge a key gap
+between practice and research, showing not only whether GenAI improves performance, but also
+how and under what conditions.
+Literature Review and Theoretical Foundation
+In this section, we briefly review prior work on generative AI's impact on developers' coding
+performance to position our study. Then, we describe two theoretical mechanisms to establish the
+theoretical foundation for our study.
+Literature Review
+We position our paper in the literature on generative AI's impact and developers' coding
+performance. Our positioning and contributions to the literature are summarized in Figure A.1 of
+Online Appendix A. Additionally, Table A.1 of Online Appendix A provides a comparative
+analysis that positions our study within the broader generative AI literature.
+Generative AI Impact
+GenAI has transformed multiple domains, including education [6], [26], healthcare [89], finance
+[34], labor markets [25], and worker productivity [13], [43]. It also shapes creative fields such as
+art [99] and online reviews [75]. Brynjolfsson et al. (2025) show productivity gains among
+customer support agents [13], while Demirci et al. (2025) document declines in freelance job
+listings, especially in analytical fields [25]. Recent studies examine GenAI's effect on
+
+                                                               6
+developers. Cui et al. (2025) find that GenAI improves task completion, particularly for less
+experienced coders [22]. Li et al. (2024) emphasize variation in developer satisfaction and
+workflow adaptation [50]. Anand (2025) observes changes in workflow and practices in case
+study settings [3]. Song et al. (2024) show that GitHub Copilot alters open-source contribution
+volume and review effort [79], while Pandey et al. (2024) report improved task speed and fewer
+bugs, though cognitive mechanisms remain unexamined [64].
+
+    This study differs in three ways. First, it measures both code quantity and quality. Second, it
+identifies mechanisms beyond main effects, particularly cognitive load and usage styles. Third, it
+uses a multi-method design that combines longitudinal field data and experiments. These
+elements address calls for empirical insight into GenAI's role in developer performance [74],
+[88] and build on evidence that GenAI can reshape developer workflows and outcomes [2].
+Coding Performance of Developers
+Prior IS literature has explored developers' performance through factors such as ability [68],
+ideology [81], organizational controls [31], learning [78], project practices [90], and
+collaboration [53], [91]. Studies also link developer performance to firm outcomes [61], software
+production [92], team formation [35], and career progression [40], [56], [96]. Despite this
+foundation, few studies examine GenAI's influence on coding performance. Huang et al. (2025)
+show that GenAI improves programming accuracy and learning among students [38].
+Mastropaolo et al. (2023) highlight variation in Copilot's output quality across coding tasks [55].
+Becker et al. (2025) find that AI improves open-source developers' productivity, but do not
+assess quality [10]. Feng et al. (2025) emphasize the evolving role of GenAI in computing
+education [26].
+
+    We extend this work by focusing on practicing software engineers and analyzing both the
+
+                                                               7
+quantitative and qualitative effects of GenAI adoption. Using field and experimental data, we
+examine usage strategies and cognitive mechanisms. As GenAI becomes more central to
+software development, understanding its effect on developer productivity and output quality is
+vital [11], [80].
+Theoretical Foundation
+In this section, we introduce two theoretical mechanisms: cognitive load mechanisms and GenAI
+usage strategies to explain the impact of GenAI usage on developers' coding performance. These
+mechanisms are detailed in the following two subsections.
+Cognitive Load Mechanisms
+Users' interaction with GenAI tools involves substantial cognitive processing. Cognitive load
+theory posits that human cognition relies on three types of memory: sensory, long-term, and
+working memory [85]. While sensory and long-term memory have vast capacity, working
+memory is limited and responsible for actively processing new information [44]. Cognitive load
+refers to the demands placed on this working memory during learning or task execution [62], and
+can be categorized into intrinsic, extraneous, and germane load [85]. Intrinsic load is shaped by
+task complexity and prior knowledge; extraneous load arises from how information is presented;
+and germane load reflects the effort invested in meaningful learning and schema construction.
+This framework is relevant to our research questions because it explains how GenAI may shape
+developers' coding performance in terms of quality and speed by linking outcomes to the
+distribution of cognitive effort.
+
+    When developers interact with GenAI tools, cognitive load is shaped in two ways: GenAI
+can reduce certain demands associated with traditional coding tasks, while also introducing new
+cognitive effort related to interpreting its outputs. Intrinsic load arises as developers must
+understand the structure and logic of the generated code, which requires abstract reasoning and
+
+                                                               8
+domain-specific expertise. As noted by [38], even scaffolds such as hints or templates can
+impose intrinsic load if they are not aligned with the user's prior knowledge. Extraneous load
+may result from outputs that are poorly contextualized or contain subtle errors, requiring
+additional interpretation or correction [28]. At the same time, GenAI may help reduce extraneous
+load by automating routine or repetitive tasks [41], [76], [84]. However, these tools can also
+introduce additional cognitive burden, particularly in terms of germane load, as they often
+generate novel and diverse content that requires users to invest substantial mental effort in
+processing and integrating ideas [60]. Finally, strategic use of GenAI, such as for debugging or
+generating initial ideas, can increase germane load as developers engage in deeper evaluation and
+refinement of the tool's output [26].
+
+    While some interactions may elevate cognitive burden, GenAI also has the potential to
+reduce overall load under the right conditions. For instance, by acting as a co-pilot, GenAI can
+automate repetitive tasks or offer contextual suggestions that offload routine mental effort,
+freeing developers to focus on higher-order problem-solving [41]. Thus, the net cognitive impact
+of GenAI depends not only on the complexity of the coding task but also on how the tool is used,
+whether as a direct code generator, an ideation partner, or a debugging assistant. Accordingly,
+cognitive load theory provides a foundation for connecting developers' mental effort to coding
+outcomes and aligns directly with RQ2, which examines the extent to which cognitive load
+explains GenAI's impact on performance.
+Impact of Different GenAI Usage
+Users interact with GenAI tools in a variety of ways, and these differences in usage can have
+significant implications for cognitive processing and performance outcomes. Some users adopt a
+passive approach by directly accepting GenAI-generated content without critical engagement.
+
+                                                               9
+While this may save time, such surface-level interaction can impede deeper learning and skill
+development, as it limits the activation of germane cognitive load associated with meaning-
+making and schema construction [8]. In contrast, when users engage GenAI as a tutor or ideation
+partner, they are more likely to invest cognitive effort in activities that support both learning and
+problem-solving, such as generating, evaluating, and integrating ideas [18]. A third strategy
+involves adapting or refining GenAI-generated content to fit specific needs, which requires
+selective attention, comparison, and modification. These cognitively demanding processes can
+stimulate germane load and promote meaningful engagement [76], [85].
+
+    The effects of GenAI are therefore not uniform, but rather contingent on how the tool is used.
+Prior research in information systems suggests that differences in IT usage patterns shape how
+users engage with technology and what outcomes they derive from it [72]. This principle applies
+to GenAI as well: developers who rely on GenAI for ideation, refinement, or debugging are
+likely to experience different cognitive and performance effects than those who use it for direct
+code generation. For example, as shown in [38], providing AI-generated coding hints led to
+distinct performance outcomes depending on whether students copied them directly or used them
+to inform their own solutions, which highlights how usage mediates learning effects.
+
+    This variation has been noted in industry discourse as well, where practitioners emphasize
+that the success of GenAI tools depends not only on the sophistication of the technology but also
+on how users engage with it [88]. Therefore, understanding the differential impact of usage
+strategies is critical for assessing GenAI's value in development settings and for designing
+interventions that promote productive interaction with these tools. Examining GenAI usage
+through the lens of cognitive load theory, therefore, integrates both the how (usage strategies)
+and the why (cognitive mechanisms), providing a rigorous foundation for our research questions.
+
+                                                              10
+Study 1: A Field Study with a Quasi-experimental Setting
+In this section, we present our field study conducted in a quasi-experimental setting.
+Research Context and Data
+In Study 1, we collaborated with a global mid-sized IT organization based in the US, operating
+under a nondisclosure agreement (NDA). This company was established as a separate legal entity
+in 2022 through a spin-off. It employs over 5,000 people and has experienced growth primarily
+driven by strategic mergers and acquisitions (M&A). It serves as a full-service digital
+engineering provider, managing software platforms and products that drive growth, reduce risk,
+enhance operational efficiency, and deliver engaging experiences for consumers and employees.
+The company has partnered with numerous Fortune 500 firms to offer end-to-end digital
+solutions with cutting-edge technology capabilities, including transforming user experiences,
+developing new software products, and implementing innovative talent models for the future.
+The company's expertise spans digital platforms, cloud engineering, data and AI, metaverse
+integration, and digital talent transformation, generating an annual revenue of $500 million.
+
+    The organization evaluates developers' coding performance based on the number of user
+stories they complete each week. Recognizing the potential advantages of GenAI tools such as
+GitHub Copilot, ChatGPT, and Gemini, the company's leadership piloted their use through a
+randomized assignment of developers, with compliance both actively monitored and documented
+through managerial self-reporting. Given the company's sophistication in managing cyber risk
+and privacy concerns, the pilot was conducted under clear usage guidelines and technical
+controls prior to any potential broader deployment. This provided a quasi-experimental setting in
+which developers using GenAI tools were classified as the treatment group. Developers were
+required to disclose whether they used these tools when completing their coding tasks.
+
+                                                               11
+    For our study, we identify developers who reported using a GenAI tool during the
+observational period as treated users and those who did not as control users. Importantly, we do
+not differentiate the frequency of GenAI tool usage but focus solely on whether developers
+reported using the tools. Using proprietary data and a difference-in-differences (DID) design, we
+aimed to gain insights into how generative AI impacts developers' coding performance.
+
+    To address our research questions, we collected coding-related data from the organization's
+developers between September 1, 2023, and March 1, 2024. GenAI tool usage was introduced on
+October 1, 2023. We organized it into a panel format comprising 201 developers observed over
+27 weeks, and measured developers' coding performance using the number of user stories
+completed.
+
+    The number of user stories completed is a widely accepted standard for assessing coding
+performance and thus can capture developers' coding performance [29]. Using the number of
+user stories to measure developers' working performance is also common in IS literature (e.g.,
+[9]). In Study 2, we also measured developers' coding performance using code quantity (number
+of coding tasks completed) and quality (reliability and testability). Coding quality can capture the
+developers' coding performance because it is a concern for businesses, bottom lines, and
+empathetic programmers [47]. Using reliability, complexity, reusability, and testability to
+measure coding quality follows industrial standards (e.g., [21]) and IS literature (e.g., [32]).
+
+    Additionally, we include developers' demographic and professional characteristics, such as
+gender, education, and years of work experience, as control variables, as these factors may
+influence coding performance and could bias results if not accounted for (e.g., [57]). This
+approach aligns with prior IS research that incorporates such variables when examining
+developer performance (e.g., [68], [90]). The variables used in our analysis in Study 1 are
+
+                                                              12
+detailed in Table 1, and summary statistics are provided in Table 2.
+
+From Table 2, the mean value of the treatment variable is 0.512, indicating that 51.2% of
+
+observations (n = 5,427) involved the use of GenAI tools. The average number of user stories
+
+completed weekly is 5.971, with a corresponding log-transformed value of 1.924. The log
+
+transformation is applied to address potential issues with skewed data distributions. The
+
+variables for years of experience, education, male, STEM, and front-end development have mean
+
+values of 5.378, 0.134, 0.697, 0.821, and 0.343, respectively. These indicate that, on average,
+
+developers have 5.378 years of work experience, 13.4% hold a master's degree, 69.7% are male,
+
+82.1% majored in a STEM field, and 34.3% are front-end developers. We also conducted a
+
+correlation analysis of the variables used in the study (shown in Table B.1 of Online Appendix
+
+B). The results show that all variables exhibit weak, small, or moderate correlations, except for
+
+the correlation between the number of user stories completed and the treatment variable, which is
+
+notably stronger.
+
+Variables                            Table 1. Variables and Definitions
+Treatmentit         Definitions
+NumStoriesit        Shows whether user i used GenAI tools on week t.
+LogNumStoriesit     Represents the number of user stories completed by user i on week t.
+                    Represents the log transformation with natural logarithm of the number of user stories
+Yearsofexperiencei  completed by user i on week t.
+                    Represents the working experience of user i in the focal organization, measured by the number
+Educationi          of years.
+Malei               Represents the education level of user i (=1, Master; =0, Bachelor).
+Stemi               Represents whether user i is a male (=1) or female (=0).
+Fronti              Represents whether the major of user i is a STEM major (=1) or not (=0).
+                    Represents whether user i is a front-end or back-end developer.
+
+                               Table 2. Variable Summary Statistics
+
+                    Variables   Obs Mean Std.Dev. Min                 Max
+
+                    Treatment   5427 .512 .5            0             1
+                                                                      10
+                    NumStories  5427 5.971 1.326        3             2.398
+                                                                      17
+                    LogNumStories 5427 1.924 .189       1.386         1
+                                                                      1
+                    Yearsofexperience 5427 5.378 3.363  1             1
+                                                                      1
+                    Education   5427 .134 .341          0
+
+                    Male        5427 .697 .46           0
+
+                    Stem        5427 .821 .383          0
+
+                    Front       5427 .343 .475          0
+
+                                13
+Estimation Strategy
+
+As outlined earlier, Study 1 examines the impact of GenAI usage on developers' coding
+
+performance using a DID estimation strategy that leverages data from the participating
+
+organization. Developers were encouraged to use GenAI tools, and those who opted to do so
+
+constituted the treatment group. The data is structured in a panel format, with individual
+
+developers as the unit of analysis and weeks as the unit of time. Since GenAI usage varies among
+
+developers, our DID analysis employs a staggered adoption approach, as outlined by [5]. To
+
+ensure the parallel trends assumption of the DID model holds, we also estimate lead and lag
+
+models.
+
+Several potential challenges are associated with employing the DID estimation in this
+
+context. First, heterogeneous time- or individual-level treatment effects can introduce bias into
+
+the DID results [30]. To address this, following [52], we adopted interactive fixed effects
+
+counterfactual (IFEct) and matrix completion (MC) estimators. Second, developers' self-
+
+selection into using GenAI tools could violate the assumption of parallel trends, introducing bias.
+
+To strengthen causal identification, we conducted equivalence tests to verify parallel trends [52]
+
+and placebo tests to test the potential pre-trend overfitting. Third, self-selection bias may pose a
+
+concern, as developers voluntarily choose to use GenAI tools. For example, male developers
+
+may be more likely to adopt GenAI tools than female developers, as suggested by [45], which
+
+could potentially bias the results. To address this, we combined DID with coarsened exact
+
+matching (CEM), following [51], to control for observed confounders.
+
+                        Table 3. Main Identification Strategy and Robustness Checks
+
+Potential issues                     Adopted methods          Findings
+
+Unobserved time-varying confounders  IFEct and MC estimators  Main findings are robust.
+
+and treatment heterogeneity
+
+Parallel trend assumption            Equivalence tests        It passes, and parallel trend is not
+
+                                                              violated.
+
+Pre-trend over-fitting               Placebo test             There is no over-fitting in the pre-
+
+                                                              trend.
+
+                                     14
+Self-selection on observable factors  CEM+DID                      Main findings are robust.
+False significance                    Random implementation tests  False significance is not an issue.
+
+Finally, to mitigate the risk of spurious relationships and false significance in the DID
+
+estimation, we conducted falsification tests, specifically random implementation tests. This
+
+approach, recommended by [77] helps guard against potential endogeneity concerns. These
+
+robustness strategies are summarized in Table 3.
+
+Empirical Results
+
+Baseline Results
+
+In Study 1, we employ a two-way fixed effects model as the baseline for our empirical analysis
+
+of the main effects [94]. The model specifications are detailed in Equation (1) below.
+
+                             =  + 0 + 1  +  +  (1)
+where  represents the dependent variable for developer i on a specific day t;  is a
+dummy variable indicating whether developer i used GenAI tools during a particular week t.
+
+                   Table 4. Estimation Results of the Baseline DID Model
+
+                                                  (1) (2)
+
+                                       NumStories LogNumStories
+
+                   Treatment           1.082***        0.158***
+
+                                       (0.05)          (0.01)
+
+                   User fixed effects             Yes  Yes
+
+                   Week fixed effects             Yes  Yes
+
+                   Observations        5427            5427
+
+                   Note. User cluster standard errors in parentheses; *** p<0.01.
+
+Table 4 reveals that using GenAI tools significantly increases the number of user stories
+
+completed by developers. Specifically, we find that GenAI usage results in an average increase
+
+of 1.082 user stories per week, representing a productivity boost of 18.12% (=1.082/5.971).
+
+Extrapolated to the global IT market, this productivity gain translates to an estimated
+
+contribution of approximately US$0.906 trillion (18.12% of US$5
+
+trillion, https://www.trade.gov/selectusa-software-and-information-technology-industry) to the
+
+global GDP, further underscoring the substantive economic potential of GenAI adoption in the
+
+                                       15
+software development industry. This result is consistent when using the log transformation of the
+number of user stories completed (see column (2) of Table 4).
+
+    These empirical findings answer RQ1. Our results indicate that GenAI tools indeed improve
+developers' coding performance, as evidenced by the higher number of user stories completed by
+developers who use them. One potential mechanism driving this improvement is GenAI's ability
+to quickly generate content, such as code completion suggestions [33], which significantly
+reduces developers' cognitive load. The literature suggests that reducing cognitive load enables
+developers to allocate more cognitive resources to processing information, thereby enhancing
+performance [62]. Furthermore, GenAI can understand the context of code, including variables
+and functions, which allows it to generate relevant code [82]. These capabilities save time and
+effort, ultimately improving the coding performance.
+
+    Our findings align with prior studies that emphasize the positive impact of AI assistants on
+worker productivity (e.g., [41]). Other papers have used cognitive load to explain the impact of
+AI, such as [76] and [93]. To further test this mechanism, we measured cognitive load in an
+online randomized experiment. Our findings contribute to the literature on generative AI's
+impact and software developers' performance. Additionally, our findings address the industrial
+debate about the effectiveness of the impact of generative AI on developers' performance [28],
+[74]. Managers and leaders can encourage their employees and developers to leverage generative
+AI tools to improve productivity, ensuring AI-driven improvements align with business
+objectives [88].
+Main Results and Checks to Address Potential Endogeneity Concerns
+IFEct and MC estimators and parallel trend investigation. According to [30], heterogeneous
+individual- or time-level treatments can bias DID estimations. In our research setting, the
+
+                                                              16
+treatment (using a GenAI tool) occurs at different times for different treated units, as developers
+
+independently decide when to use the GenAI tool during various weeks. Consequently,
+
+traditional DID estimation may introduce bias into our results.
+
+Recent literature has proposed several methods to address treatment heterogeneity within
+
+general panel treatment structures [7], [17], [24], [52]. These methods are categorized into three
+
+groups: the imputation estimator (e.g., [52]), the Cohort-Specific Average Treatment Effects on
+
+the Treated (CATT) estimator (e.g., [24]), and the stacked regression estimator (e.g., [17]). Those
+
+methods have also recently been adopted in the IS literature (e.g., [63], [76]). Our study
+primarily employs the imputation estimator to address treatment heterogeneity, motivated by
+
+several considerations. First, the stacked regression estimator is inconsistent with the sample-
+
+average treatment effect, making it less suitable for our analysis [7]. Second, the imputation
+
+estimator facilitates the examination of parallel trends, a critical aspect of our study [52].
+
+              Table 5. Results of IFEct and MC Estimators
+
+Variables           (1)              (2)                         (3)      (4)
+
+                    NumStories LogNumStories NumStories LogNumStories
+
+Treatment           1.852***  0.251***       1.421***                     0.194***
+
+                    (0.10)           (0.01)  (0.05)                       (0.01)
+
+User fixed effects  Yes              Yes                         Yes      Yes
+
+Week fixed effects  Yes              Yes                         Yes      Yes
+
+Observations        5427             5427    5427                         5427
+
+Estimator                     IFEct                                   MC
+
+              Note. Standard errors in parentheses; *** p<0.01
+
+For the imputation estimator, we follow [52] by constructing interactive fixed effects
+
+counterfactual (IFEct) and matrix completion (MC) estimators. These estimators address
+
+unobserved time-varying confounders by employing a factor-augmented model to estimate
+
+counterfactual potential outcomes for untreated units. As outlined by [52], this approach
+
+mitigates the impact of unobserved time-varying confounders on observed differences between
+
+treated and untreated units. Our estimation results, presented in Table 5, demonstrate that the
+
+IFEct and MC estimators produce findings consistent with the DID model. These results confirm
+                                                              17
+that using GenAI tools significantly increases the number of user stories completed.
+    To ensure the validity of our DID estimator, we rigorously examine the parallel trends
+
+assumption, as failing to meet this assumption would compromise the reliability of our analysis.
+To assess parallel trends, following the recommendations of [1] and [52], we employ leads and
+lags models. Liu et al. (2024) highlight that the coefficients and p-values of the treatment
+indicator and dummy variables in traditional leads and lags models may be biased due to their
+dependence on the chosen baseline category [52].
+
+    To address this limitation, we adopt their approach by plotting the average differences
+between the observed outcomes and the predicted counterfactuals for each user i at period t
+(relative to the treatment) in the treatment groups, using the IFEct and MC estimators. These
+plots are presented in Figure 1 for the user-level dependent variables, where Figures 1a-1b and
+Figures 1c-1d show the results using the IFEct estimator and the MC estimator, respectively. By
+examining the average pre-treatment residuals, we assess whether they converge to zero, which
+would indicate the presence of a parallel trend. Our results show that the average pre-treatment
+residuals do not significantly deviate from zero during the pre-treatment period. This finding
+suggests that our DID model satisfies the parallel trends assumption.
+
+(a) NumStories         (b) LogNumStories      (c) NumStories           (d) LogNumStories
+                                                               MC
+                IFEct
+
+                       Figure 1. Parallel Trend Investigation
+
+Additionally, following [52], we conduct equivalence tests to further evaluate the parallel
+
+trends assumption. Following [48], [58], and [71], we adopt an equivalence margin of ±0.20
+
+                                          18
+number of stories (around 5% of the mean of number of stories across pre-treated periods). As
+shown in Figure 2a-2b and 2c-2d representing the estimations using IFEct and MC,
+respectively, the results confirm that the equivalence tests pass, indicating that the parallel
+trends assumption is not violated.
+
+(a) NumStories         (b) LogNumStories      (c) NumStories          (d) LogNumStories
+                                                              MC
+                IFEct
+
+                       Figure 2. Equivalence Tests
+
+(a) NumStories         (b) LogNumStories      (c) NumStories          (d) LogNumStories
+                                                              MC
+                IFEct
+
+                       Figure 3. Placebo Tests
+
+Overfitting in the pre-trend period could undermine the validity of the IFEct and MC
+
+estimations, parallel trend investigations, and equivalence tests. To address concerns about
+
+overfitting during the pre-trend periods, we conduct placebo tests for each estimation, following
+
+the methodology outlined by [52]. The results, presented in Figure 3, indicate that the placebo
+
+tests pass, confirming that there is no overfitting issue in the pre-trend period. Please note that
+
+Figures 3a-3b and 3c-3d are the results using the IFEct estimator and the MC estimator,
+
+respectively. Furthermore, the leads and lags model proposed by [52] leverages the predicted
+
+counterfactual instead of raw outcomes in the control group. Hence, we also follow [1] to
+
+conduct the leads and lags model and visualize the parallel trend graphs. Our results, shown in
+
+Figure B.1 of Online Appendix B, show consistent pre-treatment trends (e.g., the outcome
+
+                                          19
+differences between the treatment and control groups are statistically indistinguishable from zero
+at the first period before the treatment), thereby supporting the validity of our DID model.
+
+    To further enhance the robustness of our findings and remove potential endogeneity
+concerns, we conducted DID with CEM, following [51], to control for observed confounders. We
+also followed [77] to conduct random implementation tests to mitigate the risk of spurious
+relationships and false significance. Our results, shown in Tables B.2-B.3 of Online Appendix B,
+further enhance our main findings.
+Study 2: Online Experiment
+To validate, complement, and deepen the investigation into the mechanisms identified in the
+quasi-experimental setting of Study 1, we designed an online randomized controlled experiment
+with three key objectives. First, we wanted to confirm the impact of GenAI usage on developers'
+coding performance in terms of coding quantity. Second, we sought to extend the analysis by
+evaluating the effects of GenAI usage on coding quality. Third, we provided both quantitative
+and qualitative evidence to uncover the underlying mechanisms driving these quantity and
+quality impacts.
+Experimental Design
+Study 2 employs a two-by-one between-subjects experimental design by randomly assigning
+developers to one of two conditions: with or without access to GenAI tools. For the experimental
+condition allowing GenAI usage, we developed a ChatGPT interaction interface (shown in
+Figure 4a) that enables developers to ask questions during the online experiment. This interface
+was developed using the ChatGPT API (https://platform.openai.com/docs/api-
+reference/introduction), based on the GPT-3.5 model (GPT-4 was also used and yielded
+consistent results), and was provided to developers to address coding-related queries. In the
+
+                                                              20
+condition where GenAI usage was not permitted, the interface was not provided, and additional
+restrictions were implemented to prevent participants from copying and pasting content to
+answer coding questions, thereby avoiding using their own ChatGPT tools. The ChatGPT
+interaction interface was seamlessly integrated into our Qualtrics survey (Figure 4b), and we
+utilized qualifications in Prolific to ensure responses were collected exclusively from developers.
+
+            (a) Developed ChatGPT Interface (b) An example of the interface integrated into our Qualtrics survey
+                                        Figure 4. ChatGPT Interface Design
+
+                                          Figure 5. Experimental Procedure
+    By following and adapting the experimental procedure designed in recent IS literature (e.g.,
+[18]), our experiment followed the procedure outlined in Figure 5. First, participants were asked
+to review and agree to the content of our consent form, which was approved by the Institutional
+Review Board (IRB) at the authors' affiliated institution. Following this, we provided
+participants with basic instructions, including details about completing coding tasks, before
+
+                                                              21
+randomly assigning them to one of the experimental conditions. Participants were then asked to
+complete five commonly used coding tasks (details provided in Online Appendix C).
+
+    To vary coding quantity, participants were required to complete the first task, while the
+remaining four tasks were voluntary. There was no time limit for completing a coding task. Next,
+participants disclosed whether they used the ChatGPT interface we provided to complete the
+coding tasks. If participants indicated that they used ChatGPT, they were prompted to answer a
+series of questions related to the underlying mechanisms of usage (particularly, we asked, "Do
+you feel a cognitive load/burden while using the ChatGPT Playground to answer/help answer a
+question?" by adapting the cognitive load measurement from [54]) and to share their experiences
+interacting with ChatGPT (in particular, we asked "Please feel free to share anything about how
+you feel cognitively about using ChatGPT Playground while answering the coding questions,"
+with an open-ended answer).
+
+    We used these responses to explore the mechanisms behind users' engagement with
+ChatGPT. Participants were directed to answer questions about their regular interactions with
+GenAI tools in their workplace after disclosing not using ChatGPT or completing the
+mechanism-related questions. This information helps us assess the impact of generative AI usage
+on coding quality in a real-world setting. Finally, all participants were required to provide
+demographic information and respond to control questions before concluding the survey.
+
+    For our randomized between-subjects experiment with two experimental conditions, we
+recruited over 222 developers from Prolific to achieve a statistical power of 0.98 with a medium
+effect size. The G*Power calculation is provided in Figure D.1 of Appendix D. Ultimately, we
+recruited 267 developers, of whom 253 passed the manipulation check, resulting in the final
+valid sample. In the experiment, we recruited participants based on their prior knowledge of
+
+                                                              22
+software development by leveraging Prolific's prescreening functionality. Specifically, we
+
+selected individuals who responded "Yes" to the prescreening question on "computer
+
+programming" and indicated their working industry as "Engineering (e.g., software)." We used
+
+one manipulation check question: "I was provided a playground to use ChatGPT to answer the
+
+coding tasks." Participants who failed this question were excluded from the analysis. Participants
+
+were compensated US$1.50 for completing our ten-minute survey, and the payment was not
+
+contingent upon speed, accuracy, or any other performance criteria. At the beginning of the task,
+
+we gave developers in different groups similar instructions. Specifically, we instructed them,
+
+"Please note that we value the quality of your responses over quantity. You are only required to
+
+answer one question--the remaining questions are entirely optional. We encourage you to take
+
+your time. Thank you again for your participation!"
+
+Sample Characteristics and Randomization Checks
+We summarized the characteristics of our participants and performed randomization checks to
+
+ensure these characteristics were balanced across the experimental conditions. The results are
+
+presented in Tables 6 and 7. Table 6 shows that, among the 253 participants, gender distribution
+
+is binary, with men accounting for 52.6% and women 47.4%. Additionally, most participants
+
+have an undergraduate degree or higher, belong to Generations Z, Y, or X, and are predominantly
+
+White. Table 7 indicates that participants passed the randomization checks, confirming that the
+
+experimental randomization was effective.
+
+Category                     Table 6. Sample Characteristics  Frequency  Percentage (%)
+Gender     Variable                                           133        52.6
+                                                              120        47.4
+Education       Men                                           15         5.9
+(degree)        Women                                         142        56.1
+                High school                                   81         32.0
+                Undergraduate                                 7          2.8
+                Master                                        8          3.2
+                PhD/Doctoral degree                           68         26.9
+                Other
+                18 ­ 26 (Gen Z)
+
+                                           23
+                  27 ­ 42 (Gen Y)                                     126       49.8
+                                                                                20.2
+Age               43 ­ 58 (Gen X)                                     51        3.2
+Race                                                                            19.8
+Marriage          59 ­ 77 (Baby Boomer)                               8         19.4
+STEM                                                                            3.2
+                  Asian                                               50        54.9
+                                                                                2.8
+                  Black                                               49        43.9
+                                                                                53.8
+                  Hispanic or Latin                                   8         2.4
+                                                                                81.4
+                  White                                               139
+                                                                                18.6
+                  Others                                              7
+
+                  Single, never married                               111
+
+                  Married or domestic partnership                     136
+
+                  Divorced                                            6
+
+                  STEM (science, technology, engineering, and 206
+
+                  mathematics)
+
+                  Others                                              47
+
+                                Table 7. Randomization Checks
+
+Group             N Gender Education Age Race Marriage STEM Working_exp Coding_freq
+
+With GenAI usage  120 0.56      0.35        1.98 0.54 0.54       0.77 6.64            1.80
+
+Without GenAI usage 133 0.50    0.35        2.01 0.62 0.53       0.86 7.15            1.77
+
+T-value           0.986 0.069               -0.248 -1.328 0.124  -1.853 -0.711        0.660
+
+P-value           0.163 0.473               0.598 0.907 0.451    0.968 0.761          0.255
+
+Note. Gender (Male = 1, Female = 0); Education (Master = 1, Others = 0); Age (18 ­ 26 = 1; 27 ­ 42 = 2; 43 ­ 58 =
+3; 59 ­ 77 = 4; 78 or over = 5); Race (White = 1; Others = 0); Marriage (Married = 1; Others =0); STEM (STEM
+major = 1; Others = 0); Working_exp (shorted for working experience with value range from 0-20 years); Coding_freq
+(shorted for coding frequency: Less than once a week = 1; Once a week = 2; Multiple times a week = 3).
+
+Examining the Impact of Generative AI Usage on Coding Performance
+
+To evaluate the impact of generative AI usage on coding performance, we ran regression models
+
+with coding performance as the dependent variable and ChatGPT assignment as the independent
+
+variable. We measured coding quantity using the number of coding tasks completed (#codes) and
+
+coding quality using the percentage of correct answers across the five coding tasks (accuracy).
+
+The mean, minimum, maximum, and standard deviations of these two variables are as follows:
+
+#codes--4.76, 2, 5, and 0.59, respectively; accuracy--0.77, 0, 1, and 0.28, respectively. The
+
+regression results, presented in Table 8, indicate that ChatGPT usage significantly enhances
+
+coding performance in terms of both quantity and quality.
+
+                  Table 8. Impact of Generative AI Usage on Coding Performance
+
+                                                   (1) (2)
+
+                                                   #codes accuracy
+
+                              ChatGPT assignment 0.245*** 0.264***
+
+                                                   (0.0703) (0.0296)
+
+                              Constant             4.647*** 0.649***
+
+                                                   (0.0642) (0.0259)
+
+                              Observations         253 253
+
+                  Note. Robust standard errors in parentheses; *** p<0.01.
+
+                                            24
+Robustness Checks on the Impact of Generative AI Usage on Coding Performance
+Since the ChatGPT assignment does not guarantee that developers actually use ChatGPT, the
+results may be subject to usage selection issues. We address this issue by using an instrumental
+variables (IV) approach, which yields consistent results, as shown in Table E.1 of Online
+Appendix E. We put the details associated with this IV in Appendix E.1.
+
+    The empirical findings from both Study 1 and Study 2 address RQ1. When developers use
+generative AI tools, their coding performance improves in terms of both quantity and quality. A
+possible mechanism driving these results is that generative AI reduces developers' cognitive load
+by providing initial answers or helping refine their responses. This minimizes the need for
+additional cognitive effort in generating initial answers, allowing developers to focus on
+completing more tasks, as suggested by [62].
+
+    Additionally, we conducted a moderation analysis to examine the impact of generative AI
+across developers with varying levels of coding experience. As shown in Table E.2 of Online
+Appendix E, the results indicate that developers with fewer years of experience benefit in terms
+of faster coding, while coding quality remains unaffected. This finding supports the conjecture
+that the observed productivity gains are concentrated among less-skilled coders and aligns with
+prior field-based evidence (e.g., [22]). Reduced cognitive load also frees up resources for
+improving coding quality, such as increasing accuracy [12].
+
+    In addition, generative AI tools understand the coding context, enabling the generation of
+higher-quality code [46]. They can also assist in correcting and enhancing human input [18],
+including developers' code, which further boosts coding quality through improved accuracy. To
+investigate these potential mechanisms, we conduct additional analyses, which are discussed in
+the following two subsections.
+
+                                                              25
+Mechanism Explorations
+This section examines the mechanisms through which generative AI impacts developers' coding
+performance. By investigating cognitive load and interaction styles with generative AI, we aim to
+uncover the psychological and behavioral factors that drive variations in performance outcomes.
+Cognitive Load Mechanisms
+To explore the mechanisms underlying the impact of generative AI usage on coding
+performance, we measured developers' cognitive load by asking, "Do you feel a cognitive
+load/burden while using the ChatGPT Playground to answer/help answer a question?" during
+the experiment. We then conducted regression analyses to examine how cognitive load might
+explain its impact on coding performance. The results, presented in Table 9, indicate that
+cognitive load negatively affects coding performance in terms of the number of coding tasks
+completed. However, we found no significant relationship between cognitive load and
+developers' coding performance in terms of coding accuracy.
+
+    To further investigate whether ChatGPT usage affects developers' cognitive load, we
+conducted a qualitative analysis using NVivo with the details put in Appendix E.2. The results,
+summarized in Table E.4 of Online Appendix E, reveal that developers frequently self-reported
+that GenAI tools help alleviate cognitive load, reduce burdens, and decrease workload. These
+findings suggest that GenAI usage can improve coding quantity by reducing cognitive load. Our
+results align with prior IS studies, such as [76], which utilize cognitive load mechanisms to
+explain the use of generative AI tools. Additionally, our findings contribute to the literature on
+cognitive load mechanisms during interactions with generative AI. Specifically, we contribute to
+those prior studies around cognitive load mechanisms by directly measuring the cognitive load
+during users' usage of generative AI and testing the cognitive load effect using a randomized
+
+                                                              26
+experiment.
+
+               Table 9. The Impact of Cognitive Load on Coding Performance
+
+                                  (1) (2) (3) (4)
+
+                                  #codes accuracy #codes accuracy
+
+               Cognitive load -0.438*** -0.0563 -0.466*** -0.0646
+
+                                  (0.1036) (0.0453) (0.0995) (0.0436)
+
+               Constant           4.979*** 0.925*** 5.039*** 0.981***
+
+                                  (0.0147) (0.0143) (0.1652) (0.0977)
+
+               Controls           No No Yes Yes
+
+               Observations       120       120        120       120
+
+Note. Robust standard errors in parentheses; *** p<0.01. Columns (1) and (2) represent the models without adding
+
+               controls, while Columns (3) and (4) represent the models with adding controls.
+
+Mechanisms of the Way to Use and Interact with GenAI
+
+In addition to examining the psychological mechanisms underlying GenAI usage, developers'
+
+interaction styles with ChatGPT may also influence their performance when using generative AI
+
+tools. Based on developers' self-reported usage of ChatGPT during our pretests, we identified the
+
+following five common usage categories: Direct acceptance of content or coding suggestions
+
+from generative AI tools; Adaptation/modification of content or coding suggestions from
+
+generative AI tools; Using generative AI as a tool for improving or correcting code; Using
+
+generative AI to generate general ideas while coding independently; and Using generative AI to
+
+debug code. When coding the five usage categories, we employed a hybrid coding approach that
+
+combined both deductive and inductive strategies. We put the detailed coding process in Online
+
+Appendix E.3.
+
+               Table 10. Impact of the Way to Use GenAI on Coding Performance
+
+                                  Panel A. Direct Acceptance
+
+                                    (1) (2) (3) (4)
+                                  #codes accuracy #codes accuracy
+
+               Direct Acceptance  0.265***  -0.0302    0.251***  -0.0266
+               Constant           (0.0636)  (0.0290)   (0.0623)  (0.0278)
+                                  4.735***  0.932***   4.845***  1.003***
+                                  (0.0636)  (0.0217)   (0.1718)  (0.0961)
+
+               Controls           No No Yes Yes
+               Observations       120 120 120 120
+
+                                  Panel B. Adaptation
+
+               Adaptation           (1)        (2)      (3)         (4)
+                                  #codes    accuracy  #codes     accuracy
+
+                                  -0.0215   0.0514*   -0.0282    0.0546*
+
+                                            27
+Constant      (0.0570)  (0.0305)  (0.0580)  (0.0318)
+              4.904***  0.885***  5.049***  0.982***
+Controls      (0.0412)  (0.0267)  (0.1788)  (0.0965)
+Observations
+                 No        No        Yes       Yes
+                 120       120       120       120
+
+              Panel C. Improving Codes
+
+Improving        (1)       (2)       (3)        (4)
+               #codes   accuracy   #codes    accuracy
+Constant
+              -0.114**  0.101***  -0.124**  0.0878***
+Controls      (0.0518)  (0.0313)  (0.0575)   (0.0301)
+Observations  4.959***  0.854***  5.157***  0.905***
+              (0.0285)  (0.0291)  (0.1860)   (0.0966)
+
+                 No        No        Yes        Yes
+                 120       120       120        120
+
+              Panel D. Ideation
+
+Ideation         (1)       (2)       (3)       (4)
+               #codes   accuracy   #codes   accuracy
+Constant
+               -0.0111  0.112**   -0.0165   0.101**
+Controls      (0.0646)  (0.0433)  (0.0596)  (0.0438)
+Observations  4.900***  0.830***  5.057***  0.933***
+              (0.0552)  (0.0416)  (0.1769)  (0.0950)
+
+                 No        No        Yes       Yes
+                 120       120       120       120
+
+              Panel E. Debugging
+
+              (1) (2) (3) (4)
+
+              #codes accuracy #codes accuracy
+
+Debugging -0.278*** 0.0752*** -0.287*** 0.0529**
+
+              (0.0916) (0.0224) (0.0893) (0.0232)
+
+Constant      4.957*** 0.896*** 5.146*** 0.964***
+
+              (0.0214) (0.0180) (0.1650) (0.0969)
+
+Controls      No No Yes Yes
+
+Observations 120 120 120 120
+
+Note. Robust standard errors in parentheses; * p<0.1, ** p<0.05, *** p<0.01. Columns (1) and (2) represent the
+
+models without adding controls, while Columns (3) and (4) represent the models with adding controls.
+
+We conducted regression analyses comparing the coding performance of developers who
+
+used specific generative AI interaction styles with that of developers who did not. The results,
+
+presented in Table 10, indicate that the effectiveness of generative AI on developers' coding
+
+performance depends on how the tools are used. Specifically, developers who directly apply code
+
+suggestions from ChatGPT experience an increase in coding quantity, but their coding quality, in
+
+terms of accuracy, does not improve. In contrast, developers who adapt or modify the code
+
+generated by ChatGPT demonstrate improvements in coding accuracy.
+
+We also found that using generative AI tools for correction or improvement purposes
+
+                        28
+enhanced developers' coding accuracy but reduced their coding speed. In contrast, using
+generative AI as an ideation tool, where it helps generate ideas for coding tasks, improved coding
+accuracy without significantly affecting coding speed. This suggests that lightweight, idea-
+sparking prompts may stimulate deeper problem-solving while avoiding the quality pitfalls
+associated with uncritical code acceptance. From a cognitive load theory perspective, ideation
+appears to reduce extraneous cognitive load by outsourcing low-value idea generation to the AI
+(for example, "When I'm working on a project, I can quickly generate code snippets for common
+functions or algorithms. This saves me time, especially during the initial stages of coding."),
+while preserving the core cognitive challenge. As a result, cognitive resources are freed for
+intrinsic problem-solving [85]. Finally, using generative AI as a debugging tool significantly
+improved coding accuracy but negatively affected coding speed.
+
+    We also estimated a multivariate model by including all five binary usage indicators
+simultaneously to assess their unique contributions to the outcomes. As shown in Table E.6 of
+Online Appendix E, direct acceptance was associated with an improvement in coding quantity,
+while using generative AI as an improvement tool enhanced coding accuracy but negatively
+affected coding quantity. Using the tool for ideation also improved coding accuracy. In contrast,
+adaptation and debugging did not show statistically significant effects on either coding quantity
+or accuracy. In addition, we conducted a sequence-profile analysis. Specifically, we
+chronologically coded the chat transcripts to identify the first occurrence of each usage category
+and then clustered participants into distinct usage profiles. We reported coding productivity and
+accuracy for the top five usage sequence profiles to illuminate potential interaction effects. The
+results, presented in Table E.7 of Online Appendix E, indicate that direct acceptance alone
+improves coding quantity. The sequence "Ideate  Adapt  Debug" improves coding accuracy
+
+                                                              29
+but reduces coding productivity. Moreover, sequences that begin with ideation, followed by
+adaptation, improvement, or both (adaptation  improvement), were associated with
+improvements in coding accuracy only. These findings contribute to the literature on the effects
+of different generative AI usage strategies.
+
+    Through our mechanism exploration, we identified that both cognitive load and the method
+of GenAI usage influence its impact on developers' performance. Specifically, using GenAI
+reduces developers' cognitive load, which affects coding quantity but not coding quality. Directly
+accepting content from GenAI significantly improves coding quantity, while using GenAI as a
+correction or debugging tool significantly decreases coding quantity. In contrast, adapting
+content generated by GenAI or using it as a correction, ideation, or debugging tool significantly
+enhances coding quality.
+
+    These empirical findings provide critical insights into RQ2, which examines the mechanisms
+underlying the impact of GenAI usage on developers' coding performance. They also address
+ongoing industry debates about whether GenAI tools reduce or increase the cognitive load [74]
+and align with discussions emphasizing the importance of how GenAI tools are used [88]. Our
+results offer practical implications for managers and leaders by helping them understand how
+GenAI tools affect employees' coding performance. These insights can inform policies that
+encourage effective GenAI usage and improve employees' productivity and performance.
+Additional Analysis: Impact of GenAI Usage on Coding Quality in the Workplace
+In Study 1, we focused exclusively on coding quantity, measured by the number of user stories
+completed. Due to privacy constraints, we were unable to access workplace measures of coding
+quality. To address this limitation and gain deeper insights into how GenAI usage affects
+developers' coding quality in the workplace, we gathered data on developers' regular GenAI
+
+                                                              30
+usage and their self-assessed coding quality performance during our online experiment.
+
+Following [21] and [32], we assess the coding quality in terms of code reliability, complexity,
+
+reusability, and testability, adapting measurements from previous literature (e.g., [19], [65], [73],
+
+[95]). Specifically, we asked, "How do you evaluate the reliability of the code you wrote over the
+
+last week?", "How do you evaluate the complexity of the code you wrote over the last week?",
+
+"How do you evaluate the reusability of the code you wrote over the last week?", and "How do
+
+you evaluate the testability of the code you wrote over the last week?", respectively. We then
+
+regressed these quality measures on the self-reported GenAI usage in the workplace. The results,
+
+presented in Table 11, provide insights into the relationship between GenAI usage and
+
+developers' coding quality.
+
+              Table 11. The Impact of GenAI Usage in the Workplace on Coding Quality
+
+              (1) (2)                 (3) (4) (5) (6)                                     (7) (8)
+
+              Reliability Complexity Reusability Testability Reliability Complexity Reusability Testability
+
+GenAI usage -0.0125  -0.0479 0.323*** 0.361*** -0.0405  -0.0737  0.299*** 0.342***
+
+              (0.1081) (0.1013) (0.1088) (0.1231) (0.1036) (0.0993) (0.1101) (0.1204)
+
+Constant      4.045*** 3.806*** 4.000*** 4.045*** 3.604*** 3.784*** 3.693*** 3.682***
+
+              (0.0958) (0.0854) (0.0971) (0.0958) (0.2661) (0.2789) (0.2772) (0.3105)
+
+Controls No No No No Yes Yes Yes Yes
+
+Observations  253            253      253 253 253       253                               253 253
+
+Note. Robust standard errors in parentheses; *** p<0.01. Columns (1)-(4) represent the models without adding
+
+              controls, while Columns (5)-(8) represent the models with adding controls.
+
+We find that using generative AI tools in the workplace significantly improves coding
+
+reusability and testability, while the reliability and complexity of the code remain unaffected.
+
+These results complement the findings from Study 1 by documenting the impact of generative AI
+
+usage in the workplace on coding quality.
+
+To gain further insights into the impact of GenAI on coding quality, we conducted a detailed
+
+analysis of developers' textual feedback. Developers frequently mentioned that the debugging
+
+functionality of generative AI tools helps enhance the testability and reusability of their code.
+
+Specifically, some developers noted:
+
+                                           31
+    · "It's especially great for looking for bugs and determining if the code you wrote is doing
+         what you want it to do."
+
+    · "...instant testing and iteration of code snippets, which ensures accuracy and quick
+         troubleshooting, and [it is] also ideal for refining functions, checking syntax, and
+         verifying logic interactively."
+
+    These qualitative insights highlight the practical benefits of generative AI tools in improving
+specific aspects of coding quality, particularly through enhanced debugging capabilities.
+A Complementary Online Experiment
+We also conducted a complementary online experiment, aiming to improve the Study 2
+experiment from the following aspects: using more complex coding tasks, improving the
+measurements of key constructs, and collecting relevant control variables. We collected 272 valid
+developers using the same process as Study 2.
+More Complex Coding Tasks
+In Study 2, we used five coding questions that could be easy for developers. To test the
+robustness of our findings, we also used five more complex coding tasks. Specifically, we
+collected coding tasks from a publicly available dataset, APPS (Automated Programming
+Progress Standard) (https://github.com/hendrycks/apps?tab=readme-ov-file), developed by [36]
+in their NeurIPS paper. Among the five coding tasks/questions, the first two questions are
+classified at the "interview" level, and the remaining three at the "competition" level. According
+to [36], both levels are considered challenging. The complete set of revised questions is
+presented in Table F.1 of the Online Appendix F.
+
+    To evaluate developers' perceived difficulty, we conducted a pretest. Specifically, we
+recruited 100 developers via Prolific and asked them to rate the difficulty of each of the five
+questions. The results, summarized in Table F.2 of Online Appendix F, indicate that four of the
+five questions were rated as somewhat difficult. We also reran our main analyses and found
+
+                                                              32
+consistent results, as shown in Table F.3 of Online Appendix F.
+    We found consistent results on more complex coding tasks. That means generative AI use
+
+significantly enhances developers' coding performance across both simple and complex tasks.
+Comparing with the estimation results in Table 8 and Table F.3, we also found suggestive
+evidence that the generative AI usage helps improve the developers' coding quantity more for
+the more complex coding tasks (0.283 > 0.245), while it helps improve the developers' coding
+accuracy more for the simple coding tasks (0.124 < 0.264). Since we didn't manipulate task
+complexity in our experimental design, we call for future research to do so and more rigorously
+examine its effects.
+Improved Measurements of Key Constructs
+In Study 2, we asked participants one question about their cognitive load and their coding quality
+attributes, which can be a concern because a one-item construct is not robust. Hence, in the
+revised study, we first developed an improved set of cognitive load items, drawing on validated
+scales from [49] and [62]. The revised instrument assesses multiple dimensions of cognitive
+load, including intrinsic, extraneous, and germane load, using multiple items for each construct.
+The full set of measurement items is presented in Table F.4 of the Online Appendix F. We re-
+analyzed the impact of cognitive load on coding performance and obtained consistent results. As
+shown in Table F.5 of Online Appendix F, increased intrinsic and extraneous cognitive load
+reduced the quantity of coding but did not significantly affect coding accuracy. In contrast,
+germane cognitive load was associated with increased coding accuracy without affecting coding
+quantity.
+
+    In addition, we refined the measurement of software quality attributes using multi-item scales
+adapted from and supported by prior literature. Specifically, we measured coding maintainability
+
+                                                              33
+and technical debt, with the adapted items and corresponding references reported in Table F.6 of
+Online Appendix F. We then re-ran the analyses using these quality attributes and found that the
+main results remained consistent, as shown in Table F.7 of Online Appendix F. Additionally, we
+found that there are 11 respondents who said they have zero years of working experiences. We
+dropped them and re-ran the model and found consistent results presented in Panels C and D in
+Table F.7 of Online Appendix F. Specifically, the use of AI was associated with decreased coding
+maintainability and increased technical debt, which aligns with recent industry findings [4].
+Collected More Control Variables
+We also collected additional control variables to enhance the rigor of our findings in Study 2.
+First, we measured the cognitive burden, primarily intrinsic cognitive load, arising from the use
+of the generative AI interface and the inherent complexity of the problem. Developers' cognitive
+burden can be influenced by both the interface design of the GenAI tool and the complexity of
+the problem itself. To isolate the effects of these influences, we collected and controlled for them
+in our analyses of the impact of cognitive load associated with the usage of GenAI tools on the
+coding performance, with consistent results. The detailed items and results are shown in Tables
+F.8-F.10 of the Online Appendix F. Second, we collected participants with prior GenAI
+experience by asking, "Do you have prior experience with using generative AI such as ChatGPT
+for coding?" We removed those who had prior GenAI experience to mitigate the potential bias
+introduced by prior GenAI experience in the complementary experiment. Our main results,
+shown in Table F.3 of the Online Appendix F, reveal consistent findings. Third, we collected and
+controlled for participants' prior coding experience by asking, "Please indicate the number of
+years you have worked as a developer" to account for prior coding experience. Our main results,
+shown in Table F.11 of the Online Appendix F, reveal consistent findings. Fourth, we collected
+data on the amount of time participants spent on the tasks. We conducted t-tests to compare time
+
+                                                              34
+differences between groups and found that participants using ChatGPT spent more time on
+multiple-choice questions but less time on coding tasks. As a result, the overall average time was
+longer for the ChatGPT group, as shown in Table F.12 of Online Appendix F.
+Discussion
+The rapid advancement of GenAI continues to shape the IT industry, particularly through its
+adoption by companies seeking to support software developers. Amid growing interest in its
+effectiveness, this research uses a multimethod approach to examine whether and how GenAI
+influences developers' coding performance.
+
+    We conducted two studies to examine the impact of GenAI on developers' coding
+performance. Study 1 uses a quasi-experimental design and proprietary data from a mid-sized
+global IT firm serving Fortune 500 clients. Applying difference-in-differences (DID) techniques
+and robustness checks over 27 weeks, we find that GenAI tools significantly improve
+performance. Developers using GenAI complete an average of 1.082 additional user stories per
+week, representing an 18.12% productivity gain that is projected to add $0.906 trillion to global
+GDP based on the IT market size. Study 2 involves a randomized online experiment with 253
+developers, 120 of whom used ChatGPT to solve five coding tasks. We measured coding
+performance and cognitive load, analyzing how different usage styles shaped outcomes.
+Regression and instrumental variable analyses show that GenAI tools significantly improve both
+code quantity and quality, with cognitive load and usage styles mediating these effects.
+
+    These findings offer key insights for managers and IT leaders, highlighting the importance of
+tailoring usage strategies and accounting for cognitive load when deploying GenAI tools. With
+thoughtful implementation, organizations can enhance developer productivity and better realize
+the value of GenAI. We define coding performance in terms of throughput and quality, which
+
+                                                              35
+narrows the scope but enables focused analysis. The following sections expand on the practical
+and academic implications, offering recommendations for effective integration.
+
+    We also assessed GPT-4's standalone performance on the same coding tasks. In the initial
+experiment, GPT-4 answered all five questions correctly, suggesting task simplicity. In the
+follow-up with more complex tasks, it answered two incorrectly, indicating that ChatGPT may
+struggle with higher coding complexity (see Online Appendix C).
+Practical and Managerial Implications
+Our findings offer significant implications for industry leaders, managers, and educators seeking
+to optimize the use of GenAI in software development. The effectiveness of GenAI tools in
+enhancing coding performance has been widely debated [28], [33], [82]. This study provides
+empirical evidence that GenAI can improve both productivity and code quality, reinforcing its
+organizational value. However, these benefits are not guaranteed; they depend on how the tools
+are used and the cognitive effects they produce. To maximize gains while mitigating risks,
+organizations should adopt GenAI through staged rollouts accompanied by usage guidelines that
+emphasize ideation and debugging rather than uncritical acceptance of AI-generated code. These
+practices offer practical, evidence-based strategies for integrating GenAI into development
+workflows.
+
+    Across both research questions, our results underscore the need for structured adoption
+approaches that account for cognitive and behavioral mechanisms. Developers using GenAI tools
+such as GitHub Copilot benefit from features like automatic code completion and context-aware
+suggestions, which accelerate task completion and support code consistency [46], [97]. This
+results in tangible performance improvements, including an 18.12% increase in productivity and
+a 26.4% gain in code accuracy. These outcomes highlight GenAI's dual potential to enhance
+
+                                                              36
+speed and quality when used appropriately. To support responsible adoption, managers should
+implement targeted training on prompt engineering and code-review practices, while
+encouraging teams to track both throughput and quality using indicators such as user stories
+completed, defect density, and tests passed. Structured performance monitoring ensures that AI-
+generated contributions align with organizational objectives and coding standards.
+
+    Cognitive load emerges as a central factor influencing GenAI effectiveness. Developers
+using GenAI experience reduced cognitive load, which increases output without diminishing
+quality [74]. This finding has practical implications for managing developer workloads and
+structuring GenAI use. For example, prior research suggests that cognitive capacity fluctuates
+during the workday, peaking in the afternoon ([69]). Managers may therefore encourage GenAI
+use during high-capacity periods to maximize performance. More broadly, integrating GenAI
+into structured workflows can help sustain focus, prevent overload, and enhance long-term
+productivity. At the same time, leaders should remain attentive to downstream effects on team
+dynamics, especially if GenAI-generated code shifts quality assurance efforts to later stages.
+
+    Our results also indicate that how developers use GenAI significantly shapes its impact.
+Directly accepting AI-generated code improves speed but not quality. In contrast, using GenAI
+for debugging or refinement improves code quality, while ideation supports both speed and
+accuracy [88]. These findings suggest that the most effective usage patterns involve critical
+engagement with GenAI outputs. As shown in Table E.5 (Online Appendix E), different
+sequences entail distinct trade-offs. For example, the "Ideate  Adapt  Debug" pattern
+improves accuracy but slows throughput, whereas the "Accept only" pattern boosts
+productivity at the expense of quality. Managers should tailor usage strategies to organizational
+goals and resource constraints, balancing speed with software reliability. Additionally,
+
+                                                              37
+organizations should implement safeguards around intellectual property and security, particularly
+when using public GenAI models with proprietary code. Fair and transparent performance
+evaluation processes are also essential to ensure that developers are neither penalized nor
+disproportionately rewarded for GenAI use.
+
+    Beyond the organizational level, our findings also have implications for education and
+training. While GenAI may reduce the cognitive demands of certain tasks, it also risks
+diminishing developers' persistence in debugging and critical-thinking engagement. At the same
+time, it may serve as cognitive scaffolding, enabling learners to focus on higher-level concerns
+such as software architecture or user needs. Educators should consider integrating GenAI in
+ways that preserve foundational skill development. For example, students could be required to
+complete tasks manually before using GenAI for optimization or refactoring. Such staged
+exposure can help balance automation benefits with the development of core programming
+competencies.
+
+    Collectively, our findings reinforce the importance of deliberate GenAI integration across
+managerial and educational settings. Structured policies, clear usage guidelines, performance
+monitoring, and targeted training can help organizations and institutions unlock the benefits of
+GenAI while managing its limitations. These implications support the broader discussions and
+highlight the practical significance of this study for both research and practice.
+Theoretical Contributions
+This study contributes to the Information Systems (IS) literature by deepening theoretical
+understanding of how GenAI shapes software development, both in terms of performance
+outcomes and the mechanisms that drive them. While existing research has largely examined
+adoption patterns and tool capabilities [33], [82], our work shifts the focus toward the
+
+                                                              38
+performance implications of GenAI use, advancing theory on digital tool productivity by
+showing that GenAI can enhance both the quantity and quality of developers' output.
+
+    By conceptualizing coding performance through the dual lens of productivity (e.g., user
+stories completed) and quality (e.g., accuracy, reusability, testability), we contribute to IS
+research on performance measurement in technology-mediated work. This operationalization
+provides a more nuanced and outcome-oriented understanding of AI's value in software
+development and links individual-level tool use to broader organizational outcomes. In doing so,
+we extend the literature on digital productivity and offer a framework that future studies can
+adopt or adapt when evaluating similar technologies.
+
+    A second key contribution lies in clarifying the mechanisms underlying GenAI's effects,
+particularly through the lens of cognitive load theory. While prior IS research has recognized that
+AI tools reshape mental effort in digital tasks, our findings show how GenAI reduces certain
+cognitive demands (e.g., syntax recall) while potentially introducing new ones (e.g., output
+verification). This dual role advances understanding of cognitive resource allocation in digitally
+mediated environments [74] and enriches theoretical conversations about the trade-offs involved
+in human-AI collaboration.
+
+    Furthermore, by examining developers' usage styles, whether they passively accept AI
+suggestions or actively engage through ideation and refinement, we extend IS theories of
+technology use beyond adoption toward meaningful interaction patterns. These differentiated
+usage strategies help explain why GenAI's effectiveness varies across contexts and users. Our
+findings suggest that active engagement enables higher-level cognitive benefits and performance
+gains, thus contributing to emerging theorization on the affordances of AI systems and the role of
+user agency in co-creating value with intelligent tools.
+
+                                                              39
+    In combination, these contributions move beyond confirming that GenAI influences
+performance. They offer theoretical insight into the conditions and mechanisms through which
+such effects occur, helping to bridge research on IS design, cognitive theory, and human-AI
+collaboration. This integrated view invites future work to further explore how interactional,
+cognitive, and contextual factors shape the evolving role of AI in software development and
+digital work more broadly.
+Limitations and Future Research
+This study has some limitations. First, the findings are derived from OpenAI's GPT models
+(specifically GPT-3.5 and GPT-4), rather than from alternative GenAI systems developed by
+other companies, which may differ in their coding and contextual capabilities. Second, the study
+does not fully control for participants' prior coding experience, which may influence both
+outcomes and perceptions of GenAI. Third, the analysis focuses on short-term effects and does
+not address longer-term impacts such as learning, code maintainability, or team dynamics.
+
+    Future research could examine how continued GenAI use shapes these broader dimensions,
+including educational outcomes. Understanding these long-term effects could help in evaluating
+the sustainability and broader organizational implications of GenAI adoption. Longitudinal
+classroom and training studies could explore whether GenAI erodes critical skills or supports
+higher-level learning and assess pedagogical strategies such as staged exposure or requiring
+manual coding before using AI. Such studies can inform evidence-based teaching practices and
+help ensure that GenAI enhances rather than substitutes foundational learning.
+
+    Fourth, our definition of coding performance emphasizes throughput and quality, which may
+limit generalizability. Future work could extend this construct to include collaboration,
+documentation, and long-term maintainability. Expanding the definition of performance will
+allow for a more comprehensive understanding of GenAI's impact in real-world settings.
+
+                                                              40
+    Fifth, in Study 1, data were organized weekly. Because sprints may span multiple weeks,
+treatment at the story level could better reflect work organization. However, this was not feasible
+given the company's operational context and the pilot's design, which prioritized consistent
+timeframes. We acknowledge this as a limitation and identify it as a direction for future research.
+Adopting sprint- or story-level granularity in future studies may yield more precise insights into
+how GenAI affects developer workflows.
+
+    Sixth, Study 1 does not include project-level controls. While project dummies can help
+account for project-specific variation, this was constrained by data availability and organizational
+practices. Developers were assigned to only one enterprise-level project at a time, in line with
+company policy. We therefore recognize the absence of project dummies as a limitation and
+encourage future research to validate these findings in settings where developers work across
+multiple projects. Incorporating project-level variation may improve causal inference and clarify
+whether GenAI's effects are consistent across different project types and team environments.
+
+    Due to data access limitations, we were also unable to examine or control for pair-
+programmed stories and tasks spanning multiple weeks in Study 1, which should be addressed in
+future research. We also call for future research to examine the impact of generative AI use
+among developers working on different projects, enabling the inclusion of controls related to
+user stories and project characteristics (e.g., size, sprint #, project complexity, and project type).
+Conclusions
+In this study, we examine how generative AI affects software developers' coding performance
+using a multi-method design that includes a quasi-experimental field study and a randomized
+controlled experiment. Our results show that GenAI tools can improve both productivity and
+code quality. Developers using GenAI completed 18.12% more user stories per week and
+
+                                                              41
+produced code with 26.4% greater accuracy. We also find that these effects depend on how the
+
+tools are used. Usage patterns that involve ideation and refinement are more effective than direct
+
+acceptance of AI-generated code. In addition, GenAI reduces developers' cognitive load, which
+
+contributes to performance gains. These findings suggest that both the cognitive effects of GenAI
+
+and usage strategy are key drivers of its effectiveness in software development.
+
+Acknowledgements
+
+We thank the editor and anonymous reviewers for their constructive feedback and comments. In
+
+addition, this paper is supported by the Research Enhancement for Competitive and Accelerated
+
+Publishing (RECAP) Award from the Fox School of Business, Temple University.
+
+References [All the URLs below were last accessed on March 5, 2026.]
+1. Alyakoob, M.; and Rahman, M. S. Shared prosperity (or lack thereof) in the sharing
+
+    economy. Information Systems Research, 33, 2 (2022), 638-658.
+2. Amazon. Amazon Q, A generative AI-powered assistant for businesses and developers, Is
+
+    now generally available. https://www.aboutamazon.com/news/aws/amazon-q-generative-ai-
+    assistant-aws. (2024).
+3. Anand, P. Unlocking the Potential: Exploring the Impact of Integration of Generative
+    Artificial Intelligence in Agile Software Engineering (Doctoral dissertation, Temple
+    University). (2025).
+4. Anderson, E.; Parker, G.; and Tan, B. The hidden costs of coding with generative AI.
+    https://sloanreview.mit.edu/article/the-hidden-costs-of-coding-with-generative-ai/. (2025).
+5. Athey, S.; and Imbens, G. W. Design-based analysis in difference-in-differences settings with
+    staggered adoption. Journal of Econometrics, 226, 1 (2022), 62-79.
+6. Baidoo-Anu, D.; and Ansah, L. O. Education in the era of generative artificial intelligence
+    (AI): Understanding the potential benefits of ChatGPT in promoting teaching and learning.
+    Journal of AI, 7, 1 (2023), 52-62.
+7. Baker, A. C.; Larcker, D. F.; and Wang, C. C. How much should we trust staggered
+    difference-in-differences estimates? Journal of Financial Economics, 144, 2 (2022), 370-395.
+8. Bastani, H.; Bastani, O.; Sungu, A.; Ge, H.; Kabakci, O.; and Mariman, R. Generative AI can
+    harm learning. Available at SSRN 4895486. (2024).
+9. Baygi, R. M.; Introna, L. D.; and Hultin, L. Everything flows: Studying continuous
+    sociotechnological transformation in a fluid and dynamic digital world. MIS Quarterly, 45, 1
+    (2021), 423-452.
+10. Becker, J.; Rush, N.; Barnes, E.; and Rein, D. Measuring the impact of early-2025 AI on
+    experienced open-source developer productivity. arXiv preprint arXiv: 2507.09089. (2025).
+11. Bevan, O.; Chui, M.; Presten, B.; Yee, L.; and Kristensen, I. Implementing generative AI
+    with speed and safety. https://www.mckinsey.com/capabilities/risk-and-resilience/our-
+    insights/implementing-generative-ai-with-speed-and-safety. (2024).
+
+                                                              42
+12. Blohm, I.; Riedl, C.; Füller, J.; and Leimeister, J. M. Rate or trade? Identifying winning ideas
+    in open idea sourcing. Information Systems Research, 27, 1 (2016), 27-48.
+
+13. Brynjolfsson, E.; Li, D.; and Raymond, L. R. Generative AI at work. The Quarterly Journal
+    of Economics, 140, 2 (2025), 889-942.
+
+14. Bughin, J.; and LaFountain, B. You won't get GenAI right if you get human oversight wrong.
+    https://www.bcg.com/publications/2025/wont-get-gen-ai-right-if-human-oversight-wrong.
+    (2025).
+
+15. Burtch, G.; Lee, D.; and Chen, Z. The consequences of generative AI for online knowledge
+    communities. Scientific Reports, 14, 1 (2024), 10413.
+
+16. Business Research Company. Generative AI global market report.
+    https://www.thebusinessresearchcompany.com/report/generative-ai-global-market-report.
+    (2025).
+
+17. Cengiz, D.; Dube, A.; Lindner, A.; and Zipperer, B. The effect of minimum wages on low-
+    wage jobs. The Quarterly Journal of Economics, 134, 3 (2019), 1405-1454.
+
+18. Chen, Z.; and Chan, J. Large language model in creative work: The role of collaboration
+    modality and user expertise. Management Science, 70, 12 (2024), 9101-9117.
+
+19. Cheng, X.; Fu, S.; de Vreede, T.; De Vreede, G. J.; Seeber, I.; Maier, R.; and Weber, B. Idea
+    convergence quality in open innovation crowdsourcing: A cognitive load perspective. Journal
+    of Management Information Systems, 37, 2 (2020), 349-376.
+
+20. Chui, M.; Roberts, R.; Yee, L.; Hazan, E.; Singla, A.; Smaje, K.; Sukharensky, A.; and
+    Zemmel, R. The economic potential of generative AI: The next productivity frontier.
+    https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-
+    potential-of-generative-ai-the-next-productivity-frontier. (2023).
+
+21. Cortex. Code quality metrics: Definition, examples, and tips.
+    https://www.cortex.io/post/measuring-and-improving-code-quality. (2024).
+
+22. Cui, Z. K.; Demirer, M.; Jaffe, S.; Musolff, L.; Peng, S.; and Salz, T. The effects of
+    generative AI on high skilled work: Evidence from three field experiments with software
+    developers. (2025). Available at SSRN 4945566.
+
+23. Davenport, T. H.; and Mittal, N. How generative AI is changing creative work.
+    https://hbr.org/2022/11/how-generative-ai-is-changing-creative-work. (2022).
+
+24. De Chaisemartin, C.; and D'Haultfoeuille, X. Difference-in-differences estimators of
+    intertemporal treatment effects. Review of Economics and Statistics, (2024), 1-45.
+
+25. Demirci, O.; Hannane, J.; and Zhu, X. (2025). Who is AI replacing? The impact of generative
+    AI on online freelancing platforms. Management Science, 71, 10 (2025), 8097-8108.
+
+26. Feng, T. H.; Luxton-Reilly, A.; Wünsche, B. C.; and Denny, P. From automation to cognition:
+    Redefining the roles of educators and generative AI in computing education. In Proceedings
+    of the 27th Australasian Computing Education Conference (pp. 164-171). (2025).
+
+27. Field, H. China's DeepSeek AI dethrones ChatGPT on app store: Here's what you should
+    know. https://www.cnbc.com/2025/01/27/chinas-deepseek-ai-tops-chatgpt-app-store-what-
+    you-should-know.html. (2025).
+
+28. Fitzmaurice, G. Developers relying on GitHub Copilot could be creating dangerously flawed
+    code. https://www.itpro.com/software/developers-relying-on-github-copilot-could-be-
+    creating-dangerously-flawed-code. (2024).
+
+29. Fuqua, A. Agile story points: How many stories per sprint?
+    https://www.leadingagile.com/2015/05/agile-story-points-how-many-user-stories-per-sprint-
+
+                                                              43
+    rules-of-thumb/. (2015).
+30. Goodman-Bacon, A. Difference-in-differences with variation in treatment timing. Journal of
+
+    Econometrics, 225, 2 (2021), 254-277.
+31. Gopal, A.; and Gosain, S. Research note--The role of organizational controls and boundary
+
+    spanning in software development outsourcing: Implications for project performance.
+    Information Systems Research, 21, 4 (2010), 960-982.
+32. Grover, V.; and Lyytinen, K. New state of play in information systems research. MIS
+    Quarterly, 39, 2 (2015), 271-296.
+33. Guo, B.; Zhang, X.; Wang, Z.; Jiang, M.; Nie, J.; Ding, Y.; Yue, J.; and Wu, Y. How close is
+    ChatGPT to human experts? Comparison corpus, evaluation, and detection. arXiv preprint
+    arXiv: 2301.07597. (2023).
+34. Guo, Y.; Tong, S.; Chen, T.; Kumar, S.; and Ouyang, S. The impact of generative artificial
+    intelligence on individual manual investment decisions: Empirical evidence from mutual
+    funds. Nanyang Business School Research Paper, (2022), (23-24).
+35. Hahn, J.; Moon, J. Y.; and Zhang, C. Emergence of new project teams from open source
+    software developer networks: Impact of prior collaboration ties. Information Systems
+    Research, 19, 3 (2008), 369-391.
+36. Hendrycks, D.; Basart, S.; Kadavath, S.; Mazeika, M.; Arora, A.; Guo, E.; ... and Steinhardt,
+    J. Measuring Coding Challenge Competence With APPS. In Thirty-fifth Conference on
+    Neural Information Processing Systems Datasets and Benchmarks Track (Round 2). (2021).
+37. Hou, J.; Wang, L.; Wang, G.; Wang, H. J.; and Yang, S. The double-edged roles of generative
+    AI in the creative process: Experiments on design work. Information Systems
+    Research (2025).
+38. Huang, A. Y.; Lin, C. Y.; Su, S. Y.; and Yang, S. J. The impact of GenAIenabled coding hints
+    on students' programming performance and cognitive load in an SRLbased Python
+    course. British Journal of Educational Technology, 56, 5(2025), 1942-1972.
+39. Huang, P.; Ceccagnoli, M.; Forman, C.; and Wu, D. J. IT knowledge spillovers, absorptive
+    capacity, and productivity: Evidence from enterprise software. Information Systems
+    Research, 33, 3 (2022), 908-934.
+40. Huang, P.; and Zhang, Z. Participation in open knowledge communities and job-hopping:
+    Evidence from enterprise software. MIS Quarterly, 40, 3 (2016), 785-806.
+41. Jia, N.; Luo, X.; Fang, Z.; and Liao, C. When and how artificial intelligence augments
+    employee creativity. Academy of Management Journal, 67, 1 (2024), 5-32.
+42. Jia, S.; Shan, G.; and Chi, O. H. Leveraging generative AI for customer complaint resolution:
+    A comparative analysis with human responses. Americas Conference on Information Systems
+    (2024).
+43. Jia, S.; and Shan, G. AI-assisted service work: Boosting efficiency but eroding human skills?
+    Americas Conference on Information Systems (2025).
+44. Jiang, Z.; Qu, X. S.; and Jain, D. C. Optimal market entry timing for successive generations
+    of technological innovations. MIS Quarterly, 43, 3 (2019),787-806.
+45. Koetsier, J. Men 2X more likely to use generative AI than women: Report.
+    https://www.forbes.com/sites/johnkoetsier/2023/11/27/men-2x-more-likely-to-use-
+    generative-ai-than-women-report/?sh=70bfbfc84149. (2023).
+46. Lardinois, F. GitHub Copilot can now tell developers when its suggestions match code in a
+    public repository. https://techcrunch.com/2023/08/03/github-copilot-now-shows-developers-
+
+                                                              44
+    when-its-code-suggestions-match-code-in-a-public-repository/. (2023).
+47. Layman, I. Code quality: A concern for businesses, bottom lines, and empathetic
+
+    programmers. https://stackoverflow.blog/2021/10/18/code-quality-a-concern-for-businesses-
+    bottom-lines-and-empathetic-programmers/. (2023).
+48. Lee, D.; Boulton, K. A.; Sun, C.; Phillips, N. L.; Munro, M.; Kumfor, F.; ... and Guastella, A.
+    J. Attention and executive delays in early childhood: A meta-analysis of neurodevelopmental
+    conditions. Molecular Psychiatry, 30, 5 (2025), 1906-1914.
+49. Leppink, J.; Paas, F.; Van der Vleuten, C. P.; Van Gog, T.; and Van Merriënboer, J. J.
+    Development of an instrument for measuring different types of cognitive load. Behavior
+    Research Methods, 45 (2013), 1058-1072.
+50. Li, M. M.; Dickhaut, E.; Bruhin, O.; Wache, H.; and Weritz, P. More than just efficiency:
+    Impact of generative AI on developer productivity. (2024). International Conference on
+    Information Systems.
+51. Li, X. Could deal promotion improve merchants' online reputations? The moderating role of
+    prior reviews. Journal of Management Information Systems, 33, 1 (2016), 171-201.
+52. Liu, L.; Wang, Y.; and Xu, Y. A practical guide to counterfactual estimators for causal
+    inference with time-series cross-sectional data. American Journal of Political Science, 68, 1
+    (2024), 160-176.
+53. Maruping, L. M.; Daniel, S. L.; and Cataldo, M. Developer centrality and the impact of value
+    congruence and incongruence on commitment and code contribution activity in open source
+    software communities. MIS Quarterly, 43, 3 (2019), 951-976.
+54. Maruping, L. M.; and Magni, M. What's the weather like? The effect of team learning
+    climate, empowerment climate, and gender on individuals' technology exploration and use.
+    Journal of Management Information Systems, 29, 1 (2012), 79-114.
+55. Mastropaolo, A.; Pascarella, L.; Guglielmi, E.; Ciniselli, M.; Scalabrino, S.; Oliveto, R.; and
+    Bavota, G. On the robustness of code generation techniques: An empirical study on GitHub
+    Copilot. In 2023 IEEE/ACM 45th International Conference on Software Engineering
+    (ICSE) (pp. 2149­2160). (2023).
+56. Mehra, A.; and Mookerjee, V. Human capital development for programmers using open
+    source software. MIS Quarterly, 6, 1 (2012), 107-122.
+57. Mithas, S.; and Krishnan, M. S. Human capital and institutional effects in the compensation
+    of information technology professionals in the United States. Management Science, 54, 3
+    (2008), 415-428.
+58. Moghaddam, F. S.; and Djaladat, H. Equivalence and Noninferiority: Design, Measures, and
+    Classic Example. In Translational Urology (pp. 225-228). Academic Press. (2025).
+59. Muratovic, F.; Stewart, D.; and Raman, P. Generative AI for software development: Tech
+    companies leading the way. https://deloitte.wsj.com/cfo/generative-ai-for-software-
+    development-tech-companies-leading-the-way-6f6361ab. (2024).
+60. Negar, J.; and Ong, C. E. From challenges to triumphs: Leveraging generative AI to support
+    international students in Liverpool. (2025). Pacific Asia Conference on Information Systems.
+61. Nidumolu, S. R.; and Knotts, G. W. The effects of customizability and reusability on
+    perceived process and competitive performance of software firms. MIS Quarterly, 22, 2
+    (1998), 105-137.
+62. Paas, F.; Renkl, A.; and Sweller, J. Cognitive load theory and instructional design: Recent
+    developments. Educational Psychologist, 18, 1 (2003), 1-4.
+
+                                                              45
+63. Pan, Y.; and Qiu, L. How ridesharing is shaping public transit system: A counterfactual
+    estimator approach. Production and Operations Management, 31, 3 (2022), 906-927.
+
+64. Pandey, R.; Singh, P.; Wei, R.; and Shankar, S. Transforming software development:
+    Evaluating the efficiency and challenges of GitHub Copilot in real-world projects. arXiv
+    preprint arXiv: 2406.17910. (2024).
+
+65. Prat, N.; Comyn-Wattiau, I.; and Akoka, J. A taxonomy of evaluation methods for
+    information systems artifacts. Journal of Management Information Systems, 32, 3 (2015),
+    229-267.
+
+66. Quinn, M.; and Gutt, D. Heterogeneous effects of generative AI on knowledge seeking in
+    online communities. Journal of Management Information Systems, 42, 2 (2025), 370-399.
+
+67. Rao, X.; Shan, G.; and Qiu, L. How generative AI transforms questioning behavior on Q&A
+    platforms: Evidence from a natural experiment with pilot usage of ChatGPT. Available at
+    SSRN 4909905 (2024).
+
+68. Rasch, R. H.; and Tosi, H. L. Factors affecting software developers' performance: An
+    integrated approach. MIS Quarterly, 16, 3 (1992), 395-413.
+
+69. Rivera, M.; Guo, X.; Shan, G.; and Qiu, L. Stimulating feedback contributions using digital
+    nudges: A field experiment in a real-time mobile feedback platform. MIS Quarterly.
+    Forthcoming. (2026).
+
+70. Sarker, S.; Bala, H.; Hong, Y.; Kankanhalli, A.; Rossi, M.; Gu, B.; and Oestreicher-Singer, G.
+    Advancing next-generation multimethod research in Information Systems: A framework and
+    some recommendations for authors and evaluators. Information Systems Research, 36, 2
+    (2025), 647-668.
+
+71. Schlegel, K.; Sommer, N. R.; and Mortillaro, M. Large language models are proficient in
+    solving and creating emotional intelligence tests. Communications Psychology, 3, 1 (2025),
+    80.
+
+72. Schmitz, K. W.; Teng, J. T.; and Webb, K. J. Capturing the complexity of malleable IT use.
+    MIS Quarterly, 40, 3 (2016), 663-686.
+
+73. Sen, R.; Choobineh, J.; Kumar, S. Determinants of software vulnerability disclosure timing.
+    Production and Operations Management, 29, 11 (2020), 2532-2552.
+
+74. Seung, Y. The impact of artificial intelligence on cognitive load. https://ciddl.org/the-impact-
+    of-artificial-intelligence-on-cognitive-load/. (2024).
+
+75. Shan, G.; and Jia, S. Generative AI or real users? Investigating the relative impact of
+    generative AI vs. humans on online review quality. (2024). Hawaii International Conference
+    on System Sciences.
+
+76. Shan, G.; and Qiu, L. Examining the impact of generative AI on users' voluntary knowledge
+    contribution: Evidence from a natural experiment on Stack Overflow. Information Systems
+    Research. Forthcoming. (2025).
+
+77. Shan, G.; and Qiu, L. Balancing acts: Unveiling the dynamics of post removal on social
+    media user-generated content. Information Systems Research. Forthcoming. (2026).
+
+78. Singh, P. V.; Tan, Y.; and Youn, N. A hidden Markov model of developer learning dynamics
+    in open source software projects. Information Systems Research, 22, 4 (2011), 790-807.
+
+79. Song, F.; Agarwal, A.; and Wen, W. The impact of generative AI on collaborative open-
+    source software development: Evidence from GitHub Copilot. arXiv
+    preprint arXiv:2410.02091. (2024).
+
+80. Statista. Software worldwide.
+
+                                                              46
+    https://www.statista.com/outlook/tmo/software/worldwide#revenue. (2024).
+81. Stewart, K. J.; and Gosain, S. The impact of ideology on effectiveness in open source
+
+    software development teams. MIS Quarterly, 30, 2 (2006), 291-314.
+82. Stryker, C. 9 ways developer productivity gets a boost from generative AI.
+
+    https://www.ibm.com/blog/developer-productivity/. (2024).
+83. Su, Y.; Zhang, K.; Wang, Q.; and Qiu, L. Generative AI and human knowledge sharing:
+
+    Evidence from a natural experiment. Available at SSRN 4628786. (2023).
+84. Susarla, A.; Gopal, R.; Thatcher, J. B.; and Sarker, S. The janus effect of generative AI:
+
+    Charting the path for responsible conduct of scholarly activities in Information Systems.
+    Information Systems Research, 34, 2 (2023), 399-408.
+85. Sweller, J. Cognitive load theory, learning difficulty, and instructional design. Learning and
+    Instruction, 4, 4 (1994), 295­312.
+86. Tavarez, G. AI Adoption in application development faces IT roadblocks.
+    https://www.genaitoday.ai/topics/genai-today/articles/461636-ai-adoption-application-
+    development-faces-it-roadblocks.htm. (2025).
+87. Ulfsnes, R.; Moe, N. B.; Stray, V.; and Skarpen, M. Transforming Software Development with
+    Generative AI: Empirical Insights on Collaboration and Workflow. In Generative AI for
+    Effective Software Development (pp. 219-234). Cham: Springer Nature Switzerland. (2024).
+88. UPenn LPS. How organizations can leverage generative AI for efficiency and help
+    employees thrive. https://lpsonline.sas.upenn.edu/features/how-organizations-can-leverage-
+    generative-ai-efficiency-and-help-employees-thrive. (2024).
+89. Vaishya, R.; Misra, A.; and Vaish, A. ChatGPT: Is this version good for healthcare and
+    research? Diabetes and Metabolic Syndrome: Clinical Research and Reviews, (2023),
+    102744.
+90. Venkatesh, V.; Rai, A.; and Maruping, L. M. Information systems projects and individual
+    developer outcomes: Role of project managers and process control. Information Systems
+    Research, 29, 1 (2018), 127-148.
+91. Venkatesh, V.; Thong, J. Y.; Spohrer, K.; Chan, F. K.; Arora, A.; Hoehle, H.; and
+    Venkatraman, S. Equality does not make you happy: Effects of differentiated leader-member
+    exchange and team member exchange on developer satisfaction in agile development teams.
+    MIS Quarterly, 47, 3 (2023), 1239-1270.
+92. Vial, G. A complex adaptive systems perspective of software reuse in the digital age: An
+    agenda for IS research. Information Systems Research, 34, 4 (2023), 1728-1743.
+93. Wambsganss, T.; Janson, A.; Söllner, M.; Koedinger, K.; and Leimeister, J. M. Improving
+    students' argumentation skills using dynamic machine-learning­based modeling. Information
+    Systems Research, 36, 1 (2025), 474-507.
+94. Wang, X. N.; Shan, G. H.; Mehra, A. AI exposure on workers' career path: Evidence from
+    U.S. workforce. CSWIM (2024).
+95. Wang, Y.; Chen, Y.; and Koo, B. Open to your rival: Competition between open source and
+    proprietary software under indirect network effects. Journal of Management Information
+    Systems, 37, 4 (2020), 1128-1154.
+96. Xu, L.; Nian, T.; and Cabral, L. What makes geeks tick? A study of Stack Overflow careers.
+    Management Science, 66, 2 (2020), 587-604.
+97. Zhao, X.; Tian, J.; Xue, L. Herding and software adoption: A re-examination based on post-
+    adoption software discontinuance. Journal of Management Information Systems, 37, 2
+
+                                                              47
+    (2020), 484-509.
+98. Zhao, Z. I.; Shan, G.; and Wattal, S. Shortcuts or blind spots? The impact of search
+
+    generative experience (SGE) on information-searching. Americas Conference on Information
+    Systems (2025).
+99. Zhou, E.; and Lee, D. Generative artificial intelligence, human creativity, and art. PNAS
+    Nexus, 3, 3 (2024), pgae052.
+
+                                                              48
+

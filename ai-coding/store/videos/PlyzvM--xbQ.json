@@ -1,0 +1,229 @@
+{
+  "id": "PlyzvM--xbQ",
+  "title": "Open-source, complexity & AI coding 🔧 — with Salvatore \"Antirez\" Sanfilippo",
+  "channel": "Refactoring",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UC6HxVKyLBJedp2Q0sN9RS7A",
+  "durationSec": 3430,
+  "thumbnail": "https://i.ytimg.com/vi_webp/PlyzvM--xbQ/sddefault.webp",
+  "summary": "Antirez on open-source success and software bloat, and how he uses Claude as a design and review partner for Redis C code, claiming large speedups.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/experienced-developers-can-get-several-fold",
+      "stance": "asserts",
+      "quote": "I believe I am more or less five times faster than I was before AI.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Some experts report large gains on specific tasks, but several-fold figures are self-reported and controlled studies of experts in mature code show small or negative effects.",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+      "stance": "asserts",
+      "quote": "for this kind of help, you have to be very good at prompting. I don't believe everybody is the same at using LLMs.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Experts get more reliable results and catch errors, but several RCTs show larger measured speedups for juniors, and METR found experts slowed; contested.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google RCT: more senior engineers and those coding 5+ hours/day were faster with AI, but the AI x seniority (p=0.706) and AI x hours interactions were not significant, so 'far more' is unsupported.",
+          "source": "ai-coding/sources/2410.12944.txt#L490-L505",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Microsoft experiment: short-tenure developers raised output 27-39% and juniors 21-40%, versus 8-13% for long-tenure and 7-16% for seniors (directionally consistent, mostly not significant), the opposite of AI amplifying experienced engineers more.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Copilot RCT heterogeneity analysis: developers with less programming experience benefited more, which the authors highlight as promise for novices (small sample, noisy estimates).",
+          "source": "ai-coding/sources/2302.06590.txt#L221-L225",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "METR 2025 cites prior work finding that AI benefits less-experienced workers more; in its own RCT, highly experienced developers were slowed down, and more so on tasks where they had high prior exposure.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L135-L141",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: experience is needed to spot subtly dangerous Claude proposals, yet a senior engineer says the tools make juniors 'more productive and more bold', so the gain isn't clearly skewed to seniors.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L75-L75",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Every group, BSc students included, gained significantly in completeness, and the authors say differences between groups were not related to experience. Professionals gained the most, but they had different tasks, and position is confounded with task and language.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L556-L569",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Moderation analysis in the 253-developer RCT: developers with fewer years of experience got the speed benefit and quality was unaffected, so gains concentrated among less-skilled coders, not experienced ones (easy tasks, ChatGPT-3.5 chat, appendix result).",
+          "source": "ai-coding/sources/4859137.txt#L872-L878",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-tools-catch-real-bugs",
+      "stance": "asserts",
+      "quote": "I am 100% sure that AI can routinely find bugs before of users in complex C projects.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/security-data-critical-code-auth-payments",
+      "stance": "asserts",
+      "quote": "I can write C code with Claude, not for Redis, not for system critical things",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Studies find frequent vulnerabilities in AI-generated security code, so the risk is real; but well-reviewed AI-assisted code by people who understand it can be fine.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "Another thing that I do, which I understand many developers don't do, is to put a lot of context inside the AI.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "And this alone is, I believe, one month of work because it's a lot of Python code.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI speeds drafting tests and docs, but generated tests often assert implementation details or weak properties and need review.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "denies",
+      "quote": "people under report significantly the help that they get from AI because they don't want to lose their job.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-built-deep-modules-small-interfaces",
+      "stance": "asserts",
+      "quote": "In general, simple code bases have an advantage to be AI-developed.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear module boundaries help both humans and agents navigate and test; consistent with Ousterhout and practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/broad-proficiency-across-stack-shifts-value",
+      "stance": "asserts",
+      "quote": "AI gives you this kind of universal basic proficiency at all the layers of the stack",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "Role blurring is widely reported anecdotally, but there is no solid labor-market evidence yet that specialists are losing ground.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/using-llms-understand-legacy-codebases-effective",
+      "stance": "asserts",
+      "quote": "AI has the advantage of making existing code bases more understandable for newcomers.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Code explanation and codebase Q&A are among the most consistently reported wins, and Thoughtworks lists it under Adopt. Explanations can still be confidently wrong.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/system-design-architecture-judgment-remain-human",
+      "stance": "asserts",
+      "quote": "Right now AI is not strong about the big picture.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Humans still own constraints and tradeoffs, but models can now propose reasonable designs when given context; the gap is narrowing.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ],
+  "supersededBy": "antirez-news-169"
+}

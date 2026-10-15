@@ -1,0 +1,209 @@
+{
+  "id": "wcRR5P0S2Us",
+  "title": "My AI Coding Workflow That Actually Works",
+  "channel": "Chris Titus Tech",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCg6gPGh8HU2U01vaFCAsvmQ",
+  "durationSec": 1516,
+  "thumbnail": "https://i.ytimg.com/vi_webp/wcRR5P0S2Us/sddefault.webp",
+  "summary": "Practitioner workflow: agents/spec/roadmap files, tests first, small PRs, independent AI review and manual merge gates.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/project-instruction-files-claude-agents-rules",
+      "stance": "asserts",
+      "quote": "you're going to have an agents, a spec, a road map",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Persistent instruction files measurably steer agent behavior; overlong or contradictory ones reduce adherence.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "A lot of people skip this entire thing ... and that's why they get poor results",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "instruct it specifically to make uh a testing suite for you and then check that testing suite",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/tasks-explicit-acceptance-criteria-out-scope",
+      "stance": "asserts",
+      "quote": "the big one here is acceptance criteria ... You got to let it know when it succeeds",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Checkable acceptance criteria give agents a stopping condition and give reviewers a test; out-of-scope lists reduce scope creep. Standard practice that carries over well to agents.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llms-propose-outdated-library-versions-models",
+      "stance": "asserts",
+      "quote": "LLMs always pick old versions that have tons of security problems in them",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Training cutoffs reliably cause stale version and model suggestions; checking against current docs is necessary.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-more-effective-fresh-context",
+      "stance": "asserts",
+      "quote": "it needs to be outside of this agent",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh-context reviewers avoid self-confirmation and context bloat; plausible and commonly practiced but little hard evidence.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-tools-catch-real-bugs",
+      "stance": "asserts",
+      "quote": "you forgot about what happens if there's no audio",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "I don't trust AI enough to just manually rubber stamp this stuff. So important to have that manual gate",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The paper recommends careful review of AI code whatever the tool, along with static analysis, tests, security checks, and monitoring after merge.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L934-L945",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+      "stance": "denies",
+      "quote": "if you want to just be like, hey, I want just one prompt and have it loop a whole bunch ... that's not really a good idea",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Goal/loop features keep agents going through backlogs, but unattended runs drift or game checks without good verification; works when acceptance tests are strong.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/subscription-sticker-prices-understate-real-cost",
+      "stance": "asserts",
+      "quote": "You're not going to be able to do it without the $100, $200 subscriptions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agentic usage is metered or rate-limited across vendors; heavy users routinely hit limits or pay usage overages.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/major-coding-subscriptions-subsidized-below-cost",
+      "stance": "asserts",
+      "quote": "I know I'm using way more compute than the cost that I pay them",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Heavy users clearly consume more compute than flat fees cover, which is why vendors added weekly limits; whether plans are below cost on average is not public.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "think about chunking those into smaller poll requests",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "even if you take the LLM out of this, this is just a good workflow for developing software",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2025 found AI amplifies existing engineering practices; strong fundamentals predict AI benefit.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

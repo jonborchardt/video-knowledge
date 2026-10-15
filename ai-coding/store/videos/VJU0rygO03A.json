@@ -1,0 +1,173 @@
+{
+  "id": "VJU0rygO03A",
+  "title": "How Uber Uses AI to Move from Java to Kotlin",
+  "channel": "Kotlin by JetBrains",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCP7uiEZIqci43m22KDl0sNw",
+  "durationSec": 1182,
+  "thumbnail": "https://i.ytimg.com/vi_webp/VJU0rygO03A/sddefault.webp",
+  "summary": "Uber's Ty Smith describes using AI to generate deterministic OpenRewrite-style recipes for Java-to-Kotlin migration with humans in the loop, and discusses review load, quality gates and how engineering roles may shift.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+      "stance": "asserts",
+      "quote": "people really only spend a small percentage of every day writing code. So just investing in one specific area, it's not going to",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies of developer time show coding is a minority of work; DORA and Faros 2025 found individual coding gains often don't translate into delivery throughput.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+      "stance": "asserts",
+      "quote": "it's easy to do uh like the quick prototype with this type of tooling, but it's really hard to productionize something safely",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/combining-deterministic-transformation-tools-codemods-code",
+      "stance": "asserts",
+      "quote": "generate those recipes and other tools with AI itself and have a human in the loop that can work in that system",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Migration case studies (Google, Amazon Java upgrades, Airbnb) got their scale from pairing LLMs with deterministic tooling and validation rather than free-form generation.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "you're holding that code to the same bar that you would hold a human to",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/large-generated-pull-requests-exceed-what",
+      "stance": "asserts",
+      "quote": "it is a real concern if teams get too much uh code to review that things just stall",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The SmartBear/Cisco review study found defect detection drops beyond ~200-400 LOC per session; AI makes large PRs cheap to produce.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "it's about small reviewable diffs that um humans can review",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/will-transform-software-engineering-jobs-rather",
+      "stance": "asserts",
+      "quote": "I don't fall into the camp of thinking we'll all be without a job and replaced by AI, at least in the immediate future",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Through 2026 evidence points to role change and slower junior hiring, not elimination of the profession; long-run is uncertain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "they still need the fundamentals because all the code that's being produced they need to be able to critique it properly",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies show novices accept incorrect AI code more often; verifying output requires domain and code literacy.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/implementation-gets-cheap-product-taste-judgment",
+      "stance": "asserts",
+      "quote": "that is probably going to need more and more people with a product mindset",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Plausible economic logic and widely argued, but not measured; execution, distribution and maintenance still matter.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/best-practices-coding-tools-stale-within",
+      "stance": "asserts",
+      "quote": "he was calling them the leader of the quarter because things are moving so quickly",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tool-use and long-horizon capability jumps in 2025 changed effective workflows (chat-with-RAG to agentic loops); consistent with practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/background-coding-agents-assigned-routine-issues",
+      "stance": "asserts",
+      "quote": "engineers can do toil work, maybe a library upgrade or handling a deprecation or fixing a flaky test um with some of the agentic AIs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

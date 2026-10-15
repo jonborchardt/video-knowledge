@@ -1,0 +1,129 @@
+{
+  "id": "usetelos-killing-coding-agent-slop",
+  "title": "Killing Coding Agent Slop With Adversarial Self-Play",
+  "channel": "Telos",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://usetelos.ai/blog/killing-coding-agent-slop#do-you-still-need-verification-as-models-get-better",
+  "summary": "Vendor post arguing that pairing a generator agent with an adversarial verifier agent in a loop reduces slop, citing small self-run SlopCodeBench results.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/large-generated-pull-requests-exceed-what",
+      "stance": "asserts",
+      "quote": "human review doesn't scale to LLM volumes. At this point, my coding agents produce code much faster than I can review it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The SmartBear/Cisco review study found defect detection drops beyond ~200-400 LOC per session; AI makes large PRs cheap to produce.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/keeping-code-maintainable-still-requires-human",
+      "stance": "asserts",
+      "quote": "deterministic checks can't catch every subjective dimension, including design, quality standards, and complexity.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Linters and agent rules catch local smells, but architecture and coupling decisions still lack automated checks. Tooling is improving.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/looping-generator-agent-against-independent-adversarial",
+      "stance": "asserts",
+      "quote": "the harness takes a goal specification as input and runs two coding agents in a loop: one generates code; the other reviews and tests it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Separate verifier/critic setups improve outputs in several studies and vendor reports, but the evidence here is a small self-run benchmark subset with two trials and large token costs.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-more-effective-fresh-context",
+      "stance": "asserts",
+      "quote": "A single agent with shared context doesn't do as good a job as an independent verifier.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh-context reviewers avoid self-confirmation and context bloat; plausible and commonly practiced but little hard evidence.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llms-most-useful-tasks-whose-output",
+      "stance": "asserts",
+      "quote": "Generation is a fundamentally hard and unforgiving search problem. Verification is simpler.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Verification cost largely determines whether AI help saves time; field studies find gains concentrate where outputs are cheap to check.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-degrade-codebase-quality-when",
+      "stance": "asserts",
+      "quote": "By checkpoint three, the one-shot agent on file_backup passed only 16% of the earlier checkpoints' tests",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent with long-horizon benchmarks such as SlopCodeBench and with studies of AI-code churn and duplication. Evidence is early but points the same way.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-sometimes-game-tests-deleting",
+      "stance": "asserts",
+      "quote": "Smarter models reward hack more, especially over long horizons.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Reward hacking on tests (special-casing, weakening or deleting tests) is documented by labs and in agent evaluations, though frequency varies by model and setup.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-specification-not-code-should",
+      "stance": "asserts",
+      "quote": "This abstraction lets us treat the spec as a durable artifact and code as the disposable implementation, much like a traditional compiler.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Specs help align agents, but code is still what runs; specs drift from implementation unless continuously maintained, and practitioners like Pocock report specs-only workflows failing.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "id": "9xoqlstC-W0",
+  "title": "AI Make Developers More Productive? Data from a 100k Engineer Stanford Study | Yegor Denisov",
+  "channel": "Toronto Machine Learning Society (TMLS)",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCvfUFYIYTbTgxKQNGc2zoqQ",
+  "durationSec": 1745,
+  "thumbnail": "https://i.ytimg.com/vi_webp/9xoqlstC-W0/sddefault.webp",
+  "summary": "Stanford's Denisov-Blanch at AI Engineer: case study of an AI rollout with no net output gain, task/language matrices, widening gaps between teams.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+      "stance": "asserts",
+      "quote": "the median productivity gain you can expect is about 10%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The Stanford 100k-developer study and other field data put average gains around 10-20%, far below 2x-10x marketing claims.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-shrink-task-complexity-codebase",
+      "stance": "asserts",
+      "quote": "for brownfield the picture looks much less pretty",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent across Stanford's data, METR's mature-repo slowdown and long-context degradation results.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR names repo size and maturity (10+ years, more than 1M lines) and complex edits as factors behind the slowdown, in contrast with greenfield RCTs that found speedups.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L986-L1003",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/helps-little-can-hurt-when-working",
+      "stance": "asserts",
+      "quote": "for your more like niche low resource languages ... you get hardly anything",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Model quality tracks training-data volume; benchmarks such as MultiPL-E show much lower scores in less common languages.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/commit-counts-overstate-productivity-because-increases",
+      "stance": "asserts",
+      "quote": "commit count increases because you're making commits to fix the bugs introduced by AI",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Stanford and GitClear both found increased short-term churn/rework with AI, so raw commit/PR counts inflate apparent gains.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR warns that lines of code and task counts can rise without productivity (more verbose but equivalent code). Developers wrote 47% more code per hour with AI (not significant) while being slower. This doesn't cover the rework mechanism.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1122-L1130",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "be careful with using surveys ... to estimate how much more productive AI makes you",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+      "stance": "asserts",
+      "quote": "these participants were just deeply familiar with the repos ... which is where AI helps a bit less",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Field experiments (Microsoft/Accenture RCTs, Brynjolfsson) found the largest gains for less-experienced or less-familiar workers and routine tasks; METR found slowdowns for deep-familiarity experts.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Slowdown is larger when developers have high prior task exposure. Developers report AI helps on unfamiliar issues and not where they're experts, and the paper expects speedups in unfamiliar or greenfield settings.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L960-L984",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Google RCT on code unfamiliar to all participants found, if anything, more senior engineers gained more from AI (non-significant interaction), contrary to gains concentrating among less experienced developers.",
+          "source": "ai-coding/sources/2410.12944.txt#L490-L505",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Microsoft experiment: gains were larger for short-tenure (newer to the company and its code) and junior developers (27-39% vs 8-13%), but differences were not significant and the routine-code half of the claim was not tested.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Copilot RCT: less experienced developers benefited more on a routine, well-trodden task (a basic HTTP server), consistent with the claim but from a small freelancer sample and without a codebase-familiarity test.",
+          "source": "ai-coding/sources/2302.06590.txt#L174-L177",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: staff delegate where they have low context and complexity is low, and avoid tasks needing tacit codebase knowledge, which mirrors METR's slowdown factors; this concerns task choice rather than measured gains.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L70-L70",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Large completeness gains (+43 points) came on small, popular-domain tasks chosen so that LLMs could help, many of them greenfield. This fits gains on routine code, but the study had no mature codebases to compare against.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L240-L247",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Less-experienced developers gained more speed in the RCT, consistent with the claim, but a follow-up on harder APPS tasks suggested quantity gains were larger on complex tasks (0.283 vs 0.245), which does not fit 'routine code only'.",
+          "source": "ai-coding/sources/4859137.txt#L872-L878",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/software-built-quickly-accumulates-more-technical",
+      "stance": "asserts",
+      "quote": "their code quality decreased by about 9% ... their code quality became more erratic",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Unreviewed, fast AI output does accumulate debt (GitClear duplication, churn), but debt depends on review discipline, not on whether AI was used per se.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "In 302k AI-authored commits, 22.7% of AI-introduced issues persist, and surviving debt grew past 100k issues. But there's no human-written baseline, so 'more than hand-built' is untested.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L855-L864",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Preregistered RCT (Phase 2, N=75, 95% professionals): code co-developed with AI was no harder to evolve manually, with no significant difference in time, CodeHealth or coverage, and a small Bayesian CodeHealth gain for habitual AI users. Caveats: small Java app, short-term, underpowered for small effects.",
+          "source": "ai-coding/sources/2507.00788.txt#L2897-L2906",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Maintainability concerns appear in 23% (11/47) of sources (e.g. WL27: conversational code 'lacks cohesive structure... complicating future maintenance'), but the review stresses that long-term and longitudinal evidence is limited and that there is no hand-built baseline.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1434-L1452",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Self-reported technical debt was higher among AI users in the follow-up experiment, consistent with the claim but based on perception, cross-sectional data and short-term evidence.",
+          "source": "ai-coding/sources/4859137.txt#L1219-L1229",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gap-between-teams-use-well",
+      "stance": "asserts",
+      "quote": "this difference grew by July of 25 to 20%. So, it's a 4x increase",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Stanford's own panel shows widening dispersion and DORA finds outcomes diverge by capability; the projection forward is explicitly speculative.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/predictions-would-write-around-all-code",
+      "stance": "asserts",
+      "quote": "Dario ... said that in 3 to 6 months ... AI would be writing 90% of the code. And in reality ... this is far from the case",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Industry-wide, AI did not write ~90% of code by late 2025; but some AI-heavy teams (including at Anthropic) reported 70-90%+, so it partly came true in narrow settings.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The cited 2025 figures (AI writes 'over 20%' of new code at Google and Microsoft) are far below 90%, consistent with those predictions not coming true on schedule; secondhand.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L59-L60",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/running-many-coding-agents-parallel-not",
+      "stance": "denies",
+      "quote": "they run multiple parallel agents ... They are a bit more methodical about it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Review and merge overhead limits parallel agents for most people today, but structured setups (worktrees, independent tasks) are productive for some.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "by the time you were at 32,000 tokens, this model was already at like 50% of its performance",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

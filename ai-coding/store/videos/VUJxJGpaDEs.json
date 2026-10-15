@@ -1,0 +1,187 @@
+{
+  "id": "VUJxJGpaDEs",
+  "title": "How to Work with AI Coding Agents: Spec-Driven Development, Context and Loop Engineering, Workflows",
+  "channel": "DataTalksClub ⬛",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCDvErgK0j5ur3aLgn6U-LqQ",
+  "durationSec": 6872,
+  "thumbnail": "https://i.ytimg.com/vi/VUJxJGpaDEs/sddefault.jpg?v=6a61e33a",
+  "summary": "Live workshop: spec before code, AGENTS.md context, groomed tasks with acceptance criteria, goal loops and PM/engineer/QA subagent graph.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/having-interview-you-reach-shared-understanding",
+      "stance": "asserts",
+      "quote": "ask me one question at a time ... we are moving towards something that we decide not the agent decides",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Requirements clarification before implementation is well-established practice and widely reported to reduce agent rework.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "the agent has to make a lot of assumptions ... That's why we want to first build the specification",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/project-instruction-files-claude-agents-rules",
+      "stance": "asserts",
+      "quote": "for the agent not to think about these things all the time ... creating this file called uh agents.mmd",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Persistent instruction files measurably steer agent behavior; overlong or contradictory ones reduce adherence.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clearing-context-starting-fresh-beats-compacting",
+      "stance": "asserts",
+      "quote": "for each new task I try to start a session a new session",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh context avoids accumulated noise, but compaction is useful when state is hard to reconstruct; it is a tradeoff, not a rule.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/tasks-explicit-acceptance-criteria-out-scope",
+      "stance": "asserts",
+      "quote": "I want to make it as unambiguous as possible ... the agent doesn't need to make any decisions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Checkable acceptance criteria give agents a stopping condition and give reviewers a test; out-of-scope lists reduce scope creep. Standard practice that carries over well to agents.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-more-effective-fresh-context",
+      "stance": "asserts",
+      "quote": "The tester often finds some things that a software engineer missed",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh-context reviewers avoid self-confirmation and context bloat; plausible and commonly practiced but little hard evidence.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/multi-agent-role-pipelines-engineer-cost",
+      "stance": "asserts",
+      "quote": "your token consumption goes like I don't know four five times more ... what you get in return is uh better quality",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Separate reviewer/QA passes do catch more defects and clearly multiply token cost; evidence that full role pipelines beat a single well-prompted agent is mixed.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+      "stance": "asserts",
+      "quote": "I will not need to babysit this agent",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Goal/loop features keep agents going through backlogs, but unattended runs drift or game checks without good verification; works when acceptance tests are strong.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/stale-planning-docs-left-repo-mislead",
+      "stance": "asserts",
+      "quote": "this thing kind of disynchronized from the codebase ... I can just actually delete it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents treat repo docs as authoritative; outdated docs demonstrably steer them wrong.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/claude-code-more-expensive-rate-limited",
+      "stance": "asserts",
+      "quote": "you get more uh for the same plan in Codex. So you get higher limits",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Rate-limit and cost complaints about Claude Code are common and real for heavy users, but competitors also cap usage; anecdotal, from a competitor's video.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llms-propose-outdated-library-versions-models",
+      "stance": "asserts",
+      "quote": "LLMs have this knowledge cutff ... it suggest to use GPT40",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Training cutoffs reliably cause stale version and model suggestions; checking against current docs is necessary.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-run-permission-prompts-disabled-should",
+      "stance": "asserts",
+      "quote": "I run it on a remote machine that um if something happens to this machine it will not affect my computer",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents have deleted files and run destructive commands when unrestricted; vendors themselves recommend containers/VMs for skip-permissions modes.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "id": "kDBeFOscZpc",
+  "title": "The Truth About Developer Productivity in the AI Age (IT'S A TRAP)",
+  "channel": "Modern Software Engineering",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCCfqyGl3nq_V0bo64CjZh8g",
+  "durationSec": 974,
+  "thumbnail": "https://i.ytimg.com/vi_webp/kDBeFOscZpc/sddefault.webp",
+  "summary": "Steve Smith critiques DX's AI report: adoption, self-reported time saved, AI-authored share and PR counts are gameable activity/output metrics, and outcomes should be measured with Accelerate/DORA metrics.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/investment-financial-bubble-even-though-underlying",
+      "stance": "asserts",
+      "quote": "Gen AI is a stock market bubble, a technology hype train, and real, genuinely exciting innovation all at the same time.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/measuring-impact-developers-requires-multidimensional-metrics",
+      "stance": "asserts",
+      "quote": "even though activity is not connected to system level outcomes, even though that's where success really lives.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/acceptance-rate-counts-generated-lines-poor",
+      "stance": "asserts",
+      "quote": "If you measure the percentage of AI generated code in a code base, don't be surprised if the number of classes and methods",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/self-reported-time-savings-weak-measure",
+      "stance": "asserts",
+      "quote": "self-reported time savings, which is a very weak construct",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found developers' self-estimates diverged sharply from measured times, and self-reports are easily biased.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR RCT, 16 experienced OSS devs, 246 tasks: developers estimated afterwards that AI sped them up by 20% when it actually slowed them by 19%, so self-reports got even the direction wrong.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L407-L424",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR Feb 2026 update says some developers self-report very high speedups but repeats that such estimates are 'quite unreliable'; it still hopes carefully designed questionnaires can give useful signal.",
+          "source": "ai-coding/sources/metr-2026-experiment-design.txt#L63-L63",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Copilot RCT: participants estimated a 35% productivity gain against a measured 55.8% speed-up. Self-reports were inaccurate here, but they understated rather than overstated the gain.",
+          "source": "ai-coding/sources/2302.06590.txt#L179-L188",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "AI users were 30.7% faster by median, yet perceived productivity looked similar across groups. The authors also flag confirmation bias in AI users' self-ratings. Self-report diverged from measured time, but this measured perceived productivity rather than estimated time savings.",
+          "source": "ai-coding/sources/2507.00788.txt#L1926-L1931",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic's own survey caveats its self-reported 50% productivity boost: cites METR finding that developers overestimated gains, says time savings 'may reflect perception biases', and lists social-desirability and recall bias, noting self-reports should be 'taken with a grain of salt'.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L41",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/pull-request-throughput-not-meaningful-measure",
+      "stance": "asserts",
+      "quote": "Number of merged artifacts per developer per week is not speed.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "PR counts are noisy and gameable, but they correlate somewhat with delivery and are used with other metrics in studies such as Cui/Demirer.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR argues that PR, commit and LOC outcome measures can rise without real productivity gains, e.g. when developers split work into smaller PRs. This is argued, not measured, in this paper.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L124-L129",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The authors treat completed pull requests as a unit of work because PR scope stays fairly stable within an organization, while conceding that scope differs across organizations and that many zero-PR weeks make the data noisy. Their 26% PR gain is close to Google's 21% time-on-task estimate.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L242-L276",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/commit-counts-overstate-productivity-because-increases",
+      "stance": "asserts",
+      "quote": "There's more rework going into that code than ever happened before.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/productivity-metrics-should-aggregated-team-level",
+      "stance": "asserts",
+      "quote": "You need to remember that a team is the unit of delivery, not an individual.",
+      "verdicts": []
+    }
+  ]
+}

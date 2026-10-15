@@ -1,0 +1,1064 @@
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  1
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+        More Code, Less Understanding?
+On the Impact of AI Assistants on Developers'
+
+        Productivity and Code Ownership
+
+Alberto Martin-Lopez,* Rosalia Tufano,* Emanuela Guglielmi,* Ana B. Sa´nchez,* Ana Lourdes Sanz,
+                   Simone Scalabrino, Rocco Oliveto, Sergio Segura, and Gabriele Bavota
+
+   Abstract--Artificial Intelligence (AI) is transforming many                 possible side effects of their adoption. For instance, while
+domains, including software engineering. AI-based tools are                    a developer may implement a requested feature faster using
+gaining popularity and are increasingly being integrated into                  Copilot, it is unknown whether this may result in a loss of
+software development workflows, automating complex tasks such                  "code ownership," namely their ability to understand1 and
+as code writing and reviewing. When it comes to coding tasks,                  explain their implementation choices and be accountable for
+some evidence suggests that tools like Copilot boost developers'               the produced code. This concept is particularly crucial in large,
+productivity (e.g., developers can handle a larger number of pull              collaborative projects where multiple developers contribute to
+requests per week). However, it remains unclear whether this                   the same codebase [5], [6]. Recent findings at MIT further
+comes at the expense of code ownership (i.e., the developers'                  support this concern, showing that users of LLMs reported
+ability to argue about their implementation choices). To partially             a significantly lower sense of ownership over their written
+address this gap, we present an experiment aimed at investigating              work compared to those using search engines or no tools
+the impact of AI-based assistants on developers' productivity                  at all [7]. While most of the research in AI for software
+and behavior in the context of code writing (e.g., developing a                engineering focuses on presenting novel techniques exploiting
+program from scratch or evolving an existing code). Our focus is               Deep Learning (DL) for the automation of software-related
+on the interplay between productivity and code ownership. We                   tasks [8], [9], we argue that there is a need to at least partially
+asked 69 participants (34 BSc and 13 MSc students, 8 researchers,              shift the focus toward building empirical evidence on how AI-
+and 14 professional developers) to perform two code writing                    based assistants affect developers' effectiveness and behavior.
+tasks, one with the support of AI and one without. Then, we
+compared the two treatments in terms of: (i) time spent on the                    We take a step in this direction by presenting the findings
+coding task and percentage of the task completeness--both being                of a family of experiments assessing the impact of AI-based
+productivity proxies; and (ii) ability of the participants to answer           tools on the developers' productivity and code ownership. We
+questions about the code they implemented--code ownership                      involved in our study 69 participants, being 34 BSc, 13 MSc
+proxy. While the time-based analyses did not provide strong                    Computer Science students, and 8 Software Engineering re-
+evidence on the impact of AI on the investigated dependent                     searchers (6 PhD students and 2 postdocs) from three different
+variables, participants using AI achieved a much higher task                   Universities (U1, U2, U3), and 14 professional developers
+completeness (>2× in terms of median), confirming a positive                   working in technological companies. Each participant was
+impact on their productivity. However, such a boost did not                    asked to perform two coding tasks, one with the support of AI
+come for free. Indeed, we also observed a loss in code ownership               (WAI) and one without (NAI). The two tasks concerned either
+when participants used AI, with lower ability to answer technical              the development from scratch of code implementing given
+questions (­12.5%).                                                            requirements, or the evolution of an existing code to meet
+                                                                               specific change requests. Therefore, our experiment follows a
+   Index Terms--AI Assistants, Developer Productivity, Code                    crossover design with the treatment and the task type as fac-
+Ownership, Controlled Experiment.                                              tors. In total, we ran our experiment six times.2 For instance,
+                                                                               BSc and MSc students from U1 did the experiment in the same
+                          I. INTRODUCTION                                      run, while professional developers were split across different
+                                                                               runs as they were located in different countries. While all runs
+   Artificial Intelligence (AI) is reshaping the way in which                  adopted the same experimental design, we crafted different
+software is built and maintained. AI-based tools such as                       tasks which were appropriate for the respective participants in
+ChatGPT [1] and Copilot [2] are increasingly integrated into                   terms of complexity, domain, and programming language to
+development workflows, assisting with tasks like code genera-
+tion and review [3]. Empirical studies demonstrated that these
+tools can help developers in becoming more productive, for ex-
+ample, by finalizing more implementation tasks per week [4].
+However, given their recent emergence, little is known about
+
+   Alberto Martin-Lopez, Ana B. Sa´nchez and Sergio Segura are with the           1We use the term "understanding" to refer to developers' ability to reason
+SCORE Lab, I3US Institute, Universidad de Sevilla. Rosalia Tufano and          about, explain, and recall aspects of code they have recently implemented.
+Gabriele Bavota are with the Universita` della Svizzera italiana. Emanuela     This notion is closely related to developers' experiential familiarity and
+Guglielmi, Simone Scalabrino and Rocco Oliveto are with the Universita` degli  sense of ownership over the code, rather than to the intrinsic readability or
+Studi del Molise. Ana Lourdes Sanz is with Schneider Electric.                 comprehensibility of the code itself.
+
+   *These authors led the work in each of the countries they were located         2A run refers to a single execution characterized by the same physical
+in at the time of the study: Alberto Martin-Lopez and Rosalia Tufano in        location and the same person supervising the experiment.
+Switzerland; Emanuela Guglielmi in Italy; and Ana B. Sa´nchez in Spain.
+
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and          2
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+be used. Similarly, the complexity of the tasks was different                                             TABLE I                                                                               Total
+across the categories of participants (those for researchers and                      PARTICIPANTS INVOLVED IN OUR STUDY.
+professional developers were the most complex).                                                                                                                                                    18
+                                                                   University/Company BSc MSc Researcher Professional                                                                              33
+   In the WAI treatment (i.e., AI-based tools allowed), partici-                                                                                                                                     4
+pants were free to access tools like ChatGPT or Copilot which      U1     14 1   3                                                              -
+were instead forbidden in the other treatment (NAI). Partici-                                                                                                                                      14
+pants had a maximum of 75 minutes per task. The experiments        U2     20 12  1                                                              -
+were all run in a controlled setting, with participants violating                                                                                                                                  69
+the instructions received being excluded from the study.           U3     00     4                                                              -
+
+   We assess and compare two aspects among the two treat-          C      --     - 14
+ments: productivity and code ownership. As for the former,
+we use as primary proxy the completeness of the coding             Total  34 13 8 14
+task, manually assessed via code inspection. On top of it, we
+also measure the completion time for the task, relevant when       the task completeness achieved by participants with/without
+participants did not use the whole 75 minutes available. As for    the usage of AI and the time needed to finalize the task.
+code ownership, we assess the ability of participants to answer
+questions about the code they implemented. This was the most          RQ2: To what extent does the availability of AI-based
+challenging part of our study. Indeed, running hundreds of one-    support during code writing impact the developer's code
+to-one interviews (in total, 180 coding tasks were performed       ownership? At the end of each coding task we ran a ques-
+by 90 involved participants) was not an option due to the          tionnaire aimed at assessing the participants' understanding
+excessive cost in terms of time, both on the experimenters'        of the code they developed, to assess whether there is a
+and on the participants' side. We address this challenge with      loss of ownership when AI-based tools were used as support
+a different approach: we developed an infrastructure that, at      during development. In this paper, we use code ownership in a
+the end of each coding task, triggers the OpenAI o1 reasoning      narrower sense than is common in software engineering, where
+model [10] to automatically generate several technical ques-       it often refers to long-term familiarity or responsibility over
+tions about the implemented code, and asked participants a         code. Here, we operationalize it through participants' ability to
+written answer to these questions. As primary proxy for code       answer questions about code they had just implemented, and
+ownership we measure the percentage of correctly-answered          therefore treat it as a short-term, comprehension-based proxy
+questions. Also, we track the time required to provide an          for code ownership.
+answer, with the conjecture that participants in the WAI group
+may require longer due to the need for comprehending the           A. Context Selection
+AI-generated code.
+                                                                      1) Participants: For our study we targeted participants
+   Our main findings show that:                                    having different levels of coding experience, since we want
+                                                                   to observe whether such an independent variable has an
+  1) AI support boosts productivity. We observed a major           impact on the dependent variables. It is possible, for example,
+      boost in productivity for participants subjected to the WAI  that a loss of code ownership may be observed only for
+      treatment, with task completeness being twice as high as     inexperienced developers, while not for professionals having
+      compared to participants in the NAI group (based on the      wide coding expertise. We used convenience sampling [12],
+      median scores). This confirms previous findings coming       [13] to recruit 90 participants who are either BSc/MSc students
+      from field studies [4].                                      in Computer Science, researchers in Software Engineering, or
+                                                                   professional developers in a technological company. In total,
+  2) There is a price to pay in terms of code ownership.           we involved 42 BSc and 21 MSc students, 9 researchers,
+      Participants supported by AI struggled more in answering     and 18 professional developers.3 Out of those, we had to
+      the technical questions about the code they implemented.     exclude 21 of them for reasons we will document after
+      Indeed, the median of correct answers for participants us-   explaining the experimental design. At the end, we collected
+      ing AI is 87.5%, as compared to the 100% of participants     valid data from 69 participants, being 34 BSc and 13 MSc
+      who wrote code without AI support.                           students, 8 researchers, and 14 professional developers. We
+                                                                   only involved BSc students who successfully passed at least
+   Study material and data are publicly available [11].            one programming course. Table I summarizes the provenance
+                                                                   of participants, with U1, U2, and U3 indicating the three
+                         II. STUDY DESIGN                          universities in which we run the study,4 and C indicating
+                                                                   technological companies in which the professional developers
+   The goal of our study is to assess the impact of AI-based       work (four different, overall). The study was conducted across
+tools on the productivity and code ownership of developers         three different countries (Italy, Spain, and Switzerland).
+during implementation tasks. The context is represented by 69
+participants, each performing one coding task with and one            We asked participants to complete a questionnaire in which
+without the support of the AI, and eight coding tasks, either      they indicated their: (i) highest level of education completed;
+in Java or Python. The study addresses the following research      (ii) current position; and (iii) years of programming experi-
+questions (RQs):                                                   ence. Also, we asked whether they used AI-based tools in the
+                                                                   past in the context of software-related tasks. Fig. 1 depicts
+   RQ1: To what extent does AI-based support impact the
+productivity of developers during coding tasks? We compare            3All of them provided informed consent to participate in the study.
+                                                                      4U1: Universita` degli Studi del Molise (Italy); U2: Universidad de Sevilla
+                                                                   (Spain), U3: Universita` della Svizzera italiana (Switzerland).
+
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  3
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+           12Experience in programming (years)                      which allows university students to manage their exam plan-
+                                                                    ning. Users should be able to add, view, modify, and mark
+           10                                                       exams as completed. The program must provide a simple
+                                                                    overview showing for which courses the preparation of the
+            8                                                       corresponding exam is ahead of schedule, on schedule, and
+                                                                    behind schedule, based on rules specified in the detailed
+            6                                                       requirements attached to the task.
+
+            4                                                          Task E2. You are provided with a Java implementation
+                                                                    of the Tic Tac Toe game (112 LOC). Your task is to add
+            2                                                       several features. Currently, the game immediately starts when
+                                                                    launching the program. Create a menu which allows to start a
+                       All BSc MSc Res. Dev.                        game, to set the nickname of the players, and to visualize
+                                                                    a report concerning all played games organized by player.
+Fig. 1. Participants programming experience.                        Such report features, for each player, the number of games
+                                                                    played, the average duration of the game, and the number of
+the years of programming experience for each "category" of          wins, ties, and losses. Additional requested features concern
+participants (blue boxes) and for the overall sample (green).       the possibility to reset the game statistics shown in the report
+The collected data will be used as possible confounding factors     and the visualization on screen of the score for the current
+in our data analysis.                                               game.
+
+   2) Coding Tasks: We asked each participant to perform two           Task D3. Develop an HTTP client for the GitLab API [14]
+coding tasks: one with the support of AI and one without.           in Java. Given the ID of a GitLab project and n requested
+Among these two tasks, one was a greenfield development             results, implement these operations: (i) Get the first n issues
+task and one an evolution task on a given code.                     of the project. (ii) Get the most voted issue of the project
+                                                                    among the first n; if more than one, return all of them. (iii) Get
+   All researchers and professionals performed the same             the distinct author names of the first n issues of the project.
+Python tasks, regardless of their university or company. As         (iv) Get the issues (closed or not) opened for more than one
+for the BSc and MSc students, which came from both U1               year among the first n.
+and U2, the tasks differed to better suit students' knowledge.
+Table II summarizes the tasks performed during the study,              Task E3. You are provided with a Spring Boot project [15]
+including their type--development (tasks starting with letter       implementing a REST API [16] for handling movies (154
+`D') or evolution (starting with letter `E')--the programming       LOC). You are requested to: (i) replace for loops with
+language, the organizations and participants involved, and a        Java Streams; (ii) throw an IllegalStateException
+short description. Next, we summarize each task. Note that          exception if any movie found has a null or empty title;
+some of the task descriptions may look ambiguous due to             (iii) implement a method that, given a list of movies, returns
+details omitted for the sake of brevity. The detailed tasks'        them ordered by descending order of year of release; and
+descriptions are available in our replication package [11].         (iv) load the movies from an XML file instead of a JSON file.
+
+   Task D1. Develop a command-line application in Python               Task D4. Given a movie manager written in Java (213 LOC)
+that manages a gift wish list. Users should be able to add,         create a test suite for it from scratch, making effective use of
+view, update, and remove gift ideas for different people. The       JUnit 5 features [17]. The test suite should implement a setup
+application should save the wish list to a CSV file when exiting    method reused in all tests. Add tests for the features related
+and load it when starting, preserving the data between sessions.    to adding a movie and searching by genre. Use parameterized
+                                                                    tests with data provided from CSVs and external methods to
+   Task E1. You are provided with a simple Python imple-            test the features related to searching by title and by rating
+mentation of the classic Snake game (113 LOC). Your task is         range, including JUnit assumptions to skip tests if not enough
+to add four features to the provided implementation: (i) The        data is provided. Use mocks to test the behavior related to
+current implementation does not keep track of the user's score;     empty data and duplicated movies.
+implement the logic needed to increase the score for each
+piece of food eaten. (ii) Currently, the player loses if the snake     Task E4. You are provided with both the implementation
+collides with one of the four walls; remove such a behavior,        and the test suite of an HTTP client for the GitLab API written
+and implement a wrap-around logic. (iii) Currently, the game        in Java (959 LOC overall). The current test suite invokes the
+immediately starts when main.py is launched; modify such            GitLab API. You must adapt it to use mocks with fake data,
+a behavior so that the user is asked for a non-empty nickname.      decoupling the tests from the actual web service. Furthermore,
+(iv) When the user loses, its score must be saved in a CSV          the implementation of the HTTP client contains four bugs. You
+file (scores.csv) assuming it is one of the top-10 scores           must identify these, modify the current tests to catch them, and
+of all time.                                                        then fix the implementation.
+
+   Task D2. Develop a command-line application in Java                 A couple of observations are worth being made concerning
+                                                                    the above-summarized tasks. First, we designed them to cover
+                                                                    application domains the participants are familiar with: For
+                                                                    researchers and professional developers we targeted programs
+
+                                   This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  4
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+                                                    TABLE II
+                        SUMMARY OF THE TASKS CONDUCTED IN THE STUDY.
+
+ID Type       Language  Organizations Participants                         Short description
+
+D1 Development Python   U1, U2, U3, C  Researchers and professionals       Implementing a gift list application
+                        U1, U2, U3, C  Researchers and professionals       Extending the Snake game with new features
+E1 Evolution  Python    U1             BSc and MSc students                Implementing an exam planning application
+                        U1             BSc and MSc students                Adding extra features to Tic Tac Toe game
+D2 Development Java     U2             BSc students                        Implementing a GitLab API client
+                        U2             BSc students                        Improving a movie REST API
+E2 Evolution  Java      U2             MSc students                        Creating a JUnit 5 test suite for a movie manager
+                        U2             MSc students                        Adding test mocks and bug fixes to a GitLab client
+D3 Development Java
+
+E3 Evolution  Java
+
+D4 Development Java
+
+E4 Evolution  Java
+
+that we believed any seasoned developer would understand                            TABLE III
+(i.e., wish list and snake game). Besides, we deliberately                 EXPERIMENTAL DESIGN.
+chose popular domains on which LLMs work reasonably well.
+Indeed, the focus of our study is really on the interplay         Session  Group A  Group B   Group C                                                    Group D
+between productivity and code ownership and, to study that,
+we need tasks for which modern LLMs can actually help             1         TD-WAI   TE-WAI    TD-NAI                                                     TE-NAI
+developers writing code, to then see whether there was a price    2         TE-NAI   TD-NAI    TE-WAI                                                     TD-WAI
+to pay in terms of code ownership. When it comes to BSc and
+MSc students, the tasks were designed considering: (i) their         The experimental design we adopted is a classical paired
+programming knowledge, especially in terms of programming         design for experiments with two factors of two possible values
+language they studied in the past; and (ii) the context of the    each, reported in Table III. As illustrated, this crossover design
+course within which the experiment was performed. As per          has two periods (sessions 1 and 2) and four sequences (groups
+the students coming from U1, both BSc and MSc students            A, B, C, and D). Each sequence represents a specific combina-
+performed the same tasks (D2 and E2 above), since they both       tion of the two factors considered in our study. During each run
+already passed a Java course. While MSc students are expected     of our experiment, participants were randomly assigned to one
+to be more proficient, BSc students studied Java in the previous  of the four groups. Each participant performed two different
+semester (Fall 2024), thus having their knowledge of such a       coding tasks, one in session 1 and one in session 2. Such a
+programming language quite fresh.                                 design ensures the minimization of confounding factors such
+                                                                  as: (i) tiring and learning effects, since half of participants
+   As per the BSc and MSc students from U2, we opted for          start with the WAI treatment (groups A and B) and half with
+different tasks (D3/E3 and D4/E4). This is because, when we       NAI (C and D); the effect of task complexity, since half of
+ran the experiment, the BSc students were finishing a course      participants apply WAI to the development task (A and D) and
+on Software Architecture and Integration, with a focus on the     half to the evolution task (B and C).
+development and consumption of REST APIs. Therefore, we
+designed the tasks to be related with these topics, aiming to        We started each of the six runs of our experiment with
+increase their complexity while keeping them manageable for       a brief presentation, explaining (i) what participants were
+the students' level. MSc students, instead, were finishing a      expected to do and (ii) the environment used for the ex-
+course on Advanced Software Testing, leading to the design        periment. For the latter, we provided each participant with
+of tasks related to test code.                                    detailed instructions to connect to a server we set up using
+                                                                  the Remote Development plugin of Visual Studio Code [18].
+B. Treatments, Setup and Procedure                                The server had the necessary environment configured for the
+                                                                  study, depending on the experimental group the participant
+   Our study follows a within-subject crossover design, with      was assigned to.
+two factors: whether AI assistants are allowed or not, and
+the type of coding task to perform. This means that each             For example, if the participant was assigned to group A,
+participant experiences both conditions, working on different     they would have GitHub Copilot installed and ready to run
+tasks with and without AI. Regarding the first factor, we con-    during the first session (i.e., development task with AI), while
+sider two treatments. The first, named with AI support (WAI),     the AI-based assistant was blocked in the second session.
+allows participants to access any AI-based tools they want.       The correctness of the setting was double-checked for each
+The second, named no AI support (NAI), forbids participants       participant by the experimenters present in the room, who also
+from using AI-based tools. In both treatments, participants had   monitored the task execution to make sure that participants
+access to any online resource they wanted (besides AI-based       with the NAI treatment did not use AI-based tools from
+tools) to better simulate a real development scenario (e.g.,      outside the IDE (e.g., from the browser). We pre-installed Java
+they could access discussions on Stack Overflow). Regarding       (version 17) and Python (version 3.10) to support running any
+the second factor, we consider tasks in Table II: development     of the subject tasks. Additionally, we set up Visual Studio
+(TD) and evolution (TE). In practice, we aim to investigate       Code with the Java Extension Pack [19] and the Python
+whether our findings in terms of developer productivity and       extension [20]. Finally, we used the Tako VS Code plugin [21]
+code ownership when using or not using AI-based tools are         to record all the actions performed in the IDE. Tako records
+consistent across different task types.                           events such as opening and closing files and tabs, switching
+                                                                  between them and editing files, among others. This allows us
+
+         This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  5
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+                                                       TABLE IV
+                        EXAMPLES OF TECHNICAL QUESTIONS GENERATED BY O1.
+
+Task   Type   Question
+
+D1    Closed  Which part checks if a numeric input is above a certain threshold?
+E1    Closed  Where do you trigger the final data-handling routine once the game can no longer proceed?
+D2    Closed  Where do you ensure that the study progress is within a valid range before it is assigned to the exam?
+E2    Closed  Where in the newly added code do you compute the total duration of each game?
+D3    Open    Describe in natural language all code blocks in the getOpenedIssueForMoreThanOneYear function.
+              Which approach did you use to compare the creation date of each issue with a specific time threshold, and
+E3    Open    why did you choose it?
+              If we removed the testSearchMoviesByMultipleGenresWithMismatchedFormat test, what kinds of problems in
+D4    Open    the searchByGenre method could potentially go undetected?
+              Imagine the method getMostVotedIssues is changed to ignore issues with upvotes below a certain threshold.
+E4    Open    How would you adjust your test suite to detect any regression caused by that change?
+
+to perform the time-based analyses needed to answer our RQs.              they understand the code they have written.
+   Once connected, participants could see the project related
+                                                                       Then, we explicitly asked o1 to generate the technical
+to the specific task, which was basically an empty folder           questions. Here there is a distinction between the development
+in case of the development tasks, or a starting code base           and evolution task. In the former, we asked the LLM to
+for the evolution ones. Each project included a PDF with            generate questions concerning the entire code present in the
+instructions about what was expected for the specific task (see     IDE directory containing the developed code. For the evolution
+the replication package [11]). Participants had a maximum of        task, instead, we instructed the LLM to only ask questions
+75 minutes to complete each task.                                   about the diff between the original project given to the
+                                                                    participants, and the final version implementing the required
+   Once each task was completed, it was time to collect data        code changes.5 This was needed to make sure that o1 was
+to assess the code ownership of the participants. To this           only asking questions about the code actually written by the
+end, we initially considered conducting one-to-one interviews.      participants, rather than on code we provided to them.
+However, we discarded this option due to the excessive cost
+in terms of time, both for experimenters and participants. For         For the tasks D1, E1, D2, E2, D3, and E3 described above,
+example, the largest run of our study involved 24 participants.     we asked o1 to generate (i) six questions which can be
+This means that even assuming two experimenters running the         answered by indicating the line number of the code performing
+technical interviews in parallel (12 each), the last participant    a certain operation, and (ii) three open-ended questions, asking
+should have waited for 11 interviews to be completed before         questions about the program logic, and the reasons behind
+running their interview, both at the end of the first and of the    the performed implementation choices. For tasks D4 and E4
+second task. Assuming an optimistic duration of 10 minutes          which, as explained before, concerned test code rather than
+per interview, this would have resulted in a total of four          production code, we found out that closed questions (i.e., those
+hours of interviews, two at the end of each task. To overcome       asking for the code performing a certain operation) were trivial
+this limitation, we performed semi-automated offline technical      to answer, since they were mostly focusing on assert state-
+interviews: we used the OpenAI o1 reasoning model [10] to           ments (e.g., where do you check that the number of returned
+automatically generate technical questions about the imple-         products is the expected one?). Thus, we asked the LLM to
+mented code, and asked participants to provide written answers      generate six open-ended questions for these two specific tasks.
+to these questions (that, as we will explain, we still manually     Table IV reports eight examples of generated questions (four
+reviewed). This allowed the collection of individualized data       closed and four open), one for each of the eight tasks. Note
+from all participants in a significantly shorter time. To generate  that while some questions may ask about the rationale for
+the questions, the implemented code was automatically saved         some implementation choices (e.g., E3 example), others may
+on our server upon completion of each task. The experimenter        concern understandability aspects (e.g., E1 example). All in
+then executed a Python script we developed using OpenAI             all, we evaluate code ownership taking into account both types
+APIs along with carefully crafted prompts.                          of questions.
+
+   The specific script used for each task is available as a            The prompts provided to o1 also featured several clarifica-
+part of the replication package [11]. The prompts were de-          tions aimed at guiding it towards the generation of meaningful
+signed following established prompt engineering practices,          and non-trivial questions. For example, we clarified that it had
+including role-playing, structured formatting, and in-context       to "avoid providing explicit details in the questions such as
+learning [22]. First, we made it clear to the LLM its role for      literal strings or conditions, since then those would be easy
+the required task:                                                  to spot in the code". Still, some of the generated questions
+                                                                    were either meaningless or trivial, and were excluded from
+      You are a lecturer in Computer Science whose                  our study as documented in Section II-C.
+      goal is to evaluate the source code of a program
+      written by a student to implement a specific request             5The diff was automatically generated by our script and sent to the OpenAI
+      described below (# Task). You must carefully analyze          API as part of the prompt.
+      the student's code and ask questions to find out if
+
+      This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  6
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+   Once the questions were generated in a txt file placed in                      analyses. We use a mixed-effects linear model to assess the
+the IDE, we gave up to 20 minutes to the participants to answer                   impact of treatment on completeness (dependent variable). The
+the questions. Participants could not leave the IDE during this                   independent variable is the treatment factor--i.e., use of AI
+time: they were only allowed to look back at the code they                        (WAI and NAI)--while the control variables are: (i) highest
+wrote to answer the questions, without any support (neither                       level of education completed; (ii) current position (e.g., BSc
+AI nor other type, e.g., Google). The total duration of each                      student, Professional); (iii) years of programming experience;
+session of our experiment was 95 minutes at maximum (75                           (iv) programming language of the subject task (Java/Python);
+minutes for the implementation, 20 minutes for the question                       (v) specific task (D1, D2, D3, D4, E1, E2, E3, E4); and (vi) the
+answering). After the first session, participants had a break                     session in which the task was performed (i.e., first or second
+before starting with the subsequent session. At the end of each                   session). Independent variables being linearly dependent are
+run, we collected for both tasks of each participant: (i) the code                not included when building the model to avoid potential issues
+written; (ii) the questions generated by o1 and the provided                      of multicollinearity. While we considered also including the
+answers; and (iii) the monitoring data collected by Tako.                         "past usage of AI-based tools for software-related tasks" as
+                                                                                  one of the control variables, all participants answered yes to
+   Our replication package [11] features an "Experiment re-                       this question, making its analysis irrelevant. Also, the model
+porting" document specifying the exact setup of the LLM used                      considers the specific experimental run and the participant as
+in our study (e.g., LLM's settings, prompts, etc.) as well as                     random effects. The former aims at separating the possible
+ethical considerations and data privacy.                                          peculiar characteristics of a specific run of the experiment from
+                                                                                  the effect produced by the investigated factor, while the latter
+C. Data Collection & Analysis                                                     aims at capturing between-person heterogeneity.
+
+   To address RQ1, one of the authors examined the output                            We also build a log-normal mixed-effects model to assess
+code submitted by each participant at the end of each task.6                      the impact of the treatment on the implementation time (de-
+Using a predefined checklist (available in [11]), the reviewer                    pendent variable). The choice to use a log scale to model
+assigned a "completeness" score to each submission. Each                          implementation time is due to the fact that time outcomes
+checklist outlined the specific sub-tasks required for a given                    are positive and right-skewed. The log-normal mixed-effects
+task and the corresponding scores for each. For example, the                      model enables better-behaved residuals and interpretable mul-
+checklist for task D1 includes the following items:                               tiplicative effects (time ratios). Its independent variables and
+                                                                                  random effects are the same discussed for the mixed-effects
+   Add a new gift idea with recipient's name, description,                        linear model used to assess completeness. The only difference
+      occasion, and price. [+10]                                                  is the addition of "Lines of Code (LOC)" as further indepen-
+                                                                                  dent variable, to check whether longer implementation times
+   Search gifts in a given price range. [+15]                                     might just be explained by more written code.
+
+   The scores in brackets reflect the complexity of each sub-                        To answer RQ2, we manually inspected for each of the 138
+task, with more complex items earning higher points. The                          completed tasks: (i) the questions generated by o1, and (ii) the
+maximum possible completeness score for a task is 100,                            answers provided by participants. Checking the questions was
+awarded when all sub-tasks are correctly implemented. Points                      required to make sure that o1 was actually asking meaningful
+were only assigned if a sub-task was fully functional (e.g.,                      and non-trivial questions. We considered a question "meaning-
+in task D1, the gift search feature needed to work correctly                      ful" if it was understandable, clearly related to the participant's
+when the code was executed). The correctness of a given                           code, and required reasoning about implementation choices or
+sub-task was assessed by running the code (thus, observing                        code behavior. Questions were discarded as non-meaningful
+that its behavior was aligned with the provided specification)                    if they referred to decisions that were dictated by task re-
+and by inspecting the code to further verify the implemented                      quirements rather than made by the participant (e.g., asking
+logic. To increase our confidence in the assigned scores, a                       why a specific feature was implemented when it was explicitly
+second author independently reviewed each task, re-examining                      mandated by the task description). We considered a question
+the submitted code. Inter-rater reliability was quantified using                  trivial if its answer could be obtained through a simple
+the intraclass correlation coefficient (ICC), two-way random-                     keyword search in the code, without requiring comprehension
+effects model with absolute agreement. Inter-rater agreement                      of the implementation. For example, a question asking "where
+was excellent (0.96), indicating high consistency between                         is the price converted from String to double?" was discarded if
+assessors. Disagreements were resolved through discussion                         the code included an explicit comment such as "converting
+prior to analysis.                                                                price from String to double". Each question was
+                                                                                  initially reviewed by one author and double-checked by a sec-
+   Besides completeness, which represents our primary end-                        ond author, following the same criteria. Disagreements were
+point to answer RQ1, we also consider as secondary endpoint                       rare (8 out of 1,170 generated questions) and typically arose
+the time participants took to finalize the tasks as automatically                 from subjective judgments about question understandability or
+collected by the Tako plugin [21] (implementation time).                          whether a question required reasoning beyond surface-level
+                                                                                  code inspection. In such cases, we adopted a conservative
+   We answer RQ1 by visually comparing the distributions of                       approach and discarded the question if it was deemed unclear
+completeness and implementation time via boxplots for tasks                       or borderline by at least one reviewer. All disagreements were
+performed with (WAI treatment) and without (NAI) the sup-
+port of AI. In addition to that, we run the following statistical
+
+   6This process involved five authors, each responsible for reviewing a portion
+of the 138 collected tasks.
+
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  7
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+resolved through open discussion. In total, 120 out of the 1,170    all observations in the analysis. Also, it is important to note
+o1-generated questions were discarded. Across all tasks, we         that, differently from what happened for implementation time
+retained an average of 7.6 valid questions per task, with a         in which participants could leave the IDE (e.g., to browse
+minimum of 4 and a maximum of 9. Our replication package            the web), while answering questions this was not allowed.
+[11] reports the distribution of valid questions both per task      Thus, the two time-related measurements should be interpreted
+and per cohort, showing no relevant differences in the number       differently.
+of questions for the WAI and NAI treatment.
+                                                                       1) Robustness Checks and Sensitivity Analyses: Our study
+   As per the answers provided by participants, we thought          follows a two-period crossover design, in which each partic-
+about several grading schemes, opting for a boolean one (i.e.,      ipant performed two tasks, one in each session. Thus, we
+wrong or correct) after inspecting the answers provided in the      conducted a set of robustness checks to assess the potential
+first run of our experiment. Indeed, given the types of questions   impact of period and carryover effects on all outcome mea-
+asked by o1 (i.e., mostly explanations about the written code),     sures, including task completeness and implementation time
+participants either answered correctly or not at all, with little   (RQ1), as well as code ownership and time to answer (RQ2).
+room for partial correctness. For example, when the LLM
+was asking in which part of the code a specific behavior was           We first extended the primary specification by adding a
+implemented, participants either indicated the correct code or      Treatment × Session interaction term. The interaction term
+not. On top of that, adding more complex grading schemes            tests whether the treatment effect differs across the two
+would have increased the subjectivity in the assessment. Also       sessions, which would be indicative of order-dependent or
+in this case each answer was graded as correct or wrong by          carryover effects. Also, we conducted a sensitivity analysis
+one author and double-checked by a second one, with 7 cases         restricted to Session-1 observations only, where no carryover
+of disagreement solved via open discussion.                         can occur by design. This analysis provides an unbiased
+                                                                    parallel-group comparison between treatments and serves as
+   Using the collected grades, we compute for each participant      a conservative check on the robustness of the main findings.
+and each task their code ownership level, as the percentage of
+correct answers they provided to the non-discarded questions.       D. Excluded Participants
+This is our primary endpoint to answer RQ2. These distri-
+butions are compared between treatments via boxplots. To               While we ran our study with 90 participants, we had to
+mirror the analyses performed in RQ1, we also wanted to build       exclude 21 of them due to different reasons. Five of them did
+a linear mixed model having code ownership as dependent             not complete the experiment. Eight did not manage to write
+variable. However, as explained by Bartlett and Partnoy [23],       enough code so that o1 could generate the required questions
+using ratio variables as dependent variables can cause spurious     (e.g., one only wrote five lines of code). In three cases the
+correlations, resulting in noise in the statistical analysis. For   code developed by participants was not sent to o1 for the
+this reason, we define a boolean dependent variable named "Is       questions generation due to the fact that they did not follow
+question correctly answered" indicating whether each of the         our instructions, implementing their code in a new project they
+(non-discarded) questions has been correctly answered by the        created in the IDE rather than in the predefined project. Three
+participant. This means that a participant who answered six         did not answer any questions and, from the inspection of the
+questions will contribute with six data points to this analysis.    logs collected via Tako [21], we found they never opened the
+Using this data, we build a logistic mixed-effects model hav-       file with the o1's questions. Finally, two used AI when they
+ing "Is question correctly answered" as dependent variable,         were not supposed to, and thus were excluded from the study.
+the treatment factor as the independent variable, and seven         The 69 left participants are still quite balanced across the four
+confounding variables: The six already presented for RQ1            experimental groups: 18 in A, 18 in B, 17 in C, and 16 in D.
+(i.e., highest level of education completed, current position,
+years of programming experience, programming language of               On top of that, 16 participants (out of the remaining 69)--
+the subject task, specific task, and the session in which the       14 BSc and 2 MSc students--mistakenly stopped the Tako
+task was performed) plus the type of question each data point       plugin we installed to monitor their implementation time and
+refers to (i.e., open or closed). Indeed, as previously explained,  time to answer. Thus, we consider these participants in all
+our experiment features both open and closed questions. Also        analyses related to completeness (RQ1) and code ownership
+this model features the specific experimental run and the           (RQ2), but not in the time-based analyses (which relate to 53
+participant as random effects.                                      participants). These 53 are also balanced across the groups:
+                                                                    13 in A, 13 in B, 14 in C, and 13 in D.
+   As a secondary endpoint for code ownership, we also
+analyze the time taken by participants to answer questions                              III. RESULTS DISCUSSION
+(time to answer), performing the same analyses described for
+implementation time in RQ1, with one exception. Because par-           We discuss the achieved results by RQ.
+ticipants received different numbers of valid ownership ques-
+tions, we modeled answering time using a log-normal mixed-          A. RQ1: Impact on Productivity
+effects model with the number of valid questions included
+as an offset. This specification accounts for unequal exposure         The left-hand side of Fig. 2 shows the boxplots depicting the
+across participants by effectively modeling the average time        distribution of task completeness achieved by participants with
+per question, rather than total answering time, while retaining     (WAI) and without (NAI) the support of AI. The green boxes
+                                                                    report the results when considering all participants, while
+
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and                           8
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+100                                                                                                                                                          80
+
+Completeness80
+                                                                                                                              Implementation time (minutes)
+                                                                                                                                                             60
+
+60
+
+                                                                                                                                                             40
+
+40
+
+20                                                                                                                                                           20
+
+0               BSc BSc MSc MSc Res. Res. Dev. Dev.                                                                                                          0              BSc BSc MSc MSc Res. Res. Dev. Dev.
+                WAI NAI WAI NAI WAI NAI WAI NAI                                                                                                                             WAI NAI WAI NAI WAI NAI WAI NAI
+       All All                                                                                                                                                     All All
+      WAI NAI                                                                                                                                                     WAI NAI
+
+Fig. 2. RQ1: Impact on Productivity.
+
+the blue ones refer to four categories of participants (BSc,                                                TABLE V
+MSc, Researcher, Professional). To simplify the visualization,        RQ1 - COMPLETENESS: LINEAR MIXED-EFFECTS MODEL PREDICTING
+NAI distributions are characterized by patterned boxes. The           TASK COMPLETENESS. BOLD INDICATES P < 0.05. RANDOM-EFFECTS
+right-hand side of Fig. 2 shows instead the distributions of
+implementation time (in minutes), following the same schema                           ENTRIES REPORT VARIANCE AND STD. DEV..
+described for completeness.
+                                                                      Groups name                                                                                           Random effects    Std.Dev.
+   The results in Fig. 2 show the strong boost in productivity        Participant                                                                                                       Var.       6.44
+provided to participants by the AI support. When considering          Run                                                                                                                          0.00
+all participants, the median completeness achieved without AI                                                                                                                         41.42
+support is 35, compared to the 84 reached when AI was                                                                                                                                   0.00
+used. As per the implementation time, the median without
+AI is 63 minutes, as compared to the 43 minutes required              Predictor                                                                                             Fixed effects     95% CI            p-value
+with AI support. Such differences may look extreme, but                                                                                                                         Estimate
+can be partially explained by the tasks we designed for our                                                                                                                                                     <0.001
+experiment, which were non-trivial but, at the same time, could       Treatment: WAI (vs NAI)                                                                                42.99            [36.12, 49.86]      0.538
+benefit from the AI support. Indeed, as explained in Section II,      Education level: High school                                                                            5.68            [-12.68, 24.03]     0.420
+the tasks are related to quite popular domains (e.g., games like      Education level: Master                                                                                -6.40             [-22.15, 9.36]     0.164
+Tic Tac Toe, content management systems relying on files as           Education level: PhD                                                                                                    [-57.64, 10.00]     0.312
+persistency mechanism) on which modern LLMs shine. Also,              Position: Master                                                                                      -23.82            [-53.05, 17.26]     0.567
+our findings are aligned with what reported in the literature:        Position: PhD Student                                                                                 -17.89            [-29.85, 54.02]     0.218
+Weber et al. [24] report a +65% in requirements implemented           Position: Postdoc                                                                                      12.09            [-21.66, 93.09]     0.839
+in a given amount of time when developers use AI, while Peng          Position: Professional dev.                                                                            35.72            [-35.47, 43.54]     0.974
+et al. [25] document a 56% decrease in implementation time            Years of programming exp.                                                                                                                   0.116
+using Copilot.                                                        Task: D1                                                                                                4.04               [-2.06, 1.99]    0.802
+                                                                      Task: D2                                                                                               -0.03             [-21.53, 2.43]     0.685
+   It is interesting to see that the overall finding (i.e., positive  Task: E2                                                                                               -9.55            [-38.58, 29.95]     0.178
+impact on productivity) is independent from the category of           Task: D3                                                                                               -4.32            [-41.32, 27.28]     0.604
+participants (i.e., BSc, MSc, Researcher, Professional): All of       Task: E3                                                                                               -7.02            [-60.26, 11.38]     0.007
+them experienced a significant increase in completeness and a         Task: D4                                                                                              -24.44            [-45.16, 26.47]     0.014
+reduction in the implementation time. For some categories of          Session: 2                                                                                             -9.35              [6.28, 38.72]
+participants the effect was more pronounced than for others,                                                                                                                 22.50              [1.78, 15.34]
+but this is not related to their level of experience. For example,                                                                                                            8.56
+professional developers benefited more from the AI support
+in terms of both completeness and implementation time as              the random and fixed effects on the task completeness,7 with
+compared to BSc students (see Fig. 2). Despite appearing              the WAI treatment playing a significant role (p < 0.001). On
+counterintuitive, this finding should be interpreted in light of      average, WAI increased completeness by 42.99 points relative
+the fact that each participant category was given tasks suited        to NAI (95% CI [36.26, 49.72]), holding all covariates constant
+to their programming level, with researchers and professional         and accounting for clustering by participant and experiment.
+developers dealing with the most complex tasks.
+                                                                         As per the other independent (control) variables, two played
+   The linear mixed model in Table V shows the impact of              a significant role in the achieved completeness, namely task
+                                                                      D4 (p = 0.007, higher completeness as compared to that of
+                                                                      the other tasks) and the second experimental session (p =
+                                                                      0.014, higher completeness as compared to the first session).
+                                                                      Concerning task D4, it asked participants to write a test suite
+                                                                      from scratch and this is the task for which we observed the
+                                                                      strongest help given by AI: Participants using AI achieved
+
+                                                                         7Some of the tasks do not appear as control variable since being linearly
+                                                                      dependent from other independent variables. Same for the language, which is
+                                                                      captured by the "position" variable, since only Researchers and Professional
+                                                                      developers worked with Python.
+
+     This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  9
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+a median completeness of 100 (average 90), while those not                                                 TABLE VI
+using AI had a median of 42.5 (average 46). Basically, the           RQ1 - IMPLEMENTATION TIME: LOG-NORMAL MIXED-EFFECTS MODEL
+highest completeness observed in D4 is influenced by the
+strong support given by the AI. As we will see, participants            PREDICTING IMPLEMENTATION TIME. BOLD INDICATES P < 0.05.
+who took advantage of the AI in this task had a high price to             RANDOM-EFFECTS ENTRIES REPORT VARIANCE AND STD. DEV.
+pay in terms of code ownership (RQ2).
+                                                                     Groups name  Random effects          Std.Dev.
+   Concerning the impact of the "session" variable, as ex-           Participant               Var.            0.00
+plained in Section II-C1 we assess the robustness of the task        Run                       0.00            0.00
+completeness results to potential period and carryover effects                                 0.00
+through additional analyses. We introduced a Treatment ×
+Session interaction to test whether the treatment effect differed    Predictor    Fixed effects           95% CI                                p-value
+across sessions. The interaction term was not statistically sig-                       Estimate
+nificant (p = 0.337), providing no evidence that the treatment                                                                                    0.003
+effect depended on session order. Importantly, the main effect       Treatment: WAI (vs NAI)       -0.44  [-0.74, -0.15]                          0.106
+of Treatment remained significant in this model (estimate =          Education level: High school  -0.52   [-1.16, 0.11]                          0.796
+39.1, 95% CI [28.5, 49.6], p < 0.001). Also, we conducted a          Education level: Master       -0.06   [-0.54, 0.42]                          0.615
+sensitivity analysis restricted to Session-1 observations only.      Education level: PhD          -0.26   [-1.27, 0.76]                          0.535
+In this conservative analysis, the treatment continued to have a     Position: Master               0.34   [-0.74, 1.41]                          0.826
+significant effect on task completeness (estimate = 38.0, 95%        Position: PhD Student          0.28   [-2.28, 2.84]                          0.804
+CI [26.7, 49.2], p < 0.001). Taken together, these analyses          Position: Postdoc              0.34   [-2.39, 3.08]                          0.910
+indicate that the observed improvement in task completeness          Position: Professional dev.    0.14   [-2.36, 2.65]                          0.434
+under AI assistance is robust to period effects and not at-          Years of programming exp.     -0.03   [-0.09, 0.04]                          0.983
+tributable to carryover or session-order confounds.                  Task: D1                       0.00   [-0.40, 0.40]                          0.957
+                                                                     Task: D2                       0.06   [-2.22, 2.35]                          0.891
+   Table VI shows the log-normal mixed effects model for the         Task: E2                       0.15   [-2.06, 2.36]                          0.322
+implementation time. The model yielded a boundary singular           Task: D3                       0.60   [-0.60, 1.79]                          0.809
+fit: The participant-level variance was estimated as 0.00 and        Task: E3                       0.29   [-2.08, 2.66]                          0.732
+the experiment-level variance as approximately 0.00. This            Task: D4                      -0.30   [-2.05, 1.44]                          0.633
+indicates that, once accounted for all fixed predictors, little      Lines of Code                 -0.00   [-0.00, 0.00]                          0.991
+residual clustering remained at either level. Thus, although         Session: 2                     0.00   [-0.25, 0.26]
+initially specified as a mixed-effects model to reflect the study
+design, for this outcome it effectively reduces to a model           valid across all tasks, languages, and participants' categories.
+with negligible random-intercept contribution (i.e., an ordinary
+regression model). To verify that inference was not an artifact      B. RQ2: Impact on Code Ownership
+of this specification, we fitted the corresponding ordinary
+regression model with the same fixed effects and obtained               The left-hand side of Fig. 3 shows the boxplots depicting
+essentially identical estimates and p-values.                        the distribution of percentage of correct answers (our proxy
+                                                                     for code ownership) provided by participants after performing
+   While the treatment was a significant predictor of imple-         tasks with and without the support of AI. The right-hand side,
+mentation time (p = 0.003), things changed when introducing          instead, shows the time (in minutes) they spent answering the
+a Treatment × Session interaction to study a possible period         posed questions in the two treatments (WAI and NAI). The
+effect. The interaction term was not statistically significant (p =  color/pattern schema used is the same described for the RQ1's
+0.142), suggesting no strong evidence of differential treatment      boxplots.
+effects across sessions. However, the main effect of Treatment
+was no longer statistically significant (p = 0.263; estimate            Visually, it can be seen that participants who implemented
+= -0.23, 95% CI [-0.64, 0.18]), indicating that the overall          the code without AI support managed to correctly answer a
+treatment difference was sensitive to the inclusion of period        higher percentage of technical questions. For example, when
+structure. Consistent with this finding, a Session-1-only sen-       considering all participants (green boxplots), the median per-
+sitivity analysis, which provides an unbiased comparison free        centage of correct answers with the NAI treatment is 100%, as
+from carryover, also showed no significant effect of Treatment       compared to the 87.5% they achieved with the WAI treatment.
+on implementation time (p = 0.719). These findings indicate          Such a trend is visible for all categories of participants, not
+that the apparent treatment effect on implementation time is         only in terms of median, but with the whole distribution
+not robust to period-based sensitivity analyses, and therefore       shifted towards higher values for the NAI treatment. There
+we refrain from drawing strong conclusions regarding the             are, however, major differences observed across different types
+impact of AI assistance on implementation speed.                     of participants, with some of them paying a higher cost than
+                                                                     others in terms of code ownership when using the AI support.
+   Answer to RQ1. AI support substantially boosts the pro-           For instance, when looking at BSc students the difference in
+ductivity of participants, with a substantial boost in terms of      percentage of correct answers is minimal (median=87% in
+task completeness in the given time. While there are tasks on        WAI and 88% in NAI, average=82% in WAI and 85% in
+which the AI helps more than others, the observed trends are         NAI). One possible explanation for such a finding relates to
+                                                                     the D3 and E3 tasks BSc students have been asked to perform:
+                                                                     Both these tasks dealt with web APIs implemented with the
+                                                                     Spring framework and offered less freedom in terms of imple-
+                                                                     mentation choices compared to the other tasks. For example,
+                                                                     D3 required very specific API implementations for interacting
+                                                                     with the GitLab server. As a result, these constraints left o1
+
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and                    10
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+100
+
+80                                                                                                                                                      20
+Answers correctness (%)                                                                                                                                 15
+                                                                                                                              Answering time (minutes)6010
+
+40                                                                                                                                                       5
+
+20
+
+0               BSc BSc MSc MSc Res. Res. Dev. Dev.                                                                                                          All All  BSc BSc MSc MSc Res. Res. Dev. Dev.
+                WAI NAI WAI NAI WAI NAI WAI NAI                                                                                                             WAI NAI   WAI NAI WAI NAI WAI NAI WAI NAI
+       All All
+      WAI NAI
+
+Fig. 3. RQ2: Impact on Code Ownership.
+
+with less "room" to generate complex questions about the           effect on code ownership was mostly driven by specific types
+implemented code and its design decisions, thus increasing         of questions. We accomplished this by replicating the logistic
+the percentage of correct answers given by the BSc students.       mixed-effects model on the subset of data related to each
+                                                                   question type. The effect of treatment was significant in the
+   When instead focusing on MSc students, they were the            model only considering open questions (p = 0.02), with OR
+ones experiencing the strongest reduction in ownership as          = 0.45 (95% CI [0.23, 0.88]), but not for the one only
+a result of the AI usage (median=67% in WAI and 100%               considering closed questions (p = 0.09), with OR = 0.61 (95%
+in NAI, average=62% in WAI and 75% in NAI). Such a                 CI [0.34, 1.08]). This is expected since statistical significance
+result can be traced back to our RQ1 discussion, in which          is not transitive under sample splitting, but the direction of the
+we observed the strong help AI provided to participants in         effect is the same for both strata.
+task D4, which is indeed the one on which 12 out of the 13
+MSc students involved in our study worked (all those from U2,                                              TABLE VII
+while the additional MSc student is from U1). Indeed, if we           RQ2 - CODE OWNERSHIP: LOGISTIC MIXED-EFFECTS MODEL (ODDS
+only focus on this specific task, the impact on code ownership      RATIOS) PREDICTING OWNERSHIP CORRECTNESS. BOLD INDICATES P <
+is even more dramatic: median=67% in WAI and 100% in                  0.05. RANDOM-EFFECTS ENTRIES REPORT VARIANCE AND STD. DEV.
+NAI, average=55% in WAI and 93% in NAI. Thus, the major
+helping hand coming from the AI resulted in a severe loss of       Groups name                                                                                        Random effects  Std.Dev.
+code ownership.                                                    Participant                                                                                                 Var.        0.88
+                                                                   Run                                                                                                         0.77        0.00
+   In the logistic mixed-effects model (Table VII), AI assis-                                                                                                                  0.00
+tance was indeed associated with lower ownership correctness
+(OR = 0.58, 95% CI [0.38, 0.91], p = 0.016). In terms              Predictor                                                                                          Fixed effects   95% CI             p-value
+of absolute probabilities, the average marginal effect (i.e.,                                                                                                                 OR
+the change in probability of getting a correct answer when                                                                                                                                                 0.016
+moving from the NAI to the WAI treatment) indicates a 5.95         Treatment: WAI (vs NAI)                                                                               0.58             [0.38, 0.91]     0.539
+percentage-point decrease in the probability of answering own-     Education level: High school                                                                          0.66              [0.18, 2.48]    0.092
+ership questions correctly when using AI assistance (95% CI        Education level: Master                                                                               0.32              [0.08, 1.21]    0.315
+[-10.8, -1.1]). No other variable played a significant effect on   Education level: PhD                                                                                  0.26              [0.02, 3.60]    0.889
+the code ownership. Adding a Treatment × Session interaction       Position: Master                                                                                      0.83            [0.06, 11.39]     0.135
+provided no evidence of differential treatment effects across      Position: PhD Student                                                                               43.37          [0.31, 6071.38]      0.113
+sessions (p = 0.473). In this model, the main effect of the        Position: Postdoc                                                                                  116.65         [0.32, 42236.66]      0.114
+treatment was attenuated and no longer significant, though         Position: Professional dev.                                                                         48.22          [0.40, 5868.31]      0.100
+the estimate remained similar (OR = 0.46, 95% CI [0.22,            Years of programming exp.                                                                             1.16              [0.97, 1.39]    0.529
+1.00], p = 0.05). As per the Session-1-only sensitivity analysis,  Lines of Code                                                                                         1.00              [1.00, 1.01]    0.080
+the treatment again showed a statistically significant effect      Task: D1                                                                                              0.47              [0.20, 1.09]    0.406
+on code ownership (OR = 0.39, 95% CI [0.16, 0.99], p =             Task: D2                                                                                              6.17           [0.08, 454.12]     0.314
+0.047), consistent in direction and magnitude with the primary     Task: E2                                                                                              8.83           [0.13, 611.88]     0.106
+model. Overall, the negative impact of AI assistance on code       Task: D3                                                                                              9.23           [0.62, 136.84]     0.219
+ownership resulted to be robust to alternative specifications,     Task: E3                                                                                            16.12          [0.19, 1352.37]      0.344
+with minor fluctuations in significance attributable to reduced    Task: D4                                                                                              4.05            [0.22, 73.41]     0.989
+statistical power rather than changes in effect direction.         Question type: Open                                                                                   1.00              [0.64, 1.56]    0.628
+                                                                   Session: 2                                                                                            0.91              [0.63, 1.32]
+   We also performed a stratified analysis (open questions only
+vs closed questions only) to better assess whether the treatment      A loss of code ownership when using the support of AI
+                                                                   seems to also be visible in terms of time needed to answer
+                                                                   the questions, at least when looking at the right-hand side of
+                                                                   Fig. 3. Indeed, overall (green boxplots) we observe a higher
+                                                                   answering time in WAI, with a +3 minutes in terms of median.
+
+     This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  11
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+While this difference might seem modest, it translates to a                ownership, as reflected in lower correctness on ownership
+27% relative increase in answering time (median=14 minutes                 questions, especially when AI support is highly effective. The
+in WAI vs. 11 minutes in NAI). Also, this finding should be                evidence for an effect on answering time is less robust.
+considered alongside the earlier results: After completing a
+task with AI support, participants spent more time answering                                                      TABLE VIII
+questions compared to the NAI condition, yet achieved a                         RQ2 - ANSWERING TIME: LOG-NORMAL MIXED-EFFECTS MODEL
+lower percentage of correct responses. As per the findings by                PREDICTING QUESTION ANSWERING TIME. BOLD INDICATES P < 0.05.
+category of participants, BSc students were the only ones for
+which we did not observe an increase in the response time,                        RANDOM-EFFECTS ENTRIES REPORT VARIANCE AND STD. DEV.
+likely for the characteristics of tasks D3 and E3 previously
+explained. For Researchers and Professional developers, the                Groups name  Random effects          Std.Dev.
+increase in answering time was instead quite noticeable. By                Participant               Var.            0.23
+leveraging the monitoring data collected through Tako [21],                Run                       0.05            0.04
+we isolated the set of didChangeTextEditorUI events                                                  0.00
+performed in the IDE by participants while they were an-
+swering the questions. Such an event indicates a change of                 Predictor    Fixed effects           95% CI                          p-value
+focus between the text editor views in the IDE which, during                                 Estimate
+questions' answering time, were usually (i) the file containing                                                                                   0.010
+the questions (and in which answers were written), and (ii) the            Treatment: WAI (vs NAI)        0.18    [0.04, 0.31]                    0.638
+implemented code files, which participants inspected when                  Education level: High school  -0.10   [-0.52, 0.32]                    0.510
+needed to answer the questions. On average, there were 87                  Education level: Master        0.10   [-0.21, 0.42]                    0.807
+of those events at the end of each task in the WAI treatment               Education level: PhD           0.08   [-0.59, 0.76]                    0.915
+(median=44) and 34 in the NAI treatment (median=26). Since                 Position: Master               0.04   [-0.67, 0.74]                    0.882
+the number of switches between the text editor views may                   Position: PhD Student          0.11   [-1.30, 1.51]                    0.790
+also be associated to the size of implemented program, usually             Position: Postdoc              0.21   [-1.36, 1.78]                    0.951
+larger for the WAI treatment, we also normalized the number                Position: Professional dev.    0.04   [-1.33, 1.41]                    0.306
+of didChangeTextEditorUI events by LOC, obtaining                          Years of programming exp.     -0.02   [-0.07, 0.03]                    0.467
+an average of 0.55 events per line of code in the WAI                      Task: D1                       0.06   [-0.11, 0.24]                    0.971
+treatment (median=0.25) versus a 0.37 in the NAI treatment                 Task: D2                       0.02   [-1.22, 1.27]                    0.955
+(median=0.17).8 This data suggests that participants had to go             Task: E2                      -0.03   [-1.25, 1.18]                    0.249
+back to the code more often when they used the AI support,                 Task: D3                      -0.45   [-1.24, 0.34]                    0.853
+possibly indicating a loss of code ownership.                              Task: E3                      -0.12   [-1.42, 1.18]                    0.260
+                                                                           Task: D4                       0.50   [-0.38, 1.39]                    0.189
+   The log-normal mixed effects model (Table VIII) shows the               Lines of Code                  0.00   [-0.00, 0.00]                    0.002
+impact of treatment on the answering time. The participant-                Session: 2                    -0.18  [-0.29, -0.07]
+level random-effect variance was estimated as 0.0517, while
+the experiment-level variance was small (0.0018), indicating                                   IV. THREATS TO VALIDITY
+modest residual clustering by participant and only minimal
+clustering by experiment after accounting for the fixed effects.              Construct validity. The results of both RQs are partially
+The impact of treatment was significant (p = 0.010, estimate =             based on data manually extracted from the code written by
+0.18, 95% CI [0.04, 0.31]). Also, introducing a Treatment ×                participants (task completeness) and the answers they provided
+Session interaction did not reveal a significant interaction (p =          (code ownership), thus involving subjectivity risks. To partially
+0.124), suggesting no strong evidence that the treatment effect            address them, we made sure that all manually-extracted data
+varied by session. However, in this specification, the main                were checked by two authors. Also, authors were not aware
+effect of the treatment was no longer statistically significant            of the specific treatment linked to the code and answers they
+(p = 0.788; estimate = 0.03, 95% CI [-0.20, 0.26]), indicating             inspected to reduce any form of experimenter bias.
+that the treatment difference was sensitive to the inclusion of
+session-specific effects. Similarly, a Session-1-only sensitivity             Another threat relates to possible ceiling effects in the
+analysis also showed no significant effect of the treatment                context of RQ2. Code ownership under the NAI treatment
+on answering time (p = 0.441). Thus, the apparent effect of                frequently approached 100%, which may limit sensitivity to
+AI assistance on answering time is not robust to conservative              detect small differences between conditions. Despite this, we
+period-based analyses, not allowing to draw strong conclusions             observed a statistically significant average marginal effect of
+regarding the impact of AI assistance on the time spent                    the treatment (WAI vs NAI), -0.0595 (95% CI [-0.108, -
+answering ownership questions.                                             0.011]), with a CI that excludes the 0. Possible ceiling effects
+                                                                           would bias the AME toward 0. Thus, the observed -5.95% can
+   Answer to RQ2. The productivity benefits of AI-based                    be seen as conservative rather than inflated.
+tools in programming (RQ1) are associated with reduced code
+                                                                              When fitting log-normal mixed-effects model for time-based
+   8Boxplots showing raw and normalized distributions of these events for  measurements, we verified that log-transformation yielded
+both treatments are available in our replication package [11].             approximately normal residuals and that model assumptions
+                                                                           were reasonably satisfied by building Q-Q (quantile-quantile)
+                                                                           plots. The latter compare the quantiles of model residuals
+                                                                           to the quantiles of a normal reference distribution. Both the
+                                                                           plots for implementation and answering time are available
+                                                                           in our replication package [11] and show that residuals are
+                                                                           approximately normal, with minor deviations at the lower and
+                                                                           upper tail, supporting models adequacy.
+
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  12
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+   In the WAI treatment, all participants were provided with        each primary outcome, namely completeness for RQ1 and
+GitHub Copilot enabled in the IDE. However, we did not              code ownership for RQ2, we report standard errors and cor-
+collect detailed logs of AI tool usage, and participants were       responding minimum detectable effects (MDEs), defined as
+free to use additional AI-based tools as part of their normal       ±1.96×SE, which indicate the smallest effects that could be
+workflow. As a result, we cannot precisely quantify the extent      reliably distinguished from zero. For completeness, MDE =
+or nature of AI assistance used by individual participants. This    1.96×3.436 = ±6.7 points, which is reliable for the large
+limits our ability to attribute observed effects to specific tools  differences we observed (AME=42.99, 95% CI [36.26, 49.72],
+or usage patterns within the AI-assisted condition and it is part   indicating that moving from NAI to WAI increases expected
+of our future research agenda.                                      task completeness by about 43%, on average. As per code
+                                                                    ownership, MDE = 1.96×0.025 = ±4.9 points, being again
+   Finally, in our time-based analyses we had to exclude            reliable for the differences we observed (AME=-0.0595, 95%
+some participants due to missing time logs. To assess whether       CI [-0.108, -0.011], indicating that WAI participants were
+this could have biased our results, we compared participants        estimated to be 5.95 percentage points less likely to answer
+included versus excluded from the time-based analyses using         correctly than NAI participants). Even so, we acknowledge
+a logistic regression on observable covariates (i.e., treatment,    the need for further replications, especially considering the
+education level, position, years of experience in programming,      differences in the magnitude of the results observed across
+task, session). The inclusion model indicated that only the         different programming tasks.
+"years of programming experience" was a significant predictor
+of having valid time logs: Each additional year of experience          Participant's position (e.g., professional developers, bach-
+increased the odds of having valid time logs (OR=1.83).             elor student) was partially entangled with task characteristics
+Importantly, treatment assignment was not associated with           and programming language, reflecting the practical constraints
+inclusion, suggesting that missingness is unlikely to bias the      of the study design. As a result, we cannot fully disentangle ex-
+estimated treatment effects for time outcomes.                      perience effects from task-family or language-specific effects.
+                                                                    While we include task indicators and conduct position-specific
+   Internal validity. We considered several control variables       analyses, generalization beyond the studied cohorts, tasks, and
+in our analysis, to better isolate the impact of the studied        languages should be made with caution.
+treatment. Still, it is possible that other variables we did not
+control or analyze had an impact on our findings. Also, we             We also performed an external-validity sensitivity analysis
+experienced some form of "experimental mortality," with the         by re-estimating the models after excluding bachelor and mas-
+need for excluding some participants from our study due to          ter students and retaining only professionals and researchers.
+the reasons documented in Section II-D. This is not expected        This restriction reduced the sample to approximately 35%
+to affect our findings in any case since (i) we opted for a         of the original observations, resulting in a non-significant
+within-subject design, in which every participant performed         treatment effects when looking at the impact of treatment
+an implementation task for both treatments, thereby always          on code ownership. However, the estimated effect remained
+guaranteeing balanced participation across conditions; and          directionally consistent with the full-sample results with a
+(ii) as shown in Section II-D, the number of participants per       wider confidence interval. In particular, for the code ownership
+experimental group (A, B, C, D) was still quite balanced.           analysis we got an OR=0.55, 95% CI [0.17, 1.79] for the
+                                                                    professional&researchers-model, as compared to the OR=0.58,
+   A possible threat to internal validity is that the questions     95% CI [0.38, 0.91] for the full-sample model. Instead, the
+generated by the o1 model for one treatment (WAI vs.                treatment effect remained significant (p < 0.001) for the
+NAI) were more difficult than those generated for the other         completeness analysis.
+treatment, thus affecting the results of RQ2. To neutralize
+this threat, two authors independently rated a sample of 100           Finally, considering the fast pace at which AI-based assis-
+questions (50 from each treatment, 30 closed and 20 open            tants for software developers are evolving, our findings may
+questions) from 1 (simple) to 3 (difficult), without knowing        not generalize to newer agent-based tools recently proposed
+the treatment they belong to. This resulted in an average score     in the literature (see e.g., [26]).
+of 1.34 for WAI and 1.30 for NAI (author #1) and 1.50 for
+WAI and 1.48 for NAI (author #2), thus showing no significant                                V. RELATED WORK
+difference in the difficulty of the questions across treatments.
+Nevertheless, we acknowledge that individualized question              Productivity. Several studies highlight the positive impact
+generation, while practically advantageous for adapting the         of AI assistants on developers' productivity. Bird et al. [27]
+assessment to each participant's implementation, inherently         conducted both a large-scale survey (2k responses) and a
+reduces the strict comparability of ownership scores across         small-scale case study (5 developers) on such a topic. Their
+participants and conditions.                                        overall results suggest that there is a significant reduction in
+                                                                    task completion time when developers use GitHub Copilot.
+   Finally, while all participants reported prior use of AI-based
+tools, we did not collect more detailed information about its          Peng et al. [25] conducted an empirical study involving
+extent or nature. This limits our ability to assess whether it      95 professional programmers, finding that participants using
+influenced the observed effects.                                    Copilot completed coding tasks 55.8% faster than those with-
+                                                                    out. Their findings also suggested greater benefits for less
+   External validity. We involved in our study 69 partici-          experienced developers, older programmers, and those who
+pants. Rather than reporting post-hoc power, we assess es-          spend more hours coding per day, indicating AI tools' potential
+timation precision under the final model specifications. For        to facilitate career transitions into software development [25].
+
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  13
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+   Weber et al. [24] conducted a user study with 24 developers        Finally, recent work by Borg et al. [36] examines whether
+aimed at comparing AI-assisted programming with non-AI-            code developed with AI assistants impacts subsequent main-
+assisted programming. Their results highlight that productivity    tenance activities performed by developers who did not origi-
+significantly increases with AI-based tools.                       nally write the code. Through a controlled experiment run with
+                                                                   151 participants, they found no consistent signs of degraded
+   Ziegler et al. [28] highlighted the critical role of devel-     code maintainability. However, the authors warn about the
+opers' perceived productivity in relation to their acceptance      building of cognitive debt when relying on AI for code im-
+of Copilot suggestions, providing insights into how subjective     plementation: mental effort deferred in the short term may ac-
+productivity perceptions correlate with AI tool acceptance.        cumulate as long-term costs (e.g., decreased creativity). Such
+                                                                   an aspect, while complementary to the one of code ownership
+   Sarkar et al. [29] explored the developer experience when       we focus on, also points to the need for carefully assessing
+using AI-driven code completion tools. Through interviews          the benefits of AI assistance during code development, not
+and usage analysis, the authors examine how AI assistance          limiting it to the positive impact on productivity.
+affects programming workflows, particularly focusing on de-
+velopers' perception of productivity, cognitive load, and sat-        To the best of our knowledge, we are the first assessing the
+isfaction. The findings reveal that while AI tools can speed       effects of AI-based tools on actual code ownership.
+up coding and support exploration, they also introduce cog-
+nitive overload and occasional interruptions, with developers                  VI. CONCLUSION AND FUTURE WORK
+expressing concerns about trust and over-reliance.
+                                                                      We ran a family of experiments involving 69 participants (34
+   Compared to the aforementioned studies, our work sheds          BSc and 13 MSc students, 8 researchers, and 14 developers)
+light on the actual productivity boost obtained by developers      aimed at assessing the impact of AI-based coding assistants on
+when using AI-based tools in a controlled experiment, rather       developers' productivity and code ownership. While AI tools
+than on their perceived productivity. We do so by measuring        significantly boost productivity, with higher task completeness
+two proxies for productivity, namely the completeness of the       and reduced implementation time, these benefits come with a
+coding task and the time taken to complete it. Furthermore,        measurable loss in code ownership, as shown by the lower
+our study involves multiple categories of participants (BSc and    percentage of correct answers despite the longer time spent
+MSc students, researchers, and professional developers), high-     answering questions. In fact, tasks on which AI assistance was
+lighting the differences observed among them. For example,         most effective were also associated with the greatest reduction
+while students observe a major boost in task completeness          in code ownership. This serves as a warning as AI coding
+when using AI-based tools, they do not observe a significant       assistants keep getting better and better. The observed reduc-
+reduction in the time taken to complete the task, differently      tion in code ownership appears directionally consistent also in
+from professional developers, who experimented the largest         the professionals/researchers-only subsample, but the evidence
+time savings. Besides studying productivity, we also analyzed      there is substantially less precise. Thus, stronger confirmation
+one of the possible drawbacks of such a boost (i.e., loss of       in professionally focused samples is needed before drawing
+code ownership).                                                   firm conclusions about real-world developer populations.
+
+   Code Ownership. The impact of AI-based coding tools                Our findings have important implications. First, in a real-
+on code ownership is underexplored in the literature. We are       world setting, reduced code ownership due to the use of AI
+aware of only one previous work on such an aspect: Weisz           assistants may hinder key code-related practices. For example,
+et al. [30] ran a survey involving 669 developers to understand    during code review, the contributor may be unable to argue
+(among other things) what is the perceived ownership of AI-        for their implementation choices; while debugging, developers
+generated code. Their results revealed that the majority of        may struggle more in locating the cause of a failed test;
+developers identify the AI-based tool as the sole author of        and in maintenance & evolution activities, developers may
+the code when they do not modify its output.                       require more time to implement change requests. Basically,
+                                                                   the time saved during code implementation may be offset by
+   Several studies investigated the impact of AI support on        increased effort in later stages of the software lifecycle, with
+students and novice developers [31], [32], [33], [34], [35],       consequences for team collaboration and project efficiency.
+with some reporting neutral or positive changes in students'       However, the extent to which such downstream costs will
+learning outcomes [32], [33], and others reporting negative        materialize depends on how software development practices
+effects [31], [34], [35].                                          will adapt to AI assistance. It is plausible that future software
+                                                                   workflows will increasingly delegate debugging and mainte-
+   Related to our study but in a different domain is the recent    nance activities to AI agents, thereby reducing the need for
+work by Kosmyna et al. [7], which explored the neural and          developers to engage deeply with low-level code details. Such
+behavioral consequences (also in terms of ownership) of LLM-       a "higher-level code understanding" is not fully captured by
+assisted essay writing (natural language). Participants were       the comprehension-based ownership measures we used and,
+divided into three groups, allowed to use: (i) LLMs, (ii) search   under such scenarios, reduced low-level code comprehension
+engines, and (iii) no tool at all (Brain-only). The self-reported  may not translate directly into reduced effectiveness. Nev-
+ownership of essays was the lowest in the LLM group and            ertheless, even in this future, we expect human oversight,
+the highest in the Brain-only group. Participants using LLMs       accountability, and collaboration remain central to software
+showed less ability to quote their own essays just minutes after
+writing them. These findings align with our results, overall
+suggesting that AI-based tools may diminish users' sense of
+ownership and ability to explain or recall details.
+
+This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+                                 This article has been accepted for publication in IEEE Transactions on Software Engineering. This is the author's version which has not been fully edited and  14
+                                                                     content may change prior to final publication. Citation information: DOI 10.1109/TSE.2026.3679627
+
+JOURNAL OF LATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021
+
+engineering practice. Second, in educational contexts, while AI                [18] "Remote Development - Visual Studio Marketplace," https:
+tools can lower entry barriers to programming, their use should                      //marketplace.visualstudio.com/items?itemName=ms-vscode-remote.
+be carefully moderated. Over-reliance on AI-generated code                           vscode-remote-extensionpack, accessed: 2024-02-28.
+may hinder the development of deeper code understanding and
+problem-solving skills.                                                        [19] "Extension Pack for Java - Visual Studio Marketplace,"
+                                                                                     https://marketplace.visualstudio.com/items?itemName=vscjava.
+   Finally, our study highlights a loss of code ownership                            vscode-java-pack, accessed: 2024-02-28.
+in the very short-term (i.e., right after the code has been
+implemented) when AI is used. Future studies should inves-                     [20] "Python - Visual Studio Marketplace," https://marketplace.visualstudio.
+tigate long-term effects. For instance, when developers may                          com/items?itemName=ms-python.python, accessed: 2024-02-28.
+need to re-familiarize themselves with their past code, is
+past code easier to comprehend if it was written without AI                    [21] "Tako - Visual Studio Marketplace," https://marketplace.visualstudio.
+support? Furthermore, future work should also explore ways                           com/items?itemName=codelounge.tako, accessed: 2024-02-28.
+to improve the explainability of generated code and foster
+developer engagement with the suggestions. This may include                    [22] S. Schulhoff, M. Ilie, N. Balepur, K. Kahadze, A. Liu, C. Si,
+mechanisms for encouraging active review of AI-generated                             Y. Li, A. Gupta et al., "The prompt report: A systematic
+output, thus minimizing a possible loss in code ownership.                           survey of prompting techniques," 2024. [Online]. Available: https:
+                                                                                     //doi.org/10.48550/arXiv.2406.06608
+                        ACKNOWLEDGMENTS
+                                                                               [23] R. Bartlett and F. Partnoy, "The ratio problem," Available at SSRN:
+   This article is part of the project PID2024-156482NB-I00,                         https://ssrn.com/abstract=3605606, 2020.
+funded by MICIU/AEI/10.13039/501100011033 and by the
+ESF+. Tufano and Bavota acknowledge the financial support                      [24] T. Weber, M. Brandmaier, A. Schmidt, and S. Mayer, "Significant
+of the Swiss National Science Foundation for the PARSED                              productivity gains through programming with large language models,"
+project (SNF Project No. 219294).                                                    Proceedings of the ACM on Human-Computer Interaction, vol. 8, no.
+                                                                                     EICS, pp. 1­29, 2024.
+                      REFERENCES
+                                                                               [25] S. Peng, E. Kalliamvakou, P. Cihon, and M. Demirer, "The impact of ai
+[1] "ChatGPT," https://chat.openai.com/, accessed: 2024-02-27.                       on developer productivity: Evidence from github copilot," arXiv preprint
+                                                                                     arXiv:2302.06590, 2023.
+[2] "Copilot website," https://copilot.github.com, accessed: 2022-11-10.
+                                                                               [26] I. Bouzenia, P. Devanbu, and M. Pradel, "Repairagent: An autonomous,
+[3] R. Tufano, A. Mastropaolo, F. Pepe, O. Dabic, M. Di Penta, and                   llm-based agent for program repair," in Proceedings of the IEEE/ACM
+                                                                                     47th International Conference on Software Engineering, ser. ICSE
+G. Bavota, "Unveiling chatgpt's usage in open source projects: A                     '25. IEEE Press, 2025, p. 2188­2200. [Online]. Available: https:
+                                                                                     //doi.org/10.1109/ICSE55347.2025.00157
+mining-based study," in Proceedings of 2024 IEEE/ACM 21st Interna-
+                                                                               [27] C. Bird, D. Ford, T. Zimmermann, N. Forsgren, E. Kalliamvakou,
+tional Conference on Mining Software Repositories (MSR). IEEE, 2024,                 T. Lowdermilk, and I. Gazit, "Taking flight with copilot: Early in-
+                                                                                     sights and opportunities of ai-powered pair-programming tools," Queue,
+p. To Appear.                                                                        vol. 20, no. 6, pp. 35­57, 2022.
+
+[4] S. Peng, E. Kalliamvakou, P. Cihon, and M. Demirer, "The impact            [28] A. Ziegler, E. Kalliamvakou, X. A. Li, A. Rice, D. Rifkin, S. Simister,
+                                                                                     G. Sittampalam, and E. Aftandilian, "Productivity assessment of neural
+of ai on developer productivity: Evidence from github copilot," 2023.                code completion," in Proceedings of the 6th ACM SIGPLAN Interna-
+                                                                                     tional Symposium on Machine Programming, 2022, pp. 21­29.
+[Online]. Available: https://arxiv.org/abs/2302.06590
+                                                                               [29] A. Sarkar, A. D. Gordon, C. Negreanu, C. Poelitz, S. S. Ragavan, and
+[5] M. Greiler, K. Herzig, and J. Czerwonka, "Code ownership and soft-               B. Zorn, "What is it like to program with artificial intelligence?" arXiv
+                                                                                     preprint arXiv:2208.06213, 2022.
+ware quality: A replication study," in 2015 IEEE/ACM 12th Working
+                                                                               [30] J. D. Weisz, S. V. Kumar, M. Muller, K.-E. Browne, A. Goldberg, K. E.
+Conference on Mining Software Repositories, 2015, pp. 2­12.                          Heintze, and S. Bajpai, "Examining the use and impact of an ai code
+                                                                                     assistant on developer productivity and experience in the enterprise," in
+[6] P. Thongtanunam, S. McIntosh, A. E. Hassan, and H. Iida, "Revisiting             Proceedings of the Extended Abstracts of the CHI Conference on Human
+                                                                                     Factors in Computing Systems, 2025, pp. 1­13.
+code ownership and its relationship with software quality in the scope
+                                                                               [31] G. Jost, V. Taneski, and S. Karakatic, "The impact of large language
+of modern code review," in Proceedings of the 38th International                     models on programming education and student learning outcomes,"
+                                                                                     Applied Sciences, vol. 14, no. 10, p. 4115, 2024.
+Conference on Software Engineering, ser. ICSE '16. New York, NY,
+                                                                               [32] Y. Xue, H. Chen, G. R. Bai, R. Tairas, and Y. Huang, "Does ChatGPT
+USA: Association for Computing Machinery, 2016, p. 1039­1050.                        help with introductory programming? An experiment of students using
+                                                                                     ChatGPT in CS1," in Proceedings of the 46th International conference
+[Online]. Available: https://doi.org/10.1145/2884781.2884852                         on software engineering: software engineering education and training,
+                                                                                     2024, pp. 331­341.
+[7] N. Kosmyna, E. Hauptmann, Y. T. Yuan, J. Situ, X.-H. Liao, A. V.
+                                                                               [33] M. Kazemitabaar, J. Chow, C. K. T. Ma, B. J. Ericson, D. Weintrop, and
+Beresnitzky, I. Braunstein, and P. Maes, "Your brain on chatgpt:                     T. Grossman, "Studying the effect of AI code generators on supporting
+                                                                                     novice learners in introductory programming," in Proceedings of the
+Accumulation of cognitive debt when using an ai assistant for essay                  2023 CHI conference on human factors in computing systems, 2023,
+                                                                                     pp. 1­23.
+writing task," 2025. [Online]. Available: https://arxiv.org/abs/2506.08872
+                                                                               [34] J. Prather, B. N. Reeves, J. Leinonen, S. MacNeil, A. S. Randrianasolo,
+[8] Y. Yang, X. Xia, D. Lo, and J. Grundy, "A survey on deep learning for            B. A. Becker, B. Kimmel, J. Wright, and B. Briggs, "The widening gap:
+                                                                                     The benefits and harms of generative ai for novice programmers," in
+software engineering," ACM Computing Surveys (CSUR), vol. 54, no.                    Proceedings of the 2024 ACM Conference on International Computing
+                                                                                     Education Research-Volume 1, 2024, pp. 469­486.
+10s, pp. 1­73, 2022.
+                                                                               [35] P. Vaithilingam, T. Zhang, and E. L. Glassman, "Expectation vs. experi-
+[9] X. Hou, Y. Zhao, Y. Liu, Z. Yang, K. Wang, L. Li, X. Luo, D. Lo,                 ence: Evaluating the usability of code generation tools powered by large
+                                                                                     language models," in CHI Conference on Human Factors in Computing
+J. Grundy, and H. Wang, "Large language models for software engi-                    Systems Extended Abstracts, 2022, pp. 1­7.
+
+neering: A systematic literature review," ACM Transactions on Software         [36] M. Borg, D. Hewett, N. Hagatulah, N. Couderc, E. So¨derberg,
+                                                                                     D. Graham, U. Kini, and D. Farley, "Echoes of ai: Investigating the
+Engineering and Methodology, vol. 33, no. 8, pp. 1­79, 2024.                         downstream effects of ai assistants on software maintainability," 2025.
+                                                                                     [Online]. Available: https://arxiv.org/abs/2507.00788
+[10] "Openai o1," https://openai.com/o1/, 2024.
+
+[11] "Replication     package,"              https://github.com/seart-group/
+
+productivity-ownership-study, [n.d.].
+
+[12] P. Sedgwick, "Convenience sampling," BMJ, 2013.
+
+[13] S. J. Stratton, "Population research: convenience sampling strategies,"
+
+Prehospital and disaster Medicine, vol. 36, no. 4, pp. 373­374, 2021.
+
+[14] "Gitlab apis," https://docs.gitlab.com/api/rest/, [n.d.].
+
+[15] "Building an application with spring boot," https://spring.io/guides/gs/
+
+spring-boot, [n.d.].
+
+[16] L. Richardson and S. Ruby, Restful web services, 1st ed. O'Reilly,
+
+2007.
+
+[17] "Junit 5," https://junit.org/, [n.d.].
+
+                   This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/
+

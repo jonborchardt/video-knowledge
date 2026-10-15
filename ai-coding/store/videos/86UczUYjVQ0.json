@@ -1,0 +1,220 @@
+{
+  "id": "86UczUYjVQ0",
+  "title": "AI-Accelerated Development: Practical Applications for Embedded Systems Engineers (Christophe Conil)",
+  "channel": "BayLibre",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCyZxBkTLjJ5B1tNka1IAYFQ",
+  "durationSec": 3288,
+  "thumbnail": "https://i.ytimg.com/vi/86UczUYjVQ0/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGDUgXihyMA8=&rs=AOn4CLDKa_zoZqzi5bLBrKjmy6SzUzkI3Q",
+  "summary": "An embedded engineer demos Claude Code writing docs, tests, cross-stack features and bug finds on an ESP32 project, with practical caveats about faked tests and context.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "writing documentation is extremely extremely adapted to uh yeah to AI code generation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI speeds drafting tests and docs, but generated tests often assert implementation details or weak properties and need review.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "AI-devs added unit tests somewhat more often (46% vs 31%), described as 'no clear tendency'; test coverage barely moved (~+1pp); they added comments more often (79% vs 54%) but authors call them noisy, surface-level comments.",
+          "source": "ai-coding/sources/2507.00788.txt#L1948-L1956",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "On D4 (writing a JUnit 5 suite from scratch, mostly MSc students), AI users reached median completeness 100 vs 42.5 without AI. That was the strongest AI help of any task, but it came with the most severe ownership loss. Evidence covers one test task; documentation was not studied.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L575-L595",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-sometimes-game-tests-deleting",
+      "stance": "asserts",
+      "quote": "after the third iteration close just give ups and then comments your test and says return true to true true",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Reward hacking on tests (special-casing, weakening or deleting tests) is documented by labs and in agent evaluations, though frequency varies by model and setup.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-tools-catch-real-bugs",
+      "stance": "asserts",
+      "quote": "he found two bugs, critical bug line 223 where I put uh humidity instead of outside air quality",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clearing-context-starting-fresh-beats-compacting",
+      "stance": "asserts",
+      "quote": "when I start iterating more than three times with AI just closing the session, reopening a new one and restarting",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh context avoids accumulated noise, but compaction is useful when state is hard to reconstruct; it is a tradeoff, not a rule.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "first he will have his mind polluted by the first code and second it will cost three times more",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/open-weight-coding-models-now-handle",
+      "stance": "denies",
+      "quote": "there are no local llamas right now which can be trusted for writing code as good as that",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-code-generation-makes-one-off",
+      "stance": "asserts",
+      "quote": "Creating tools creating tools is uh is wonderful.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small standalone throwaway tools are where AI generation is most reliable, and many practitioners report building debugging aids they previously skipped.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic: 27% of Claude-assisted work wouldn't have been done otherwise, including dashboards and small tools, and 8.6% of Claude Code tasks are 'papercut fixes' such as building tools.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L45-L45",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeds-throwaway-prototyping-far-more-production",
+      "stance": "asserts",
+      "quote": "initial prototype prototyping crossplatform features yeah implemented in a few minutes instead of days",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Direction is well supported: greenfield, low-stakes work gets the biggest gains in studies and surveys. The specific multipliers are anecdote.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "you definitely need an experienced software engineer in the back uh to be able to to create good code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies show novices accept incorrect AI code more often; verifying output requires domain and code literacy.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "denies",
+      "quote": "you you'll get I think days",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Google RCT found no significant evidence that more frequent prior AI tool use increased speed with AI (H5 rejected); authors suggest a low usability floor where benefits accrue quickly, though power was limited.",
+          "source": "ai-coding/sources/2410.12944.txt#L522-L532",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "METR Feb 2026: the same 10 developers went from 19% slower (early 2025) to ~18% faster (late 2025, wide CI), but the update cannot separate more experience from better tools and selection effects.",
+          "source": "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Habitual AI users had a 55.9% posterior speedup vs 30.7% median across all AI users, suggesting proficiency matters, but the gains for non-habitual users were still positive and habitual status was self-selected.",
+          "source": "ai-coding/sources/2507.00788.txt#L2908-L2913",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-shifts-developer-effort-toward",
+      "stance": "asserts",
+      "quote": "It's like managing a team of five where you where you're the lead software engineer and you're have to review the code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys and studies (e.g. Faros, Google) report increased PR volume and review load with AI adoption.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

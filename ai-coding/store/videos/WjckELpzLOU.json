@@ -1,0 +1,180 @@
+{
+  "id": "WjckELpzLOU",
+  "title": "Mitchell Hashimoto’s new way of writing code",
+  "channel": "The Pragmatic Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPbwhExawYrn9xxI21TFfyw",
+  "durationSec": 7103,
+  "thumbnail": "https://i.ytimg.com/vi_webp/WjckELpzLOU/sddefault.webp",
+  "summary": "Mitchell Hashimoto on HashiCorp's history, AI-driven pressure on open source and Git, and his habit of always keeping an agent working on planning, research or code.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/makes-cheap-submit-plausible-looking-low",
+      "stance": "asserts",
+      "quote": "AI makes it trivial to create plausible-looking but incorrect and low-quality contributions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Maintainers of curl, Ghostty and others document floods of low-effort AI PRs and reports, and GitHub added tooling to restrict PRs in response.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/git-current-code-forge-workflows-not",
+      "stance": "asserts",
+      "quote": "Git and GitHub uh forges in their current form do not work with agentic infrastructure today",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Merge-queue and monorepo strain is reported by heavy agent users, but the evidence is anecdotal and Git scales far with existing extensions.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/keeping-agent-working-slow-background-tasks",
+      "stance": "asserts",
+      "quote": "I endeavor to always have an agent doing something at all times.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "Plausible for research-style tasks, but no study measures the net gain against review and context-switching costs.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR Feb 2026: developers using agentic tools often worked on unrelated tasks while waiting, and some ran several agents at once, which made per-task time unreliable. The practice is common, but the extra output is not measured.",
+          "source": "ai-coding/sources/metr-2026-experiment-design.txt#L83-L83",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-highly-useful-research-tasks",
+      "stance": "asserts",
+      "quote": "I absolutely love them for research.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Agents speed up broad searches and surveys, but deep-research outputs still contain errors and fabricated details that need checking.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "Oh, if I do a separate planning step, it does so much better.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Plan-then-execute consistently reduces agent rework in practice and in vendor evals, especially on multi-file tasks.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "Oh, if I have a better test harness for it to execute, it does a lot better.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/updating-agent-rules-workflows-after-each",
+      "stance": "asserts",
+      "quote": "oh if it makes a mistake and I add that just to agents.md, it never makes that mistake again.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Encoding lessons in rules and workflows does reduce repeat mistakes, but rule files bloat and conflict if not pruned; gains are real but not automatically compounding.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "asserts",
+      "quote": "it takes much longer than an hour to get proficient with git, but you put in the effort and then you reap the rewards later.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeds-throwaway-prototyping-far-more-production",
+      "stance": "asserts",
+      "quote": "when it turns into productionizing something, uh it feels similar to what it's always been.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Direction is well supported: greenfield, low-stakes work gets the biggest gains in studies and surveys. The specific multipliers are anecdote.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-prototypes-should-used-validate-requirements",
+      "stance": "asserts",
+      "quote": "I would much rather someone just like throw slop at a wall that you're never going to ship",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Validating demand before building is long-standing product practice; AI lowers prototype cost, making it more attractive.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/heavy-reliance-coding-assistance-erodes-developers",
+      "stance": "asserts",
+      "quote": "I think if you use the tools wrong, you do think less",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Anthropic's 2026 RCT found AI-assisted learners scored lower on mastery of a new library, and other studies show reduced engagement; effects depend on how AI is used.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

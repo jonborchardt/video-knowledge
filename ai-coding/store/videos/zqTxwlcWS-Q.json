@@ -1,0 +1,169 @@
+{
+  "id": "zqTxwlcWS-Q",
+  "title": "AI Made Devs 19% Slower (METR 2025 Study)",
+  "channel": "zencoderai",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCKy6an-NGVSLNPLfEmPttFQ",
+  "durationSec": 459,
+  "thumbnail": "https://i.ytimg.com/vi_webp/zqTxwlcWS-Q/sddefault.webp",
+  "summary": "Zencoder explainer: METR and DORA data, three hidden time drains (debugging, integration, review) and fixes.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+      "stance": "asserts",
+      "quote": "they actually were 19% slower",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L11-L27",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "After using it, they said they felt about 20% faster",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/higher-adoption-has-associated-lower-team",
+      "stance": "asserts",
+      "quote": "across those same teams throughput was down 1 and 1/2%. Delivery stability was about down 7%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2024 estimated a 25% AI-adoption increase associated with ~1.5% lower throughput and ~7.2% lower stability; DORA 2025 found throughput improved but instability persisted.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-using-assistants-write-less-secure",
+      "stance": "asserts",
+      "quote": "they had less secure output, but more confidence that it was secure",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Perry et al. (Stanford, 2022/CCS 2023) found AI-assisted participants wrote less secure code and were more likely to believe it secure.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+      "stance": "asserts",
+      "quote": "writing code is less than a third of a developer's day",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Studies of developer time show coding is a minority of work; DORA and Faros 2025 found individual coding gains often don't translate into delivery throughput.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/large-generated-pull-requests-exceed-what",
+      "stance": "asserts",
+      "quote": "reviewers stop finding bugs after about 400 lines of code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The SmartBear/Cisco review study found defect detection drops beyond ~200-400 LOC per session; AI makes large PRs cheap to produce.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The vibe-coding review names a verification gap between generation speed and developers' capacity to verify. It doesn't measure PR size.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1906-L1918",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "before you prompt AI to build a function, you need to spec it out",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/handles-routine-coding-well-but-struggles",
+      "stance": "asserts",
+      "quote": "That's not AI work. That's context work that a human should probably be doing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks and field studies show strong performance on well-specified, common tasks and weaker results on context-heavy, novel logic.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/including-prompt-intent-authored-pull-requests",
+      "stance": "asserts",
+      "quote": "you can just put the prompt in there as part of the pull request",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Capturing intent helps reviewers, but raw prompt logs are noisy; a good PR description serves the same purpose. Plausible, untested.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

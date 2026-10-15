@@ -1,0 +1,71 @@
+{
+  "id": "devclass-ai-assistance-is-leading-to-lower-code-quality-claim-researchers",
+  "title": "AI assistance is leading to lower code quality, claim researchers",
+  "channel": "devclass",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://devclass.com/2024/01/24/ai-assistance-is-leading-to-lower-code-quality-claim-researchers/",
+  "summary": "Reports GitClear's analysis of rising code churn and copy-paste alongside AI adoption, set against GitHub's productivity claims.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/commit-counts-overstate-productivity-because-increases",
+      "stance": "asserts",
+      "quote": "They also see an increase in churn, now at 7.1 percent compared to just 3.3 percent in 2020.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-code-duplicates-existing-utilities-types",
+      "stance": "asserts",
+      "quote": "no greater scourge to long-term code maintainability.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/code-assistants-suggest-adding-far-more",
+      "stance": "asserts",
+      "quote": "suggestions for added code, but never suggestions for updating, moving, or deleting code.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "True of completion-style assistants and consistent with GitClear's falling moved-code share, but agentic tools now routinely refactor and delete code.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "RefactoringMiner found AI-assisted developers did as many or more refactorings (mean 18.3 vs 15.4) but mostly simple ones such as Inline or Rename Variable. Non-AI developers did more structural moves (Move Method 1.89 vs 0.21). Refactoring was not discouraged overall, but the deeper kinds were rarer.",
+          "source": "ai-coding/sources/2507.00788.txt#L2067-L2080",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Across 302k real AI-authored commits, AI fixed slightly more static-analysis code smells than it introduced (439,817 vs 432,748), which suggests it does perform local cleanup. Smell removal is only a loose proxy for refactoring.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L918-L922",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/github-copilot-makes-developers-complete-tasks",
+      "stance": "asserts",
+      "quote": "developers complete tasks 55 percent faster",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/large-share-code-major-companies-now",
+      "stance": "asserts",
+      "quote": "46 percent of code was completed by Copilot in files where it was enabled",
+      "verdicts": []
+    }
+  ]
+}

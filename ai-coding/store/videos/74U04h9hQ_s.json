@@ -1,0 +1,141 @@
+{
+  "id": "74U04h9hQ_s",
+  "title": "Ralph Wiggum: Continuous Agent Loops in Claude Code",
+  "channel": "AI Makerspace",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCbDZFHUjTCCUKyXgcp3g50Q",
+  "durationSec": 3713,
+  "thumbnail": "https://i.ytimg.com/vi/74U04h9hQ_s/sddefault.jpg?v=696feab5",
+  "summary": "AI Makerspace explains the Ralph Wiggum loop plugin (stop-hook re-prompting) and argues it suits low-stakes, verifiable work, not your job.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+      "stance": "asserts",
+      "quote": "when Claude tries to stop, we say, No, no, no. It's not time to stop",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Goal/loop features keep agents going through backlogs, but unattended runs drift or game checks without good verification; works when acceptance tests are strong.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/unattended-agent-loops-suit-low-stakes",
+      "stance": "asserts",
+      "quote": "It's not good for tasks requiring human judgment ... don't use Ralph at work",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Loops without human checkpoints work when tests define success; for ambiguous or high-stakes work, drift, false completion and token burn dominate. Matches vendor guidance on long-running harnesses.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: engineers fully delegate easily verifiable, low-stakes work (throwaway debug or research code) and keep supervising high-stakes work; this is about delegation in general, not unattended loops specifically.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L19-L19",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "if I want Claude to work for for 10 hours on something, I best have put 10 hours into planning",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "tasks with automatic verification ... if we make it superverifiable",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/prompts-used-repeatedly-should-packaged-reusable",
+      "stance": "asserts",
+      "quote": "Every time I do something more than once with Claude, I turn it into a skill",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Reusable commands/skills reduce variance and share practice across a team; the 'three times' threshold is a rule of thumb.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/updating-agent-rules-workflows-after-each",
+      "stance": "asserts",
+      "quote": "if I notice Claude has made a mistake ... I'm simply going to tell Claude to remember to not make that mistake",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Encoding lessons in rules and workflows does reduce repeat mistakes, but rule files bloat and conflict if not pruned; gains are real but not automatically compounding.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Airbnb's 'sample, tune, sweep' loop (find common failures, fix the prompt/scripts, re-run) raised completion from 75% to 97% in 4 days.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L54-L60",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-run-permission-prompts-disabled-should",
+      "stance": "asserts",
+      "quote": "dangerously run permissions mode which uh which you should never do unless you're in a sandbox",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents have deleted files and run destructive commands when unrestricted; vendors themselves recommend containers/VMs for skip-permissions modes.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Sandboxing appears in 15% (5/33) of safeguard sources (e.g. Seatbelt read-only jail, Docker plus iptables isolation) and is a recommended practice, but its effectiveness is not evaluated.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1631-L1642",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

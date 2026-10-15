@@ -1,0 +1,162 @@
+{
+  "id": "17-YSUHo6Lk",
+  "title": "Building Blocks for Uber’s Software Factory— Uday Kiran Medisetty & Adam Huda, Uber",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 1105,
+  "thumbnail": "https://i.ytimg.com/vi_webp/17-YSUHo6Lk/sddefault.webp?v=6a96ea32",
+  "summary": "Uber engineers describe the model gateway, MCP gateway, agent sandboxes, skills marketplace and context graph behind their agent-built software pipeline.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/large-share-code-major-companies-now",
+      "stance": "asserts",
+      "quote": "more than 70% of our PRs now either by local or cloud agents.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Google and Microsoft executives cite ~25-50% of new code AI-generated; the figures are self-reported and usually count accepted suggestions, not finished code.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Citing company disclosures: Google and Microsoft said in 2025 that AI writes over 20% of their new code. This is secondhand and a meaningful but not majority share.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L59-L60",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Cites public statements from Microsoft, Meta and Google that roughly a third of their new code is AI-generated; secondhand.",
+          "source": "ai-coding/sources/2507.00788.txt#L73-L75",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Google reports that AI completion assisted 67% of code characters (38% acceptance rate), so more characters are AI-completed than typed by hand; note this is a completion metric, not autonomous authorship.",
+          "source": "ai-coding/sources/2501.06972.txt#L86-L95",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/combining-deterministic-transformation-tools-codemods-code",
+      "stance": "asserts",
+      "quote": "We handled more than 250 automated migrations 9 million lines of code automatically for our engineers.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Migration case studies (Google, Amazon Java upgrades, Airbnb) got their scale from pairing LLMs with deterministic tooling and validation rather than free-form generation.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/mcp-tool-definitions-consume-significant-context",
+      "stance": "asserts",
+      "quote": "we projected all of these MCPS into CLI pattern so that even the response doesn't eat up in your context.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Each MCP server injects tool schemas into context; large servers can use tens of thousands of tokens, and agents use CLIs well. Deferred tool loading has since reduced this.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-agents-organizational-context-tickets-discussions",
+      "stance": "asserts",
+      "quote": "with and without graph we see massive improvement in tokens, turns and latency",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Relevant org context plausibly cuts rework, but the cited 50% token / one-shot result is a single vendor test, not independent evidence.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/prompts-used-repeatedly-should-packaged-reusable",
+      "stance": "asserts",
+      "quote": "So what we built an entire life cycle around skills.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Reusable commands/skills reduce variance and share practice across a team; the 'three times' threshold is a rule of thumb.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "to build more advanced like endtoend features we really need to be able to validate uh the feature first",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeds-coding-deciding-what-build-product",
+      "stance": "asserts",
+      "quote": "we can probably build it now it's more of a question of should we build it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent with Amdahl-style reasoning and reports of shifting PM:engineer ratios; evidence is mostly anecdotal from AI-native teams.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/broad-proficiency-across-stack-shifts-value",
+      "stance": "asserts",
+      "quote": "the roles of engineers are getting blurred.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "Role blurring is widely reported anecdotally, but there is no solid labor-market evidence yet that specialists are losing ground.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: engineers report becoming 'more full-stack' (backend engineers building UIs, researchers building front-end visualizations), but nothing shows value moving away from specialists.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L83-L84",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

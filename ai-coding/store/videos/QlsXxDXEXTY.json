@@ -1,0 +1,115 @@
+{
+  "id": "QlsXxDXEXTY",
+  "title": "AI-Infused Development: Lessons Learned and Patterns from Esri Engineers",
+  "channel": "Esri Developers",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCgCXcfk5uEraWkpE9wlRwgw",
+  "durationSec": 3172,
+  "thumbnail": "https://i.ytimg.com/vi_webp/QlsXxDXEXTY/sddefault.webp",
+  "summary": "An Esri developer-outreach talk surveying AI coding use cases (tools, translation, tests, docs, debugging via MCP), workflows like spec-driven development, and risks and mitigations.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/different-models-suit-coding-tasks-switching",
+      "stance": "asserts",
+      "quote": "there are a lot of organizations that are using as I was saying multiple models depending on the task",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/effective-translating-application-code-samples-one",
+      "stance": "asserts",
+      "quote": "how useful it became to translate an application built from one language to another",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Migration case studies (Airbnb, Google) show large time savings on translation and migration, but output still needs review and deterministic tooling helps.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "One participant reported that Copilot sped up their work by translating constructs from familiar languages into Java/Spring idioms. This is a single anecdote about snippet-level translation, not whole applications.",
+          "source": "ai-coding/sources/2507.00788.txt#L2232-L2237",
+          "confidence": 0.2,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "Google authors' related-work aside: prior LLM approaches to language translation 'do not reach high enough quality to become useful yet' (an opinion on the literature, not a measurement).",
+          "source": "ai-coding/sources/2501.06972.txt#L687-L690",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/cheap-code-generation-makes-one-off",
+      "stance": "asserts",
+      "quote": "we are using it to generate small tools to process our data pipelines",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/prompts-used-repeatedly-should-packaged-reusable",
+      "stance": "asserts",
+      "quote": "That ship skill is just a markdown file that is helping me to run my test locally",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/having-interview-you-reach-shared-understanding",
+      "stance": "asserts",
+      "quote": "it's popping up a window that it's interviewing me.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/agents-run-permission-prompts-disabled-should",
+      "stance": "asserts",
+      "quote": "the most important one is to consider using containers like Docker",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/extra-code-volume-produces-increases-complexity",
+      "stance": "asserts",
+      "quote": "the more lines of code, the more time you will have to read them",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "how it can be risky to allow people new to teams to start using AI from day one without having the foundational knowledge",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/llms-propose-outdated-library-versions-models",
+      "stance": "asserts",
+      "quote": "many of these models have been trained with code that was out there some time ago",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/agents-work-better-widely-used-standard",
+      "stance": "asserts",
+      "quote": "The AI doesn't know anything about the frameworks and the coding patterns that we've developed",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "generating tests for testing the proprietary code, we absolutely use AI all the time",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/security-data-critical-code-auth-payments",
+      "stance": "asserts",
+      "quote": "do not delegate anything related to security to an agent",
+      "verdicts": []
+    }
+  ]
+}

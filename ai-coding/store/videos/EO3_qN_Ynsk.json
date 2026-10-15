@@ -1,0 +1,198 @@
+{
+  "id": "EO3_qN_Ynsk",
+  "title": "Software engineering with LLMs in 2025: reality check (at LDX3 by LeadDev)",
+  "channel": "The Pragmatic Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCPbwhExawYrn9xxI21TFfyw",
+  "durationSec": 1517,
+  "thumbnail": "https://i.ytimg.com/vi_webp/EO3_qN_Ynsk/sddefault.webp",
+  "summary": "Gergely Orosz contrasts executive AI hype with what engineers at AI startups, big tech and independent shops actually report, finding real but uneven adoption and gains.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/labs-capability-claims-inflated-fundraising-incentives",
+      "stance": "asserts",
+      "quote": "again is an AI company founder very much interested in in in this",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Labs do have incentives and many evals are self-reported, but independent evals (METR, SWE-bench, LMArena) largely confirm capability gains.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/handles-routine-coding-well-but-struggles",
+      "stance": "asserts",
+      "quote": "help this agent land a fix in a production and really complex codebase, a .NET codebase, and they failed spectacularly",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Benchmarks and field studies show strong performance on well-specified, common tasks and weaker results on context-heavy, novel logic.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+      "stance": "asserts",
+      "quote": "It's still faster for us to write the correct code than to review the LM code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "A reasonable explanation consistent with METR's 44% acceptance and review overhead; the specific threshold is conjecture.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1454-L1458",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "the faults of the model hallucination are avoided because the tool just runs itself and sees the results",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/lets-experienced-developers-work-productively-programming",
+      "stance": "asserts",
+      "quote": "languages and frameworks just matter less because it's so easy to switch",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI clearly lowers the barrier to unfamiliar mainstream languages, but output quality still depends on the developer's ability to judge it and drops for less common languages.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025, qualitative: developers find AI helpful on unfamiliar tasks (first-time Git hooks saved ~3h, an unfamiliar frontend test), and less helpful where they are experts. This involves unfamiliar tools and areas, not unknown languages.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L963-L973",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Eight participants, several seasoned developers new to Java/Spring Boot, said AI assistants helped them onboard and get up to speed (one said the task would have been near-impossible without Copilot); qualitative self-reports only.",
+          "source": "ai-coding/sources/2507.00788.txt#L2197-L2210",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: engineers use Claude to cover unfamiliar areas (SQL, Git/Linux, front-end), but interviewees are split, and some keep to familiar territory so they can verify the output.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L72-L78",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/most-professional-developers-now-use-coding",
+      "stance": "asserts",
+      "quote": "the median organization has about 50%. Five out of 10 use it on a weekly basis.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Stack Overflow 2025: ~84% use or plan to use AI tools, about half of professionals daily; JetBrains and DORA report similar figures.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "estimations are maybe 3 to 5 hours, maybe 4 hours. I mean, okay, 4 hours saved is pretty good, but that's not 10x",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/individual-productivity-gains-have-not-reliably",
+      "stance": "asserts",
+      "quote": "These tools are great for individual developers but not yet good at the org level.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/main-change-llms-bring-programming-shift",
+      "stance": "asserts",
+      "quote": "except these things are non-deterministic for the first time in computing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A framing about what matters most; it's a useful lens, but you can't test it as a fact.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+      "stance": "denies",
+      "quote": "the model improvements in the last 6 months have been some sort of tipping point",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

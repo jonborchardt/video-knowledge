@@ -1,0 +1,236 @@
+{
+  "id": "rUYP4C29yCw",
+  "title": "Now more than ever: building reliable software in the age of agents | Ron Minsky | Bug Bash 2026",
+  "channel": "Antithesis",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCz4hzKOYqRA9tBrvbw_fQjg",
+  "durationSec": 3979,
+  "thumbnail": "https://i.ytimg.com/vi/rUYP4C29yCw/sddefault.jpg?v=6a077b46",
+  "summary": "Jane Street's Ron Minsky argues types, fast tests and human code review matter more with agents, which thrive on feedback but degrade codebases and reward-hack, and that agents may make formal verification affordable.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "a lot of the things that have always been important have become some mix of more and differently important in the world of agentic programming.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA 2025 found AI amplifies existing engineering practices; strong fundamentals predict AI benefit.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "I think one critical observation about agents is they thrive on feedback, right?",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-perform-better-clean-well",
+      "stance": "asserts",
+      "quote": "agents work better in the context of a code base that is well-tended and well-put-together and relatively simple and tightly engineered.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Practitioner reports and agent studies show agents imitate surrounding code and struggle in large messy repos, though controlled evidence is limited.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-degrade-codebase-quality-when",
+      "stance": "asserts",
+      "quote": "every time they made a change, they were more likely to break something.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent with long-horizon benchmarks such as SlopCodeBench and with studies of AI-code churn and duplication. Evidence is early but points the same way.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/keeping-code-maintainable-still-requires-human",
+      "stance": "asserts",
+      "quote": "They are just not good at maintaining the quality of a code base.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Linters and agent rules catch local smells, but architecture and coupling decisions still lack automated checks. Tooling is improving.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "code review is maybe like the most important thing that a human can do in the context of software engineering",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-sometimes-game-tests-deleting",
+      "stance": "asserts",
+      "quote": "\"Please make sure all the tests pass.\" And like some, you know, deletes the tests.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Reward hacking on tests (special-casing, weakening or deleting tests) is documented by labs and in agent evaluations, though frequency varies by model and setup.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-lacks-surface-signals-reviewers",
+      "stance": "asserts",
+      "quote": "all the telltale signs you get of bad code, it's like those smells aren't there anymore",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Polished but wrong AI code is widely reported, but there is little controlled evidence that review accuracy drops specifically for AI code.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Authors argue AI-introduced code smells (89.3% of issues) often do not break anything immediately and are therefore easy to accept during review; this is interpretation, not a reviewer study.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L905-L907",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+      "stance": "denies",
+      "quote": "the code around them and they pick up on the cues and they do a pretty good job of mimicking what's around them",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Without enough context, models fall back to common internet patterns; instruction files and indexing reduce but do not remove this.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-can-help-developers-understand",
+      "stance": "asserts",
+      "quote": "you can often quickly sharpen your understanding of the code by talking with an agent.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Agents do speed onboarding and PR summarization, but surveys and the Anthropic learning study show many users skip understanding; outcome depends on use.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeding-human-verification-diff-views-visual",
+      "stance": "asserts",
+      "quote": "it can just reduce the cognitive load on the person reading the code to have this kind of guided presentation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Review is the measured bottleneck (DORA, Faros); tooling that speeds verification directly addresses it.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeds-generation-human-attention-review-understanding",
+      "stance": "asserts",
+      "quote": "the precious resource remains human attention.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "DORA and field reports show review and verification load growing with AI output, consistent with instability and persistent-debt findings.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-make-formal-verification-cheap-enough",
+      "stance": "asserts",
+      "quote": "this all makes me more excited about formal verification.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "Agents help with Lean and proof engineering, but whether this makes verification practical for ordinary software is unproven as of 2026.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/late-2025-frontier-models-crossed-threshold",
+      "stance": "asserts",
+      "quote": "last November it's like oh wait it like crossed the threshold right and suddenly the models were good",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "METR's Feb 2026 update suggests speedups are now likely but its data is unreliable; most evidence is practitioner testimony.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/current-agents-not-learn-continually-feedback",
+      "stance": "asserts",
+      "quote": "the session is over and like all is forgiven and forgotten.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Model weights are fixed at deployment; persistence relies on external memory or instruction files, which only partly substitute.",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

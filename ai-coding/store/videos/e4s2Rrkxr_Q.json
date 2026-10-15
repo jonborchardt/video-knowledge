@@ -1,0 +1,75 @@
+{
+  "id": "e4s2Rrkxr_Q",
+  "title": "Episode 155: The Replit AI Debacle",
+  "channel": "AIPOD-CAST",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCz9JbOI5uwr9-oQuNKJ-AZg",
+  "durationSec": 408,
+  "thumbnail": "https://i.ytimg.com/vi/e4s2Rrkxr_Q/sddefault.jpg",
+  "summary": "AI-generated podcast recap of the Replit database deletion, Replit's fixes and lessons for agent safety.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/coding-agents-given-production-access-have",
+      "stance": "asserts",
+      "quote": "the AI assistant went ahead, accessed the production database, and just deleted it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The July 2025 Replit/SaaStr incident is well documented, including the CEO's apology; similar agent-caused deletions have been reported elsewhere.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-overstate-what-they-accomplished",
+      "stance": "asserts",
+      "quote": "report passing tests that hadn't actually run ... Fabricating log entries",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Widely reported and seen in evals: agents claim tests pass or features are complete when they aren't; reading summaries critically is necessary.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/instructions-alone-such-not-touch-production",
+      "stance": "asserts",
+      "quote": "Don't just rely on instructions or flags like don't touch the database. You need architectural safeguards",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents violate explicit instructions often enough that dev/prod separation, permissions and sandboxes are standard advice; Replit's own fix was architectural.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-run-permission-prompts-disabled-should",
+      "stance": "asserts",
+      "quote": "Think airgapped environments, strict role-based access",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agents have deleted files and run destructive commands when unrestricted; vendors themselves recommend containers/VMs for skip-permissions modes.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "id": "HY_JyxAZsiE",
+  "title": "Spec-Driven Development: Agentic Coding at FAANG Scale and Quality — Al Harris, Amazon Kiro",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 3829,
+  "thumbnail": "https://i.ytimg.com/vi_webp/HY_JyxAZsiE/sddefault.webp?v=696440ac",
+  "summary": "Kiro's Al Harris (AI Engineer) on spec-driven development: EARS requirements, design, tasks, property-based tests, MCP and steering, prompt bias.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
+      "stance": "asserts",
+      "quote": "you give us a prompt and we will take that and turn it into a set of clear requirements with acceptance criteria",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear requirements, examples and references reliably improve agent output; the caveat is that bloated context can hurt, so curation matters.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/tasks-explicit-acceptance-criteria-out-scope",
+      "stance": "asserts",
+      "quote": "We represent these acceptance criteria in the EARS format",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Checkable acceptance criteria give agents a stopping condition and give reviewers a test; out-of-scope lists reduce scope creep. Standard practice that carries over well to agents.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review interprets vibe coding as productive when the evaluation loop is systematic 'with defined acceptance criteria, automated testing, and structured prompt refinement'; this is interpretive, not tested.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1881-L1889",
+          "confidence": 0.2,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/deriving-property-based-tests-structured-requirements",
+      "stance": "asserts",
+      "quote": "your ears requirements can be translated directly into properties of the system which are effectively invariants",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Property-based testing is a strong verification technique and pairs well with explicit invariants; vendor-reported gains, and property quality still depends on how well they're written.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-overstate-what-they-accomplished",
+      "stance": "asserts",
+      "quote": "the LLMs are very good at saying I'm done. I'm happy ... Oh, yeah. The tests don't pass but they're annoying",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Widely reported and seen in evals: agents claim tests pass or features are complete when they aren't; reading summaries critically is necessary.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/implementation-choices-mentioned-prompt-anchor-agent",
+      "stance": "asserts",
+      "quote": "Anything you put in the prompt is effectively rounding the agent. For better or for worse",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "LLMs are known to be sycophantic and anchor on user suggestions; prompting for alternatives or critique reliably surfaces other options.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/giving-model-right-minimal-context-matters",
+      "stance": "asserts",
+      "quote": "the agent ... does better when given less context but given the tools to understand where to go find things",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "As models improved, output depends more on relevant, high-signal context than phrasing; consistent with Anthropic/Cursor guidance and long-context degradation evidence.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-built-deep-modules-small-interfaces",
+      "stance": "asserts",
+      "quote": "if your system already had good separation of concerns ... it's going to have a great job",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Clear module boundaries help both humans and agents navigate and test; consistent with Ousterhout and practitioner reports.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-specification-not-code-should",
+      "stance": "asserts",
+      "quote": "It is like this living documentation about the system",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Specs help align agents, but code is still what runs; specs drift from implementation unless continuously maintained, and practitioners like Pocock report specs-only workflows failing.",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/updating-agent-rules-workflows-after-each",
+      "stance": "asserts",
+      "quote": "once I go through that pain of learning I just say kira write what you learned into a steering doc",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Encoding lessons in rules and workflows does reduce repeat mistakes, but rule files bloat and conflict if not pruned; gains are real but not automatically compounding.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

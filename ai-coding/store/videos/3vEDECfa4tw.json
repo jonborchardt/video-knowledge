@@ -1,0 +1,180 @@
+{
+  "id": "3vEDECfa4tw",
+  "title": "AI at Honeycomb: What’s Actually Working (w/ CTO Charity Majors)",
+  "channel": "Jam",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCRl9ts9n5zmXHNzfeMcN_2Q",
+  "durationSec": 648,
+  "thumbnail": "https://i.ytimg.com/vi_webp/3vEDECfa4tw/sddefault.webp",
+  "summary": "Honeycomb CTO Charity Majors says AI has modestly changed team velocity, speeds up throwaway prototyping more than core systems, and that communication and production feedback still matter most.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+      "stance": "asserts",
+      "quote": "it hasn't transformed our team's velocity. It's made us a little slower in some places, a little faster in others.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The Stanford 100k-developer study and other field data put average gains around 10-20%, far below 2x-10x marketing claims.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Google RCT, 96 full-time engineers on an enterprise-grade C++ task in the monorepo: AI cut time on task by ~21% in the best-fit model (95% CI crosses zero, p=0.086), well below Peng et al.'s 56% and in line with Cui et al.'s 26%.",
+          "source": "ai-coding/sources/2410.12944.txt#L519-L528",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Field RCTs with 4,867 developers at Microsoft, Accenture and a Fortune-100 firm: Copilot raised weekly completed PRs by 26% (SE 10.3%), substantially smaller than the lab's 56% speedup, which the authors attribute to real work being less assistable.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025: in large, mature repos (~10 years old, >1.1M LOC) AI helped less than in greenfield RCTs, and on average slowed developers by 19%; this goes beyond 'modest gains', and the repos are open-source rather than enterprise.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L995-L1001",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google reports large end-to-end savings (about 50% on int64, about 89% on small Joda clusters) in a 500M+ LOC codebase, but only for bespoke migration pipelines with fine-tuned models, not average developer work, and the figures are engineers' estimates.",
+          "source": "ai-coding/sources/2501.06972.txt#L245-L251",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Field DID at a 5,000-person IT services firm (201 devs, 27 weeks, 2023-24 Copilot/ChatGPT/Gemini): AI users completed 1.08 more user stories per week (+18%), a real gain but modest next to 55% or 10x headlines; usage was self-reported and partly self-selected.",
+          "source": "ai-coding/sources/4859137.txt#L489-L493",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/speeds-throwaway-prototyping-far-more-production",
+      "stance": "asserts",
+      "quote": "the ideation phase when when you're throwing a lot of code away anyway has gotten a lot faster.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Direction is well supported: greenfield, low-stakes work gets the biggest gains in studies and surveys. The specific multipliers are anecdote.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025 caveat: its slowdown on mature repos is 'consistent with small greenfield projects or development in unfamiliar codebases seeing substantial speedup'. This is a hypothesis; prototyping was not measured.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L581-L586",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-shrink-task-complexity-codebase",
+      "stance": "asserts",
+      "quote": "database engineers who are working on storage engine it has not transformed their velocity and nor should it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent across Stanford's data, METR's mature-repo slowdown and long-context degradation results.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google's complex enterprise task (unfamiliar 474-line CL, build/test updates) yielded ~21% vs 56% on Peng's simple HTTP-server task, but the authors attribute the gap mainly to population differences rather than task complexity.",
+          "source": "ai-coding/sources/2410.12944.txt#L529-L539",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Comparing two separate experiments: the AI accuracy gain fell on harder tasks (0.124 vs 0.264), but the task-count gain rose slightly (0.283 vs 0.245). Complexity was not manipulated, and the authors call this suggestive.",
+          "source": "ai-coding/sources/4859137.txt#L1197-L1205",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/non-engineers-such-pms-can-now",
+      "stance": "asserts",
+      "quote": "our our designers can you know uh do do code prototypes",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tools like Lovable, v0, Replit let non-developers produce working prototypes; widely observed.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/communication-domain-knowledge-stakeholder-work-remain",
+      "stance": "asserts",
+      "quote": "any engineer who can tell me what they want to do and why is more than capable of you know generating the code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Requirements, stakeholder alignment and judgment remain hard to delegate; plausible though not strictly testable.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/implementation-gets-cheap-product-taste-judgment",
+      "stance": "asserts",
+      "quote": "Doesn't matter how fast you're going if you aren't working on things that really change your users's lives.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Plausible economic logic and widely argued, but not measured; execution, distribution and maintenance still matter.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/software-bifurcating-disposable-generated-tools-long",
+      "stance": "asserts",
+      "quote": "the world of software is bifurcating into disposable software stuff that nobody really understands",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A framing of how software is changing rather than a measurable claim.",
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

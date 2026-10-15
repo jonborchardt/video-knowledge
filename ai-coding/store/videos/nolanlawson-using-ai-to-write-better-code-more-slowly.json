@@ -1,0 +1,125 @@
+{
+  "id": "nolanlawson-using-ai-to-write-better-code-more-slowly",
+  "title": "Using AI to write better code more slowly",
+  "channel": "Read the Tea Leaves",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://nolanlawson.com/2026/05/25/using-ai-to-write-better-code-more-slowly/",
+  "summary": "Describes a multi-model AI review skill that finds many real bugs with few false positives and argues for using agents to write better code more slowly rather than to ship slop fast.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/code-review-tools-catch-real-bugs",
+      "stance": "asserts",
+      "quote": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-second-different-model-review-agent",
+      "stance": "asserts",
+      "quote": "the more, different models you throw at a PR review, the less likely you are to get hallucinations or bogus bugs.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Cross-model and independent review plausibly reduces shared blind spots and self-preference bias, but evidence is mostly practitioner anecdote rather than controlled comparison.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-let-engineers-take-refactoring-tech",
+      "stance": "asserts",
+      "quote": "I’m writing unit tests and fixing subtle flaws that pre-date the PR.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Airbnb and Google migration case studies show large mechanical refactors sped up a lot with AI, though results need careful review and broad cleanup claims are mostly anecdotal.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Google: LLM migrations finished efforts stalled for years and 'saved hundreds of engineers worth of work', making previously infeasible tech-debt work possible.",
+          "source": "ai-coding/sources/2501.06972.txt#L79-L85",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Airbnb finished a migration estimated at 1.5 engineering-years by hand in 6 weeks, after Enzyme had lingered since RTL was adopted in 2020.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L6-L10",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic usage data: 8.6% of Claude Code tasks are papercut fixes such as refactoring for maintainability, which people say would normally be deprioritized.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L134-L134",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-can-help-developers-understand",
+      "stance": "asserts",
+      "quote": "It’s a great way to improve the overall health of the codebase while also teaching you about the odd corners of it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Agents do speed onboarding and PR summarization, but surveys and the Anthropic learning study show many users skip understanding; outcome depends on use.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-often-ship-generated-code-without",
+      "stance": "asserts",
+      "quote": "if you’re the kind of developer who uses agents to write multi-hundred-line PRs that you barely understand yourself",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys (e.g. Sonar 2026) report many developers don't always check AI code before committing, despite saying they distrust it.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/system-design-architecture-judgment-remain-human",
+      "stance": "asserts",
+      "quote": "Agents are not terribly good at architecture",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Humans still own constraints and tradeoffs, but models can now propose reasonable designs when given context; the gap is narrowing.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

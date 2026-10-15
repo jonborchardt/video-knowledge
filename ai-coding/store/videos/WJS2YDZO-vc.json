@@ -1,0 +1,173 @@
+{
+  "id": "WJS2YDZO-vc",
+  "title": "Build to Last — Chris Lattner talks with Jeremy Howard",
+  "channel": "Jeremy Howard",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCX7Y2qWriXpqocG97SFW2OQ",
+  "durationSec": 3519,
+  "thumbnail": "https://i.ytimg.com/vi_webp/WJS2YDZO-vc/sddefault.webp",
+  "summary": "Chris Lattner and Jeremy Howard argue AI coding helps prototypes and learning but threatens craftsmanship when used to crank out code without understanding.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/speeds-throwaway-prototyping-far-more-production",
+      "stance": "asserts",
+      "quote": "it probably is 5 or 10x productivity for prototypes.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Direction is well supported: greenfield, low-stakes work gets the biggest gains in studies and surveys. The specific multipliers are anecdote.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-can-help-developers-understand",
+      "stance": "asserts",
+      "quote": "it's amazing for learning uh a code base you're not familiar with.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Agents do speed onboarding and PR summarization, but surveys and the Anthropic learning study show many users skip understanding; outcome depends on use.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/acceptance-rate-counts-generated-lines-poor",
+      "stance": "asserts",
+      "quote": "I'm not uh CEO bragging about the number of lines of code written by AI. That's I think a completely useless metric.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accepted suggestions are often later rewritten or deleted, and output volume has long been a poor proxy for productivity; controlled studies measure task time or delivery instead.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-unit-tests-can-become-technical",
+      "stance": "asserts",
+      "quote": "unit tests are their own potential tech debt.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Mock-heavy or change-detector tests do raise maintenance cost, but well-guided AI tests are often useful, so it depends on review.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agentic-bug-fixes-often-make-symptom",
+      "stance": "asserts",
+      "quote": "It made It made the symptom go away, so it air quote fixed the bug, but it just was so wrong",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Audits of SWE-bench-style patches find many plausible but incorrect or overfitted fixes, though the rate varies by task and model.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/heavy-reliance-coding-assistance-erodes-developers",
+      "stance": "asserts",
+      "quote": "it can end up retarding your development and preventing you from growing and actually getting stuff done.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Anthropic's 2026 RCT found AI-assisted learners scored lower on mastery of a new library, and other studies show reduced engagement; effects depend on how AI is used.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/using-explanations-concepts-preserves-skill-formation",
+      "stance": "asserts",
+      "quote": "the people who do use it to learn more and learn faster are going to like they're going to outpace",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Anthropic's 2026 study found high scorers used AI for conceptual questions and explanations while low scorers delegated; small sample and a single learning task.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+      "stance": "denies",
+      "quote": "the results were just terrible. We we our productivity fell off a cliff.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "Second-hand anecdote measured by lines of code and commits; controlled and large field studies find average gains of roughly 10-30%, sometimes negative.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+      "stance": "asserts",
+      "quote": "pre-training was a big deal. It seemed exponential but actually it S-curved out and got flat as things went on.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/models-will-most-all-software-engineer",
+      "stance": "denies",
+      "quote": "I don't like the people that are making decisions as though AGI or ASI were here tomorrow.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "Prediction tracked against 2026 reality: agents handle more scoped tasks, but end-to-end engineering (requirements, review, operations) still depends on people; METR horizons and hiring data don't support 'most or all' yet.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/non-engineers-such-pms-can-now",
+      "stance": "asserts",
+      "quote": "the people who don't know code being able to get something done that they otherwise couldn't do, that is actually transformative.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Tools like Lovable, v0, Replit let non-developers produce working prototypes; widely observed.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

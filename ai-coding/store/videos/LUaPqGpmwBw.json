@@ -1,0 +1,169 @@
+{
+  "id": "LUaPqGpmwBw",
+  "title": "AI made Developers Slower",
+  "channel": "Telusko",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UC59K-uG2A5ogwIrHw4bmlEg",
+  "durationSec": 565,
+  "thumbnail": "https://i.ytimg.com/vi/LUaPqGpmwBw/sddefault.jpg",
+  "summary": "Telusko reacts to the METR RCT; argues slowdown is from older models and lack of ramp-up.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+      "stance": "asserts",
+      "quote": "it has decreased their productivity by 19%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L11-L27",
+          "confidence": 0.85,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "after the study they thought they it has improved their performance by 20%",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+      "stance": "asserts",
+      "quote": "if they conduct the same research now ... the result of using AI would be bit better",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Newer models may help, but METR attributed much of the slowdown to context, review overhead and repo familiarity, not model quality alone; METR's own later follow-up was mixed.",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "The paper tests only Feb-June 2025 tools. It says more reliable or better-elicited systems could speed up developers, and that early agents already make progress, but it doesn't test newer models.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L587-L599",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR Feb 2026: METR believes developers are likely more sped up in early 2026. Returning developers show an 18% time reduction (CI -38% to +9%) and new recruits a 4% reduction (CI -15% to +9%), but selection effects make this 'very weak evidence', and models are not separated from other changes.",
+          "source": "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-productivity-gains-appear-only-after",
+      "stance": "asserts",
+      "quote": "it slows you down when you just started work for one day but overall it improves it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Learning curves are real (METR's one dev with >50h Cursor experience was faster), but evidence that ramp-up reliably flips results is thin.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "There was no improvement across the first 50 hours of Cursor use, and dropping early tasks didn't change the slowdown. One developer with more than 50 hours did speed up, so a high skill ceiling is plausible but underpowered.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1205-L1230",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "It is also useful in creating test cases. It is also useful in creating documentations",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "AI speeds drafting tests and docs, but generated tests often assert implementation details or weak properties and need review.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/investment-financial-bubble-even-though-underlying",
+      "stance": "asserts",
+      "quote": "AI as a technology is very solid. What is a bubble is this fundings",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A market-valuation opinion; not testable from a video's claims.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+      "stance": "asserts",
+      "quote": "with every model you will see slight improvement",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/will-transform-software-engineering-jobs-rather",
+      "stance": "asserts",
+      "quote": "that doesn't means that it will replace developers completely",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Through 2026 evidence points to role change and slower junior hiring, not elimination of the profession; long-run is uncertain.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

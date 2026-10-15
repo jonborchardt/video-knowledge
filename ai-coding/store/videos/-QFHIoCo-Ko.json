@@ -1,0 +1,315 @@
+{
+  "id": "-QFHIoCo-Ko",
+  "title": "Full Walkthrough: Workflow for AI Coding — Matt Pocock",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 5790,
+  "thumbnail": "https://i.ytimg.com/vi_webp/-QFHIoCo-Ko/sddefault.webp",
+  "summary": "Matt Pocock workshop: grill-me alignment, PRD, vertical-slice Kanban issues, AFK Ralph loops with TDD and deep modules.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "as you continually keep adding stuff to the same context window, it just gets dumber and dumber",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.8,
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Vibe-coding MLR (47 sources): context-window/state-retention failures and context drift over long multi-turn sessions are reported, but only by 2 sources and labeled 'emerging'; no 'smart zone' sizing evidence.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1319-L1327",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clearing-context-starting-fresh-beats-compacting",
+      "stance": "asserts",
+      "quote": "devs love compacting for some reason, but I hate it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Fresh context avoids accumulated noise, but compaction is useful when state is hard to reconstruct; it is a tradeoff, not a rule.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+      "stance": "asserts",
+      "quote": "I tried this. I really tried it. And it sucks.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The review recommends reviewing generated code before committing rather than integrating unread output, and warns that deferred understanding (cognitive debt) raises later maintenance costs; this is recommendation-level evidence.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L2076-L2093",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "The authors warn that a loss of understanding may hurt review, debugging and maintenance. They also concede that future workflows handing those jobs to agents might make low-level comprehension matter less. So the paper backs the concern only speculatively.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L917-L940",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-interview-you-reach-shared-understanding",
+      "stance": "asserts",
+      "quote": "Interview me relentlessly about every aspect of this plan",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Requirements clarification before implementation is well-established practice and widely reported to reduce agent rework.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/agents-should-implement-work-thin-vertical",
+      "stance": "asserts",
+      "quote": "AI loves to code horizontally",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Tracer-bullet/vertical slicing gives earlier integration feedback; applies to agents as to humans.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "the quality of your feedback loops influences how good your AI can code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.8,
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/test-driven-development-red-green-refactor",
+      "stance": "asserts",
+      "quote": "TDD I found is absolutely essential for getting the most out of agents",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Tests-first gives agents a target and limits test-cheating; evidence is mostly anecdotal and it does not suit all code (e.g. UI).",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/codebases-built-deep-modules-small-interfaces",
+      "stance": "asserts",
+      "quote": "bad code bases make bad agents",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Clear module boundaries help both humans and agents navigate and test; consistent with Ousterhout and practitioner reports.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/planning-alignment-need-human-loop-while",
+      "stance": "asserts",
+      "quote": "planning, this alignment phase, has to be human in the loop",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Current agents are weakest at intent/requirements and strongest at well-specified implementation with verification.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic: most staff can 'fully delegate' only 0-20% of their work and actively supervise the rest, keeping design for themselves; this supports keeping a human on design but shows implementation is also rarely left unattended.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L50-L50",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/code-review-more-effective-fresh-context",
+      "stance": "asserts",
+      "quote": "the reviewer will be dumber than the thing that actually implemented it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Fresh-context reviewers avoid self-confirmation and context bloat; plausible and commonly practiced but little hard evidence.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/stale-planning-docs-left-repo-mislead",
+      "stance": "asserts",
+      "quote": "This is doc rot",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Agents treat repo docs as authoritative; outdated docs demonstrably steer them wrong.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-shifts-developer-effort-toward",
+      "stance": "asserts",
+      "quote": "I think we just need to be ready to be doing more code review",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Surveys and studies (e.g. Faros, Google) report increased PR volume and review load with AI adoption.",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The review finds developer work shifts from writing code toward specification, supervision and validation, with the unit of work moving to the acceptance decision.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1900-L1931",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR 2025 screen recordings (74 issues): with AI, developers spend less time coding and searching and more time reviewing AI output, prompting and waiting; supports a shift toward review, though QA/testing time is not singled out.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L433-L441",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Anthropic interviews: engineers describe becoming 'managers of AI agents', and one estimated their work shifted '70%+ to being a code reviewer/reviser'; this is qualitative self-report.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L115-L115",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "software engineering fundamentals ... also works super well with AI",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "DORA 2025 found AI amplifies existing engineering practices; strong fundamentals predict AI benefit.",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-should-read-correct-generated-plans",
+      "stance": "denies",
+      "quote": "Should I be reviewing this document? ... I don't look at these",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Reviewing plans catches costly mistakes early (e.g. editing secrets), but some practitioners get similar alignment through interactive Q&A and skip reading plans; value depends on task risk.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/simple-self-owned-coding-workflow-works",
+      "stance": "asserts",
+      "quote": "you need to own as much of your planning stack as you possibly can",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Owning and understanding your workflow helps you debug it, and many practitioners report framework bloat; but there is no comparative evidence, and frameworks can be a good starting point.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google built its own pipeline of reusable steps and deliberately chose agentless techniques over complex planning agents, citing Agentless results and cost, which supports simple self-built workflows for migrations.",
+          "source": "ai-coding/sources/2501.06972.txt#L678-L685",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+      "stance": "asserts",
+      "quote": "implementation here is really the only AFK bit",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Goal/loop features keep agents going through backlogs, but unattended runs drift or game checks without good verification; works when acceptance tests are strong.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L19-L22",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

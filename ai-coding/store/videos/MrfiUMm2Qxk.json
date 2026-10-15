@@ -1,0 +1,195 @@
+{
+  "id": "MrfiUMm2Qxk",
+  "title": "Broken AI Discourse with Steve Klabnik",
+  "channel": "Software Unscripted Podcast",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCgyxhwKAtiCREPVlOiamVZg",
+  "durationSec": 4783,
+  "thumbnail": "https://i.ytimg.com/vi/MrfiUMm2Qxk/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGHIgXihHMA8=&rs=AOn4CLBXp05v9Lu5Ncu4pDFSDaa0JU2zjQ",
+  "summary": "Klabnik and Feldman criticize both AI hype and reflexive anti-AI discourse, describing measured gains from agentic coding with careful review.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/predictions-would-write-around-all-code",
+      "stance": "asserts",
+      "quote": "Like by by September 90% of code will be written by AI.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/developers-should-able-explain-generated-code",
+      "stance": "asserts",
+      "quote": "I feel like you still have a professional responsibility to understand the code that you're committing to master or main or trunk.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+      "stance": "denies",
+      "quote": "I'm not 100x faster. I'm not even 10x faster.",
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "The field gain from AI assistants was about 18% more user stories (24-31% under alternative estimators), far from 10x. The tools were 2023-24 assistants, not agentic coding.",
+          "source": "ai-coding/sources/4859137.txt#L489-L493",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/keeping-agent-working-slow-background-tasks",
+      "stance": "asserts",
+      "quote": "I got a lot of coding work done on that meeting heavy day that I would have not necessarily gotten done",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/rewriting-code-scratch-often-cheaper-modifying",
+      "stance": "asserts",
+      "quote": "scrapping the whole thing and starting over is now cheaper",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/underlying-model-matters-more-agent-harness",
+      "stance": "asserts",
+      "quote": "it doesn't really feel like the agent tool itself is like making that big of a difference",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-run-tools-loop-step",
+      "stance": "asserts",
+      "quote": "if you're doing any copy pasting at all you're not getting the experience that either of us have been talking about for an hour",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/having-agent-plan-research-before-implementing",
+      "stance": "asserts",
+      "quote": "please spit out a step-by-step implementation plan including sample prompts and then I take that and then I hand it off to an agentic tool",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/reliably-useful-generating-tests-documentation",
+      "stance": "asserts",
+      "quote": "I have more tests and better tests and more documentation and better documentation than I did before I was using AI stuff.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "I'm reviewing each chunk of the diff as it builds it up and then I'll review it at the end",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/getting-good-results-coding-tools-takes",
+      "stance": "asserts",
+      "quote": "I feel like there's a big to use gamer terms as a high skill ceiling basically",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Practitioner reports and field studies suggest usage skill matters, but METR found no clear learning-curve effect and the basics are learned quickly.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR RCT: speedup did not improve over the first 50 hours of Cursor use, and the lone >50h developer's speedup (~25%) fell to ~0% once a second developer's misreported experience was corrected. The 'high skill ceiling' idea is plausible but underpowered.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1217-L1234",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Google RCT, 96 engineers: senior and heavy-coding developers were tentatively faster with AI and natural-language-to-code needs prompting skill, but how often people already used AI tools had no significant effect on their AI speed-up, so the authors point to a 'low usability floor'.",
+          "source": "ai-coding/sources/2410.12944.txt#L522-L543",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Field RCTs, ~4,900 developers: Copilot gains varied with experience, but in the opposite direction from 'skill needed'. Short-tenure and junior developers gained 21-40% while senior and long-tenure developers gained 7-16% (noisy, not significant).",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Bayesian analysis: the more AI-skilled the original developer, the larger the downstream CodeHealth benefit (+0.10, about half an SD, for habitual users). The authors conclude developers vary in their ability to use AI well, though Java proficiency mattered even more.",
+          "source": "ai-coding/sources/2507.00788.txt#L2541-L2551",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Vibe-coding MLR (47 sources, mention counts): quality, maintainability and productivity outcomes are described as conditional on developer expertise, task complexity and verification practice, and outcome claims vary substantially by user expertise.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1518-L1526",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Anthropic survey (n=132): time-savings responses cluster at opposite ends, with some spending more time debugging AI code; authors attribute gains to learned 'strategic delegation skills' and task choice, supporting wide variation by user practice.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L40",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "Gains appeared in every experience group, but the authors state they cannot separate experience effects from task and language effects, so the study cannot say whether outcomes depend on user expertise.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L828-L835",
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Results depended on how developers used ChatGPT: direct acceptance raised output but not accuracy, while ideation, improvement and debugging raised accuracy, and debugging lowered output. Outcomes vary with usage style, but usage was self-chosen, so the evidence is correlational.",
+          "source": "ai-coding/sources/4859137.txt#L1037-L1064",
+          "confidence": 0.4,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-help-keep-code-comments",
+      "stance": "asserts",
+      "quote": "as part of the change to the function it just like fixed the comment",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Agents often update nearby comments during edits, but they also add redundant comments and there is little systematic evidence.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "AI-assisted developers added comments more often (79% vs 54%), but the authors describe them as noisy surface-level comments that risk drifting out of sync with the logic. That shows more comments, not better sync.",
+          "source": "ai-coding/sources/2507.00788.txt#L1952-L1956",
+          "confidence": 0.25,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

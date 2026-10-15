@@ -1,0 +1,189 @@
+{
+  "id": "luBkbzjo-TA",
+  "title": "FULL Guide to Becoming a Principled Agentic Engineer (Build Anything with AI)",
+  "channel": "Cole Medin",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCMwVTLZIRRUyyVrkjDpn4pA",
+  "durationSec": 4021,
+  "thumbnail": "https://i.ytimg.com/vi/luBkbzjo-TA/sddefault.jpg",
+  "summary": "Cole Medin workshop: ideate with clarifying questions, PRD to tickets, PIV loop (plan/implement/validate) and system evolution.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/simple-self-owned-coding-workflow-works",
+      "stance": "asserts",
+      "quote": "a lot of these frameworks are very over-engineered ... what I teach here is simple on purpose",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Owning and understanding your workflow helps you debug it, and many practitioners report framework bloat; but there is no comparative evidence, and frameworks can be a good starting point.",
+          "confidence": 0.5,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/having-interview-you-reach-shared-understanding",
+      "stance": "asserts",
+      "quote": "the most powerful strategy here ... is to have the coding agent ask you questions",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Requirements clarification before implementation is well-established practice and widely reported to reduce agent rework.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/prompts-used-repeatedly-should-packaged-reusable",
+      "stance": "asserts",
+      "quote": "anytime you find yourself prompting something more than three times, you should turn it into a command or skill",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Reusable commands/skills reduce variance and share practice across a team; the 'three times' threshold is a rule of thumb.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-should-read-correct-generated-plans",
+      "stance": "asserts",
+      "quote": "it's important for us to review the artifact and make sure that things are really aligned",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Reviewing plans catches costly mistakes early (e.g. editing secrets), but some practitioners get similar alignment through interactive Q&A and skip reading plans; value depends on task risk.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/clearing-context-starting-fresh-beats-compacting",
+      "stance": "asserts",
+      "quote": "We want to start a brand new session with Claude code ... We want it to have a fresh set of eyes",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Fresh context avoids accumulated noise, but compaction is useful when state is hard to reconstruct; it is a tradeoff, not a rule.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/delegating-research-subagents-their-own-context",
+      "stance": "asserts",
+      "quote": "Sub-agents is one of the best strategies for that",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Subagents return summaries rather than raw exploration; Anthropic reports gains from multi-agent research, at higher token cost.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "Just because you can fit a million tokens into a large language model does not mean that you should",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/fast-automated-feedback-loops-tests-type",
+      "stance": "asserts",
+      "quote": "we want it to take care of as much validation as possible",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Agent benchmarks and practice consistently show verifiable feedback (tests, compilers) is the main driver of agent success.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/generated-changes-should-pass-human-review",
+      "stance": "asserts",
+      "quote": "for any like serious production coding that I'm doing, I still am reviewing all of the code myself",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Given documented defect and security rates in AI code, human review before merge is standard practice (e.g. Amazon's two-person rule for AI-assisted changes); it's a sound norm.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The paper recommends careful review of AI code whatever the tool, along with static analysis, tests, security checks, and monitoring after merge.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L934-L945",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/updating-agent-rules-workflows-after-each",
+      "stance": "asserts",
+      "quote": "We can spend some time to fix ... the system that allowed the bug",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "note": "Encoding lessons in rules and workflows does reduce repeat mistakes, but rule files bloat and conflict if not pruned; gains are real but not automatically compounding.",
+          "confidence": 0.55,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-development-shifts-developer-effort-toward",
+      "stance": "asserts",
+      "quote": "Our job as an engineer is to no longer write the code, but to do the higher leverage tasks like the planning and validating",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Surveys and studies (e.g. Faros, Google) report increased PR volume and review load with AI adoption.",
+          "confidence": 0.75,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "The review finds developer work shifts from writing code toward specification, supervision and validation, with the unit of work moving to the acceptance decision.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1900-L1931",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}

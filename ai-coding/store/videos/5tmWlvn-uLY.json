@@ -1,0 +1,158 @@
+{
+  "id": "5tmWlvn-uLY",
+  "title": "Stanford Study: AI Makes Developers 20% More Productive (But There's a Catch)",
+  "channel": "Josh Anderson",
+  "origin": "manual",
+  "fetched": "2026-10-14",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UC9AdYqiCvywZOf3b4_FRZoQ",
+  "durationSec": 1889,
+  "thumbnail": "https://i.ytimg.com/vi/5tmWlvn-uLY/sddefault.jpg",
+  "summary": "Fractional CTO livestream reacting to the Stanford 100k-developer productivity talk.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+      "stance": "asserts",
+      "quote": "you're going to be 15 to 20% more effective using AI",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "The Stanford 100k-developer study and other field data put average gains around 10-20%, far below 2x-10x marketing claims.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/productivity-gains-shrink-task-complexity-codebase",
+      "stance": "asserts",
+      "quote": "it doesn't take very long for your product to quickly reduce the value that AI provides",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Consistent across Stanford's data, METR's mature-repo slowdown and long-context degradation results.",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "METR names repo size and maturity (10+ years, more than 1M lines) and complex edits as factors behind the slowdown, in contrast with greenfield RCTs that found speedups.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L986-L1003",
+          "confidence": 0.65,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/commit-counts-overstate-productivity-because-increases",
+      "stance": "asserts",
+      "quote": "more commits doesn't mean more better ... some of those commits are cleanup",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Stanford and GitClear both found increased short-term churn/rework with AI, so raw commit/PR counts inflate apparent gains.",
+          "confidence": 0.6,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR warns that lines of code and task counts can rise without productivity (more verbose but equivalent code). Developers wrote 47% more code per hour with AI (not significant) while being slower. This doesn't cover the rework mechanism.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L1122-L1130",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "Builds rose 38% vs 26% for PRs; authors note this could reflect trial-and-error coding that lowers quality, but build success rate fell significantly only at Accenture (-17%), pooled -5.5% NS, so rework is suggested not shown.",
+          "source": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L525-L530",
+          "confidence": 0.3,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+      "stance": "asserts",
+      "quote": "people telling you estimating how their productivity was affected by AI is effectively a coin flip",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+          "source": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "note": "In the Copilot RCT both groups estimated a ~35% productivity gain, an underestimate of the measured 55.8% speedup.",
+          "source": "ai-coding/sources/2302.06590.txt#L184-L188",
+          "confidence": 0.45,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "note": "METR Feb 2026: some developers self-report very high speedups, which METR notes can be 'quite unreliable' per its earlier study; it also says the true speedup may be higher among those who selected out, so no new measured overestimate.",
+          "source": "ai-coding/sources/metr-2026-experiment-design.txt#L63-L63",
+          "confidence": 0.35,
+          "date": "2026-10-14"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "Anthropic's +50% figures are self-reported; the post cites METR's overestimation finding and admits perception, social-desirability and recall biases, so it cannot settle the question.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L36",
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "It can handle more, but it quickly drops off at how effective it can be",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Long-context benchmarks (e.g. NoLiMa, context-rot studies) show degradation as context grows; the exact threshold is model-dependent.",
+          "confidence": 0.8,
+          "date": "2026-10-14"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/assisted-changes-should-integrated-small-verifiable",
+      "stance": "asserts",
+      "quote": "if you can break your work down into smaller digestible chunks, it's easier for you to do that work",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "note": "Small batches with fast feedback are a strong DORA predictor of delivery performance; DORA 2024 linked AI to larger batches and lower stability.",
+          "confidence": 0.7,
+          "date": "2026-10-14"
+        }
+      ]
+    }
+  ]
+}
