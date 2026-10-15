@@ -1,6 +1,6 @@
 # video-knowledge
 
-Knowledge stores about topics, built from YouTube videos and blog posts with the `watcher` library, and published as a website: what the sources claim, and how those claims hold up against studies.
+What YouTube videos and blog posts claim, checked against the evidence. For each topic it collects sources, extracts the distinct testable claims, judges every claim (an AI guess, then studies where they exist), and publishes which claims hold up and which sources are worth your time. Stores are built with the `watcher` library.
 
 Site: https://jonborchardt.github.io/video-knowledge/
 
@@ -8,9 +8,7 @@ The library lives in `../retire-sim/watcher`, which must be checked out next to 
 
 ## Setup
 
-```
-npm install
-```
+Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checkout is only needed for the data scripts, not for building the site.
 
 ## One folder per topic
 
@@ -22,7 +20,8 @@ npm install
   store/       written by the CLI; commit it (store/transcripts/ is a gitignored cache)
   report.json  written by `npm run report`; commit it (the site is built from it)
   lean.json    written by `npm run record`: claim id â†’ pro | pro-hype | calibrating | skeptic | neutral
-  site.json    optional: recap claims and bottom line, study display names
+  site.json    optional: recap groups, bottom line ({hypeWrong}/{hypeTotal} are filled in), study display names
+  changed-minds.json  optional notes from the changed-minds pass (step 6); nothing reads it
   work/        scratch for agent batches (gitignored)
 ```
 
@@ -41,7 +40,7 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3â
    ```
 5. **Studies.** Put papers in `<topic>/sources/` and convert them (`pdftotext -layout x.pdf x.txt`). Give each agent `scripts/briefs/sources.md`, a few documents and the claims list. Each writes `<topic>/work/sv_G.json`. Then `npm run record-sources -- <topic> <topic>/work/sv_*.json`. When you add claims or documents later, only the new pairs need checking: new claims against all documents, and new documents against all claims.
 6. **Changed minds.** If a speaker reverses an earlier position in a later source, run `npm run watcher -- supersede <old-id> <new-id> --store <topic>/store`. The old source stays listed but stops counting.
-7. **Publish.** Optionally add `<topic>/site.json` (copy `ai-coding/site.json`: recap groups, bottom line, study display names). Then `npm run report && npm run site`, check `_site/<topic>/index.html`, and commit and push.
+7. **Publish.** Optionally add `<topic>/site.json` (copy `ai-coding/site.json`: recap groups, bottom line, study display names). Then `npm run report && npm run validate`, check the page with `npm run dev`, and commit and push.
 
 ### How verdicts work
 

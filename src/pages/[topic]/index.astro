@@ -15,7 +15,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const tabs = [
   { id: 'recap', label: 'Recap' },
   { id: 'top', label: 'Top 5' },
-  ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'What studies changed' }] : []),
+  ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'What the studies changed' }] : []),
   ...(t.superseded.length ? [{ id: 'minds', label: 'Changed minds' }] : []),
   { id: 'wrong-claims', label: `Wrong (${t.wrong.length})` },
   { id: 'contested-claims', label: `Contested (${t.contested.length})` },
