@@ -10,6 +10,7 @@ interface Props {
   description?: string;
 }
 const { title, description = site.description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -19,18 +20,29 @@ const { title, description = site.description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcfcfd" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15171c" />
     <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
 
     <!-- Theme: applied before paint to avoid a flash. Order: user override → system preference. -->
     <script is:inline>
       (() => {
         const root = document.documentElement;
-        const stored = localStorage.getItem('theme');
+        let stored = null;
+        try {
+          stored = localStorage.getItem('theme'); // throws when storage is blocked (e.g. Safari with cookies off)
+        } catch {
+          /* storage blocked: fall through to the system preference */
+        }
         root.classList.toggle(
           'dark',
           stored === 'dark' || (stored !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches),
@@ -47,7 +59,10 @@ const { title, description = site.description } = Astro.props;
       Skip to content
     </a>
     <SiteHeader />
-    <main id="main" class="mx-auto grid w-full max-w-wide flex-1 gap-10 px-4 py-10 sm:px-6 md:py-14">
+    <main
+      id="main"
+      class="mx-auto grid w-full max-w-wide flex-1 grid-cols-[minmax(0,1fr)] gap-10 px-4 py-10 sm:px-6 md:py-14"
+    >
       <slot />
     </main>
     <SiteFooter />

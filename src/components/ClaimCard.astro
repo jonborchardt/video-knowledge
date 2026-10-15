@@ -13,16 +13,12 @@ const decided = c.decidedBy
     : 'AI guess only';
 ---
 
-<div
-  class="grid gap-1 border-t py-3"
-  data-verdict={c.verdict ?? 'unknown'}
-  data-search={`${c.text} ${c.note}`.toLowerCase()}
->
+<div class="grid gap-1 border-t py-3" data-verdict={c.verdict ?? 'unknown'}>
   <div class="flex items-baseline justify-between gap-2.5">
     <p>{c.text}</p>
     <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
   </div>
-  <p class="text-sm text-muted-foreground">{c.note}</p>
+  {c.note && <p class="text-sm text-muted-foreground">{c.note}</p>}
   <span class="font-mono text-xs text-muted-foreground tabular-nums">
     asserted {c.asserted} · denied {c.denied} · {decided}
   </span>

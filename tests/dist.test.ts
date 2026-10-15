@@ -35,4 +35,39 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     const dirs = readdirSync(DIST, { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== '_astro');
     expect(dirs.map((d) => d.name).sort()).toEqual(topicNames().sort());
   });
+
+  it('serves a 404 page', () => {
+    expect(readFileSync(join(DIST, '404.html'), 'utf8')).toContain('<h1');
+  });
+
+  it.each([...pages, '404.html'])('%s: document metadata and accessibility basics', (p) => {
+    const html = readFileSync(join(DIST, p), 'utf8');
+    expect(html).toMatch(/<html lang="[a-z]{2}(-[A-Z]{2})?"/);
+    expect(html).toContain('<meta name="viewport" content="width=device-width, initial-scale=1"');
+    expect(html).toMatch(/<title>[^<]+<\/title>/);
+    expect(html).toMatch(/<meta name="description" content="[^"]+"/);
+    expect(html).toMatch(/<link rel="canonical" href="https:\/\/[^"]+"/);
+    expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
+    expect(html).toContain('href="#main"'); // skip link
+    expect(html).toContain('<main id="main"');
+    // Every input is labelled and every icon is either hidden or named.
+    for (const [tag] of html.matchAll(/<input[^>]*>/g)) expect(tag).toMatch(/aria-label=|id="/);
+    for (const [tag] of html.matchAll(/<svg[^>]*>/g)) expect(tag).toMatch(/aria-hidden="true"|aria-label=/);
+    // No fixed pixel widths that could overflow a narrow screen.
+    expect(html).not.toMatch(/style="[^"]*width:\s*\d{3,}px/);
+  });
+
+  it('topic pages: tabs, table headers and the search box are wired up', () => {
+    for (const n of topicNames()) {
+      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
+      expect(html).toContain('role="tablist"');
+      for (const [tab] of html.matchAll(/<button[^>]*role="tab"[^>]*>/g)) {
+        const id = tab.match(/aria-controls="([^"]+)"/)![1];
+        expect(html).toContain(`<section id="${id}"`);
+      }
+      for (const [th] of html.matchAll(/<th[\s>][^>]*>/g)) expect(th).toContain('scope="col"');
+      expect(html).toContain('role="status"');
+      expect(html).toContain('<symbol id="icon-video"'); // the shared icon sprite SourceLink points at
+    }
+  });
 });

@@ -55,18 +55,18 @@ eight commits are dated 2026-10-15).
 
 ## Numbers
 
-| Fact | Value |
-|---|---|
-| Active sources | 221 (33 are blog posts) |
-| Distinct channels | 163 |
-| Canonical claims | 366 |
-| Verdict mix | 153 right, 177 partly, 16 wrong, 13 untestable, 7 unknown |
-| Claims checked against a study | 131 |
-| Claims where a study overrode the AI guess | 51 |
-| Study documents | 14 |
-| "Pro-hype" claims judged wrong | 8 of 10 |
-| Lean tags | 173 neutral, 76 skeptic, 67 pro, 40 calibrating, 10 pro-hype |
-| Claims with only an AI guess | 235 |
+| Fact                                       | Value                                                        |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| Active sources                             | 221 (33 are blog posts)                                      |
+| Distinct channels                          | 163                                                          |
+| Canonical claims                           | 366                                                          |
+| Verdict mix                                | 153 right, 177 partly, 16 wrong, 13 untestable, 7 unknown    |
+| Claims checked against a study             | 131                                                          |
+| Claims where a study overrode the AI guess | 51                                                           |
+| Study documents                            | 14                                                           |
+| "Pro-hype" claims judged wrong             | 8 of 10                                                      |
+| Lean tags                                  | 173 neutral, 76 skeptic, 67 pro, 40 calibrating, 10 pro-hype |
+| Claims with only an AI guess               | 235                                                          |
 
 ## Quotable study-backed findings
 

@@ -75,9 +75,23 @@ const icon = 'h-3.5 w-3.5';
   const order = ['system', 'light', 'dark'] as const;
   type Mode = (typeof order)[number];
 
+  // localStorage throws when storage is blocked (e.g. Safari with cookies off); the toggle then works for the page only.
   const current = (): Mode => {
-    const v = localStorage.getItem(KEY);
+    let v: string | null = null;
+    try {
+      v = localStorage.getItem(KEY);
+    } catch {
+      /* storage blocked */
+    }
     return v === 'light' || v === 'dark' ? v : 'system';
+  };
+  const store = (mode: Mode) => {
+    try {
+      if (mode === 'system') localStorage.removeItem(KEY);
+      else localStorage.setItem(KEY, mode);
+    } catch {
+      /* storage blocked */
+    }
   };
 
   const apply = (mode: Mode) => {
@@ -95,8 +109,7 @@ const icon = 'h-3.5 w-3.5';
   for (const btn of document.querySelectorAll('[data-theme-toggle]')) {
     btn.addEventListener('click', () => {
       const next = order[(order.indexOf(current()) + 1) % order.length]!;
-      if (next === 'system') localStorage.removeItem(KEY);
-      else localStorage.setItem(KEY, next);
+      store(next);
       apply(next);
     });
   }
