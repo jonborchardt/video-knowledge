@@ -66,6 +66,13 @@ a{color:var(--accent)}
 .lean span{display:block;height:100%}
 .l-pro{background:var(--right)}.l-neu{background:var(--other);opacity:.45}.l-cal{background:var(--partly)}.l-sk{background:var(--wrong)}
 tr.sup td{opacity:.55}
+.tabs{position:sticky;top:0;z-index:2;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 0 0;margin-bottom:-16px}
+.tabs button{flex:none;font:600 13px var(--body);padding:8px 12px;border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;background:none;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button:hover{color:var(--fg)}
+.tabs button[aria-selected="true"]{color:var(--accent);background:var(--surface);border-color:var(--line);margin-bottom:-1px}
+.tabs button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+section[role="tabpanel"]{scroll-margin-top:56px}
 @media (max-width:560px){.vtbl th:nth-child(4),.vtbl td:nth-child(4){display:none}h1{font-size:1.7rem}}
 .cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
 .card{display:grid;gap:8px;padding:18px;background:var(--surface);border:1px solid var(--line);border-radius:8px;text-decoration:none;color:inherit}
@@ -155,7 +162,7 @@ function buildSubject(dir, name) {
   const docsUsed = new Set(claims.flatMap(c => c.srcs)).size;
 
   const superseded = recs.filter(v => v.supersededBy);
-  const supHtml = superseded.length ? '<h3>Changed minds</h3><p class="small">When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts toward claims or novelty. Evidence recorded on it still counts.</p><ul>'
+  const supHtml = superseded.length ? '<h2>Changed minds</h2><p class="small">When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts toward claims or novelty. Evidence recorded on it still counts.</p><ul>'
     + superseded.map(v => '<li>' + he(v.title) + ' → superseded by ' + he(recOf[v.supersededBy]?.title ?? v.supersededBy) + '</li>').join('') + '</ul>' : '';
 
   const ids = x => (x || []).map(c => (typeof c === 'string' ? c : c.id));
@@ -168,14 +175,16 @@ function buildSubject(dir, name) {
   <p class="lede">${claims.length} canonical claims from ${nVid} YouTube videos and ${nArt} blog posts${r.videos.length - videos.length ? ' (' + (r.videos.length - videos.length) + ' more videos had no captions)' : ''}. Every claim has an AI guess: a verdict from the AI's general knowledge, with a one-line reason.${docsUsed ? ' Claims that the ' + docsUsed + ' studies and reports in the sources folder speak to also carry study verdicts that cite line ranges.' : ''}</p>
 </header>
 
-<section>
+<div id="tabbar"></div>
+
+<section id="recap" data-tab="Recap">
   <h2>Recap</h2>
   <p>${used.length} videos and posts making ${claims.length} distinct claims${docsUsed ? ', checked against ' + docsUsed + ' studies and reports. Studies decide ' + decided + ' claims; the rest use an AI guess, which counts for at most 50% confidence. ' + changed.length + ' AI guesses were overturned by a study.' : '. No studies have been checked yet, so every verdict is an AI guess.'}</p>
   ${cfg.recap?.bottomLine ? '<p><strong>Bottom line:</strong> ' + fill(cfg.recap.bottomLine) + '</p><p class="small">The verdicts below update automatically as evidence is added; the bottom line is a hand-written summary of them.</p>' : ''}
 ${recapHtml}
 </section>
 
-<section>
+<section id="top" data-tab="Top 5">
   <h2>Five most worth your time</h2>
   <p class="small">Ranked by score, then novelty (rare claims that hold up, weighted by verdict confidence).</p>
   <ol>
@@ -184,7 +193,7 @@ ${top5}
   ${runners ? '<p class="small">Next: ' + runners + '.</p>' : ''}
 </section>
 
-${surp.length ? `<section>
+${surp.length ? `<section id="studies" data-tab="What studies changed">
   <h2>What the studies changed</h2>
   <p class="small">Each claim first got an <em>AI guess</em>, then was checked against the studies. Listed: claims where a study pointed a different way. An AI guess counts for at most 50% confidence; a study at least that confident replaces it, a weaker one is shown as context. Biggest changes first.</p>
   <h3>Verdict changed by a study (${changed.length})</h3>
@@ -194,33 +203,58 @@ ${changed.map(surpLi).join('\n')}
   ${held.length ? '<details><summary class="small">' + held.length + ' more where a study disagreed but was less confident, so the AI guess stands</summary><ul>\n' + held.map(surpLi).join('\n') + '\n</ul></details>' : ''}
 </section>` : ''}
 
-${supHtml ? '<section>' + supHtml + '</section>' : ''}
+${supHtml ? '<section id="minds" data-tab="Changed minds">' + supHtml + '</section>' : ''}
 
-<section>
+<section id="wrong-claims" data-tab="Wrong (${ids(t.commonlyWrong).length})">
   <h2>Judged wrong</h2>
   <p class="small">The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.</p>
   <div id="wrong"></div>
 </section>
 
-<section>
+<section id="contested-claims" data-tab="Contested (${ids(t.contested).length})">
   <h2>Contested</h2>
   <p class="small">Claims some sources assert and others deny.</p>
   <div id="contested"></div>
 </section>
 
-<section>
+<section id="claims" data-tab="All claims (${claims.length})">
   <h2>All claims</h2>
   <div class="filters" role="group" aria-label="Filter by verdict"><input id="q" type="search" placeholder="Search claims" aria-label="Search claims"></div>
   <div id="all"></div>
 </section>
 
-<section>
+<section id="sources" data-tab="Videos &amp; posts (${used.length})">
   <h2>Videos and posts</h2>
   <p class="small">Score: −1 mostly wrong, 0 mixed, 1 mostly right, 2 right, from the verdicts on the claims each source makes. Novelty adds up, for each claim a source gets right or correctly refutes, the verdict's confidence divided by how many sources take the same stance; 1 is about one unique, well-supported point.</p>
   <div class="table"><table class="vtbl"><thead><tr><th>Score</th><th>Source</th><th>Novelty</th><th>Verdict</th></tr></thead><tbody id="vids"></tbody></table></div>
 </section>`;
 
   const script = `<script>
+(() => {
+  const panels = [...document.querySelectorAll('section[data-tab]')];
+  const bar = document.getElementById('tabbar');
+  bar.className = 'tabs'; bar.setAttribute('role', 'tablist'); bar.setAttribute('aria-label', 'Report sections');
+  const tabs = panels.map(p => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.role = 'tab'; b.id = 'tab-' + p.id; b.textContent = p.dataset.tab;
+    b.setAttribute('aria-controls', p.id);
+    p.setAttribute('role', 'tabpanel'); p.setAttribute('aria-labelledby', b.id);
+    b.onclick = () => { history.replaceState(null, '', '#' + p.id); show(p.id); };
+    b.onkeydown = e => {
+      const i = tabs.indexOf(b), n = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : null;
+      if (n === null) return;
+      e.preventDefault(); const t = tabs[(n + tabs.length) % tabs.length]; t.focus(); t.click();
+    };
+    bar.appendChild(b); return b;
+  });
+  function show(id) {
+    if (!panels.some(p => p.id === id)) id = panels[0].id;
+    panels.forEach((p, i) => { const on = p.id === id; p.hidden = !on; tabs[i].setAttribute('aria-selected', on); tabs[i].tabIndex = on ? 0 : -1; });
+    tabs.find(t => t.getAttribute('aria-selected') === 'true').scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  }
+  addEventListener('hashchange', () => show(location.hash.slice(1)));
+  show(location.hash.slice(1));
+})();
 const D = ${esc(JSON.stringify(data))};
 const ICON = ${esc(JSON.stringify(ICON))};
 const byId = Object.fromEntries(D.claims.map(c => [c.id, c]));
