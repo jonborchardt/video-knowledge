@@ -32,6 +32,13 @@ const firstSentence = (s: string) => s[0].toUpperCase() + s.slice(1).split('. ')
         </a>
       ))
     }
+    <div
+      class="grid gap-2 rounded-lg border border-dashed bg-card p-4 text-card-foreground opacity-70"
+      aria-disabled="true"
+    >
+      <h2 class="text-title font-semibold text-muted-foreground">More topics</h2>
+      <span class="font-mono text-xs text-muted-foreground">coming soon</span>
+    </div>
     {
       topics.length === 0 && (
         <p class="text-sm text-muted-foreground">No subjects have a report yet. Run npm run report.</p>
