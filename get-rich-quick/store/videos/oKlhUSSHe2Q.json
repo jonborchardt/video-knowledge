@@ -32,6 +32,13 @@
           "confidence": 0.5,
           "note": "Paper trading teaches platform mechanics but omits slippage and emotional pressure, so simulator profits do not reliably transfer to live accounts.",
           "date": "2026-10-16"
+        },
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Simulators teach mechanics and can screen out losing strategies, but they omit slippage and emotion and the large majority of day traders still lose money.",
+          "date": "2026-10-16"
         }
       ]
     },
@@ -46,6 +53,13 @@
           "confidence": 0.5,
           "note": "Scaling works until liquidity limits and slippage in thin small-cap stocks erode the edge, which the source itself concedes as a plateau.",
           "date": "2026-10-16"
+        },
+        {
+          "method": "prior",
+          "verdict": "wrong",
+          "confidence": 0.45,
+          "note": "Liquidity, slippage and market impact erode edges as size grows, especially in thin small caps, so profits do not scale by simply sizing up.",
+          "date": "2026-10-16"
         }
       ]
     },
@@ -59,6 +73,13 @@
           "verdict": "partly",
           "confidence": 0.6,
           "note": "The arithmetic is correct, but win rate and reward ratio trade off against each other, so a 2:1 target does not by itself create positive expectancy.",
+          "date": "2026-10-16"
+        },
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "The arithmetic is correct, but win rate falls as reward targets widen, so a 2:1 target does not by itself make a trader profitable.",
           "date": "2026-10-16"
         }
       ]
@@ -128,6 +149,13 @@
           "verdict": "partly",
           "confidence": 0.5,
           "note": "Trade journaling helps identify costly habits, but filtering past trades for winning subsets is prone to overfitting noise.",
+          "date": "2026-10-16"
+        },
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Journaling helps spot costly habits, but slicing a small sample of trades for winning subsets mostly finds noise.",
           "date": "2026-10-16"
         }
       ]
