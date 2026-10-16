@@ -1,0 +1,136 @@
+{
+  "id": "EZ05e7EMOLM",
+  "title": "🚀  TDD, Where Did It All Go Wrong (Ian Cooper)",
+  "channel": "DevTernity Conference",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCvzMZyJZZ3XYQwbvOACVYrQ",
+  "durationSec": 3835,
+  "thumbnail": "https://i.ytimg.com/vi_webp/EZ05e7EMOLM/sddefault.webp",
+  "summary": "Ian Cooper argues TDD went wrong when teams tested methods and mocked every dependency; he reboots it as testing behaviours through a module's public API with red-green-refactor and ports-and-adapters.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/writing-test-per-method-mocking-every",
+      "stance": "asserts",
+      "quote": "all these tests with mocks they broke and we had to rewrite all the mocks",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Over-specified interaction tests are a documented cause of fragile suites in both practitioner literature and studies of test co-evolution.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/writing-tests-slows-delivery-meaningful-fraction",
+      "stance": "asserts",
+      "quote": "we were you know twenty to fifty percent slower than we had been before by writing tests",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Controlled studies of TDD report roughly fifteen to thirty-five percent more initial development time alongside fewer defects, so the slowdown is real but is partly repaid later.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.35,
+          "note": "Elite performers report far more automated testing than low performers (87% vs 57% automated unit tests, 58% vs 28% acceptance tests) while deploying 208 times more often with shorter lead times, so at the delivery level testing is associated with faster, not slower, delivery; the data are cross-sectional self-reports and do not isolate per-feature development time.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1535-L1549",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/tdd-unit-isolation-test-not-class",
+      "stance": "asserts",
+      "quote": "the unit of isolation is the test not the thing under test",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A definitional reading of Kent Beck's book rather than an empirical claim.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/customer-readable-acceptance-test-suites-rarely",
+      "stance": "asserts",
+      "quote": "the customers never really looked at this stuff right",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Practitioner consensus including the Fit author's own retraction supports this, though some teams report value from Gherkin-style specs; no controlled study exists.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/getting-test-green-quick-dirty-code",
+      "stance": "asserts",
+      "quote": "for this brief moment speed Trump's design I want to get there as fast as I can",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Kent Beck's original claim, consistent with cognitive-load arguments against solving and designing at once, but not directly measured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/refactoring-step-needs-new-tests-because",
+      "stance": "asserts",
+      "quote": "when you refactor and this is the really important part you do not write any new tests",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Practice advice that follows from the definition of refactoring; whether existing tests actually cover the behaviour is case by case.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/tests-written-probe-implementation-details-should",
+      "stance": "asserts",
+      "quote": "at the end of that process delete the tests the tests help guide you but now they're a burden to somebody else",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A judgment about test maintenance trade-offs with no empirical comparison.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/slow-driven-end-test-suites-fragile",
+      "stance": "asserts",
+      "quote": "the tools all break because I changed the way that my widgets work",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Flaky and brittle UI tests are extensively documented in industry reports and flaky-test research, which is why the test pyramid pushes coverage downward.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

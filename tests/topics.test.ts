@@ -13,6 +13,10 @@ describe('topics', () => {
     const t = loadTopic(name);
     expect(t.claims.length).toBeGreaterThan(0);
     expect(t.counted).toBe(t.videos + t.posts);
+    expect(t.channels).toBeGreaterThan(0);
+    expect(t.channels).toBeLessThanOrEqual(t.counted);
+    if (t.videos) expect(t.hours).toBeGreaterThan(0);
+    if (t.glyph) expect(t.glyph).toMatch(/^<svg[\s\S]*<\/svg>$/);
     expect(t.top.length).toBeLessThanOrEqual(5);
     for (const c of t.claims) {
       // A shown confidence only belongs to a real judgment, and an AI guess never shows more than 50%.
@@ -20,6 +24,21 @@ describe('topics', () => {
       if (!c.decidedBy && c.confidence !== null) expect(c.confidence).toBeLessThanOrEqual(0.5);
     }
     for (const g of t.recap) expect(g.claims.length).toBeGreaterThan(0);
+    for (const s of t.sources) {
+      expect(s.claims.length).toBeGreaterThan(0);
+      for (const sc of s.claims) {
+        expect(sc.share).toBeGreaterThanOrEqual(1);
+        if (sc.novel) expect(sc.verdict).toBe('right');
+        if (sc.share > 3) expect(sc.novel).toBe(false);
+        // Denying a claim the evidence calls wrong counts as getting it right.
+        const c = t.claims.find((x) => x.id === sc.id)!;
+        if (sc.stance === 'denies' && c.verdict === 'wrong') expect(sc.verdict).toBe('right');
+        if (sc.stance === 'asserts' && c.verdict === 'wrong') expect(sc.verdict).toBe('wrong');
+      }
+      // Novel claims come first, rarest first.
+      const firstPlain = s.claims.findIndex((x) => !x.novel);
+      if (firstPlain >= 0) expect(s.claims.slice(firstPlain).some((x) => x.novel)).toBe(false);
+    }
     expect(t.bottomLine ?? '').not.toMatch(/\{\w+\}/); // template tokens filled
   });
 });

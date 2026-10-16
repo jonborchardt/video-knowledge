@@ -1,0 +1,138 @@
+{
+  "id": "87VOk4aoEkA",
+  "title": "Code Faster or Safer? Static vs Dynamic Typing",
+  "channel": "deep dive dev",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCMYIXxxNIH0XRxDRGXgLZzw",
+  "durationSec": 220,
+  "thumbnail": "https://i.ytimg.com/vi/87VOk4aoEkA/sddefault.jpg",
+  "summary": "Explainer contrasting static and dynamic typing: compile-time checks and performance for static, flexibility and faster prototyping for dynamic, framed as a trade-off by domain.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/static-typing-catches-type-errors-compile",
+      "stance": "asserts",
+      "quote": "type errors happen at compilation time before the code is ever ran",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.8,
+          "note": "True by definition for the class of errors the type checker covers; studies estimate roughly fifteen percent of real JavaScript bugs would have been caught by a type checker, so the benefit is real but bounded.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "Adding Flow or TypeScript annotations to 400 fixed public JavaScript bugs (which had already survived testing and review) made the type checker flag 15% of them, so those would have been caught before release; the other 85% are not type errors.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L24-L31",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "In the GitHub corpus 122 runtime-error bug fixes appear in JavaScript projects but not TypeScript ones, while TypeScript projects log more type-related fixes because the compiler flags them during development; observational and the TypeScript sample was later found to be mislabelled.",
+          "source": "software-practices/sources/ray2014-languages-github.txt#L600-L605",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "In the type-error tasks the Java version simply failed to compile while the Groovy version only surfaced the error as a failing test at run time; the experiment is built on exactly this compile-time-versus-run-time difference.",
+          "source": "software-practices/sources/kleinschmager2012-static-types-maintainability.txt#L246-L249",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Journal version of the same experiment: the compiler points to the exact location of a type error, whereas the dynamic system finds it at run time with symptoms that may appear far from the cause, which is why Groovy subjects needed more navigation and more test runs.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L1365-L1371",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/static-typing-yields-better-runtime-performance",
+      "stance": "asserts",
+      "quote": "static typing leads to better performance while Dynamic typing is usually slower",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Conflates typing with ahead-of-time compilation; static languages are usually faster, but JIT compilers make dynamic languages competitive and types are only one of several causes.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "C/C++ ran faster than Java (p=0.074) and tended to beat scripts (p=0.15), but statically typed Java was not significantly faster than the dynamically typed scripts overall and scripts tended to be faster than Java in the search phase, so the speed advantage tracks the language implementation, not static typing as such (JDK 1.2 era).",
+          "source": "software-practices/sources/prechelt2000-seven-languages.txt#L145-L150",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/dynamic-typing-faster-prototyping-rapid-iteration",
+      "stance": "asserts",
+      "quote": "dynamic typing is better for prototyping and fast iteration",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Controlled experiments by Hanenberg and others found no consistent development-time advantage for dynamic typing, and static types sometimes sped tasks up, so the advantage is at best small and task-dependent.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.2,
+          "note": "Related-work summary: in Hanenberg's controlled experiment (undergraduates, custom language and IDE, parser task) the dynamically typed variant had shorter development time with no quality difference; a narrow lab setting, not iteration on real products.",
+          "source": "software-practices/sources/ray2014-languages-github.txt#L711-L715",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Scripts (Perl, Python, Rexx, Tcl) took a median 3.1 hours versus 10.0 hours for C, C++ and Java and were half as long, but the author attributes this to built-in associative arrays and the absence of declarations, times were self-reported for the script group, and the result is explicitly limited to the phonecode problem.",
+          "source": "software-practices/sources/prechelt2000-seven-languages.txt#L438-L441",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Summarising the same series: an earlier experiment found the dynamic type system significantly faster for writing a scanner, and Mayer et al. found dynamic typing faster on simpler tasks with static typing paying off on larger ones; in the present experiment no task favoured dynamic typing.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L282-L292",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/static-typing-suits-safety-performance-critical",
+      "stance": "asserts",
+      "quote": "statically typed languages are more popular for things like Financial software systems programming and game development where safety and performance is preferred",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A description of adoption patterns and taste rather than a measurable benefit claim.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,838 @@
+A Large Scale Study of Programming Languages
+               and Code Quality in Github
+
+       Baishakhi Ray, Daryl Posnett, Vladimir Filkov, Premkumar Devanbu
+
+                     {bairay@, dpposnett@, filkov@cs., devanbu@cs.}ucdavis.edu
+        Department of Computer Science, University of California, Davis, CA, 95616, USA
+
+ABSTRACT                                                                            1. INTRODUCTION
+
+What is the effect of programming languages on software qual-                          A variety of debates ensue during discussions whether a given
+ity? This question has been a topic of much debate for a very long                  programming language is "the right tool for the job". While some
+time. In this study, we gather a very large data set from GitHub                    of these debates may appear to be tinged with an almost religious
+(729 projects, 80 Million SLOC, 29,000 authors, 1.5 million com-                    fervor, most people would agree that a programming language can
+mits, in 17 languages) in an attempt to shed some empirical light                   impact not only the coding process, but also the properties of the
+on this question. This reasonably large sample size allows us to use                resulting artifact.
+a mixed-methods approach, combining multiple regression model-
+ing with visualization and text analytics, to study the effect of lan-                 Advocates of strong static typing argue that type inference will
+guage features such as static v.s. dynamic typing, strong v.s. weak                 catch software bugs early. Advocates of dynamic typing may argue
+typing on software quality. By triangulating findings from differ-                  that rather than spend a lot of time correcting annoying static type
+ent methods, and controlling for confounding effects such as team                   errors arising from sound, conservative static type checking algo-
+size, project size, and project history, we report that language de-                rithms in compilers, it's better to rely on strong dynamic typing to
+sign does have a significant, but modest effect on software quality.                catch errors as and when they arise. These debates, however, have
+Most notably, it does appear that strong typing is modestly better                  largely been of the armchair variety; usually the evidence offered
+than weak typing, and among functional languages, static typing is                  in support of one position or the other tends to be anecdotal.
+also somewhat better than dynamic typing. We also find that func-
+tional languages are somewhat better than procedural languages. It                     Empirical evidence for the existence of associations between code
+is worth noting that these modest effects arising from language de-                 quality programming language choice, language properties, and us-
+sign are overwhelmingly dominated by the process factors such as                    age domains, could help developers make more informed choices.
+project size, team size, and commit size. However, we hasten to
+caution the reader that even these modest effects might quite possi-                   Given the number of other factors that influence software en-
+bly be due to other, intangible process factors, e.g., the preference               gineering outcomes, obtaining such evidence, however, is a chal-
+of certain personality types for functional, static and strongly typed              lenging task. Considering software quality, for example, there are
+languages.                                                                          a number of well-known influential factors, including source code
+                                                                                    size [8], the number of developers [29, 3], and age/maturity [13].
+Categories and Subject Descriptors                                                  These factors are known to have a strong influence on software
+                                                                                    quality, and indeed, such process factors can effectively predict de-
+D.3.3 [PROGRAMMING LANGUAGES]: [Language Constructs                                 fect localities [25].
+and Features]
+                                                                                       One approach to teasing out just the effect of language prop-
+General Terms                                                                       erties, even in the face of such daunting confounds, is to do a
+                                                                                    controlled experiment. Some recent works have conducted exper-
+Measurement, Experimentation, Languages                                             iments in controlled settings with tasks of limited scope, with stu-
+                                                                                    dents, using languages with static or dynamic typing (based on ex-
+Keywords                                                                            perimental treatment setting) [11, ?, 15]. While type of controlled
+                                                                                    study is "El Camino Real" to solid empirical evidence,another op-
+programming language, type system, bug fix, code quality, empiri-                   portunity has recently arisen, thanks to the large number of open
+cal research, regression analysis, software domain                                  source projects collected in software forges such as GitHub.
+
+Permission to make digital or hard copies of all or part of this work for              GitHub contains many projects in multiple languages. These
+personal or classroom use is granted without fee provided that copies are           projects vary a great deal across size, age, and number of develop-
+not made or distributed for profit or commercial advantage and that copies          ers. Each project repository provides a historical record from which
+bear this notice and the full citation on the first page. To copy otherwise, to     we extract project data including the contribution history, project
+republish, to post on servers or to redistribute to lists, requires prior specific  size, authorship, and defect repair. We use this data to determine
+permission and/or a fee.                                                            the effects of language features on defect occurrence using a variety
+FSE'14 November 16âA S¸ 22, 2014, Hong Kong, China                                  of tools. Our approach is best described as mixed-methods, or tri-
+Copyright 2014 ACM 978-1-4503-3056-5/14/11 ...$15.00.                               angulation [7] approach. A quantitative (multiple regression) study
+                                                                                    is further examined using mixed methods: text analysis, cluster-
+                                                                                    ing, and visualization. The observations from the mixed methods
+                                                                                    largely confirm the findings of the quantitative study.
+   In summary, the main features of our work are as follows.            Table 1: Top three projects in each language
+
+    · We leverage a categorization of some important features of        Language      Projects
+       programming languages that prior knowledge suggests are
+       important for software quality (strong v.s. weak typing, dy-     C             linux, git, php-src
+       namic v.s.. static typing, memory managed v.s. unmanaged,        C++           node-webkit, phantomjs, mongo
+       and scripting vs. compiled) to study their impact on defect      C#            SignalR, SparkleShare, ServiceStack
+       quality.                                                         Objective-C   AFNetworking, GPUImage, RestKit
+                                                                        Go            docker, lime, websocketd
+    · We use multiple regression to control for a range of different    Java          storm, elasticsearch, ActionBarSherlock
+       factors (size, project history, number of contributors, etc.)    CoffeeScript  coffee-script, hubot, brunch
+       and study the impact of the above features on defect occur-      JavaScript    bootstrap, jquery, node
+       rence. The findings are listed under RQ1 and RQ2 in Sec-         TypeScript    bitcoin, litecoin, qBittorrent
+       tion 3.                                                          Ruby          rails, gitlabhq, homebrew
+                                                                        Php           laravel, CodeIgniter, symfony
+    · We use text analysis and clustering methods to group projects     Python        flask, django, reddit
+       into domains of application, and also the defects into cate-     Perl          gitolite, showdown, rails-dev-box
+       gories of defects; we then use heat maps to study relation-      Clojure       LightTable, leiningen, clojurescript
+       ships of project types and defect types to programming lan-      Erlang        ChicagoBoss, cowboy, couchdb
+       guages. The findings from this study (RQ3 and RQ4 in Sec-        Haskell       pandoc, yesod, git-annex
+       tion 3) are consistent with statistical results.                 Scala         Play20, spark, scala
+
+   While the use of regression analysis to deal with confounding        source files is assigned as primary language of the project. GitHub
+variables is not without controversy, we submit that a couple of        Archive stores this information. We aggregate projects based on
+factors increase the credibility of our results: a fairly large sample  their primary language. Then we select the top languages having
+size, and use of mixed methods to qualitatively explore and largely     maximum number of projects for further analysis as shown in Ta-
+confirm the findings from the regression model.                         ble 1.
+
+2. METHODOLOGY                                                             Retrieving popular projects. For each selected language, we
+                                                                        retrieve the project repositories that are primarily written in that
+   Here, we describe the languages and GitHub projects that we          language. We then count the number of stars associated with that
+collected, and the analysis methods we used to answer our research      repository. The number of stars relate to how many people are
+questions.                                                              interested in that project [?]. Thus, we assume that stars indi-
+                                                                        cate the popularity of a project. We select the top 50 projects in
+2.1 Study Subjects                                                      each language. To ensure that these projects have a sufficient de-
+                                                                        velopment history, we filter out the projects having less than 28
+   To understand whether choice of programming languages have           commits, where 28 is the first quartile commit number of all the
+any impact on software quality, we choose the top 19 program-           projects. This leaves us with 729 projects. Table 1 shows the top
+ming languages from GitHub. We disregard CSS, Shell script, and         three projects in each language. This includes projects like Linux,
+Vim script as they are not considered to be general purpose lan-        mysql, android-sdk, facebook-sdk, mongodb, python, ruby source
+guages. We further include TypeScript, a typed superset of              code etc.
+JavaScript. Then, for each of the studied languages we re-
+trieve top 50 projects that are primarily written in that language.        Retrieving project evolution history. For each of these 729
+Table 1 shows top three projects in each language, based on their       projects, we downloaded the non merged commits, along with the
+popularity. In total, we analyze 850 projects spanning 17 different     commit logs, author date, and author name using the command:
+languages.                                                              git log -no-merges -numstat. The numstat flag shows
+                                                                        the number of added and deleted lines per file associated with each
+2.2 Data Collection                                                     commit. This helps us to compute code churn and the number of
+                                                                        files modified per commit. We also retrieve the languages associ-
+   To retrieve the top programming languages and their correspond-      ated with each commit from the extensions of the modified files.
+ing projects from GitHub, we used GitHub Archive [?], a database        Note that, one commit can have multiple language tags. For each
+that records all public GitHub activities. The archive logs eighteen    commit, we calculate its commit age by subtracting its commit date
+different GitHub events including new commits, fork events, pull        from the first commit of the corresponding project. We also calcu-
+request, developers' information, and issue tracking of all the open    late some other project related statistics, including maximum com-
+source GitHub projects on an hourly basis. The archive data is up-      mit age of a project and the total number of developers; we use
+loaded to Google BigQuery [?] service to provide an interface for       them as control variables in our regression model as discussed in
+interactive data analysis.                                              Section 3 . We further identify the bug fix commits made to indi-
+                                                                        vidual projects by searching for error related keywords: `error',
+   Identifying top languages. The top languages in GitHub are           `bug', `fix' , `issue', `mistake', `incorrect', `fault', `defect' and
+measured by first finding the number of open source GitHub projects     `flaw' in the commit log using a heuristic similar to that in Mockus
+developed in each language, and then choosing the top languages         and Votta [19].
+with the maximum number of projects. However, since multiple
+languages are often used to develop a project, assigning a single          Table 2 summarizes our data set. Since a project may use multi-
+language to a project is difficult. GitHub Linguist [9] can mea-        ple languages, the second column of the table shows the total num-
+sure such a language distribution of a GitHub project repository.       ber of projects that use a certain language at some capacity. We
+Since languages can be identified by the extension of a project's       further exclude some languages from a project that have fewer than
+source files, GitHub Linguist counts the number of source files with    20 commits in that language, where 20 is the first quartile value of
+different extensions. The language with the maximum number of           the total number of commits per project per language. For example,
+                                                                        we find 220 projects that use more than 20 commits in C. This en-
+                                                                        sures that the studied languages have significant activity within the
+                                                                        projects. In summary, we study 729 projects developed in 17 lan-
+                                                Table 2: Study Subjects
+
+                                        Project Details                           Total Commits              BugFix Commits
+
+              Language      #Projects   #Authors SLOC                   Period    #Commits #Insertion        #Bug Fixes #Insertion
+                                                       (KLOC)                                        (KLOC)                      (KLOC)
+              C                   220
+              C++                 149   13,769  22,418          1/1996 to 2/2014  447,821   75,308           182,568   20,121
+              C#                         3,831  12017           8/2000 to 2/2014  196,534   45,970            79,312   23,995
+              Objective-C           77   2,275   2,231          6/2001 to 1/2014  135,776   27,704            50,689    8,793
+              Go                    93   1,643                  7/2007 to 2/2014                                7,089
+              Java                  54             600         12/2009 to 1/2014   21,645    2,400              4,423     723
+              CoffeeScript        141      659     591         11/1999 to 2/2014   19,728    1,589            35,128      269
+              JavaScript            92   3,340   5,154         12/2009 to 1/2014   87,120   19,093              6,312   7,363
+              TypeScript          432    1,691     260          2/2002 to 2/2014   22,500    1,134            39,250      269
+              Ruby                  96   6,754   5,816          3/2011 to 2/2014  118,318   33,134              2,443   8,676
+              Php                 188           18,363          1/1998 to 1/2014   14,987   65,910            30,478    8,970
+              Python              109      789   1,656         12/1999 to 2/2014  122,023    5,804            47,194    1,649
+              Perl                286    9,574   3,892          8/1999 to 2/2014  118,664   16,164            41,946    5,139
+              Clojure             106    4,862   2,438          1/1996 to 2/2014  114,200    9,033              1,903   2,984
+              Erlang                60   5,042       86         9/2007 to 1/2014                                6,022     190
+              Haskell               51             444         05/2001 to 1/2014     5,483     471              8,129     163
+              Scala                 55     758    2484         01/1996 to 2/2014   28,353    1,461            10,362    1,970
+                                    55     843     837         04/2008 to 1/2014   31,398    5,001            12,950      508
+              Summary                      847   1,370                             46,087    2,922                        836
+                                  729      925                                     55,696    5,262
+                                         1,260
+
+                                        28,948 80,657 1/1996 to 2/2014            1,586,333 318,360          566,198   92,618
+
+guages with 18 years of parallel evolution history. This includes 29    is weakly-typed if type-confusion can occur silently (undetected),
+thousand different developers, 1.58 million commits, and 566,000        and eventually cause errors that are difficult to localize. For exam-
+bug fix commits.                                                        ple, in a weakly typed language like JavaScript adding a string
+                                                                        to a number is permissible (e.g., `5' + 2 = `52'), while such an op-
+2.3 Categorizing Languages                                              eration is not permitted in strongly typed Python. Also, C and
+                                                                        C++ are considered weakly typed since, due to type-casting, one
+   We define language classes based on several properties of the        can interpret a field of a structure that was an integer as a pointer.
+language that have been thought to influence language quality [11,
+12, 15], as shown in Table 3 . The Programming Paradigm indi-              Finally, Memory Class indicates whether the language requires
+cates whether the project is written in a procedural, functional, or    developers to manage memory. We treat Objective-C as un-
+scripting language. Compile Class indicates whether the project is      managed, though Objective-C follows a hybrid model, because
+                                                                        we observe many memory errors in Objective-C codebase, as
+Table 3: Different Types of Language Classes                            discussed in RQ4 in Section 3.
+
+Language      Categories Languages                                      2.4 Identifying Project Domain
+Classes
+Programming   Procedural    C, C++, C#, Objective-C,                       We classify the studied projects into different domains based
+Paradigm      Scripting     Java, Go                                    on their features and functionalities using a mix of automated and
+              Functional    CoffeeScript, JavaScript,                   manual techniques. The projects in GitHub come with project
+Compilation   Static        Python, Perl, Php, Ruby                     descriptions and Readme files that describe their features.
+Class         Dynamic       Clojure, Erlang, Haskell,                   First, we used Latent Dirichlet Allocation(LDA) [4], a well-known
+                            Scala                                       topic analysis algorithm, on the text describing project features.
+Type Class    Strong                                                    Given a set of documents, LDA identifies a set of topics where each
+                            C, C++, C#, Objective-C,                    topic is represented as probability of generating different words.
+Memory Class  Weak          Java, Go, Haskell, Scala                    For each document, LDA also estimates the probability of assign-
+                            CoffeeScript, JavaScript,                   ing that document to each topic.
+              Managed       Python, Perl, Php, Ruby,
+              Unmanaged     Clojure, Erlang                                           Table 4: Characteristics of Domains
+
+                            C#, Java, Go, Python, Ruby,                 Domain              Domain                 Example               Total
+                            Clojure, Erlang, Haskell,                   Name                Characteristics        Projects              Proj
+                            Scala                                                           end user programs.     bitcoin, macvim         120
+                            C, C++, Objective-C,                        Application
+                            CoffeeScript, JavaScript,                   (APP)               sql and nosql          mysql, mongodb           43
+                            Perl, Php                                                       databases
+                                                                        Database            compiler, parser       ruby, php-src            88
+                            Others                                      (DB)                interpreter etc.
+                            C, C++, Objective-C                                             Operating Systems,     linux, memcached         48
+                                                                        CodeAnalyzer        Virtual Machine, etc.
+statically or dynamically typed.                                        (CA)                APIs, libraries etc.   androidApis,            175
+   Type Class classifies languages based on strong and weak typing,                                                opencv
+                                                                        Middleware          SDKs, plugins          ios sdk, coffeekup      206
+based on whether the language admits type-confusion. We consider        (MW)
+that a program introduces type-confusion when it attempts to inter-                         -                      Arduino, autoenv         49
+pret a memory region populated by a datum of specific type T1, as       Library
+an instance of a different type T2 and T1 and T2 are not related by     (LIB)
+inheritance. We classify a language as strongly typed if it explicitly
+detects type confusion and reports it as such. Strong typing could      Framework
+happen by static type inference within a compiler (e.g., with Java),    (FW)
+using a type-inference algorithm such as Hendley-Milner [?, ?], or
+at run-time using a dynamic type checker. In contrast, a language       Other
+                                                                        (OTH)
+   We detect distinct 30 domains (i.e. topics) and estimate the          also stem the bag-of-words using standard natural language pro-
+probability of each project belonging to these domains. For ex-          cessing (NLP) techniques. Finally, we use a well-known super-
+ample, LDA assigned the facebook-android-sdk project to the fol-         vised classifier: Support Vector Machine(SVM) [27] to classify the
+lowing topic with high probability: (0.042  f acebook + 0.010            test data.
+swank/slime+0.007f ramework+0.007environments.+
+0.007  transf orming). Here, the text values are the topics and             To evaluate the accuracy of the bug classifier, we manually an-
+the numbers are their probability of belonging to that domain. For       notated 180 randomly chosen bug fixes, equally distributed across
+clarity, we only show the top 5 domains. Since such auto-detected        all of the categories. We then compare the result of the automatic
+domains include several project-specific keywords, such as face-         classifier with the manually annotated data set. The following table
+book, swank/slime as shown in the previous example, it is hard to        summarizes the result for each bug category.
+identify the underlying common functionalities. Hence, we man-
+ually inspect each of the thirty domains to identify project-name-       Performance  precision    recall
+independent, domain-identifying keywords. Manual inspection helps        Security
+us in assigning a meaningful name to each domain. For example,           Failure       70.00%    87.50%
+for the domain described earlier, we identify the keywords frame-        Memory        75.00%    83.33%
+work, environments, and transforming to call it development frame-       Programming   80.00%    84.21%
+work. We manually rename all the thirty auto-detected domains in         Concurrency   86.00%    85.71%
+similar manner and find that the majority of the projects fall under     Algorithm     90.00%    69.23%
+six domains: Application, Database, CodeAnalyzer, Middleware,                         100.00%    90.91%
+Library, and Framework. We also find that some projects like "on-        Average       85.00%    89.47%
+line books and tutorials", "scripts to setup environment", "hard-
+ware programs" etc. do not fall under any of the above domains                         83.71%    84.34%
+and so we assign them to a catchall domain labeled as Other. This
+classification of projects into domains was subsequently checked            The result of our bug classification is shown in Table 5. In the
+and confirmed by another member of our research group. Table 4           Cause category, we find most of the bugs are related to generic pro-
+summarizes the identified domains resulting from this process. In        gramming errors (88.53%). Such high proportion is not surprising
+our study set, the Framework domain has the greatest number of           because it involves a wide variety of programming errors including
+projects (206), while the Database domain has the fewest number          incorrect error handling, type errors, typos, compilation errors, in-
+of projects (43).                                                        correct control-flow, and data initialization errors. The rest 5.44%
+                                                                         appears to be incorrect memory handling; 1.99% is concurrency
+2.5 Categorizing Bugs                                                    bugs, and 0.11% is algorithmic errors. Analyzing the impact of the
+                                                                         bugs, we find 2.01% are related to security vulnerability; 1.55%
+   While fixing software bugs, developers often leave important in-      is performance errors, and 3.77% causes complete failure to the
+formation in the commit logs about the nature of the bugs; e.g., why     system. Our technique could not classify 1.04% of the bug fix mes-
+the bugs arise, how to fix the bugs. We exploit such information to      sages in any Cause or Impact category; we classify these with the
+categorize the bugs, similar to Tan et al. [16, 26]. First, we catego-   Unknown type.
+rize the bugs based on their Cause and Impact. Root Causes are
+further classified into disjoint sub-categories of errors--Algorithmic,  2.6 Statistical Methods
+Concurrency, Memory, generic Programming, and Unknown. The
+bug Impact is also classified into four disjoint sub-categories: Se-        We use regression modeling to describe the relationship of a set
+curity, Performance, Failure, and other unknown categories. Thus,        of predictors against a response. In this paper, we model the num-
+each bug fix commit has a Cause and a Impact type. For exam-             ber of defective commits against other factors related to software
+ple, a Linux bug corresponding to the bug fix message: "return           projects. All regression models use negative binomial regression,
+if prcm_base is NULL.... This solves the following crash" 1 was          or NBR to model the non-negative counts of project attributes such
+caused due to a missing check (programming error), and impact            as the number of commits. NBR is a type of generalized linear
+was crash (failure). Table 5 shows the description of each bug cat-      model used to model non-negative integer responses. It is appro-
+egory. This classification is performed in two phases:                   priate here as NBR is able to handle over-dispersion, e.g., cases
+                                                                         where the response variance is greater than the mean [5].
+   (1) Keyword search. We randomly choose 10% of the bug-fix
+messages and use a keyword based search technique to automati-              In our models we control for several language per-project de-
+cally categorize the messages with potential bug types. We use this      pendent factors that are likely to influence the outcome. Conse-
+annotation, separately, for both Cause and Impact types. We chose        quently, each (language, project) pair is a row in our regression and
+a restrictive set of keywords and phrases as shown in Table 5. For       is viewed as a sample from the population of open source projects.
+example, if a bug fix log contains any of the keywords: deadlock,        We log-transform dependent count variables as it stabilizes the vari-
+race condition or synchronization error, we infer it is related to the   ance and usually improves the model fit [5]. We verify this by
+Concurrency error category. Such a restrictive set of keywords and       comparing transformed with non transformed data using the AIC
+phrases help to reduce false positives.                                  and Vuong's test for non-nested models [28].
+
+   (2) Supervised classification. We use the annotated bug fix logs         To check that excessive multi-collinearity is not an issue, we
+from the previous step as training data for supervised learning tech-    compute the variance inflation factor (VIF) of each dependent vari-
+niques to classify the remainder of the bug fix messages by treating     able in all of the models. Although there is no particular value of
+them as test data. We first convert each bug fix message to a bag-of-    VIF that is always considered excessive, we use the commonly used
+words. We then remove words that appear only once among all of           conservative value of 5 [5]. We check for and remove high lever-
+the bug fix messages. This reduces project specific keywords. We         age points through visual examination of the residuals vs leverage
+                                                                         plot for each model, looking for both separation and large values of
+1https://lkml.org/lkml/2012/12/18/102                                    Cook's distance.
+
+                                                                            We employ effects, or contrast, coding in our study to facilitate
+                                                                         interpretation of the language coefficients [5]. Effects codes dif-
+                                                                         fer from the more commonly used dummy, or treatment, codes that
+                                                                         compare a base level of the factor with one or more treatments.
+                                                                         With effects coding, each coefficient indicates the relative effect
+        Table 5: Categories of bugs and their distribution in the whole dataset
+
+Cause   Bug Type            Bug Description                             Search keywords/phrases                                count   %count
+Impact  Algorithm (Algo)    algorithmic or logical errors                                                                         606      0.11
+        Concurrancy (Conc)  multi-threading or multi-processing         algorithm                                                          1.99
+        Memory (Mem)        related issues                              deadlock, race condition, synchronization error.       11111       5.44
+                            incorrect memory handling                                                                          30437
+        Programming (Prog)                                              memory leak, null pointer, buffer overflow, heap                  88.53
+                            generic programming errors                  overflow, null pointer, dangling pointer, double      495013
+        Security (Sec)                                                  free, segmentation fault.                                          2.01
+        Performance (Perf)  correctly runs but can be exploited         exception handling, error handling, type error,        11235       1.55
+        Failure (Fail)      by attackers                                typo, compilation error, copy-paste error, refactor-     8651      3.77
+        Unknown (Unkn)      correctly runs with delayed re-             ing, missing switch case, faulty initialization, de-   21079       1.04
+                            sponse                                      fault value.                                             5792
+                            crash or hang
+                            not part of the above seven cate-           buffer overflow, security, password, oauth, ssl
+                            gories
+                                                                        optimization problem, performance
+
+                                                                        reboot, crash, hang, restart
+
+of the use of a particular language on the response as compared         ance. The remaining coefficients are significant and either positive
+to the weighted mean of the dependent variable across all projects.     or negative. For those with positive coefficients we can expect that
+Since our factors are unbalanced, i.e., we have different numbers of    the language is associated with, ceteris paribus, a greater number
+projects in each language, we use weighted effects coding, which        of defect fixes. These languages include C, C++, JavaScript,
+takes into account the scarcity of a language. This method has been     Objective-C, Php, and Python. The languages Clojure,
+used previously in software engineering to study the impact of pat-     Haskell, Ruby, Scala, and TypeScript, all have negative
+tern roles on change proneness [24]. As with treatment coding, it       coefficients implying that these languages are less likely than the
+is still necessary to omit a factor to compute the model. Since the     average to result in defect fixing commits.
+use of effects codes compares each level to the grand mean, how-
+ever, we can easily extract the missing coefficient from the other                      Df Deviance Resid.                    Resid. Pr(>Chi)
+model coefficients, or more practically, we simply re-compute the
+coefficients using a different level of the factor as a base [5].                                                             Df Dev
+
+   To test for the relationship between two factor variables we use     NULL                               1113 38526.51
+a Chi-Square test of independence [17]. After confirming a depen-
+dence we use Cramer's V, an r × c equivalent of the phi coefficient     log commits 1 36986.03 1112 1540.48                                0.0000
+for nominal data, to establish an effect size [6].
+                                                                        log age         1       42.70 1111 1497.78                         0.0000
+3. RESULTS
+                                                                        log size        1       12.25 1110 1485.53                         0.0005
+   Prior to analyzing language properties in more detail, we begin
+with a straightforward question that directly addresses the core of     log devs        1       48.22 1109 1437.30                         0.0000
+what some fervently believe must be true, namely:
+                                                                        language        16 242.89 1093 1194.41 0.0000
+RQ1. Are some languages more defect prone than others?
+                                                                           One should take care not to overestimate the impact of language
+   We evaluate this question using an NBR model with languages          on defects. While these relationships are statistically significant,
+encoded with weighted effects codes as predictors for the number        the effects are quite small. In the analysis of deviance table above
+of defect fixing commits. The model details are shown in Table 6.       we see that activity in a project accounts for the majority of ex-
+                                                                        plained deviance. Note that all variables are significant, that is, all
+   We include some variables as controls for factors that will clearly
+influence the number of defect fixes. Project age is included as        Table 6: Some languages induce fewer defects than other languages.
+older projects will generally have a greater number of defect fixes.    Response is the number of defective commits.Languages are coded with
+Trivially, the number of commits to a project will also impact the      weighted effects coding so each language is compared to the grand
+response. Additionally, the number of developers who touch a            mean. AIC=10673, BIC=10783, Log Likelihood = -5315, Deviance=1194,
+project and the raw size of the project are both expected to grow       Num. obs.=1114
+with project activity.
+                                                                                  Defective Commits Model    Coef.            Std. Err.
+   The sign and magnitude of the Estimate in the above model re-                  (Intercept)              -1.93              (0.10)
+lates the predictors to the outcome. The first four variables are                 log commits                                 (0.03)
+control variables and we are not interested in their impact on the                log age                    2.26             (0.03)
+outcome other than to say, in this case, that they are all positive,              log size                   0.11             (0.02)
+as expected, and significant. The language variables are indica-                  log devs                   0.05             (0.03)
+tor, or factor, variables for each project. The coefficient compares                                         0.16
+each language to the grand weighted mean of all languages in all                  C                                           (0.04)
+projects. The language coefficients can be broadly grouped into                                              0.15             (0.04)
+three general categories. The first category are those for which the              C++                        0.23
+coefficient is statistically insignificant and the modeling procedure
+could not distinguish the coefficient from zero. These languages                  C#                                          0.03 (0.05)
+may behave similarly to the average or they may have wide vari-                   Objective-C                                 0.18 (0.05)
+
+                                                                                  Go -0.08 (0.06)
+
+                                                                                  Java                     -0.01 (0.04)
+
+                                                                                  CoffeeScript               0.07             (0.05)
+                                                                                  JavaScript                 0.06             (0.02)
+                                                                                  TypeScript               -0.43              (0.06)
+                                                                                  Ruby                     -0.15              (0.04)
+                                                                                  Php                        0.15             (0.05)
+                                                                                  Python                     0.10             (0.03)
+
+                                                                                  Perl                     -0.15 (0.08)
+                                                                                  Clojure                  -0.29 (0.05)
+
+                                                                                  Erlang                   -0.00              (0.05)
+                                                                                  Haskell                  -0.23              (0.06)
+                                                                                  Scala                    -0.28              (0.05)
+
+                                                                                  p < 0.001, p < 0.01, p < 0.05
+of the factors above account for some of the variance in the number     cific interactions between language and domain with respect to de-
+of defective commits. The next closest predictor, which accounts        fects within projects. Statistically, this goal poses challenges for
+for less than one percent of the total deviance, is language. All       regression. Interaction terms in a regression model might yield
+other controls taken together do not account for as much deviance       some insight, however, with 17 languages across 7 domains this
+as language.                                                            will yield an excessive number of terms and a challenging, and
+                                                                        most likely spurious, interpretation.
+   Although we expressed the impact of language in this model as
+a percentage of deviance, we hasten to remind the reader that al-          Given this, we first consider testing for the dependence between
+though interpretation is similar, in a rough sense, to a percentage     domain and language usage within a project, using a Chi-Square
+of the total variance explained in an ordinary least squares regres-    test of independence. Unfortunately, out of 119 cells in our data
+sion, it is not accurate to say that the measures are synonymous [5].   set, 46, i.e. 39%, are below the value of 5. This exceeds the recom-
+About the best we can do is to observe that it is a small affect. We    mendation that no more than 20% of the counts should be below
+can read the coefficients as the expected change in the log of the      5 [17]. We include the value here for completeness3, however, the
+response for a one unit change in the predictor with all other pre-     low strength of association of 0.191 as measured by Cramer's V,
+dictors held constant; i.e., for a coefficient i, a one unit change     suggests that although there is likely some relationship between do-
+in i yields an expected change in the response of ei . For the          main and language in our data set, including domain in regression
+factor variables, this expected change is normally interpreted as       models is unlikely to lead to meaningful models.
+a comparison to a base factor. In our case, however, the use of
+weighted effects coding allows us to compare this expected change          One option to address this concern would be to remove lan-
+to the grand mean, i.e., the average across all languages. Thus, if,    guages or combine domains, however, our data here presents no
+for some number of commits, a particular project developed in an        clear choices. Alternatively, we could combine languages; this
+average language had four defective commits, then the choice to         choice leads to a related but slightly different question.
+use C++ would mean that we should expect one additional buggy
+commit since e0.23 × 4 = 5.03. For the same project, choos-             RQ2. Which language properties relate to defects?
+ing Haskell would mean that we should expect about one fewer
+defective commit as e-0.23 × 4 = 3.18. The accuracy of this                Rather than considering languages individually, we aggregate
+prediction is dependent on all other factors remaining the same, a      them by language class, as described in Section 2.3, and analyze
+challenging proposition for all but the most trivial of projects. All   the relationship between defects and language class. Broadly, each
+observational studies face similar limitations and we address this      of these properties divides languages along some line that is often
+concern in more detail in section 5.                                    discussed in the context of errors, drives user debate, or have been
+                                                                        the subject of prior work. To arrive at the six factors in the model
+     Result 1: Some languages have a greater association with           we combined all of these factors across all of the languages in our
+  defects than other languages, although the effect is small.           study.
+
+   In the remainder of this paper we expand on this basic result           Ideally, we would want to include each of the separate properties
+by considering how different categories of application, defect, and     in the regression model so that we can assert with some assurance
+language, lead to further insight into the relationship between lan-    that a particular property is responsible for particular defects. Un-
+guages and defect proneness.                                            fortunately, however, the properties are highly correlated and mod-
+                                                                        els with all properties are not stable. To avoid this issue we model
+   Software bugs usually fall under two broad categories: (1) Do-       the impact of the six different language classes, which result from
+main Specific bug: specific to project functionalities and do not       combining the language properties, on the number of defects while
+depend on the underlying programming language. For example,             controlling for the same basic covariates that we used in the model
+we find a bug fix in Linux with log message: "Fix headset mic sup-      in RQ1.
+port for Asus X101CH". The bug was due to a missing functional-
+ity [23] in Asus headset2 and less to do with language feature. Pre-    Table 7: Functional languages have a smaller relationship to defects
+vious researches term these errors as Software Component bug [16,       than other language classes where as procedural languages are either
+26]. (2) Generic bug: more generic in nature and have less to do        greater than average or similar to the average. Language classes are
+with project functionalities. For example, type-error, concurrency      coded with weighted effects coding so each language is compared to the
+error etc.                                                              grand mean. AIC=10419, Deviance=1132, Num. obs.=1067
+
+   Consequently, it is reasonable to think that the interaction of ap-  Defective Commits                  -2.13   (0.10)
+plication domain and language might impact the number of defects        (Intercept)                          0.96  (0.01)
+within a project. Moreover some languages are believed to excel at      log commits                          0.07  (0.01)
+some tasks more so than others, e.g., C for low level work, or Java     log age                              0.05  (0.01)
+for user applications. A less than ideal language for an application    log size                             0.07  (0.01)
+might lead to a greater number of defects. To compare error prone-      log devs                                   (0.04)
+ness of different languages we ideally should ignore the domain         Functional-Static-Strong-Managed   -0.25   (0.04)
+specific bugs and focus only on the generic ones since they are                                            -0.17   (0.03)
+more likely to depend on the programming language feature. How-         Functional-Dynamic-Strong-Managed  -0.06   (0.03)
+ever, since a domain specific bug may also arise due to a generic                                          0.001   (0.02)
+programming error, it is difficult to separate the two. A possible      Proc-Static-Strong-Managed                 (0.02)
+workaround is to study the defect proneness of languages while                                               0.04
+controlling the domain. To this end, we would like to confirm spe-      Script-Dynamic-Strong-Managed        0.14
+
+2https://bugs.launchpad.net/ubuntu/+source/                             Script-Dynamic-Weak-Managed
+linux/+bug/1169138
+                                                                        Proc-Static-Weak-Unmanaged
+                                                                        p < 0.001, p < 0.01, p < 0.05
+
+                                                                           As with language, we are comparing language classes with the
+                                                                        average behavior across all languages. The model is presented in
+                                                                        Table 7. As with the previous model, the first four variables are
+                                                                        control variables and we are not interested in their impact on the
+                                                                        outcome other than to say, in this case, that, with the exception
+                                                                        of size, they are all positive and significant. their It's clear that
+
+                                                                        3Chi-Squared value of 243.6 with 96d.f. and p = 8.394e - 15
+Script-Dynamic-Strong-Managed class has the smallest                    relationship between these factors and the project domain yields
+magnitude coefficient. The coefficient is insignificant implying that   a value of 99.0494 and df = 30 with p = 2.622e - 09 allow-
+the z-test for the coefficient cannot distinguish the coefficient from  ing us to reject the null hypothesis that the factors are independent.
+zero. Given the magnitude of the standard error, however, we can        Cramer's-V yields a value of 0.133, a weak level of association.
+reasonably assume that the lack of significance is not related to       Consequently, although there is some relation between domain and
+wide variance or insufficient data, rather, it is because the behav-    language, there is only a weak relationship between domain and
+ior of languages in this class is very close to the average behavior    language class.
+across all languages. We confirm this by recoding the coefficient
+using Proc-Static-Weak-Unmanaged as the base level and                       Result 2: There is a small but significant relationship be-
+employing treatment, or dummy coding that compares each lan-              tween language class and defects. Functional languages have
+guage class with the base level. In this case, Script-Dynamic-            a smaller relationship to defects than either procedural or
+-Strong-Managed is significantly different with p = 0.00044.              scripting languages.
+We note here that while choosing different coding methods affects
+the coefficients and z-scores, the models are identical in all other       It is somewhat unsatisfying that we do not observe a strong as-
+respects. When we change the coding we are rescaling the coeffi-        sociation between language, or language class, and domain within
+cients to reflect the comparison that we wish to make [5]. Compar-      a project. An alternative way to view this same data is to aggregate
+ing the other language classes to the grand mean, Proc-Static-          defects over all languages and domains, disregarding the relation-
+-Weak-Unmanaged languages are more likely to induce defects.            ship to projects. Since we cannot view this data as independent
+This implies that either weak typing or memory management is-           samples, we do not attempt to analyze it statistically, rather we take
+sues contribute to greater defect proneness as compared with other      a descriptive, visualization based approach.
+procedural languages.
+                                                                           We define Defect Proneness as the ratio of bug fix commits over
+   Among scripting languages we observe a similar relationship be-      total commits per language per domain. Figure 1 illustrates the in-
+tween weak and strong typing. This is some evidence that weak vs        teraction between domain and language using a heat map, where
+strong typing is more likely responsible for this difference as op-     the defect proneness increases from lighter to darker zone. We in-
+posed to memory management, we cannot state this conclusively           vestigate which language factors influence defect fixing commits
+given the correlation between factors. It is possible that among        across a collection of projects written across a variety of languages.
+script languages strong versus weak typing is driving the relation-     This leads to the following research question:
+ship and among procedural languages, memory management is driv-
+ing the difference. However, as a group, strongly typed languages       RQ3. Does language defect proneness depend on domain?
+are less error prone than average while the weakly typed languages
+are more error prone than the average. The contrast between static         A first glance at Figure 1(a) reveals that defect proneness of the
+and dynamic typing is also visible in functional languages.             languages indeed depends on the domain. For example, in the
+                                                                        Middleware domain JavaScript is most defect prone (31.06%
+   The functional languages as a group show a strong difference         defect proneness). This was little surprising to us since Java-
+from the average. Compared to all other language types, both            Script is typically not used for Middleware domain. On a closer
+Functional-Dynamic-Strong-Managed and Function-                         look, we find that JavaScript has only one project, v8 (Google's
+al-Static-Strong-Managed languages show a smaller rela-                 JavaScript virtual machine), in Middleware domain that is re-
+tionship with defects. Statically typed languages have substantially    sponsible for all the errors.
+smaller coefficient yet both functional language classes have the
+same standard error. This is strong evidence that functional static        Also, Scala is most defect prone in the Application domain
+languages are less error prone than functional dynamic languages,       with a defect density (number of bug fix commit over total com-
+however, the z-tests only test whether the coefficients are different   mit) of 52.67%. However, a single project zipkin, with defect den-
+from zero. In order to strengthen this assertion we recode the model    sity of 80%, contribute most of defects. Similarly, Perl and C
+as above using treatment coding and observe that the Function-          are the two top most buggy languages in Database domain with de-
+al-Static-Strong-Managed language class is significantly                fect proneness 58.63% and 61.47% respectively. However, we find
+less defect prone than the Functional-Dynamic-Strong-                   that mysql project is solely responsible for such high defect count,
+-Managed language class with p = 0.034.                                 where overall defect density of mysql is 70.25%.
+
+          Df Deviance Resid. Df Resid. Dev Pr(>Chi)                        Thus, it turns out that variation of defect density of the domains
+                                                                        with languages may be an attribute of individual projects. To ver-
+NULL                    1066 32995.23                                   ify this, we re-evaluate domain-language interaction after ignoring
+                                                                        the outliers. We filter out the projects that have defect density be-
+log commits 1 31634.32  1065  1360.91  0.0000                           low 10 percentile and above 90 percentile. Figure 1(b) shows the
+                                                                        result. Note that, the outliers' effects are also controlled in all our
+log age   1 51.04       1064  1309.87  0.0000                           regression models as we filter them out as high leverage points, as
+                                                                        discussed in Section 2.6.
+log size  1 50.82       1063  1259.05  0.0000
+                                                                           The variation of defect proneness and languages per domain is
+log devs  1 31.11       1062  1227.94  0.0000                           much subdued in the new heat map. The remaining variation comes
+                                                                        from the inherent defect proneness of the languages, as we have
+Lang. Class 5  95.54    1057  1132.40  0.0000                           seen in RQ1. To ensure this, we measure the pairwise rank cor-
+                                                                        relation (Spearman Correlation [30]) between the language defect
+   As with the relationship between language and defects, the re-       proneness for each domain with the Overall. For all the domains,
+lationship between language class and defects is based on a small       the correlation is positive, and p-values are significant (< 0.01) ex-
+effect. The deviance explained is shown in the anova table above        cept for Database domain. This shows that w.r.t. defect proneness,
+and is similar, although smaller, to the deviance related to language   language ordering in each domain (except Database) is correlated
+and, consequently, has a similar interpretation.
+
+   Having discussed the relationship between language class and
+defects, we revisit the question of application domain.As before we
+ask whether domain has an interaction with language class. Does
+the choice of, e.g., a functional language, have an advantage for
+a particular domain? For this pair of factors, the contingency ta-
+ble confirms to assumptions. As above, a Chi-Square test for the
+Language            C                                                                          bug_pcent  Language            C                                                                             bug_pcent
+                 C++                                                                              60                       C++
+                                                                                                  40                                                                                                           40
+                  C#                                                                              20                        C#                                                                                 30
+        Objective-C                                                                                               Objective-C                                                                                  20
+                                                                                                                                                                                                               10
+                  Go                                                                                                        Go
+                Java                                                                                                      Java
+        Coffeescript                                                                                              Coffeescript
+          Javascript                                                                                                Javascript
+          Typescript                                                                                                Typescript
+                Ruby                                                                                                      Ruby
+                 Php                                                                                                       Php
+              Python                                                                                                    Python
+                 Perl                                                                                                      Perl
+             Clojure                                                                                                   Clojure
+              Erlang                                                                                                    Erlang
+             Haskell                                                                                                   Haskell
+               Scala                                                                                                     Scala
+
+                       Application CodeAnalyzeDratabase Framework Library  Middleware Overall                                       Application CodeAnalyzeDratabase Framework Library  Middleware Overall
+
+                                                     Domain                                                                                                       Domain
+
+(a) Variation of defect proneness across languages for a given domain                                     (b) Variation of defect proneness across languages for a given domain
+                                                                                                          after removing the outliers
+
+                                        Figure 1: Interaction between language's defect proneness and domain
+
+Each cell in the heat map represents defect proneness of a language (row header) for a given domain (column header). The `Overall' column represents defect proneness of a
+                    language over all the domains. The cells with white cross mark indicate null value, i.e. no commits were made corresponding to that cell.
+
+with the overall language ordering. Hence, domain has less signif-                                        defect type is similar in magnitude for most of the categories. We
+icance when it comes to defect proneness of the languages.                                                interpret this relationship to mean that language has a greater im-
+                                                                                                          pact on specific categories of bugs, than it does on bugs overall.
+                                 APP CA DB FW LIB MW
+                                                                                                             In the following section, we elaborate the result for bug cate-
+               Spearman 0.71 0.56 0.30 0.76 0.90 0.46                                                     gories with significant bug count as reported in Table 5. However,
+                     Corr.                                                                                our conclusion generalizes for all categories.
+
+                   p-value 0.00 0.02 0.28 0.00 0.00 0.09
+
+     Result 3: There is no general relationship between domain                                                script-dynamic-weak-managedLanguage Class
+  and language defect proneness.
+                                                                                                             script-dynamic-strong-managed
+   We have shown that different languages induce a larger number
+of defects and that this relationship is not only related to particular                                         proc-static-weak-unmanaged
+languages but holds for general classes of languages, however, we
+find that the type of project doesn't mediate this relationship to a                                             proc-static-strong-managed
+large degree. We now turn our attention to categorization of the
+response. We want to understand how language relates to specific                                                 func-static-strong-managed
+kinds of defects and how this relationship compares to the more
+general relationship that we observe. We divide the defects into                                              func-dynamic-strong-managed
+categories as described in Table 5 and ask the following question:
+                                                                                                                                               Algo ConcurrenFcyailure Memory PerformancPerogrammSinegcurity
+RQ4. What is the relation between language & bug category?                                                                                                       Bug Type
+
+   We use a mixed-method analysis to understand the relation be-                                              Figure 2: Relation between bug categories and language class
+tween languages and bug categories. First, using a descriptive,
+visualization based approach similar to RQ3, we study the rela-                                              Each cell represents percentage of bug fix commit out of all bug fix commits per
+tion between bug categories and language class. A heat map (see                                               language class (row header) per bug category (column header). The values are
+Figure 2) shows aggregated defects over language classes and bug
+types and illustrate an overall relationship between language class                                                                           normalized column wise.
+and the bug categories.
+                                                                                                             Programming Errors. Generic programming errors account for
+   To understand the interaction between bug categories with indi-                                        around 88.53% of all bug fix commits and occur in all the language
+vidual languages, we use a separate NBR model, as discussed in                                            classes. The regression analysis draws a similar conclusion as of
+RQ1, for each bug category. For each of these models we use the                                           RQ1 (see Table 6) since programming errors represent the majority
+same control factors as RQ1 as well as languages encoded with                                             of the studied fixes. All languages incur programming errors such
+weighted effects as predictors, with the number of defect fixing                                          as faulty error-handling, faulty object and variable definitions, in-
+commits belong to that category as a response.                                                            correct data initialization, typos, etc.. Still, some programming er-
+                                                                                                          rors are more language-specific. For example, we find 122 runtime
+   The results are shown in Table 8. For these models we present                                          errors in JavaScript that are not present in TypeScript. In
+only a subset of the anova coefficients as the distribution of de-                                        contrast, TypeScript has more type related errors, since Type-
+viance explained is very similar to the language model presented                                          Script compiler flags them during development. Thus, although
+in Table 6 and its associated anova table. Most importantly,the                                           generic programming errors occur in all languages, some kinds re-
+number of commits still commands the largest proportion of the                                            late to specific language features.
+deviance, and the deviance explained by the remaining control vari-
+ables is substantially smaller than that explained by the language.                                          Memory Errors. Memory errors count for 5.44% of all the
+                                                                                                          bug fix commits. The heat map in Figure 2 shows a strong rela-
+   The overall deviance for each model is substantially smaller,                                          tionship between Proc-Static-Weak-Unmanaged class and
+however, and the proportion explained by language for a specific                                          memory errors. This is obvious as languages with unmanaged
+                                                                                                          memory type are known for memory bugs. Regression analysis
+                                                                                                          in Table 8 also confirms that languages with unmanaged memory
+                                                                                                          type, e.g.,C, C++, and Objective-C introduce more memory
+Table 8: While the impact of language on defects varies across defect category, language has a greater impact on specific categories than it does on
+defects in general. For all models above the deviance explained by language type has p < 3.031e - 07.
+
+          (Intercept)                  -7.45   Memory    -8.19          Concurrency  -7.65   Security  -6.41   Failure
+          log commits                    2.32  (0.45)      2.60         (0.75)         2.04  (0.56)      2.03  (0.40)
+          log age                        0.31  (0.12)      0.37         (0.21)         0.74  (0.15)      0.14  (0.11)
+                                               (0.15)                   (0.24)               (0.18)      0.30  (0.13)
+                                                         -0.23          (0.16)       -0.07   (0.11)            (0.08)
+          log size                     0.00 (0.09)         0.25         (0.17)         0.46  (0.14)    -0.03   (0.10)
+                                                           0.58         (0.22)         0.51  (0.17)      0.67  (0.12)
+          log devs                     0.18    (0.10)      1.18         (0.18)         0.49  (0.15)      1.15  (0.11)
+          C                            1.81    (0.11)      0.93         (0.24)               (0.22)            (0.16)
+          C++                          1.14    (0.10)      0.52         (0.29)       -0.30   (0.23)    -0.02   (0.15)
+                                                           1.73         (0.30)       -0.04   (0.27)      1.16  (0.24)
+          C#                           -0.05 (0.17)        0.97         (0.22)               (0.18)            (0.13)
+          Objective-C                    1.47 (0.15)                    (0.55)         0.55  (0.26)    -0.38   (0.19)
+                                                         -1.64          (0.17)         0.14  (0.12)      0.32  (0.09)
+          Go                           0.00 (0.25)       -0.12          (0.98)       -0.26   (0.41)      0.00  (0.07)
+          Java                         0.59 (0.14)       -2.15          (0.30)       -0.02   (0.20)            (0.16)
+                                                         -0.82          (0.35)       -1.34   (0.19)    -0.16   (0.17)
+          CoffeeScript                 -0.36 (0.23)      -1.64          (0.23)       -0.24   (0.16)    -0.34   (0.13)
+                                                         -0.21          (0.86)         0.27  (0.43)    -0.34   (0.40)
+          JavaScript                   -0.11   (0.10)    -0.86          (0.25)         0.25  (0.22)    -0.61   (0.19)
+          TypeScript                   -1.32   (0.40)                   (0.30)       -0.16   (0.26)    -0.07   (0.19)
+          Ruby                         -1.12   (0.20)      0.73         (0.29)       -0.16   (0.22)    -0.40   (0.17)
+          Php                          -0.63   (0.17)      0.10         (0.32)       -0.69   (0.26)    -0.91   (0.19)
+          Python                       -0.44   (0.14)      0.76                        0.73            -0.53
+                                                         -0.17          2234.29      -0.31   3411.57           4188.71
+          Perl                           0.41  (0.36)                   2344.63              3521.92     0.65  4299.06
+          Scala                        -0.41   (0.18)                   -1095.14             -1683.79  -0.38   -2072.36
+          Clojure                      -1.16   (0.27)                   666.41               921.50            1070.60
+          Erlang                       -0.53   (0.23)                   1114                 1114              1114
+
+          Haskell                      -0.22 (0.20)                     3426.5               3372.5            6071.5
+                                                                        157.03               61.40             303.8
+          AIC 3033.55
+
+          BIC 3143.90
+
+          Log Likelihood                       -1494.77
+
+          Deviance                             905.38
+
+          Num. obs.                            1114
+
+          Residual Deviance (NULL)             8508.6
+
+          Language Type Deviance               587.2
+
+          p < 0.001, p < 0.01, p < 0.05
+
+errors than the average with statistical significance. Among the        condition, deadlock, or incorrect synchronization, as shown in the
+managed languages, Java has significantly more memory errors            table above. In all the languages, race condition is most frequent,
+than the average, though its regression coefficient is less than the    ranging from 41% in C++ to 92% is Go. The enrichment of race
+unmanaged languages. Though Java has its own garbage col-               condition errors in Go is likely because the Go is distributed with a
+lector, having memory leak is not surprising since unused object        race-detection tool that may advantage Go developers in detecting
+references often prevents the garbage collector from reclaiming the     races. Deadlocks are also noteworthy, ranging from 43.36% in C++
+memory [14]. In fact, we notice 28.89% of all the memory errors         to 10.80% in Go. The synchronization errors are mostly related to
+in Java comes from a memory leak. In terms of effect size, lan-         message passing (MPI) or shared memory operation (SHM). Er-
+guage has a larger impact on memory defects than all other cause        lang and Go use MPI [10, 1] (which do not require locking of
+categories.                                                             shared resources) for inter-thread communication, which explains
+                                                                        why these two languages do not have any SHM related errors like
+   Concurrency Errors. 1.99% of total bug fix commits are re-           locking, mutex etc. In contrast, projects in the other languages
+lated to Concurrency Errors. The heat map shows that Proc-              use SHM primitives for communication and can thus have locking-
+-Static-Weak-Unmanaged class dominates concurrency er-                  related errors.
+rors. In this class, C and C++ introduce 19.15% and 7.89% of the
+Concurrency errors, and they are distributed across the projects.          Security and Other Impact Errors. Around 7.33% of all the
+The regression result of Table 8 also confirms that with significant    bug fix commits is related to Impact errors. Among them Er-
+p-value. Language classes Proc-Static-Strong-Managed                    lang, C, C++, and Go produce more security errors than average,
+and Functional-Static-Strong-Managed are also in the                    as confirmed by the regression model (Table 8). The regression also
+darker zone in the heat map. The major languages that contribute        suggests that projects written in TypeScript and Clojure are
+concurrency errors from these classes are Go, C#, and Scala and         less likely to introduce a security error than average (Figure 2).
+their regression coefficient is also statistically significant. These   From the heat map we also see that Static languages are in
+results confirm, in general static languages produce more concur-       general more prone to failure and performance errors, followed
+rency errors than others. Among the dynamic languages, only Er-         by Functional-Dynamic-Strong-Managed languages. In
+lang is more prone to concurrency errors. The regression anal-          the later category, Erlang is more prone to induce a failure (posi-
+ysis also shows that projects written in dynamic languages like         tive regression coefficient with statistical significance). The analy-
+CoffeeScript, TypeScript, Ruby, and Php have fewer con-                 sis of deviance results confirm that language is strongly associated
+currency errors (note statistically significant negative coefficients,  with failure impacts. While security errors are the weakest among
+in Table 8).                                                            the categories, with respect to the residual deviance of the model,
+                                                                        the deviance explained by language is still quite strong.
+race          C    C++      C#   Java  Scala      Go     Erlang
+deadlock                                                                     Result 4: Defect types are strongly associated with lan-
+SHM       63.11   41.46   77.7  65.35  74.07   92.08      78.26           guages; Some defect type like memory error, concurrency er-
+MPI       26.55   43.36  14.39  17.08  18.52   10.89      15.94           rors also depend on language primitives. Language matters
+          28.78   18.24   9.36   9.16   8.02                              more for specific categories than it does for defects overall.
+                   2.21   2.16          4.94        0          0
+               0                 3.71           1.98      10.14
+
+   A textual analysis based on word-frequency of the bug fix mes-
+sages suggests that most of the concurrency errors occur due to race
+4. RELATED WORK                                                         monly used, as reflected in our data set. For instance, we classify
+                                                                        Objective-C as unmanaged memory type, although it may fol-
+   Prior work on programming language comparison falls in three         low a hybrid memory model. Similarly, we annotate Scala as
+categories: (1) Controlled Experiment: For a given task, develop-       functional and C# as procedural language, although they support
+ers are monitored while programming in different languages. Re-         both procedural and functional design [20, 22].We do not distin-
+searchers then compare outcomes such as development effort and          guish object-oriented languages (OOP) in this work as there is no
+program quality. Hanenberg et al. [11] compared static vs. dynamic      clear distinction between pure OOP languages and procedural lan-
+typing by monitoring 48 programmers for 27 hours while devel-           guages.The difference largely depends on programming style. We
+oping a parser program. They found no significant difference in         categorize C++ as weakly typed because a memory region of a cer-
+code quality between the two. However, dynamic type-based lan-          tain type can be treated differently using pointer manipulation [?].
+guage have shorter development time. Their study was conducted          However, depending on the compiler some C++ type errors can
+with undergraduate students in a lab setting with custom-designed       be detected in compile time. We further exclude TypeScript
+language and IDE. Our study, by contrast is a field study of popu-      from our language classification model (see Table 3 and Table 7);
+lar software applications. While we can only indirectly (and post       TypeScript is intended to be used as a static, strongly typed lan-
+facto) control for confounding factors using regression, we bene-       guage. However, in practice, we notice that developers often (for
+fit from much larger sample sizes, and more realistic, widely-used      50% of the variables, and in all the TypeScript-using projects
+software. We find that statically typed languages in general are less   in our dataset) use any type, a catch-all union type, and thus makes
+defect prone than the dynamic types, and that strong typing is better   TypeScript dynamic and weak.
+than weak typing in the same regard. The effect sizes are modest;
+it could be reasonably argued that they are visible here precisely         Finally, we associate defect fixing commits to language proper-
+because of the large sample sizes.                                      ties, although they could reflect reporting style or other developer
+                                                                        properties. Availability of external tools or libraries may also im-
+   Harrison et al. [12] compared C++, a procedural language, with       pact the extent of bugs associated with a language.
+SML, a functional language, finding no significant difference in to-
+tal number of errors, although SML has higher defect density than       6. CONCLUSION
+C++. SML was not represented in our data, which however, sug-
+gest that functional languages are generally less defect prone than        We have presented a large scale study of language type and use,
+procedural languages. Another line of work primarily focuses on         as it relates to software quality. The Github data we used is char-
+comparing development effort across different languages [15, 21].       acterized by its complexity and the variance along multiple dimen-
+However, they do not analyze language defect proneness.                 sions of language, language type, usage domain, amount of code,
+(2) Surveys: Meyerovich et al. survey developers' views of pro-         sizes of commits, and the various characteristics of the many issue
+gramming languages, to study why some languages are more popu-          types.
+lar than others[18]. They report strong influence from non-linguistic
+factors: prior language skills, availability of open source tools, and     The large GitHub dataset sample-size allows a mixed-methods
+existing legacy systems. Such factors also arise in our findings:       study of the effects of language, while controlling for a number of
+we confirm that availability of external tools also impact software     confounds. Through a combination of regression modeling, text
+quality; Go has lot more concurrency bugs related to race condition     analytics, and visualization, we have examined the interactions of
+due to its race condition detection tool (see RQ4 in Section 3).        language, domain, and defect type. The data indicates functional
+(3) Repository Mining: Bhattacharya et al. [2] study four projects      languages are better than procedural languages; it suggests that
+developed in both C and C++ and find that the software compo-           strong typing is better than weak typing; that static typing is better
+nents developed in C++ are in general more reliable than C. We          than dynamic; and that managed memory usage is better than un-
+find that both C and C++ are more defect prone than average defect      managed. Further, that the defect proneness of languages in general
+proneness of all the studied languages, although C++ has a higher       is not associated with software domains. Also, languages are more
+regression coefficient (0.23) than C (0.15) (see Table 6). However,     related to individual bug categories than bugs overall.
+for certain bug types like concurrency errors, C is more defect prone
+than C++ (see RQ4 in Section 3).                                           On the other hand, even large datasets become small and insuf-
+                                                                        ficient when they are sliced and diced many ways simultaneously,
+5. THREATS TO VALIDITY                                                  i.e. when the underlying connectivity between variables is rich. The
+                                                                        implications are that the more dependent variables there are, the
+   We recognize few threats to our reported results. First, to iden-    more difficult it becomes (vis-a-vis the amount of data available) to
+tify bug fix commits we did not check the bug database; instead         answer questions about a specific variable's effect on any outcome
+we rely on the keywords that developers often use to indicate a         where interactions with other variables exist. Hence, we are unable
+bug fix commit. Our choice was deliberate. We wanted to capture         to quantify the specific effects of language type on usage. Addi-
+the issues that developers continuously face in an ongoing devel-       tional methods such as surveys could be helpful here. Addressing
+opment process, not just the reported bugs. However, such choice        these challenges remains for future work.
+possesses threats of over estimation. Our categorization of the do-
+mains is subjected to interpreter's bias, although another member       7. ACKNOWLEDGEMENTS
+of our group verified the categories. Also, our effort to categorize a
+large number of bug fix commits could potentially raise some ques-         We thank Sameer Khatri for cross checking domain categoriza-
+tions. Especially, the categorization can be tainted by the initial     tion. We acknowledge support from the National Science Founda-
+choice of keywords. Also, the descriptiveness of commit logs vary       tion under Grants No. CCF-1247280 and CCF-1446683 and from
+across the projects. To mitigate the threat, we evaluate our classifi-  AFOSR award FA955-11-1-0246.
+cation against manual annotation as discussed in Section 2.5.
+                                                                        8. REFERENCES
+   To interpret the language classes in Section 2.3, we make cer-
+tain assumptions based on how a language property is most com-           [1] J. Armstrong, R. Virding, C. Wikström, and M. Williams.
+                                                                              Concurrent programming in erlang. 1993.
+ [2] P. Bhattacharya and I. Neamtiu. Assessing programming                   characteristics in modern open source software. In ASID '06:
+      language impact on development and maintenance: A study                Proceedings of the 1st workshop on Architectural and system
+      on c and c++. In Proceedings of the 33rd International                 support for improving software dependability, October 2006.
+      Conference on Software Engineering, ICSE '11, pages
+      171­180, New York, NY, USA, 2011. ACM.                           [17] J. P. Marques De Sá. Applied statistics using spss, statistica
+                                                                             and matlab. 2003.
+ [3] C. Bird, N. Nagappan, B. Murphy, H. Gall, and P. Devanbu.
+      Don't touch my code!: examining the effects of ownership         [18] L. A. Meyerovich and A. S. Rabkin. Empirical analysis of
+      on software quality. In Proceedings of the 19th ACM                    programming language adoption. In Proceedings of the 2013
+      SIGSOFT symposium and the 13th European conference on                  ACM SIGPLAN international conference on Object oriented
+      Foundations of software engineering, pages 4­14. ACM,                  programming systems languages & applications, pages
+      2011.                                                                  1­18. ACM, 2013.
+
+ [4] D. M. Blei. Probabilistic topic models. Communications of         [19] A. Mockus and L. G. Votta. Identifying reasons for software
+      the ACM, 55(4):77­84, 2012.                                            changes using historic databases. In ICSM '00: Proceedings
+                                                                             of the International Conference on Software Maintenance,
+ [5] J. Cohen. Applied multiple regression/correlation analysis              page 120. IEEE Computer Society, 2000.
+      for the behavioral sciences. Lawrence Erlbaum, 2003.
+                                                                       [20] M. Odersky, L. Spoon, and B. Venners. Programming in
+ [6] H. CRAMÉR et al. Mathematical methods of statistics.                    scala. Artima Inc, 2008.
+      Princeton University Press, 1946.
+                                                                       [21] V. Pankratius, F. Schmidt, and G. Garretón. Combining
+ [7] S. Easterbrook, J. Singer, M.-A. Storey, and D. Damian.                 functional and imperative programming for multicore
+      Selecting empirical methods for software engineering                   software: an empirical study evaluating scala and java. In
+      research. In Guide to advanced empirical software                      Proceedings of the 2012 International Conference on
+      engineering, pages 285­311. Springer, 2008.                            Software Engineering, pages 123­133. IEEE Press, 2012.
+
+ [8] K. El Emam, S. Benlarbi, N. Goel, and S. N. Rai. The              [22] T. Petricek and J. Skeet. Real World Functional
+      confounding effect of class size on the validity of                    Programming: With Examples in F# and C#. Manning
+      object-oriented metrics. Software Engineering, IEEE                    Publications Co., 2009.
+      Transactions on, 27(7):630­650, 2001.
+                                                                       [23] A. A. Porter and L. G. Votta. An experiment to assess
+ [9] GitHub. Linguist: https://github.com/github/linguist.                   different defect detection methods for software requirements
+                                                                             inspections. In Proceedings of the 16th International
+[10] Google. http://golang.org/doc/effective_go.                             Conference on Software Engineering, ICSE '94, pages
+      html#concurrency.                                                      103­112, Los Alamitos, CA, USA, 1994. IEEE Computer
+                                                                             Society Press.
+[11] S. Hanenberg. An experiment about static and dynamic type
+      systems: Doubts about the positive impact of static type         [24] D. Posnett, C. Bird, and P. Dévanbu. An empirical study on
+      systems on development time. In Proceedings of the ACM                 the influence of pattern roles on change-proneness.
+      International Conference on Object Oriented Programming                Empirical Software Engineering, 16(3):396­423, 2011.
+      Systems Languages and Applications, OOPSLA '10, pages
+      22­35, New York, NY, USA, 2010. ACM.                             [25] F. Rahman and P. Devanbu. How, and why, process metrics
+                                                                             are better. In Proceedings of the 2013 International
+[12] R. Harrison, L. Smaraweera, M. Dobie, and P. Lewis.                     Conference on Software Engineering, pages 432­441. IEEE
+      Comparing programming paradigms: an evaluation of                      Press, 2013.
+      functional and object-oriented programs. Software
+      Engineering Journal, 11(4):247­254, 1996.                        [26] L. Tan, C. Liu, Z. Li, X. Wang, Y. Zhou, and C. Zhai. Bug
+                                                                             characteristics in open source software. Empirical Software
+[13] D. E. Harter, M. S. Krishnan, and S. A. Slaughter. Effects of           Engineering, 2013.
+      process maturity on quality, cycle time, and effort in software
+      product development. Management Science, 46(4):451­466,          [27] V. Vapnik. The nature of statistical learning theory. springer,
+      2000.                                                                  2000.
+
+[14] M. Jump and K. S. McKinley. Cork: dynamic memory leak             [28] Q. Vuong. Likelihood ratio tests for model selection and
+      detection for garbage-collected languages. In ACM                      non-nested hypotheses. Econometrica: Journal of the
+      SIGPLAN Notices, volume 42, pages 31­38. ACM, 2007.                    Econometric Society, pages 307­333, 1989.
+
+[15] S. Kleinschmager, S. Hanenberg, R. Robbes, É. Tanter, and         [29] E. J. Weyuker, T. J. Ostrand, and R. M. Bell. Do too many
+      A. Stefik. Do static type systems improve the maintainability          cooks spoil the broth? using the number of developers to
+      of software systems? an empirical study. In Program                    enhance defect prediction models. Empirical Software
+      Comprehension (ICPC), 2012 IEEE 20th International                     Engineering, 13(5):539­559, 2008.
+      Conference on, pages 153­162. IEEE, 2012.
+                                                                       [30] J. H. Zar. Significance Testing of the Spearman Rank
+[16] Z. Li, L. Tan, X. Wang, S. Lu, Y. Zhou, and C. Zhai. Have               Correlation Coefficient. Journal of the American Statistical
+      things changed now? An empirical study of bug                          Association, 67(339):578­580, 1972.
+

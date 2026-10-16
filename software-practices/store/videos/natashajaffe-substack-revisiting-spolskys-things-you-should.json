@@ -1,0 +1,85 @@
+{
+  "id": "natashajaffe-substack-revisiting-spolskys-things-you-should",
+  "title": "Revisiting Spolsky's \"Things You Should Never Do, Part I\"",
+  "channel": "natashajaffe.substack.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://natashajaffe.substack.com/p/revisiting-spolskys-things-you-should",
+  "summary": "Natasha Jaffe revisits Spolsky with three rewrites and one refactor from her career: rewrites can succeed when the code is small, the product is not the breadwinner and the business case is strong; otherwise refactor in place.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/rewriting-working-system-scratch-throws-away",
+      "stance": "asserts",
+      "quote": "If this goes on for long enough your competitors will eat your lunch.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/code-harder-read-write-programmers-misjudge",
+      "stance": "asserts",
+      "quote": "Old code is hairy for a reason. Each one of those hairs represents a weird bug that was detected, fixed, and vetted in real life.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/rewrite-viable-when-codebase-small-product",
+      "stance": "asserts",
+      "quote": "If the business case is strong then think critically about the size and complexity of the code as it stands today.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Derived from a handful of personal cases; plausible conditions with no broader data.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/rewrite-duration-grows-faster-linearly-codebase",
+      "stance": "asserts",
+      "quote": "accurately estimating the time a rewrite will take is very hard",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Consistent with overrun data showing large projects overrun most, though the exponential form is hand-waved.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Larger tasks are underestimated more (magnitude bias) in controlled experiments, but the observational link between project size and overrun is partly a statistical artefact and the authors do not know how much it applies to large projects.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L3219-L3231",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/architectural-problems-can-fixed-incremental-refactoring",
+      "stance": "asserts",
+      "quote": "at least with a refactor you get to deliver value along the way and stay alive",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/tech-debt-distaste-old-code-alone",
+      "stance": "asserts",
+      "quote": "If your only reason for completely rewriting your codebase is tech debt and visceral ick, don't do it.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Consistent with Spolsky and with rewrite failure cases; opinion-based.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

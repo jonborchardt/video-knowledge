@@ -1,0 +1,1401 @@
+                                                                                                                                            1
+
+Automatically Assessing Code Understandability
+
+          Simone Scalabrino, Member, IEEE, Gabriele Bavota, Member, IEEE,
+   Christopher Vendome, Member, IEEE, Mario Linares-Vásquez, Member, IEEE,
+Denys Poshyvanyk, Member, IEEE Computer Society, Rocco Oliveto, Member, IEEE
+
+Abstract--Understanding software is an inherent requirement for many maintenance and evolution tasks. Without a thorough
+understanding of the code, developers would not be able to fix bugs or add new features timely. Measuring code understandability
+might be useful to guide developers in writing better code, and could also help in estimating the effort required to modify code
+components. Unfortunately, there are no metrics designed to assess the understandability of code snippets.
+In this work, we perform an extensive evaluation of 121 existing as well as new code-related, documentation-related, and
+developer-related metrics. We try to (i) correlate each metric with understandability and (ii) build models combining metrics to assess
+understandability. To do this, we use 444 human evaluations from 63 developers and we obtained a bold negative result: none of the
+121 experimented metrics is able to capture code understandability, not even the ones assumed to assess quality attributes apparently
+related, such as code readability and complexity. While we observed some improvements while combining metrics in models, their
+effectiveness is still far from making them suitable for practical applications. Finally, we conducted interviews with five professional
+developers to understand the factors that influence their ability to understand code snippets, aiming at identifying possible new metrics.
+
+Index Terms--Software metrics, Code understandability, Empirical study, Negative result
+
+                                                                !
+
+1 INTRODUCTION
+
+    Developers spend most of their time (70%) under-                        the code; a developer could find a piece of code readable
+standing code [1]. While such a finding might look sur-                     while still experiencing difficulties in understanding it, for
+prising, it only highlights the pivotal role that code un-                  example due to unknown APIs used. Let us consider the
+derstanding plays in any code-related activity, such as fea-                code fragment listed below:
+ture implementation or bug fixing. While the importance
+of code understandability is undisputed for maintenance-                      AsyncHttpClient client=new AsyncHttpClient();
+related activities [2], [3], [4], [5], [6], [7], there is no empirical        String cookies=CookieManager.getInstance().getCookie(url);
+foundation suggesting how to objectively assess the under-                    Log.e(TAG , cookies);
+standability of a given piece of code. Indeed, our knowl-                     client.addHeader(SM.COOKIE , cookies);
+edge of factors affecting (positively or negatively) code
+understandability is basically tied to common beliefs or is                     A developer, as well as all readability metrics proposed
+focused on the cognitive process adopted when understand-                   in the literature [10], [11], [12], [13], [14], [15], would con-
+ing code [8], [9]. For example, we commonly assume that                     sider this snippet of code as readable, since it is concise
+code complexity can be used to assess the effort required                   and utilizes meaningful identifier names. Nevertheless, this
+to understand a given piece of code. However, there is no                   snippet of code is not necessarily easy to understand for
+empirical evidence that this is actually the case. Similarly,               any given developer, because the used APIs could be un-
+researchers have designed models and proposed metrics to                    known to her and even poorly documented. For example,
+evaluate the readability of code by correlating them with the               the developer may not understand the implications of the
+readability perceived by developers [10], [11], [12], [13], [14],           getCookie(url) method call without prior experience using
+[15]. This typically means that the developers participating                the API or without reading related documentation, e.g., she
+in the evaluation are required to read a fragment of code                   might not know whether getCookie(url) could throw an
+and rate its readability on a given scale (e.g., from 1: low                exception, return a null value, or produce some side effects.
+to 5: high readability). However, the perceived readability
+is something different from the actual understandability of                     Having a metric to estimate the effort required to under-
+                                                                            stand a given piece of code would have a strong impact on
+· S. Scalabrino and R. Oliveto are with the University of Molise, Italy.    several software engineering tasks. For example, it would be
+     E-mail: {simone.scalabrino, rocco.oliveto}@unimol.it                   possible to use such a metric to (i) improve the estimation
+                                                                            of the time needed to fix a bug (the lower the under-
+· G. Bavota is with the Università della Svizzera italiana (USI), Switzer-  standability, the higher the time to comprehend the code
+     land.                                                                  and thus to fix the bug); (ii) create search-based refactoring
+     E-mail: gabriele.bavota@usi.ch                                         recommender systems using code understandability as a
+                                                                            fitness function; or (iii) assess the quality of code changes
+· C. Vendome is with Miami University, USA.                                 during code reviews.
+     E-mail: vendomcg@miamioh.edu
+                                                                                While we have possible proxies for code understand-
+· D. Poshyvanyk is with the The College of William & Mary, USA.             ability, such as code complexity and readability, we do not
+     E-mail: denys@cs.wm.edu                                                (i) know whether these proxies actually correlate with the
+                                                                            effort required to understand a piece of code, and (ii) have
+· M. Linares-Vásquez is with the Universidad de los Andes, Colombia.        a metric able to provide an estimation for code understand-
+     E-mail: m.linaresv@uniandes.edu.co
+                                                                 2
+
+ability. Previous attempts to define a code understandability          such information to propose possible future directions
+model [4], [16], [6] have not been empirically evaluated,              for code understandability assessment.
+considered understandability as a factor in a quality model
+[2], [17], or measured understandability at the level of a           Paper structure. Section 2 provides background infor-
+whole software system [18].                                      mation about code characteristics possibly related to its
+                                                                 understandability. Section 3 describes the 121 metrics used
+    In this work, we investigate 121 metrics to determine        in our empirical study, while Section 4 presents the proxies
+the extent to which they correlate with code understand-         we used to assess the developers' understandability of a
+ability. These metrics can be categorized into three types:      given code snippet. The design and results of the study
+(i) code-related metrics (105 metrics), (ii) documentation-      are presented in Sections 5 and 6, respectively. Section 7
+related metrics (11), and (iii) developer-related metrics (5).   discusses the threats that could affect our findings, while
+The code-related metrics are comprised of classic code met-      Section 8 concludes the paper and highlights future research
+rics, like LOC and cyclomatic complexity, and readability        directions.
+metrics, like text coherence [14], [15] and code indentation
+[10]. As the aforementioned example illustrates, a developer     2 BACKGROUND & RELATED WORK
+may be able to read some code snippet, but it may use
+unknown code. Thus, we included existing documentation-          In this section, we describe metrics and models that have
+related metrics, like the availability of external documen-      been proposed to measure code readability. All these metrics
+tation, and introduced nine new documentation-related            have been included in our study. Afterwards, we briefly
+metrics. Finally, we included developer-related metrics to       describe related work presenting metrics for measuring un-
+understand the extent to which the developer's experience        derstandability (at system level) as a single quality attribute
+and background might influence code comprehension.               and as part of a quality model.
+
+    To carry out our investigation, we performed a study         2.1 Code Readability
+with 63 participants using the 121 metrics to determine
+their correlation with the understandability of code snip-       Identifiers and comments play a crucial role in program
+pets. Each participant was required to understand up to          comprehension, since developers express domain knowl-
+eight code snippets, leading to a total of 444 evaluations.      edge through the names that they assign to the code entities
+We consider understandability from two perspectives: per-        at different levels (i.e., packages, classes, methods, variables)
+ceived and actual understandability of the code snippets. The    [20], [21], [22], [23], [24]. Thus, source code lexicon impacts
+participants were presented a code snippet to understand         the psychological complexity of a program [14], [25]. An-
+and they were asked whether they could understand it             other aspect that also contributes to the readability (and
+(perceived understandability). If their answer was positive,     potentially understandability) of source code are structural
+they were asked to answer three verification questions           aspects such as indentation, code entity length [10], [11],
+(actual understandability). We also monitored the time spent     and visual/spatial aspects such as syntax highlighting, code
+understanding each snippet to estimate the effort.               formatting, and visual areas covered by code entities [12].
+
+    By performing an extensive statistical analysis, we ob-          All the aforementioned aspects have been used as fea-
+tained a negative empirical result: none of the considered       tures in binary classifiers able to predict the readability of
+metrics exhibit a significant correlation with either the per-   code snippets [10], [11], [12], [14], [15]. In the model by Buse
+ceived or the actual understandability. This result was quite    and Weimer [10], source code structural aspects (e.g., num-
+surprising to us, especially considering the involvement in      ber of branches, loops, operators, blank lines, comments)
+our study of complexity and readability metrics generally        represent the underlying features in the classifier. The model
+thought to influence code understandability. Then, we ex-        was trained a-priori on 100 small snippets; the snippets
+ploited classification and regression models utilizing combina-  were tagged manually as readable or non-readable by 120
+tions of metrics to predict proxies of code understandability.   human annotators. The reported results provide evidence
+While these models represent a step ahead as compared            that readability can be estimated automatically.
+to the single metrics taken in isolation, their prediction
+accuracy is still too low to make them useful in practice.           Posnett et al. [11] proposed a model based on a reduced
+Finally, we interviewed five developers to better understand     set of the features introduced by Buse and Weimer. An
+their perspective when it comes to understanding a code          empirical evaluation conducted on the same dataset used by
+snippet and to infer factors that could be exploited in future   Buse and Weimer [10] indicated that the model by Posnett
+metrics to automatically assess code understandability.          et al. is more accurate than the one by Buse and Weimer.
+
+    The main contributions of this work, as compared to our          Dorn introduced a readability model which relies on a
+ASE'17 paper [19] that it extends, are the following:            larger set of features grouped in four categories: visual, spa-
+                                                                 tial, alignment, and linguistic [12]. Some of the new features
+   · We increased the size of our dataset from 324 eval-         are computed by aggregating some structural features in
+      uations by 46 developers to 444 evaluations by 63          different ways: for example, some of them rely on Discrete
+      developers to increase the confidence in our findings;     Fourier Transform (DFT) to capture the regularity/irregu-
+                                                                 larity of variations of the structural metrics over different
+   · We used combinations of feature models to predict           lines/columns. This larger set of features highlights the fact
+      the independent variables that we define as proxies of     that structural aspects are not the only ones that should be
+      understandability;                                         considered for code readability; aspects representing and
+                                                                 modeling how the code is read on the screen, such as syn-
+   · We conducted structured interviews with five expe-          tax highlighting, variable naming standards, and operators
+      rienced developers to understand what makes code
+      understandable/not understandable to them; we used
+                                                                  3
+
+alignment, should be also considered. Dorn trained and                Capiluppi et al. [18] proposed a measure of understand-
+validated the model on a new dataset, including programs          ability that can be evaluated in an automated manner. The
+in Java, Python, and CUDA, for a total of 360 snippets. Such      proposed measure considers: (i) the percentage of micro-
+a model achieved a higher accuracy as compared to the one         modules (i.e., the numbers of files) that are within the macro-
+by Buse and Weimer.                                               modules (i.e., the directories), and (ii) the relative size of
+                                                                  the micro-modules. The authors calculated the proposed
+    Scalabrino et al. [14], [15] proposed and evaluated a set of  measure on the history of 19 open source projects, finding
+features based entirely on source code lexicon analysis (e.g.,    that understandability typically increased during the life-
+consistency between source code and comments, specificity         cycle of the systems. Yet, no evaluation is provided for such
+of the identifiers, textual coherence, comments readability).     a measure.
+The model was evaluated on the two datasets previously
+introduced by Buse and Weimer [10] and Dorn [12] and on               Understandability has also been a factor in quality mod-
+a new dataset, composed of 200 Java snippets, manually            els to assess software maintainability. Aggarwal et al. [2]
+evaluated by nine developers. The results indicated that          investigated the maintainability of software and proposed
+combining the features (i.e., structural+textual) improves the    a fuzzy model, which is composed of three parts: (i) read-
+accuracy of code readability models.                              ability of code, (ii) documentation quality, and (iii) under-
+                                                                  standability of the software. To quantify understandability,
+2.2 Software/Code Understandability                               the authors utilize a prior work that defines language of
+                                                                  software as the symbols used, excluding reserved words.
+While readable code might directly impact program com-            The authors constructed rules based on the ranges of the
+prehension, code readability metrics are not sufficient to        three factors to determine maintainability.
+measure to what extent the code allows developers to un-
+derstand its purpose, relationships between code entities,            Similarly, Chen et al. [7] investigated the COCOMO II
+and the latent semantics at the low-level (e.g., statements,      Software Understandability factors by conducting a study
+beacons, motifs) and high-level structures (e.g., packages,       with six graduate students asked to accomplish 44 mainte-
+classes). Program understanding is a non-trivial mental           nance tasks, and found that higher quality structure, higher
+process that requires building high-level abstractions from       quality organization, and more self-descriptive code were
+code statements or visualizations/models [9], [4]. There          all correlated with less effort spent on the tasks, which leads
+have been several metrics designed to evaluate software           to high maintainability.
+understandability by focusing on complexity as well as
+source-level metrics.                                                 Bansiya and Davis [28] proposed a model where metrics
+                                                                  are related to several quality attributes, including under-
+    Lin et al. [4] proposed a model for assessing understand-     standability. In terms of understandability, the model con-
+ability by building an understandability matrix from fuzzy        siders encapsulation and cohesion to have positive influ-
+maximum membership estimation for population of fog               ences, while abstraction, coupling, polymorphism, complex-
+index, comment ratio, the number of components, CFS, Hal-         ity, and design size have a negative influence. The authors
+stead Complexity, and DMSP. The authors then used PCA             validated the model by analyzing several versions of two
+and factor analysis to get the weights for the column vectors,    applications and found that understandability decreases as
+which can be multiplied by the matrix to get the Synthesis        a system evolves with many new features. Additionally,
+Vector of Understandability. Finally, the understandability is    13 evaluators analyzed 14 versions of a project and the
+calculated by using the fuzzy integral. The authors did not       authors found a correlation between the evaluators' overall
+empirically evaluate the proposed metric.                         assessment of quality and the models assessment for 11 out
+                                                                  of 13 evaluators.
+    Misra and Akman [26] performed a comparative study
+between existing cognitive complexity measures and their              It is worth noting that we do not consider the above
+proposed measure: cognitive weight complexity measure             discussed understandability metrics [4], [26], [3], [6], [18],
+(CWCM), which assigns weights to software components by           [17], [28] in our study since they are defined at system-level
+analyzing their control structures. The authors performed a       (i.e., they provide an overall indication of the system under-
+theoretical validation of these metrics based on the prop-        standability), while we are interested in studying whether it
+erties proposed by Weyuker [27]. They found that only one         is possible to measure the understandability of a given code
+metric, Cognitive Information Complexity Measure (CICM),          snippet, as already done in the literature for code readability.
+satisfied all nine properties, while the others satisfied seven   Instead, we included in our study the metrics used by Kasto
+of the nine.                                                      and Whalley [29] to study the understandability of code
+                                                                  snippets in an educational context. Specifically, Kasto and
+    Thongmak et al. [3] considered aspect-oriented software       Whalley analyzed the performance of 93 students in their
+dependence graphs to assess understandability of aspect-          final examination for the Java programming course and they
+oriented software, while Srinivasulu et al. [6] used rough        correlated their results with five metrics.
+sets and rough entropy (to filter outliers) when consider-
+ing the following metrics: fog index, comment ration, the             Several studies have explored software understandabil-
+number of components, CFS, Halstead Complexity, and               ity and program comprehension with either students or
+DMSC. These metrics are computed at system level for              practitioners. Shima et al. considered the understandability
+nine projects, and subsequently the rough entropy outlier         of a software system by assessing the probability that a sys-
+factor was calculated for the metrics to identify the outliers,   tem can be correctly reconstructed from its components [30].
+which correspond to either highly understandable or not           The authors asked eight students to reconstruct a system
+understandable software based on the metric values.               and the results suggest that faults tend to occur in hard to
+                                                                  understand files or very simple files. Roehm et al. performed
+an observational study with 28 developers to identify the                                                                                                                  4
+steps developers perform when understanding software
+and the artifacts they investigate [5]. The authors found that   TABLE 1: Candidate predictors for code understandability.
+developers are more inclined towards relying upon source
+code as well as discussing with colleagues over utilizing the    Code  Metric                Non-aggregated  Min     Avg     Max   DFT   Visual  Area
+documentation. The authors also identified some behaviors                                            [29]
+that improve comprehension, such as consistent naming                  Cyclomatic comp.              [29]    [14]    [29]    [10]  [12]   [12]   [12]
+conventions or meaningful names.                                       #nested blocks                [29]    [14]                         [12]   [12]
+                                                                       #parameters                           [14]    [10]    [10]  [12]   [12]   [12]
+    Understandability has been mostly analyzed from the                #statements                   [29]    [19]    [10]    [10]  [12]   [12]   [12]
+perspective of (i) the quality attribute at the software level,        #assignments                          [19]                  [12]   [12]   [12]
+i.e., understandability as the "The capability of the software         #blank lines                  [12]    [19]    [10]    [10]  [12]   [12]   [12]
+product to enable the user to understand whether the software          #characters                   [12]    [19]    [10]          [12]
+is suitable, and how it can be used for particular tasks and           #commas                       [11]            [10]    [10]  [12]   [12]   [12]
+conditions of use" [31]; and (ii) the theories, challenges, and        #comments                     [11]            [10]    [10]
+models for program understanding at cognitive levels [9],              #comparisons                  [11]            [10]    [10]  [12]
+[8]. However, as of today, we still lack models for assessing          #conditionals                                 [10]    [10]  [12]
+code understandability at snippet-level, similarly to code             #identifiers                  [14]                          [12]
+readability. The only work we found that relates to a code             #keywords                     [14]            [10]    [14]  [12]
+understandability model is based on complexity and size                #literals                                     [10]    [14]  [12]
+source code level metrics [4], [16].                                   #loops                        [19]            [10]    [14]  [12]
+                                                                       #numbers                      [19]            [10]    [19]
+    More recently, Trockman et al. [32] analyzed the dataset           #operators                                    [10]    [14]  [12]
+we released as part of our ASE'17 work [19] that this                  #parenthesis                                  [10]    [14]
+paper extends. They showed that it is possible to define               #periods                                              [19]  [12]
+classification models with some discriminatory power by                #spaces                                       [10]    [19]
+combining the 121 metrics considered in our study. Specifi-      Docs  #strings                                      [10]    [19]
+cally, they use LASSO regression [32] to classify evaluations          #words                                        [10]
+as understandable or not understandable. In this paper, we       Devs  Indentation length
+also experiment with combinations of metrics to predict                Identifiers length                            [14]
+the understandability of a given code snippet. However,                Line length                                   [14]
+we (i) rely on our new and larger dataset featuring 22%                #aligned blocks                             [14][12]
+more data points as compared to the one we previously                  Ext. of alig. blocks                          [14]
+released; and (ii) we experiment with both classification              Entropy
+and regression techniques, and use several different proxies           LOC                                           [19]
+for the dependent variable (i.e., code understandability), as          Volume
+compared to the single one used by Trockman et al. [32].               NMI                                           [14]
+                                                                       NM                                            [14]
+3 CANDIDATE PREDICTORS FOR CODE UNDER-                                 ITID                                          [19]
+                                                                       TC                                            [19]
+STANDABILITY                                                           Readability                                   [19]
+                                                                       IMSQ
+Understandability is a multifaceted property of source code
+and, as well as readability, is subjective in nature. In read-         CR
+ability, the subjectivity is represented by personal taste and         CIC
+habits, while in understandability it lies in the previous             CICsyn
+knowledge of a developer and in her mental models [8].                 MIDQ
+Consider a method of an Android activity in a mobile                   AEDQ
+app; its understandability might be high for an Android
+developer, while it could be low for a Java developer with             EAP
+no experience in Android. In this section, we briefly discuss          PEgen
+the 121 metrics considered in our study aimed at assessing             PEspec
+their ability to capture the understandability of a given piece
+of code. Table 1 shows the complete list of metrics: rows con-   measure. For example, each metric aggregated as "Visual"
+tain the basic metrics and columns indicate how the metrics      should be counted twice (i.e., "Visual X" and "Visual Y").
+are aggregated (e.g., the Identifiers length for a given code    Indeed, for these metrics, a "virtual" color is assigned to
+snippet is computed, as suggested by previous work [10],         each character in the code, based on the type of the token it
+as the average and as the maximum length of the identifiers      belongs to (e.g., characters of identifiers have color 1, while
+used in the snippet). We report in boldface the new metrics      characters of keywords have color 2), thus creating a matrix
+introduced in the our previous work [19]. It is worth noting     of colors for the snippet. Then, the variation of colors is
+that the number of metrics shown in Table 1 does not add         computed both on the X and on the Y axis of such a matrix
+up to the 121 metrics considered in our study. This is due       [12], thus resulting in two different forms of aggregation.
+to the fact that some forms of aggregation, e.g., "Visual"       The complete list of metrics is available in our replication
+and "Area", include multiple types of aggregating the same       package [33]. In the following subsections, we discuss the
+                                                                 considered metrics grouped by their type.
+
+                                                                 3.1 Code-Related Metrics
+
+                                                                 Most of the metrics considered in our study assess source
+                                                                 code properties. We include the five metrics used by Kasto
+                                                                 and Whalley [29]: cyclomatic complexity [34], which estimates
+                                                                 the number of linear independent paths of the snippet aver-
+                                                                 age number of nested blocks, which measures the average code-
+                                                                 block nesting in the snippet, number of parameters, number of
+                                                                 statements and number of operands, i.e., number of identifiers.
+
+                                                                     We also include in this category all the code-related
+                                                                 readability metrics defined in the literature [10], [11], [12],
+                                                                 [14]. These include the ones by Buse and Weimer [10],
+                                                                 assessing properties for a single line of code (e.g., number
+                                                                 of identifiers or line length) and then aggregated (with the
+                                                                 maximum and/or the average) to work at the level of "code
+                                                                 snippet".
+
+                                                                     Lines of code (LOC), token entropy and Halstead's volume
+                                                                 are used by Posnett et al. [11] in the context of readabil-
+                                                                 ity prediction. Dorn [12] presents a variation to the basic
+                                                                   5
+
+metrics introduced by Buse and Weimer [10], measuring              distance, identifiers composed by several words. For exam-
+the bandwidth of the Discrete Fourier Transform (DFT) of           ple, the identifier printOnStdOut is first split into print, on,
+the metrics, the absolute and the relative area of characters      std, out; then, each word is expanded, which has no effect
+belonging to different token categories (e.g., identifiers, key-   on the first two words, but expands std into standard and
+words or comments), the alignment of characters through            out into output. Therefore, printOnStdOut is transformed
+different lines, and the number of identifiers containing          in print_on_standard_output.
+words belonging to an English dictionary. Note that the
+area-related metrics defined by Dorn are computed both                 To have Rd(id) defined in [0, 1], we normalize the Leven-
+in an absolute way (e.g., total area of comments) and in           shtein distance (L) between id and idexp as follows:
+a relative way (e.g., area of comments divided by area of
+strings). These variants are not explicitly reported in Table 1                       Rd (id ) = 1 - L(id , id exp)
+due to space constraints, but are considered in our study                                                max(|id |, |id exp|)
+and listed in our replication package [33].
+                                                                   where max(|id |, |id exp|) represents the longest identifier
+    Scalabrino et al. [14] define Narrow Meaning Identifiers       among the two. When the distance equals zero, the read-
+(NMI), Number of Meanings (NM), Identifiers Terms In Dic-          ability of the identifier equals one, indicating no need for ex-
+tionary (ITID) and Textual Coherence (TC) to capture the           pansion/splitting (i.e., id is composed by a single expanded
+readability of a code snippet. Such metrics are computed           word).
+line-by-line (ITID), identifier-by-identifier (NMI and NM)
+or block-by-block (TC); the authors aggregate the measures             Note that in the implementation of Rd(id), we used a
+using minimum, average and maximum, in order to have a             semi-automatic approach to split/expand identifiers. We
+single measure for the snippet. We also use code readability,      first used a naive automatic splitting technique, based on
+as defined by Scalabrino et al. [14], as a separate metric,        camel case and underscores; then, we automatically checked
+combining together the previously listed metrics. We fol-          the presence of each resulting word in an English dictionary.
+lowed the steps described by Scalabrino et al. to define the       If the word was not found, we manually expanded/further
+readability model by using a logistic classifier that we train     split the specific word. For example, for the word "cmd-
+on the 420 Java snippets available in the literature [10], [12],   line" there would not be automatic split. Since the word
+[14].                                                              "cmdline" does not exist in the dictionary, we manually
+                                                                   convert it to "command" and "line". We save all the manual
+    We also introduce a new code-related metric, the Invoked       substitutions in order to minimize the human effort. In the
+Methods Signature Quality (IMSQ), which measures the qual-         literature, there are many automatic approaches for identi-
+ity of the signature of the internal methods invoked by a          fier splitting/expansion, but we preferred to implement a
+given code snippet s (i.e., methods belonging to the same          simpler and more effective strategy at this stage, since the
+system of s) in terms of readability and representativeness.       number of identifiers to split/expand was limited and our
+We define the Method Signature Quality (MSQ) of an in-             goal was to assess the correlation of the defined metrics with
+voked method m as:                                                 the understandability effort. Thus, we wanted to be sure to
+                                                                   avoid introducing imprecision while computing the metrics.
+          MSQ(m) =             1                 IQ (id)
+                                                                       When dealing with the identifier used to name a method,
+                           |IS (m)|    idIS (m)                    we also verify whether it is representative of what the
+                                                                   method does (Rp). We compute the textual overlap between
+where IS(m) is the set of identifiers used in the m's signature    the terms used in the identifier and in the method body. We
+(i.e., method name and parameters) and IQ(id) is defined as:       tokenize the method body to define its dictionary. Then, we
+                                                                   count the number of times each word from the identifier
+IQ(id) =  1  (Rd  (id)  +  Rp  (id)),  id is a method name         (expanded or not) is contained in the dictionary extracted
+          2                                                        from the method body. We consider only names and verbs
+                                                                   from the identifiers, ignoring other parts of speech such as
+          Rd (id ),                    id is a parameter name      conjunctions, since they do not carry semantic information.
+                                                                   Following the printOnStdOut example, we check whether
+    IQ(id) captures the quality of an identifier in terms of       the method body contains the words print, standard, std,
+its readability (Rd) and its representativeness (Rp). The          output, and out. We measure the representativeness as the
+idea behind the readability is that an identifier should be        ratio between the number of words from the identifier (i.e.,
+composed of a (possibly small) set of meaningful words. To         method name) contained in the method body, and the total
+measure Rd for an identifier (id), we (i) split id into the words  number of words in the identifier. If all the words from
+composing it, (ii) expand each word to bring it in its original    the identifier are used in m's body, we assume that the
+form (e.g., ptr  pointer), (iii) create a new identifier           method name is representative of m and thus, should ease
+idexp composed by the expanded words separated by a "_",           the understanding of methods invoking m. If, instead, words
+and (iv) measure the Levenshtein distance between id and           are not found in the method body, this could hinder the
+idexp. The Levenshtein distance between two strings a and b        understandability of the methods invoking m.
+measures the minimum number of single-character changes
+needed to transform a into b. The conjecture behind IQ(id)             In our study, we consider the minimum, the average,
+is that the higher the Levenshtein distance between id and         and the maximum values of the MSQ metric for a given
+idexp, the higher the mental effort required for the developer     code snippet (e.g., the average MSQ of all methods invoked
+to understand the meaning of the identifier by mentally            in the code snippet).
+splitting and expanding it during program comprehension.
+Note also that we separate the expanded terms in idexp by
+using "_" in order to penalize, by increasing the Levenshtein
+                                                                 6
+
+3.2 Documentation-Related Metrics                                3.3 Developer-Related Metrics
+
+Scalabrino et al. [14] introduced three metrics to capture the   Since understandability is a very subjective feature of code,
+quality of the internal documentation of a snippet: Comments     we introduced three developer-related metrics. We measure
+Readability (CR) measures the readability of the comments in     the programming experience of the developer who is re-
+a snippet using the Flesch reading-ease test [35]; Comments      quired to understand a snippet (PEgen and PEspec) and the
+and Identifiers Consistency (CIC) measures the consistency       popularity of the API used in the snippet (EAP).
+between comments and code; and CICsyn, a variant of CIC,
+which takes synonyms into account.                                   The common wisdom is that the higher the program-
+                                                                 ming experience of developers, the higher their capability
+    We also introduce two new metrics aimed at capturing         of understanding code. PEgen measures the programming
+the quality of both the internal (MIDQ) and external (AEDQ)      experience (in years) of a developer in general (i.e., in
+documentation available for code components used in a            any programming language). PEspec assesses instead the
+given snippet. The Methods Internal Documentation Qual-          programming experience (in years) of a developer in the
+ity (MIDQ) for a snippet s acts as a proxy for the internal      programming language in which a given snippet s is im-
+documentation (i.e., Javadoc) available for the internal meth-   plemented. The higher PEspec, the higher the developer's
+ods (the ones belonging to the same project as s) invoked        knowledge about the libraries available for such a program-
+in s. Given m an internal invoked method, we compute             ming language.
+MIDQ(m) using a variation of the approach proposed by
+Schreck et al. [36]:                                                 With External API Popularity (EAP), we aim at capturing
+                                                                 the popularity of the external APIs used in a given snippet.
+MIDQ (m)  =  1         +  readability D (m))                     The assumption is that the lower the popularity, the lower
+              (DIR(m)                                            the probability that a typical developer knows the API. If
+             2                                                   the developer is not aware of the APIs used in a snippet,
+                                                                 it is likely that she has to look for its documentation or to
+where DIR(m) is the Documented Items Ratio computed              inspect its source code, thus spending more effort in code
+as the number of documented items in m divided by the            understanding.
+number of documentable items in m. We consider as docu-
+mentable items for m (i) its parameters, (ii) the exceptions it      We rely on an external base of Java classes E to esti-
+throws, and (iii) its return value. Such items are considered    mate the popularity of an external class. We chose as E a
+as documented if there is an explicit reference to them in the   10% random sample of classes from Java/Android projects
+Javadoc through the tags @param, @throws and @returns.           hosted on GitHub in 2016, totaling 2M classes from 57K
+readabilityD(m) represents, instead, the readability of the      Java projects. We used Google BigQuery to extract all the
+Javadoc comments assessed using the Flesch reading-ease          imports of all the classes belonging to such projects using a
+test [35]. The higher MIDQ the higher the internal documen-      regular expression. Then, we counted the number of times
+tation quality for m. We consider the minimum, the average,      each class imported in E occurred in the import statements.
+and the maximum values of the MSQ metric for a given code        Note that in Java it is possible to import entire packages (e.g.,
+snippet.                                                         import java.util.). In this case, it is difficult to identify the
+                                                                 actual classes imported from the package. For this reason,
+    Concerning the API External Documentation Quality            we applied the following strategy. Let us assume that a
+(AEDQ), it tries to capture the amount of information about      class, Foo, is imported only once with the statement import
+APIs used in the given snippet s that can be acquired from       bar.Foo, but it is part of a quite popular package, bar, that is
+external sources of documentation, such as Q&A websites.         imported 100 times in E through the statement import bar..
+The conjecture is that if external documentation is available,   The class Foo2, belonging to the same package, is imported
+it is more likely that developers are able to understand         99 times with the statement import bar.Foo2. In this case,
+the usage of an API in a code snippet s. We compute              we increase the number of occurrences of classes belonging
+the availability of external documentation for each external     to imported package in a proportional way. In the presented
+class c used in s via the AEDQ(c) metric. First, we identify     example, we add 1 to the number of Foo's imports, and 99
+all Stack Overflow discussions related to c by running the       to the number of Foo2 imports. We found that imports of
+following query:                                                 entire packages represent only 2.6% of all the imports and,
+                                                                 therefore, their impact is very low. EAP(c) is defined as the
+      title:"how to" <c> hasaccepted:yes [java]                  number of c imports normalized over the number of imports
+                                                                 of cmax, where cmax is the most imported class we found in
+In other words, we select all Stack Overflow discussions that    E (i.e., java.util.List).
+(i) contain "how to" and the class name in the title, (ii) have
+an accepted answer, and (iii) concern Java (since our study      4 PROXIES FOR CODE UNDERSTANDABILITY
+has been performed on Java snippets). Then, we sum the
+votes assigned by the Stack Overflow users to the question       Code understandability can affect two aspects of code un-
+in each retrieved discussion, in order to have a quantitative    derstanding: the correctness (i.e., how well the developer is
+information about the interest of the developers' community      able to understand a snippet), and the time needed to un-
+in such a class. We assume that higher interest in a given       derstand the snippet. Moreover, as previously shown [19],
+API class implies a higher availability of external sources      developers might perceive that they understand a given code
+of information (e.g., discussions, code examples, etc.). We      without actually understanding it. Since understandability is
+consider in our study the minimum, the average, and the          composed by several facets, we introduce six proxies of code
+maximum values of the AEDQ metric for the external classes       understandability. These proxies can be used to (i) study
+used in s.
+                                                                                                                                      7
+
+the correlation between the candidate predictor variables                        TABLE 2: Systems used in our study
+introduced in Section 3, and (ii) as dependent variables in
+techniques aimed at predicting code understandability:               System      Java KLOC  Category   Description
+
+  1) Perceived Binary Understandability (PBU). This is a             ANTLR       178        Desktop    Lexer-parser
+      binary categorical variable that is true if a developer        Car-report  45         Mobile     Car costs monitoring
+      perceives that she understood a given code, and false          Hibernate   948        Framework  ORM framework
+      otherwise.                                                     Jenkins     231        Web        Continuous integration
+                                                                     K9 mail     121        Mobile     Mail client
+  2) Time Needed for Perceived Understandability                     MyExpenses  101        Mobile     Budget monitoring
+      (TNPU). This is a continuous variable in +, measur-            OpenCMS     1059       Web        Content Management System
+      ing the time spent by the developer to comprehend a            Phoenix     352        Framework  Relational database engine
+      given code before having a clear idea on whether she           Spring      197        Framework  Generic application framework
+      understood it or not.                                          Weka        657        Desktop    Machine-learning toolkit
+
+  3) Actual Understandability (AU). This is a continuous             RQ0 How does code understandability change among developers
+      variable in [0, 1], measuring the actual understanding of            and snippets? In this preliminary research question, we
+      the inspected code. A possible way of measuring actual               would like to check whether understandability changes
+      understandability is through verification questions. For             more among different developers or among different
+      example, the developer understanding the code could                  snippets;
+      be required to answer three questions, and the percent-
+      age of correct answers is used to assess AU.                   RQ1 What is the correlation between the 121 considered metrics
+                                                                           and the understandability level of a given developer for
+  4) Actual Binary Understandability (ABUk%). This is a                    a specific code snippet? Given the wide and heteroge-
+      binary categorical variable derived from AU. It is true if           neous set of considered metrics, answering this research
+      AU is greater than k, false otherwise. ABUk% is basically            question would allow us and, in general, the research
+      a proxy to classify snippets of code as understandable               community to understand how far we are from defining
+      or not based on the level of actual understanding de-                a set of metrics capable of automatically and objectively
+      velopers are able to achieve while inspecting it.                    assessing code understandability;
+
+  5) Timed Actual Understandability (TAU). This is a con-            RQ2 Is it possible to define understandability models able to
+      tinuous variable in [0, 1], derived from AU and TNPU. It             predict code understandability? Given a snippet of code,
+      gets a value of 0 if the developer perceives that she did            we want to determine whether combining metrics in a
+      not understand the snippet. Otherwise, it is computed                model can effectively capture the level of understand-
+      as:                                                                  ability of that code;
+                      T AU = AU 1 - T N P U
+                                             max T N P U             RQ3 How do developers determine the understandability of
+                                                                           code? While the first two questions relate to metrics to
+where AU and TNPU are the variables previously                             assess understandability, it is also important to consider
+                                                                           the perspective of developers when trying to under-
+defined. The higher AU, the higher TAU, while the                          stand code. To this end, we aim to deepen our analysis
+                                                                           by asking experienced developers what makes a certain
+higher TNPU, the lower TAU. We take into account                           code snippet understandable or not understandable.
+
+the  relative  time  (     TNPU    U  )  instead  of  the  absolute  5.1 Data Collection
+                        max T N P
+                                                                     The context of the study consists of objects, i.e., Java methods,
+time, so that TAU gives the same importance to both                  and subjects, i.e., software developers. We first describe the
+                                                                     selection of the code snippets we considered. Then, we
+the correctness achieved (AU) and the time needed                    present the subjects that we selected for the survey, which
+                                                                     we conducted to answer RQ1 and RQ2, and the procedure
+(TNPU). max T N P U is, indeed, the maximum TNPU                     that we used to acquire the data. Finally, we introduce the
+                                                                     subjects we selected for the interviews we conducted to
+measured on the snippet.                                             answer RQ3 and the interviewing process we followed.
+
+6) Binary Deceptiveness (BDk%). This is a binary cate-                   Selection of Code Snippets. We selected 50 Java/An-
+    gorical variable derived from PBU and ABUk%, which               droid methods extracted from ten popular systems listed in
+                                                                     Table 2 (five methods from each system). We first extracted
+is true if PBU is true and ABUk% is false, and false                 all the methods having 50 ± 20 ELOCs (i.e., Effective Lines
+otherwise. BDk% indicates whether a developer can be                 Of Code, excluding blank and comment lines) from the
+deceived by a method in terms of its understandability               systems. The choice of the methods' size (i.e., 50±20 ELOCs)
+                                                                     was driven by the decision of excluding methods that are
+(i.e., she incorrectly thinks she understood the method).            too trivial or too complex to understand.
+
+5 EMPIRICAL STUDY DESIGN                                                 Afterwards, we computed all the metrics described in
+                                                                     Section 3 for the selected methods1. Then, we used a greedy
+The goal of our study is to assess the extent to which the           algorithm for center selection [37] to select the 50 most
+considered 121 metrics are related to code understandabil-
+ity and what developers consider as understandable/not                  1. Excluding the "Developer programming experience" and the "De-
+understandable. The perspective is of researchers interested         veloper Java experience"
+in (i) analyzing whether code-related, documentation-related,
+and developer-related metrics can be used to assess the un-
+derstandability level of a given piece of code, and (ii)
+investigating characteristics of code considered as important
+for developers during program comprehension. This study
+aims at answering the following research questions:
+representative methods based on the defined metrics. Given                                                                                                                 8
+a set of candidate methods M and a set of already se-
+lected centers C, the algorithm chooses, in each iteration,     TABLE 3: Position and experience of the interviewed devel-
+arg maxmM dist(C, m), i.e., the candidate method which is       opers
+the farthest possible (in terms of considered metrics) from
+the already selected centers of which the first center is       Name                 Position                       Programming experience
+randomly selected. In order to select exactly five snippets
+from each system, we used the set of candidate methods          Salvatore Geremia    PhD Student @ Unimol           8 years
+from a specific system as M until the five methods for such     Giovanni Grano       PhD Student @ Uzh              8 years
+a system were selected; then, we changed M with the set of      Stefano Dalla Palma  Android developer @ Datasound  5 years
+candidate methods from another system, and so on, until |C|     Carlo Branca         Front-end developer @ Gatelab  8 years
+= 50. Note that (i) we did not empty the C set when changing    Matteo Merola        Back-end developer @ Bunq      8 years
+the candidate methods (i.e., when moving from one system
+to another) to always keep track of the methods selected        answers were stored for future analysis.
+up to that moment, thus avoiding the risk of adding to C
+methods similar to the ones already in C; (ii) we did not           In particular, one of the questions we asked was about
+run the algorithm on the union of all candidate methods         the identifiers used in the method (e.g., what does "CMS"
+to ensure the selection of five methods per system (thus        mean?); a second question was about the purpose of a call
+increasing the heterogeneity of the final sample).              to an internal method (e.g., What does the invoked method
+                                                                X do?); and the third question was about the purpose of
+    Selection of the Participants to the Survey. After se-      using an external component in the snippet (e.g., JDBC
+lecting the 50 methods and computing the values of the          APIs). These questions capture different aspects of code
+metrics for each of these 50 methods, we needed to define a     comprehension: knowing the meaning of the names used
+ground-truth, which reports the understandability of each       in a snippet is necessary to have a generic idea about the
+method. To this aim, we invited 63 Java developers and          topic of the snippet; understanding the purpose of inter-
+CS students to participate in a survey, where they were         nal/external method calls is important to have full aware-
+required to understand the selected methods. The survey         ness of what happens when such methods are used, which
+was implemented in a Web application and featured the           requires (i) knowledge about the application domain of the
+following steps. First, we collected demographic data about     project (internal methods) and (ii) knowledge about the
+participants: (i) years of experience in programming and        used technology (external methods). Knowing the correct
+more specifically in Java, and (ii) current position (e.g., CS  answer to all the questions is a necessary condition to say
+student, developer etc.). This information was used in part to  that a developer fully understood a snippet.
+compute the developer-related metrics. We asked participants
+for consent to anonymously use the gathered data. We                Selection of the Participants for the Interviews. To
+do not report developers' names and e-mail addresses for        perform a more in-depth qualitative analysis, we conducted
+privacy reasons.                                                semi-structured interviews with five experienced develop-
+                                                                ers recruited using convenience sampling, listed in Table 3.
+    Survey Procedure. After this preliminary step, each         We tried to select developers with diverse specializations:
+participant was required to understand a subset of eight        the three professional developers work in different areas
+methods randomly selected from the 50 methods. The Web          (Android, front-end, back-end); one of the two PhD students
+application was designed to automatically balance the num-      had a previous experience in industry, while the other one
+ber of evaluations for each of the 50 methods (i.e., the        did not. The developers provided consent to include their
+number of participants understanding each method was            names in this paper. We do not directly associate the names
+roughly the same). In total, we collected 444 evaluations       to the performance in the tasks.
+across the 50 methods (8.9 evaluations per method on
+average), since not all participants completed the survey.          Interviews Procedure. To guide the interviews, we se-
+                                                                lected 4 methods among the 50 that we used to answer the
+    The eight methods were presented individually (i.e., each   other research questions. Such methods where (i) the one
+method on a different page) to participants, and the Web        with the highest mean TAU, i.e., the most understandable
+application allowed navigation of the method and access to      one, (ii) the one with the lowest mean TAU, i.e., the least
+the methods/classes invoked/used by it. Also, participants      understandable one, (iii) the one with the highest standard
+were allowed to browse the Web to collect information about     deviation in TAU, i.e., the one for which the understandabil-
+types, APIs, data structures, etc. used in the method. This     ity seems to be most subjective, and (iv) the one that has the
+was done to simulate the typical understanding process          highest TNPU and a number of BD50% = true greater than
+performed by developers. We asked participants to carefully     zero, i.e., the method that, despite being analyzed for the
+read and fully understand each method. Participants could,      longest time, still makes some developers incorrectly believe
+at any moment, click on the button "I understood the            that they understood it.
+method" or the button "I cannot understand the method".
+In both cases, the Web application stored the time spent, in        We use TAU as a proxy for understandability to select
+seconds, by the developer for the method's understanding        the first three snippets as it takes into account both the
+before clicking on one of the two buttons. If the participant   actual understandability and the time taken to understand
+clicked on "I understood the method", the method was            the snippet. Table 4 shows the four methods we selected.
+hidden and she was required to answer three verification        For each method, we asked the five developers to read
+questions about the method she just inspected. The provided     and understand it, thinking aloud, if they wanted. Before
+                                                                the participants started to read and understand the snippet,
+                                                                we asked them how familiar they were with the system to
+                                                                which the snippet belongs and with the APIs used in the
+                                                                snippet. For each snippet, after the participants concluded
+                                                                the understanding phase, we asked precise questions: Q1:
+                                                                                                                                             9
+
+            TABLE 4: Methods used during the interviews with developers
+
+System      Class                         Method                     Type                                              URL
+
+OpenCMS     CmsHoverbarContextMenuButton  createContextMenu          The most understandable (T AU = 0.74)             https://git.io/vpHzL
+Phoenix     MetaDataEndpointImpl          doDropSchema               The least understandable (T AU = 0.06)            https://git.io/vpHzm
+Hibernate   TimesTenDialect               TimesTenDialect            The most subjective (sd(T AU ) = 0.46)            https://git.io/vpHzs
+MyExpenses  LazyFontSelector              processChar                The most deceptive (T N P U = 391.0, #BD50% = 2)  https://git.io/vpHzZ
+
+"do you think this snippet is understandable?"; Q2: "what makes      understandability vary among different evaluators (for the
+this method understandable/not understandable to you?"; Q3: "is
+it possible to modify the method to make it more understandable?     same snippet) and different snippets (for the same evalu-
+If yes, how?". If the participants understood the snippet, we
+asked the purpose of the snippet to ensure they actually             ator). For each proxy P , we computed the mean variance
+understood it, unless they explained it while they thought
+aloud during the interview. Finally, we registered the time          of P among different evaluators (for the same snippet)
+the participants took to understand the snippets.                                                      ,n
+
+5.2 Analysis Method                                                                                    i=1
+                                                                     using the formula Vs(P ) =        var(Pi )        where  n  is  the
+In the context of our study, we measure the understand-
+ability level using the previously defined proxies of code                                             n
+understandability (Section 4).
+                                                                     number of snippets in our dataset and Pi is the vector
+    We measure Perceived Binary Understandability (PBU)
+using the initial declaration of the participants: if they           containing the values of P for the snippet i. The higher
+clicked on "I cannot understand the method" button, PBU
+is false, while it is true otherwise (i.e., the participant clicked  Vs, the larger the differences in terms of understandability
+on "I understood the method").                                       among different evaluators for the same snippets. Similarly,
+
+    We measure Time Needed for Perceived Understand-                 we computed the variations among different snippets for
+ability (TNPU) as time, in seconds, spent by the partic-                                               ,n
+ipant while inspecting the method before clicking on "I
+understood the method". This metric cannot be computed                                                 i=1
+when the participant clicked on "I cannot understand the             the same evaluator as Vd(P ) =       var(Pi )     where  n  is  the
+method".
+                                                                                                          n
+    We measure Actual Understandability (AU) as the per-
+centage of correct answers given by the participants to the          number of developers and Pi is the vector containing the
+three verification questions. If the participant clicked on the
+"I cannot understand the method" button, AU is 0.                    evaluations of the developer i. Again, the higher Vd, the
+
+    We measure Actual Binary Understandability (ABUk%),              higher the differences in understandability among different
+with k = 50. Therefore, ABU50% is true when participants
+correctly answer at least two of the three verification ques-        snippets for the same evaluator.
+tions, and false otherwise.
+                                                                         RQ1: Correlation With Single Metrics. To answer RQ1,
+    To measure Timed Actual Understandability (TAU),                 we first verified which metrics strongly correlate among the
+we use the previously defined formula, which combines
+AU and TNPU. TAU gets value 0 if the participant clicked             121. This was done to exclude redundant metrics, which
+on the "I cannot understand the method" button. In this
+context, we used a modified version of TNPU in which                 capture the same information in different ways, from our
+outliers (detected using the Tukey's test [38], with k = 3)
+are replaced with the maximum value of TNPU which is                 analysis. We compute the Kendall rank correlation coef-
+not an outlier. We did this because the maximum value of
+TNPU in our dataset is 1,649 seconds, much greater than the          ficient (i.e., Kendall's  ) [39] to determine whether there
+third quartile (164 seconds). Using the real maximum value
+would have flattened down all the relative times.                    are pairs exhibiting a strong correlation. We adopted the
+
+    Finally, we measure Binary Deceptiveness (BDk%), with            Kendall's  , since it does not assume the data to be normally
+k = 50, using the previously defined formula which com-
+bines PBU and ABU50%.                                                distributed nor the existence of a straight linear relationship
+
+    We computed these six variables for each of the 444              between the analyzed pairs of metrics. Cohen [40] provided
+evaluations performed by participants (i.e., for each method
+that each participant tried to understand). We excluded 2            a set of guidelines for the interpretation of the correlation
+of the 121 considered metrics (i.e., NMImin and ITIDmin),
+because the value of such metrics was 0 for all the snippets.        coefficient. It is assumed that there is no correlation when
+
+    RQ0: Variation of Code Understandability. To answer              0  | | < 0.1, small correlation when 0.1  | | < 0.3,
+RQ0, we analyzed how the values of our proxies for code
+                                                                     medium correlation when 0.3  | | < 0.7, and strong corre-
+
+                                                                     lation when 0.7  | |  1. For each pair of metrics exhibiting
+
+                                                                     a strong correlation (i.e., with a Kendall's | |  0.7), we
+
+                                                                     excluded the ones which presented the highest number
+                                                                     of missing values2 or one at random, when the number
+
+                                                                     of missing values were equal. This allowed us to reduce
+
+                                                                     the number of investigated metrics from 121 to 73. Finally,
+
+                                                                     we computed the Kendall correlation between each of the
+
+                                                                     remaining 73 metrics and PBU, TNPU, AU, BD50%, and
+                                                                     TAU to verify whether some of them are able to capture the
+
+                                                                     (actual and perceived) understandability of code. We did not
+
+                                                                     compute the correlation with ABU50%, since, in this case, it
+                                                                     would have been redundant, because we already compute
+
+                                                                     the correlation with AU.
+
+                                                                         RQ2: Performance of Multi-Metrics Models. To answer
+                                                                     RQ2, we tried to combine the metrics defined in Section 3
+                                                                     to predict the six proxies of understandability previously
+
+                                                                     defined. Since the number of metrics is high as compared to
+
+                                                                     the number of instances, we performed a preliminary phase
+
+                                                                     of feature selection. First, we removed the features highly
+
+                                                                     correlated among each others (as previously done for RQ1);
+
+                                                                        2. Some metrics cannot be computed in some cases. For example,
+                                                                     "Area of comments/literals" cannot be computed if the method does
+                                                                     not contain literals.
+                                                                    10
+
+then, we removed Area Keywords/Comments, because of                     Both classifiers and regression models need to be trained
+                                                                    and tested on different datasets to avoid overfitting (i.e., the
+the high number of missing values (124, more than 30% of            model would fit the specific data, but not generalize). For
+                                                                    this reason, we performed leave-one-out cross-validation
+the instances), which could be problematic for some of the          where we divided the dataset in 444 folds, i.e., each fold
+                                                                    contains exactly one instance. For each iteration, one of the
+used machine learning techniques.                                   folds was used as test set and the union of the other folds
+                                                                    as training set for our models. Therefore, for each evaluated
+To build a model for predicting PBU, ABU50%, and                    instance, we train our models on the whole dataset without
+                                                                    the test instance. This solution is ideal in this context for two
+BD50%, we use a broad selection of classifiers defined in the       reasons: (i) since our dataset may be small for regression
+                                                                    techniques to be effective, we cannot afford to reduce the
+literature, since such variables are nominal. Specifically, we      number of instances for the training phase; (ii) this type
+                                                                    of validation allows us to use all the evaluations of the
+use (i) Logistic Regression [41], (ii) Bayes Networks [42], (iii)   same developer (except for the one that has to be tested)
+                                                                    in the training phase. This would allow machine learning
+Support Vector Machines (SMO algorithm [43]), (iv) Neural           techniques to define rules specific for the developer itself.
+                                                                    It is worth highlighting that we do not aim at comparing
+Networks (Multilayer Perceptron), (v) k-Nearest-Neighbors           different machine learning techniques. Instead, our goal is
+                                                                    to understand if any technique is able to effectively combine
+[44], and (vi) Random Forest [45]. As the first step, we            the considered metrics to capture code understandability.
+
+use 10% of each dataset to tune the hyper-parameters and                RQ3: Structured Interviews with Developers. Finally,
+                                                                    to answer RQ3, we transcribed the interviews and we sum-
+we removed such instances from the dataset used in the              marized the responses into comments. Then, we clustered
+                                                                    the comments into topics and we counted how many de-
+experiment. We focus on the main parameters of each tech-           velopers mentioned each topic. For example, if a developer
+                                                                    said that he was confused by the name of a specific identifier
+nique and, specifically, we tune: (i) number of hidden layers,      and another developer said that identifier names were good
+                                                                    for a snippet, we clustered such comments together in the
+learning rate, and momentum for Multilayer Perceptron; (ii)         category "quality of identifiers". Finally, we report in the
+                                                                    results (i) the answers given by the participants to the
+k, weighting method, and distance metric for kNN; (iii) kernel,     precise question we asked them at the end of the analysis
+                                                                    of each snippet, and (ii) interesting insights that we could
+exponent, and complexity for SMO; (iv) number of features for       obtain during the interviews.
+
+Random Forest. To do this, we use an exhaustive search              5.3 Replication Package
+
+approach on a reduced search space, i.e., we defined discrete       The data used in our study is publicly available [33]. We
+                                                                    provide the research community with our dataset reporting
+values for each parameters (at most 10 values) and then             the (perceived and actual) understandability achieved by
+                                                                    the 63 participants, hoping that the availability of such a
+we try all of the possible combinations. We search for the          dataset will help foster research on the definition of a metric
+                                                                    to automatically assess code understandability.
+combination of parameters that achieves the best AUC using
+                                                                    6 EMPIRICAL STUDY RESULTS
+leave-one-out cross-validation on the tuning set. Note we
+                                                                    In this section, we present the results of our empirical
+did not tune hyper-parameters for Logistic Regression and           study. Fig. 1 provides information about the participants
+                                                                    involved in RQ1 (same dataset is used for RQ2 as well).
+Bayes Networks, since they do not rely on any particular            The majority of them ( 60%) are CS bachelor's students--
+                                                                    mixed in terms of years of programming experience. The
+parameter.                                                          sample of participants also includes nine master's students,
+                                                                    three Ph.D. students, and thirteen professional developers.
+    Both PBU and BD50% were unbalanced: PBU presented
+a high number of positive instances (69%), while BD50%              6.1 RQ0 Variation of Code Understandability
+a high number of negative instances (80%). To have bal-
+                                                                    We report in Table 5 both Vs and Vd for TNPU, AU, and
+anced models, we use the SMOTE filter [46] on the training          TAU, i.e., the numeric proxies we previously defined. We
+                                                                    also report the values of Vs for the different categories of
+sets to generate artificial instances for the minority classes.     participants. The table shows that Vs is slightly higher than
+                                                                    Vd for all the proxies. This shows that the understandability
+Moreover, while Random Forest is designed to automat-               depends more on the developer than on the snippet he/she
+
+ically select the best features, for the other algorithms it
+
+is important to have an adequate number of features in
+
+relation to the number of instances. To achieve this goal,
+
+for those techniques, we performed a second round of
+
+feature selection using linear floating forward selection with
+
+a wrapper strategy. We used Logistic Regression as the
+
+classifier for the wrapper and AUC (Area Under the Curve)
+
+as the metric for the evaluation of the effectiveness of each
+
+subset of features, computed with a 5-fold cross validation.
+
+We report the average F-Measure of the classes of each vari-
+
+able and the AUC of all the classifiers for the three variables
+
+to show the effectiveness of combinations of metrics defined
+
+in the literature in the prediction of the nominal proxies of
+
+understandability.
+
+For the other proxies, i.e., TNPU, AU and TAU, we use
+
+several regression techniques defined in the literature, since
+
+such variables are numeric. Specifically, we use (i) Linear
+
+Regression, (ii) Support Vector Machines (SMOreg [47]), (iii)
+
+Neural Networks (Multilayer Perceptron), (iv) k-Nearest-
+
+Neighbors[44] and (v) Random Forest[45]. In this case, we
+
+report the correlation of the predicted values with the actual
+
+values and the MAE (Mean Absolute Error) of the predic-
+                             -xi
+tion, computed as   (|xi.n        |)  We  use  the  same  approach
+
+                    i
+                          n
+
+that we used for classification to tune the parameters of the
+
+regressors and to select the best features. In this case, we
+
+look for the parameters and the features that minimize the
+
+mean absolute error. We use linear regression as regressor
+
+in the wrapper strategy.
+                                                                                  11
+
+                    3                        Position                             The correlation with PEspec, instead, shows that developers
+       9                                                                          with more experience in the specific programming language
+                                                         Ph.D. students           tend to have a slightly higher confidence and they tend
+13                                                       Master's students        to perceive snippets of code as understandable more fre-
+                                                         Professional developers  quently than developers with less experience. Finally, we
+                              38 Bachelor's students                              observed other low correlations with PBU: NMavg (-0.12),
+                                                                                  i.e., when words used for identifiers have many meanings,
+Fig. 1: Participants to the study                                                 they make developers perceive the snippet as slightly less
+                                                                                  understandable; M IDQmin (0.12), i.e., the higher the mini-
+TABLE 5: Mean variance of the proxies among snippets and                          mum quality of the internal documentation, the higher the
+developers (lower values imply more similar scores).                              perceived understandability; average identifiers' length (-0.12),
+                                                                                  i.e., shorter identifiers slightly help perceiving the code as
+                              AU TNPU TAU                                         more understandable.
+
+VVVVPPPPssss  (BsC)           0.11  61,683  0.08                                      While in our previous study we showed that ten of the
+              (MsC)           0.06   4,209  0.03                                  metrics have a slight correlation with TNPU, replicating this
+              (PhD)           0.09          0.10                                  work on a larger number of evaluations reduced the number
+              (Professional)  0.07  24,924  0.07                                  to just a single metric, i.e., DFT of conditionals (0.11).
+                                    42,425
+                                            0.10                                      The metric that has the highest correlation with AU is
+VPs 0.13 34,294                             0.09                                  average Textual Coherence (  -0.16). The fact that such a
+VPd 0.12 26,109                                                                   correlation is negative is surprising, because we expected
+                                                                                  a higher Textual Coherence to imply a higher understand-
+is evaluating, even if such a difference is not very high.                        ability. Also, we found that number of parameters negatively
+Also, it is worth noting that Vs(AU ) decreases if we divide                      correlates with AU (  -0.13) (i.e., the larger the number
+the developers in categories based on their professional                          of parameters, the lower the actual understandability of
+position. This means that different categories of developers                      the method). We found a similar result also in RQ3 when
+achieve more similar levels of correctness. Specifically, pro-                    interviewing developers. Other examples of metrics corre-
+fessional developers and Master's students seem to be the                         lated with AU are PEspec (  0.13) and DFT of conditionals
+most cohesive groups in terms of correctness (i.e., the groups                    (  -0.13).
+that exhibit the lowest variance). The same happens (but
+with lower differences) for Vs(T AU ). On the other hand,                             The metric with the highest correlation with TAU is
+for Vs(T N P U ) there are categories with lower inter-group                      DFT of conditionals (  -0.16). This suggests that high
+variations (i.e., Master's students and PhD students), while                      complexity reduces the understandability of a snippet. It
+others have higher variations (i.e., Bachelor's students and                      should be noted that for TAU, which is expression of actual
+professional developers).                                                         understandability, we observe only a slight correlation with
+                                                                                  the programming experience (  0.11 for PEspec).
+    Summary for RQ0. Code understandability depends
+    slightly more on the developers rather than on the                                Finally, only two metrics, i.e., number of literals (visual X)
+    code snippets.                                                                and DFT of conditionals, are slightly correlated with BD50%
+                                                                                  (  0.11 and 0.1, respectively). All the other metrics show
+                                                                                  a negligible correlation.
+
+6.2 RQ1: Correlation With Single Metrics                                              Summary for RQ1. None of the metrics we considered
+                                                                                      achieve a medium/strong correlation with any of the
+When evaluating the metrics on a larger number of eval-                               proxies of code understandability we defined.
+uations and by considering more proxies for code under-
+standability, we still observe the negative results that were                     6.3 RQ2: Performance of Multi-Metrics Models
+shown in our previous study [19]: Very few metrics have
+a correlation with understandability higher than |0.1|.                           We report the performance of models that combine metrics
+Specifically, 8 metrics have a weak correlation with PBU,                         dividing them as classification, for PBU, ABU50% and BD50%,
+only one with TNPU, 13 with AU, 13 with TAU, and 2 with                           and regression, for TNPU, AU and TAU.
+BD50%. Note that, since we only observed weak correlations,
+these metrics are very unlikely to be appropriate proxies for                     6.3.1 Classification
+code understandability. 51 out of the 73 metrics considered
+showed no correlation at all with any of the proxies.                             First, we report in Table 6 the features selected for the
+                                                                                  models of at least two of the proxies (the replication package
+    The metric which has the highest correlation with PBU                         contains the complete list of features for each proxy). It is
+are two: (i) maximum line length (  -0.13), which is one                          worth noting that, in some cases, they are the same we
+of the metrics introduced by Buse and Weimer [10] for                             found useful in RQ1. However, some features that alone
+readability prediction; (ii) PEspec (  0.13), which measures                      seem to be not important, become useful when combined
+the Java experience of the developer. Note that Buse and                          with the other features. For example, #literals (Visual X)
+Weimer also found that Maximum line length is the most                            achieves a correlation of 0.11 just with BD50% when used
+important one for readability prediction in their model [10].                     alone, but, combined with others, it is selected as a good
+Therefore, this reinforces the fact that, generally, developers                   feature for the models of four out of the six proxies.
+tend to perceive code with long lines as less pleasant.
+TABLE 6: Features selected for at least two proxies                                                                                                                  12
+
+                                                                  TABLE 8: Regression results of TNPU, AU, and TAU
+
+Feature                         PBU ABU50% BD50% TNPU AU TAU      Regressor                  TNPU               AU              TAU
+                                                                                     Correlation MAE  Correlation MAE  Correlation MAE
+TC (avg)                        ×  ×               × ××           Linear Regression
+NMI (avg)                       ×  ×               × ××                              0.14 132.9       0.35 0.30        0.36 0.27
+PE (spec)                       ×  ×  × ××                        kNN
+#literals (Visual X)               ×  × ××                        SMOreg             0.11 137.1       0.26 0.31        0.21 0.28
+Indentation length (DFT)        ×  ×                              Random Forest      0.17 114.4       0.36 0.29        0.29 0.27
+#operators/#identifiers (area)                                ××  ML Perceptron      0.09 147.0       0.34 0.29        0.29 0.28
+#conditionals (DFT)                ×                          ××                     0.18 124.8       0.37 0.30        0.36 0.27
+PE (gen)                           ×  ××
+#parameters                        ×  ××                          a prediction of TNPU to be wrong by about 2 minutes. Con-
+#comparisons (DFT)                                            ×   sidering that the average TNPU is 143.4 seconds, without
+#conditionals (avg)                                           ×   excluding outliers, it is clear that any prediction of TNPU
+Line length (max)                                             ×   made with the state of the art metrics is practically useless.
+                                                              ×
+                                                                      On the other hand, it can be seen that there is a good
+TABLE 7: Classification results of PBU, ABU50%, and BD50%         improvement in the correlation for both AU and TAU, when
+                                                                  using combinations of metrics rather than single metrics.
+Classifier             PBU               ABU50%          BD50%    The maximum correlations are 0.37 and 0.36, respectively,
+               F-Measure AUC       F-Measure AUC  F-Measure AUC   leading to a medium correlation. However, it is worth notic-
+Logistic                                                          ing that the Mean Absolute Error is quite high. In our
+               0.68 0.71           0.63 0.71      0.72 0.71       context, the MAE of 0.29 for AU means that we should
+kNN                                                               expect our model to be wrong by one answer, on average
+SMO            0.62 0.63           0.59 0.66      0.74 0.66       (0.29  0.33). If our model predicts that AU is 0.66 (the
+Naive Bayes    0.64 0.63           0.63 0.63      0.71 0.63       participant gives two correct answers out of three), it may
+Random Forest  0.60 0.65           0.66 0.68      0.63 0.66       be that she gives one or three correct answers, thus making
+ML Perceptron  0.65 0.63           0.67 0.72      0.77 0.64       this prediction poorly actionable except for corner cases
+               0.66 0.69           0.63 0.70      0.70 0.70       (predicted AU very low or very high).
+
+    Table 7 shows the F-Measure and AUC of the classi-                Finally, because of the results of RQ0, i.e., that under-
+fication of PBU, ABU50%, and BD50%. Since we use Lo-              standability depends much more on the developer, we tried
+gistic Regression for feature selection, we do not include        to use the professional position of the developer as an addi-
+it directly in the comparison among the techniques. It is         tional feature in our combined models (RQ2). We observed
+worth noting that the AUC achieved by Random Forest and           a slight improvement in the regression performance of TAU
+Multilayer Perceptron for the classification of ABU50% seems      (Correlation: +0.07; MAE: -0.02) and AU (Correlation: +0.02;
+to suggest that it is possible to classify with a good level of   MAE: +0.00), while we achieved lower classification perfor-
+confidence snippets as actually understandable or actually not    mance for BD50% (F-measure: -0.06; AUC: -0.02), and com-
+understandable. Looking at the F-Measure, however, it is clear    parable regression and classification performance for PBU
+that we are quite far from having a practical classifier for      (F-measure: -0.02; AUC: +0.01), ABU50% (F-measure: +0.07;
+actual understandability. Also, looking at the classification     AUC: -0.02), and TNPU (Correlation: +0.03; MAE: +7.5).
+accuracy, 33% of the instances are wrongly classified by the      However, the improvement relates only to the maximum
+best model.                                                       scores achieved: not all the machine learning techniques
+                                                                  achieve better results.
+    Such results are even more negative for PBU and, above
+all, BD50%. For PBU the maximum F-Measure is 0.66.                    Summary for RQ2. Combining the state-of-the-art
+On the other hand, the best F-measure for BD50% is 0.77,              metrics can result in models that show some discrim-
+achieved by Random Forest. However, this positive result              inatory power in the prediction of some proxies of
+hides the fact that such a classifier has good results only           code understandability (i.e., ABU50%, AU and TAU).
+on negative instances. Both precision and recall for the pos-         However, such predictions are not sufficiently good
+itive class are, indeed, very low (mean 0.31 and 0.51 for             yet to be used in practice.
+precision and recall, respectively). In general, looking at
+the F-Measure of the minority classes, which are perceived        6.4 RQ3: Structured Interviews with Developers
+as not understandable and deceptive, such values are much
+lower (i.e., 0.48 and 0.37, respectively), despite the fact       We report the results of the interviews by presenting the
+that we used SMOTE to balance the training sets. We can           developer responses grouped by each type of code snippet.
+conclude that the combination of the considered metrics           The interviews lasted roughly between one and two hours
+shows a slight discriminatory power for actual binary un-         each. For space limitations, we report the complete code
+derstandability (ABU50%); however, we are quite far from          snippets in our replication package [33].
+a practically useful prediction model of actual/perceived
+understandability and deceptiveness.                              6.4.1 The Most Understandable Method
+
+6.3.2 Regression                                                  All the developers correctly described the functionality
+                                                                  implemented in the method, and all of them answered
+In Table 8, we report the performance of the regression           positively to Q1 (i.e., they think the method is understand-
+models for TNPU, AU and TAU. The first thing that is              able). The average time needed to understand the method
+very clear is that our models are not able to predict TNPU
+(Time Needed for Perceived Understandability). The highest
+correlation for TNPU is only 0.18, higher than the correlation
+achieved by single metrics, but still very low. The Mean
+Absolute Error is also very high. On average, we can expect
+                                                                 13
+
+//Actual code                                                    6.4.2 The Least Understandable Method
+
+result.add(new CmsGotoMenuEntry(hoverbar));                      Four developers out of five did not understand the sec-
+                                                                 ond method. They admitted that fully understanding the
+result.add(new CmsGotoExplorerMenuEntry(hoverbar));              method would have required much longer, and they asked
+                                                                 to stop after about 5 minutes. One of them, on the other
+//Desired code                                                   hand, took some extra time to analyze the classes used in
+                                                                 the method (about 8 minutes, in total). In the end, he said
+result.add(new CmsGotoMenuEntry  (hoverbar));                    he understood the method and he was able to describe what
+                                                                 the method did. Three developers said that the method is
+result.add(new CmsGotoExplorerMenuEntry(hoverbar));              not understandable (Q1), while the other two, surprisingly,
+                                                                 said that the method is understandable. The developer,
+Fig. 2: Actual code vs aligned code (first snippet)              who did not fully understand the method but perceived it
+                                                                 as understandable, explained that he roughly understood
+was about 2.5 minutes. As expected, this was the method          the method, but the lack of knowledge about the system
+understood most quickly.                                         made him say that it would take more time to properly
+                                                                 understand it.
+    The single aspect that makes this method highly under-
+standable, according to the developers, is the easy/clear            Two developers highlighted that the positive aspects of
+task it implements. Other positive aspects of the method         the method (Q2) are that it implements just one task. One of
+as for understandability (Q2) are that it is very tidy (good     them also generally liked the names used for the identifiers.
+readability, in general) and it implements a single task. Carlo  On the other hand, all the developers listed many negative
+highlighed that the names are very well chosen. However,         aspects. The most negative aspect highlighted is the com-
+both Salvatore and Giovanni put emphasis on the many             plete lack of comments and internal documentation (all the
+repetitions in the code. Salvatore said that, to some extent,    developers). Also, the fact that the method belongs to a big
+repetition and alignment are positive, because they help the     and untidy class makes the method itself less understand-
+brain ignoring part of the code that is not useful to read. On   able (2 out of 5 developers). The developers also generally
+the other hand, Giovanni thinks that repetitions make the        complained about the low readability of the method (4 out
+method "poorly maintainable and less elegant"; however,          of 5 developers). Matteo and Carlo pointed out that another
+he does not think that repetitions hinder understandability.     negative aspect is that the method is highly dependent on
+                                                                 some internal classes/methods that are hard to understand.
+    Three developers agreed that there is no negative aspect     Stefano, Salvatore and Matteo did not like the presence of
+in terms of understandability, and it would not be possible      many exit points for the method; Salvatore and Matteo also
+to have a more understandable version of the method (Q3).        said that the high number of parameters strongly reduces
+On the other hand, Salvatore thinks that the repetition of the   its understandability (confirming what we found answering
+actual parameter "hoverbar" for all the constructors and the     RQ1), and Matteo precised that some of the parameters
+lack of alignment forces the reader to check if it is actually   are not used at all. Stefano and Matteo did not like some
+true that all the constructors are called with such an actual    identifiers names (e.g., areTablesIdentifiers), which they
+parameter, and this slightly increases the time needed to        considered potentially misleading. Matteo thinks that this
+understand the method. He would have aligned all the             method has too many responsibilities. For example, the first
+actual parameters of the constructors in the list (Fig. 2).      thing the method does is to load a schema, based on the
+Matteo thinks that the name "hoverbar" is not very clear,        value of one of the parameters, but he thinks that it would be
+and documentation is lacking for it. He also thinks that         better to directly have a parameter with the loaded schema.
+the abstract return type makes the method slightly less          Also, he thinks that the application domain is quite complex.
+understandable, because it is necessary to understand what
+kinds of concrete types can be returned. He said that, from          All the developers answered Q3 saying that they would
+his experience, there is often a trade-off between understand-   improve the understandability of the method by adding
+ability and maintainability. In this case, using abstract types  comments and improving its readability. Matteo said that he
+is necessary to make the method more maintainable (e.g., all     would (i) change the order of the parameters (e.g., putting
+the classes that implement the same interface have the same      the schema as the first parameter), (ii) use exceptions instead
+signature, and it is easier to extend this system). However,     of SCHEMA_NOT_FOUND instances, and (iii) start with a check
+this makes the implemented mechanism (and the system)            for exceptional behaviors (that lead to SCHEMA_NOT_FOUND)
+harder to understand.                                            and the normal behavior after that.
+
+    While reading and understanding the method, the de-              Also, in this case, the developers used different ap-
+velopers used different approaches. Some of the developers       proaches to read and understand the snippet. One developer
+looked at class and internal dependencies of the method          tried to look for the internal documentation of the used
+(i.e., the context in which such method exists); some looked     classes (which is lacking); two developers looked at the code
+as well at some of the classes used in the method and they       of the used classes; one developer strongly relied on the
+inferred that they are very similar, which was helped by         names of the identifiers. Finally, one developer said that he
+the names; some focused on the method itself. One of them        would have used the debugger to understand the snippet
+searched on the internet for "hoverbar" to understand its        (i.e., he would have analyzed the dynamic behavior of the
+meaning in this context. One of the developers also looked       code). He explained that understanding this snippet only
+for information about the entire system and the repository       looking at code statically would take longer.
+(e.g., number of developers) and he looked at the documen-
+tation of the implemented interface to get information about
+the method to understand.
+6.4.3 The Most Controversial Method                                                                                                                              14
+
+Four out of five developers were able to understand the           TABLE 9: Factors mentioned by the participants
+method with a low effort ( 2 minutes). One of the developers
+took longer (5 minutes). He explained that he had no expe-        Factor                  MM SG GG SD CB
+rience with SQL dialects. However, in the end, all of them
+were able to understand the method. Three of the develop-         Quality of Identifiers  × × × ××
+ers were familiar with SQL dialects and Hibernate, and they
+took shorter than the average to understand the snippet. All      Code Readability        × ×××
+the developers agreed that the method is understandable           Presence of Comments
+(Q1). However, three out of five developers explicitly said                               × ××      ×
+that a good knowledge of SQL dialects and, partially, of
+Hibernate is necessary to understand this method; con-            # Exit Points           ××     ×
+versely, one developer said that the lack of knowledge on         Documentation Quality
+SQL dialects would have just increased the time needed            # Responsibilities      × ××
+to understand, but the method would have been easy to             Quality of the Class
+understand anyway.                                                                        × ××
+
+    All the developers appreciated the good names and the                                 × ××
+good quality of comments and Javadoc (Q2) and four out of
+five developers said that there are no negative aspects of this   # Parameters            ××
+method in terms of understandability and that they would
+not change it (Q3). Matteo, on the other hand, said that, in      Nesting                 ××
+general, he would have divided the method in three private
+methods: one for the columns, one for the SQL properties,         Quality of Dependencies ×         ×
+and one for the functions. However, he said that it is not
+strictly necessary in this specific case, because the dialect is  Application Domain      ×   ×
+easy.
+                                                                  Code repetitions           ××
+    The interviews suggest that this method was the most
+controversial in our study due to differences in background       Broken Lines               ××
+among the developers. Such subjectivity may have strongly
+influenced the time needed to understand the snippet.             Control Flow                ××
+While the subjectivity of this method emerged from the
+survey we conducted, on the other hand the five developers        same class improved the understandability of the method.
+we interviewed seemed to agree that the method is under-          Stefano did not find any positive aspects about this method.
+standable. This is most likely due to the fact that they are all  On the other hand, the developers said that some names,
+professional and experienced developers.                          such as "surrogate", are uncommon and abstract, and they
+                                                                  may hinder the understandability of the method (2 out
+6.4.4 The Most Deceiving Method                                   of 5 developers); Matteo points out that the name of the
+                                                                  method itself (processChar) is too generic and ambiguous.
+Three out of five developers said that they understood the        The redundancy in some parts of the method is definitely
+method and that they found the method understandable              a negative aspect. The method contains two very similar
+(Q1). Two developers said that it would take longer to fully      blocks of code (4 out of 5 developers). They all suggest to
+understand it. On average, the developers took about 5            remove this repetition (Q3).
+minutes to understand the method. Interestingly, when we
+asked them to precisely describe what the method does,                To understand this snippet, three developers looked only
+one of the developers noticed that he actually did not            at the code of the method, while two of them found it useful
+understand the reason why a for loop was in the method.           to look at the only method in the class that calls the snippet's
+Therefore, in the end, only two developers actually under-        method.
+stood the method.
+                                                                      Table 9 provides a summary of the factors that the
+    Differently from the other methods for which developers       developers mentioned at least once during the interview.
+often highlighted more or less the same positive/nega-            The quality of the identifiers is mentioned by all of them,
+tive aspects in terms of its understandability (Q2), for this     but also code readability and comments seem to be valuable,
+method, each of them talked about a different positive            according to most of them.
+aspect. Salvatore said that, despite the nesting, the condi-
+tions are quite simple and the blocks of the conditions are           Summary for RQ3. There is a diverse set of aspects
+short. According to him, this facilitates the understanding           considered by developers during code understanding.
+of causes and effects in the code. Conversely, Matteo said            The interviewed developers (mostly) agree on a subset
+that he did not like the many nested if controls, which               of aspects that are desirable (e.g., good identifiers,
+make it hard to understand, according to him. Giovanni                readability, and presence of comments) or undesirable
+liked the names used, and he found them quite clear. Carlo,           (e.g., too many exit points) for having understandable
+instead, did not like them, but he said that the fact that            code. However, we found no agreement on many
+all the internal methods called in this snippet were in the           other aspects and, above all, on the adopted under-
+                                                                      standing process.
+
+                                                                  6.5 Discussion
+
+                                                                  In our previous study [19], we showed that no single metric
+                                                                  has a non-weak correlation with any proxy of understand-
+                                                                  ability. Increasing the size of our dataset further reduced the
+                                                                  correlations. Most noticeably, the number of metrics with a
+                                                                  correlation with TNPU higher than |0.1| were ten in our
+                                                                  previous study, and this number has been reduced to just
+                                                                  one with the larger dataset.
+
+                                                                      We also tried to combine these metrics in classification
+                                                                  and regression models to predict different aspects of code
+                                                                  understandability. In a previous study, Trockman et al.
+                                                                  [32] used LASSO regression to classify ABU50%, and they
+                                                                  15
+
+achieved an AUC of 0.64. We achieved a higher AUC for             about them. Introducing new developer-related metrics con-
+the classification of ABU50% (0.72) and a comparable AUC          sidering their experience with specific topics (e.g., JDBC
+for PBU (0.69) and BD50% (0.70). However, looking at the          APIs) or design patterns (e.g., bridge design-pattern) could
+F-Measure, it is clear that the prediction model would not        be useful to capture such aspects.
+be useful in practice. Compared to the readability models,
+understandability models are much less effective and prac-        7 THREATS TO VALIDITY
+tically unusable. Combining metrics in regression models to
+predict TNPU, AU and TAU also shows the limits of the             Threats to construct validity, concerning the relation be-
+metrics, which can achieve a maximum correlation of 0.37          tween theory and observation, are mainly due to the mea-
+(with AU). Therefore, we can confirm the negative result of       surements we performed, both in terms of the 121 metrics
+our previous study: the metrics we investigated are not           that we studied as well as when defining the six dependent
+enough to capture code understandability. However, as             variables for the understandability level. Concerning the 121
+previously hinted by Trockman et al. [32], combining metrics      metrics, we tested our implementation and, when needed
+helps to achieve better results as compared to single metrics     (e.g., for the IM SQ metric during the identifiers splitting/-
+for most of the understandability proxies.                        expansion), relied on manual intervention to ensure the
+                                                                  correctness of the computed metrics. As for the dependent
+    In the interviews that we conducted, we found that            variables, we tried to capture both the perceived and the
+developers perceive readability as an aspect that highly          actual code understandability in many ways. However, dif-
+influences code understandability. However, this contradicts      ferent results might be achieved combining correctness and
+our quantitative results. It is possible that we did not capture  time in different ways.
+any correlation between readability and understandability         Threats to internal validity concern external factors that
+because we measured the understandability effort only by          we did not consider that could affect the variables and the
+using the time spent to understand a snippet as a proxy.          relations being investigated. Since two of the understand-
+A factor that we ignore here is the mental effort actually        ability proxies are time-related (i.e., they are based on the
+needed to understand a snippet. It could be that unreadable       time participants spent while understanding the code), it is
+code makes developers more tired in the long run, but when        possible that some participants were interrupted by external
+focusing on a single snippet this does not result in noticeable   events while performing the comprehension task. For this
+differences in terms of comprehension time and it does            reason, we replaced outliers for TNPU in the computation
+not affect the correctness of the understandability process.      of TAU with the maximum TNPU that was not an outlier. An
+Experienced developers, who had the chance of working             outlier was a participant requiring more than Q3 +(3×IQR)
+both with readable and unreadable code for longer periods,        seconds to understand a code snippet, where Q3 is the third
+consider this as an important aspect because they feel it         quartile and IQR is the Inter Quartile Range. We used leave-
+affects their overall performance. The same may be true           one-out cross-validation to evaluate all the models used
+for other aspects associated to code readability (such as the     to answer RQ2. This means that some of the evaluations
+quality of identifiers [14]). Most importantly, our interviews    of the same developer were used in the training set. This
+with developers show that each developer uses her own             could allow the models to learn some peculiarities about
+understanding process. When code is harder to understand,         the preferences of the developer. It is worth noting that
+some look at the related classes, while others say they would     such evaluations represent a large minority of the training
+run the code and use the debugger to understand it. One of        instances (< 2%) and they are unlikely to heavily affect the
+the most surprising facts is that some developers found the       trained model. Also, our assumption is that, in a real use-
+least understandable snippet to be understandable. Finally,       case scenario, developers might contribute understandabil-
+we found that the personal background of developers plays         ity evaluations to the training set. We acknowledge that
+a crucial role in understanding: when the knowledge of a          this assumption may not hold in all the contexts. As for
+concept is lacking, it takes time to acquire such a knowledge.    RQ3, the think-aloud strategy we used to get qualitative
+This may be the main limit of the metrics we introduced: We       data could have affected the performance of the developers.
+measure the "knowledge" contained in a snippet (e.g., with        Previous studies were conducted to assess the limitations of
+MIDQ and AEDQ), but we do not measure the knowledge               the non-metacognitive protocols, such as think-aloud [48]:
+that the developer already has. Our metrics may be valid          These studies conclude that the latency, i.e., the time needed
+for the "average" developer, but when we try to measure           to perform a task, is generally affected when using such
+understandability at a personal level, they are not enough.       protocols [49], [50], [51], [52]; on the other hand, most of
+This is confirmed by the results of RQ0, which show that our      them agree that there is no effect on the accuracy [49], [50],
+proxies of code understandability vary more when the same         [51], [52], [53], [54]. To minimize such limitations, we did
+snippet is evaluated by different developers than when the        not ask questions while the developers were reading and
+same developer evaluates different snippets.                      understanding the code. Finally, it is worth noting that the
+                                                                  results of the survey are valid for short-term comprehension
+    Therefore, we can conclude that the effort in the predic-     tasks: it is possible that other factors affect understandability
+tion of code understandability should be directed in cap-         when developers need to comprehend code for long periods
+turing subjective aspects of developers ­ their background        of time (e.g., a working day).
+knowledge and their experience ­ not only in quantitative         Threats to conclusion validity concern the relation between
+terms (i.e., years of experience) but also in qualitative terms:  the treatment and the outcome. The results of RQ2 may
+the interviews suggest that when developers are not familiar      depend on the used machine learning techniques. To limit
+with the topics in the code that they need to understand,
+they need to spend some time to search for information
+                                                                16
+
+this threat, we used the most common and widespread                 Our study lays the foundations for future research on
+machine learning techniques, being careful to choose them       new metrics actually able to capture facets of code un-
+from different families, such as tree-based, bayesian, and      derstandability. In our opinion, the state-of-the-art lacks
+neural networks. Also, such results may depend on the           developer-related metrics. Therefore, we think that future
+parameters used for the machine learning techniques. We         research should be aimed at defining more of such metrics
+always used the standard parameters provided by Weka [55]       to properly capture code understandability. To enable the
+for all the machine learning techniques.                        research community to investigate this direction further, we
+Threats to external validity concern the generalizability of    publicly release our new dataset [33].
+our findings. Our study has been performed on a large, but
+limited, set of metrics and by involving 63 participants com-   ACKNOWLEDGMENTS
+prehending a subset of 50 methods extracted from 10 Java
+systems. We increased the number of observation from our        Bavota was supported in part by the SNF project JITRA,
+previous study [19] by 22% to improve the generalizability      No. 172479. Poshyvanyk was supported in part by the NSF
+of our findings. All of the results hold for the considered     CCF-1525902 grant. Any opinions, findings, and conclusions
+population of participants and for Java code. Larger studies    expressed herein are the authors and do not necessarily
+involving more participants and code snippets written in        reflect those of the sponsors.
+other languages should be performed to corroborate or
+contradict our results. The same is true for the developers     REFERENCES
+involved in RQ3: even though the developers have diverse
+work experiences and specializations, they all were from the    [1] R. Minelli, A. Mocci, and M. Lanza, "I know what you did last
+same country (Italy) with a similar educational background.           summer - an investigation of how developers spend their time," in
+Since we observed differences in their evaluation of code             23rd IEEE International Conference on Program Comprehension, 2015,
+understandability, a more comprehensive study with a more             pp. 25­35.
+diverse set of developers would be needed to generalize our
+results, and it may highlight other factors that underline the  [2] K. K. Aggarwal, Y. Singh, and J. K. Chhabra, "An integrated
+subjectivity of code understandability.                               measure of software maintainability," in Annual Reliability and
+                                                                      Maintainability Symposium., 2002, pp. 235­241.
+8 CONCLUSION AND FUTURE WORK
+                                                                [3] M. Thongmak and P. Muenchaisri, Measuring Understandability of
+We presented an empirical study investigating the correla-            Aspect-Oriented Code. Berlin, Heidelberg: Springer Berlin Heidel-
+tion between code understandability and 121 metrics related           berg, 2011, pp. 43­54.
+to the code itself, to the available documentation, and to
+the developer who is understanding the code. We asked 63        [4] J. c. Lin and K. c. Wu, "A model for measuring software under-
+developers to understand 50 Java snippets, and we gathered            standability," in 6th IEEE International Conference on Computer and
+a total of 444 evaluations. We assessed the participants'             Information Technology, 2006, pp. 192­192.
+perceived and actual understanding for each snippet they
+inspected and the time they needed for the comprehension        [5] T. Roehm, R. Tiarks, R. Koschke, and W. Maalej, "How do pro-
+process. Our results demonstrate that, in most of the cases,          fessional developers comprehend software?" in 34th International
+there is no correlation between the considered metrics and            Conference on Software Engineering (ICSE), 2012, pp. 255­265.
+code understandability. In the few cases, where we observed
+a correlation, its magnitude is very small. Combining met-      [6] D. Srinivasulu, A. Sridhar, and D. P. Mohapatra, Evaluation of
+rics generally results in models with some discriminatory             Software Understandability Using Rough Sets. New Delhi: Springer
+power (classification) and with a higher correlation, com-            India, 2014, pp. 939­946.
+pared to single metrics (regression). However, such models
+are still far from being usable in practice for the prediction  [7] C. Chen, R. Alfayez, K. Srisopha, L. Shi, and B. Boehm, Evaluat-
+of understandability. Finally, we reported interviews with            ing Human-Assessed Software Maintainability Metrics. Singapore:
+software developers, which provide useful insights about              Springer Singapore, 2016, pp. 120­132.
+what makes code understandable or not understandable. We
+noticed that each developer puts emphasis on some aspects       [8] M. A. Storey, "Theories, methods and tools in program compre-
+of understandability, and they give a different level of im-          hension: past, present and future," in 13th International Workshop
+portance to each aspect. Note that we used shallow/classic            on Program Comprehension, 2005, pp. 181­191.
+models in our study; deep models from the deep learning
+comunity should be used as part of future work, given their     [9] M. A. D. Storey, K. Wong, and H. A. Muller, "How do program
+power to abstract and model complex relationships between             understanding tools affect how programmers understand pro-
+input data and several abstraction layers, similar to the             grams?" in 4th Working Conference on Reverse Engineering, 1997, pp.
+cognitive processes in the humans brain; as suggested by              12­21.
+the interviews, developers exhibited some comonalities but
+also variabilities in the understandability process that might  [10] R. P. L. Buse and W. Weimer, "Learning a metric for code readabil-
+not be captured by classic models, thus, shallow models are           ity," IEEE Transactions on Software Engineering, vol. 36, no. 4, pp.
+not the best choice to predice/measure understandability.             546­558, 2010.
+
+                                                                [11] D. Posnett, A. Hindle, and P. T. Devanbu, "A simpler model of
+                                                                      software readability." in 8th Working Conference on Mining Software
+                                                                      Repositories, 2011, pp. 73­82.
+
+                                                                [12] J. Dorn, "A general software readability model," Mas-
+                                                                      ter's thesis, University of Virginia, Department of Computer
+                                                                      Science, https://www.cs.virginia.edu/~weimer/students/dorn-
+                                                                      mcs-paper.pdf, 2012.
+
+                                                                [13] E. Daka, J. Campos, G. Fraser, J. Dorn, and W. Weimer, "Modeling
+                                                                      readability to improve unit tests," in 10th Joint Meeting of the
+                                                                      European Software Engineering Conference and the ACM SIGSOFT
+                                                                      Symposium on the Foundations of Software Engineering, 2015, pp. 107­
+                                                                      118.
+
+                                                                [14] S. Scalabrino, M. Linares-Vásquez, D. Poshyvanyk, and R. Oliveto,
+                                                                      "Improving code readability models with textual features," in 24th
+                                                                      IEEE International Conference on Program Comprehension, 2016.
+
+                                                                [15] ----, "A comprehensive model for code readability," Journal of
+                                                                      Software: Evolution and Process, vol. 30, no. 6, June 2018.
+
+                                                                [16] J.-C. Lin and K.-C. Wu, "Evaluation of software understandability
+                                                                      based on fuzzy matrix," in IEEE International Conference on Fuzzy
+                                                                      Systems, 2008, pp. 887­892.
+                                                                                17
+
+[17] M. Bartsch and R. Harrison, "An exploratory study of the effect of         [44] D. W. Aha, D. Kibler, and M. K. Albert, "Instance-based learning
+      aspect-oriented programming on maintainability," Software Qual-                 algorithms," Machine learning, vol. 6, no. 1, pp. 37­66, 1991.
+      ity Journal, vol. 16, no. 1, pp. 23­44, 2008.
+                                                                                [45] L. Breiman, "Random forests," Machine learning, vol. 45, no. 1, pp.
+[18] A. Capiluppi, M. Morisio, and P. Lago, "Evolution of understand-                 5­32, 2001.
+      ability in oss projects," in 8th European Conference on Software
+      Maintenance and Reengineering, 2004, pp. 58­66.                           [46] N. V. Chawla, K. W. Bowyer, L. O. Hall, and W. P. Kegelmeyer,
+                                                                                      "Smote: synthetic minority over-sampling technique," Journal of
+[19] S. Scalabrino, G. Bavota, C. Vendome, M. Linares-Vásquez,                        artificial intelligence research, vol. 16, pp. 321­357, 2002.
+      D. Poshyvanyk, and R. Oliveto, "Automatically assessing code
+      understandability: how far are we?" in Proceedings of the 32nd            [47] S. K. Shevade, S. S. Keerthi, C. Bhattacharyya, and K. R. K. Murthy,
+      IEEE/ACM International Conference on Automated Software Engineer-               "Improvements to the smo algorithm for svm regression," IEEE
+      ing. IEEE Press, 2017, pp. 417­427.                                             transactions on neural networks, vol. 11, no. 5, pp. 1188­1193, 2000.
+
+[20] D. Lawrie, C. Morrell, H. Feild, and D. Binkley, "Effective identifier     [48] M. A. Bowles, The think-aloud controversy in second language research.
+      names for comprehension and memory." Innovations in Systems and                 Routledge, 2010.
+      Software Engineering, vol. 3, no. 4, pp. 303­318, 2007.
+                                                                                [49] S. F. Biggs, A. J. Rosman, and G. K. Sergenian, "Methodological
+[21] ----, "What's in a name? a study of identifiers," in 14th Interna-               issues in judgment and decision-making research: Concurrent ver-
+      tional Conference on Program Comprehension, 2006.                               bal protocol validity and simultaneous traces of process," Journal
+                                                                                      of Behavioral Decision Making, vol. 6, no. 3, pp. 187­206, 1993.
+[22] B. Caprile and P. Tonella, "Restructuring program identifier
+      names," in International Conference on Software Maintenance, 2000,        [50] J. A. Brinkman, "Verbal protocol accuracy in fault diagnosis,"
+      pp. 97­107.                                                                     Ergonomics, vol. 36, no. 11, pp. 1381­1397, 1993.
+
+[23] D. Lawrie, H. Feild, and D. Binkley, "Syntactic identifier concise-        [51] U. Lass, W. Klettke, G. Lüer, and P. Ruhlender, "Does thinking
+      ness and consistency," in 6th International Working Conference on               aloud influence the structure of cognitive processes," Oculomotor
+      Source Code Analysis and Manipulation, 2006, pp. 139­148.                       control and cognitive processes, pp. 385­396, 1991.
+
+[24] E. Enslen, E. Hill, L. L. Pollock, and K. Vijay-Shanker, "Mining           [52] D. Rhenius and G. Deffner, "Evaluation of concurrent thinking
+      source code to automatically split identifiers for software analy-              aloud using eye-tracking data," in Proceedings of the human factors
+      sis," in 6th Working Conference on Mining Software Repositories, 2009.          society annual meeting, vol. 34, no. 17. SAGE Publications Sage
+                                                                                      CA: Los Angeles, CA, 1990, pp. 1265­1269.
+[25] V. Arnaoudova, M. Di Penta, and G. Antoniol, "Linguistic an-
+      tipatterns: What they are and how developers perceive them,"              [53] A. Williams and K. Davids, "Assessing cue usage in performance
+      Empirical Software Engineering, vol. 21, no. 1, pp. 104­158, 2015.              contexts: A comparison between eye-movement and concurrent
+                                                                                      verbal report methods," Behavior Research Methods, Instruments, &
+[26] S. Misra and I. Akman, "Comparative study of cognitive complex-                  Computers, vol. 29, no. 3, pp. 364­375, 1997.
+      ity measures," in 23rd International Symposium on Computer and
+      Information Sciences, Oct 2008, pp. 1­4.                                  [54] J. F. Stratman and L. Hamp-Lyons, "Reactivity in concurrent
+                                                                                      think-aloud protocols: Issues for research," Speaking about writing:
+[27] E. J. Weyuker, "Evaluating software complexity measures," IEEE                   Reflections on research methodology, vol. 8, pp. 89­111, 1994.
+      Transactions on Software Engineering, vol. 14, no. 9, pp. 1357­1365,
+      1988.                                                                     [55] M. Hall, E. Frank, G. Holmes, B. Pfahringer, P. Reutemann, and
+                                                                                      I. H. Witten, "The weka data mining software: an update," ACM
+[28] J. Bansiya and C. G. Davis, "A hierarchical model for object-                    SIGKDD explorations newsletter, vol. 11, no. 1, pp. 10­18, 2009.
+      oriented design quality assessment," IEEE Transactions on Software
+      Engineering, vol. 28, no. 1, pp. 4­17, Jan 2002.                                                         Simone Scalabrino is a Ph.D. student at Uni-
+                                                                                                               versity of Molise, Italy. He received his Master's
+[29] N. Kasto and J. Whalley, "Measuring the difficulty of code com-                                           Degree in Computer Science from the University
+      prehension tasks using software metrics," in 15th Australasian                                           of Salerno in 2015, defending a thesis on Search
+      Computing Education Conference. Australian Computer Society,                                             Based Software Testing, advised by Andrea De
+      Inc., 2013, pp. 59­65.                                                                                   Lucia. He received the Bachelor's Degree from
+                                                                                                               the University of Molise in 2013, defending a
+[30] K. Shima, Y. Takemura, and K. Matsumoto, "An approach to                                                  thesis about source code readability, advised by
+      experimental evaluation of software understandability," in Inter-                                        Rocco Oliveto and Denys Poshyvanyk. His re-
+      national Symposium on Empirical Software Engineering, 2002, pp. 48­                                      search interests include software quality, testing
+      55.                                                                                                      and security. He received two ACM SIGSOFT
+                                                                                Distinguished Paper awards at ICPC 2016 and ASE 2017. He served
+[31] ISO/IEC. Iso/iec 9126 software engineering -- product quality --           as Local Arrangement Co-Chair for SANER 2018. He is co-founder and
+      part 1: Quality model.                                                    CSO of datasound, a spin-off of the University of Molise.
+
+[32] A. Trockman, K. Cates, M. Mozina, T. Nguyen, C. Kästner, and                                              Gabriele Bavota is a Senior Assistant Professor
+      B. Vasilescu, ""automatically assessing code understandability"                                          at the Universitá della Svizzera italiana (USI),
+      reanalyzed: Combined metrics matter," 2018.                                                              Switzerland. He received the PhD degree in
+                                                                                                               computer science from the University of Salerno,
+[33] S. Scalabrino, G. Bavota, C. Vendome, M. Linares-Vásquez,                                                 Italy, in 2013. His research interests include soft-
+      D. Poshyvanyk, and R. Oliveto, "Replication package."                                                    ware maintenance, empirical software engineer-
+      https://dibt.unimol.it/report/understandability-tse.                                                     ing, and mining software repository. He is the au-
+                                                                                                               thor of over 110 papers appeared in international
+[34] T. J. McCabe, "A complexity measure," IEEE Transactions on soft-                                          journals and conferences. He received four ACM
+      ware Engineering, no. 4, pp. 308­320, 1976.                                                              SIGSOFT Distinguished Paper awards at ASE
+                                                                                                               2013, ESEC-FSE 2015, ICSE 2015, and ASE
+[35] R. F. Flesch, How to write plain English: A book for lawyers and           2017, an IEEE TCSE Distinguished Paper award at ICSME 2018, the
+      consumers. Harpercollins, 1979.                                           best paper award at SCAM 2012, and three distinguished reviewer
+                                                                                awards at WCRE 2012, SANER 2015, and MSR 2015. He is the recipi-
+[36] D. Schreck, V. Dallmeier, and T. Zimmermann, "How documenta-               ent of the 2018 ACM Sigsoft Early Career Researcher Award. He served
+      tion evolves over time," in Ninth International Workshop on Princi-       as a Program Co-Chair for ICPC'16, SCAM'16, and SANER'17. He also
+      ples of Software Evolution. ACM, 2007, pp. 4­10.                          serves and has served as organizing and program committee member
+                                                                                of international conferences in the field of software engineering, such as
+[37] J. Kleinberg and É. Tardos, Algorithm design. Pearson Education            ICSE, FSE, ASE, ICSME, MSR, SANER, ICPC, SCAM, and others.
+      India.
+
+[38] J. W. Tukey, "Exploratory data analysis," 1977.
+
+[39] M. G. Kendall, "A new measure of rank correlation," Biometrika,
+      vol. 30, no. 1-2, p. 81, 1938.
+
+[40] J. Cohen, Statistical power analysis for the behavioral sciences, 2nd ed.
+      Lawrence Earlbaum Associates, 1988.
+
+[41] S. Le Cessie and J. C. Van Houwelingen, "Ridge estimators in
+      logistic regression," Applied statistics, pp. 191­201, 1992.
+
+[42] G. H. John and P. Langley, "Estimating continuous distributions
+      in bayesian classifiers," in Proceedings of the Eleventh conference on
+      Uncertainty in artificial intelligence. Morgan Kaufmann Publishers
+      Inc., 1995, pp. 338­345.
+
+[43] J. Platt, "Fast training of support vector machines using sequen-
+      tial minimal optimization. advances in kernel methods--support
+      vector learning (pp. 185­208)," AJ, MIT Press, Cambridge, MA, 1999.
+                                                                                 18
+
+                               Christopher Vendome is an Assistant Profes-                                      Mario Linares-Vásquez is an Assistant Profes-
+                               sor at Miami University in Ohio. He received a                                   sor at Universidad de los Andes in Colombia. He
+                               B.S. in Computer Science from Emory University                                   received his Ph.D. degree in Computer Science
+                               in 2012 and he received his M.S. in Computer                                     from the College of William and Mary in 2016. He
+                               Science from The College of William & Mary                                       received his B.S. in Systems Engineering from
+                               in 2014. He received his PhD degree in Com-                                      Universidad Nacional de Colombia in 2005, and
+                               puter Science from the College of William &                                      his M.S. in Systems Engineering and Computing
+                               Mary in 2018. His main research areas are soft-                                  from Universidad Nacional de Colombia in 2009.
+                               ware maintenance and evolution, mining soft-                                     His research interests include software evolution
+                               ware repositories, program comprehension, soft-                                  and maintenance, software architecture, mining
+                               ware provenance, and software licensing. His                                     software repositories, application of data mining
+has received an ACM Distinguished Paper Award at ASE 2017. He is                 and machine learning techniques to support software engineering tasks,
+a member of ACM, IEEE, and IEEE Computer Society.                                and mobile development.
+                               Denys Poshyvanyk is the Class of 1953 Term                                       Rocco Oliveto is Associate Professor at Univer-
+                               Distinguished Associate Professor of Computer                                    sity of Molise (Italy), where he is also the Chair
+                               Science at the College of William and Mary in                                    of the Computer Science Bachelor and Master
+                               Virginia. He received the MS and MA degrees in                                   programs and the Director of the Software and
+                               Computer Science from the National University                                    Knowledge Engineering Lab (STAKE Lab). He
+                               of Kyiv-Mohyla Academy, Ukraine, and Wayne                                       co-authored about 150 papers on topics related
+                               State University in 2003 and 2006, respectively.                                 to software traceability, software maintenance
+                               He received the PhD degree in Computer Sci-                                      and evolution, search-based software engineer-
+                               ence from Wayne State University in 2008. He                                     ing, and empirical software engineering. His ac-
+                               served as a program co-chair for MobileSoft'19,                                  tivities span various international software engi-
+                               ICSME'16, ICPC'13, WCRE'12 and WCRE'11.                                          neering research communities. He has served
+He currently serves on the editorial board of IEEE Transactions on               as organizing and program committee member of several international
+Software Engineering (TSE), Empirical Software Engineering Journal               conferences in the field of software engineering. He was program co-
+(EMSE, Springer) and Journal of Software: Evolution and Process                  chair of ICPC 2015, TEFSE 2015 and 2009, SCAM 2014, WCRE
+(JSEP, Wiley). His research interests include software engineering, soft-        2013 and 2012. He was also general chair at SANER 2018. He is
+ware maintenance and evolution, program comprehension, reverse en-               also co-founder and CEO of datasound, a spin-off of the University
+gineering, software repository mining, source code analysis and metrics.         of Molise aiming at efficiently exploiting the priceless heritage that
+His research papers received several Best Paper Awards at ICPC'06,               can be extracted from big data. More information available at: https:
+ICPC'07, ICSM'10, SCAM'10, ICSM'13 and ACM SIGSOFT Distin-                       //dibt.unimol.it/staff/oliveto/
+guished Paper Awards at ASE'13, ICSE'15, ESEC/FSE'15, ICPC'16
+and ASE'17. He also received the Most Influential Paper Awards at
+ICSME'16 and ICPC'17. He is a recipient of the NSF CAREER award
+(2013). He is a member of the IEEE and ACM. More information avail-
+able at: http://www.cs.wm.edu/~denys/.
+

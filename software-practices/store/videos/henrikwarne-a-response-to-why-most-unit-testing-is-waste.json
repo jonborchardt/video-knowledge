@@ -1,0 +1,125 @@
+{
+  "id": "henrikwarne-a-response-to-why-most-unit-testing-is-waste",
+  "title": "A Response to “Why Most Unit Testing is Waste”",
+  "channel": "Henrik Warne's blog",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://henrikwarne.com/2014/09/04/a-response-to-why-most-unit-testing-is-waste",
+  "summary": "Rebuttal to Coplien: unit tests earn their keep on algorithmic logic by decoupling design, giving instant feedback and easy context setup, and the usual objections (never-failing tests, refactor breakage, state space) do not hold.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/higher-level-tests-often-pay-back",
+      "stance": "asserts",
+      "quote": "unit tests are most valuable when you use them for algorithmic logic. They are not particularly useful for code that is more coordinating",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+      "stance": "asserts",
+      "quote": "I was quite surprised at how much better separated my code become when I started writing unit testing as I was developing.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/test-first-development-reduces-time-spent",
+      "stance": "asserts",
+      "quote": "With unit tests, you get feedback immediately if you make a mistake.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/unit-tests-never-fail-version-control",
+      "stance": "asserts",
+      "quote": "if a unit test fails, it fails as you are developing the code. It is similar to a compilation failure. You fix it immediately.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Local failures are invisible to repository history so 'never failed' undercounts value, but maintenance cost is real and tests that never fail even locally may be low value.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/tests-breaking-during-refactoring-minor-cost",
+      "stance": "asserts",
+      "quote": "Sometimes when you refactor code, you break tests. But my experience is that this is not a big problem.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Test co-evolution studies show test maintenance is a real and recurring effort, heavily dependent on how mock-heavy and implementation-coupled the tests are.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/impossibility-exhaustively-testing-program-state-space",
+      "stance": "asserts",
+      "quote": "This is true, but it applies equally to integration testing, and is thus not an argument against unit testing.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Both are samples, but a system-level test exercises many units per case, so the argument cuts differently per test.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/unit-tests-make-easy-set-edge",
+      "stance": "asserts",
+      "quote": "it is easier to set up the context you want in a unit test than it is to set it up in the complete system",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Near-definitional and borne out by practice; error-handling paths in particular are hard to trigger end to end.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/runtime-assertions-complement-but-cannot-replace",
+      "stance": "asserts",
+      "quote": "Asserts can be useful, but they are not a substitute for unit tests. If an assert fails, there is still a failure",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Assertions do catch what tests missed but after shipping; the two find overlapping faults at different costs.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/how-much-invest-tests-depends-required",
+      "stance": "asserts",
+      "quote": "Unit tests are not a goal in themselves. They are not useful in every situation.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/combining-unit-integration-tests-catches-more",
+      "stance": "asserts",
+      "quote": "I agree that integration tests are effective, but I think a combination of both is even better.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Different test levels find different fault classes, but no study quantifies the marginal catch of adding unit tests to a good integration suite.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "id": "martinfowler-microservicepremium",
+  "title": "Microservice Premium",
+  "channel": "martinfowler.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://martinfowler.com/bliki/MicroservicePremium.html",
+  "summary": "Martin Fowler (2015): microservices carry a premium of distributed-system complexity, so most systems should be monoliths; continuous delivery and modularity do not require services.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/microservices-cost-more-short-term-rarely",
+      "stance": "asserts",
+      "quote": "microservices introduce complexity on their own account. This adds a premium to a project's cost and risk",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/single-process-monolith-right-default-microservices",
+      "stance": "asserts",
+      "quote": "The majority of software systems should be built as a single monolithic application.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
+      "stance": "asserts",
+      "quote": "there's no reason why you can't make a single monolith with well defined module boundaries",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/continuous-delivery-does-not-require-microservices",
+      "stance": "asserts",
+      "quote": "there are plenty of organizations that succeed with a cookie-cutter deployment approach: Facebook and Etsy are two well-known examples",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.8,
+          "note": "Facebook, Etsy, Shopify and GitHub have all deployed monoliths many times a day.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "What DORA finds predictive of continuous delivery is the ability to test and deploy independently; microservices are named only as one architecture that is supposed to enable this, and a footnote warns against decomposing new systems into services prematurely.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1071-L1079",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/hype-drives-teams-adopt-microservices-they",
+      "stance": "asserts",
+      "quote": "we've seen teams be too eager to embrace microservices",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Microservice envy is widely reported; its magnitude is unmeasured.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "id": "deke8dAsLTI",
+  "title": "Completing the Rewrite from Hell: Five Years of Technical Debt and How We Escaped - Aaron Stannard",
+  "channel": "NDC Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCTdw38Cw6jcm0atBPA39a0Q",
+  "durationSec": 3055,
+  "thumbnail": "https://i.ytimg.com/vi_webp/deke8dAsLTI/sddefault.webp",
+  "summary": "Aaron Stannard's SDKbin post-mortem: unreviewed microservice and generic-repository architecture, fake test coverage, and a strangler-fig recovery with ADRs and AI help.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/microservices-cost-more-short-term-rarely",
+      "stance": "asserts",
+      "quote": "For a twoperson team, you do not need this.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/generic-repository-abstractions-over-orm-lead",
+      "stance": "asserts",
+      "quote": "It produced n plus1 queries everywhere",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "A commonly documented .NET anti-pattern; the problem is the abstraction's inflexibility rather than inevitability.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/skipping-architecture-review-project-first-weeks",
+      "stance": "asserts",
+      "quote": "I could have figured this out that there was a problem in about 10 minutes.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Early structural decisions are the costliest to reverse, though the exponential defect-cost curve behind this is overstated.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/line-coverage-shows-code-executed-not",
+      "stance": "asserts",
+      "quote": "we effectively had a test suite that told us nothing about how well our codebase worked",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/giving-requirements-without-having-engineer-explain",
+      "stance": "asserts",
+      "quote": "You've got to make sure they can narrate it back to you and understand the reasoning",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Read-back is standard in safety-critical communication; software evidence is anecdotal.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/architectural-problems-can-fixed-incremental-refactoring",
+      "stance": "asserts",
+      "quote": "We had to abandon that because the integration risk with the old billing system was just way too high.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/coding-tools-reproduce-codebase-existing-anti",
+      "stance": "asserts",
+      "quote": "the code that is already in the codebase is like the strongest center of gravity for what the AI is going to infer",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Consistent with how code models condition on context; measured mainly in practitioner reports.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/end-browser-tests-brittle-but-fastest",
+      "stance": "asserts",
+      "quote": "That is not something I would recommend as your primary testing strategy because it's very brittle.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Matches the test-pyramid rationale; brittleness of UI tests is well documented.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/writing-down-architecture-decisions-their-reasoning",
+      "stance": "asserts",
+      "quote": "the sort of culture of writing things down and explaining why we did stuff is just as valuable for people as it is for LLMs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "ADRs are widely adopted; the benefit is reported, not measured.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

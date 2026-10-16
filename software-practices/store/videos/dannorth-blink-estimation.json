@@ -1,0 +1,179 @@
+{
+  "id": "dannorth-blink-estimation",
+  "title": "Blink Estimation",
+  "channel": "Dan North & Associates Limited",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://dannorth.net/blog/blink-estimation/",
+  "summary": "Dan North's Blink Estimation: experts' gut project estimates, revealed simultaneously, beat two-day story-level planning; frame estimates as investment decisions.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/independent-gut-estimates-experienced-practitioners-converge",
+      "stance": "asserts",
+      "quote": "Experienced delivery folks can have surprisingly good instincts for macro-level estimation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Expert judgment matches formal models in estimation research, but these are a handful of successful anecdotes.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Individual estimates diverge widely (students' guesses of one height ranged 10-370 m) but the median of independent estimates is reliably better than at least half of them and combining improved accuracy in all 30 reviewed contexts (avg 12.5%); accuracy comes from combination, not convergence.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L4474-L4510",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Fifteen studies comparing expert and model estimates split 5/5/5, with experts more accurate when they hold domain knowledge the model lacks; expert estimation is not beaten by models but is strongly biased by irrelevant information, and convergence is not studied.",
+          "source": "software-practices/sources/jorgensen2004-expert-estimation.txt#L271-L286",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/detailed-story-estimation-inflates-total-because",
+      "stance": "asserts",
+      "quote": "micro-planning is fractal: The more detail you go into the more the rolled-up result expands",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Decomposition studies find bottom-up estimates can run high or low; inflation is common but not universal.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Decomposition yields higher totals because small tasks are less underestimated (magnitude effect); in two office-task experiments decomposed sums were 9-10% too high vs 2-5% for whole-task estimates, and a software study found decomposed estimates higher but less accurate. The mechanism is magnitude bias, not fractal micro-planning.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L3981-L4020",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Evidence on decomposition is mixed: one software study found professionals using bottom-up estimation were more over-optimistic (lower) than top-down estimators, and decomposition improved accuracy in only one of two experiments, so inflation is not a reliable effect.",
+          "source": "software-practices/sources/jorgensen2004-expert-estimation.txt#L789-L795",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/estimating-individual-stories-adds-little-because",
+      "stance": "asserts",
+      "quote": "many surprises are cross-project rather than specific to a particular story",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Plausible and consistent with project post-mortems, but no comparative measurement.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Accurate decomposed estimates depend on identifying all components, unknown components and unexpected events, which analogy-based whole-project estimates absorb implicitly; decomposition is still recommended when no close analogies exist.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L4022-L4029",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Bottom-up (decomposed) estimation is characterised as easy to forget activities and prone to underestimating unexpected events, which is why the review recommends an independent top-down estimate alongside it.",
+          "source": "software-practices/sources/jorgensen2004-expert-estimation.txt#L818-L822",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/revealing-estimates-simultaneously-prevents-first-number",
+      "stance": "asserts",
+      "quote": "If we went round one at a time the earlier estimates would act as an unconscious anchor to the later ones.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Anchoring effects on software estimates are experimentally demonstrated.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.55,
+          "note": "Planning poker's simultaneous reveal is described as keeping initial estimates independent and unanchored, and a field study found it cut median estimation error from 50% to 33%; combinations of independent predictions beat ones influenced by each other.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L4588-L4612",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.4,
+          "note": "Review recommends producing estimates independently of each other to avoid the anchoring effect, citing a software study where an early estimate strongly biased re-estimation even when estimators were told to ignore it.",
+          "source": "software-practices/sources/jorgensen2004-expert-estimation.txt#L805-L808",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/estimate-better-framed-investment-decision-contract",
+      "stance": "asserts",
+      "quote": "it becomes a straightforward return-on-investment discussion rather than the traditional estimation-as-contract negotiation",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A framing preference for how to run the conversation.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Bid, planned effort and most-likely effort have conflicting goals, and software estimators frequently do not distinguish them, which the review argues hinders realistic estimates; the investment-decision framing itself is not tested.",
+          "source": "software-practices/sources/jorgensen2004-expert-estimation.txt#L534-L547",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/sometimes-honest-estimate-size-cannot-known",
+      "stance": "asserts",
+      "quote": "It means we can't possibly know, and here's why.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Practice advice on handling irreducible uncertainty.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "When no relevant historical data exist the recommended method is to start the work and extrapolate from the first stage, which supports deferring the estimate until unknowns are probed, though the book still expects a prediction before starting.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L4309-L4321",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "id": "davefarley",
+  "title": "Don’t Feature Branch | Dave Farley’s Weblog",
+  "channel": "davefarley.net",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://www.davefarley.net/?p=160",
+  "summary": "Dave Farley argues feature branches are either not isolated (so not branches) or incompatible with CI; commenters defend branch-per-feature and attack feature toggles.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/long-lived-branches-delay-integration-produce",
+      "stance": "asserts",
+      "quote": "the merge problem it faces could be nothing at all or represent days or even weeks of effort",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/merge-tools-cannot-detect-functional-conflicts",
+      "stance": "asserts",
+      "quote": "No merge tool can predict that the features that I write and features that you write will work nicely together",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Semantic conflicts are invisible to textual merge; this is the standard rationale for CI.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/choosing-which-features-release-after-integration",
+      "stance": "asserts",
+      "quote": "if you decide to merge only one of them back to head, you are about to release a previously untested scenario",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Logically sound; the size of the risk depends on how coupled the features are.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/trunk-based-development-feature-toggles-simpler",
+      "stance": "asserts",
+      "quote": "Trunk Based Development with Feature toggles are simpler for a team to use and implement than feature branches",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Survey data favours trunk-based teams, but 'simpler' is a judgment and toggles carry their own cost.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "DORA finds trunk-based development with frequent check-in predicts delivery performance, but it does not compare it with disciplined branch-per-feature or measure simplicity, and does not study feature toggles.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1039-L1041",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/keeping-branch-per-feature-lets-finished",
+      "stance": "asserts",
+      "quote": "You set yourself up for disappointment when you want to release and can’t take out a feature.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "True without toggles; feature flags give trunk-based teams the same ability at some complexity cost.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/feature-toggles-hack-source-errors-proper",
+      "stance": "asserts",
+      "quote": "I find them the biggest hack of what’s in ci these days and a potential source of errors",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Toggle debt and misconfiguration incidents are real, but branches trade them for merge risk; no comparison exists.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

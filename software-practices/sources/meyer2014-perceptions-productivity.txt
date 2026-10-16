@@ -1,0 +1,872 @@
+                                                                                                Zurich Open Repository and Archive
+                                                                                                University of Zurich
+                                                                                                University Library
+                                                                                                Strickhofstrasse 39
+                                                                                                CH-8057 Zurich
+                                                                                                www.zora.uzh.ch
+Year: 2014
+
+                   Software Developers' Perceptions of Productivity
+
+                         Meyer, André N; Fritz, Thomas; Murphy, Gail C; Zimmermann, Thomas
+
+DOI: https://doi.org/10.1109/ESEM.2017.17
+Posted at the Zurich Open Repository and Archive, University of Zurich
+ZORA URL: https://www.zora.uzh.ch/handle/20.500.14742/106788
+Conference or Workshop Item
+Originally published at:
+Meyer, A. N., Fritz, T., Murphy, G. C., & Zimmermann, T. (2014, November 21). Software Developers'
+Perceptions of Productivity. FSE 14, Hong Kong. https://doi.org/10.1109/ESEM.2017.17
+DOI: https://doi.org/10.1109/ESEM.2017.17
+Software Developers' Perceptions of Productivity
+
+André N. Meyer, Thomas Fritz                Gail C. Murphy                          Thomas Zimmermann
+
+            University of Zurich      University of British Columbia                    Microsoft Research
+            Zurich, Switzerland           Vancouver, BC Canada                          Redmond, WA USA
+andre.meyer@uzh.ch, fritz@ifi.uzh.ch        murphy@cs.ubc.ca                         tzimmer@microsoft.com
+
+ABSTRACT                                                                            1. INTRODUCTION
+
+The better the software development community becomes                                  There is a common refrain that repeats itself in similar
+at creating software, the more software the world seems to                          forms every few years: the inability for enough software to
+demand. Although there is a large body of research about                            be produced to satisfy the needs of the world. In 1968, at-
+measuring and investigating productivity from an organiza-                          tendees at the first NATO software engineering conference
+tional point of view, there is a paucity of research about                          coined the term software crisis [34]. In 1972, Dijkstra wrote
+how software developers, those at the front-line of software                        about "programming [becoming a] gigantic problem" [16, p.
+construction, think about, assess and try to improve their                          861]. In 1987, Boehm wrote about the growing demand for
+productivity. To investigate software developers' percep-                           software [6]. In 1996, Gibbs wrote about the chronic soft-
+tions of software development productivity, we conducted                            ware crisis [19]. And in 2011, Andreessen wrote about soft-
+two studies: a survey with 379 professional software devel-                         ware eating the world, expressing that the need for software
+opers to help elicit themes and an observational study with                         keeps outstripping the ability to produce the software [2].
+11 professional software developers to investigate emergent
+themes in more detail. In both studies, we found that de-                              There are a couple of ways of addressing the gap between
+velopers perceive their days as productive when they com-                           software demand and supply. We could try to reduce the
+plete many or big tasks without significant interruptions or                        demand, namely the world's appetite for software. This ap-
+context switches. Yet, the observational data we collected                          proach seems unlikely to succeed. Or, we could try to in-
+shows our participants performed significant task and activ-                        crease the supply, namely our ability to produce software.
+ity switching while still feeling productive. We analyze such                       In this paper, we consider one way to address supply: how
+apparent contradictions in our findings and use the analy-                          we might improve the productivity of software developers.
+sis to propose ways to better support software developers
+in a retrospection and improvement of their productivity                               A substantial amount of research into the meaning of soft-
+through the development of new tools and the sharing of                             ware productivity has been undertaken over the past four
+best practices.                                                                     decades (Section 2). Much of this research introduces par-
+                                                                                    ticular definitions of productivity, such as computing pro-
+Categories and Subject Descriptors                                                  ductivity based on the number of source lines of code per
+                                                                                    hour [15]. Another body of research considers organizational
+H.4 [Information Systems Applications]: Miscellaneous;                              issues associated with productivity, such as the effect of the
+D.2.8 [Software Engineering]: Metrics--complexity mea-                              workplace on programmer performance [14]. There is also
+sures, performance measures                                                         research focused at specific tools and approaches for improv-
+                                                                                    ing productivity. For example, the Personal Software Pro-
+General Terms                                                                       cess (PSP) aims to help software developers improve their
+                                                                                    skills and quality of work by tracking a number of mea-
+Human Factors                                                                       sures, including schedule data [22]. Surprisingly, there has
+                                                                                    been no work that we have been able to find that considers
+Keywords                                                                            when software developers perceive themselves to be produc-
+                                                                                    tive and when they perceive themselves as unproductive.
+Retrospection, productivity, goal setting                                           This information can help inform how productivity is de-
+                                                                                    fined, measured, assessed and supported by tools and best
+Permission to make digital or hard copies of all or part of this work for           practices.
+personal or classroom use is granted without fee provided that copies are
+not made or distributed for profit or commercial advantage and that copies             In this paper, we gather data about software developers'
+bear this notice and the full citation on the first page. To copy otherwise, to     perceptions of productive and unproductive work through
+republish, to post on servers or to redistribute to lists, requires prior specific  two studies: a survey (Section 3) and an observational study
+permission and/or a fee. Request permissions from Permissions@acm.org.              (Section 4). The survey we conducted had 379 responses
+FSE'14 , November 16­22, 2014, Hong Kong, China.                                    from individuals with an average of 9.2 (±7.3) years profes-
+Copyright 2014 ACM 978-1-4503-3056-5/14/11 ...$15.00.                               sional software development experience. Our analysis of the
+                                                                                    survey responses found, amongst other results, that devel-
+                                                                                    opers think about productive days in terms of ones in which
+                                                                                    many or big tasks are completed without significant context
+                                                                                    switching or interruption.
+   The observational study we conducted involved observing             resolution time defined as the time, in days, it took to
+11 professional software developers from three companies at              resolve a particular modification request [9], and
+work for four hours each. As the developers worked, we col-
+lected detailed logs of the tasks worked on and the programs           number of editing events to number of selection and
+used to perform work, gathering a total of 2650 log entries.             navigation events needed to find where to edit code [27].
+We defined a task as a piece of work with a specific goal,
+such as fixing a bug, and an activity as an action under-         In this paper, we do not attempt to define productivity for
+taken by the developer during his work, such as navigating        developers but instead we investigate how developers them-
+code or reading an email.                                         selves think about productive versus non-productive work.
+
+   We also performed semi-structured follow-up interviews            In contrast, the majority of the work we could find about
+of the participants in this study. From this data, we found       software development productivity focused on the organiza-
+that significant context switching between tasks and activ-       tional, not the personal, level. DeMarco and Lister found
+ities can occur with developers still perceiving themselves       evidence that characteristics of the workplace and organi-
+as productive. The number of task switches we observed,           zation have significant influence on the performance of pro-
+13.3 (±8.5) per hour on average, is similar to other reports      grammers [14]. Boehm looked at large-scale possibilities for
+in the literature [20, 29]. The number of activity switches is    improving outputs, such as hiring well and using better lan-
+larger than reported in previous studies at 47 (±19.8) times      guages and tools [6]. Blackburn et al. correlated lines of code
+per hour on average. From this study, we gained insights          per person month to aspects such as program size and team
+into the complexities involved with helping developers as-        size from survey data collected from Western Europe, Japan
+sess their own productivity.                                      and US, finding that time-to-market correlated with higher
+                                                                  productivity, while larger teams tend to have lower produc-
+   We conclude the paper with a discussion of ways in which       tivity [5]. Through a systematic literature review, Wagner
+we might help developers retrospect upon their productivity       and Ruhe distilled a list of the main factors influencing pro-
+and share best practices (Section 5).                             ductivity, separating them into technical (e.g., product com-
+                                                                  plexity) and soft (e.g., manager capability) factors [40].
+   This paper makes three contributions:
+                                                                     There are a lot fewer studies on productivity at the level
+     it presents results from a survey of 379 professional        of an individual developer where the focus is on the study
+       software developers, describing their perceptions of when  of productivity, not on the effect of introducing a new tool
+       their work is productive and what measurements of          or process to improve productivity. One of the few recent
+       productivity they might find useful,                       studies is by Kamma and Jalote who recorded and analyzed
+                                                                  the screens of highly productive developers (as identified by
+     it presents the results of an observational study of 11      managers) to identify characteristics of what makes develop-
+       professional software developers, showing that produc-     ers productive when performing model-based testing activ-
+       tive work can occur in the presence of some kinds of       ities. They found differences in the behaviors of the highly
+       fast context switches, and                                 productive developers that could be captured as best prac-
+                                                                  tices, such as that high productivity programmers moved all
+     it synthesizes the results of these two studies to sug-      required information to a common place and avoided refer-
+       gest ways in which we might better support developers      ring to multiple documents when writing test cases [26]. The
+       in reflecting upon their productivity and sharing best     studies we report on in this paper help describe more general
+       practices.                                                 work practices that developers themselves see as productive.
+
+2. RELATED WORK                                                      To try to improve the productivity of software develop-
+                                                                  ers, many approaches have been suggested (e.g., Extreme
+   Definitions of productivity share characteristics of typi-     Programming [3]). A few approaches have been aimed more
+cally being about efficiency, inputs and outputs. As one ex-      specifically at improving productivity. The most notable of
+ample, the Oxford Dictionary defines productivity as "effec-      these is the Personal Software Process (PSP), which aims
+tiveness of productive effort, especially in industry, as mea-    to help individuals improve their skills and quality of work
+sured in terms of the rate of output per unit of input" [37].     by collecting (often manually) a set of basic PSP measures
+Often, the unit of input is time-based. Most research in          such as time, size, quality (defects), and schedule data [23,
+software engineering defines productivity along similar lines;    22]. Johnson et al. [24] observed a "PSP adoption problem,"
+here are some examples:                                           which they attributed to the high overhead of PSP-style
+                                                                  metrics collection and analysis, and the requirement that
+     number of modification requests and added lines of           PSP users switch between product development and pro-
+       code per year [32],                                        cess recording. To eliminate overhead and context switch-
+                                                                  ing, they introduced Hackystat which fully automates both
+     number of tasks per month [41],                              data collection and analysis. Our work is orthogonal to PSP
+                                                                  and Hackystat in that we explore what it means to devel-
+     number of function points per month [25],                    opers to be productive and how they perceive productivity.
+                                                                  This information can inform the design of new tools focused
+     number of source lines of code per hour [15],                on aspects of productivity that developers care about the
+                                                                  most.
+     number of lines of code per person month of coding
+       effort [5],                                                   In the last twenty years, an increasing number of stud-
+                                                                  ies were conducted about how developers work. Perry and
+     amount of work completed per reported hour of effort         colleagues' paper that collected time diaries from develop-
+       for each technology [28],                                  ers and performed direct observation of developers at work
+                                                                  to see where they spent their time was one of the first [36].
+     ratio of produced logical code lines and spent effort [21],
+
+     average number of logical source statements output per
+       month over the product development cycle [30],
+
+     total equivalent lines of code per person-month [35],
+            Table 1: Sample Survey Questions.                     Table 2: Top 5 Reasons for a Productive Workday.
+  Q10 Are you satisfied with your productivity last week?
+                                                                  (#, %: Number and Percentage of Participants)
+           (very unsatisfied, unsatisfied, undecided, satisfied,
+           very satisfied)                                        I have a productive workday when I . . .      #%
+  Q11 How did you assess if you were productive last week?
+                                                                  complete tasks or goals                       192 53.2
+They found that work was typically performed in two hour
+chunks, progress on a particular development task could end       have no/few interruptions and distractions    182 50.4
+up being blocked for various reasons, over half of the devel-
+opers' time was spent in interactive activities other than cod-   have no meetings                              79 21.9
+ing and there were seven unique personal contacts per day
+on average. The data we present in this paper on the obser-       have clear goals and/or requirements are set  72 19.9
+vational study we performed also found situations in which
+developers were blocked (also similar to Ko et. al. [29]), but    plan my workday                               62 17.2
+we saw much less time being spent on any one task. Other
+observational based studies have focused on specific areas        3.2 Results
+of development, such as novice programming [4], program
+comprehension [38], software dependencies [13], information          We begin by describing when and in what conditions par-
+needs [29], and change tasks [39]. The work we report on          ticipants perceived their software development activities as
+in this paper is unique in considering the condition under        productive. We then describe how participants think they
+which developers perceive they are productive.                    could assess or measure their productivity. Since the re-
+                                                                  sponses to the open-ended questions largely overlap and
+3. STUDY 1: SURVEY                                                there are only minor differences between the ratings by par-
+                                                                  ticipants from within Microsoft and from the general adver-
+   To gain a broad sense of what productivity means to soft-      tisement, we present the results aggregated over all partici-
+ware developers and how developers assess their productiv-        pants.
+ity, we conducted a survey.
+                                                                  A Productive Day.
+3.1 Participants and Method
+                                                                     We asked each participant to complete the sentence "I
+   The online survey had 28 questions: 8 on the participants'     have a productive workday when . . . " in up to three differ-
+background and experience, 7 on perceptions of productiv-         ent ways. Table 2 summarizes the top five reasons mentioned
+ity, 7 on goal setting and monitoring, 3 on techniques for        by participants for having a productive workday. Most par-
+improving and monitoring productivity, and 3 on the raf-          ticipants responded that their workday is productive when
+fle participation and dissemination of results. 16 of the 28      they complete tasks, achieve their planned goals or make
+questions had a closed set of answers from which a partic-        progress on their goals (stated by 192, 53.2%). The second
+ipant selected, while 12 of the questions were open-ended.        most mentioned reason for having a productive workday is
+Table 1 shows an example of a closed and an open-ended            getting into a "flow" without many "context-switches" and
+question. None of the questions were obligatory and a par-        with no or few interruptions and distractions (182, 50.4%).
+ticipant was allowed to drop out at any time. Depending           Different kinds of distractions were described, ranging from
+on a participant's answers, some questions were filtered and      interruptions from co-workers asking questions, phone calls,
+not presented to avoid asking unnecessary questions. Inter-       infrastructure issues, such as waiting for a build to complete,
+ested readers can download the complete survey from our           to disrupting background-noise in the office. The remaining
+web site [1].                                                     three reasons of the top five all had substantially lower sup-
+                                                                  port: having no meetings (79, 21.9%), having clear goals
+   We announced the online survey on Twitter and in sev-          (72, 19.9%) and planning of a workday (62, 17.2%).
+eral big online developer forums, including two big German-
+speaking IT news portals.1 We also advertised within Mi-          Productive and Unproductive Activities.
+crosoft, sending a personalized email to 1500 Microsoft em-
+ployees and directing them to a special internal posting of          Other questions in the survey focused on developers' per-
+the survey. To incentivize participants, we held a raffle for     ceptions of productivity on a finer-grained level. For ex-
+the online participants to win two 200 US$ Amazon gift cer-       ample, we asked participants in two open-ended questions
+tificates and one for the Microsoft participants to win two       about the activities they consider particularly productive or
+50 US$ Amazon gift certificates. We ended up with 379             unproductive in a workday.
+valid responses: 185 from the general advertisements and
+194 from Microsoft. Of the 185 participants that completed           The top five productive and unproductive activities men-
+the survey from the general advertisement, the majority of        tioned by participants are summarized in Table 3. Unsur-
+the participants was from Germany (32%) and Switzerland           prisingly, the activities mentioned most frequently as partic-
+(16%). Of all 379 participants, more than 93.4% of the par-       ularly productive were coding related, including coding, test-
+ticipants listed their job as software developer; the remaining   ing, bug fixing and code reviews (236 participants, 71.5%).
+6.6% reported having experience in software development.          Despite this strong support for coding activities as produc-
+The average professional software development experience          tive, some participants (47, 14.2%) did mention certain as-
+per participant was 9.2 (±7.3) years.                             pects of coding as unproductive; these participants mostly
+                                                                  differentiated between productive coding activities, such as
+1heise.de/developer and pocketpc.ch, verified 03/15/14            implementing a feature, and unproductive ones, mainly de-
+                                                                  bugging and testing.
+
+                                                                     Many other activities had mixed responses as to whether
+                                                                  they were productive or unproductive. Most participants
+                                                                  (191, 57.9%) think meetings are unproductive and a waste
+                                                                  of time. However, 57 (17.3%) participants considered formal
+                                                                  and informal meetings as productive, particularly when the
+                 200                                                                                          Table 4: What Participants Want to Measure.
+                                                                                                   workday
+# of Parcipants                                                                                               (#, %: Number and Percentage of Participants)
+                 150
+                                                                                                   last week                                                #%
+
+                 100                                                                                          Activities (how much time was spent where)    67 27.0
+
+                 50                                                                                           Achievements (actual work done, progress)     44 17.7
+
+                                                                                                              Value (usefulness of completed work, success  41 16.5
+
+                 0                                                                                            of feature, value to customer)
+
+                     5 = very 4 = sasfied 3 = neutral 2 = unsasfied 1 = very                                  Time per task ratio                           39 15.7
+
+                     sasfied                     unsasfied                                                    Number of context switches and distractions   36 14.5
+
+Figure 1: Developers' Productivity Satisfaction.
+
+meetings include decision making, have a clear focus and                                                      progress in the past workday or workweek, largely through
+goals, improve relationships between developers, help others                                                  tasks and work items completed. Several participants (86,
+and when all meeting attendees are well-prepared. The main                                                    27.8%) mentioned other measures, such as lines of code,
+reasons stated for unproductive meetings were missing goals,                                                  number of commits, number of bugs found or fixed, num-
+lacking a preparation, too many participants attending the                                                    ber of test cases written and code reviews completed and
+meeting, or going over time.                                                                                  number of emails sent. Others (43, 13.9%) stated that they
+                                                                                                              use their feelings to assess their productivity.
+   Participants were also mixed on their views of email. 62
+(18.8%) participants considered time spent on email as un-                                                    Measuring Productivity.
+productive, while a few (10, 3%) stated reading and writing
+emails as a productive activity. The amount of emails ap-                                                        We also asked participants about which measures might
+pears to be a reason contributing to this activity being seen                                                 be helpful to them to assess their productivity. In particu-
+as unproductive:                                                                                              lar, we asked participants to rate 23 possible measures on a
+                                                                                                              five point Likert-scale, with 1 - they strongly disagree that
+Tracking and responding to tons of emails [and] email com-                                                    the metric would help them to assess their personal produc-
+munications going back and forth for days together with no                                                    tivity and 5 - they strongly agree. The 23 measures were
+closure. (MS23)                                                                                               identified by the authors in an iterative process taking into
+                                                                                                              account related work and responses from our pilot survey
+Other activities mentioned as being productive included plan-                                                 participants. The results are presented in Figure 2.
+ning (25, 7.6%), writing documentation and (administra-
+tive) reports (22, 6.7%), modeling or designing an architec-                                                     The metric with the highest rating is "The number of work
+ture (18, 6.7%), or learning new things (11, 3.3%).                                                           items (tasks, bugs) I closed." with a mean of 3.88 (±1.22).
+                                                                                                              This supports our findings presented above that participants
+Assessing Productivity.                                                                                       assess their productivity often based on their tasks or work
+                                                                                                              items completed. Overall, the means of all metrics lie be-
+   When asked to rate their productivity on the previous                                                      tween 2 and 4 with an overall mean of 3.14 (±0.35). 16
+workday and workweek on a Likert-scale from 1 (very un-                                                       metrics were rated 3 or higher while only 7 metrics have val-
+satisfied) to 5 (very satisfied), most participants were sat-                                                 ues slightly below 3, showing that while the number of work
+isfied with their work (see Figure 1, median of 4, mean                                                       items closed might be considered helpful by a wide range
+of 3.42, ±0.94). Only a few participants mentioned being                                                      of participants, there is no single metric that is consider-
+very satisfied (7.7%) or very unsatisfied (2.1%). The partic-                                                 ably better than others to assess a developer's productivity,
+ipants reported assessing their productivity in a variety of                                                  similar to what Card states in [8]. Furthermore, partici-
+ways. Most (242, 78.1%) assessed their productivity on their                                                  pants usually rated several metrics as helpful, and differed
+                                                                                                              in which metrics they considered more helpful, suggesting
+Table 3: Top 5 Productive and Unproductive Activ-                                                             that measuring one's productivity is an individual task that
+                                                                                                              varies across developers. When further asked in an open-
+ities. (#, %: Number and Percentage of Participants)                                                          ended question on what one would want to measure to meet
+                                                                                                              ones goals and improve ones productivity, 221 (89.1%) of
+                                                 #%                                                           the participants who answered the question mentioned one
+                                                                                                              or multiple measurements. The measures varied a lot across
+Productive activities                                                                                         participants. The top five mentioned pieces of information
+                                                                                                              participants wanted to measure are presented in Table 4. 67
+coding (implementing new features, testing,      236 71.5                                                     (27.0%) participants are interested in better knowing how
+bug fixing, code reviews)                                                                                     they spend their time on their computer, in meetings, or
+                                                                                                              taking breaks, as well as in comparing their time spent cod-
+meetings                                         57 17.3                                                      ing with time spent in meetings, time spent on personal tasks
+                                                                                                              and total work time. Developers were also interested in the
+planning                                         25 7.6                                                       value of their work. 41 (16.5%) participants mentioned that
+                                                                                                              performing useful, necessary, and interesting work and hav-
+reading/writing documentation and reports        22 6.7                                                       ing the feeling of being necessary to the team or product is
+                                                                                                              very important.
+designing or modeling an architecture (i.e. so-  18 5.5
+lution for a programming problem)                                                                                27 (10.9%) participants explicitly stated that they would
+                                                                                                              not want to be measured, as they either think measuring
+Unproductive activities                                                                                       decreases their productivity, have privacy concerns or think
+                                                                                                              it is not possible to accurately measure productivity.
+meetings                                         191 57.9
+
+reading/writing emails                           62 18.8
+
+unplanned work (e.g., solving problems, fight-   58 17.6
+ing fires, unplanned tasks)
+
+coding (testing, debugging, maintenance)         47 14.2
+
+reading/writing documentation and reports        25 7.6
+                      Knowing the following would help me assess my personal producvity.                                                                 90% 100%
+
+                               The number of work items (tasks, bugs) I closed.
+                                        The me I have spent on each work item.
+                                                  The me I spend reviewing code.
+                                                The me that I spent wring code.
+
+                               The number of code reviews I've contributed to.
+                           The number of work items I created that were fixed.
+
+                                             The number of work items I created.
+                                                       The me I spent in meengs.
+
+                                     The number of code reviews I've signed off.
+                                                 The number of test cases I wrote.
+
+      The me that I spent browsing the web for work related informaon.
+                                              The number of meengs I aended.
+
+                 The me it takes me on average to sign off on code reviews.
+                         The me that I spent in each code project or package.
+
+                    The number of test cases I wrote that subsequently failed.
+                           The me it took me on average to respond to email.
+
+The me that I spent browsing the web for personal maers during work.
+                                The number of API methods I learned each day.
+                                                   The number of commits I made.
+                                                     The number of emails I wrote.
+
+                           The number of lines of code that I changed per day.
+              The number of code elements that I changed for the first me.
+    The number of code elements (e.g. packages or classes) that I changed.
+
+                                                                                           0% 10% 20% 30% 40% 50% 60% 70% 80%
+
+                                                                            5 = strongly agree 4 = agree 3 = neutral 2 = disagree 1 = strongly disagree
+
+                                                 Figure 2: Metrics for Assessing Productivity.
+
+3.3 Threats to Validity                                         4.1 Participants and Method
+
+   Since the survey participants might not be representative       This observational study involved 11 professional software
+of the general population of software developers, the gener-    developers who were recruited from three international soft-
+alizability of our survey results might be limited. To mit-     ware development companies of varying size (Table 5). We
+igate this risk, we advertised our survey through various       used personal contacts and a recruiting email to solicit par-
+channels to a large audience. Having gathered data from         ticipation. Of the 11 participants, two were female and nine
+software developers from various countries, and with differ-    were male, and all resided either in the US or Canada. Par-
+ent levels of open-source and closed source experience, we      ticipants had an average of 5.4 years (±3.4, ranging from 0.5
+believe that our sample is fairly representative of software    to 8 years) of professional software development experience
+developers and that it provides an interesting perspective.     and an average of 13.3 years (±8.3, ranging from 1.5 to 29
+Participants could freely decide whether to participate in the  years) of total development experience. The primary work
+study or not (self-selection). They were informed about the     area of all participants was development and the roles varied
+survey's topics, an estimated duration for the participation    between individual contributor and lead.
+and offered a raffle to incent their participation. This could
+have biased the selection of participants as only participants     The study had two parts. In the first part, we observed
+who could spare enough time or were interested in the in-       each participant for a total of four hours on a single work-
+centive might have participated. We tried to mitigate this      day: two hours before and two hours after lunch. In four
+risk by advertising through various channels and offering a
+very generic incentive.                                         Table 5: Observational Study Participants (Dev: De-
+
+4. STUDY 2: OBSERVATION                                         velopm., PM: Project Management, IC: Individ. Con-
+
+   The survey results raise many questions. For instance, is    tributor).
+there a common meaning between developers for what con-
+stitutes a task or a context switch? Are all interruptions      ID            Primary  Role  Dev Experience
+necessary? How, when and what kind of email must devel-                     Work Area        Prof. Overall
+opers process? To investigate some of the survey results in
+more depth, we conducted an observational study of software     Company R
+developers at work including follow-up interviews. To focus
+the observational study, we extracted three themes from the     R1 Dev                 IC 8.0 14.0
+survey results:
+                                                                R2          Dev        Lead  7.5 8.5
+   1. the role of tasks in how developers work and how de-
+       velopers view productivity,                              R3          Dev        Lead  5.0 11.0
+
+   2. different views on the effect on productivity of various  R4 Dev                 IC 8.0 13.0
+       kinds of activities, and
+                                                                Company S
+   3. the role of uninterrupted work to be in "the flow".
+                                                                S1 Dev IC/Lead 7.5 14.5
+
+                                                                S2          PM/Dev     IC/Lead 4.0 22.0
+
+                                                                S3 Dev                 IC 0.5 1.5
+
+                                                                S4 Dev                 IC 12.0 29.0
+
+                                                                Company T
+
+                                                                T1 Dev                 IC 2.0 22.0
+
+                                                                T2 Dev                 IC 2.0 5.0
+
+                                                                T3 Dev                 IC 3.0 6.0
+cases, we had to adapt the two sessions to accommodate for        Table 6: Activity Categories for Observations.
+the participant's availability, still ensuring to have at least
+one hour in the morning or afternoon and all four hours on        Category                               % of time over
+the same day. Before the first session, the observer, one of                                                   all Observ.
+the authors of this paper, introduced himself to the partic-
+ipant as well as any colleagues working nearby, asking for        Development
+all to ignore him as much as possible. He then provided a
+short introduction to the study and placed himself behind         Code         reading/editing/navigating code       32.3%
+the participant to prevent distractions while still being able
+to read the screen contents of the participant, before asking     Debug        debugging                             3.9%
+the participant to continue his workday. The observer noted
+in an observation log each time the participant switched a        VC           reading/accepting/submitting          2.4%
+program on his computer, was interrupted by others or inter-
+rupted him or herself, or switched a task while being in the                   changes
+same program. Each entry in the observation log consists
+of a time stamp, a reason for the switch, the program that        TestApp      testing application outside IDE       11.7%
+the participant switched to and the task that the participant
+was working on. We defined a task as a piece of work with         Review       performing code reviews               2.3%
+a specific goal or intention, such as fixing a bug or review-
+ing code changes for a specific work item. We inferred tasks      DevOther other related to development              4.1%
+from the active programs on the screen and the information
+considered in those programs, such as a work item consulted       Email        reading/writing emails                4.9%
+before beginning to code. Ten minutes into the first session,
+the observer briefly interrupted the participant to validate      Planning     editing work items/tasks/todos; cre- 7.9%
+the tasks the participant was working on to ensure the qual-
+ity of the collected transcripts. The preparation and process                  ating/changing calendar entries
+of the observation was inspired by Mintzberg's protocol of a
+structured observation session [31].                              ReadWriteDoc reading/editing documents and other 2.7%
+
+   All observations were conducted by the same observer.                       artifacts, e.g. pictures
+For the first session of the first participant, we cross-checked
+the observations by having a second observer also record ob-      MeetPlanned scheduled meeting/call                 4.9%
+servations. Almost all events were noted by both observers.
+Of the total of 202 entries for the first session, less than 10   MeetInformal ad-hoc, informal communication; e.g. 13.1%
+log entries (4.9%) were not contained in both observer's logs,
+while all others matched, suggesting a high accuracy of the                    unscheduled phone call / IM, or col-
+primary observer's logs. Due to confidentiality reasons, we
+are not able to share the observation logs.                                    league asks a question
+
+   In the second part of the study, following the observations,   BrowsingRel Internet browsing related to 4.0%
+we interviewed each participant using a semi-structured ap-
+proach by using a set of prepared questions as general guid-                   code/work/task
+ance. As part of this interview, the observer briefly discussed
+the tasks a participant worked on during the two observation      BrowsingUnrel Internet browsing work unrelated     0.4%
+sessions to verify the accuracy of the observation notes. The
+bulk of the interview focused on gaining further insights into    Other        Anything else, such as break or 5.4%
+the observations and to investigate themes arising from the
+survey results. In particular, the questions focused on par-                   changing music
+ticipants' perception and reflection of productivity, context
+switches, work items, code check-ins, meetings and emails         4.2 Results
+and whether and how information on these might help to
+assess a developer's productivity. Interviews took between           Figure 3 illustrates the work of each participant over the
+34 and 51 minutes per participant, and were conducted in          first observation session. Each participant is represented by
+person. Interested readers can download the interview guid-       a row. Each row is divided into segments, with each segment
+ance notes from our website [1].                                  representing a particular task: when tasks are revisited the
+                                                                  same grey-scale is used to represent the task. Figure 3 also
+   From the observation sessions, we collected transcripts of     shows the activities undertaken by each participant. The
+a total of 44 hours of work with a total of 2650 observation      occurrence of the start of an activity is indicated with a par-
+events over all 11 developers. During the data analysis, we       ticular colored shape. The lines emanating from the activity
+further determined the number of tasks a developer worked         indicate the duration of an activity. For two participants,
+on and categorized each program into one of the activity cat-     three hours of work are represented as these participants
+egories listed in Table 6, which we inferred from the survey      required the observation sessions to be split into one three
+results and the observations using an open coding technique.      hour session and one one hour session. Full graphs of both
+The logged time stamps were then used to calculate the du-        sessions are available here [1]. Our analysis of the data in
+ration spent on interruptions, activities and tasks, amongst      this section considers all of the data collected over the four
+others.                                                           hours for each participant.
+
+                                                                  Theme 1: Tasks.
+
+                                                                     During the observation sessions, participants worked on
+                                                                  between 2 and 10 tasks (mean of 4.8, ±2.3) each, such as
+                                                                  fixing a bug, reviewing code, helping co-workers with a prob-
+                                                                  lem, or reading and writing emails. Each participant switched
+                                                                  frequently between tasks with a mean task switch rate of
+                                                                  13.3 (±8.5) times per hour. The average time spent on each
+                                                                  task was 6.2 (±3.3) minutes. When asked about whether the
+                                                                  workday observed was productive or not, 8 of the 11 partic-
+                                                                  ipants (73%) stated that they were fairly or very productive
+                                                                  during the observation sessions. The number of tasks worked
+                                                                  on in the time observed (2 to 10) is similar in magnitude to
+                                                                  the number of working spheres (13), a concept similar to our
+                                                                  use of task, observed by Gonzales and Marks in a study that
+                                                                  included a small number of software developers [20]. The
+                                                                  rate of task switching is similar to that reported in both [20]
+                                                                  and [29].
+
+                                                                     The participants mentioned several reasons during the in-
+                                                                  terview for why task switches occurred, including the need
+                                                                  to help co-workers make progress (T3, from company T),
+to unblock them (S3 and S4, from company S), and to in-           day, taking anywhere from one minute to two hours. The
+terrupt themselves (all but two participants), similar to [29]    participants in this study agreed that unplanned, informal
+and [12]. The participants also mentioned that task switches      meetings are usually productive as they are generally short
+occurred when they were blocked themselves or waiting, such       and efficient, and often succeed in helping to unblock a team
+as waiting for a build to finish. In these cases, the partic-     member.
+ipants mentioned that switching to email, code reviews, or
+other small tasks can help increase their productivity. Five         Unlike the survey respondents, participants in the ob-
+of 11 participants (45%) also stated that making progress         servational study found all meetings generally productive,
+on either many tasks or a difficult one (S1, S2, T2, R2, R4)      whether informal or formal. Participants in this study de-
+makes them perceive the day as productive. More experi-           scribed having five to ten planned meetings in the past work-
+mentation is needed to further narrow down what "many"            week, taking anywhere from 15 to 60 minutes each and uni-
+tasks means.                                                      formly stated that having more than two meetings a day
+                                                                  decreases their productivity. Participants did describe for-
+   The results of this study also raise questions about the       mal meetings as more productive when only a few people
+relationships between tasks and trackable work items. From        are involved, there is a concrete outcome and the partici-
+the survey results, the highest rated measure for assess-         pant feels useful in the meeting.
+ing productivity (Figure 2) was the number of work items
+closed. From our observations, we found that the partici-            Most survey respondents described email activities as un-
+pants worked on many more tasks than trackable work items.        productive (62, 18.8%) compared to productive (10, 3.0%).
+When the participants were asked during the interview how         When interviewed, participants in the observational study
+many work items they worked on during that day, answers           did not consider emails as unproductive, given the small
+ranged from one to 13 and all participants stated that the        fraction of time that email took up in their day. Table 6
+size of the work items varies.                                    shows that the participants spent on average just under 5%
+                                                                  of their time handling email during our observation. This
+There could be days where you've been working on one mas-         amount of time is similar to the time spent in formal meet-
+sive bug or issue or identified other sub-issues into it that     ings and in taking breaks of various forms.
+need to be resolved, but there could be other days where you
+just got 20 bugs, but they are all little things. (R4)               Each participant used on average 14.8 (±3.9) different pro-
+                                                                  grams during the observation. Several developers used mul-
+The varying size of work items likely introduces problems         tiple different programs to achieve a similar activity. For in-
+for using the measure of the number of work items closed as       stance, a few participants used two different development en-
+a sole means of productivity assessment, at least for shorter     vironments to develop software or two different email clients
+time periods, such as a day. Participants did mention the         to handle email.
+use of the number of closed work items as one that is used
+to reflect on a team's productivity, such as in meetings as-      Theme 3: Work Flow.
+sociated with the end of an agile sprint.
+                                                                     We were surprised by the number of task and activity
+Theme 2: Activities.                                              switches performed by the developers we observed. In par-
+                                                                  ticular, because the survey respondents as well as observed
+   During the sessions, participants switched activities 47.0     developers had expressed concern that context switches lead
+(±19.8) times per hour, spending on average 1.6 (±0.8) min-       to a loss of productivity while 8 of the 11 (72.7%) develop-
+utes on an activity before switching. Table 6 shows the           ers observed making so many switches in the four hours,
+percentage of time across the observation periods that de-        felt that their sessions were productive. To understand the
+velopers spent in each activity. Unsurprisingly, given our        relationships between task switches, activity switches and
+selection of participants, the largest amount of time was         context switches, we asked the participants in the observa-
+spent on coding (32.3%), with testing the application also        tional study to define a context switch. The participants
+taking an average of 11.7% of the observed time for each          predominantly described a context switch as a change in
+participant.                                                      thinking, as in:
+
+   Based on an n-gram analysis of the activities recorded,        When I have to stop thinking about one thing and start think-
+we found that developers most frequently switched back and        ing about something else. (T1)
+forth between coding and testing. Following coding the next
+activity was testing in 28.5% of the cases; a similar result      Participants did go on to discuss the range of context switches
+holds for switches from testing to coding. Coding was also        from small ones, such as getting distracted due to back-
+often superseded by an informal meeting (14.9%) either be-        ground noise or switching between programs when working
+cause someone asked a question or the participant asked           on the same task (R2, R3), to switching between a main
+someone else a question. After an informal meeting, de-           task and small other tasks such as code reviews or writing
+velopers either went to coding (26.1%), testing (14.8%) or        an email (R4) to switching between two cognitively different
+right into planning (18.3%). Finally, emails were mostly          tasks (R1). Although all participants agreed that context
+checked while coding (18.8%) or testing (19.4%) and devel-        switches generally reduced productivity, the cost or harm is
+opers generally returned to testing (20.7%), coding (17.2%)       dependent upon the duration of the switch, the reason for
+or planning (19.5%) after the email check.                        the switch and the focus on the current task. The longer the
+                                                                  switch the more expensive:
+   Interestingly, the second highest activity in terms of amount
+of time spent (Table 6) was informal meetings (13.1%), rang-      [To] stop and work on a different task is a more costly con-
+ing from instant messages to a colleague interrupting and         text switch than writing a quick email. (S1)
+asking a question. During the interviews, participants de-
+scribed having between one and ten informal meetings per          Similarly, the more a developer is focused on a task, the
+                                                                  more expensive the switch:
+         R1                                                                                         96 activity switches
+         R2                                                         
+         R3                                                                                         28 task switches, 4 distinct tasks
+
+                                                                                                                                                                102 activity switches
+                                                                                                                                                                61 task switches
+                                                                                                                                                                6 distinct tasks
+                                                         
+                                                                                                                                                                66 activity switches
+                                                                                                                                                                25 task switches
+                                                                                                                                                                4 distinct tasks
+                                                                                                                                                         
+
+         R4                                                                                                          108 activity switches
+                                                                                                                     16 task switches, 5 distinct tasks
+                                                                             
+
+Subject  S1                                                                                                          148 activity switches
+                                                                                                                     27 task switches, 4 distinct tasks
+                                                                                                 
+
+         S2                                                                                                          88 activity switches                      Dev:VC
+                                                                                                                     17 task switches, 5 distinct tasks        Dev:Debug
+                                                                                                                                                               Dev:Code
+                                                                                                                                                               Dev:Review
+         S3                                                                                             59 activity switches                                   Dev:TestApp
+                                                                                                        20 task switches, 5 distinct tasks                     Dev:Other
+                                                            
+                                                                                                                                                                 BrowsingRel
+                                                                                                                                                                 BrowsingUnrel
+                                                                                                                                                                 MeetInformal
+         S4                                                                                        85 activity switches                                          MeetPlanned
+                                                                                                   13 task switches, 4 distinct tasks                            Email
+                                                                                                                                                                 Planning
+                                                                                                                                                                 ReadWriteDoc
+                                                                                                                                                                 Other
+         T1                                                                                                          230 activity switches
+                                                                                                                     79 task switches, 4 distinct tasks
+                                                                                         
+                                                                           
+
+         T2                                                                      166 activity switches
+                                                                                 36 task switches, 3 distinct tasks
+                                                      
+
+         T3                                                                              51 activity switches
+                                                                                         10 task switches, 3 distinct tasks
+                                                                                     
+                                                                                       
+
+             0 30 60 90 120 150 180
+                                                                                       Time [minutes]
+
+Figure 3: Developers' Activity and Task Switches in the First Observation Session (for a figure of all sessions,
+©please visit www.ifi.uzh.ch/seal/people/meyer/developers-productivity).
+                                                                                                                             Meyer, Fritz, Murphy, Zimmer-
+
+mann.
+
+Depends on where I was, if it was a critical section, it is                              study. We tried to address this threat by selecting partici-
+really hard to get back to focus on that task, even if it only                           pants from three different international software companies.
+was for like 30 seconds. (R3)                                                            Furthermore, the strength of our mixed method approach
+                                                                                         allowed us to triangulate findings obtained through the sur-
+And also, switching away from a creative task for which                                  vey study with the results from the observations and follow
+more focus is required is more expensive than switching                                  up interviews. Additionally, participants were observed in
+from a routine task (S2). Finally, a self-inflicted context                              their normal real-world work and not during an experimen-
+switch, such as going for a coffee break or writing a quick,                             tal exercise.
+task-unrelated email, is less expensive than externally im-
+posed switches, such as interruptions by co-workers or an                                   Another limitation might be the study setting of observ-
+unplanned task (S2, T2).                                                                 ing participants for 4 hours in one day. Participants could
+                                                                                         have had a particularly productive or unproductive day, or
+   The distinctions in the kinds of context switches help ex-                            other factors could have influenced them. Furthermore, by
+plain why the participants felt their work sessions were pro-                            sitting behind the participant and observing him or her, the
+ductive despite high numbers of task and activity switches.                              observer might have been a source of distraction, influenced
+In particular, we observed the participants often switching                              the work style or prevented interruptions by co-workers. We
+to simple tasks, such as reviewing code for 30 seconds or                                tried to mitigate this risk by splitting up the session into two,
+answering an email, without apparent significant impact to                               two-hour sessions, sitting as far away from the participant as
+a primary task, such as fixing a bug. Developers also adapt                              possible and telling co-workers beforehand about the study
+to waiting times, such as waiting for builds to complete, by                             and that they should continue and interrupt as usual.
+performing low cost switches to tasks on which they could
+make progress. These short fast task switches are even faster                               The collection and categorization of data poses another
+than those reported by Gonzales and Marks in a study of                                  threat to validity, since it is not straightforward to identify
+business analysts, software developers and managers; they                                task switches or not miss any switches. To mitigate these
+reported fast task switches as spending approximately two                                risks, all observations were done by the same researcher and
+and a half minutes at a time on email [20].                                              task switches were confirmed with participants. A cross-
+                                                                                         validation was also done for the first session, showing signif-
+4.3 Threats to Validity                                                                  icant agreement between the two observers.
+
+   The small number of participants in our observation and                                  Finally, the interviews and qualitative analysis was per-
+interview study, the use of personal contacts for inviting par-                          formed by one author using grounded theory techniques,
+ticipants and the short sessions capturing a total of 44 hours                           such as open, axial and selective coding. To avoid observer
+of work might limit the generalizability of the results of this                          bias, several parts of the survey, interview and observation
+                                                                                         were analyzed and open coded by at least one more author.
+5. DISCUSSION                                                     sion of such information enables retrospection and hopefully
+                                                                  drives up productivity.
+   Our findings contribute new knowledge about how devel-
+opers perceive their own productivity and how it relates to       Reducing Context Switches.
+their software development work. Despite the general in-
+terest of our participants in assessing and improving their          Participants in our study mentioned that being focused
+productivity, there is little tool support to help them and       and "in the flow" without context switches increases their
+few best practices recorded. Opportunities exist to better        productivity. We can see benefits in visualizing context
+support developers in managing and improving their work           switches to developers and using rates or measures based on
+to achieve higher productivity levels.                            context switches as part of an aggregate measure of produc-
+                                                                  tivity in a given time period. However, this raises the ques-
+Tools for Retrospective Analysis.                                 tion of how one can automatically identify context switches
+                                                                  in a developer's work given that the switch is based not only
+   Self-monitoring can provide valuable insights into one's       on the program used, not only on the task defined, but on
+own behavior and reflection about self-monitored informa-         the semantics of the work the developer is performing. For
+tion can be used to change one's behavior (e.g., [33], [17]). In  instance, a developer might be switching to respond to a
+particular, activity tracking devices have been shown to be       personal email after writing an email to a colleague about a
+successful in promoting individuals to adopt a more active        problem in the code, thus staying in the same program but
+lifestyle (e.g., [11, 18]). There has been growing interest in    still switching context. Participants in our observational
+this area with devices such as the Fitbit2, which tracks such     study clearly stated that quick context switches to perform
+information as the number of steps per day and the number         such a task, as reading email while waiting for a build, did
+of stairs walked per day, and the Nike+ Fuelband3 which           not impact productivity but switches that require a change
+aggregates such individual measures into a proprietary no-        in thinking are most costly and do impact productivity. In-
+tion of fuel. Given that participants in our two studies did      vestigation is needed to determine whether it is possible to
+assert interest in measuring their productivity, what might       correlate program switches to help enable the determination
+similar individual or aggregate measures be that are useful       of the cost of a context switch, for instance, a switch from
+for tracking and reporting to software developers?                a program that enables builds to be launched to email may
+                                                                  be considered a low cost context switch. Investigation is
+   Although developers in our survey suggested many pos-          also needed to determine if analysis of the information in
+sible individual measures (Figure 2), further investigation       programs used adjacently can help in assessing the cost of a
+of the top ranked item in our observational study indicated       context switch. Perhaps the combination of the correlation
+the difficulty of using one simple metric, in this case, num-     of program usage with the correlation of information in ad-
+ber of work items closed. Taken together, the results of the      jacently used programs can help assess whether it is more
+two studies suggest that there might not be a single and/or       likely that the switch is between semantically different tasks
+simple measure for a developer's productivity. For example,       rather than just a program switch and thus more likely to
+while summarizing the time developers spent on certain ac-        have a high cost. This information could be helpful in the
+tivities during the day might provide some insight, as for        development of aggregate and individual productivity mea-
+example done by Codealike4, to be more meaningful it has          sures and could be helpful to support developers in reflecting
+to be combined with measures that also provide a certain,         upon their work habits.
+possibly personal, assessment of the productivity of the time
+spent, such as the progress made towards certain tasks, the          Even without knowledge of the exact cost of a specific
+value of the task for the customers, or how focused the de-       context switch and without being able to retrospectively an-
+veloper was during the time. Based on a combination of            alyze one's productivity in terms of context switch behavior,
+such measures, some of which might be qualitative rank-           there are multiple strategies that can help to avoid or pre-
+ings by a developer, one might be able to abstract these to       vent context switches. The ones mentioned by our study
+an overall productivity level for a day, not unlike the Nike      participants ranged from closing the email client and shut-
+fuel idea. Seeing fluctuations in an abstracted measure may       ting off notifications, to listening to music, closing the office
+provide sufficient support for a developer to retrospect on       door, scheduling a meeting with oneself, coming in early to
+how work was performed, particularly if detailed informa-         work, or working from home. One team even used an ex-
+tion could be provided, such as the visualization of task and     plicit indicator for avoiding work disruptions by others at
+program switches in Figure 3, to support the retrospection.       certain times:
+
+   We believe the benefit of enabling and driving retrospec-      [..] all devs in our team also have a physical light on top of
+tion may be the key rather than trying to define measures         our monitors that reflects our lync status, so people walking
+that can be compared across individuals or across organiza-       by can see not to disturb. This has been really useful in re-
+tions. By driving productivity for the individual in a person-    ducing random interruptions. (MS5)
+alized way, we can also help assuage privacy concerns men-
+tioned by the participants in our studies with who might be       There is a trade-off though between an individual devel-
+able to see productivity information and to whom it might         oper's productivity gain by avoiding interruptions from co-
+be compared, such as co-workers. We plan to investigate ag-       workers and a team's productivity loss. With a better as-
+gregate approaches to visualizing and reporting productivity      sessment of the impact a context switch would have on a
+that are driven by the individual and assess how the provi-       developer's productivity, one could devise approaches to op-
+                                                                  timize the productivity gain.
+2fitbit.com, verified 03/15/14
+3www.nike.com, verified 03/15/14
+4codealike.com, verified 03/15/14
+Setting Goals.                                                    7. ACKNOWLEDGMENTS
+
+   The setting of goals is another technique that can be used        The authors would like to thank the participants in the
+to motivate and enforce a behavior change. For example,           survey and observational study. The authors would also
+goal-setting has been shown to be successful in motivating        like to thank Chris Bird for his help and the anonymous
+people to be more active, in particular in combination with       reviewers for their helpful feedback. This work was funded
+self-monitoring (e.g. [10, 7]). When it comes to software de-     in part by NSERC.
+velopment, many of our participants stated they set goals
+for themselves on a daily or weekly basis. Although the de-       8. REFERENCES
+velopers did not necessarily believe that goal-setting helped
+them increase their productivity, they stated that the goals       [1] www.ifi.uzh.ch/seal/people/meyer/developers-
+provide an overview of their tasks, allow them to prioritize            productivity.
+work and to better react in cases of unplanned tasks, which
+were mentioned to be a major detriment to being and feel-          [2] M. Andreessen. Why software is eating the world. The
+ing productive. Goals are often written down in a simple                Wall Street Journal, August 20, 2011.
+todo list and allow developers to measure their progress and
+productivity, creating a certain happiness and satisfaction        [3] K. Beck and C. Andres. Extreme programming
+when the goals are met. However, as with a more general                 explained: embrace change. Addison-Wesley, 2004.
+retrospection of a developer's productivity, monitoring goals
+either requires manual work by the developer or measures           [4] A. Begel and B. Simon. Novice software developers, all
+that can be tracked automatically, and describe the progress            over again. In Proceedings of the Fourth International
+towards fulfilling a goal.                                              Workshop on Computing Education Research, ICER
+                                                                        '08, pages 3­14. ACM, 2008.
+   As with monitoring, several participants fear the nega-
+tive effect goal monitoring can have and stated that the ad-       [5] J. Blackburn, G. Scudder, and L. Van Wassenhove.
+ditional time needed for monitoring could better be used                Improving speed and productivity of software
+for actual work. From talking to developers, it seems how-              development: a global survey of software developers.
+ever that the overhead of setting goals, is negligible and well         IEEE Transactions on Software Engineering,
+worth it since it helps to better structure the next workday            22(12):875­885, 1996.
+and thus make them more focused. This approach is a best
+practice that could be shared amongst developers.                  [6] B. W. Boehm. Improving software productivity.
+                                                                        volume 20, pages 43­57. IEEE, 1987.
+6. CONCLUSION
+                                                                   [7] D. M. Bravata, C. Smith-Spangler, V. Sundaram,
+   To investigate how developers perceive and assess their              A. L. Gienger, N. Lin, R. Lewis, C. D. Stave, I. Olkin,
+own productivity, we conducted two studies, a survey with               and J. R. Sirard. Using pedometers to increase
+379 professional software developers and an in-person ob-               physical activity and improve health: A systematic
+servation study with 11 professional developers in three dif-           review. Jama, 298(19):2296­2304, 2007.
+ferent companies. The survey results show that while most
+participants considered coding highly productive, there are        [8] D. N. Card. The Challenge of Productivity
+several activities, such as meetings and handling emails, that          Measurements. In Pacific Northwest Software Quality
+are more difficult for developers to assess with respect to pro-        Conference, pages 1­10, 2006.
+ductivity. The results also show that while progress made
+on work items is considered as one of the better measures to       [9] M. Cataldo, J. D. Herbsleb, and K. M. Carley.
+assess productivity, there is no simple and single best mea-            Socio-technical congruence: A framework for assessing
+sure to use. Developers also like to organize their work to             the impact of technical and work dependencies on
+get in "the flow" so as to have few interruptions and context           software development productivity. In Proceedings of
+switches. Interestingly, the observation data we collected              the Second ACM-IEEE International Symposium on
+paints a different picture, showing that developers experi-             Empirical Software Engineering and Measurement,
+ence a high number of switches in their work, switching tasks           ESEM '08, pages 2­11. ACM, 2008.
+every 6.2 minutes and activities every 1.6 minutes. The rea-
+son why developers still feel productive is the varying cost      [10] S. Consolvo, P. Klasnja, D. W. McDonald, and J. A.
+associated with these varying forms of context switches.                Landay. Goal-setting considerations for persuasive
+                                                                        technologies that encourage physical activity. In
+   Based on this data, we propose a number of ways to im-               Proceedings of the 4th international Conference on
+prove a developer's productivity through tool support and               Persuasive Technology, pages 8:1­8:8. ACM, 2009.
+the sharing of best practices. For instance, tool support
+to recognize context switches and visualize the switches to       [11] S. Consolvo, D. W. McDonald, T. Toscos, M. Y. Chen,
+a developer may help a developer in retrospecting on their              J. Froehlich, B. Harrison, P. Klasnja, A. LaMarca,
+own productivity. There are also interesting avenues to ex-             L. LeGrand, R. Libby, et al. Activity sensing in the
+plore in terms of helping developers define aggregate per-              wild: a field trial of ubifit garden. In Proceedings of
+sonal productivity measurements for tracking and retrospec-             the SIGCHI Conference on Human Factors in
+tion. With more support for retrospection on productivity,              Computing Systems, pages 1797­1806. ACM, 2008.
+developers may be able to better share best practices, such
+as goal setting best practices discussed by participants in       [12] L. Dabbish, G. Mark, and V. M. Gonza´lez. Why do i
+our observational study.                                                keep interrupting myself?: Environment, habit and
+                                                                        self-interruption. In Proceedings of the SIGCHI
+                                                                        Conference on Human Factors in Computing Systems,
+                                                                        CHI '11, pages 3127­3130. ACM, 2011.
+
+                                                                  [13] C. R. B. de Souza and D. F. Redmiles. An empirical
+                                                                        study of software developers' management of
+                                                                        dependencies and changes. In Proceedings of the 30th
+                                                                        International Conference on Software Engineering,
+                                                                        ICSE '08, pages 241­250. ACM, 2008.
+[14] T. DeMarco and T. Lister. Programmer performance                 and L. Walton. A software engineering experiment in
+      and the effects of the workplace. In Proceedings of the         software component generation. In Proceedings of the
+      8th International Conference on Software Engineering,           18th International Conference on Software
+      ICSE '85, pages 268­272. IEEE, 1985.                            Engineering, ICSE '96, pages 542­552. IEEE, 1996.
+
+[15] P. Devanbu, S. Karstu, W. Melo, and W. Thomas.             [29] A. J. Ko, R. DeLine, and G. Venolia. Information
+      Analytical and empirical evaluation of software reuse           needs in collocated software development teams. In
+      metrics. In Proceedings of the 18th International               Proceedings of the 29th International Conference on
+      Conference on Software Engineering, ICSE '96, pages             Software Engineering, ICSE '07, pages 344­353. IEEE,
+      189­199. IEEE, 1996.                                            2007.
+
+[16] E. W. Dijkstra. The humble programmer.                     [30] J. A. Lane and D. Zubrow. Integrating measurement
+      Communications of the ACM, 15(10):859­866, 1972.                with improvement: An action-oriented approach:
+                                                                      Experience report. In Proceedings of the 19th
+[17] B. J. Fogg. Persuasive technology: Using computers to            International Conference on Software Engineering,
+      change what we think and do. Ubiquity, 2002:5, 2002.            ICSE '97, pages 380­389. ACM, 1997.
+
+[18] T. Fritz, E. M. Huan, G. C. Murphy, and                    [31] H. Mintzberg. The nature of managerial work. Theory
+      T. Zimmermann. Persuasive technology in the real                of management policy series. Prentice-Hall, 1980.
+      world: A study of long-term use of activity sensing
+      devices for fitness. In Proceedings of the SIGCHI         [32] A. Mockus, R. T. Fielding, and J. D. Herbsleb. Two
+      Conference on Human Factors in Computing Systems,               case studies of open source software development:
+      2014. to appear.                                                Apache and mozilla. ACM Transactions on Software
+                                                                      Engineering and Methodology, 11(3):309­346, 2002.
+[19] W. Gibbs. Software's chronic crisis. Scientific
+      American, 271(3):86­94, 1994.                             [33] S. Munson. Mindfulness, reflection, and persuasion in
+                                                                      personal informatics. In Proceedings of the SIGCHI
+[20] V. M. Gonza´lez and G. Mark. "constant, constant,                Conference on Human Factors in Computing Systems,
+      multi-tasking craziness": Managing multiple working             2012.
+      spheres. In Proceedings of the SIGCHI Conference on
+      Human Factors in Computing Systems, CHI '04, pages        [34] P. Naur and B. Randell. Software engineering: Report
+      113­120. ACM, 2004.                                             of a conference sponsored by the nato science
+                                                                      committee. Scientific Affairs Division, NATO, 1969.
+[21] H. Hulkko and P. Abrahamsson. A multiple case study
+      on the impact of pair programming on product              [35] V. Nguyen, L. Huang, and B. Boehm. An analysis of
+      quality. In Proceedings of the 27th International               trends in productivity and cost drivers over years. In
+      Conference on Software Engineering, ICSE '05, pages             Proceedings of the 7th International Conference on
+      495­504. ACM, 2005.                                             Predictive Models in Software Engineering, Promise
+                                                                      '11, pages 3:1­3:10. ACM, 2011.
+[22] W. S. Humphrey. Introduction to the Personal
+      Software Process. Addison-Wesley Professional, first      [36] D. E. Perry, N. A. Staudenmayer, and L. G. Votta.
+      edition, 1996.                                                  People, organizations, and process improvement.
+                                                                      Software, IEEE, 11(4):36­45, 1994.
+[23] W. S. Humphrey. Using a defined and measured
+      personal software process. IEEE, 13(3):77­88, 1996.       [37] O. U. Press. Oxford dictionary.
+                                                                      www.oxforddictionaries.com/us/definition/american
+[24] P. M. Johnson, H. Kou, J. Agustin, C. Chan,                      english/productivity.
+      C. Moore, J. Miglani, S. Zhen, and W. E. J. Doane.
+      Beyond the personal software process: Metrics             [38] T. Roehm, R. Tiarks, R. Koschke, and W. Maalej.
+      collection and analysis for the differently disciplined.        How do professional developers comprehend software?
+      In Proceedings of the 25th International Conference on          In Proceedings of the 2012 International Conference
+      Software Engineering, ICSE '03, pages 641­646. IEEE,            on Software Engineering, ICSE 2012, pages 255­265.
+      2003.                                                           IEEE, 2012.
+
+[25] C. Jones. Software metrics: good, bad and missing.         [39] J. Sillito, G. C. Murphy, and K. De Volder. Questions
+      Computer, 27(9):98­100, 1994.                                   programmers ask during software evolution tasks. In
+                                                                      Proceedings of the 14th ACM SIGSOFT International
+[26] D. Kamma and P. Jalote. Effect of task processes on              Symposium on Foundations of Software Engineering,
+      programmer productivity in model-based testing. In              SIGSOFT '06/FSE-14, pages 23­34. ACM, 2006.
+      Proceedings of the 6th India Software Engineering
+      Conference, ISEC '13, pages 23­28. ACM, 2013.             [40] S. Wagner, M. Ruhe, and A. Siemens. A systematic
+                                                                      review of productivity factors in software
+[27] M. Kersten and G. C. Murphy. Using task context to               development, 2008.
+      improve programmer productivity. In Proceedings of
+      the 14th ACM SIGSOFT International Symposium on           [41] M. Zhou and A. Mockus. Developer fluency:
+      Foundations of Software Engineering, SIGSOFT                    Achieving true mastery in software projects. In
+      '06/FSE-14, pages 1­11. ACM, 2006.                              Proceedings of the Eighteenth ACM SIGSOFT
+                                                                      International Symposium on Foundations of Software
+[28] R. B. Kieburtz, L. McKinney, J. M. Bell, J. Hook,                Engineering, FSE '10, pages 137­146. ACM, 2010.
+      A. Kotov, J. Lewis, D. P. Oliva, T. Sheard, I. Smith,
+

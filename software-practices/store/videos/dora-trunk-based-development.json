@@ -1,0 +1,97 @@
+{
+  "id": "dora-trunk-based-development",
+  "title": "DORA | Capabilities: Trunk-based development",
+  "channel": "dora.dev",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://dora.dev/capabilities/trunk-based-development/",
+  "summary": "DORA capability page: trunk-based development (few branches, daily merges, no freezes) correlates with delivery performance; heavy async review and untested commits are pitfalls.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/trunk-based-development-one-small-change",
+      "stance": "asserts",
+      "quote": "teams achieve higher levels of software delivery and operational performance (delivery speed, stability, and availability) if they follow these practices",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/long-lived-branches-delay-integration-produce",
+      "stance": "asserts",
+      "quote": "large merges frequently introduce bugs or regressions",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/small-pull-requests-picked-merged-faster",
+      "stance": "asserts",
+      "quote": "it is hard to reason about the impact of large changes on a system through inspection, defects are likely to escape the attention of reviewers",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/pull-request-review-delays-feedback-pushes",
+      "stance": "asserts",
+      "quote": "When code review is laborious and takes hours or days, developers avoid working in small batches",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/pair-programming-provides-continuous-code-review",
+      "stance": "asserts",
+      "quote": "If your team practices pair programming, then the code has already been reviewed by a second person.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/reviewing-code-synchronously-commit-time-rather",
+      "stance": "asserts",
+      "quote": "The longer a merge is delayed, the more likely it is to create merge conflicts and associated issues.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "The delay-to-conflict link is well supported; whether synchronous review is practical at scale is less clear.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/running-automated-test-suite-before-every",
+      "stance": "asserts",
+      "quote": "it's essential that tests are run against code changes before commit",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Standard CI mechanism; effectiveness depends on suite coverage and speed.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "DORA states that for CI to be impactful every commit should trigger a successful build and test run, and finds CI predicts continuous delivery; whether this keeps trunk releasable is implied rather than measured.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1006-L1011",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/trunk-based-development-requires-developers-learn",
+      "stance": "asserts",
+      "quote": "Many developers simply can't imagine working in this way.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Adoption reports consistently cite resistance; the magnitude is anecdotal.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

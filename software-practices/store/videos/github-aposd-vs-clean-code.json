@@ -1,0 +1,121 @@
+{
+  "id": "github-aposd-vs-clean-code",
+  "title": "GitHub - johnousterhout/aposd-vs-clean-code: A discussion between John Ousterhout and Robert Martin about differences between John's book \"A Philosophy of Software Design\" and Bob's book \"Clean Code\".",
+  "channel": "GitHub",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://github.com/johnousterhout/aposd-vs-clean-code",
+  "summary": "Ousterhout and Martin debate Clean Code's tiny methods, comment hostility and TDD; they agree on modularity and fearless refactoring but split on decomposition depth, comments and whether test-first harms design.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/decomposing-code-small-methods-can-too",
+      "stance": "asserts",
+      "quote": "it encourages programmers to create teeny-tiny methods that suffer from both shallow interfaces and entanglement",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Controlled studies find no comprehension gain from splitting code into very small methods, though none establishes where the optimum lies.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/most-software-effort-goes-understanding-maintaining",
+      "stance": "asserts",
+      "quote": "Programmers spend far more hours reading code than writing code, so the activity we want to ease is that of reading.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/modular-decomposition-behind-simple-interfaces-reduces",
+      "stance": "asserts",
+      "quote": "one of the most important ways to reduce the amount of information a programmer has to keep in their mind at once",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Working-memory limits are well established and information hiding has long-standing empirical support for change isolation.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/treating-comments-failures-leads-under-documented",
+      "stance": "asserts",
+      "quote": "For me the cost of missing comments is easily 10-100x the cost of incorrect comments.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Comprehension experiments show well-placed comments help readers, but stale-comment costs are real and the cost ratio is one practitioner's estimate.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "For the least understandable method all five interviewed developers cited the complete lack of comments and internal documentation as the top problem and all proposed adding comments, supporting the cost of missing comments; nothing compares missing with incorrect comments and comment metrics did not correlate quantitatively.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L1002-L1004",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/every-comment-failure-express-intent-code",
+      "stance": "asserts",
+      "quote": "I prefer long names to comments. I don't trust comments to be maintained, nor do I trust that they will be read.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/trustworthy-automated-test-suite-lets-developers",
+      "stance": "asserts",
+      "quote": "Enabling fearless refactoring? BINGO! This is the where almost all of the benefits from unit testing come from",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/driving-architecture-unit-tests-without-front",
+      "stance": "asserts",
+      "quote": "it forces developers to work too tactically, in units of development that are too small; it discourages design thinking",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/once-developer-has-internalised-test-driven",
+      "stance": "asserts",
+      "quote": "working in small units, and then immediately writing after the fact tests, can give you all the above advantages",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+      "stance": "asserts",
+      "quote": "every small part of the system must be designed to be testable, and testability requires decoupling",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/test-first-development-reduces-time-spent",
+      "stance": "asserts",
+      "quote": "The benefit comes because unit tests expose bugs earlier and in an environment where they are easier to track down.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/preferring-runtime-polymorphism-over-switch-statements",
+      "stance": "asserts",
+      "quote": "this revision of the code creates a serious performance regression: I measured a factor of 3-4x slowdown compared to either of the earlier revisions",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/test-driven-development-produces-better-quality",
+      "stance": "asserts",
+      "quote": "To do that, we'd need empirical data about the frequency of good and bad outcomes from TDD. Unfortunately I'm not aware of any such data.",
+      "verdicts": []
+    }
+  ]
+}

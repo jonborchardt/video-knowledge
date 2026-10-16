@@ -1,0 +1,593 @@
+Resumption Strategies for Interrupted Programming Tasks
+
+           Chris Parnin                                               Spencer Rugaber
+     College of Computing                                          College of Computing
+Georgia Institute of Technology                               Georgia Institute of Technology
+
+       Atlanta, GA U.S.A.                                            Atlanta, GA U.S.A.
+    chris.parnin@gatech.edu                                        spencer@cc.gatech.edu
+
+                        Abstract                                 Studies examining software companies have also repli-
+                                                              cated similar results from studies of non-programming tasks
+   Interruptions are a daily reality for professional pro-    in the workplace. Solingen [36] characterizes interruptions
+grammers. Unfortunately, the strategies programmers use       at several industrial software companies and observed that
+to recover lost knowledge and resume work have not yet        an hour a day was spent managing interruptions, and de-
+been well studied. In this paper, we perform exploratory      velopers typically required 15 minutes to recover from an
+analysis on 10,000 recorded programming sessions of 85        interruption. Ko [15] used a fly-on-the-wall [17] approach
+programmers to understand the variety of strategies used      to observe software developers at Microsoft and found that
+by programmers for resuming programming tasks. In our         they were commonly blocked from completing tasks be-
+study, we find that only 10% of the programming sessions      cause of failure to acquire essential information from busy
+have coding activity start in less than a minute, only 7% of  co-workers. Another study at Microsoft indicated that 62%
+the programming sessions involve no navigation to other lo-   of developers surveyed believed recovering from interrup-
+cations prior to editing, and find evidence of programmers    tions was a serious problem [16].
+seeking other sources of task context during task resump-
+tion. Based on the analysis, we suggest how task resump-         Although many studies have been performed on inter-
+tion might be better supported in future development tools.   ruptions, few describe what strategies programmers use for
+                                                              resuming a programming task. Research on program com-
+1. Introduction                                               prehension has typically focused on the perspective of ex-
+                                                              ploring a new program or making a new change; how-
+   Everyday, professional developers engage in a process      ever, with an interrupted task, programmers are instead re-
+of recovering knowledge about software. When resuming         comprehending a program and related artifacts in order to
+an incomplete programming task, the developer must re-        resume work.
+member their previous working state and recover knowl-
+edge about the software. Details of working state might          This paper makes the following contributions:
+include recalling plans, intentions, and goals. Details of
+knowledge might include plan progress, component mech-          1. An analysis of the beginning of programming sessions
+anisms, and domain representations.                                 to understand the various activities that take place be-
+                                                                    fore resuming work.
+   Several researchers have characterized the effects of in-
+terruptions on performing tasks [6, 24, 12, 21]. Despite        2. A characterization of several possible strategies for re-
+efforts for managing interruptions, in situ studies suggest         suming programming tasks.
+interruptions remain problematic. Czerwinski's study [7]
+showed that tasks resumed after an interruption were more        The benefit of this paper is that other researchers and
+difficult to perform and took twice as long. O'Conaill's      toolsmiths can apply these results when investigating and
+study [23] found 40% of interrupted tasks are not resumed     designing how to enhance tool support for resuming pro-
+at all. Further research by Mark et al. [18] observed 57%     gramming tasks.
+of tasks were interrupted ­ as a result work on a task often
+was fragmented into many small work sessions.                    In the next section of the paper, we describe related work
+                                                              for programming tool support. This is followed by a discus-
+                                                              sion of our datasets and relevant concepts. We then describe
+                                                              a set of resumption strategies and the experiments used to
+                                                              support the feasibility and plausibility of the strategies. The
+                                                              strategies are than compared and discussed in the context of
+current tool support. Finally, we conclude with future work       lated to a past event). Safer [28] performed an investigation
+for this research.                                                comparing the use of alternative user interfaces for recalling
+                                                                  information about recent tasks. In the study, the user's task
+2. Background                                                     was to identify when a recent task was completed or de-
+                                                                  ferred for another task. One interface displayed screenshots
+   Studies have examined the idea of maintaining a repre-         capturing different stages of performing the task to prompt
+sentation of task context [14] to help reduce mental work-        episodic recall of the event. The other used a Mylyn con-
+load during development. Because the risk of interruptions        text [14] indicating the files and methods visited or edited.
+includes the loss of details and increased time to recover        An overall subjective preference was found for the screen-
+working state, some have hypothesized that using a repre-         shots, although the results overall remain inconclusive.
+sentation of context in the IDE would reduce resumption
+costs [25, 14, 11, 10]. Although there is some evidence sup-         Finally, recent research has identified a strong connec-
+porting the reduction of navigation cost [25, 14, 29], there      tion between environmental cues and reducing resumption
+is little evidence describing what effects arise from using       costs [2, 13, 34]. In these experiments, the availability of
+task context when resuming programming tasks. Further,            cues during task resumption reduces the time to restart the
+the scope of task context has been primarily limited to the       task. Conversely, if the cue is removed or tampered with,
+files and methods related to the task. However, an increas-       then this benefit is removed. This even holds for implicit
+ing amount of research raises the question of what other          cues such as the location of a mouse cursor. For example, in
+knowledge should be included in a context.                        one experiment when the mouse cursor location was moved
+                                                                  from the last button clicked to be in the corner of screen, the
+   Miyata and Norman [20] describe task execution as hav-         resulting resumption lag was higher than when the implicit
+ing three phases: planning, execution, and evaluation. Inter-     cue was present.
+ruptions during different phases have different effects [38]
+that require different sources of knowledge to support re-           Because most development environments limit the view
+sumption. The current approach for representing a context         to one active element but may hold many active elements in
+typically relies on filtering the hierarchical list of files and  their working state, developers are limited to the details of
+methods in the IDE based on recent interaction or items ex-       one active element when automatically encoding [35] work-
+plicitly specified to belong to the current task. The bene-       ing state (making mental notes).
+fit of this representation would be in its ability to reduce
+interference on recall of non-relevant code, especially in           The types of knowledge and representations needed to
+the case of returning to a task that had be shelved for a         restore working context remains an open research problem.
+long period of time. However, in the case of short term           Most proposed solutions have been limited to prescriptive
+interruptions, this technique's representation mainly assists     approaches that have not been evaluated to determine their
+with continuing execution of the last task, but neither as-       impact in assisting developers with recovering from inter-
+sists the user in planning the next steps or in evaluating the    ruptions. In our work, we are investigating if developers
+progress made. Because task execution is commonly hierar-         would like to see other sources of information for restoring
+chical [1], this representation does not include information      working state.
+from other pending tasks. Finally, the representation of con-
+text would provide little benefit when compared with a user       3. Concepts and Datasets
+manually controlling the file manager by collapsing nodes;
+in either case, only the last editor window is in focus, and         In this section, we describe the time line of recovering
+the user must still explore other code elements to recall de-     from an interruption and related concepts. Secondly, we de-
+tail.                                                             scribe the data sets we use for analysis. The content of the
+                                                                  data sets include the interaction history captured from de-
+   There is some evidence that developers use different           velopers programming in their natural settings. Interaction
+sources of information for maintaining context. Software          history is the record of low-level events (including naviga-
+developers often need to record prospective tasks that they       tion and edit events) from a programmer using an IDE.
+are unable to complete at the moment but need to complete
+in the future. Failure to remember prospective tasks is a         3.1. Resumption Timeline
+common occurrence with interrupted tasks [7]. Researchers
+have observed how programmers use task annotations [32]              A key measure of the effect of an interruption is resump-
+to record prospective task and proposed systems for captur-       tion lag [1, 3, 4]. Resumption lag measures the time it takes
+ing prospective tasks [8, 32].                                    for a person to recollect their thoughts when returning to
+                                                                  a task. In experimental studies, resumption lag is typically
+   Other researchers have explored the recall from episodic       measured as the time between a subject being told to resume
+memory (contextual details including time and activity re-        a task and the first physical response (such as mouse click).
+   Similarly, interruption lag [3, 4] describes the time be-         In this study, we focus most of our analysis on edit lag to
+tween when the user stop working on a task and when               gain insight into what activities developers perform before
+they begin addressing the interruption (e.g. writing down         regaining enough context to resume editing for that session.
+a note before picking up the telephone). Taking prospective       Undoubtedly, developers perform numerous activities other
+measures at the time of interruption has both negative and        than coding during software development; however, study-
+positive effects [35] on task resumption. Prospective mea-        ing the moment coding begins in a session serves as a log-
+sures are primarily successful when users have environmen-        ical starting point for asking why developers performed a
+tal cues about working state (e.g. an error message associ-       series of activities before making an edit and how much of
+ated with a bug being fixed) that are present during both the     that is related to resumption costs.
+interruption lag and the resumption lag. When comparing
+written notes versus mental notes, written notes were found                     EPM
+to be effective in assisting recall, but negatively effected the                minutes
+ability to recall contextual details about the task when com-
+pared to mental notes. Another positive factor occurs when                              E
+users have completed a subtask because there is less inter-
+mediate state that has to be recalled [1].                           Figure 2. Edit lag (E). When starting a new
+                                                                     programming session, a latency can be ob-
+   In Figure 1, we show the time line of a programmer edit-          served in the time it takes to begin coding
+ing code, stopping work, and then resuming work. Each pe-            and the time it takes to reach the peak of cod-
+riod of programming activity describes one session of work.          ing activity during the session.
+The depiction of the session is adopted from the visualiza-
+tion used in the SpyWare tool [27]. Basically, the graph dis-     3.3. Interruptions
+plays the edits per minute (EPM) in a development session.
+The vertical axis corresponds to the number of edits, and a          The nature of interruption is an important determinate
+point on the horizontal axis corresponds to one minute.           on the extent of an interruption's impact. The worst type
+                                                                  of interruption often comes at an inopportune moment and
+       EPM                                                        gives insufficient time to a programmer for preserving men-
+       minutes                                                    tal working state. These inopportune moments tend to
+                                                                  align with programmers using large amounts of intermedi-
+                                 IR                               ate knowledge that does not yet have any physical repre-
+                                                                  sentation or have a firm mental foothold in the program-
+                   session break session                          mer's mind. However, not all interruptions are involun-
+                                                                  tary. Other reasons for suspending a programming task in-
+   Figure 1. Interruption lag (I) and Resumption                  clude fatigue, desire for reflection, road blocks, and reach-
+   lag (R). During the brief period of interrup-                  ing a stopping point. These types of interruptions are called
+   tion lag, the programmer may actively en-                      self-interruptions. The nature and timing of an interruption
+   code their mental working state to prevent an                  will influence the type of suspension strategy used and the
+   increased latency when resuming a task (re-                    amount of lost knowledge at risk. In this paper, we do not
+   sumption lag).                                                 know the nature of an interruption, but instead focus on ob-
+                                                                  serving the activities of resuming a programming task after
+3.2. Edit Lag                                                     a break in programming activity.
+
+   Although previous work has demonstrated strong corre-          3.4. Interaction History
+lations between interruptions and increased resumption lag,
+the measured resumption lag has been in the order of sec-            We draw upon a variety of data sets in our analysis.
+onds. In the domain of software development, the effects of          The first data set we will call the Eclipse data set; it was
+interruption are believed to have a larger impact on loss of      originally collected in the latter half of 2005 by Murphy
+context and the recovery period to be on the order of min-
+utes [36]. Therefore, we propose a specialized measure of
+resumption lag, called edit lag, which is the time between
+returning to a programming task and making the first edit.
+and colleagues [22]. The researchers used the Mylyn Moni-           Dataset                     Stats
+tor tool to capture and analyze fine-grained usage data from                    Users Sessions Filtered* Edits+ Events
+volunteer programmers using the Eclipse development en-        Visual Studio
+vironment 1.                                                          Eclipse      12 1972 1561 1213 573,998
+                                                                         Total     73 7927 5931 3962 3,937,526
+   The second set we will call the Visual Studio data set; it                      85 9,899 7492 5175 4,511,524
+was also collected in 2005 by Parnin and Go¨rg [25]. The
+data was collected from 12 developers over several months      Table 1. Summary of data in Visual Studio and
+at an industrial site.                                         Eclipse data sets. The column Filtered* indi-
+                                                               cates the remaining number of sessions after
+   The third set of data we will call the UDC dataset; it      removing sessions with a duration less than
+is publicly-available from the Eclipse Usage Data Collec-      one minute and the column Edits+ indicates
+tor [33], and includes data requested from every user of the   the number of filtered sessions with at least
+Eclipse Ganymede release. Activity is recorded from over       one edit event.
+10,000 Java developers between April and December 2008.
+The data counts how many programmers have used each            sume work? In this section, we shed some light on this
+Eclipse command, such as refactoring commands, and how         question ­ but a more pressing question should be answered
+many times each command was executed.                          first: Is there even any meaningful impact from interrup-
+                                                               tion? Are programmers immediately able to return to effec-
+   To obtain the developer's sessions, the events were seg-    tive work without a resumption delay?
+mented when there was a break in activity of 15 minutes
+or more. This segmentation is well supported by the nature        To understand the possible impact of interruptions on de-
+of the data. The interval between events follows a Pois-       velopers, we measure the distribution of edit lag. If we ob-
+son distribution: for 98% of the 4.5 million events, the time  serve most values of edit lag are less than one minute, then
+between those events is less than a minute. This means         we would likely conclude the impact of interruptions are
+tight clusters can be formed with any threshold above a        negligible or not immediately observable in this window of
+minute. Similar thresholds have been supported in other        time. Second, we characterize the number and size of ses-
+studies [39, 27].                                              sions in the day to see how often a programmer must resume
+                                                               work in a day.
+   The events collected are solely from the IDE. Although,
+what appears to us is a break in programming activity, the        In Figure 3, we display the distribution of edit lag among
+developer may be engaging in a related task such as check-     all sessions having editing activity. In 10% of the sessions,
+ing in source code or searching for online code examples. If   edit lag was less than a minute. For the rest of the ses-
+we included window focus events [26], then we could better     sions, several minutes pass until the first edit event occurs.
+explain these breaks. Nevertheless, we believe many breaks     In about 30% of sessions, the edit lag is over 30 minutes. In
+from programming activity are due to diversions [5] that of-   these sessions, we believe the developers may be engaged
+ten derail programming efforts as observed by Ko [15].         in debugging activities which require a longer investment of
+                                                               attention before a first edit can be made.
+   There are some instrumentation differences between the
+data sets. In the Eclipse data set, an edit event was regis-      Finally, in Table 2, we show a breakdown of the fre-
+tered whenever a programmer typed (i.e. roughly an event       quency and duration of sessions in a typical day.
+per word); however, in the Visual Studio data set, an edit
+event was collected for each line edited. Another differ-                           Sessions in a typical day
+ences was that in the Visual Studio data set, edit lag was              sessions 1-3 1-2 1-2 1 0-1 rarely
+more finely observable because navigation events within a               duration 15m 30m 1h 2h 4h 8h
+code editor were recorded which was not true in the Eclipse
+data set. This would mainly effect edit lags that did not re-     Table 2. In a typical day, developers program
+quire navigation to another file.                                 in several short sessions with an additional
+                                                                  one or two longer sessions.
+   In our analysis, we accounted for these differences by
+running the experiments separately to check for any dis-          Overall, this evidence indicates that significant interrup-
+crepancies between the data sets. A summary of our data        tions do occur and that significant time is required for effec-
+sets can be see in Table 1.                                    tive resumption.
+
+4. Resumption Strategies
+
+   When a programmer is interrupted from a programming
+task, what activities do they need to perform in order to re-
+
+    1http://eclipse.org
+Sessions              Edit Lag Distribution                   The results of the edit lag can be seen in Table 3. When the
+                                                              programmers do continue work in the same method, they
+           25%                                                can often resume work quickly. When resuming coding
+           20%                                                in the last method, the programmer does this within one
+           15%                                                minute 35% of the time. We believe in these situations,
+           10%                                                the programmer can successfully use the method to remem-
+                                                              ber sufficient details for completing the task. In other cases,
+             5%                                               the programmer may be spending time re-understanding the
+             0%                                               code or re-evaluating their implementation plan.
+
+                      1 5 10 15 30 45 60 120 360                 One explanation for the results is that programmers may
+                                                              prefer to stop working at a natural task boundary and there-
+                                    Minutes                   fore not need to complete work in that method upon re-
+                                                              suming the task. The last completed task may serve as a
+        Figure 3. Developers often do not make their          convenient cue for remembering which next logical task to
+        first edit of the session until at least several      perform. Further investigation is needed to understand why
+        minutes have past.                                    programmers may spend more than a few minutes resuming
+                                                              work even when the work is in the same location. An ex-
+4.1. Return to Last Method Edited                             periment comparing the complexity of the source code with
+                                                              edit lag would confirm the hypothesis that developers need
+                                                              time to re-comprehend complex code when completing a
+                                                              task involving that code.
+
+   One of the most simple tactics for resuming a program-     4.2. Navigate to Remember
+ming task is to return to the site where work was last per-
+formed. But how sufficient and how frequently is this tactic     In the previous subsection, we observed that in 118 of the
+applicable for resuming work?                                 209 (56%) sessions (where the programmer made changes
+                                                              to the last method edited) the programmer still navigated
+   To measure how often programmers successfully per-         to other locations first. Navigating to other locations is a
+form this tactic, we make several measurements. First, we     natural tactic to use if the programmer needs to recall details
+measure how often the first change is made without navigat-   from other parts of the code before making a change. But
+ing to other methods or classes. Second, we measure how       how many places do programmers need to visit, and what is
+often the first change is eventually made in the last edited  the cost of performing all these navigations before a change
+method even with intervening navigations to other methods     can be finally be started?
+or classes. Finally, we measure the edit lag for both cases.
+Only the Visual Studio data set had sufficient information       Because of differences in the two data sets, we separate
+about navigation for this analysis.                           the analyses and use two different metrics. With the Visual
+                                                              Studio data set, to measure the number of places visited,
+          Sessions  Resumption cost                           we record the set of all methods or classes visited before
+          Edit Lag   35% 22% 23% 12%                          making the change. We then measure the navigational cost
+                     1m 1-5m 5-15m 15-30m                     as determined by the distance between a code element. For
+                                                              the Eclipse data set, we measure the number of selection
+        Table 3. Developers are able to resume cod-           events prior to the edit.
+        ing within 1 minute for 35% of sessions and
+        within 30 minutes for most sessions when              Locations            Visual Studio    Eclipse
+        the work involves completing the last edited          Navigation Distance      2-12 (7)   15-150 (135)
+        method.                                               Selection Events        4-40 (27)
+
+   The results show that in 91 of 1213 sessions (7.5%) the    Table 4. Developers typically visit several lo-
+programmers were able to make changes without navigat-        cations of code before beginning a change.
+ing to other methods. Second, in 209 out of 1213 sessions     The range of elements covering 75% of val-
+(17%) the programmers do eventually return from navigat-      ues is shown with the mean in parenthesis.
+ing to other locations and make changes to the last method
+edited. Otherwise, in the majority of sessions, the program-
+mers navigated to other methods or classes to resume work.
+                     Resumption cost                           tasklist      Pre-Edit Lag    Post-Edit Lag    % Sessions
+         Sessions 16% 25% 22% 18% 8%                           problem view             274              246           9%
+         Edit Lag 1m 1-5m 5-15m 15-30m 30-45m                                           301              265           9%
+
+   Table 5. Developers take a little longer to start           Table 6. Viewing the task list or problem view
+   coding when the work involves navigating to                 during a session is common.
+   other locations first.
+                                                                  Commands                   Users
+   The results can be seen in Table 4. In general, the de-
+velopers navigated within the code to several locations be-     View Task List               10/2008          11/2008
+fore being able to begin coding. The developers also took            Open Task
+considerably longer to start coding when navigation was in-                                  10,311           11,206
+volved. As shown in Table 5, sessions with navigations to      New Local Task
+other locations (in the Visual Studio data set) have higher      New Sub Task                861 953
+edit lag when compared to results in the previous section
+(Table 3).                                                                                   101 101
+
+4.3. Task Tracking                                                                           11 22
+
+   Programmers actively manage and perform many tasks          Table 7. Tasking software is popular for re-
+when developing software. Some tasks may be specific such      viewing assigned tasks but not for recording
+as fixing a compile error, or as complex as implementing a     low-level tasks.
+complete system module. When resuming an incomplete
+programming task, developers may need to recall details of     This suggests these sessions might have been spent planning
+the task and other related subtasks. In this subsection, we    or refining tasks or resolving time-consuming configuration
+are measuring the activity related to viewing details about    or compile issues.
+tasks stored in a task repository. In addition, we also exam-
+ine how developers use task tracking software to understand       In Table 7, the results of the task subtask recording us-
+how willingly developers are for tracking subtasks or small    age is shown. A more detailed breakdown of the four com-
+tasks with task software.                                      mands in Mylyn is the following: users
+
+   To measure the use of task information, we examined          · listed the tasks in an external task repository,
+commands used in the Eclipse data set related to accessing
+a bug repository such as Bugzilla, the Mylyn Task List, and     · opened a task from the task repository,
+the Eclipse Task List. We also separately measure the use
+of possible implicit task reminders such as the warnings or     · created a new task that was not be stored in the task
+compile errors listed in the Problem View. Compile errors          repository and,
+may serve as a good source of reminders, but we do not
+know if these are being intentionally left unresolved as a      · created a subtask of an existing task.
+cue or could not be fixed during the previous session.
+                                                                  The table also shows the number of users that have used
+   To measure the use of task tracking for management of       the command in the two most recent months of activity.
+subtasks, we examined the UDC data set and Eclipse data        Mylyn is a popular tool for viewing assigned tasks, but un-
+set. We count the number of users that use commands re-        fortunately the number of users using Mylyn for managing
+lated to creating new subtasks and compare that to the num-    personal tasks (or willing to use the tool to enter new tasks
+ber of users using other common task management com-           or sub tasks) is several magnitudes less than managing as-
+mands. This gives an estimation of the developer population    signed tasks.
+likely to use task software for small tasks.
+                                                               4.4. Review Source Code History
+   The results for viewing task details are shown in Table 6.
+Developers viewed task information in 9% of sessions, and         Source code repositories hold a vast amount of informa-
+the Problem View was used in 9% of sessions. However, for      tion about the history of a project. Some questions might
+both cases the associated edit lag was also very high. For     have to be answered by accessing the revision history be-
+75% of the sessions that viewed either the Problem View or     fore resuming a task.
+task information, the edit lag was greater than 30 minutes.
+                                                                  To measure the frequency of using this strategy, we count
+                                                               the number of sessions that have cvs or subversion history
+                                                               commands during the edit lag. To obtain the activity related
+                                                               to history, we separate the actions concerned with retrieving
+                                                               information from the managerial repository commands. We
+                                                               were primarily concerned with comparing revisions, view-
+                                                               ing the history of a revision, viewing the commit log, and
+                                                               viewing a revision annotation. We also measure the occur-
+history  Pre-Edit Lag    Post-Edit Lag    % Sessions             5.1. Edit and Navigation Behavior
+commit              142              183           4%
+                    193              390          11%               Considerable doubt was placed on the sufficiency of us-
+                                                                 ing the last edit as an environmental cue. When the cue was
+Table 8. Viewing history during the edit lag                     applicable, it was very effective: 35% of these sessions were
+is as common as during the rest of the pro-                      resumed in less than a minute, which is much higher than
+gramming session.                                                the 10% of sessions overall that could be resumed in less
+                                                                 than a minute. However, this situation was only applicable
+rence of commands in the rest of the session to gain insight     17% of the sessions and still required navigation to other lo-
+into the significance of the command occurring during the        cations. In other cases, developers had considerable edit lag
+edit lag. Finally, we are only able to measure the Eclipse       even when continuing edits at the same location. It is likely
+data set for revision history usage.                             that in this situation, the code or task was complex. This
+                                                                 suggests there are opportunities for researchers to investi-
+   The results can be see in Table 8. From this measure-         gate how additional code representations or visualizations
+ment, we only observe occasional use of revision history         might eliminate this latency.
+during the edit lag (only 4% of sessions). However, relative
+to commit commands, the history commands are used fairly            If programmers use the last site of completed work as
+frequently, and are as likely to be used during the edit lag as  a launching point, then there are some interesting implica-
+during normal coding activity.                                   tions. Several researchers have reported differences in recall
+                                                                 ability in completed tasks versus incomplete tasks [37, 19].
+   The measures we have collected may be conservative.           It is unknown how much contextual detail programmers
+Not all users always use the Eclipse plugins for accessing       lose after task completion. There is some evidence that
+revision history. Future studies should expand the instru-       gives direction. In Bailey's study [1], the task-evoked pupil-
+mentation collection to directly measure access to source        lary response was recorded over time (the pupil size dilates
+control.                                                         during moments of increased memory access and mental
+                                                                 load) while users performed tasks. In the study, immedi-
+5. Discussion                                                    ately after subtask completion, pupillary response would re-
+                                                                 turn to baseline levels. This suggests that memory access
+   Several analyses were described in Section 4. In Ta-          ceases after task completion and may effect the retention of
+ble 9, a summary is given of the frequency of various ac-        task-related information that was in short-term memory.
+tivities developers performed when starting a programming
+session. How do the presented results affect future research        Finally, developers are spending a considerable amount
+and tools?                                                       of time navigating to several locations in code before begin-
+                                                                 ning coding. Ideally, a developer should be able to resume
+         Strategies                       Usage                  working without having to spend several minutes of ev-
+         Continue Last Edit                7.5%                  ery session re-orienting themselves. Future research should
+         Nav Then Continue Last Edit        17%                  continue to evaluate alternative navigation interfaces such
+         Navigate to New Location           83%                  as CodeThumbnails [9], or Relo [30], or SHriMP [31] af-
+         View Revision History                                   fect on resumption costs.
+         View Problem List                   4%
+         View Task or Bug List               9%                  5.2. Other Sources of Task Context
+                                             9%
+                                                                    We also reviewed two possible sources of information
+Table 9. Developers perform various activi-                      that may be relevant in resuming a programming task. First,
+ties at the beginning of a session.                              when developers refer to task or compile errors at the begin-
+                                                                 ning of a session, the time to begin coding was much longer
+   In the following, we review our findings and provide          than in any other sessions. The extra latency needs to be
+hypotheses that might explain the observed behavior and          further investigated. Secondly, a recording formal represen-
+implications for future tool research. Finally, researchers      tation of task structure including all relevant subtasks could
+should be able to experimentally apply these latency mea-        be an important method of reducing cost of task switching
+sures when studying their proposed tools.                        and managing interruptions. Many research tools rely on
+                                                                 the assumption of developers participate in detailing tasking
+                                                                 information. However, very few users actively use avail-
+                                                                 able facilities for recording subtasks or small tasks. The
+                                                                 issues that developers have with these tools must be dis-
+covered and addressed before such an approach becomes            · Instant Diff Highlighted code showing how a developer
+feasible. Other interfaces for recording information may al-        changed a method body as well as a global view.
+leviate this problem: Developers may be receptive to more
+simple input that allows whiteboard-like task sketching.         · Snapshots and Instant Replay. Time line of screen-
+                                                                    shot thumbnails or an instant replay of past work.
+   Developers actively refer to revision history information
+but are slower to resume coding when they do. Research           · Change Summary. Short summary of changes.
+needs to elaborate on the motivations and requirements for
+viewing revision history when resuming a task. One possi-          Continuing from the last state of the programming task
+ble explanation is that developers need to review the status    can happen in a variety of ways: the developer may resume
+of other teammates activities to see if it impacts their task.  coding in the previous location, may need to transition to the
+This would be consistent with other research: Status aware-     next step of the task, or may need to evaluate the progress
+ness was one of the top information needs found in Ko's         of the task. The complex nature of programming requires
+study [15] of developers. Developers may also be using fa-      developers to concentrate on a fixed set of artifacts in the
+cilities such as a code difference to remind themselves of      context of a task. Developers linearize tasks so that upon
+what changes were made during their last activity. Surpris-     completing a subtask, they are aware of what the next sub-
+ingly, this process is still manual and may be an explana-      task will be. In effect, developers maintain a rolling window
+tion for the low observance of use. Future enhancement to       of focus. Unfortunately, an interruption can severely derail
+IDEs may include the ability to automatically summarize         this process due to the memory strategies used in this pro-
+and highlight code differences between programming ses-         cess. The diverging needs of different task states suggest
+sions. This may provide additional cues for programmers         that there are opportunities for devising notations for ex-
+to trigger reminders on any incomplete tasks or unresolved      pressing the steps, objectives, and stages of a programming
+bugs.                                                           task. An IDE can formally support task stages by includ-
+                                                                ing perspectives for different task stages or introduce light-
+5.3. Toward Supporting Task Resumption                          weight mechanisms for annotating programming artifacts.
+                                                                A list of some measures that can support task state include:
+   Having seen the variety of activities developers perform
+at the beginning of a programming session, we attempt            · Task Sketches. Light-weight annotations of a task
+to identify how better tool support can be constructed for          breakdown: steps, objectives, and plans.
+suspending and resuming programming tasks. Developers
+are devoting a significant amount of time toward building        · Runtime Information. Values or visualizations of vari-
+knowledge and planning how to perform a programming                 ables or expressions from previous execution or debug-
+task during the start of a session. When resuming a pro-            ging session(s).
+gramming task, developers have a spectrum of resumption
+strategies available. The selection of these strategies will     · Prospective Cues. Contextual reminders that are dis-
+largely depend on the manner in which the developer was             played when a condition is true.
+interrupted and the current state of the programming task.
+However, the variety of suspended task states and types of      5.4. Threats to Validity
+knowledge programmers need to recall will pose many chal-
+lenges to developing tool support.                                 One main threat to validity for this analysis is that the
+                                                                period of edit lag does not necessarily distinguish the time
+   With involuntary interruptions, developers have limited      related to resuming a task from that of thinking about a new
+time to properly suspend the programming task and as a          task. In a controlled study, a researcher would be able to
+result will most likely select strategies that will prompt re-  control for whether a programmer was resuming an incom-
+call by using implicit cues. Unfortunately, the source of       plete task or starting a new task. In this study, we can use
+implicit cues are limited in current IDE systems. Because       the structure of activity to infer properties about task re-
+there are no explicit representations of plans, goals, or in-   sumption, but ultimately the effects may be confounded. In
+termediate knowledge used during a task, developers rely        the worst case, the experimental values found in this study
+on ad-hoc strategies to trigger and activate those memories.    serve as an upper bound. Future studies needs a stronger
+A likely reason why these strategies fail is caused by in-      method of separating this effect by accounting for which
+sufficient cues contained at the last site of work. There are   task(s) comprise a session. Possible methods include relat-
+several measures that future tools can make to improving        ing sessions to source code check-ins and task repository
+this scenario:                                                  activity.
+
+ · Automatic Tags. A tag cloud of links to recent source           Similarly, for the activities detected; such as task track-
+    code symbols and names inside method bodies.                ing usage, there is no direct causal relationship between
+                                                                starting a session and observance of an activity. Again, the
+                                                                experimental results found establish an upper bound on the
+                                                                activity corresponding with resuming a programming task
+and set the basis for future confirmatory studies.                 ing this time period, developers are performing a variety of
+   Finally, the data does not capture a complete representa-       activities that relate to rebuilding their task context.
+
+tion of all possible activities that were performed. Devel-           However, there is still much work to be done. The psy-
+opers may be using other sources of reminder cues such as          chology and environmental factors related to interruptions
+notes on their desk or comments in source code. Other types        remains a complex topic. Fortunately, understanding this
+of studies would be needed to be performed to measure the          topic has broad impact on the everyday activities of devel-
+frequency and effectiveness of these techniques.                   opers. Future research should investigate why developers
+                                                                   must visit several locations of code before coding and con-
+5.5. Future Work                                                   sider ways to rethink how IDE organizes content beyond
+                                                                   tabbed editing and hierarchical lists.
+   We are investigating several directions for expanding this
+research. To continue our work, we are conducting a formal         References
+survey of developers to further understand the kinds of re-
+sumption strategies that are commonly used. Second, we               [1] P. D. Adamczyk and B. P. Bailey. If not now, when?: the ef-
+will perform an ethnographic evaluation of developers re-                 fects of interruption at different moments within task execu-
+suming programming tasks to capture-information seeking                   tion. In CHI '04: Proceedings of the SIGCHI conference on
+requirements and common barriers faced. Finally, we will                  Human factors in computing systems, pages 271­278, New
+perform several experiments to better answer some of the                  York, NY, USA, 2004. ACM.
+questions raised in this study. What information are devel-
+opers seeking (or what did they forget) when resuming a              [2] E. M. Altmann and J. G. Trafton. Memory for goals: an
+programming task? What are effective cues for resuming                    activation-based model. Cognitive Science, 26:39­83, 2002.
+tasks: For example, would highlighting code differences of
+changes made during the last session better prompt devel-            [3] E. M. Altmann and J. G. Trafton. Task interruption: Re-
+opers' memories?                                                          sumption lag and the role of cues. In Proceedings of the 26th
+                                                                          annual conference of the Cognitive Science Society, 2004.
+   The analysis of session data can be expanded in several
+ways. An interesting aspect of the session data to investi-          [4] E. M. Altmann and J. G. Trafton. Timecourse of recovery
+gate is the time after the last edit in the session (interruption         from task interruption: Data and a model. Psychonomic Bul-
+lag). The interruption lag may include activities related to              letin & Review, 14:1079­1084, 2007.
+preparing the workspace to facilitate resumption. Another
+possible analysis includes examining the relationships be-           [5] L. Bannon, A. Cypher, S. Greenspan, and M. L. Monty.
+tween groups of sessions. For example, in reviewing vi-                   Evaluation and analysis of users' activity organization. In
+sualizations of developer sessions, we observed a pattern                 CHI '83: Proceedings of the SIGCHI conference on Human
+of "dabbling sessions" early in the day where developers                  Factors in Computing Systems, pages 54­57, New York, NY,
+would navigate for a few minutes but make no changes. Pre-                USA, 1983. ACM.
+sumingly, after "warming up" for an hour or two, the devel-
+oper have a long productive session. Another trend we ob-            [6] E. Cutrell, M. Czerwinski, and E. Horvitz. Notification, dis-
+served that was very productive days containing many long                 ruption and memory: Effects of messaging interruptions on
+sessions were followed by several days of low productivity                memory and performance. 2001.
+(a few small sessions). There may be the effects of mental
+fatigue and workload regulating the nature of sessions.              [7] M. Czerwinski, E. Horvitz, and S. Wilhite. A diary study of
+                                                                          task switching and interruptions. In CHI '04: Proceedings
+6. Conclusions                                                            of the SIGCHI conference on Human factors in computing
+                                                                          systems, pages 175­182, New York, NY, USA, 2004. ACM
+   We have presented an analysis of three sets of data that               Press.
+provides new insight into how programmers resume a pro-
+gramming task -- particularly characterizing what activi-            [8] U. Dekel. Designing a prosthetic memory to support soft-
+ties are performed at the beginning of a resumed session.                 ware developers. In ICSE Companion '08: Companion of
+                                                                          the 30th international conference on Software engineering,
+   Some interesting results have emerged from these data.                 pages 1011­1014, New York, NY, USA, 2008. ACM.
+In only a small percentage of sessions did developers re-
+sume coding in less than a minute. Developers consistently           [9] R. DeLine, M. Czerwinski, B. Meyers, G. Venolia,
+spend a significant portion of their time doing non-editing               S. Drucker, and G. Robertson. Code thumbnails: Using spa-
+activities before making their first edit in a session. Dur-              tial memory to navigate source code. In VLHCC '06: Pro-
+                                                                          ceedings of the Visual Languages and Human-Centric Com-
+                                                                          puting, pages 11­18, Washington, DC, USA, 2006. IEEE
+                                                                          Computer Society.
+
+                                                                   [10] R. DeLine, M. Czerwinski, and G. Robertson. Easing pro-
+                                                                          gram comprehension by sharing navigation data. In VLHCC
+                                                                          '05: Proceedings of the 2005 IEEE Symposium on Visual
+                                                                          Languages and Human-Centric Computing, pages 241­248,
+                                                                          Washington, DC, USA, 2005. IEEE Computer Society.
+
+                                                                   [11] R. DeLine, A. Khella, M. Czerwinski, and G. Robertson.
+                                                                          Towards understanding programs through wear-based filter-
+                                                                          ing. In SoftVis '05: Proceedings of the 2005 ACM sympo-
+      sium on Software visualization, pages 183­192, New York,       [26] K. Renaud and P. Gray. Making sense of low-level usage
+      NY, USA, 2005. ACM.                                                  data to understand user activities. In In Proceedings of SAIC-
+[12] T. Gillie and D. Broadbent. What makes interruptions dis-             SIT '04, pages 115­124, , Republic of South Africa, 2004.
+      ruptive? a study of length, similiarity, and complexity. Psy-        South African Institute for Computer Scientists and Infor-
+      chological Research, 50:243­250, 1998.                               mation Technologists.
+[13] H. M. Hodgetts and D. M. Jones. Contextual cues aid re-
+      covery from interrruption: The role of associative activita-   [27] R. Robbes and M. Lanza. Characterizing and understand-
+      tion. Journal of Experimental Psychology: Learning, Mem-             ing development sessions. In ICPC '07: Proceedings of
+      ory, and Cognition, 32(5):1120­1132, 2006.                           the 15th IEEE International Conference on Program Com-
+[14] M. Kersten and G. C. Murphy. Using task context to im-                prehension, pages 155­166, Washington, DC, USA, 2007.
+      prove programmer productivity. In SIGSOFT '06/FSE-14:                IEEE Computer Society.
+      Proceedings of the 14th ACM SIGSOFT international sym-
+      posium on Foundations of software engineering, pages 1­11,     [28] I. Safer and G. C. Murphy. Comparing episodic and se-
+      New York, NY, USA, 2006. ACM.                                        mantic interfaces for task boundary identification. In CAS-
+[15] A. J. Ko, R. DeLine, and G. Venolia. Information needs in             CON '07: Proceedings of the 2007 conference of the center
+      collocated software development teams. In ICSE '07: Pro-             for advanced studies on Collaborative research, pages 229­
+      ceedings of the 29th international conference on Software            243, New York, NY, USA, 2007. ACM.
+      Engineering, pages 344­353, Washington, DC, USA, 2007.
+      IEEE Computer Society.                                         [29] J. Singer, R. Elves, and M.-A. Storey. Navtracks: Supporting
+[16] T. D. Latoza, G. Venolia, and R. Deline. Maintaining mental           navigation in software maintenance. In ICSM '05: Proceed-
+      models: a study of developer work habits. In ICSE '06:               ings of the 21st IEEE International Conference on Software
+      Proceeding of the 28th international conference on Software          Maintenance, pages 325­334, Washington, DC, USA, 2005.
+      engineering, pages 492­501, New York, NY, USA, 2006.                 IEEE Computer Society.
+      ACM Press.
+[17] T. C. Lethbridge, S. E. Sim, and J. Singer. Studying soft-      [30] V. Sinha, D. Karger, and R. Miller. Relo: Helping users man-
+      ware engineers: Data collection techniques for software              age context during interactive exploratory visualization of
+      field studies. Empirical Software Engineering, 10(3):311­            large codebases. In VLHCC '06: Proceedings of the Visual
+      341, July 2005.                                                      Languages and Human-Centric Computing, pages 187­194,
+[18] G. Mark, V. M. Gonzalez, and J. Harris. No task left be-              Washington, DC, USA, 2006. IEEE Computer Society.
+      hind? Examining the nature of fragmented work. In CHI
+      '05: Proceedings of the SIGCHI conference on Human fac-        [31] M.-A. Storey, C. Best, J. Michaud, D. Rayside, M. Litoiu,
+      tors in computing systems, pages 321­330, New York, NY,              and M. Musen. Shrimp views: an interactive environment
+      USA, 2005. ACM Press.                                                for information visualization and navigation. In CHI '02:
+[19] F. McKinney. Studies in the retention of interrupted learning         CHI '02 extended abstracts on Human factors in computing
+      activities. Journal of Comparative Psychology, 19 (2):265­           systems, pages 520­521, New York, NY, USA, 2002. ACM.
+      296, 1935.
+[20] Y. Miyata and D. A. Norman. Psychological issues in sup-        [32] M.-A. Storey, J. Ryall, R. I. Bull, D. Myers, and J. Singer.
+      port of multiple activities. In D. A. Norman and S. W.               Todo or to bug: exploring how task annotations play a role in
+      Draper, editors, User Centered System Design: New Per-               the work practices of software developers. In ICSE '08: Pro-
+      spectives on Human-Computer Interaction, pages 265­284.              ceedings of the 30th international conference on Software
+      Erlbaum, Hillsdale, NJ, 1986.                                        engineering, pages 251­260, New York, NY, USA, 2008.
+[21] C. A. Monk. The efffect of frequent versus infrequent inter-          ACM.
+      ruptions on primary task resumption. In Proceedings of the
+      Human Factors and Ergonomics Society 48th Annual Meet-         [33] The Eclipse Foundation. Usage Data Collector Results.
+      ing, 2004.                                                           January 5th, 2009. Website, http://www.eclipse.org/org/
+[22] G. C. Murphy, M. Kersten, and L. Findlater. How are Java              usagedata/reports/data/commands.csv.
+      software developers using the Eclipse IDE? volume 23,
+      pages 76­83, Los Alamitos, CA, USA, 2006. IEEE Comp.           [34] J. G. Trafton, E. M. Altmann, and D. P. Brock. Huh, what
+      Soc. Press.                                                          was i doing? how people use environmental cues after an
+[23] B. O'Conaill and D. Frohlich. Timespace in the workplace:             interruption. In Proceedings of the Human Factors and Er-
+      dealing with interruptions. In CHI '95: Conference compan-           gonomics Society 49th Annual Meeting, 2005.
+      ion on Human factors in computing systems, pages 262­263,
+      New York, NY, USA, 1995. ACM Press.                            [35] J. G. Trafton, E. M. Altmann, D. P. Brock, and F. E. Mintz.
+[24] M. Offner. Mental Fatigue. Warwick & York, 1911.                      Preparing to resume an interrupted task: effects of prospec-
+[25] C. Parnin and C. Go¨rg. Building usage contexts during pro-           tive goal encoding and retrospective rehearsal. International
+      gram comprehension. In ICPC '06: Proceedings of the                  Journal of Human-Computer Studies, 58:583­603, 2003.
+      14th IEEE International Conference on Program Compre-
+      hension, pages 13­22, 2006.                                    [36] R. van Solingen, E. Berghout, and F. van Latum. Interrupts:
+                                                                           Just a minute never is. IEEE Software, 15(5):97­103, 1998.
+
+                                                                     [37] B. Zeigarnik. Das behalten erledigter und unerledigter hand-
+                                                                           lungen. Psychologische Forschung, 9 (1):1­85, 1927.
+
+                                                                     [38] F. R. H. Zijlstra, R. A. Roe, A. B. Leonova, and I. Krediet.
+                                                                           Temporal factors in mental work: Effects of interrupted ac-
+                                                                           tivities. Journal of Occupational and Organizational Psy-
+                                                                           chology, 72:163­185, 1999.
+
+                                                                     [39] L. Zou and M. W. Godfrey. An industrial case study of pro-
+                                                                           gram artifacts viewed during maintenance tasks. In WCRE
+                                                                           '06: Proceedings of the 13th Working Conference on Re-
+                                                                           verse Engineering, pages 71­82, Washington, DC, USA,
+                                                                           2006. IEEE Computer Society.
+

@@ -1,0 +1,169 @@
+{
+  "id": "tratt-tratt-dynamically-typed-languages",
+  "title": "Laurence Tratt: Dynamically Typed Languages",
+  "channel": "tratt.net",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://tratt.net/laurie/research/pubs/html/tratt__dynamically_typed_languages/",
+  "summary": "Tratt's survey of dynamically typed languages: static types catch few of the important errors, whole-program type checking ossifies systems, dynamic languages trade speed for simplicity, and testing covers most type errors.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/retrofitting-static-types-onto-dynamically-typed",
+      "stance": "asserts",
+      "quote": "in practice, run-time type errors in deployed programs are exceedingly rare",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/dynamic-languages-can-run-programs-deliberately",
+      "stance": "asserts",
+      "quote": "static types inhibit large-scale refactorings, tending to ossify a program’s structure",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/dynamic-typing-faster-prototyping-rapid-iteration",
+      "stance": "asserts",
+      "quote": "Such simplicity makes both learning and using dynamically typed languages simpler, in general, than statically typed languages",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/static-typing-yields-better-runtime-performance",
+      "stance": "asserts",
+      "quote": "There is little doubt that, in practice, equivalent programs in dynamically typed languages are slower than in statically typed languages.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/unit-tests-catch-most-type-errors",
+      "stance": "asserts",
+      "quote": "unit testing allows developers to make guarantees of their programs that are considerably in excess of anything that static typing can provide",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Tests check behaviour that types cannot express, but they are not exhaustive, so types and tests are complementary rather than one subsuming the other.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "The 400 bugs studied had already survived each project's testing and review, yet 15% were still detectable by adding type annotations, so tests and review let a non-trivial residue of type errors through; the study cannot say what fraction of all type errors tests caught earlier.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L24-L31",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "The provided tests did expose every injected type error in Groovy as a run-time failure, so tests caught them, but fixing from that failure took 2-5x longer than from the compiler message because the symptom appeared far from the cause and required much more navigation.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L1365-L1371",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/static-typing-catches-type-errors-compile",
+      "stance": "asserts",
+      "quote": "statically typed programs have an implicit form of documentation within them, which happens to be machine checkable",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/mainstream-static-type-systems-cannot-express",
+      "stance": "asserts",
+      "quote": "This limitation is shared by virtually all statically typed languages.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Refinement and dependent types can express such constraints but remain niche; mainstream systems cannot.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.35,
+          "note": "StringError (wrong content of a string such as a bad URL or SQL) is the second largest class of bugs neither Flow nor TypeScript could detect, because the string type is opaque to most static type systems and refining it remains an open problem; a value-level constraint example matching the claim's mechanism.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L428-L441",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.35,
+          "note": "The semantic-error tasks are concrete cases Java's type system cannot express: a wrong job class with a compatible interface and a missing method call both type-check, and static typing gave no measurable help in fixing them.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L657-L678",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/small-increases-type-system-expressiveness-cause",
+      "stance": "asserts",
+      "quote": "relatively small increases in the expressivity of static type systems cause a disproportionately large increase in complexity",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Borne out by the history of Scala, Java generics and TypeScript's type-level programming, though it is a qualitative observation.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/any-sound-static-type-system-rejects",
+      "stance": "asserts",
+      "quote": "Since any practical type system needs to be both decidable and sound, they are not complete; in other words, certain valid programs will be rejected",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/type-systems-themselves-contain-soundness-bugs",
+      "stance": "asserts",
+      "quote": "the vast majority of static type systems are not proved correct; some are sufficiently complex that a full proof of correctness is impractical or impossible",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Eiffel covariance, Java generics with arrays, and unsoundness found in Scala and TypeScript are documented cases.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/automatic-memory-management-saves-large-share",
+      "stance": "asserts",
+      "quote": "Manual memory management – when the programmer must manually allocate and free memory – wastes programmer resources",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Memory-safety bugs are the majority of serious vulnerabilities in C and C++ codebases per Microsoft and Google data.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Memory errors are 5.44% of bug-fix commits and are concentrated in unmanaged languages (C, C++, Objective-C) with statistical significance, but garbage-collected Java still has above-average memory errors (29% of them leaks), and programmer time is not measured; the reproduction could not repeat this bug-category analysis.",
+          "source": "software-practices/sources/ray2014-languages-github.txt#L607-L613",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/static-typing-suits-safety-performance-critical",
+      "stance": "asserts",
+      "quote": "it is my contention that both statically typed and dynamically typed languages are required for the increasingly broad range of tasks",
+      "verdicts": []
+    }
+  ]
+}

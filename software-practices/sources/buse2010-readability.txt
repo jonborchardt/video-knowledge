@@ -1,0 +1,839 @@
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS                                                                                                1
+
+   Learning a Metric for Code Readability
+
+                                        Raymond P.L. Buse, Westley Weimer
+
+Abstract--In this paper, we explore the concept of code readability and investigate its relation to software quality. With data collected
+from 120 human annotators, we derive associations between a simple set of local code features and human notions of readability.
+Using those features, we construct an automated readability measure and show that it can be 80% effective, and better than a human
+on average, at predicting readability judgments. Furthermore, we show that this metric correlates strongly with three measures of
+software quality: code changes, automated defect reports, and defect log messages. We measure these correlations on over 2.2
+million lines of code, as well as longitudinally, over many releases of selected projects. Finally, we discuss the implications of this study
+on programming language design and engineering practice. For example, our data suggests that comments, in of themselves, are less
+important than simple blank lines to local judgments of readability.
+
+Index Terms--software readability, program understanding, machine learning, software maintenance, code metrics, FindBugs
+
+                                                               3
+
+1 INTRODUCTION                                                                its sequencing control (e.g., he conjectured that goto
+                                                                              unnecessarily complicates program understanding), and
+W E define readability as a human judgment of how                             employed that notion to help motivate his top-down
+         easy a text is to understand. The readability of a                   approach to system design [9].
+program is related to its maintainability, and is thus a key
+factor in overall software quality. Typically, maintenance                       We present a descriptive model of software readability
+will consume over 70% of the total lifecycle cost of                          based on simple features that can be extracted automati-
+a software product [4]. Aggarwal claims that source                           cally from programs. This model of software readability
+code readability and documentation readability are both                       correlates strongly with human annotators and also with
+critical to the maintainability of a project [1]. Other                       external (widely available) notions of software quality,
+researchers have noted that the act of reading code is                        such as defect detectors and software changes.
+the most time-consuming component of all maintenance
+activities [8], [33], [35]. Readability is so significant, in                    To understand why an empirical and objective model
+fact, that Elshoff and Marcotty, after recognizing that                       of software readability is useful, consider the use of read-
+many commercial programs were much more difficult                             ability metrics in natural languages. The Flesch-Kincaid
+to read than necessary, proposed adding a development                         Grade Level [11], the Gunning-Fog Index [15], the SMOG
+phase in which the program is made more readable [10].                        Index [28], and the Automated Readability Index [21] are
+Knight and Myers suggested that one phase of soft-                            just a few examples of readability metrics for ordinary
+ware inspection should be a check of the source code                          text. These metrics are all based on simple factors such as
+for readability [22] to ensure maintainability, portability,                  average syllables per word and average sentence length.
+and reusability of the code. Haneef proposed adding a                         Despite this simplicity, they have each been shown to be
+dedicated readability and documentation group to the                          quite useful in practice. Flesch-Kincaid, which has been
+development team, observing that, "without established                        in use for over 50 years, has not only been integrated
+and consistent guidelines for readability, individual re-                     into popular text editors including Microsoft Word, but
+viewers may not be able to help much" [16].                                   has also become a United States governmental standard.
+                                                                              Agencies, including the Department of Defense, require
+   We hypothesize that programmers have some intu-                            many documents and forms, internal and external, to
+itive notion of this concept, and that program features                       meet have a Flesch readability grade of 10 or below
+such as indentation (e.g., as in Python [40]), choice of                      (DOD MIL-M-38784B). Defense contractors also are often
+identifier names [34], and comments are likely to play a                      required to use it when they write technical manuals.
+part. Dijkstra, for example, claimed that the readability
+of a program depends largely upon the simplicity of                              These metrics can help organizations gain some con-
+                                                                              fidence that their documents meet goals for readability
+· Buse and Weimer are with the Department of Computer Science at The          very cheaply, and have become ubiquitous for that rea-
+   Universiy of Virginia, Charlottesville, VA 22904.                          son. We believe that similar metrics, targeted specifically
+   E-mail: {buse, weimer}@cs.virginia.edu                                     at source code and backed with empirical evidence
+   This research was supported in part by, but may not reflect the positions  for effectiveness, can serve an analogous purpose in
+   of, National Science Foundation Grants CNS 0716478 and CNS 0905373,        the software domain. Readability metrics for the niche
+   Air Force Office of Scientific Research grant FA9550-07-1-0532, and        areas such as computer generated math [26], treemap
+   Microsoft Research gifts.                                                  layout [3], and hypertext [17] have been found useful.
+                                                                              We describe the first general readability metric for source
+                                                                              code.
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS                2
+
+   It is important to note that readability is not the               one in the previous presentation.
+same as complexity, for which some existing metrics               · An additional experiment correlating our readabil-
+have been empirically shown useful [41]. Brooks claims
+that complexity is an "essential" property of software;              ity metric with a more natural notion of software
+it arises from system requirements, and cannot be ab-                quality and defect density: explicit human mentions
+stracted away [12]. In the Brooks model, readability is              of bug repair. Using software version control reposi-
+"accidental" because it is not determined by the prob-               tory information we coarsely separate changes made
+lem statement. In principle, software engineers can only             to address bugs from other changes. We find that
+control accidental difficulties: implying that readability           low readability correlates more strongly with this
+can be addressed more easily than intrinsic complexity.              direct notion of defect density than it does with the
+                                                                     previous approach of using potential bugs reported
+   While software complexity metrics typically take into             by static analysis tools.
+account the size of classes and methods, and the extent of        · An additional experiment which compares readabil-
+their interactions, the readability of code is based primar-         ity to cyclomatic complexity. This experiment serves
+ily on local, line-by-line factors. Our notion of readability        to validate our claim that our notion of readability
+arises directly from the judgments of actual human                   is largely independent from traditional measures of
+annotators who do not have context for the code they                 code complexity.
+are judging. Complexity factors, on the other hand, may           · An additional longitudinal experiment showing
+have little relation to what makes code understandable               how changes in readability can correlate with
+to humans. Previous work [31] has shown that attempt-                changes in defect density as a program evolves. For
+ing to correlate artificial code complexity metrics directly         ten versions of each of five programs we find that
+to defects is difficult, but not impossible. Although both           projects with unchanging readability have similarly
+involve local factors such as indentation, readability is            unchanging defect densities, while a project that
+also distinct from coding standards (e.g., [2], [6], [38]),          experienced a sharp drop in readability was subject
+conventions primarily intended to facilitate collaboration           to a corresponding rise in defect density.
+by maintaining uniformity between code written by
+different developers.                                             There are a number of possible uses for an automated
+                                                               readability metric. It may help developers to write more
+   In this study, we have chosen to target readability         readable software by quickly identifying code that scores
+directly both because it is a concept that is independently    poorly. It can assist project managers in monitoring and
+valuable, and also because developers have great control       maintaining readability. It can serve as a requirement
+over it. We show in Section 5 that there is indeed a           for acceptance. It can even assist inspections by helping
+significant correlation between readability and quality.       to target effort at parts of a program that may need
+The main contributions of this paper are:                      improvement. Finally, it can be used by other static
+                                                               analyses to rank warnings or otherwise focus developer
+   · A technique for the construction of an automatic          attention on sections of the code that are less readable
+      software readability metric based on local code fea-     and thus more likely to contain bugs. The readability
+      tures.                                                   metric presented in this paper has already been used
+                                                               successfully to aid a static specification mining tool [24]
+   · A survey of 120 human annotators on 100 code              -- in that setting, knowing whether a code path was
+      snippets that forms the basis of the metric presented    readable or not had over twice the predictive power (as
+      and evaluated in this paper. We are unaware of any       measured by ANOVA F -score) as knowing whether a
+      published software readability study of comparable       code path was feasible or not.
+      size (12,000 human judgments). We directly evaluate
+      the performance of our model on this data set.              The structure of this paper is as follows. In Section 2
+                                                               we present a study of readability involving 120 hu-
+   · A set of experiments which reveal significant cor-        man annotators. We present the results of that study
+      relations between our metric for readability and         in Section 3, and in Section 4 we determine a small
+      external notions of software quality including defect    set of features that is sufficient to capture the notion of
+      density.                                                 readability for a majority of annotators. In Section 5 we
+                                                               discuss the correlation between our readability metric
+   · A discussion of the features involved in our met-         and external notions of software quality. We discuss
+      ric and their relation to software engineering and       some of the implications of this work on programming
+      programming language design.                             language design in Section 6, discuss potential threats to
+                                                               validity in Section 7, discuss possibilities for extension
+Some of these main points were previously presented [5].       in Section 8, and conclude in Section 9.
+This article also includes:
+                                                               2 STUDY METHODOLOGY
+   · A broader base of benchmark programs for em-
+      pirical experiments linking our readability metric       A consensus exists that readability is an essential de-
+      with notions of software quality. In particular, we      termining characteristic of code quality [1], [4], [8], [9],
+      evaluate on over two million lines of code compared
+      to over one million in previous work.
+
+   · A reporting of the primary results of our analysis
+      in terms of five correlation statistics as compared to
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS                3
+
+[10], [16], [31], [32], [33], [34], [35], [41], but not about  have a strong impact on readability and, by extension,
+which factors contribute to human notions of software          software quality.
+readability the most. A previous study by Tenny looked
+at readability by testing comprehension of several ver-           With these considerations in mind, we restrict snippets
+sions of a program [39]. However, such an experiment           for Java programs as follows. A snippet consists of pre-
+is not sufficiently fine-grained to extract precise features.  cisely three consecutive simple statements [14], the most
+In that study, the code samples were large, and thus the       basic unit of a Java program. Simple statements include
+perceived readability arose from a complex interaction         field declarations, assignments, function calls, breaks,
+of many features, potentially including the purpose of         continues, throws and returns. We find by experience
+the code. In contrast, we choose to measure the software       that snippets with fewer such instructions are sometimes
+readability of small (7.7 lines on average) selections of      too short for a meaningful evaluation of readability, but
+code. Using many short code selections increases our           that three statements are generally both adequate to
+ability to tease apart which features are most predictive      cover a large set of local features and sufficient for a
+of readability. We now describe an experiment designed         fine-grained feature-based analysis.
+to extract a large number of readability judgments over
+short code samples from a group of human annotators.              A snippet does include preceding or in-between lines
+                                                               that are not simple statements, such as comments, func-
+   Formally, we can characterize software readability as a     tion headers, blank lines, or headers of compound state-
+mapping from a code sample to a finite score domain. In        ments like if-else, try-catch, while, switch, and
+this experiment, we presented human annotators with a          for. Furthermore, we do not allow snippets to cross
+sequence of short code selections, called snippets, through    scope boundaries. That is, a snippet neither spans mul-
+a web interface. The annotators were asked to individ-         tiple methods nor starts inside a compound statement
+ually score each snippet based on their personal esti-         and then extends outside it (however, we do permit
+mation of readability. We now discuss three important          snippets to start outside of a compound statement but
+parameters: snippet selection policy (Section 2.1), snippet    end before the statement is complete). We find that
+scoring (Section 2.2), and participation (Section 2.3).        with this set of policies, over 90% of statements in
+                                                               all of the programs we considered (see Section 5) are
+2.1 Snippet Selection Policy                                   candidates for incorporation in some snippet. The few
+                                                               non-candidate lines are usually found in functions that
+We claim that the readability of code is very different        have fewer than three statements. This snippet definition
+from that of natural languages. Code is highly structured      is specific to Java but extends to similar languages like
+and consists of elements serving different purposes,           C and C++. We find the size distribution (in number of
+including design, documentation, and logic. These issues       characters) for the 100 snippets generated for this study
+make the task of snippet selection an important concern.       to be approximately normal, but with a positive skew
+We have designed an automated policy-based tool that           (mean of 278.94, median of 260, minimum of 92 and
+extracts snippets from Java programs.                          maximum of 577).
+
+   First, snippets should be relatively short to aid feature      The snippets were generated from five open source
+discrimination. However, if snippets are too short, then       projects (see Figure 10). They were chosen to include
+they may obscure important readability considerations.         varying levels of maturity and multiple application do-
+Second, snippets should be logically coherent to allow         mains to keep the model generic and widely-applicable.
+annotators the context to appreciate their readability. We     We discuss the possibility of domain-specific models in
+claim that they should not span multiple method bodies         Section 8.
+and that they should include adjacent comments that
+document the code in the snippet. Finally, we want to          2.2 Readability Scoring
+avoid generating snippets that are "trivial." For example,
+we are uninterested in evaluating the readability of a         Prior to their participation, our volunteer human an-
+snippet consisting entirely of boilerplate import state-       notators were told that they would be asked to rate
+ments or entirely of comments.                                 Java code on its readability, and that their participation
+                                                               would assist in a study of that aspect of software quality.
+   Consequently, an important tradeoff exists such that        Responses were collected using a web-based annotation
+snippets must be as short as possible to adequately            tool (shown in Figure 1) that users were permitted to
+support analysis by humans, yet must be long enough to         access at their leisure. Participants were presented with
+allow humans to make significant judgments on them.            a sequence of snippets and buttons labeled 1­5 [25].
+Note that it is not our intention to "simulate" the reading    Each participant was shown the same set of one hundred
+process, where context may be important to understand-         snippets in the same order. Participants were graphically
+ing. Quite the contrary: we intend to eliminate context        reminded that they should select a number near five for
+and complexity to a large extent and instead focus on          "more readable" snippets and a number near one for
+the "low-level" details of readability. We do not imply        "less readable" snippets, with a score of three indicating
+that context is unimportant; we mean only to show that         neutrality. Additionally, there was an option to skip the
+there exists a set of local features that, by themselves,      current snippet; however, it was used very infrequently
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS                         4
+
+Fig. 1. Web-based tool for annotating the readability of                Fig. 2. The complete data set obtained for this study.
+code snippets used for this study.                                      Each box corresponds to a judgment made by a human
+                                                                        annotator. Darker colors correspond to lower readability
+                                                                        scores (e.g., 1 and 2) the lighter ones correspond to
+                                                                        higher scores. The vertical bands, which occur much
+                                                                        more frequently here than in a figure with random col-
+                                                                        oration, indicate snippets that were judged similarly by
+                                                                        many annotators. Our metric for readability is derived
+                                                                        from these 12,000 judgments.
+
+(15 times in 12,000). Snippets were not modified from the
+source, but they were syntax highlighted to better sim-
+ulate the way code is typically viewed.1 Finally, clicking
+on a "help" link reminded users that they should score
+the snippets "based on [their] estimation of readability"
+and that "readability is [their] judgment about how
+easy a block of code is to understand." Readability was
+intentionally left formally undefined in order to capture
+the unguided and intuitive notions of participants.
+
+2.3 Study Participation                                                 Fig. 3. Distribution of readability scores made by 120
+                                                                        human annotators on code snippets taken from several
+The study was advertised at several computer science                    open source projects (see Figure 10).
+courses at The University of Virginia. As such, participants
+had varying experience reading and writing code: 17                     without placing any time pressure on the activity itself
+were taking first-year courses, 63 were taking second                   (e.g., there was no incentive to make rushed readability
+year courses, 30 were taking third or fourth year courses,              judgments); this setup was made clear to participants.
+and 10 were graduate students. In total, 120 students par-              All collected data was kept carefully anonymous, and
+ticipated. The study ran from Oct 23 to Nov 2, 2008. Par-               participants were aware of this fact: completing the
+ticipants were told that all respondents would receive $5               survey yielded a randomly-generated code that could be
+USD, but that the fifty people who started (not finished)               monetarily redeemed. In Section 4.2 we discuss the effect
+the survey the earliest would receive $10 USD. The use of               of experience on readability judgments. In Section 7
+start time instead of finish time encouraged participation              we discuss the implications of our participant pool on
+                                                                        experiment validity.
+   1. Both syntax highlighting and the automatic formatting of certain
+IDEs (e.g., Eclipse) may change the perceived readability of code. In
+our opinion, the vast majority of editors feature syntax highlighting,
+but while automatic formatting is often available and is prevalent in
+some editors, it is not as universally used. We thus present snippets
+with syntax highlighting but without changing the formatting.
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS                          5
+
+Statistic    Avg--Humans         Avg--Model
+
+Cohen's      0.18 (p=0.0531)  0.07 (p=0.0308)
+Weighted     0.33 (p=0.0526)  0.27 (p=0.0526)
+Kendall's    0.44 (p=0.0090)  0.53 (p<0.0001)
+Pearson's r  0.56 (p=0.0075)  0.63 (p<0.0001)
+Spearman's   0.55 (p=0.0089)  0.71 (p<0.0001)
+
+Fig. 4. Five statistics for inter-annotator agreement. The
+"Avg--Humans" Column gives the average value of the
+statistic when applied between human annotator scores
+and the average human annotator score (or mode in the
+case of ). The "Avg--Model" column show the value of
+the statistic between our model's output and the average
+(or mode) human readability scores. In both cases we
+give the corresponding p-values for the null-hypothesis
+(the probability that the correlation is random).
+
+3 STUDY RESULTS                                                          Fig. 5. Distribution of the average readability scores
+                                                                         across all the snippets. The bimodal distribution presents
+Our 120 annotators each scored 100 snippets for a total                  us with a natural cutoff point from which we can train a
+of 12,000 distinct judgments. Figure 2 provides a graph-                 binary classifier. The curve is a probability-density repre-
+ical representation of this publicly-available data.2 The                sentation of the distribution with a window size of 0.8.
+distribution of scores can be seen in Figure 3.
+                                                                         two annotators at a time. We extend it by finding the
+   First, we consider inter-annotator agreement, and eval-               average correlation between our unified model and each
+uate whether we can extract a single coherent model                      annotator, the results are tabulated in Figure 4. In the
+from this data set. For the purpose of measuring agree-                  case of  and Weighted  we use the mode of the
+ment, we consider several correlation statistics. One                    scores because discrete values are expected. Translating
+possibility is Cohen's  which is often used as a measure                 this sort of statistic into qualitative terms is difficult,
+of inter-rater agreement for categorical items. However,                 but correlation greater than 0.5 (Pearson/Spearman) is
+the fact that our judgment data is ordinal (i.e., there                  typically considered to be moderate to strong for a
+is a qualitative relationship and total order between                    human-related study[13]. We use this unified model in
+categories) is an important statistical consideration. Since             our subsequent experiments and analyses. We employ
+the annotators did not receive precise guidance on how                   Spearman's  throughout this study as our principle
+to score snippets, absolute score differences are not                    measure of agreement because it is the most general, and
+as important as relative ones. If two annotators both                    it appears to model the greatest degree of agreement.
+gave snippet X a higher score than snippet Y , then                      Figure 5 shows the range of agreements.
+we consider them to be in agreement with respect to
+those two snippets, even if the actual numerical score                      This analysis seems to confirm the widely-held belief
+values differ. Thusly, in this study we tested a linear-                 that humans agree significantly on what readable code
+weighted version of  (which conceptually gives some                      looks like, but not to an overwhelming extent. One im-
+credit for rankings that are "close"). In addition, we                   plication is that there are, indeed, underlying factors that
+considered Kendall's  (i.e., the number of bubble-sort                   influence readability of code. By modeling the average
+operations to order one list in the same way as a second),               score, we can capture most of these common factors,
+Pearson's r (measures the degree of linear dependence)                   while simultaneously omitting those that arise largely
+and Spearman's  (the degree of dependence with any                       from personal preference.
+arbitrary monotonic function, closely related to Pearson's
+r) [37]. For these statistics, a correlation of 1 indicates              4 READABILITY MODEL
+perfect correlation, and 0 indicates no correlation (i.e.,
+uniformly random scoring with only random instances                      We have shown that there is significant agreement be-
+of agreement). In the case of Pearson a correlation of 0.5               tween our group of annotators on the relative readability
+would arise, for example, if two annotators scored half                  of snippets. However, the processes that underlie this
+of the snippets exactly the same way, and then scored                    correlation are unclear. In this section, we explore the
+the other half randomly.                                                 extent to which we can mechanically predict human
+                                                                         readability judgments. We endeavor to determine which
+   We can combine our large set of judgments into a                      code features are predictive of readability, and construct
+single model simply by averaging them. Because each                      a model (i.e., an automated software readability metric)
+of the correlation statistics compares the judgments of                  to analyze other code.
+
+   2. The dataset and our tool are available at http://www.cs.virginia.
+edu/weimer/readability
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS               6
+
+Avg.  Max.  Feature Name                                      the training phase, we give a classifier a set of instances
+                                                              along with a labeled "correct answer" based on the
+            line length (# characters)                        readability data from our annotators. The labeled correct
+            # identifiers                                     answer is a binary judgment partitioning the snippets
+            identifier length                                 into "more readable" and "less readable" based on the
+            indentation (preceding whitespace)                human annotator data. We designate snippets that re-
+            # keywords                                        ceived an average score below 3.14 to be "less readable"
+            # numbers                                         based on the natural cutoff from the bimodal distribution
+            # comments                                        in Figure 5. We group the remaining snippets and con-
+            # periods                                         sider them to be "more readable." Furthermore, the use
+            # commas                                          of binary classifications also allows us to take advantage
+            # spaces                                          of a wider variety of learning algorithms.
+            # parenthesis
+            # arithmetic operators                               When the training is complete, we apply the classifier
+            # comparison operators                            to an instance it has not seen before, obtaining an
+            # assignments (=)                                 estimate of the probability that it belongs in the "more
+            # branches (if)                                   readable" or "less readable" class. This allows us to use
+            # loops (for, while)                              the probability that the snippet is "more readable" as
+            # blank lines                                     a score for readability. We used the Weka [18] machine
+            # occurrences of any single character             learning toolbox.
+            # occurrences of any single identifier
+                                                                 We build a classifier based on a set of features that
+Fig. 6. The set of features considered by our metric. Read    have predictive power with respect to readability. To
+"#" as "number of . . . "                                     help mitigate the danger of over-fitting (i.e., of construct-
+                                                              ing a model that fits only because it is very complex in
+4.1 Model Generation                                          comparison the amount of data), we use 10-fold cross
+                                                              validation [23] (in Section 4.2 we discuss the results
+First, we form a set of features that can be detected         of a principle component analysis designed to help us
+statically from a snippet or other block of code. We          understand the true complexity of the model relative to
+have chosen features that are relatively simple, and that     the data). 10-fold cross validation consists of randomly
+intuitively seem likely to have some effect on readability.   partitioning the data set into 10 subsets, training on 9 of
+They are factors related to structure, density, logical       them and testing on the last one. This process is repeated
+complexity, documentation, and so on. Importantly, to         10 times, so that each of the 10 subsets is used as the test
+be consistent with our notion of readability as discussed     data exactly once. Finally, to mitigate any bias arising
+in Section 2.1, each feature is independent of the size of a  from the random partitioning, we repeat the entire 10-
+code block. Figure 6 enumerates the set of code features      fold validation 10 times and average the results across
+that our metric considers when judging code readability.      all of the runs.
+Each feature can be applied to an arbitrary sized block of
+Java source code, and each represents either an average       4.2 Model Performance
+value per line, or a maximum value for all lines. For
+example, we have a feature that represents the average        We now test the hypothesis that local textual surface
+number of identifiers in each line, and another that          features of code are sufficient to capture human no-
+represents the maximum number in any one line. The            tions of readability. Two relevant success metrics in an
+last two features listed in Figure 6 detect the character     experiment of this type are recall and precision. Here,
+and identifier that occur most frequently in a snippet,       recall is the percentage of those snippets judged as
+and return the number of occurrences found. Together,         "more readable" by the annotators that are classified as
+these features create a mapping from snippets to vectors      "more readable" by the model. Precision is the fraction
+of real numbers suitable for analysis by a machine-           of the snippets classified as "more readable" by the
+learning algorithm.                                           model that were also judged as "more readable" by
+                                                              the annotators. When considered independently, each
+   Earlier, we suggested that human readability judg-         of these metrics can be made perfect trivially (e.g., a
+ments may often arise from a complex interaction of           degenerate model that always returns "more readable"
+features, and furthermore that the important features         has perfect recall). We thus weight them together using
+and values may be hard to locate. As a result, simple         the f-measure statistic, the harmonic mean of precision
+methods for establishing correlation may not be suffi-        and recall [7]. This, in a sense, reflects the accuracy of the
+cient. Fortunately, there are a number of machine learn-      classifier with respect to the "more readable" snippets.
+ing algorithms designed precisely for this situation. Such    We also consider the overall accuracy of the classifier by
+algorithms typically take the form of a classifier which      finding the percentage of correctly classified snippets.
+operates on instances [30]. For our purposes, an instance
+is a feature vector extracted from a single snippet. In          We performed this experiment on ten different classi-
+                                                              fiers. To establish a baseline, we trained each classifier
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS              7
+
+Fig. 7. Inter-annotator agreement. For each annotator        Fig. 8. Annotator agreement by experience group. "Ran-
+(in sorted order), the value of Spearman's  between the      dom" represents a baseline of uniformly distributed ran-
+annotator's judgments and the average judgments of all       dom annotations.
+the annotators (the model that we attempt to predict). Also
+plotted is Spearman's  for our metric as compared to the     adopt the Bayesian classifier for the experiments in this
+average of the annotators.                                   paper because of its run-time efficiency.
+
+on the set of snippets with randomly generated score            We also repeated the experiment separately with each
+labels. Guessing randomly yields an f-measure of 0.5 and     annotator experience group (e.g., first year CS students,
+serves as a baseline, while 1.0 represents a perfect upper   second year CS students). Figure 8 shows the mean
+bound. None of the classifiers were able to achieve an       Spearman correlations. The dark bars on the left show
+f-measure of more than 0.61 (note, however, that by al-      the average agreement between humans and the average
+ways guessing `more readable' it would actually be triv-     score vector for their group (i.e., inter-group agreement).
+ial to achieve an f-measure of 0.67). When trained on the    For example, third and fourth year CS students agree
+average human data (i.e., when not trained randomly),        with each other more often (Spearman correlation of
+several classifiers improved to over 0.8. Those models       approximately 0.6) than do first year CS students (cor-
+included the multilayer perceptron (a neural network),       relation under 0.5). The light bar on the right indicates
+the Bayesian classifier (based on conditional probabilities  the correlation between our metric (trained on the anno-
+of the features), a Logistic Regression, and the Voting      tator judgments for that group) and the average of all
+Feature Interval approach (based on weighted "voting"        annotators in the group. Three interesting observations
+among classifications made by each feature separately).      arise. First, for all groups, our automatic metric agrees
+On average, these three best classifiers each correctly      with the human average more closely than the humans
+classified between 75% and 80% of the snippets. We           agree. Second, we see a gradual trend toward increased
+view a model that is well-captured by multiple learning      agreement with experience, except for graduate students.
+techniques as an advantage: if only one classifier could     We suspect that the difference with respect to graduates
+agree with our training data, it would have suggested a      may a reflection of the more diverse background of the
+lack of generality in our notion of readability.             graduate student population, their more sophisticated
+                                                             opinions, or some other external factor. And third, the
+   While an 80% correct classification rate seems rea-       performance of our model is very consistent across all
+sonable in absolute terms, it is perhaps simpler to ap-      four groups, implying that to some degree it is robust to
+preciate in relative ones. When we compare continuous        the source of training data.
+the output of the Bayesian classifier (i.e., we use a
+probability estimate of "more readable" rather a binary         We investigated which features have the most pre-
+classification) to the average human score model it was      dictive power by re-running our all-annotators analysis
+trained against, we obtain a Spearman correlation of 0.71.   using only one feature at a time. The relative magnitude
+As shown in Figure 7, that level of agreement is 16% than    of the performance of the classifier is indicative of the
+what the average human in our study produced. Column         comparative importance of each feature. Figure 9 shows
+3 of Figure 4 presents the results in terms of four other    the result of that analysis with the magnitudes normal-
+statistics. While we could attempt to employ more exotic     ized between zero and one.
+classifiers or investigate more features to improve this
+result, it is not clear that the resulting model would be       We find, for example, that factors like `average line
+any "better" since the model is already well within the      length' and `average number of identifiers per line'
+margin of error established by our human annotators. In      are very important to readability. Conversely, `average
+other words, in a very real sense, this metric is "just as   identifier length' is not, in itself, a very predictive factor;
+good" as a human. For performance we can thus select         neither are if constructs, loops, or comparison oper-
+any classifier in that equivalence class, and we choose to   ators. Section 6 includes a discussion of some of the
+                                                             possible implications of this result. A few of these fig-
+                                                             ures are similar to those used by automated complexity
+                                                             metrics [27]: in Section 5.2 we investigate the overlap
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS            8
+
+Fig. 9. Relative power of features as determined by a      to test the hypothesis that readability (as captured by our
+singleton (one-feature-at-a-time) analysis. The direction  model) correlates with external conventional metrics of
+of correlation for each is also indicated.                 software quality. Specifically, we first test for a correla-
+                                                           tion between readability and FindBugs, a popular static
+                                                           bug-finding tool [19]. Second, we test for a similar corre-
+                                                           lation with changes to code between versions of several
+                                                           large open source projects. Third, we do the same for
+                                                           version control log messages indicating that a bug has
+                                                           been discovered and fixed. Then, we examine whether
+                                                           readability correlates with Cyclomatic complexity [27]
+                                                           to test our earlier claim that our notion of readability
+                                                           is largely independent of inherent complexity. Finally,
+                                                           we look for trends in code readability across software
+                                                           projects.
+
+                                                              The set of open source Java programs we have em-
+                                                           ployed as benchmarks can be found in Figure 10. They
+                                                           were selected because of their relative popularity, di-
+                                                           versity in terms of development maturity and appli-
+                                                           cation domain, and availability in multiple versions
+                                                           from SourceForge, an open source software repository.
+                                                           Maturity is self reported, and categorized by Source-
+                                                           Forge into 1-planning, 2-pre-alpha, 3-alpha, 4-beta, 5-
+                                                           production/stable, 6-mature, 7-inactive. Note that some
+                                                           projects present multiple releases at different maturity
+                                                           levels; in such cases we selected the release for the
+                                                           maturity level indicated.
+
+                                                              Running our readability tool (including feature de-
+                                                           tection and the readability judgment) was quite rapid.
+                                                           For example, the 98K lines of code in SoapUI took less
+                                                           than 16 seconds to process (about 6K LOC per second)
+                                                           on a machine with a 2GHz processor and disk with a
+                                                           maximum 150 MBytes/sec transfer rate.
+
+between readability and complexity.                        5.1 Readability Correlations
+   We prefer this singleton feature analysis to a leave-
+                                                           Our first experiment tests for a correlation between
+one-out analysis (which judges feature power based on      defects detected by FindBugs with our readability metric
+decreases in classifier performance) that may be mis-      at the function level. We first ran FindBugs on the
+leading due to significant feature overlap. This occurs    benchmark, noting defect reports. Second, we extracted
+when two or more features, though different, capture the   all of the functions and partitioned them into two sets:
+same underlying phenomena. As a simple example, if         those containing at least one reported defect, and those
+there is exactly one space between every two words then    containing none. To avoid bias between programs with
+a feature that counts words and a feature that counts      varying numbers of reported defects, we normalized the
+spaces will capture essentially the same information and   function set sizes. We then ran the already-trained clas-
+leaving one of them out is unlikely to decrease accuracy.  sifier on the set of functions, recording an f-measure for
+A principal component analysis (PCA) indicates that        "contains a bug" with respect to the classifier judgment
+95% of the total variability can be explained by 8 prin-   of "less readable." The purpose of this experiment is
+cipal components, thus implying that feature overlap is    to investigate the extend to which our model correlates
+significant. The total cumulative variance explained by    with an external notion of code quality in aggregate.
+the first 8 principal components is as follows {41%, 60%,
+74%, 81%, 87%, 91%, 93%, 95%}.                                Our second experiment tests for a similar correla-
+                                                           tion between "code churn" and readability. Version-to-
+5 CORRELATING READABILITY WITH                             version changes capture another important aspect of
+SOFTWARE QUALITY                                           code quality. This experiment used the same setup as
+                                                           the first, but used readability to predict which functions
+In the previous section we constructed an automated        will be modified between two successive releases of
+model of readability that mimics human judgments.          a program. For this experiment, "successive release"
+We implemented our model in a tool that assesses the       means the two most recent stable versions. In other
+readability of programs. In this section we use that tool  words, instead of "contains a bug" we attempt to predict
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS                                             9
+
+Project Name                                     KLOC      Maturity  Description
+
+Azureus: Vuze 4.0.0.4                                651        5    Internet File Sharing
+JasperReports 2.04                                   269        6    Dynamic Content
+Hibernate* 2.1.8                                     189        6    Database
+jFreeChart* 1.0.9                                    181        5    Data representation
+FreeCol* 0.7.3                                       167        3    Game
+TV Browser 2.7.2                                     162        5    TV Guide
+jEdit* 4.2                                           140        5    Text editor
+Gantt Project 3.0                                    130        5    Scheduling
+SoapUI 2.0.1                                                    6    Web services
+Data Crow 3.4.5                                       98        5    Data Management
+Xholon 0.7                                            81        4    Simulation
+Risk 1.0.9.2                                          61        4    Game
+JSch 0.1.37                                           34        3    Security
+jUnit* 4.4                                            18        5    Software development
+jMencode 0.64                                           7       3    Video encoding
+                                                        7
+
+Fig. 10. Benchmark programs used in our experiments. The "Maturity" column indicates a self-reported SourceForge
+project status. *Used as a snippet source.
+
+Fig. 11. f-measure for using readability to predict functions that: show a FindBugs defect, have change between
+releases, and have a defect referenced in a version control log message. For log messages, "Data Unavailable"
+indicates that not enough version control information was available to conduct the experiment on that benchmark.
+
+"is going to change soon." We consider a function to       this third experiment we use our metric for readability
+have changed in any case where the text is not exactly     to predict whether a function has been modified with a
+the same, including changes to whitespace. Whitespace      log message that mentions a bug.
+is normally ignored in program studies, but since we are
+specifically focusing on readability we deem it relevant.     Twelve of our fifteen benchmarks feature publicly
+                                                           accessible version control systems with at least 500 revi-
+   While our first experiment looks at output from a bug   sions (most have thousands). For the most recent version
+finder, such output may not constitute true defects in     of each program, for each line of code, we determine
+code. Our third experiment investigates the relationship   the last revision to have changed that line (e.g., this
+between readability and defects that have actually been    is similar to the common cvs blame tool). We restrict
+noted by developers. It has become standard software       our evaluation to the most recent 1000 revisions of each
+engineering practice to use version control repositories   benchmark and find 5087 functions with reported bugs
+to manage modifications to a code base. In such a          out of 111,670 total. We then inspect the log messages
+system, when a change is made, the developer typically     for the word "bug" to determine whether a change
+includes a log message describing the change. Such log     was made to address a defect or not. We partition all
+messages may describe a software feature addition, an      functions into two sets: those where at least one line was
+optimization, or any number of other potential changes.    last changed to deal with a bug, and those where no lines
+In some cases log messages even include a reference to     were last changed to deal with a bug.
+a "bug" -- often, but not always, using the associated
+bug tracking number from the project's bug database. In       Figure 11 summarizes the results of these three ex-
+                                                           periments. The average f-measure over our benchmarks
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS              10
+
+Fig. 12. Mean ratio of the classifier probabilities (predicting `less readable) assigned to functions that contained a
+FindBugs defect, that will change in the next version, or that had a defect reported in a version control log. For
+example, FreeCol functions with FindBug errors were assigned a probability of `less readable' that was nearly 150%
+greater on average than the probabilities assigned to functions without such defects.
+
+for the FindBugs correlation is 0.62 (precision=0.90, re-    ferences about the implications of the standard deviation
+call=0.48), for version changes it is 0.63 (precision=0.89,  do not apply. However, the mean of such a distribution
+recall=0.49), and for log messages indicating a bug fix      does well-characterize the ratio of methods from the
+in the twelve applicable benchmarks, the average f-          lower half of the distribution to the upper half (i.e., it
+measure is 0.65 (precision=0.92, recall=0.51). It is im-     characterizes the population of 'less-readable' methods
+portant to note that our goal is not perfect correlation     compared to 'more-readable' ones).
+with FindBugs or any other source of defect reports:
+projects can run FindBugs directly rather than using our        For each of these three external quality indicators
+metric to predict its output. Instead, we argue that our     we found that our tool exhibits a substantial degree of
+readability metric has general utility and is correlated     correlation. Predicting based on our readability metric
+with multiple notions of software quality. This is best      yields an f-measure over 0.8 in some case. Again, our
+shown by our strong performance when correlating with        goal is not a perfect correlation with version changes
+bug-mentioning log messages: code with low readability       and code churn. These moderate correlations do, how-
+is significantly more likely to be changed by developers     ever, add support to the hypothesis that a substantial
+later for the purposes of fixing bugs.                       connection exists between code readability, as described
+                                                             by our model, and defects and upcoming code changes
+   A second important consideration is the magnitude
+of the difference. We claim that classifier probabilities    5.2 Readability and Complexity
+(i.e., continuous output versus discrete classifications)
+are useful in evaluating readability. Figure 12 presents     In this paper, we defined readability as the "accidental"
+this data in the form of a ratio, the mean probability as-   component of code understandability, referring to the
+signed by the classifier to functions positive for FindBugs  idea that it is an artifact of writing code and not closely
+defects or version changes to functions without these        related to the complexity of the problem that the code is
+features. A ratio over 1 (i.e., > 100%) for many of the      meant to solve. Our short snippet selection policy masks
+projects indicates that the functions with these features    complexity, helping to tease it apart from readability. We
+tend to have lower readability scores than functions         also selected a set of surface features designed to be ag-
+without them. For example, in the jMencode and SoapUI        nostic to the length of any selection of code. Nonetheless,
+projects, functions judged less readable by our metric       some of the features still may capture some amount of
+were dramatically more likely to contain FindBugs defect     complexity. We now test the hypothesis that readability
+reports, and in the JasperReports project less-readable      and complexity are not closely related.
+methods were very likely to change in the next version.
+                                                                We use McCabe's Cyclomatic measure [27] as an in-
+   As a brief note: we intentionally do not report stan-     dicative example of an automated model of code com-
+dard deviations for readability distributions. Both the      plexity. We measured the Cyclomatic complexity and
+underlying score distribution that our metric is based       readability of each method in each benchmark. Since
+on (see Figure 5) and the output of our tool itself are      both quantities are ordinal (as opposed to binary as in
+bimodal. In fact, the tool output on our benchmarks          our three previous experiments), we computed Pearson's
+more closely approximates a bathtub or uniform random        r between them. We also computed, for use as a base-
+distribution than a normal one. As a result, standard in-    line, the correlation between Cyclomatic complexity and
+                                                             method length. Figure 13 shows that readability is not
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS              11
+
+Fig. 13. Pearson Product moment correlation between Cyclomatic complexity and readability as well as between
+Cyclomatic complexity and method length (number of statements in the method). Readability is at most weakly
+correlated with complexity in an absolute sense. In a relative sense, compared to method length, readability is
+effectively uncorrelated with complexity. These results imply that readability captures an aspect of code that is not
+well modeled by a traditional complexity measure.
+
+Fig. 14. The left graph shows the average readability metric of all functions in a project as a function of project
+lifetime. The right graph shows the FindBugs defect density in a project as a function of project lifetime for the same
+projects and releases. Note that the projects with flat readabilities have corresponding flat defect densities, while jUnit
+(described in text) becomes significantly less readable and significantly more buggy starting at release 5.
+
+closely related to this traditional notion of complexity.    relationship at a statistical significance level (p-value) of
+Method length, on the other hand, is much more strongly      better than 0.05 except for defect density with jFreeChart.
+related to complexity. We thus conclude that while our
+notion of readability is not orthogonal to complexity, it       Note that newly-released versions for open source
+is in large part modeling a distinct phenomena.              projects are not always more stable than their predeces-
+                                                             sors. Projects often undergo major overhauls or add ad-
+5.3 Software Lifecycle                                       ditional cross cutting features. Consider jUnit, which has
+                                                             recently adopted a "completely different API . . . [that]
+To further explore the relation of our readability metric    depends on new features of Java 5.0 (annotations, static
+to external factors, we investigate changes over long        import. . . )" [20].
+periods of time. We hypothesize that an observed trend
+in the readability of a project will manifest as a similar      The rightmost graph in Figure 14 plots FindBugs-
+trend in project defects. Figure 14 shows a longitudinal     reported defect density over multiple project releases.
+study of how readability and defect rates tends to change    Most projects, such as Hibernate and SoapUI, show a rel-
+over the lifetime of a project. To construct this figure we  atively flat readability profile. These projects experience
+selected several projects with rich version histories and    a similarly flat defect density. The jUnit project, however,
+calculated the average readability level over all of the     shows a sharp decline in readability from releases 5 to
+functions in each. Each of the projects shows a linear       0 (as the new API is introduced) and a corresponding
+                                                             increase in defect density from releases 5 to 0. For JUnit,
+                                                             we observe that 58.9% of functions have readability
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS                 12
+
+Fig. 15. Average readability metric of all functions in         is often characterized by long and descriptive identifier
+a project as a function of self-reported project maturity       names and few abbreviations. The movement has had
+with best fit linear trend line. Note that projects of greater  particular influence on the Java community. Further-
+maturity tend to exhibit greater readability.                   more, naming conventions, like the "Hungarian" nota-
+                                                                tion which seeks to encode typing information into iden-
+below 0.5 in the earliest version we tested, and 71.4% in       tifier names, should be considered carefully [36]. In our
+the most recent (an increase of 12.5%). Of the remaining        study, the average identifier length had near zero predic-
+four systems, SoapUI had the greatest change: 44.3%             tive power, while maximum identifier length was much
+below 0.5 to 48.1% (an increase of 3.8%). In this case          more useful as a negative predictor. While we did not
+study, our readability metric correlates strongly with          include any features to detect encoded type information
+software quality metrics both between different projects        or other variable naming conventions, paradigms that
+and also between different releases of the same project.        result in longer identifiers without conveying additional
+                                                                information may negatively impact readability.
+   We conducted one additional study to measure read-
+ability against maturity and stability. Figure 15 plots            Unlike identifiers, comments are a very direct way of
+project readability against project maturity, as self-          communicating intent. One might expect their presence
+reported by developers. The data shows a noisy, but sta-        to increase readability dramatically. However, we found
+tistically significant (Pearson's r = 0.80 with p= 0.00031),    that comments were are only moderately well-correlated
+upward trend implying that projects that reach matu-            with our annotators' notion of readability (33% relative
+rity tend to be more readable. For example, every "6­           power). One conclusion may be that while comments
+mature" project is more readable than every "3­alpha"           can enhance readability, they are typically used in code
+project.                                                        segments that started out less readable: the comment
+                                                                and the unreadable code effectively balance out. The
+6 DISCUSSION                                                    net effect would appear to be that comments are not
+                                                                always, in and of themselves, indicative of high or low
+This study includes a significant amount of empirical           readability.
+data about the relation between local code features and
+readability. We believe that this information may have             The number of identifiers and characters per line has a
+implications for the way code should be written and             strong influence on our readability metric (100% and 96%
+evaluated, and for the design of programming lan-               relative power respectively). It would appear that just as
+guages. However, we caution that this data may only             long sentences are more difficult to understand, so are
+be truly relevant to our annotators; it should not be           long lines of code. Our findings support the conventional
+interpreted to represent a comprehensive or universal           wisdom that programmers should keep their lines short,
+model for readability. Furthermore, by the nature of a          even if it means breaking up a statement across multiple
+descriptive model, it may not be suitable for directly          lines.
+prescribing coding practices. However, we believe it can
+be useful to identify aspects of code readability which            When designing programming languages, readability
+should be more carefully considered.                            is an important concern. Languages might be designed to
+                                                                force or encourage improved readability by considering
+   To start, we found that the length of identifier names       the implications of various design and language features
+constitutes almost no influence on readability (0% rel-         on this metric. For example, Python enforces a specific
+ative predictive power). This observation fails to sup-         indentation scheme in order to aid comprehension [29],
+port the common belief that "single-character identifiers       [40]. In our experiments, the importance of character
+. . . [make the] . . . maintenance task much harder" [22].      count per line suggests that languages should favor the
+An observation which perhaps contributed to a signifi-          use of constructs, such as switch statements and pre-
+cant movement toward "self documenting code" which              and post-increment, that encourage short lines. Our data
+                                                                suggests that languages should add additional keywords
+                                                                if it means that programs can be written with fewer new
+                                                                identifiers.
+
+                                                                   It is worth noting that our model of readability is
+                                                                descriptive rather than normative or prescriptive. That is,
+                                                                while it can be used to predict human readability judg-
+                                                                ments for existing software, it cannot be directly inter-
+                                                                preted to prescribe changes that will improve readability.
+                                                                For example, while "average number of blank lines" is
+                                                                a powerful feature in our metric that is positively corre-
+                                                                lated with high readability, merely inserting five blank
+                                                                lines after every existing line of code need not improve
+                                                                human judgments of that code's readability. Similarly,
+                                                                long identifiers contribute to lower readability scores
+                                                                in our model, but replacing all identifiers with random
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS               13
+
+two-letter sequences is unlikely to help. We might tease      8 FUTURE WORK
+apart such relationships and refine our model by apply-
+ing model-prescribed changes to pieces of code and then       The techniques presented in this paper should provide
+evaluating their actual change in readability via a second    an excellent platform for conducting future readability
+human study: differences between predicted changes            experiments, especially with respect to unifying even a
+and observed changes will help illuminate confounding         very large number of judgments into an accurate model
+variables and imprecise features in our current model.        of readability.
+Learning such a normative model of software readability
+remains as future work.                                          While we have shown that there is significant agree-
+                                                              ment between our annotators on the factors that con-
+   Finally, as language designers consider new language       tribute to code readability, we would expect each annota-
+features, it might be useful to conduct studies of the        tor to have personal preferences that lead to a somewhat
+impact of such features on readability. The techniques        different weighting of the relevant factors. It would
+presented in this paper offer a framework for conducting      be interesting to investigate whether a personalized or
+such experiments.                                             organization-level model, adapted over time, would be
+                                                              effective in characterizing code readability. Furthermore,
+7 THREATS TO VALIDITY                                         readability factors may also vary significantly based on
+                                                              application domain. Additional research is needed to
+One potential threat to validity concerns the pool of         determine the extent of this variability, and whether
+participants for our study. In particular, our participants   specialized models would be useful.
+were taken largely from introductory and intermediate
+computer science courses, implying that they have had            Another possibility for improvement would be an ex-
+little previous experience reading or writing code as         tension of our notion of local code readability to include
+compared to industrial practitioners. Furthermore, they       broader features. While most of our features are calcu-
+may possess some amount of bias to certain coding             lated as average or maximum value per line, it may be
+practices or idioms resulting from a uniform instruction      useful to consider the size of compound statements, such
+at the same institution.                                      as the number of simple statements within an if block.
+                                                              For this study, we intentionally avoided such features to
+   Because our model is built only upon the opinions of       help ensure that we were capturing readability rather
+computer science students at The University of Virginia,      than complexity. However, in practice, achieving this
+it is only a model of readability according to them.          separation of concerns is likely to be less compelling.
+Nonetheless, the metric we present shows significant
+correlation with three separate external notions of soft-        Readability measurement tools present their own chal-
+ware quality. Furthermore, our study shows that even          lenges in terms of programmer access. We suggest that
+graduate students, who have widely varying educational        such tools could be integrated into an IDE, such as
+and professional backgrounds, show a strong level of          Eclipse, in the same way that natural language read-
+agreement with each other and with our metric. This           ability metrics are incorporated into word processors.
+indicates that annotator bias of this type may be small;      Software that seems readable to the author may be quite
+however, we did not study it directly in this paper.          difficult for others to understand [16]. Such a system
+Finally, rather than presenting a final or otherwise defini-  could alert programmers as such instances arise, in a
+tive metric for readability, we present an initial metric     way similar to the identification of syntax errors.
+coupled with a methodology for constructing further
+metrics from an arbitrary population.                            Finally, in line with conventional readability metrics,
+                                                              it would be worthwhile to express our metric using a
+   We also consider our methodology for scoring snip-         simple formula over a small number of features (the
+pets as a potential threat to validity. To capture an intu-   PCA from Section 4.2 suggests this may be possible).
+itive notion of readability, rather than a constrained one,   Using only the truly essential and predictive features
+we did not provide specific guidance to our participants      would allow the metric to be adapted easily into many
+on how to judge readability. It is possible that inter-       development processes. Furthermore, with a smaller
+annotator agreement would be much greater in a similar        number of coefficients the readability metric could be
+study that included a precise definition of readability       parameterized or modified in order to better describe
+(e.g., a list of factors to consider). In is unclear how      readability in certain environments, or to meet more
+our modeling technique would perform under those cir-         specific concerns.
+cumstances. Similarly, both practice and fatigue factors
+may affect the level of agreement or bias the model.          9 CONCLUSION
+However, we do not observe a significant trend in the
+variance of the score data across the snippet set (a linear   In this paper we have presented a technique for model-
+regression on score variance has a slope of 0.000 and R-      ing code readability based on the judgments of human
+squared value of 0.001, suggesting that practice effects      annotators. In a study involving 120 computer science
+were minimal).                                                students, we have shown that it is possible to create a
+                                                              metric that agrees with these annotators as much as they
+                                                              agree with each other by only considering a relatively
+                                                              simple set of low-level code features. In addition, we
+TSE SPECIAL ISSUE ON THE ISSTA 2008 BEST PAPERS                                     14
+
+have seen that readability, as described by this metric, ex-                 [23] R. Kohavi, "A study of cross-validation and bootstrap for accu-
+                                                                                   racy estimation and model selection," International Joint Conference
+hibits a significant level of correlation with more conven-                        on Artificial Intelligence, vol. 14, no. 2, pp. 1137­1145, 1995.
+
+tional metrics of software quality, such as defects, code                    [24] C. Le Goues and W. Weimer, "Specification mining with few false
+                                                                                   positives," in Tools and Algorithms for the Construction and Analysis
+churn, and self-reported stability. Furthermore, we have                           of Systems, 2009.
+
+discussed how considering the factors that influence                         [25] R. Likert, "A technique for the measurement of attitudes,"
+                                                                                   Archives of Psychology, vol. 140, pp. 44­53, 1932.
+readability has potential for improving the programming
+                                                                             [26] S. MacHaffie, R. McLeod, B. Roberts, P. Todd, and L. An-
+language design and engineering practice with respect                              derson, "A readability metric for computer-generated mathe-
+                                                                                   matics," Saltire Software, http://www.saltire.com/equation.html,
+to this important dimension of software quality. Finally,                          Tech. Rep., retrieved 2007.
+
+it is important to note that the metric described in this                    [27] T. J. McCabe, "A complexity measure," IEEE Trans. Software Eng.,
+                                                                                   vol. 2, no. 4, pp. 308­320, 1976.
+paper is not intended as the final or universal model of
+                                                                             [28] G. H. McLaughlin, "Smog grading ­ a new readability," Journal
+readability.                                                                       of Reading, May 1969.
+
+REFERENCES                                                                   [29] R. J. Miara, J. A. Musselman, J. A. Navarro, and B. Shneiderman,
+                                                                                   "Program indentation and comprehensibility," Commun. ACM,
+[1] K. Aggarwal, Y. Singh, and J. K. Chhabra, "An integrated measure               vol. 26, no. 11, pp. 861­867, 1983.
+      of software maintainability," Reliability and Maintainability Sympo-
+      sium, pp. 235­241, Sep. 2002.                                          [30] T. Mitchell, Machine Learning. McGraw Hill, 1997.
+                                                                             [31] N. Nagappan and T. Ball, "Use of relative code churn measures to
+[2] S. Ambler, "Java coding standards," Softw. Dev., vol. 5, no. 8, pp.
+      67­71, 1997.                                                                 predict system defect density," in ICSE '05: Proceedings of the 27th
+                                                                                   international conference on Software engineering, 2005, pp. 284­292.
+[3] B. B. Bederson, B. Shneiderman, and M. Wattenberg, "Ordered              [32] C. V. Ramamoorthy and W.-T. Tsai, "Advances in software engi-
+      and quantum treemaps: Making effective use of 2d space to                    neering," Computer, vol. 29, no. 10, pp. 47­58, 1996.
+      display hierarchies," ACM Trans. Graph., vol. 21, no. 4, pp. 833­      [33] D. R. Raymond, "Reading source code," in Conference of the Centre
+      854, 2002.                                                                   for Advanced Studies on Collaborative Research. IBM Press, 1991,
+                                                                                   pp. 3­16.
+[4] B. Boehm and V. R. Basili, "Software defect reduction top 10 list,"      [34] P. A. Relf, "Tool assisted identifier naming for improved software
+      Computer, vol. 34, no. 1, pp. 135­137, 2001.                                 readability: an empirical study," Empirical Software Engineering,
+                                                                                   2005. 2005 International Symposium on, November 2005.
+[5] R. P. L. Buse and W. R. Weimer, "A metric for software readabil-         [35] S. Rugaber, "The use of domain knowledge in program under-
+      ity," in International Symposium on Software Testing and Analysis,           standing," Ann. Softw. Eng., vol. 9, no. 1-4, pp. 143­192, 2000.
+      2008, pp. 121­130.                                                     [36] C. Simonyi, "Hungarian notation," MSDN Library, November
+                                                                                   1999.
+[6] L. W. Cannon, R. A. Elliott, L. W. Kirchhoff, J. H. Miller, J. M.        [37] S. E. Stemler, "A comparison of consensus, consistency, and mea-
+      Milner, R. W. Mitze, E. P. Schan, N. O. Whittington, H. Spencer,             surement approaches to estimating interrater reliability," Practical
+      D. Keppel, , and M. Brader, Recommended C Style and Coding                   Assessment, Research and Evaluation, vol. 9, no. 4, 2004.
+      Standards: Revision 6.0. Seattle, Washington: Specialized Systems      [38] H. Sutter and A. Alexandrescu, C++ Coding Standards: 101 Rules,
+      Consultants, Inc., June 1990.                                                Guidelines, and Best Practices. Addison-Wesley Professional, 2004.
+                                                                             [39] T. Tenny, "Program readability: Procedures versus comments,"
+[7] T. Y. Chen, F.-C. Kuo, and R. Merkel, "On the statistical properties           IEEE Trans. Softw. Eng., vol. 14, no. 9, pp. 1271­1279, 1988.
+      of the f-measure," in International Conference on Quality Software,    [40] A. Watters, G. van Rossum, and J. C. Ahlstrom, Internet Program-
+      2004, pp. 146­153.                                                           ming with Python. New York: MIS Press/Henry Holt publishers,
+                                                                                   1996.
+[8] L. E. Deimel Jr., "The uses of program reading," SIGCSE Bull.,           [41] E. J. Weyuker, "Evaluating software complexity measures," IEEE
+      vol. 17, no. 2, pp. 5­14, 1985.                                              Trans. Softw. Eng., vol. 14, no. 9, pp. 1357­1365, 1988.
+
+[9] E. W. Dijkstra, A Discipline of Programming. Prentice Hall PTR,          PLACE  Raymond P.L. Buse received a BS degree
+      1976.                                                                  PHOTO  in computer science from the Johns Hopkins
+                                                                              HERE  University and an MCS from the University of
+[10] J. L. Elshoff and M. Marcotty, "Improving computer program                     Virginia, where he is currently a graduate stu-
+      readability to aid modification," Commun. ACM, vol. 25, no. 8,                dent. His main research interests include static
+      pp. 512­521, 1982.                                                            analysis techniques and the underlying human
+                                                                                    factors related to programming language design
+[11] R. F. Flesch, "A new readability yardstick," Journal of Applied                and software engineering practice.
+      Psychology, vol. 32, pp. 221­233, 1948.
+                                                                             PLACE  Westley R. Weimer received the BA degree in
+[12] J. Frederick P. Brooks, "No silver bullet: essence and accidents of     PHOTO  computer science and mathematics from Cornell
+      software engineering," Computer, vol. 20, no. 4, pp. 10­19, 1987.       HERE  University and the MS and PhD degrees from
+                                                                                    the University of California, Berkeley. He is cur-
+[13] L. L. Giventer, Statistical Analysis in Public Administration. Jones           rently an assistant professor at the University
+      and Bartlett Publishers, 2007.                                                of Virginia. His main research interests include
+                                                                                    static and dynamic analyses and program trans-
+[14] J. Gosling, B. Joy, and G. L. Steele, The Java Language Specification,         formations to improve software quality.
+      ser. The Java Series. Reading, MA, USA: Addison-Wesley, 1996.
+
+[15] R. Gunning, The Technique of Clear Writing. New York: McGraw-
+      Hill International Book Co, 1952.
+
+[16] N. J. Haneef, "Software documentation and readability: a pro-
+      posed process improvement," SIGSOFT Softw. Eng. Notes, vol. 23,
+      no. 3, pp. 75­77, 1998.
+
+[17] A. E. Hatzimanikatis, C. T. Tsalidis, and D. Christodoulakis, "Mea-
+      suring the readability and maintainability of hyperdocuments,"
+      Journal of Software Maintenance, vol. 7, no. 2, pp. 77­90, 1995.
+
+[18] G. Holmes, A. Donkin, and I. Witten, "Weka: A machine learning
+      workbench," Australia and New Zealand Conference on Intelligent
+      Information Systems, 1994.
+
+[19] D. Hovemeyer and W. Pugh, "Finding bugs is easy," SIGPLAN
+      Not., vol. 39, no. 12, pp. 92­106, 2004.
+
+[20] jUnit.org, "jUnit 4.0 now available," in http://sourceforge.net/forum/
+      forum.php?forum id=541181, Feb. 2006.
+
+[21] J. P. Kinciad and E. A. Smith, "Derivation and validation of the
+      automated readability index for use with technical materials,"
+      Human Factors, vol. 12, pp. 457­464, 1970.
+
+[22] J. C. Knight and E. A. Myers, "Phased inspections and their
+      implementation," SIGSOFT Softw. Eng. Notes, vol. 16, no. 3, pp.
+      29­35, 1991.
+

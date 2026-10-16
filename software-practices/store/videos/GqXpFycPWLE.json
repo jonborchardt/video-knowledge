@@ -1,0 +1,106 @@
+{
+  "id": "GqXpFycPWLE",
+  "title": "Static vs Dynamic Typing",
+  "channel": "Boot dev",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UC9HOZ53gnHP3f_b-wixS74g",
+  "durationSec": 334,
+  "thumbnail": "https://i.ytimg.com/vi/GqXpFycPWLE/sddefault.jpg",
+  "summary": "Boot.dev instructor explains static versus dynamic typing and argues type inference has removed the old trade-off so static typing is now simply better for large systems.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/static-typing-produces-fewer-bugs-more",
+      "stance": "asserts",
+      "quote": "the advice has always been static typing is better and the reason being it results in fewer bugs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Large GitHub studies found a small defect advantage for static typing that weakened on replication, and bug-detectability studies suggest a type checker catches a minority of real bugs, so the benefit is real but modest.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "In 729 GitHub projects statically typed languages have a modestly lower association with bug-fix commits than dynamic ones (static functional vs dynamic functional p=0.034), but language explains under 1% of deviance versus project activity, bug fixes are identified by commit-message keywords, and readability is not measured.",
+          "source": "software-practices/sources/ray2014-languages-github.txt#L721-L725",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "The reproduction concludes the GitHub data cannot establish a causal link between language and code quality and even the correlation is questionable; after cleaning, only C++ (more bugs) and Clojure, Haskell, Ruby (fewer) remain significant with exceedingly small effects, a pattern that does not split by static vs dynamic typing.",
+          "source": "software-practices/sources/berger2019-languages-reproduction.txt#L203-L210",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Static types made undocumented classes faster to use (4 of 5 class-identification tasks) and type errors faster to fix, but gave no benefit on semantic errors; the study measured time, not bug counts, on a 30-class, 1300-line program, so 'fewer bugs' and 'large systems' are untested.",
+          "source": "software-practices/sources/kleinschmager2012-static-types-maintainability.txt#L447-L473",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "The authors conclude static types act as effective documentation and reduce effort to fix type errors but may not help with semantic errors; the readability mechanism is supported (fewer file switches, less navigation) while defect rates and large codebases were not studied.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L111-L121",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Across 80 implementations of one small program, the dynamically typed scripts were not less reliable than the statically typed C/C++/Java programs; C/C++ were the least reliable group and half the Java programs crashed on empty inputs, so no reliability edge for static typing appeared, though only small programs were compared.",
+          "source": "software-practices/sources/prechelt2000-seven-languages.txt#L340-L384",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/dynamic-typing-faster-prototyping-rapid-iteration",
+      "stance": "asserts",
+      "quote": "when we don't have to specify types as we're writing our code we're able to write the code a little more quickly",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/type-inference-gives-static-typing-dynamic",
+      "stance": "asserts",
+      "quote": "type inference basically gives us the best of both worlds it allows us to have static typing but with a very simple syntax",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Inference clearly cuts annotation burden in Go, Rust and TypeScript, but compile times, generics complexity and type-error comprehension remain costs.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Flow's stronger type inference meant detecting a bug needed fewer annotation tokens (mean 1.7 vs 2.4) and less time (median 133s vs 262s) than TypeScript, so inference does cut annotation burden, but this is per-bug minimal annotation, not whole-program verbosity.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L539-L552",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/static-typing-suits-safety-performance-critical",
+      "stance": "asserts",
+      "quote": "you can build large production back-end systems in statically typed or dynamically typed languages it's certainly been done both ways",
+      "verdicts": []
+    }
+  ]
+}

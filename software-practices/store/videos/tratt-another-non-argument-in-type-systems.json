@@ -1,0 +1,101 @@
+{
+  "id": "tratt-another-non-argument-in-type-systems",
+  "title": "Laurence Tratt: Another Non-Argument in Type Systems",
+  "channel": "tratt.net",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://tratt.net/laurie/blog/2012/another_non_argument_in_type_systems.html",
+  "summary": "Tratt rebuts Harper's claim that dynamic typing is a straitjacketed special case of static typing: the encodings go both ways, sound static systems reject some correct programs, and expressiveness depends on which prism you use.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/static-dynamic-typing-differ-when-types",
+      "stance": "asserts",
+      "quote": "The fundamental difference between statically and dynamically typed languages isn’t over how many types they have: it’s about when those types are utilised.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Standard type-theory framing; the 'unityped' view is a legitimate static lens but says nothing about dynamic type counts.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "Background definition only: static type systems check types at compile time while dynamic ones distinguish types at run time; the paper's gradual-typing method relies on JavaScript values having the same types either way.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L38-L42",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/any-sound-static-type-system-rejects",
+      "stance": "asserts",
+      "quote": "if the type system is sound then (because of the expressivity of programming languages) it will be incomplete, rejecting some programs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.9,
+          "note": "Follows from undecidability; every practical sound type system is incomplete.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/encoding-dynamically-typed-program-static-type",
+      "stance": "asserts",
+      "quote": "a static type system forces us to explicitly express all the checks that a dynamically typed run-time implicitly performs for us",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "True for naive sum-type encodings; gradual and inferred systems reduce but do not eliminate the annotation burden.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/static-typing-suits-safety-performance-critical",
+      "stance": "asserts",
+      "quote": "Arguing whether static or dynamic typing is universally better or more expressive is therefore pointless.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/static-analysis-unsound-incomplete-can-augment",
+      "stance": "asserts",
+      "quote": "They therefore can not replace static type systems, but can augment them.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Industrial static analyzers deliberately trade soundness for coverage; this is their documented design position.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/dynamic-languages-can-run-programs-deliberately",
+      "stance": "asserts",
+      "quote": "ability to execute and run programs which are deliberately not statically type safe (a useful property when comprehending and modifying large systems)",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Running partially broken code aids exploration, but gradual typing and IDE tooling narrow the gap.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

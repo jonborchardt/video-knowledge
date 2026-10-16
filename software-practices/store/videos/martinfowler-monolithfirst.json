@@ -1,0 +1,49 @@
+{
+  "id": "martinfowler-monolithfirst",
+  "title": "Monolith First",
+  "channel": "martinfowler.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://martinfowler.com/bliki/MonolithFirst.html",
+  "summary": "Martin Fowler (2015): successful microservice systems grew out of monoliths while greenfield microservice systems mostly ran into trouble, so start with a monolith and split once boundaries are understood.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/single-process-monolith-right-default-microservices",
+      "stance": "asserts",
+      "quote": "you should build a new application as a monolith initially, even if you think it's likely that it will benefit from a microservices architecture later on",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/service-boundaries-usually-wrong-first-attempt",
+      "stance": "asserts",
+      "quote": "Almost all the cases where I've heard of a system that was built as a microservice system from scratch, it has ended up in serious trouble.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/moving-functionality-across-service-boundaries-far",
+      "stance": "asserts",
+      "quote": "Any refactoring of functionality between services is much harder than it is in a monolith.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/decomposing-monolith-only-works-already-has",
+      "stance": "asserts",
+      "quote": "Most systems acquire too many dependencies between their modules, and thus can't be sensibly broken apart.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Consistent with migration case studies, though some decompositions of tangled code succeeded with heavy investment.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

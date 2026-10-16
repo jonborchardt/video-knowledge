@@ -1,0 +1,73 @@
+{
+  "id": "testdesiderata",
+  "title": "TestDesiderata",
+  "channel": "TestDesiderata",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://testdesiderata.com/",
+  "summary": "Kent Beck lists properties that make tests valuable and notes some reinforce each other while others, like predictiveness versus speed, trade off.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/writing-test-per-method-mocking-every",
+      "stance": "asserts",
+      "quote": "Structure-insensitive — tests should not change their result if the structure of the code changes.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/desirable-test-properties-trade-off-making",
+      "stance": "asserts",
+      "quote": "Making tests more predictive of production behavior makes them slower.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Integration and end-to-end tests are consistently slower than unit tests while catching more realistic failures; the test-pyramid literature rests on this.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/tests-deterministic-independent-run-order-more",
+      "stance": "asserts",
+      "quote": "Isolated — tests should return the same results regardless of the order in which they are run.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Flaky-test research at Google and in academia shows order dependence and nondeterminism waste developer time and cause ignored failures.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/passing-test-suite-should-sufficient-evidence",
+      "stance": "asserts",
+      "quote": "Predictive — if the tests all pass, then the code under test should be suitable for production.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "An aspiration; in practice tests cannot cover all production conditions, which is why canaries and monitoring exist.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.25,
+          "note": "DORA defines effective automated testing as giving developers confidence that a passing suite means the code can be successfully deployed, and finds such testing predicts CI and CD; this is the report's framing rather than a test of whether suites actually suffice.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1012-L1015",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

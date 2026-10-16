@@ -1,0 +1,121 @@
+{
+  "id": "smartbear-best-practices-for-peer-code-review",
+  "title": "Best Practices for Code Review",
+  "channel": "smartbear.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/",
+  "summary": "SmartBear's vendor guide: review small chunks slowly and briefly, annotate and use checklists, never use review metrics for performance evaluation, and lightweight review matches formal inspection in a fraction of the time.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+      "stance": "asserts",
+      "quote": "beyond 400 LOC, the ability to find defects diminishes",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/reviewer-effectiveness-falls-off-after-about",
+      "stance": "asserts",
+      "quote": "performance starts dropping off after about 60 minutes",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Vigilance decrement is well established in general, but direct evidence for code review durations is thin and vendor-sourced.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/summarizing-change-risks-helps-reviewer-understand",
+      "stance": "asserts",
+      "quote": "the author will often find additional errors before the peer review even begins",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/checklists-catch-omission-defects-unstructured-review",
+      "stance": "asserts",
+      "quote": "Checklists are the most effective way to eliminate frequently made errors and to combat the challenges of omission finding.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Checklist-based reading experiments show modest gains over ad hoc reading; 'most effective' is overstated.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/using-code-review-metrics-performance-evaluation",
+      "stance": "asserts",
+      "quote": "If personal metrics become a basis for compensation or promotion, developers will become hostile toward the process",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Goodhart effects are well documented for productivity metrics generally; direct evidence for review metrics is anecdotal.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "The report invokes Goodhart's law for productivity metrics like lines of code or story points, noting teams refuse to help others when it would hurt their velocity; the gaming mechanism applies, but code review metrics are not studied.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1427-L1435",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/knowing-code-will-reviewed-makes-developers",
+      "stance": "asserts",
+      "quote": "The knowledge that others will be examining their work naturally drives people to produce a better product.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Accountability effects are plausible and reported by practitioners, but the spot-check figures come from one vendor study.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.2,
+          "note": "A manager describes the 'discipline of explaining your code to your peers' as driving a higher standard of coding; an opinion from a survey, and the effect on unreviewed changes is not examined.",
+          "source": "software-practices/sources/bacchelli2013-modern-code-review.txt#L277-L279",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/lightweight-tool-assisted-review-finds-many",
+      "stance": "asserts",
+      "quote": "lightweight code review takes less than 20% the time of formal reviews and finds just as many bugs!",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Vendor data; independent studies (Bacchelli and Bird) find modern lightweight review catches fewer defects than expected, with most value in knowledge transfer.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/code-review-major-channel-learning-knowledge",
+      "stance": "asserts",
+      "quote": "Peer review also allows junior team members to learn from senior leaders and for even the most experienced programmers to break bad habits.",
+      "verdicts": []
+    }
+  ]
+}

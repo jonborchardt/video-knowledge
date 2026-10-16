@@ -11,7 +11,8 @@ const pages = ['index.html', ...topicNames().map((n) => join(n, 'index.html'))];
 describe.skipIf(!existsSync(DIST))('built site', () => {
   it.each(pages)('%s exists without template leaks', (p) => {
     const html = readFileSync(join(DIST, p), 'utf8').replace(/<script[\s\S]*?<\/script>/g, '');
-    for (const bad of ['undefined', 'NaN', '[object Object]']) expect(html).not.toContain(bad);
+    // A leak renders as a whole text node or attribute value; quoted prose may legitimately say "undefined".
+    expect(html).not.toMatch(/[>"](undefined|NaN|\[object Object\])[<"]/);
   });
 
   it.each(pages)('%s: internal links resolve', (p) => {

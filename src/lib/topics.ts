@@ -55,13 +55,16 @@ interface Report {
 interface StoreVideo {
   id: string;
   title: string;
+  channel?: string;
+  durationSec?: number;
   transcript: string;
   url?: string;
   summary?: string;
   supersededBy?: string;
-  assertions?: unknown[];
+  assertions?: { claim: string; stance: 'asserts' | 'denies'; quote: string }[];
 }
 interface SiteConfig {
+  hero?: { title?: string; lede?: string }; // hand-written hook at the top of the topic page
   recap?: { bottomLine?: string; groups?: { title: string; claims: string[] }[] };
   docs?: Record<string, string>;
 }
@@ -77,6 +80,15 @@ export interface ClaimView {
   decidedBy: string | null; // a study's display name, or null when the AI guess decides
   studies: number; // documents with a verdict on this claim
 }
+export interface SourceClaimView {
+  id: string;
+  text: string;
+  quote: string;
+  stance: 'asserts' | 'denies';
+  verdict: Verdict; // for this source: denying a wrong claim is right
+  share: number; // sources taking the same stance, this one included
+  novel: boolean; // right and few others say it
+}
 export interface SourceView {
   id: string;
   title: string;
@@ -88,6 +100,7 @@ export interface SourceView {
   novelty: number;
   worthWatching: string;
   superseded: boolean;
+  claims: SourceClaimView[]; // novel first, rarest first
 }
 export interface SurpriseView {
   text: string;
@@ -107,9 +120,14 @@ export interface Topic {
   counted: number;
   videos: number;
   posts: number;
+  channels: number; // distinct channels and authors among counted sources
+  hours: number; // total runtime of counted videos
+  medianMinutes: number;
   noCaptions: number;
   studies: number;
   decided: number;
+  hero: { title: string | null; lede: string | null };
+  glyph: string | null; // <topic>/glyph.svg, inlined on the home card
   bottomLine: string | null;
   recap: { title: string; claims: ClaimView[] }[];
   top: SourceView[];
@@ -161,6 +179,29 @@ export function loadTopic(name: string): Topic {
   });
   const claims = t.claims.map(claimOf).sort((a, b) => b.asserted + b.denied - (a.asserted + a.denied));
   const byId = new Map(claims.map((c) => [c.id, c]));
+  const NOVEL_SHARE = 3;
+  const sourceClaims = (x: StoreVideo): SourceClaimView[] =>
+    (x.assertions ?? [])
+      .flatMap((a) => {
+        const c = byId.get(a.claim);
+        if (!c) return [];
+        const e = c.verdict ?? 'unknown';
+        const denies = a.stance === 'denies';
+        const verdict: Verdict = e === 'right' || e === 'wrong' ? (denies === (e === 'wrong') ? 'right' : 'wrong') : e;
+        const share = (denies ? c.denied : c.asserted) + (x.supersededBy ? 1 : 0); // the report's counts skip superseded sources
+        return [
+          {
+            id: c.id,
+            text: c.text,
+            quote: a.quote,
+            stance: a.stance,
+            verdict,
+            share,
+            novel: verdict === 'right' && share <= NOVEL_SHARE,
+          },
+        ];
+      })
+      .sort((a, b) => Number(b.novel) - Number(a.novel) || a.share - b.share);
 
   const sources: SourceView[] = r.videos
     .filter((v) => v.assertions > 0)
@@ -178,11 +219,18 @@ export function loadTopic(name: string): Topic {
         novelty: v.novelty,
         worthWatching: v.worthWatching,
         superseded: !!x.supersededBy,
+        claims: sourceClaims(x),
       } satisfies SourceView;
     })
     .sort((a, b) => (b.score ?? -2) - (a.score ?? -2) || b.novelty - a.novelty);
   const counted = sources.filter((s) => !s.superseded);
   const ranked = counted.filter((s) => s.score !== null);
+  const durations = counted
+    .filter((s) => s.kind === 'video')
+    .map((s) => recOf.get(s.id)?.durationSec ?? 0)
+    .filter(Boolean)
+    .sort((a, b) => a - b);
+  const glyphPath = join(dir, 'glyph.svg');
 
   const surprises = t.surprises
     .map((s) => ({
@@ -223,9 +271,14 @@ export function loadTopic(name: string): Topic {
     counted: counted.length,
     posts: counted.filter((s) => s.kind === 'post').length,
     videos: counted.filter((s) => s.kind === 'video').length,
+    channels: new Set(counted.map((s) => s.channel)).size,
+    hours: durations.reduce((a, b) => a + b, 0) / 3600,
+    medianMinutes: durations.length ? durations[Math.floor(durations.length / 2)] / 60 : 0,
     noCaptions: recs.filter((v) => v.transcript === 'none' && !v.assertions).length,
     studies: new Set(t.claims.flatMap((c) => c.documents)).size,
     decided: claims.filter((c) => c.decidedBy).length,
+    hero: { title: cfg.hero?.title ?? null, lede: cfg.hero?.lede ?? null },
+    glyph: existsSync(glyphPath) ? readFileSync(glyphPath, 'utf8').trim() : null,
     bottomLine,
     recap,
     top: ranked.slice(0, 5),

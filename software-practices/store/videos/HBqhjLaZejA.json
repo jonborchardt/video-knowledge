@@ -1,0 +1,162 @@
+{
+  "id": "HBqhjLaZejA",
+  "title": "Mutation Testing in Python with Cosmic Ray - Austin Bingham - NDC TechTown 2024",
+  "channel": "NDC Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCTdw38Cw6jcm0atBPA39a0Q",
+  "durationSec": 3408,
+  "thumbnail": "https://i.ytimg.com/vi/HBqhjLaZejA/sddefault.jpg",
+  "summary": "Austin Bingham explains mutation testing theory, its practical obstacles (runtime, equivalent mutants, unreachable code) and demonstrates the Cosmic Ray tool for Python.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/line-coverage-shows-code-executed-not",
+      "stance": "asserts",
+      "quote": "it's not really telling you that your tests are that you understand what your program is doing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.85,
+          "note": "Well established; Inozemtseva and Holmes found coverage only weakly correlates with suite effectiveness once suite size is controlled.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Across 31,000 generated suites on five large Java systems, coverage correlated only low-to-moderately with mutation-detection effectiveness once suite size was controlled, so high coverage does not indicate an effective suite; executing a line does not reveal an error in it.",
+          "source": "software-practices/sources/inozemtseva2014-coverage.txt#L733-L747",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/mutation-score-measures-test-suite-quality",
+      "stance": "asserts",
+      "quote": "the quality of your tests can be gauged by the percentage of mutations killed",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Just et al. found mutant detection correlates with real-fault detection, with caveats about mutant representativeness.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "The study uses mutation score as its ground-truth measure of fault-detection effectiveness and finds coverage tracks it only weakly; the authors suggest mutation score as a substitute for coverage, but this is their judgment, not a head-to-head test against real faults.",
+          "source": "software-practices/sources/inozemtseva2014-coverage.txt#L635-L639",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/surviving-mutant-reveals-either-missing-test",
+      "stance": "asserts",
+      "quote": "your tests are inadequate to protect this change this Behavior modifying change or the code that was mutated is extraneous",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Follows from the technique, with the third possibility of an equivalent mutant that the speaker also acknowledges.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "A surviving mutant may be an equivalent mutant (e.g. == changed to >= with identical behaviour) rather than a missing test, and manual inspection is needed to tell; the study classified up to 35% of mutants as equivalent, so the either/or omits a third case.",
+          "source": "software-practices/sources/inozemtseva2014-coverage.txt#L212-L250",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/mutation-testing-too-slow-run-routinely",
+      "stance": "asserts",
+      "quote": "it is just not practical to do on a frequent basis",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Runtime is the documented adoption barrier; Google's deployment runs mutation analysis only on changed lines for this reason.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/equivalent-mutants-cannot-detected-automatically-require",
+      "stance": "asserts",
+      "quote": "it is not really detectable in any practical way",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.8,
+          "note": "Equivalent mutant detection is undecidable in general; heuristics and compiler-based detection remove some but not all.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Manual inspection is required because automatically determining whether a mutant is equivalent is undecidable, which is why studies fall back on assuming anything the master suite misses is equivalent.",
+          "source": "software-practices/sources/inozemtseva2014-coverage.txt#L280-L281",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/higher-level-behavioural-tests-make-mutation",
+      "stance": "asserts",
+      "quote": "when I have higher level tests that tests my functionality that that is probably one of the keys to Breaking the time barrier",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "A practitioner hunch; fewer larger tests may run slower per mutant, so the net effect on runtime is unclear.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+      "stance": "asserts",
+      "quote": "good testing results in better design almost always in my experience",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/full-line-coverage-relatively-easy-reach",
+      "stance": "asserts",
+      "quote": "that's actually relatively easy to get if you're if you're motivated to do it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Achievable for many codebases but costly for legacy or hardware-bound code; coverage-driven tests are often weak, which is the speaker's own point.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.3,
+          "note": "Authors call extremely high coverage very difficult to reach, and even their five actively developed Java projects with 600-8,000 test methods sit at 27-76% statement coverage; no motivated team pushing for 100% was studied.",
+          "source": "software-practices/sources/inozemtseva2014-coverage.txt#L664-L667",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

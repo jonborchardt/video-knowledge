@@ -1,0 +1,120 @@
+{
+  "id": "v0D2BZuTx_g",
+  "title": "Technical Neglect, Kevlin Henney",
+  "channel": "Codecamp Romania",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCfaoHrqCGPWmx_o9Qn10wew",
+  "durationSec": 2954,
+  "thumbnail": "https://i.ytimg.com/vi/v0D2BZuTx_g/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGEYgVShlMA8=&rs=AOn4CLBI9Syvn3_ua58JLP7Q13x8nUgJKA",
+  "summary": "Kevlin Henney reframes chronic technical debt as technical neglect: debt itself is a legitimate trade-off, the problem is unmanaged debt caused by habitually skipping maintenance, which drives failure demand.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/legacy-code-results-technical-neglect-failure",
+      "stance": "asserts",
+      "quote": "your problem is technical neglect because we have to ask the question where did the technical debt come from",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/debt-prudent-when-taken-deliberately-ship",
+      "stance": "asserts",
+      "quote": "a little debt speeds development so long as it is paid back promptly with a rewrite",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/tools-assign-monetary-figure-technical-debt",
+      "stance": "asserts",
+      "quote": "tools that will look over your code base and say here is how much technical debt you have",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "SQALE-style remediation costs rest on arbitrary per-issue estimates with little validation; some correlate loosely with maintenance effort.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "Argues that existing TD quantification methods (Maintainability Index, SIG TD, SQALE) price remediation work while the real cost of TD is the extra development time (interest), so such figures measure the wrong thing; it does not call them made up and the paper itself tries to put numbers on TD.",
+          "source": "software-practices/sources/tornhill2022-code-red.txt#L164-L172",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/technical-debt-consumes-substantial-fraction-developers",
+      "stance": "asserts",
+      "quote": "out of an 8 hour working day a developer would spend 7 hour hours on failure demand",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/organizations-often-scale-headcount-cope-mess",
+      "stance": "asserts",
+      "quote": "most organizations when they scale they scale for the wrong reasons they scale to manage failure",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "Plausible but no data links hiring growth to failure demand.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/teams-stop-reading-agent-written-code",
+      "stance": "asserts",
+      "quote": "they have automated the creation of Legacy code and have redefined their role as debugging and fixing such code",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/unmanaged-technical-debt-undermines-security-because",
+      "stance": "asserts",
+      "quote": "if you don't know your dependencies you can't make claims about security",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Dependency unawareness is a documented supply-chain risk; the link to general debt is argued rather than measured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/focusing-one-change-inevitably-leaves-side",
+      "stance": "asserts",
+      "quote": "there is inevitably going to be some other consequence that you will have to address",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Lehman's increasing-complexity law; empirical decay studies support it, though the inevitability is a strong form.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/code-does-not-decay-own-degradation",
+      "stance": "asserts",
+      "quote": "if you leave a piece of code and don't touch it for 10 years there is no intrinsic rotting or decaying",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "True of the code text; in practice environments and dependencies drift, so untouched code does stop working.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

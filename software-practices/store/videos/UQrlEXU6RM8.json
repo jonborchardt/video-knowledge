@@ -1,0 +1,162 @@
+{
+  "id": "UQrlEXU6RM8",
+  "title": "Why Pull Requests Are a Bad Idea • Dave Farley • GOTO 2022",
+  "channel": "GOTO Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCs_tLP3AiwYKwdUHpltJPuA",
+  "durationSec": 1164,
+  "thumbnail": "https://i.ytimg.com/vi_webp/UQrlEXU6RM8/sddefault.webp",
+  "summary": "Dave Farley argues pull-request review blocks continuous integration and that pair programming provides better, faster review.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/trunk-based-development-one-small-change",
+      "stance": "asserts",
+      "quote": "if you don't check that your changes work alongside everybody else's at least once per day then statistically you produce lower quality software more slowly",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/pull-request-review-delays-feedback-pushes",
+      "stance": "asserts",
+      "quote": "if you can't process my pull request at least once per day then by definition continuous integration is impossible",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Review latency is a measured delay in PR studies, but many teams integrate daily with small PRs, so the incompatibility is not absolute.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "DORA notes elite lead times rose from under an hour to under a day and speculates this may reflect heavier code review and approval processes; it separately finds extra approvals produce larger, less frequent batches, but still recommends per-change peer review, so it does not support the claim that PR review makes daily integration impossible.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L580-L588",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.45,
+          "note": "Google requires pre-commit review on every change yet median review latency is under 4 hours, 70% of changes commit within 24 hours of being sent for review, and the median author lands about 3 changes a week of 24 lines, so per-change review did not prevent daily integration there.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L588-L592",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/asynchronous-review-loses-two-way-conversation",
+      "stance": "asserts",
+      "quote": "so now we've lost two-way Communications as part of the review",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Synchronous review has documented knowledge-sharing benefits, but asynchronous tools also support discussion; the loss is a matter of degree.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Tool-based reviewers at Microsoft frequently (20-40% of reviews) go talk to the author in person to understand the change, and the authors recommend in-person or synchronous channels because tool comments alone do not meet understanding needs; no direct comparison of educational value.",
+          "source": "software-practices/sources/bacchelli2013-modern-code-review.txt#L556-L560",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pull-requests-designed-gatekeep-untrusted-open",
+      "stance": "asserts",
+      "quote": "pull requests were invented to gatekeep access to open source projects",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A framing about intent and fit rather than a measurable outcome.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Inside a single trusted company, all 44 surveyed Google engineers agree code review is valuable and gatekeeping/security oversight are among its stated purposes, which argues against review fitting poorly in a trusted team; the claim's history of pull requests is not addressed.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L448-L453",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pair-programming-provides-continuous-code-review",
+      "stance": "asserts",
+      "quote": "that provides the second pair of eyes and the constant code review without slowing down the development process",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Pairing does catch defects as they are written, but pairs cost more person-hours, so 'without slowing' depends on the measure.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.25,
+          "note": "The report treats approval by a teammate during pair programming, before commit, as a valid lightweight way to implement peer review and segregation of duties, as an alternative to review before merge; this is a recommendation, not a measured comparison.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1237-L1241",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+      "stance": "asserts",
+      "quote": "pairs make progress and nearly but not quite twice the rate of an individual working alone but they also produce work with significantly fewer defects",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/most-developers-who-try-pair-programming",
+      "stance": "asserts",
+      "quote": "most people that I have seen try pair programming actually prefer it as a way of working",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Williams' student studies found high post-trial preference, but professional adoption surveys show persistent dislike among many.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Surveys in the review found 73% of XP employees say pairing speeds development and most students found it helpful, but the review summarises findings on pair programming effectiveness as mixed, with several developers calling it exhausting and one project drifting back to solo work.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L1167-L1170",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pairs-sustain-focus-better-individuals-working",
+      "stance": "asserts",
+      "quote": "pairs are actually able to sustain a better focus than individuals working alone",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Reported in pair-programming studies as 'pair pressure', mostly self-reported.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

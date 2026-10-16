@@ -1,0 +1,162 @@
+{
+  "id": "infoq-business-impact-code-quality",
+  "title": "Code Red: the Business Impact of Code Quality",
+  "channel": "InfoQ",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://www.infoq.com/articles/business-impact-code-quality",
+  "summary": "Adam Tornhill summarises the Code Red study: technical debt wastes a large share of developer time, unhealthy code has far more defects and slower, less predictable changes, and hotspots show where to pay debt down.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/technical-debt-consumes-substantial-fraction-developers",
+      "stance": "asserts",
+      "quote": "the average company wastes 23-42% of developers' time due to technical debt and bad code in general",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Besker et al. surveys report roughly a quarter of time self-reported as wasted, but the figures are self-reported and vary widely.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Respondents reporting high technical debt were 1.6 times less productive and the highest performers were 1.4 times more likely to have low technical debt; the survey measures a productivity drag, not a fraction of working time.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1677-L1681",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "The paper's own measurement is per-file (issues in Alert code take 124% longer, Warning 78%) rather than a share of total time; in related work it relays Besker et al.'s longitudinal self-reports of 23% of time wasted on TD and Stripe's 42% figure, which are secondary citations here.",
+          "source": "software-practices/sources/tornhill2022-code-red.txt#L152-L158",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/code-unhealthy-files-has-many-times",
+      "stance": "asserts",
+      "quote": "Red code has, on average, 15 times more defects than a healthy codebase.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "The Code Red paper on 39 codebases is correlational and from the vendor of the code-health metric; the direction matches other complexity-defect studies.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Across 30,737 files in 39 proprietary codebases, Alert (low Code Health) files had 15x the Jira defects of Healthy files and issues took 124% (about 2.2x) longer on average, so 'many times more defects' holds but 'several times longer' overstates the average time effect; observational, CodeScene-customer sample, vendor-authored, causality direction acknowledged as open.",
+          "source": "software-practices/sources/tornhill2022-code-red.txt#L362-L389",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Functions scored less readable were more likely to carry FindBugs warnings, change next release, and be touched by bug-fix commits (f-measure 0.62-0.65, precision about 0.9, recall about 0.5) across 15 open-source Java projects; supports the defect half of the claim for low readability but measures nothing about time to change.",
+          "source": "software-practices/sources/buse2010-readability.txt#L532-L547",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/low-quality-code-makes-delivery-times",
+      "stance": "asserts",
+      "quote": "Adding a feature to healthy code seems to be a predictable process. Not so in unhealthy red code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Task-time variance in red code is reported in one vendor study; independent replication is lacking.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "The maximum Time-in-Development per file was 9x longer in Alert code than Healthy code (large effect, Cohen's d 0.96) and already 2x in Warning code, with much higher variance, which the authors read as lower predictability of task completion; correlational, single tool vendor's customer base.",
+          "source": "software-practices/sources/tornhill2022-code-red.txt#L384-L389",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/technical-debt-lowers-developer-happiness-drives",
+      "stance": "asserts",
+      "quote": "Unmitigated technical debt with high interest fuel developer attrition.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Graziotin and others link bad code to frustration and lower productivity; attrition effects are anecdotal.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "In DORA's model technical debt reduces productivity, productivity improves work recovery, and work recovery reduces burnout, so the link to well-being is indirect through two steps; attrition is not measured.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1677-L1681",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/prioritising-refactoring-hotspots-where-change-frequency",
+      "stance": "asserts",
+      "quote": "focus on development hotspots to remediate high-interest debt first",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Change-frequency weighting is a sensible proxy supported by defect-prediction research, but comparative outcome data is limited to vendor case studies.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/software-delivery-speed-stability-move-together",
+      "stance": "asserts",
+      "quote": "the shorter your cycle times for deployment, the fewer production failures",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/code-quality-tolerated-waste-because-invisible",
+      "stance": "asserts",
+      "quote": "code is an abstract concept that isn't accessible to non-technical stakeholders",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Explanatory framing.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "The motivation section relays that the business impact of code quality is vague, managers in a 15-organisation study would not fund refactoring because benefits were unclear, there are no code-quality KPIs comparable to financial ones, and only 10% of 1,831 surveyed said their business manager managed TD; all cited from other studies rather than measured here.",
+          "source": "software-practices/sources/tornhill2022-code-red.txt#L28-L40",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

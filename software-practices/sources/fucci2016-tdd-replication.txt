@@ -1,0 +1,676 @@
+  An External Replication on the Effects of Test-driven
+Development Using a Multi-site Blind Analysis Approach
+
+      Davide Fucci               Giuseppe Scanniello                          Simone Romano
+
+M-Group, University of Oulu        University of Basilicata                  University of Basilicata
+         Oulu, Finland                   Potenza, Italy                            Potenza, Italy
+
+     davide.fucci@oulu.fi     giuseppe.scanniello@unibas.it                simone.romano@unibas.it
+
+     Martin Shepperd                Boyce Sigweni                              Fernando Uyaguari
+
+         Brunel University           Brunel University                       Universidad Politécnica de
+   London, United Kingdom       London, United Kingdom                                    Madrid
+martin.shepperd@brunel.ac.uk  boyce.sigweni@brunel.ac.uk
+                                                                                      Madrid, Spain
+                                                                           f.uyaguari@alumnos.upm.com
+
+      Burak Turhan                 Natalia Juristo                                Markku Oivo
+
+M-Group, University of Oulu   M-Group, University of Oulu                  M-Group, University of Oulu
+         Oulu, Finland        Universidad Politécnica de                            Oulu, Finland
+
+    burak.turhan@oulu.fi                    Madrid                             markku.oivo@oulu.fi
+                                  natalia.juristo@oulu.fi
+
+ABSTRACT                                                                   We recommend future studies to survey the tasks used in
+                                                                           experiments evaluating TDD. Finally, to lower the cost of
+Context: Test-driven development (TDD) is an agile prac-                   replication studies and reduce researchers' bias, we encour-
+tice claimed to improve the quality of a software product,                 age other research groups to adopt similar multi-site blind
+as well as the productivity of its developers. A previous                  analysis approach described in this paper.
+study (i.e., baseline experiment) at the University of Oulu
+(Finland) compared TDD to a test-last development (TLD)                    Keywords
+approach through a randomized controlled trial. The results
+failed to support the claims. Goal: We want to validate                    test-driven development, external experiment replication, blind
+the original study results by replicating it at the Univer-                analysis
+sity of Basilicata (Italy), using a different design. Method:
+We replicated the baseline experiment, using a crossover de-               1. INTRODUCTION
+sign, with 21 graduate students. We kept the settings and
+context as close as possible to the baseline experiment. In                   Test-driven development (TDD) is an agile practice [4], in
+order to limit researchers bias, we involved two other sites               which unit tests are written before production code, com-
+(UPM, Spain, and Brunel, UK) to conduct blind analysis of                  pelling the developer to focus on the correct behavior of the
+the data. Results: The Kruskal-Wallis tests did not show                   intend feature from an early stage. The developer writes
+any significant difference between TDD and TLD in terms                    just enough production code to make the unit test pass, and
+of testing effort (p-value = .27 ), external code quality (p-              refactors it afterwards [4].
+value = .82 ), and developers' productivity (p-value = .83 ).
+Nevertheless, our data revealed a difference based on the or-                 A TDD cycle is composed of three, iterative phases.
+der in which TDD and TLD were applied, though no carry                     Red: Write a unit test; the unit test fails.
+over effect. Conclusions: We verify the baseline study re-                 Green: Write production code; the unit test passes.
+sults, yet our results raises concerns regarding the selection             Blue: Refactor the code [11]; the unit test passes.
+of experimental objects, particularly with respect to their in-            The SE research community has taken an interest in inves-
+teraction with the order in which of treatments are applied.               tigating the effects of TDD on several outcomes, including
+                                                                           testing effort, external software quality and developers' pro-
+Permission to make digital or hard copies of all or part of this work for  ductivity. In particular, there is a plethora of controlled
+personal or classroom use is granted without fee provided that copies      experiments (e.g., [10, 18, 27, 28]), aggregated in secondary
+are not made or distributed for profit or commercial advantage and         studies (e.g., [32, 36, 39]), which report mostly inconclusive,
+that copies bear this notice and the full citation on the first page.      or inconsistent results. A number of experiments were car-
+Copyrights for components of this work owned by others than the            ried out at the University of Oulu [13, 16]--including repli-
+author(s) must be honored. Abstracting with credit is permitted. To        cation studies [14, 15]--investigating the same outcomes. In
+copy otherwise, or republish, to post on servers or to redistribute to     order to understand the reliability of the findings in [13]
+lists, requires prior specific permission and/or a fee. Request            (i.e., baseline experiment), we carried out a close, exter-
+permissions from Permissions@acm.org.                                      nal replication [24] at the University of Basilicata, Potenza
+ESEM '16, September 08 - 09, 2016, Ciudad Real, Spain                      (Italy). Authors GS and SR conducted the experiment us-
+Copyright is held by the owner/author(s). Publication rights licensed to
+ACM.
+ACM 978-1-4503-4427-2/16/09...$15.00
+DOI: http://dx.doi.org/10.1145/2961111.2962592
+ing the protocol devised by the original experimenters (i.e.,      relevance according to the framework presented in [22]. The
+authors DF, BT and MO), but with a different design--i.e.,         results are inconclusive when the primary studies are con-
+crossover. In order to limit the possible threat to validity due   sidered together; however the nine high-rigor, high-relevance
+to researchers' bias [26], the data analysis was done in dif-      studies show that TDD improves external quality, while pro-
+ferent sites. The data was extracted at one site (i.e., UPM,       ductivity is not affected. The 21 studies in the same cate-
+Madrid) and analyzed at another site (i.e., Brunel Univer-         gory of the baseline experiment and this replication (i.e.,
+sity, London). Both sites' researchers were not aware of the       low-relevance due to its academic context, but high-rigor
+experiment goal. Through this replication we checked the           due level of control) are inconclusive with respect to both
+validity of the results presented in the baseline experiment,      outcomes. None of the secondary studies survey the effects
+and expanded them by analyzing the impact of the changes           of TDD on testing effort.
+made to the experiment design and settings.
+                                                                   2.2 External replications in SE
+   The paper is organized as follows: in Section 2, we present
+a summary of the previous studies regarding TDD, and the              The software engineering community has been readily em-
+salient literature about external replication and blind anal-      bracing replications (e.g., [9, 25, 38]). There are two im-
+ysis. In Section 3, we describe the baseline experiment. In        portant factors characterizing a replication: procedure (i.e.,
+Section 4, we present the goals, changes in context, data          followed experimental steps) and researcher (i.e., who con-
+analysis strategy, and results of the replication. The threats     ducted the replication). As for the procedure, the kinds of
+to validity are discussed in Section 5. In Section 6, we discuss   replications range in between conceptual and close [38]. A
+results and compare them to those of the baseline experi-          replication is conceptual if the research questions are the
+ment. Final remarks and future work conclude the paper.            same as the baseline experiment, but the experimental pro-
+                                                                   cedures are completely different. A replication is close if the
+2. BACKGROUND                                                      baseline experiment and the replication share the same pro-
+                                                                   cedure [38]. As for the researcher, we distinguish between
+   In this section, we report the results of the secondary stud-   internal and external. An internal replication is conducted
+ies investigating the effects of TDD on developers' produc-        by the same group of researchers as the baseline experiment
+tivity and external quality. In order to position our work,        [30], while an external replication is performed by different
+we report a brief review about external replication and blind      experimenters. da Silva et al. systematic review [9] showed
+analysis for software engineering.                                 that the majority of replications between 1994 and 2010 were
+                                                                   internal. Alongside, internal replications tend to report posi-
+2.1 Previous studies on TDD                                        tive results not only in SE [7], but also in other disciplines [1].
+                                                                   Therefore, external replications should be preferable as they
+   The systematic review reported by Turhan et al. [41] in-        are less affected by experimenters' biases [24, 38]. More re-
+cludes 32 primary studies, published between 2000 and 2008,        cently, Go´mez et al. [19] propose a different classification, in
+in which TDD is compared to different, more traditional de-        which the study presented in this paper occurs to be an op-
+velopment approaches. The primary studies vary in type             erational replication. In particular, following Go´mez et al.,
+(i.e., controlled experiment, pilot studies, and industrial use),  we consider this to be a changed-experimenter replication,
+and were classified according to the experience of the par-        because at least two treatments and one response variable
+ticipants, the level of details reported for the constructs,       are retained, and the researchers are different with respect
+and the scale of the study. When taking into account all           to the baseline study. Independently from the classification
+the studies, the authors suggest that TDD improves exter-          for types of replications, there are two primary motivations
+nal quality. However, this result does not hold once only the      to perform replications: (i) they are necessary to solve prob-
+rigorous primary studies are taken into account. The results       lems and to collect evidence because they bring credibility
+regarding productivity vary across the type of primary stud-       to a given research and (ii) they are valuable because they
+ies, from positive, to negative, to inconclusive. Nevertheless,    provide evidence on the benefits of a software engineering
+the controlled experiments show improvements due to the            practice thus allowing industrial stakeholders to use this in-
+use of TDD. The meta-analysis by Rafique and Misi´c [36]           formation to support adoption decisions [2, 19, 35].
+includes 27 primary studies published until 2011. The re-
+sults, based on effects sizes [12], do not show solid evidence     2.3 Blind analysis
+either in support, or against, TDD. Interestingly, when con-
+sidering the academic context (i.e., the same as the baseline         Another strategy to minimize the possibility of bias in ex-
+study, and this replication), TDD improves external qual-          perimental results is blind analysis [40]. Clearly for blind
+ity of 24% with respect to a waterfall approach;1 however,         analysis to be effective it requires a minimum of two re-
+its effects are detrimental (-13%) when compared to an it-         searchers, one who carries out the experiment (or simply
+erative test-last (ITL) approach (i.e., a similar approach is      experimenter) and another who conducts data analysis (or
+used by the control groups in the baseline study and this          simply analyst). The main idea is that, by relabeling (or
+replication). Conversely, TDD increases productivity--27%          anonymizing) the different treatments, the analyst is no
+vis-a`-vis ITL, and 7% vis-a`-vis waterfall development. The       longer aware of which is the new (or known experimented)
+authors recommend the use of an ITL-based approach to be           technique/approach, nor which are the results from bench-
+compared against TDD in order to remove the extra testing          marks. Searching for a test or procedure that yields statis-
+effort required by, for example, a waterfall approach. Munir       tical significance is less straightforward. It is more difficult
+et al.'s systematic review [32] covered the 2000-2011 decade,      for the analyst to have a view as to what results are "inter-
+and included 41 primary studies categorized by rigor and           esting." This kind of analysis is almost unknown in software
+                                                                   engineering (e.g., [37,40], unlike other disciplines (e.g., [3]).
+1Using waterfall, the system is tested once it is considered
+completely developed.
+3. BASELINE EXPERIMENT (UOULU)                                   sity of Oulu, and attending the Fall 2012 course Software
+                                                                 Quality and Testing. The participants were sampled by con-
+   We provide the context for the replication by reporting the   venience. Before the experiment, a pre-questionnaire was
+key information about the baseline experiment. We followed       administered to the participants in order to grasp their expe-
+the recommendations in [6]. The baseline study [13] itself       rience. Fifteen participants reported to have professional ex-
+reports a replication of a previous study by Erdogmus et         perience varying between three months and ten years, with
+al. [10]2. Both studies were structured in two parts. The first  an average of 2.6 years. All the participants, before the
+part covered a controlled experiment to assess the impact of     study, received 20 hours of training in unit testing in Java,
+TDD3 on testing effort, productivity and external quality.       using JUnit as a framework and Eclipse as the IDE. The
+The experiment compared TDD to a control composed of             training was completely practice oriented and required the
+developers applying test-last development (TLD) method,          participants to solve a variety of programming katas5 using
+while working on a single task. The TLD developers followed      TDD. The participants were informed about their partici-
+an approach in which unit tests are written only after some      pation to the experiment; however, the research questions
+production code (e.g., the code necessary for a feature of       were not disclosed to them in advance. Some of the par-
+the task) was present. They were asked to work on small          ticipants used pair-programming: 11 pairs were formed; the
+chunks of the task, rather than utilize a waterfall approach;    remaining 36 participants worked individually. In the final
+accordingly the task was designed to support this way of         design seven pairs and 20 individuals were allocated to the
+working. The second part reported a correlational study          TDD group; four pairs and 16 individuals were allocated to
+investigating the relationship between testing effort and the    the TLD group. Hence, the design was unbalanced.
+other two outcomes.4 In this paper, we report a replication
+of the first phase of Fucci et al.'s study [13].                 3.3 Object
+
+3.1 Research Questions and Hypotheses                               The baseline experiment utilized a single experimental ob-
+                                                                 ject: the Bowling Scorekeeper (BSK) kata. The task re-
+   The research questions driving the part of the baseline       quired to participants to implement an API for calculating
+study replicated in this paper were:                             the score of a player in a bowling game. The development
+                                                                 of a GUI was not required. The task was divided into 13
+   Do test-first developers write more tests than test-last de-  user stories of incremental difficulty, each building on the
+velopers?                                                        results of the previous one. An example, in terms of in-
+                                                                 put and expected output, accompanied the description of
+   Do test-first developers produce solutions with higher ex-    each user story. An Eclipse project, containing a stub of the
+ternal quality than test-last developers?                        expected API signature (51 Java SLOC); also an example
+                                                                 JUnit test (9 Java SLOC) was provided together with the
+   Are test-first developers more productive than test-last de-  task description. The task was administered electronically
+velopers?                                                        at the beginning of the experiment sessions.
+The independent variable (IV) was, therefore, development
+approach (i.e., TDD or TLD), whereas the dependent vari-         3.4 Metrics
+ables (DV) were: testing effort (T EST S), software exter-
+nal quality (QLT Y ), and developers' productivity (P ROD).         The relevant metrics for this study are T EST , QLT Y ,
+Note that, following from the research questions, the hy-        and P ROD. T EST is defined as the number of JUnit assert
+potheses were formulated as directional for consistency with     statements within the unit test suite written by the partic-
+Erdogmus et al., but analyzed as non-directional since the       ipants while tackling the task. Therefore, T EST  [0, ].
+existing body of knowledge regarding the postulated impact       QLT Y represents how well, on average, the implementation
+of TDD does not suggest a specific direction of the effect.      of each user story matches that user story's requirements
+The UOULU's three causal research hypotheses were for-           according to a pre-defined set of acceptance tests developed
+mulated according to the research questions. Table 1 re-         by the authors. P ROD represents the portion of the task
+ports the original hypotheses, as well as their outcomes. [13].  correctly implemented. Both QLT Y and P ROD were cal-
+Some of the participants in the original study used pair-        culated based on an acceptance test suite developed by the
+programming (PP) along with TDD or TLD. Therefore,               researchers, and hidden to the participants. In particular,
+the original study included an additional hypothesis deal-       QLT Y is computed as follows:
+ing with the possible interactions between the practices un-
+der study, and PP as nuisance factor. In our replication,                               #T U S
+participants worked individually; therefore such additional
+hypothesis was not taken into account.                                                          QLT Yi
+
+3.2 Sample and participants                                      QLT Y = i=1                            × 100,  (1)
+                                                                                    #T U S
+   The sample in the original study was composed of 58 par-
+ticipants (33 graduate and 25 undergraduate), enrolled at        where #T U S represents how many user stories a participant
+the department of Information Processing Science, Univer-        tackled. A user story is considered tackled if at least one
+                                                                 assert in any of the acceptance tests associated with that
+2Acknowledging Erdogmus et al. [10] as the first study in        user story passes. Hence, #T U S is formally defined as:
+our family of experiments, we use the terms original study or
+baseline study interchangebly based on context for referring                         n  1 #ASSERTi(P ASS) > 0   (2)
+to Fucci et al. [13] within the scope of this paper.
+3The baseline experiment refers to it as test-first for consis-  #T U S =               0 otherwise
+tency with the Erdogmus et al.
+4The rationale for it is based on the conjecture that TDD        i=0
+developers produce more unit tests, hence a positive correla-
+tion between T EST S and QLT Y or P ROD was expected.            5A code kata is a programming exercise used to practice a
+                                                                 technique or language.
+           Table 1: UOULU hypotheses and outcomes (from [13])
+
+Name       H0                                                     H1                           Outcome H0
+  1T       T EST (T DD) = T EST (T LD)                            T EST (T DD) > T EST (T LD)  Failed to reject
+  1Q       QLT Y (T DD) = QLT Y (T LD)                            QLT Y (T DD) > QLT Y (T LD)  Failed to reject
+  1P       P ROD(T DD) = P ROD(T LD)                              P ROD(T DD) > P ROD(T LD)    Failed to reject
+
+For the BSK task, n = 13. The quality of the i-th user story,     from carry-over and learning effects [43]. Using the experi-
+QLT Yi, is defined as:                                            ment definition template in Wohlin et al. [45], this replica-
+                                                                  tion is defined as follows:
+QLT Yi  =  #ASSERTi(P ASS) .    (3)                               "Analyze the practice of TDD, for the purpose of evaluating
+            #ASSERTi(ALL)                                         its impact, compared to a test-last development approach,
+                                                                  with respect to testing effort, external software quality and
+From Formulas 1-3, QLT Y  [0, 100]. The metric for P ROD          developers' productivity, from the point of view of the re-
+was calculated as follows:                                        searcher, in the context of an academic course about software
+                                                                  development practices."
+P ROD = #ASSERT (P ASS) × 100,  (4)
+                #ASSERT (ALL)                                     4.2 Interaction between researchers
+
+in other words P ROD represents the percentage of assert             The interaction between the baseline experimenters
+statements in the acceptance test suite passed. From For-         (UOULU: authors DF, BT, and MO) and the replication
+mula 4, P ROD  [0, 100].                                          ones (UNIBAS: authors GS and SR) followed the guidelines
+                                                                  proposed in [24]. The interaction was started by UOULU.
+3.5 Design, Context and Execution                                 An initial meeting between UNIBAS and UOULU happened
+                                                                  face-to-face, the baseline experiment (e.g., its motivation,
+   The baseline experiment was designed as one factor (i.e.,      design choice, and results) and the possibilities for a repli-
+development approach), with two treatments (i.e., TDD and         cation were discussed. Subsequently, a series of meetings
+TLD) [45]. No blocking was applied; nevertheless the effect       (i.e., adaptation meetings [24]) was carried out via telco to
+of a nuisance factor, pair-programming, was assessed after-       discuss important points such as: where to sample the par-
+the-fact. At the beginning of the experiment session, the         ticipants from, the participants' type, the time frame avail-
+participants were randomly assigned to either groups (TDD         able for the training and the experiment, the schedule of
+or TLD). The sample was not stratified before the assign-         the replication, and the physical settings in which the repli-
+ment to the groups. The researchers distributed the ma-           cation would take place. The design (see Section 4.7) pro-
+terial (i.e., hard and soft copies of the experimental task,      posed for this replication seemed to fit the settings. The
+and Eclipse template) to each group accordingly. The only         finals decision regarding the replication design was made at
+difference between the two groups was whether the task re-        this stage. After the meetings it was clear that the context
+quired to be implemented using TDD or TLD. The session            would be close to the UOULU one, with two main differ-
+lasted for three hours, after which the participants returned     ences. The UNIBAS settings allowed a) all the participants
+the Eclipse project used to develop their solutions. These        to work individually (i.e., without pair-programming) due
+artifacts were later used to extract the metrics.                 to the larger availability of computer rooms; b) because of
+                                                                  the new design, an additional task should be used. The
+3.6 Summary of results                                            expected impact of the changes (see Section 4.3) were also
+                                                                  discussed at this stage. The practicalities--e.g., the training
+   The results of the original study are reported in Table 1.     material, the specific experimental tasks, questionnaires for
+Mann-Whitney U-test [21] was used to test hypotheses 1T,          the participants--were defined via email discussions. Dur-
+1Q and 1P. The null-hypothesis was failed to be rejected          ing the execution of the experiment no major inquiries or
+in each case. The effect size, reported as Pearson's r [34],      clarifications were necessary. Finally, after the the analysis
+are small; respectively .16, .04 and .11. The conclusion of       of the data was made available (see Section 4.8), there was a
+the original study is that TDD does not affect testing effort,    final combination meeting [24] via telco. Rather than focus
+external software quality, and developers' productivity when      strictly on the results, this meeting reviewed the changes on
+compared to TLD.                                                  replication condition and mapped them onto the results.
+
+4. EXTERNAL REPLICATION (UNIBAS)                                  4.3 Changes to original settings
+
+4.1 Motivations                                                      With respect to UOULU, there were changes in the ex-
+                                                                  perimental protocol [19].
+   The replication was carried out following the guidelines       Experimental Design: the overall design was kept as one
+reported in [23]. We wanted to validate the results of the        factor, two treatment but a second measurement--corresponding
+UOULU regarding TDD in an academic context; in order to           to the second task--was added, which resulted in a balanced
+do that we changed the design of the experiment. We moved         crossover design. A balanced crossover design is a type of
+from a simple randomized trial to a balanced crossover de-        repeated measure design--i.e., the measures are taken sev-
+sign. This has the advantages of reducing the influence of        eral times for the same participant--in which a participant
+confounding covariates (e.g., participant's skills), and requir-  is randomly assigned to a sequence of treatments rather than
+ing less participants with respect to non-crossover designs to    a single one. That is, a participant will be assigned either to
+achieve the same power. Conversely, crossover designs might       the sequence TDD+TLD, or to TLD+TDD. The expected
+suffer from the order in which the treatments are applied, or
+      Table 2: UNIBAS hypotheses and outcomes                    refactoring. The participants had sufficient level of techni-
+                                                                 cal maturity and knowledge of software design, development,
+Name  H0                           H1                            and refactoring. Their prior knowledge could be considered
+ R1T  T EST (T DD) = T EST (T LD)  T EST (T DD) = T EST (T LD)   homogeneous. The participants had passed all the exams
+ R1Q  QLT Y (T DD) = QLT Y (T LD)  QLT Y (T DD) = QLT Y (T LD)   related to the following courses: Procedural Programming,
+ R1P  P ROD(T DD) = P ROD(T LD)    P ROD(T DD) = P ROD(T LD)     Object-Oriented Programming I and II, Software Engineer-
+                                                                 ing I, Web Technologies, and Databases. In these courses,
+impact of this change is to improve the reliability of the re-   participants gained significant experience with C/C++, C#,
+sults, i.e., a crossover design removes the within-participant   and Java. The results of a pre-questionnaire administered
+difference since each participant serves as its own control. In  before the experiment to the participants, showed that they
+particular, our concern regarded the participants' program-      had an average experience of 4.5 years in object oriented
+ming skill-set as a possible confounding covariate [17, 31].     programming in academia (standard deviation 1.1 years).
+A second change in the experimental design was done. In          One participant declared ten years of professional experi-
+particular, UOULU had to include an additional nuisance          ence in software development; three declared four, three and
+factor, pair-programming, due to its settings. The effects       two years experience as professional developers; two partici-
+of the nuisance factor were managed by an ad-hoc analysis.       pants declared one year of professional experience, while the
+The settings of UNIBAS removed the need to control for           remaining had none. The participants' average experience
+such factor entirely. The expected impact of this change is      with unit testing was a little over one and a half years. The
+that we can exclude the possibility that the results were due    replication was conducted as an optional exercise of IS. Be-
+to the interaction with the nuisance factor.                     fore the replication, the IS course was accompanied by four
+Experimental Objects: following from the change in the           lab sessions of three hours each. During these lab sessions,
+experimental design, a change in the experimental objects'       students improved their knowledge on how to use the Eclipse
+population was needed. We added a second object, MarsRover       IDE to develop unit tests with Java and JUnit, the refac-
+Api (MRA)--an experimental task, assessed by the authors         toring tools included in the IDE, and TDD development.
+as complex as the original one. This was a necessary change      The participants were required to use TDD to solve several
+to implement the crossover design. In fact, using the same       code katas of increasing difficulty throughout these lab ses-
+task for the second measurement would pose a significant         sions. We also asked students to work on home assignments
+threat to the internal validity of the experiment due to learn-  to further practice the contents presented in the lab sessions.
+ing effects. In other words, there was the risk that the par-    The topics, focusing on TDD, and material used during the
+ticipants would perform better not because of the treatment      training (i.e., slides, practice tasks, pre-questionnaire) was
+but simply because they learned the task's solution during       the same used for the UOULU experiment and translated
+the first measurement. Given the changes described in this       into the Italian language.6
+section, we consider this to be a close replication [38].
+                                                                 4.6 Objects
+4.4 Research Questions and Hypothesis
+                                                                    Two experimental tasks, one for each measurement, were
+   As described in section 4.3, the research questions tackled   used in this replication due to the changes in the experi-
+in this replication are the same as the UOULU experiment.        mental design. The first task was MarsRover API (MRA).
+Nevertheless, their direction was changed accordingly. In        It required to develop the API which allows to move a vehi-
+particular, no expectation about the direction of the results    cle on a two-dimensional grid. It was algorithmic in nature,
+is present. The research questions are formulated as follows:    and several edge cases needed to be handled. The require-
+RQ1 : Is there a difference between the number of tests writ-    ments were described as 11 user stories, which were later
+ten by TDD developers and TLD developers?                        used for the acceptance test suite necessary to calculate the
+RQ2 : Is there a difference between the external code quality    metrics. The participants were given a template project of
+of TDD developers and TLD developers?                            the task to get started. It included the class containing the
+RQ3 : Is there a difference between the productivity of TDD      signature (8 LOC) and a stub of a JUnit test class (9 LOC).
+developers and TLD developers?                                   The second object was BSK, also used for UOULU.
+Table 2 reports the research hypothesis investigated in this
+replication, where T EST is number of tests, QLT Y is ex-        4.7 Design, Context and Execution
+ternal quality, and P ROD is developers' productivity.
+                                                                    The design is shown in Table 3. The experiment took
+4.5 Sample and Participants                                      place in two different days: April 15th (i.e., Day 1) and
+                                                                 April 22nd 2015 (i.e., Day 2). We randomly assigned the
+   The participants in UNIBAS were sampled by convenience        participants to a sequence of treatments. Sequence A im-
+among the students enrolled in the Informative System (IS)       plemented MRA during Day 1 using TDD, and BSK during
+course of the Master program in Computer Science at the          Day 2 using TLD. On the other hand, Sequence B imple-
+University of Basilicata. Students participated in the exper-    mented MRA during Day 1 with TLD, and BSK during Day
+iment on a voluntary basis. Although they were informed          2 using TDD. In this design the treatments are switched
+about their participation to the experiment, our research        within the sequence so that all the participants are given
+questions were not disclosed to them. We also informed par-      all the treatment yielding a balanced design. This not only
+ticipants that data were treated anonymously, and disclosed      removes within participants variance, but also controls for
+in aggregated form. Out of the 23 participants enrolled in       learning effects, as the participants do not apply the the
+the IS course, 21 decided to take part in the experiment. The    treatments to the same task. The control group is formed by
+course had elements regarding software testing, software de-     the participants applying TLD (Sequence A, Task BSK and
+velopment process, software maintenance, agile development
+techniques with a focus on TDD, regression testing, and          6DF is the author of the material and native Italian speaker.
+                                  Table 4: UOULU and UNIBAS settings
+
+Characteristic              Baseline                                                     UNIBAS
+
+Participant type            33 graduate, 25 undergraduate                                21 graduate students
+Participant Unit            11 pairs, 36 individuals                                     21 individuals
+Environment                 Software quality and testing course                          Informative system
+Participant Stratification  None                                                         None
+Programming Environment     Java, Eclipse, JUnit                                         Java, Eclipse, JUnit
+Experiment Task             Bowling Scorekeeper                                          Mars Rover API and Bowling Scorekeeper
+Task Type                   Fine grained, incremental difficulty                         Fine grained, incremental difficulty
+Time to Complete the Task   Single lab session (3 hours)                                 Two lab sessions (3 hours each)
+Experiment Design           Parallel one factor, two treatments                          Balanced crossover design
+Experiment groups           TLD vs. TDD                                                  TLD vs. TDD
+Control / Treatment size    20 (4 pairs, 16 individuals) / 27 (7 pairs, 20 individuals)  21/21
+Variables                   T EST , P ROD, QLT Y , SU BJ                                 T EST , P ROD, QLT Y
+
+Table 3: Replication design                                     tivations, hypotheses, nor design. When extracting the data,
+                                                                one artifact was discarded because it did not contained the
+                            TASK                                source code necessary to executed the acceptance test suite.
+                                                                The result of the first step was the dataset, comprising 20
+             Day 1 (MRA) Day 2 (BSK)                            observations, later used to carry out the statistical analysis
+                                                                in step 2). The dataset was then blinded by removing the la-
+SEQUENCE  A  TDD            TLD                                 bels from its column, so that, for the analyzer, the measure-
+          B  TLD            TDD                                 ments do not refer to any particular construct. The blind
+                                                                analyzers (i.e., authors BS and MS) received the blinded
+Sequence B, Task MRA). The experimental group is formed         dataset with a description of the variables (e.g., continuous,
+by the participants applying TDD (Sequence A, Task MRA          ordinal), their ranges, and the description of the experimen-
+and Sequence B, Task BSK). Consistently with UOULU,             tal design in which the names of the constructs, and tasks
+development approach is the independent variable (IV). It       were replaced with anonymous labels. The result of the sec-
+is a nominal variable and assumes values: TLD and TDD.          ond step was a document, containing the statistical analysis,
+The instructions given to participants in both groups on how    upon which the results are based. Before making any infer-
+to apply the treatments during the experiment sessions were     ence on the results, the original labels were re-applied to
+the same as UOULU. The dependent variables (DV): testing        them. In Figure 1, we summarize the interactions between
+effort (T EST ), external quality (QLT Y ), and productivity    the sites participating in this replication.
+(P ROD) are calculated as the UOULU experiment, using
+the same acceptance test suite for BSK. A new acceptance           OULU                   UNIBAS     UPM             BRUNEL
+test suite was developed to measure QLT Y , and P ROD for
+MRA. The context of the experimental sessions was the same      Experiment               Experiment
+as UOULU. Therefore, Java was the language used to solve          Design                  Execution
+the task, Eclipse was the IDE, three hours were allocated
+for the session. Just before the experiment, the experiment                                          Data Etraction
+supervisors highlighted the study goal without providing de-
+tails on its hypotheses. The experimental tasks were carried                                         Blinding
+out under controlled conditions. GS and SR monitored the
+participants to prevent their communication with each other                                                          Data Analysis
+in the laboratory trials. The experiment supervisors were
+the same at each trial. We suggested the participants to im-                                         Un-blinding
+plement the stories in the order with which they appear in
+the given documentation. We allowed all the participants to                              Results
+use Internet to accomplish the tasks because actual devel-
+opers usually exploit this medium as support for their daily    Figure 1: Sites involved in the replication
+work activities. We clearly forbid the participants to use
+of the Internet to communicate with each another. Table 4       4.9 Results
+compared the settings of both experiments.
+                                                                   In this section we present a summary of the statistical
+4.8 Blind analysis                                              analysis process that led to the results.
+
+   In order to reduce possible researcher bias [26], we used a  4.9.1 Descriptive statistics
+two-step protocol for blind analysis: 1) blind data extraction
+(UPM); 2) blind statistical analysis (BRUNEL). In 1), the          Table 5 presents the summary statistics for the dataset.
+source code produced during the experiment was given to a       We have 40 observations (i.e., two observations for each
+third party (i.e., author FU) to extract the metrics for the    of the 20 valid participants) for the three DVs, T EST S,
+constructs of interest using the formulas reported in Section
+3.4. FU used the same artifacts--i.e., metrics extraction
+form, and acceptance test suite--utilized for the data ex-
+traction in UOULU, as well as the acceptance test suite for
+the new task. He was aware of neither the experimental mo-
+QLT Y , and P ROD. It seems that the participants were            Table 7: K-W tests for ordering effects (n=20, df=1)
+able to correctly complete a bit more than one-third of the
+tasks (P ROD = 39.81); however the quality of the portions          DV   K-W 2         p-value    Decision
+of the tasks implemented was acceptable (QLT Y = 66.70).          TESTS       7.43
+It appears that the participants, on average, wrote less than     QLTY        8.69   .64 × 10-2  Reject H0
+two unit tests per each user story7.                              PROD        9.14   .32 × 10-2  Reject H0
+                                                                                     .24 × 10-2  Reject H0
+
+Table 5: Summary statistics for the UNIBAS dataset (n=40)         might exist. A carryover effect takes place when the ef-
+                                                                  fect of the first treatment is still present when measuring
+DV Mean St. Dev. Min Median Max                                   the second. In particular, we have reasons to believe that
+                                                                  there could be a carryover in the sequence B. In fact, ap-
+TESTS 10              6.58     0 10        26                     plying TLD first might better prepare the participants for
+QLTY 66.70            30.77  0.00 74.35    100                    the application of TDD. For example, by using TLD as first
+PROD 39.81            33.05  0.00 35.79    100                    treatment, the participants can focus on tackling small part
+                                                                  of the task without the burden of applying the counterin-
+4.9.2 Comparison of treatments                                    tuitive test-first approach at the same time. Conversely,
+                                                                  applying TDD as first treatment, might overload the partic-
+   Figure 2 shows the distributional characteristics of the two   ipants. Although the participants should be familiar with
+treatments for each of the three DVs. The three research          both techniques, we proceed with a carryover analysis to
+hypotheses R1T , R1Q, and R1P were tested with  = .05             remove any doubts. When assessing the carryover effect,
+as in UOULU using a non-directional one-sample sign test:         we followed the method proposed in [44]--i.e., a carryover
+                                                                  is present when there is a statistically significant difference
+H0: M (DV(T DD) - DV(T LD)) = 0                                   between the sums of the DVs at different experimental con-
+H1: M (DV(T DD) - DV(T LD)) = 0                                   ditions with respect to the sequence. In order to assess such
+                                                                  differences, we used the same statistical test used during the
+where M is the median, and DV  {T EST S, P ROD, QLT Y }.          blind analysis:
+The test results, reported in Table 6, show that none of
+the null hypotheses could be rejected. Moreover, the effect       H0: M (DV(T DD) + DV(T LD))A = M (DV(T DD) + DV(T LD))B
+size [12]--reported as Cliff's --is negligible for all the vari-  H1: M (DV(T DD) + DV(T LD))A = M (DV(T DD) + DV(T LD))B
+ables. We conclude that no difference between TDD and
+TLD could be observed in terms of testing effort, external        where DV  {T EST S, P ROD, QLT Y }.
+code quality, and developers' productivity. These results are     The null-hypotheses were failed to reject (see Table 8); there-
+in line with those of UOULU.                                      fore we do not have strong evidence that our data exhibits
+                                                                  a carryover effect. However, at this stage we cannot be
+Table 6: Results of One Sample Sign test, n = 20, no ties were    sure whether the ordering effect showed is due to the task--
+present                                                           i.e., the particular sequence of tasks is biased towards (or
+                                                                  against) one sequence of treatments.
+Hypotheses  p-value         Cliff's  (CI)         Decision
+R1T             1.00   0.07 (-0.41, 0.29)                         Table 8: K-W tests for carryover effect (n=20, df=1)
+R1Q             0.82  -0.07 (-0.29, 0.41)  Failed to reject H0
+R1P             0.82   0.14 (-0.22, 0.47)  Failed to reject H0
+                                           Failed to reject H0
+
+4.9.3 Ordering Effects                                              DV   K-W 2       p-value          Decision
+                                                                  TESTS       1.22        .27
+   The analysis included a second level of investigation initi-   QLTY          .09       .76  Failed to reject H0
+ated by BRUNEL, in which the sequence of treatments was           PROD          .02       .88  Failed to reject H0
+conjectured to be a moderator variable. Hence, the question                                    Failed to reject H0
+of whether the DV median's difference significantly varies
+between the two sequences A and B was investigated. The           5. THREATS TO VALIDITY
+Kruskal-Wallis (K-W) test [43], i.e., a non-parametric tests
+for assessing whether two or more samples originate from             We present and discuss threats that could affect our study.
+the same distribution, was used. The hypotheses are:              Despite our efforts to mitigate as many threats as possible,
+                                                                  some of them are unavoidable. We discuss the threats to va-
+H0: M (DV(T DD) - DV(T LD))A = M (DV(T DD) - DV(T LD))B           lidity using the guidelines by Wohlin et al. [45]. Considering
+H1: M (DV(T DD) - DV(T LD))A = M (DV(T DD) - DV(T LD))B           that this study focuses on testing a theory, rather than as-
+                                                                  sess its generalizability, the threats to validity are prioritized
+Table 7 shows the hypotheses testing results. There is evi-       in decreasing order of importance [45].
+dence of a difference between the sequences in all three DVs.
+We attribute this result to a carryover effect, or a bias in the  5.1 Internal Validity
+task. The next section analyzes possible carryover effects.
+                                                                     Selection-maturation interaction: the adopted experimen-
+4.9.4 Carryover Effects                                           tal design might suffer from the presence of carryover. We
+                                                                  discussed it in Section 4.9.4. Diffusion or imitation of treat-
+   After acknowledging the results of the blind analysis re-      ments: this threat concerns information exchanged among
+ported in Section 4.9.1-4.9.3, we suspected that a carryover      the participants within each trial. Experiment supervisors
+                                                                  monitored the participants to prevent their communication
+7Note that number of total user stories is different between      to each another. As an additional measure to prevent diffu-
+the two tasks (MRA=11, BSK=13).                                   sion of material, we asked participants to return back mate-
+                                                                  rial at the end of each task. Selection: the effect of letting
+(a) Difference in TEST                                            (b) Difference in QLTY
+
+                                     (c) Difference in PROD
+Figure 2: Boxplots comparing the DVs for the treatments in UNIBAS
+
+volunteers take part in the experiment may influence the          participants with similar background--i.e., students in the
+results, since they are generally more motivated [45].            same university who completed similar courses, and had sim-
+                                                                  ilar experience. Fishing and the error rate: fishing has been
+5.2 External Validity                                             mitigated because we applied a blind data analysis proce-
+                                                                  dure. As for error rate, we chose an adequate significance
+   Interaction of selection and treatment: the use of students    level while testing null hypotheses. Violated assumptions
+as participants may affect the generalizability of the results    of statistical tests: to perform certain tests some assump-
+with respect to practitioners [8, 20]. However, the tasks to      tions have to be verified (e.g., normality of data). Violating
+be performed did not require a high level of industrial expe-     the assumptions may lead to wrong conclusions. We used
+rience, so we believe that the use of students as participants    robust, non-parametric statistics to test our hypotheses.
+could be considered appropriate, as suggested in [5]. Inter-
+action of setting and treatment: In our study, the size and       6. DISCUSSION AND COMPARISON
+the complexity of the selected application might affect ex-
+ternal validity. The use of Eclipse might have threaten the          In this section we discuss and compare the results of the
+result validity; it could be possible that a few participants in  UOULU experiment with the UNIBAS replication. We dis-
+the experiment were more familiar with the tool than others.      cuss the current state of knowledge about the effects of TDD
+                                                                  according to the changes that were made in the replication.
+5.3 Construct Validity                                            Regarding the three research questions driving this replica-
+                                                                  tion (RT 1, RQ1, and RP 1), the answer is that, given the
+   Interaction of different treatments: To mitigate this kind     data collected during the experiment, there is no evidence
+of threat, we adopted the design shown in Table 3. Mono-          supporting the claim that TDD differs from a TLD approach
+method bias: we acknowledge that this replication suffers         in terms of testing effort, external code quality, and devel-
+from such bias since the DVs were measured with a single          opers' productivity. This replication yielded only consistent
+metric. However, we designed this replication to be as close      results [6], in similar settings, but a different design, and
+as possible to the baseline. Evaluation apprehension: we          with different experimenters. Thus, the baseline experiment
+mitigated this threat because the participants were not eval-     results are less likely to be a false negative, and less likely
+uated on the results they achieved during the experiment.         to be due to a bias of the baseline experimenters. The mod-
+The participants were also unaware of the objectives and          ifications to the experiment have not changed the results;
+the experimental hypotheses. Experimenters' expectancies:         therefore increasing the conclusion validity of the baseline
+experimenters can bias results both consciously and uninten-      experiment. We discuss the following changes.
+tionally based upon their expectations about the outcome of       Crossover design: In the baseline experiment, the possible
+the experiment. We mitigated this kind of threat by adopt-        impact of the difference between the participants in terms
+ing a blind analysis procedure. Reliability of measures: we       of skills was considered a threat [29]. The replication design
+used measures that limit the influence of the measurer. The       decreases the possibility that the baseline experiment results
+majority of the measures were automatized, and can be re-         were due to an unobserved, unbalanced skills distribution.
+peated with the same outcome. When human judgement                Pair-programming: In the baseline experiment, pair pro-
+was necessary, we adopted a blind approach.                       gramming was used together with the treatments, and its
+                                                                  effects assessed; the operationalization of the constructs was
+5.4 Conclusion Validity
+
+   Random heterogeneity of participants: our sample includes
+improved in this replication by removing pair-programming.         Acknowledgments
+We are more confident that the baseline results were not due
+to the interaction with the other practice.                        This research is supported in part by the Academy of Fin-
+Task : The crossover design required a new task. We added          land Project 278354.
+a task of the same difficulty and with the same structure
+of the baseline experiment task. Although we believed that         8. REFERENCES
+such change would not directly impact the baseline exper-
+iment results, there is evidence that it might interact with        [1] M. Baker. Over half of psychology studies fail
+the sequence in which the treatments were applied.                       reproducibility test. Nature News, 27, 2015.
+Given the limitations presented in Section 5, it appears that
+TDD does not improve, nor deteriorate the participants'             [2] M. T. Baldassarre, J. Carver, O. Dieste, and
+performance with respect to an iterative development tech-               N. Juristo. Replication types: Towards a shared
+nique in which unit tests are written after production code.             taxonomy. In Proc. of International Conference on
+The same conclusion has been reached in the relevant litera-             Evaluation and Assessment in Software Engineering,
+ture [32,36,41]. We conjecture that the inconclusive findings            pages 18:1­18:4. ACM, 2014.
+can be due to two factors:
+Control treatment: the baseline experiment and its replica-         [3] V. Bebarta, D. Luyten, and K. Heard. Emergency
+tion compared TDD to a really similar approach, labelled                 medicine animal research: does use of randomization
+as TLD. Under this circumstances, we might be focusing                   and blinding affect the results? Academic Emergency
+on the incorrect part of development process (i.e., whether              Medicine, 10(6):684­687, 2003.
+write tests first or not), and disregard the part of the process
+in which the a substantial effect might lie (i.e., the iterative-   [4] K. Beck. Test-driven development: by example.
+ness of the process). Accordingly, the tasks used for both               Addison-Wesley Professional, 2003.
+experiments were designed to fit the iterative nature of both
+treatments--i.e., isolate the process itself from the cognitive     [5] J. Carver, L. Jaccheri, S. Morasca, and F. Shull. Issues
+effort required to break down a complex problem into sub-                in using students in empirical studies in software
+problems. Pancur and Ciglaric [33] made a similar claim                  engineering education. In Proceedings of International
+reporting the inconclusive results of a similar experiment.              Symposium on Software Metrics, pages 239­251, 2003.
+Tasks sequence: although the baseline experiment used a
+single task, this replication included a second task deemed         [6] J. C. Carver. Towards reporting guidelines for
+of similar complexity. Since we showed a difference between              experimental replications: A proposal. Proceedings of
+the sequences, but not a carryover effect, there is the pos-             the 1st international workshop on replication in
+sibility that the (fixed) sequence of the experimental tasks             software engineering (RESER), 2010.
+interacts with one (or both) treatment sequence--for exam-
+ple, the MRA task inherently suits TLD, while BSK tends             [7] M. Ciolkowski. What do we know about
+to be TDD's sweet-spot, or vice versa. We are worried about              perspective-based reading? an approach for
+how experimental tasks should be chosen (or designed), not               quantitative aggregation in software engineering. In
+only to be comparable, but also to limit their interaction               Proceedings of the 2009 3rd International Symposium
+with the treatments, for crossover design studies [42].                  on Empirical Software Engineering and Measurement,
+                                                                         pages 133­144. IEEE Computer Society, 2009.
+7. CONCLUSION AND FUTURE WORK
+                                                                    [8] M. Ciolkowski, D. Muthig, and J. Rech. Using
+   In this paper we reported a replication of an experiment              academic courses for empirical validation of software
+[13] in which TDD was compared to a test-last approach.                  development processes. EUROMICRO Conference,
+The replication involved four institutions in four countries.            pages 354­361, 2004.
+In particular, data extraction and analysis were conducted
+by researchers unaware of the replication goals and hypothe-        [9] F. Q. B. da Silva, M. Suassuna, A. C. C. Franc¸a,
+ses. Despite adopting such countermeasures, aimed at re-                 A. M. Grubb, T. B. Gouveia, C. V. F. Monteiro, and
+ducing researchers bias, we confirmed the baseline results:              I. E. dos Santos. Replication of empirical studies in
+TDD does not affect testing effort, software external quality,           software engineering research: a systematic mapping
+and developers' productivity. The changes introduced in the              study. Empirical Software Engineering, 19(3), 2014.
+replication did not affect the results--including the new de-
+sign, crossover, for which no significant carryover effect was     [10] H. Erdogmus, M. Morisio, and M. Torchiano. On the
+found. However, we found that there is a difference between              effectiveness of the test-first approach to
+the sequences in which the treatments were applied. We                   programming. IEEE Transactions on Software
+made sure to select similar experimental objects; nonethe-               Engineering, 31(3):226­237, Mar. 2005.
+less, we suspect that they interact with the treatments. We
+recommend future studies to survey the tasks used in ex-           [11] M. Fowler. Refactoring: improving the design of
+periments evaluating TDD, and assess them with respect to                existing code. Pearson Education India, 2009.
+the treatments. Finally, in order to lower the cost of replica-
+tion studies and reduce researchers' bias, we encourage other      [12] C. O. Fritz, P. E. Morris, and J. J. Richler. Effect size
+research groups to adopt the same multi-site approach de-                estimates: current use, calculations, and
+scribed in this paper.                                                   interpretation. Journal of Experimental Psychology:
+                                                                         General, 141(1):2, 2012.
+
+                                                                   [13] D. Fucci and B. Turhan. A Replicated Experiment on
+                                                                         the Effectiveness of Test-First Development. In 2013
+                                                                         ACM/IEEE International Symposium on Empirical
+                                                                         Software Engineering and Measurement (ESEM),
+                                                                         pages 103­112. IEEE, Oct. 2013.
+
+                                                                   [14] D. Fucci and B. Turhan. On the role of tests in
+                                                                         test-driven development: a differentiated and partial
+                                                                         replication. Empirical Software Engineering,
+                                                                         19(2):277­302, 2014.
+
+                                                                   [15] D. Fucci, B. Turhan, and M. Oivo. Conformance
+      factor in test-driven development: initial results from        replications. In Proc. of International Conference on
+      an enhanced replication. In Proc. of the 18th                  Engineering of Complex Computer Systems, pages
+      International Conference on Evaluation and                     203­212. IEEE Computer Society, 2008.
+      Assessment in Software Engineering. ACM, 2014.
+                                                               [31] M. M. Mu¨ller and A. Ho¨fer. The effect of experience
+[16] D. Fucci, B. Turhan, and M. Oivo. Impact of process             on the test-driven development process. Empirical
+      conformance on the effects of test-driven development.         Software Engineering, 12(6):593­615, 2007.
+      In the 8th ACM/IEEE International Symposium on
+      Empirical Software Engineering and Measurements,         [32] H. Munir, M. Moayyed, and K. Petersen. Considering
+      pages 1­10. ACM Press, 2014.                                   rigor and relevance when evaluating test driven
+                                                                     development: A systematic review. Information and
+[17] D. Fucci, B. Turhan, and M. Oivo. On the effects of             Software Technology, 2014.
+      programming and testing skills on external quality
+      and productivity in a test-driven development context.   [33] M. Pancur and M. Ciglaric. Impact of test-driven
+      In Proc. of the 19th International Conference on               development on productivity, code and tests: A
+      Evaluation and Assessment in Software Engineering,             controlled experiment. Information and Software
+      EASE '15. ACM, 2015.                                           Technology, 53(6):557­573, June 2011.
+
+[18] B. George and L. Williams. A structured experiment        [34] K. Pearson. Note on regression and inheritance in the
+      of test-driven development. Information and Software           case of two parents. Proceedings of the Royal Society
+      Technology, 46(5):337­342, 2004.                               of London, 58:240­242, 1895.
+
+[19] O. S. Go´mez, N. Juristo, and S. Vegas. Understanding     [35] S. L. Pfleeger and W. Menezes. Marketing technology
+      replication of experiments in software engineering: A          to software practitioners. IEEE Software, 17(1):27­33.
+      classification. Information and Software Technology,
+      56(8):1033­1048, Aug. 2014.                              [36] Y. Rafique and V. B. Misic. The Effects of
+                                                                     Test-Driven Development on External Quality and
+[20] J. Hannay and M. Jørgensen. The role of deliberate              Productivity: A Meta-Analysis. Software Engineering,
+      artificial design elements in software engineering             IEEE Transactions on, 39(6):835­856, 2013.
+      experiments. IEEE Trans. on Soft. Eng., 34:242­259,
+      March 2008.                                              [37] M. Shepperd, D. Bowes, and T. Hall. Researcher bias:
+                                                                     The use of machine learning in software defect
+[21] T. P. Hettmansperger and J. W. McKean. Robust                   prediction. IEEE Transactions on Software
+      nonparametric statistical methods. CRC Press, 2010.            Engineering, 40(6):603­616, 2014.
+
+[22] M. Ivarsson and T. Gorschek. A method for evaluating      [38] F. Shull, J. C. Carver, S. Vegas, and N. J. Juzgado.
+      rigor and industrial relevance of technology                   The role of replications in empirical software
+      evaluations. Empirical Software Engineering,                   engineering. Empirical Software Engineering,
+      16(3):365­395, Oct. 2010.                                      13(2):211­218, 2008.
+
+[23] N. Juristo and S. Vegas. Using differences among          [39] F. Shull, G. Melnik, B. Turhan, L. Layman, M. Diep,
+      replications of software engineering experiments to            and H. Erdogmus. What Do We Know about
+      gain knowledge. In Empirical Software Engineering              Test-Driven Development? IEEE Software,
+      and Measurement, 2013 ACM / IEEE International                 27(6):16­19, 2010.
+      Symposium on, pages 356­366. IEEE, 2009.
+                                                               [40] B. Sigweni and M. Shepperd. Using blind analysis for
+[24] N. Juristo, S. Vegas, M. N. Solari, and S. Abraha~o. A          software engineering experiments. In Proceedings of
+      process for managing interaction between                       the 19th International Conference on Evaluation and
+      experimenters to get useful similar replications.              Assessment in Software Engineering, page 32, 2015.
+      Information and Software Systems Journal, 2013.
+                                                               [41] B. Turhan, L. Layman, M. Diep, H. Erdogmus, and
+[25] B. Kitchenham. The role of replications in empirical            F. Shull. How effective is test-Driven Development.
+      software engineering - a word of warning. Empirical            Making Software: What Really Works, and Why We
+      Software Engineering, 13(2):219­221, 2008.                     Believe It, pages 207­217, 2010.
+
+[26] R. MacCoun and S. Perlmutter. Blind analysis: Hide        [42] S. Vegas, C. Apa, and N. Juristo. Crossover designs in
+      results to seek the truth. Nature, 526:187­189, 2015.          software engineering experiments: Benefits and perils.
+                                                                     IEEE Transactions on Software Engineering,
+[27] L. Madeyski. The impact of test-first programming on            42(2):120­135, Feb 2016.
+      branch coverage and mutation score indicator of unit
+      tests: An experiment. Information and Software           [43] E. Vonesh and V. M. Chinchilli. Linear and nonlinear
+      Technology, 52(2):169­184, 2010.                               models for the analysis of repeated measurements.
+                                                                     CRC press, 1996.
+[28] E. M. Maximilien and L. Williams. Assessing
+      test-driven development at ibm. In Proceedings of the    [44] S. Wellek and M. Blettner. On the proper use of the
+      25th International Conference on Software                      crossover design in clinical trials. Deutsches Arztebllatt
+      Engineering, ICSE '03, pages 564­569, Washington,              Intern, 109:276­281, 2012.
+      DC, USA, 2003. IEEE Computer Society.
+                                                               [45] C. Wohlin, P. Runeson, M. Ho¨st, M. C. Ohlsson,
+[29] S. E. Maxwell and H. D. Delaney. Designing                      B. Regnell, and A. Wessl´en. Experimentation in
+      experiments and analyzing data: A model comparison             software engineering. Springer Science & Business
+      perspective, volume 1. Psychology Press, 2004.                 Media, 2012.
+
+[30] M. G. Mendon¸ca, J. C. Maldonado, M. C. F.
+      de Oliveira, J. Carver, S. C. P. F. Fabbri, F. Shull,
+      G. H. Travassos, E. N. Ho¨hn, and V. R. Basili. A
+      framework for software engineering experimental
+

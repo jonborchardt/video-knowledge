@@ -1,0 +1,69 @@
+{
+  "id": "signalvnoise-the-majestic-monolith",
+  "title": "The Majestic Monolith",
+  "channel": "Signal v. Noise",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://signalvnoise.com/svn3/the-majestic-monolith/",
+  "summary": "DHH argues microservices fit organizations with thousands of developers, that small teams copying them are cargo culting, and that a deliberately integrated monolith let a dozen programmers ship a large product on six platforms.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/microservices-cost-more-short-term-rarely",
+      "stance": "asserts",
+      "quote": "Every time you extract a collaboration between objects to a collaboration between systems, you’re accepting a world of hurt with a myriad of liabilities",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/coordination-cost-grows-faster-linearly-team",
+      "stance": "asserts",
+      "quote": "M/SOA fits the organizational shape of very large corporations.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/hype-drives-teams-adopt-microservices-they",
+      "stance": "asserts",
+      "quote": "The patterns that make sense for organizations orders of magnitude larger than yours, are often the exact opposite ones that’ll make sense for you.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/small-team-can-maintain-large-product",
+      "stance": "asserts",
+      "quote": "the only possible way to do so with a small team of ~12 programmers is do explicitly choose and commit to The Majestic Monolith",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Basecamp is a real existence proof, but a single company's experience does not show other approaches would have failed.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/many-small-services-make-easy-knowledge",
+      "stance": "asserts",
+      "quote": "It’s much easier to silo knowledge and responsibilities with a proliferation of smaller systems.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Service ownership does concentrate knowledge by design; whether that is worse than monolith hotspots has not been measured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/single-process-monolith-right-default-microservices",
+      "stance": "asserts",
+      "quote": "Integrate your systems until it’s impossible for one person to hold it all in their head.",
+      "verdicts": []
+    }
+  ]
+}

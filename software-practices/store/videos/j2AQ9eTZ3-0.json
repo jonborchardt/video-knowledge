@@ -1,0 +1,174 @@
+{
+  "id": "j2AQ9eTZ3-0",
+  "title": "Microservices, Where Did It All Go Wrong • Ian Cooper • GOTO 2024",
+  "channel": "GOTO Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCs_tLP3AiwYKwdUHpltJPuA",
+  "durationSec": 2616,
+  "thumbnail": "https://i.ytimg.com/vi/j2AQ9eTZ3-0/sddefault.jpg",
+  "summary": "Ian Cooper (GOTO 2024) traces the microservices backlash to nano-services, equating services with containers, and boundaries drawn by team availability; advises a 4+1 view with macro-services where domains are cohesive.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/modular-decomposition-behind-simple-interfaces-reduces",
+      "stance": "asserts",
+      "quote": "due to complexity is always easier and cheaper to create two small pieces rather than one big piece",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/microservices-cost-more-short-term-rarely",
+      "stance": "asserts",
+      "quote": "as soon as I create separate processes I do distribution and that always implies a cost",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/splitting-services-too-finely-raises-inter",
+      "stance": "asserts",
+      "quote": "people when they focused on making them small quite often cross over this point and keep going down",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Structured Design's inter/intra-module cost curve and reports of shotgun surgery across many services support this; no controlled measurement.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.2,
+          "note": "A footnote warns that overly fine-grained services can inhibit delivery performance; stated as authorial guidance citing Fowler, not as a measured finding.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1091-L1092",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "17 of 51 sources report much higher network traffic because services interact by remote API calls instead of in-memory calls, and more services mean more remote invocations; this supports rising inter-service cost with finer splits but gives no total-cost curve.",
+          "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L703-L711",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/service-boundaries-usually-wrong-first-attempt",
+      "stance": "asserts",
+      "quote": "typically first wave of microservices is likely to be wrong",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Consistent practitioner anecdote from Fowler, Newman and others, but anecdotes suffer selection bias.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.2,
+          "note": "The same footnote advises avoiding premature decomposition of new systems into services because it can inhibit delivery performance, which matches the claim's conclusion though the report offers no data on boundary mistakes.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1091-L1092",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "16 industrial sources recognise service dimensioning as a pain and all agree it is hard to identify bounded contexts because boundaries between business capabilities are not sharp; the review does not track whether greenfield microservice systems end in trouble.",
+          "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L526-L531",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
+      "stance": "asserts",
+      "quote": "this needs to have modularity but that modularity won't use a microservices approach it will instead split it up into larger pieces",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Modular monolith reports from Shopify and Prime Video are positive, but in-process boundaries are known to erode without tooling.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/moving-functionality-across-service-boundaries-far",
+      "stance": "asserts",
+      "quote": "when your components are servic as remote Communications then refactoring is much harder than within processed libraries",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "No IDE-level refactoring crosses process or API boundaries; coordinated deploys and versioning are required.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/headlines-about-big-companies-abandoning-microservices",
+      "stance": "asserts",
+      "quote": "it's one team saying uh we got rid of a couple of Step functions and we made it a single process",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/creating-services-which-team-free-rather",
+      "stance": "asserts",
+      "quote": "that kind of opportunity to use microservices to solve a problem of organizational capacity tends to lead to poor outcomes",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Conway's-law reasoning and anecdote; no measured outcome data.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/service-boundaries-must-repartitioned-continually-business",
+      "stance": "asserts",
+      "quote": "owning microservices is a constant activity there is never a we are done",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Domain drift is real; whether it demands service repartitioning rather than internal change depends on granularity.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/micro-should-mean-replaceable-not-few",
+      "stance": "asserts",
+      "quote": "it's replaceability that we care about not Lumber and lines of coat",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Definitional.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

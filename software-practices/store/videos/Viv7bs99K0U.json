@@ -1,0 +1,194 @@
+{
+  "id": "Viv7bs99K0U",
+  "title": "The Rationale for Continuous Delivery • Dave Farley • YOW! 2018",
+  "channel": "GOTO Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCs_tLP3AiwYKwdUHpltJPuA",
+  "durationSec": 2871,
+  "thumbnail": "https://i.ytimg.com/vi/Viv7bs99K0U/sddefault.jpg",
+  "summary": "Dave Farley's case for continuous delivery: replace guesswork with feedback, measure cycle time, automate everything, and cite HP and industry-wide gains.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/most-software-projects-run-late-over",
+      "stance": "asserts",
+      "quote": "In a study of nearly 6,000 projects, 17% of them go so badly that they threaten the existence of the company",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Surveys like Standish and McKinsey consistently report high overrun rates, though their methods are criticized.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Systematic review found no general overoptimism in software when small tasks are included, but projects of 100+ hours had a median overrun of about 20%, i.e. more than half of larger projects overran while small tasks were unbiased or overpessimistic.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L665-L684",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/paper-introduced-waterfall-diagram-warned-approach",
+      "stance": "asserts",
+      "quote": "the paper that introduced waterfall to our industry said whatever you do don't do waterfall",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.85,
+          "note": "Royce's 1970 paper does say the simple sequential model is risky and invites failure and recommends iteration.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/replacing-guesswork-measured-experiments-what-makes",
+      "stance": "asserts",
+      "quote": "start experimenting and start measuring",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A philosophy of practice rather than a measurable claim.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/infrequent-releases-leave-security-patches-compliance",
+      "stance": "asserts",
+      "quote": "That alone closes a whole load of security areas.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/continuous-delivery-yields-order-magnitude-improvements",
+      "stance": "asserts",
+      "quote": "We are often talking massive steps forward sometimes orders of magnitude in certain measures",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "DORA shows large gaps on deployment metrics between clusters, but order-of-magnitude gains in cost or quality rest on a few case studies.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Elite versus low performers differ by 208x in deploy frequency, 106x in lead time, 2,604x in time to restore and 7x in change failure rate, so the spread is orders of magnitude on throughput but under one on quality; these are gaps between survey clusters, not before/after gains from adopting CD.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L478-L495",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/short-cycle-times-force-small-teams",
+      "stance": "asserts",
+      "quote": "You can't have a 57 minute cycle time if your team is too big.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Logically coherent and consistent with DORA's capability model, but the causal direction is asserted, not measured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/automating-everything-except-creative-judgment-makes",
+      "stance": "asserts",
+      "quote": "if we want to be repeatable and reliable, we're going to automate",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Deployment automation correlates with lower change failure in DORA data; human error in manual deployments is well documented.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/automated-test-investment-permanently-prevents-class",
+      "stance": "asserts",
+      "quote": "It's not a cost. It's an investment. If you spend time writing tests now, that pays back in spades later on.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Regression tests do prevent recurrence, but suites also incur maintenance and decay, which the claim ignores.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
+      "stance": "asserts",
+      "quote": "each change is so small and simple and easy to reason about, it's trivial to to revert it if you need to",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/adopting-continuous-delivery-shifts-development-effort",
+      "stance": "asserts",
+      "quote": "The bottom line is eight times as much effort going into creating new software.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "The HP LaserJet case documents this, but it is one firm with concurrent changes and no control.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "The report asserts automation lets engineers spend less time on manual work and more on new development, refactoring and design, and that CD reduces the risk and cost of releases; effort reallocation and cost per product are not measured.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1548-L1553",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/organizations-high-software-delivery-performance-more",
+      "stance": "asserts",
+      "quote": "organizations that do this kind of thing make more money than organizations that don't",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/continuous-delivery-pipeline-gives-regulated-environments",
+      "stance": "asserts",
+      "quote": "this is pretty much the only way in which you get the kind of insight and traceability that modern regulatory frameworks are looking for",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Pipelines do record provenance, but 'only way' is overstated since traditional change management also provides audit trails.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "DORA argues that with version control as the source of truth, recording who approved each change makes the review-and-submit process highly auditable and satisfies segregation-of-duties requirements from PCI-DSS and NIST frameworks; reasoned from practice rather than measured.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1243-L1256",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

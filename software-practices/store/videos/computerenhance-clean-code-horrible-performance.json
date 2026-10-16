@@ -1,0 +1,130 @@
+{
+  "id": "computerenhance-clean-code-horrible-performance",
+  "title": "\"Clean\" Code, Horrible Performance",
+  "channel": "computerenhance.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://www.computerenhance.com/p/clean-code-horrible-performance",
+  "summary": "Casey Muratori benchmarks the clean-code shapes example: polymorphism, encapsulation and small functions cost 1.5x to 15x versus switch and table-driven code.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/preferring-runtime-polymorphism-over-switch-statements",
+      "stance": "asserts",
+      "quote": "writing the code the old fashioned way rather than the “clean” code way — gave us an immediate 1.5x performance increase",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Reproducible on this microbenchmark; the gain in real programs depends on how much time hot loops spend in dispatch.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/fusing-data-layout-operation-table-driven",
+      "stance": "asserts",
+      "quote": "a table-driven version that’s fully 10x faster or more on the exact same problem",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Well-known data-oriented design result for compute-bound loops; most application code is not compute-bound.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/following-clean-code-structure-rules-can",
+      "stance": "asserts",
+      "quote": "The first two rules of the “clean code” concept wipe out 12 years of hardware evolution, all by themselves.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Holds for the toy benchmark; in typical applications I/O, allocation and network dominate so the end-to-end cost is far smaller.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/performance-penalty-class-hierarchy-designs-grows",
+      "stance": "asserts",
+      "quote": "the more complex you make the problem, the more these ideas harm your performance",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Adding a second virtual call widened the gap here, but this is one extra property on a toy problem.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/avoiding-repeated-code-does-not-conflict",
+      "stance": "asserts",
+      "quote": "we don’t have to violate it to write code that gets reasonable performance",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Reasonable in general; some performance work deliberately duplicates code paths for specialisation.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/code-organised-operation-rather-type-makes",
+      "stance": "asserts",
+      "quote": "When your code is organized by operation, rather than by type, it’s straightforward to observe and pull out common patterns.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A design-perception claim with no agreed measure.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/clean-code-rules-adopted-maintainability-without",
+      "stance": "asserts",
+      "quote": "The “clean” code rules were developed because someone thought they would produce more maintainable codebases.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Evidence that small functions or polymorphism improve maintainability is thin and mixed; readability studies are mostly small.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "The authors state that knowledge of what affects understandability is tied to common beliefs with no empirical evidence that complexity predicts comprehension effort, and their 121-metric study found no readability or complexity metric correlates with it; this covers metrics, not clean-code rules as practices.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L36-L42",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Provides correlational evidence that low readability goes with more defects and churn over 2.2M lines, which cuts against 'without evidence', but the authors stress the model is descriptive and cannot prescribe that applying readability rules will improve code.",
+          "source": "software-practices/sources/buse2010-readability.txt#L657-L669",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

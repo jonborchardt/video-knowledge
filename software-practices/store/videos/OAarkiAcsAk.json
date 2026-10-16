@@ -1,0 +1,81 @@
+{
+  "id": "OAarkiAcsAk",
+  "title": "SWETUGG 2015 - Is TDD Dead? What are the alternatives? - Emily Bache",
+  "channel": "Swetugg",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCwKpUzPPOVOqcoxuDuSmZOw",
+  "durationSec": 1094,
+  "thumbnail": "https://i.ytimg.com/vi/OAarkiAcsAk/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGHIgUigxMA8=&rs=AOn4CLA6Q9XKa5x8FBK8J6Liergd_p3MTA",
+  "summary": "Emily Bache responds to the 'Is TDD dead' debate: TDD biases toward indirection, unit tests alone miss integration errors, and the pyramid ratios are beginner advice.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/tdd-biases-design-toward-extra-abstraction",
+      "stance": "asserts",
+      "quote": "tdd gives you a bias uh a bias towards in Direction and interfaces and all that",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Test-induced indirection is widely reported in practice and in the DHH debate, but controlled studies of TDD on design quality show small mixed effects.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/unit-tests-alone-cannot-catch-integration",
+      "stance": "asserts",
+      "quote": "there are classes of defects that unit tests do not find kind of by definition they do not find integration errors",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "By construction isolated unit tests do not exercise component interaction; integration failures are a well-documented defect class.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/right-mix-unit-higher-level-tests",
+      "stance": "asserts",
+      "quote": "the pyramid might not look like a pyramid it might it might actually look like you flipped it but that might be the right decision",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Reasonable and consistent with practice, but no study compares test-mix strategies against outcomes.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/slow-driven-end-test-suites-fragile",
+      "stance": "asserts",
+      "quote": "it's actually very difficult to get the threading and the timing right for a machine to use the user interface",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/higher-level-tests-often-pay-back",
+      "stance": "asserts",
+      "quote": "if you do them well they actually I think pay back very well in finding bugs often compared with unit tests",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Integration and system tests do catch defects unit tests miss, but relative cost-effectiveness depends on the system and is not well quantified.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

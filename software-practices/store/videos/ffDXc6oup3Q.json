@@ -1,0 +1,186 @@
+{
+  "id": "ffDXc6oup3Q",
+  "title": "SE Radio 577: Casey Muratori on Clean Code, Horrible Performance?",
+  "channel": "IEEEComputerSociety",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCSVKswAwikRd8ZS3AmSnuKg",
+  "durationSec": 4241,
+  "thumbnail": "https://i.ytimg.com/vi/ffDXc6oup3Q/sddefault.jpg?sqp=-oaymwEmCIAFEOAD8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGBMgHCh_MA8=&rs=AOn4CLCO6hHYkkbiQVwElWIxH8XTh3Dj4w",
+  "summary": "Casey Muratori on SE Radio: clean-code structural rules, microservices and 'optimise later' all trade real performance for unproven readability gains, and performance measurably drives revenue.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/preferring-runtime-polymorphism-over-switch-statements",
+      "stance": "asserts",
+      "quote": "when you actually look at what those transforms do to code it all just slows it down it never speeds it up",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/programs-rarely-inherently-bound-chatty-serial",
+      "stance": "asserts",
+      "quote": "the actual nature of the thing the program is doing is almost never i o bound",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Waterfall request chains are a well-documented cause of slow web apps, but large-data workloads genuinely are bounded by storage and network even when well structured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/faster-more-responsive-software-measurably-increases",
+      "stance": "asserts",
+      "quote": "the more responsive your software and the faster it performs the more engaged users are the more likely they are to spend more money",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Published latency experiments at Amazon, Google and others consistently show engagement and conversion dropping with added delay, though 'conclusive' overstates how far the effect generalises to internal tools.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/hiding-implementation-details-behind-layers-abstraction",
+      "stance": "asserts",
+      "quote": "layers of encapsulation that that library has put between me and what's going on actually make it take longer for me to find the problem",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Information hiding has evidence for isolating change, and indirection is also known to hurt comprehension; which dominates for debugging has not been measured.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.2,
+          "note": "One interviewed developer said an abstract return type made the method less understandable because the concrete types must be discovered, describing a trade-off between understandability and maintainability; a single opinion in a five-developer interview.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L1000-L1009",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/readability-gains-credited-class-hierarchies-come",
+      "stance": "asserts",
+      "quote": "so why are we claiming the advantage comes from the classes as opposed to just not doing all of these kind of other bad things",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Comprehension experiments find naming and structure matter more than paradigm, but no study compares a tidy procedural version against a hierarchy on the same task.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/switch-based-code-easier-optimise-later",
+      "stance": "asserts",
+      "quote": "it is very simple to improve the performance of a switch statement it is much more time consuming to do the same transform",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Merging cases into branch-free or vectorised code is standard practice and needs the cases in one place, but this is a specialist optimisation path rather than a general maintenance cost.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/lines-code-per-feature-useful-objective",
+      "stance": "asserts",
+      "quote": "features per line of code is something I kind of actually want to keep a good handle on",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Lines of code predict defects and effort about as well as any complexity metric, but minimising it can also produce dense, cryptic code.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "LOC and statement counts were among the 73 metrics with at most weak correlation to any of six understandability proxies across 444 evaluations, so line count did not track readability here; methods were pre-filtered to 30-70 effective lines, which limits the size range tested.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L864-L870",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/coordination-cost-grows-faster-linearly-team",
+      "stance": "asserts",
+      "quote": "microservices in my opinion never were a thing you would do because you wanted to write good software",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/premature-optimisation-quote-misapplied-licence-ignore",
+      "stance": "asserts",
+      "quote": "the way this quote is now applied is that you don't need to think about optimization until the end of your program",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "The full Knuth passage explicitly says not to pass up the critical few percent and concerns small-scale efficiencies, not architecture.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/developer-time-savings-claimed-ignoring-performance",
+      "stance": "asserts",
+      "quote": "so they claim that they were saving develop first time but they're spending years rewriting entire systems",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Several large companies have published performance-driven rewrites, but the examples are survivors whose slow first version reached market, so the net accounting is unknown.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/performance-trade-off-only-counts-cost",
+      "stance": "asserts",
+      "quote": "if you don't know how bad the performance will be from your decisions you aren't making a trade-off",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "This is a framing about what deserves the word trade-off rather than a testable prediction.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/performance-must-designed-start-because-hotspot",
+      "stance": "asserts",
+      "quote": "architecting for performance needs to be done from day one",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Architectural choices like synchronous call chains are expensive to undo, but profiling-driven fixes resolve many real slowdowns without redesign.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

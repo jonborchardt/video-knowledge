@@ -1,0 +1,123 @@
+{
+  "id": "Tml94je2edk",
+  "title": "Why Static Typing Came Back • Richard Feldman • GOTO 2022",
+  "channel": "GOTO Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCs_tLP3AiwYKwdUHpltJPuA",
+  "durationSec": 3120,
+  "thumbnail": "https://i.ytimg.com/vi_webp/Tml94je2edk/sddefault.webp",
+  "summary": "Richard Feldman explains why dynamic languages won the early web and why modern static typing removed the ceremony, slow feedback and unhelpful errors that made them lose.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/dynamic-languages-became-popular-because-they",
+      "stance": "asserts",
+      "quote": "these benefits don't require Dynamic typing they just first appeared in Dynamic languages",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "A plausible historical account consistent with language-adoption timelines, but causal attribution from history is not testable.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/type-inference-gives-static-typing-dynamic",
+      "stance": "asserts",
+      "quote": "some languages and Community Norms encourage ceremony but they don't have to",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/static-typing-catches-type-errors-compile",
+      "stance": "asserts",
+      "quote": "all of these things do not have any nil null or undefined errors in production all of them 100 have been caught at build time",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/editor-type-errors-give-faster-feedback",
+      "stance": "asserts",
+      "quote": "this right here is a fast feedback loop seeing this error right there as you're writing your code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Developer surveys cite this as TypeScript's main benefit; measured productivity gains from type feedback are modest in experiments.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "For both type-error fixing tasks Java (compile error) beat Groovy (run-time no-such-method failure) significantly in both groups; mean times 78s vs 149s and 44s vs 246s, so a static error message is faster feedback than running the program and tracing the failure.",
+          "source": "software-practices/sources/kleinschmager2012-static-types-maintainability.txt#L455-L458",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "All indicators (time, test runs, files opened, file switches) favoured the static type system on type-error tasks because the compiler names the location while a run-time failure appears far from the cause; the feedback came from a compiler in a plain text editor, not an in-editor checker, so the claim's in-editor form is an extrapolation.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L1343-L1371",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/static-typing-yields-better-runtime-performance",
+      "stance": "asserts",
+      "quote": "there's no way to get a dynamically typed language to be as fast as the fastest possible statically type language",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/gradual-typing-requires-more-complex-type",
+      "stance": "asserts",
+      "quote": "it has very serious unavoidable downsides that just come with the territory of deciding that you want gradual types",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Type-system complexity in TypeScript and Sorbet supports this, though gradual typing's migration benefit is real.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/non-blocking-type-errors-keep-fast",
+      "stance": "asserts",
+      "quote": "when these go from sort of blocking compile errors to non-blocking error reports that are just informative wow this just becomes sort of all upside",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "TypeScript's emit-on-error demonstrates feasibility; the productivity claim is anecdotal.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/nearly-every-mainstream-language-emerged-after",
+      "stance": "asserts",
+      "quote": "C sharp action script go Russ Dart kotlin typescript and Swift that's a quite a different story",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Consistent with RedMonk and similar rankings, with a few exceptions.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

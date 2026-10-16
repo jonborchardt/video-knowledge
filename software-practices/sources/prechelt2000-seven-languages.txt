@@ -1,0 +1,534 @@
+                              Submission to IEEE Computer
+
+        An empirical comparison of
+C, C++, Java, Perl, Python, Rexx, and Tcl
+
+              Lutz Prechelt (prechelt@ira.uka.de)
+        Fakulta¨t fu¨r Informatik, Universita¨t Karlsruhe
+
+                  D-76128 Karlsruhe, Germany
+         +49/721/608-4068, Fax: +49/721/608-7343
+
+               http://wwwipd.ira.uka.de/~prechelt/
+
+                          March 14, 2000
+
+                             Summary                                  memory consumption, and reliability.
+80 implementations of the same set of requirements are
+compared for several properties, such as run time, memory             We will consider the languages both individually and
+consumption, source text length, comment density, program         combined into groups: Perl, Python, Rexx, and Tcl and
+structure, reliability, and the amount of effort required for     often called scripting languages and will form one group
+writing them. The results indicate that, for the given pro-       called the script group. The name scripting language com-
+gramming problem, which regards string manipulation and           monly refers to languages that are for instance (more or
+search in a dictionary, "scripting languages" (Perl, Python,      less) interpreted rather than compiled, at least during the
+Rexx, Tcl) are more productive than "conventional lan-            program development phase, and that do typically not re-
+guages" (C, C++, Java). In terms of run time and mem-             quire variable declarations. The alternative are the more
+ory consumption, they often turn out better than Java and         conventional programming languages which I will call the
+not much worse than C or C++. In general, the differences         non-script group. These languages (C, C++, and Java) are
+between languages tend to be smaller than the typical dif-        more or less compiled and require typed variable declara-
+ferences due to different programmers within the same lan-        tions. We will sometimes consider C and C++ as one group
+guage.                                                            and Java as another.
+
+                                                                      The number of programs considered for each language
+
+Introduction                                                      and the execution platforms are described in Table 1. See
+                                                                  the sidebars for a discussion of setup and validity of the
+When it comes to the pros and cons of various program-            study. A more detailed description of this study can be
+                                                                  found in a technical report [4].
+
+ming languages, programmers and computer scientists alike
+
+are usually highly opinionated. The present work provides         Results
+some objective information comparing several languages,
+namely C, C++, Java, Perl, Python, Rexx, and Tcl. It has          The programs were evaluated on three different input files:
+the following features:                                           z1000 contains 1000 non-empty random phone numbers,
+                                                                  m1000 contains 1000 arbitrary random phone numbers
+ ­ The same program (i.e. an implementation of the same           (with empty ones allowed), and z0 contains no phone num-
+    set of requirements) is considered for each language.         ber at all (for measuring dictionary load time alone).
+    Hence, the comparison is narrow but homogeneous.
+
+­ For each language, we analyze not a single implementa-
+   tion of the program but a number of separate implemen-
+
+  tations by different programmers. Such a group-wise Run time
+
+comparison has two advantages. First, it smoothes out             We will first investigate the total run time and then examine
+the differences between individual programmers (which             the initialization phase and the search phase separately.
+threaten the validity of any comparison based on just             Total: z1000 data set. The global overview of the program
+one implementation per language). Second, it allows to            run times on the z1000 input file is shown in Figure 1. We
+assess and compare the variability of program proper-             see that for all languages a few very slow programs exist,
+ties induced by the different languages.                          but except for C++, Java and Rexx, at least three quarters
+
+­ Several different aspects are investigated, such as pro- of the programs run in less than one minute. We can make
+   gram length, programming effort, run time efficiency, several interesting observations:
+
+                                                               1
+                                           The programming problem: Phonecode
+    All programs implement the same functionality, namely a conversion from telephone numbers into word strings
+as follows. The program first loads a dictionary of 73113 words into memory from a flat text file (one word per line,
+938 Kilobytes overall). Then it reads "telephone numbers" from another file, converts them one by one into word
+sequences, and prints the results. The conversion is defined by a fixed mapping of characters to digits as follows:
+e jnq rwx dsy ft am civ bku lop ghz
+
+0 111 222 333 44 55 666 777 888 999
+The task of the program is to find a sequence of words such that the sequence of characters in these words exactly
+corresponds to the sequence of digits in the phone number. All possible solutions must be found and printed. The
+solutions are created word-by-word and if no word from the dictionary can be inserted at some point during that
+process, a single digit from the phone number can appear in the result at that position. Many phone numbers have
+no solution at all. Here is an example of the program output for the phone number "3586-75", where the dictionary
+contained the words `Dali', `um', `Sao', `da', `Pik', and 73108 others:
+3586-75: Dali um
+
+3586-75: Sao 6 um
+
+3586-75: da Pik 5
+A list of partial solutions needs to be maintained by the program while processing each number and the dictionary
+must be embedded in a supporting data structure (such as a 10-ary digit tree) for efficient access.
+
+Table 1: Number of programs and name/version of com-
+
+piler or interpreter used for the various languages. The Java            tcl                                                           M
+                                                                      rexx                                                                o
+evaluation uses either the JDK 1.2.2 Hotspot Reference ver-        python                        o ooooo o o                                           o
+                                                                       perl
+sion or the JDK 1.2.1 Solaris Production version (with JIT),         Java                                                                        M
+                                                                      C++                               oo oo
+whichever was faster for each program. All programs were
+                                                                         C
+executed on a 300 MHz Sun Ultra-II workstation with 256 MB                        o oo o o                                       M                  o
+
+                                                                                                 o ooo        oo
+
+memory, running under SunOS 5.7 (Solaris 7). Note that the                                                                          M
+
+results for C and Rexx will be based on only 5 or 4 programs,                     o o o o ooo oo o                                          oo
+                                                                                                                                       o ooo
+respectively, and are thus rather coarse estimates of reality,                    o o ooooo ooo  o                               M
+                                                                                                        o ooo o o o                         o
+but for all of the other languages there are 10 or more pro-                                                                               o
+
+grams, which is a broad-enough base for reasonably precise                    oo o o                              M
+
+                                                                                      o                 o oo o       o
+
+results.                                                                      oo                                              M
+      language no. compiler or execution platform                                                   o
+
+Tcl 10 tcl 8.2.2                                                                              4 16 64 256 1024 4096
+
+Rexx  4 Regina 0.08g                                                                                  run time for z1000 [seconds]
+
+Python 13 python 1.5.2                                             Figure 1: Program run time on the z1000 data set. Three
+                                                                   programs were timed out with no output after about 21 min-
+Perl 13 perl 5.005_02                                              utes. The bad/good ratios range from 1.5 for Tcl up to 27 for
+                                                                   C++. Note the logarithmic axis.
+Java 24 Sun JDK 1.2.1/1.2.2
+
+C++ 11 GNU g++ 2.7.2
+
+C 5 GNU gcc 2.7.2
+
+­ The typical (i.e., median) run time for Tcl is not signifi-         Rexx, and Tcl and tends to be smaller than those of Perl
+   cantly longer than that for Java or even for C++.                  and Python.
+
+­ The median run times of both Python and Perl are                 ­ Except for two very slow programs, Tcl and Perl run
+   smaller than those of Rexx and those of Tcl.                       times tend to have a smaller variability than the run
+                                                                      times for the other languages.
+
+­ The median run time of Java is not significantly dif-                Remember not to over-interpret the plots for C and
+   ferent from any of the others (not even Rexx, where             Rexx, because they have only few points. Note that the
+  p = 0:13).                                                       Rexx programs can be made to run about four times faster
+                                                                   by recompiling the Regina interpreter so as to use a larger
+­ Don't be confused by the median for C++. Since the               hash table size; the additional memory overhead is negligi-
+   distance to the next larger and smaller points is rather        ble.
+   large, it is unstable. The Wilcoxon test, which takes
+   the whole sample into account, confirms that the C++                If we aggregate the languages into only three groups
+   median in fact tends to be smaller than the Java median         (one with C/C++, one with Java, and one with scripts), we
+  (p = 0:18).                                                      find that C/C++ is faster than Java (p = 0:074) and tends
+                                                                   to be faster than scripts (p = 0:15). There is no significant
+­ The median run time of C is smaller than those of Java,          difference between average Java and Script run times. With
+
+                                                                2
+                                                    Validity of this comparison
+    Any programming language comparison based on actual example programs is valid only to the degree to which
+the capabilities of the respective programmers using these languages are similar. In our case, we only need the
+programs to be comparable on average, not in individual cases. This section assesses program comparability threats
+for the 80 programs analyzed here.
+    The programs analyzed in this report come from two different sources. The Java, C, and C++ programs were
+produced in 1997/1998 during a controlled experiment [5]; all of the subjects were Computer Science master stu-
+dents. The Perl, Python, Rexx, and Tcl programs were produced under more variable conditions: They were created
+by volunteers after I had posted a "Call for Programs" on several newsgroups. These subjects are more diverse in
+terms of background and experience.
+    Programmer capabilities. It is plausible that a public call for programs may attract only fairly competent
+programmers and hence the script programs reflect higher average programmer capabilities than the non-script
+programs. However, two observations suggest that this is not a problem. First, with some exceptions, the students
+who created the non-script programs were also quite capable and experienced [5]. Second, a fair fraction of the
+script programmers have described themselves as either beginners in their respective scripting language or even as
+persons without a thorough programming background (e.g. VLSI designer, system administrator, social scientist).
+    Within the non-script group, the Java programmers tend to be less experienced in their language than the C and
+C++ programmers because Java was still a new language in 1997/1998. In the script group, the Perl subjects may
+be more capable than the others, because the Perl language appears more than others to attract especially capable
+people.
+    Work time reporting accuracy. In contrast to the non-script programs from the controlled experiment, for
+which we know the real programming time accurately, nothing kept the script programmers from "rounding down"
+the working times they reported when they submitted their program. Worse, some apparently read the requirements
+days before they actually started implementing the solution (in one case "two weeks. . . during which my subcon-
+scious may have already worked on the solution.")
+    However, there is evidence that the average work times are reasonably accurate for the script group, too: The
+common software engineering wisdom which says "the number of lines written per hour is independent of the
+language" holds fairly well across all languages. Even better, the same data also confirms that the programmer
+capabilites are not higher in the script group.
+    Different task and different work conditions. The instructions for the non-script group focused on correctness
+as the main goal; high reliability and at least some efficiency was required in an acceptance test. The instructions
+of the non-script group mentioned 8 other program quality goals besides the main goal of correctness. Instead of
+the acceptance test in the non-script group, the script group received the z1000 input and output data for their own
+testing. Both of these differences may represent an advantage for the script group.
+    Summary. Overall, it is probably fair to say that due to the design of the data collection, the data for the script
+groups will reflect several relevant (although modest) a-priori advantages compared to the data for the non-script
+groups and there are likely to be some modest differences in the average programmer capability between any two of
+the languages. Due to these threats to validity, we should discount small differences between any of the languages,
+as these might be based on weaknesses of the data. Large differences, however, are likely to be valid.
+
+80% confidence a script will run at least 1.29 times as long the 80% confidence level). Compared to a Java program, a
+
+as a C/C++ program and a Java program at least 1.22 times script will run at least 3.2 times as long.
+
+as long as a C/C++ program. The bad/good ratios are much Search phase only. Finally, we may subtract this run time
+
+smaller for scripts (4.1), than for Java (18) or even C/C++ for the loading phase (z0 data set) from the total run time
+
+(35). (z1000 data set) and thus obtain the run time for the actual
+
+Initialization phase only: z0 data set. Now we consider search phase only. Figure 3 shows the corresponding run
+
+only reading, preprocessing, and storing the dictionary. Fig- times. We find the following:
+
+ure 2 shows the corresponding run time.                          ­ Very fast programs occur in all languages except for
+    We find that C and C++ are clearly faster in this case          Rexx and Tcl and very slow programs occur in all lan-
+                                                                    guages without exception.
+than all other languages. The fastest script languages are
+again Perl and Python. Rexx and Tcl are again slower than        ­ The median run time for Tcl is longer than that for
+these and Java is faster.                                           Python, Perl, and C, but shorter than that of Rexx.
+
+    For the aggregate grouping we find that, compared to a       ­ The median run times of Python are smaller than those
+C/C++ program, a Java program will run at least 1.3 times           of Rexx, and Tcl. They even tend to be smaller than
+as long and a script will run at least 5.5 times as long (at       those of Java (p = 0:13).
+
+                                                              3
+              Plots and statistical methods                           tcl                                                                                            M                             o
+    The main evaluation tool will be the multiple box-             rexx                                                                              o o o o ooo oo
+plot display, see for example Figure 1. Each of the             python
+"lines" represents one subset of data, as named on the              perl                                                                             oo                      M
+left. Each small circle stands for one individual data            Java                                                                                                                  oo
+value. The rest of the plot provides visual aids for the           C++
+comparison of two or more such subsets of data. The                                                                                                  M                                          oo
+shaded box indicates the range of the middle half of                  C
+the data, that is, from the first quartile (25% quantile)                                              o             oo                              o o ooo
+to the third quartile (75% quantile). The "whiskers" to
+the left and right of the box indicate the bottom and                                                         o oo                        M
+top 10% of the data, respectively. The fat dot within
+the box is the median (50% quantile). The "M" and                                 o                    o                                  o o o o oo
+the dashed line around it indicate the arithmetic mean
+and plus/minus one standard error of the mean.                             oo                                                          M             oo o o                                     o
+    For quantitatively describing the variability within                   oo     o oo o oo o o
+one group of values we will use the bad/good ratio:                        oo
+Imagine the data be split in an upper and a lower half,                           oo o                     M                                                              o
+then the bad/good ratio is the median of the upper half                                                    o
+divided by the median of the lower half. In the boxplot,
+this is just the value at the right edge of the box divided                                                   M
+by the value at the left edge. In contrast to a variability
+measure such as the standard deviation, the bad/good                              oo                                                                     o
+ratio is robust against outliers.
+    Most interesting observations can easily be made                                        2 4 8 16 32 64
+directly in the plots. To be sure, I have also performed
+statistical tests (please skip the rest of this subsection                                           run time for z0 [seconds]
+if you are not interested in these details): Medians are
+compared using a one-sided Wilcoxon Rank Sum Test               Figure 2: Program run time for loading and preprocessing
+(Mann-Whitney U-Test). The result of each test is a             the dictionary only (z0 data set). Note the logarithmic axis.
+p-value, that is, a probability that the observed differ-       The bad/good ratios range from 1.3 for Tcl up to 7.5 for
+ences between the samples are only accidental and no            Python.
+difference (or a difference in the opposite direction) be-
+tween the underlying populations does indeed exist. I           80% confidence the run time variability of the scripts is
+will usually not give the p-value itself, but rather say        smaller than that of Java by a factor of at least 2.1 and
+                                                                smaller than that of C/C++ by a factor of at least 3.4.
+". . . is larger than. . . " if 0 p 0:10 or ". . . tends to
+be larger than. . . " if 0:10 p 0:20. If p 0:10                 Memory consumption
+
+there is "no significant difference".                           Figure 4 shows the total process size at the end of the pro-
+    At several points I will also provide confidence in-        gram execution for the z1000 input file. Several observa-
+                                                                tions are interesting:
+tervals, either on the differences in means or on the dif-       ­ The most memory-efficient programs are clearly from
+ferences in logarithms of means (that is, on the ratios
+of means). These confidence intervals are computed                  the C and C++ groups.
+by Bootstrapping. They will be chosen such that they
+are open-ended, that is, their upper end is at infinity.         ­ The least memory-efficient programs are the clearly the
+Bootstrapping is described in more detail in [3, 5].                Java programs.
+
+    Note that due to the validity caveats of the study           ­ Except for Tcl, only few of the scripts consume more
+these quantitative statistical inference results merely             memory than the worse half of the C and C++ programs.
+indicate trends; they should not be considered precise
+evidence.                                                        ­ Tcl scripts require more memory than other scripts.
+
+                                                                      tcl         o o ooo              oo                                                   M                                      o
+                                                                   rexx                                                                                        o
+                                                                python
+                                                                    perl                                                                                  M
+                                                                  Java                                     oo o o
+                                                                   C++
+                                                                           o      ooo o o  o oo oo                                                   M
+                                                                                                                                                                                             o
+
+                                                                           oo o o o oo o                                                             M                       o
+                                                                                                                                                                       o
+
+                                                                           oo oo           o oo ooo o         o oo o o                       M       o ooo
+                                                                                                                                          oo
+
+                                                                           oo o                               o ooo                       M                 o
+                                                                                                                                                  o
+
+                                                                C oo                                                                            M
+                                                                                                       oo
+
+ ­ The median run times of Perl are smaller than those of                                  4 16 64 256 1024 4096
+    Rexx, Tcl, and Java.
+                                                                                          run time for z1000 after loading [seconds]
+ ­ Although it doesn't look like that, the median of C++ is
+    not significantly different from any of the others.         Figure 3: Program run time for the search phase only. Com-
+                                                                puted as time for z1000 data set minus time for z0 data set.
+    The group-aggregated comparison indicates no signifi-       Note the logarithmic axis. The bad/good ratios range from
+cant differences between any of the groups. However, with       2.9 for Perl up to over 50 for C++.
+
+                                                             4
+      tcl                                           M              oo                                     tcl                  M     o
+   rexx                           o oo o o oo o                                                        rexx    o ooo oo o o o
+python                                                                                              python
+    perl                     M                                                                          perl                   M
+  Java              oo                                                                                Java     oo o o
+   C++                                                                                                 C++
+                                   M                                                          o                          M        o
+      C                oooooo oo o                                                          o             C    o ooo ooooo o oo
+
+                       oooo o o o     M  o                                            o                                M
+                                                                                                               o ooooooo o ooo o
+
+                       o oo                            o oooooooo  M              oo     o                                                              M     oo o oo o  oo  o  o
+                                                                    o ooo o o oo                               o o oo oo oo oo oo o o                                        o
+
+           oooo oo  M  ooo o                                                                                                      o o oo o oo  M           o
+
+                                                                                                                                                              oo
+
+                              M                                                                                                                M              o
+           o ooo
+                                                                                                                                  o oo                     o
+
+           0 20 40 60 80                                                                                       0 100 200 300 400 500 600
+                       memory consumption for z1000 [MB]                                                                      program length [statement LOC]
+
+Figure 4: Amount of memory required by the program, in-                                             Figure 5: Program length, measured in number of non-
+cluding the interpreter or run time system, the program itself,                                     comment source lines of code. The bad/good ratios range
+and all static and dynamic data structures. The bad/good ra-                                        from 1.3 for C up to 2.1 for Java and 3.7 for Rexx.
+tios range from 1.2 for Python up to 4.9 for C++.
+                                                                                                    scripts averaging a median of 22% as many comment lines
+ ­ For Python and Perl, the relative variability in memory                                          or commented lines as statement lines and the scripts aver-
+    consumption tends to be much smaller than for C and in                                          aging 34%.
+    particular C++.
+
+ ­ A few (but only a few) of the scripts have a horribly high                                       Program reliability
+    memory consumption.
+                                                                                                    With the z1000 input file, 5 programs (1 C, 1 C++, 1 Perl)
+ ­ On the average for the group-aggregated view and with                                            produced no correct outputs at all, either because they were
+    a confidence of 80%, the Java programs consume at                                               unable to load the large dictionary or because they were
+    least 32 MB (or 297%) more memory than the C/C++                                                timed out during the load phase. 2 Java programs failed
+    programs and at least 20 MB (or 98%) more memory                                                with near-zero reliability for other reasons and 1 Rexx pro-
+    than the script programs. The script programs consume                                           gram produced many of its outputs with incorrect format-
+    only at least 9 MB (or 85%) more than the C/C++ pro-                                            ting, resulting in a reliability of 45 percent.
+    grams.
+                                                                                                        If we ignore the above-mentioned highly faulty pro-
+    I conclude that the memory consumption of Java is typ-                                          grams and compare the rest (hence excluding 13% of the
+ically more than twice as high as that of scripts, and scripts                                      C/C++ programs, 8% of the Java programs, and 5% of the
+are not necessarily worse than a program written in C or                                            script programs) by language group, we find that C/C++
+C++, although they cannot beat a parsimonious C or C++                                              programs are less reliable than both the Java and the script
+program.                                                                                            programs. These differences, however, all depend on just
+                                                                                                    a few defective programs and should hence not be over-
+    An observation on the side: Common wisdom suggests                                              generalized. On the other hand, since these differences
+that algorithmic programs have a time/memory tradeoff:                                              show the same trend as the fractions of highly faulty pro-
+Making a program faster will usually require more mem-                                              grams mentioned above, there is good evidence that this
+ory. Within our given set of programs, this rule holds for                                          ordering of reliability among the language groups in the
+all three non-script languages, but the opposite rule tends                                         present experiment is real. Remember that the advantage
+to be true for script languages: Those scripts that use more                                        of the scripts may be due to the better test data available to
+memory actually tend to be slower (rather than faster) than                                         the script programmers.
+the others.
+                                                                                                        Now let us compare the behavior for the more evil-
+Program length and amount of commenting                                                             minded input file m1000, which even allows for phone num-
+                                                                                                    bers that do not contain any digits at all, only dashes and
+Figure 5 shows the number of lines containing anything that                                         slashes. Such a phone number should result in an empty en-
+contributes to the semantics of the program in each of the                                          coding, but one does not usually think of such inputs when
+program source files, e.g. a statement, a declaration, or at                                        reading the requirements. Hence the m1000 input file tests
+least a delimiter such as a closing brace.                                                          the robustness of the programs.
+
+    We see that non-scripts are typically two to three times                                            Most programs cope with this situation well, but half of
+as long as scripts. Even the longest scripts are shorter than                                       the Java programs and 4 of the script programs (1 Tcl and
+the average non-script.                                                                             3 Python) crash when they encounter the first empty phone
+                                                                                                    number (which happens after 10% of the outputs), usually
+    At the same time, scripts tend to contain a significantly                                       due to an illegal string subscript or array subscript. 13 of
+higher density of comments (p = 0:020), with the non-
+
+                                                                                                 5
+the other programs (1 C, 5 C++, 4 Java, 2 Perl, 2 Python,                                        tcl                                                   M
+1 Rexx) fail exactly on the three empty phone numbers, but                                    rexx
+work allright otherwise, resulting in a reliability of 98.4%.                              python     o     oo o o                              o      o                    oo o
+                                                                                               perl                                                                                     o
+    Summing up, it appears warranted to say that the scripts                                 Java                                M                                    o
+are not less reliable than the non-scripts.                                                   C++           oo o
+
+Work time and productivity                                                                       C                  oo o                        M      o oo o
+
+Figure 6 shows the total work time for designing, writing,                                            oo                                                       oo
+and testing the program as reported by the script program-
+mers and measured for the non-script programmers.                                                           o o o oo                                M  oo o
+
+                                                                                                         o                                                     oo
+
+                                                                                                                                             M      o oo o         o oo
+                                                                                                      o o ooo o oo ooo o ooo o o
+
+                                                                                                            ooo oo    M                                   o        o
+                                                                                                                    o o oo
+
+                                                                                                                    oo o                         M                       o
+                                                                                                                                                o
+
+      tcl  oo o       M       oo           o                                                               0 20 40 60 80
+   rexx          ooo o                                                                                                   source text productivity [LOC/hour]
+python
+           oo            M                                                                 Figure 7: Source text productivity in non-comment lines of
+                                                                                           code per total work hour. The bad/good ratios range from
+                              o      o                                                     1.4 for C up to 3.1 for Tcl.
+
+                  M
+           ooooo o oo oooo o
+
+ perl                  M                                                                   ductivity range of Java, all data points except maybe for the
+Java       ooooo ooo o o o o                                                               top three of Tcl and the top one of Perl are quite believable.
+C++
+                 oo oo o ooo o o o oo                              M                           None of the median differences are statistically clearly
+    C                                                                                      significant, the closest being Java versus C, Perl, Python, or
+                                           oo o                       oo  o         oo
+                                                                              o             Tcl where 0:07 p 0:10. Even in the group-aggregated
+                                                                M         oo
+                 oo o o o o o o                                                            view with its much larger groups, the difference between
+                                                                                           C/C++ and scripts is not significant (p = 0:22), only Java
+                 o                M                                                        is less productive than scripts (p = 0:031), the difference
+                                                                                           being at least 5.2 LOC/hour (with 80% confidence).
+                              oo        o                          o
+                                                                                               This comparison lends a lot of credibility to the work
+                0 5 10 15 20 25                                                            time comparison shown above. The times reported for
+                                                                                           script programming are probably either not at all or only
+                               total time for programming [hours]                          modestly too optimistic, so that a work time advantage for
+                                                                                           the script languages of about factor two holds. The Java
+Figure 6: Total working time for realizing the program. Script                             work times appear to be a bit pessimistic, probably due to
+group: times as measured and reported by the program-                                      the lower language experience of the 1997/1998 Java pro-
+mers. Non-script group: times as measured by the experi-                                   grammers.
+menter. The bad/good ratios range from 1.5 for C up to 3.2
+for Perl. Three Java work times at 40, 49, and 63 hours are                                Program structure
+not shown.
+                                                                                           If one considers the designs chosen by the authors of the
+    As we see, scripts (total median 3.1 hours) take less than                             programs in the various languages, there is a striking differ-
+half as long as non-scripts (total median 10.0 hours). Keep                                ence.
+in mind the validity threats discussed above, which may
+have exaggerated this difference.                                                              Most of the programmers in the script group used the
+                                                                                           associative arrays provided by their language and stored the
+    Validation. Fortunately, there is a way how we can                                     dictionary words to be retrieved by their number encodings.
+check two things at once, namely the correctness of the                                    The search algorithm simply attempts to retrieve from this
+work time reporting and the equivalence of the programmer                                  array, using prefixes of increasing length of the remaining
+capabilities in the script versus the non-script group. Note                               rest of the current phone number as the key. Any match
+that both of these possible problems, if present, will tend to                             found leads to a new partial solution to be completed later.
+bias the script group work times downwards: we would ex-
+pect cheaters to fake their time to be smaller, not larger, and                                In contrast, essentially all of the non-script program-
+we expect to see more capable programmers (rather than                                     mers chose either of the following solutions. In the sim-
+less capable ones) in the script group compared to the non-                                ple case, they simply store the whole dictionary in an array,
+script group if there is a difference.                                                     usually in both the original character form and the corre-
+                                                                                           sponding phone number representation. They then select
+    This check relies on an old rule of thumb, which says                                  and test one tenth of the whole dictionary for each digit of
+that programmer productivity measured in lines of code per                                 the phone number to be encoded, using only the first digit as
+hour (LOC/hour) is roughly independent of the program-                                     a key to constrain the search space. This leads to a simple,
+ming language. Several widely used effort estimation meth-                                 but inefficient solution.
+ods explicitly assume that productivity in lines of code per
+hour is independent of programming language, for instance
+Boehm's CoCoMo [1] and Capers Jones' programming lan-
+guage table for function point estimation [2].
+
+    The validation of our work time data based on this rule
+is plotted in Figure 7. Judging from the reliably known pro-
+
+                                                                                        6
+    The more elaborate case uses a 10-ary tree in which                by the bad/good ratios) is on average about as large
+each node represents a certain digit, nodes at height n rep-           or even larger than the variability due to different lan-
+resenting the n-th character of a word. A word is stored               guages.
+at a node if the path from the root to this node represents
+the number encoding of the word. This is the most effi-            Due to the large number of implementations and broad
+cient solution, but it requires a comparatively large number       range of programmers investigated, these results, when
+of statements to implement the tree construction and traver-       taken with a grain of salt, are probably reliable despite the
+sal. In Java, the large resulting number of objects also leads     validity threats discussed in the sidebar. However, it must
+to a high memory consumption due to the severe memory              be emphasized that the results are valid for the phonecode
+overhead incurred per object by current implementations of         problem only; generalizing to different application domains
+the language.                                                      would be haphazard. It is likely that for many other prob-
+                                                                   lems the relative results for the script group of languages
+    The shorter program length of the script programs can          would not be quite as good as they are. I conclude the fol-
+be explained by the fact that most of the actual search is         lowing:
+done simply by the hashing algorithm used internally by
+the associative arrays. In contrast, the non-script programs        ­ As of JDK 1.2.1 (and on the Solaris platform), the mem-
+require most of the elementary steps of the search process             ory overhead of Java is still huge compared to C or C++,
+to be coded explicitly by the programmer. This is further              but the run time efficiency has become quite acceptable.
+pronounced by the effort (or lack of it) for data structure
+and variable declarations.                                          ­ The often so-called "scripting languages" Perl, Python,
+                                                                       Rexx, and Tcl can be reasonable alternatives to "con-
+    It is an interesting observation that despite the exis-            ventional" languages such as C or C++ even for tasks
+tence of hash table implementations in both the Java and               that need to handle fair amounts of computation and
+the C++ class libraries none of the non-script programmers             data. Their relative run time and memory consump-
+used them (but rather implemented a tree solution by hand),            tion overhead will often be acceptable and they may
+whereas for the script programmers the hash tables built               offer significant advantages with respect to program-
+into the language were the obvious choice.                             mer productivity -- at least for small programs like the
+                                                                       phonecode problem.
+
+Conclusions                                                         ­ Interpersonal variability, that is the capability and
+                                                                       behavior differences between programmers using the
+The following statements summarize the findings of                     same language, tends to account for more differences
+the comparative analysis of 80 implementations of the                  between programs than a change of the programming
+phonecode program in 7 different languages:                            language.
+
+ ­ Designing and writing the program in Perl, Python,              References
+    Rexx, or Tcl takes no more than half as much time as
+    writing it in C, C++, or Java and the resulting program        [1] Barry W. Boehm. Software Engineering Economics.
+    is only half as long.                                               Prentice Hall, Englewood Cliffs, NJ, 1981.
+
+ ­ No unambiguous differences in program reliability be-           [2] Software Productivity Research Capers Jones.
+    tween the language groups were observed.                            Programming languages table, version 7.
+                                                                        http://www.spr.com/library/0langtbl.htm, 1996 (as
+ ­ The typical memory consumption of a script program is                of Feb. 2000).
+    about twice that of a C or C++ program. For Java it is
+    another factor of two higher.
+
+­ For the initialization phase of the phonecode program            [3] Bradley Efron and Robert Tibshirani. An introduction
+   (reading the 1 MB dictionary file and creating the 70k-              to the Bootstrap. Monographs on statistics and applied
+   entry internal data structure), the C and C++ programs               probability 57. Chapman and Hall, New York, London,
+   have a strong run time advantage of about factor 3 to                1993.
+   4 compared to Java and about 5 to 10 compared to the
+   script languages.                                               [4] Lutz Prechelt. An empirical comparison of C, C++,
+                                                                        Java, Perl, Python, Rexx, and Tcl for a search/string-
+­ For the main phase of the phonecode program (search                   processing program. Technical Report 2000-5, Fakulta¨t
+   through the internal data structure), the advantage in run           fu¨r Informatik, Universita¨t Karlsruhe, Germany, March
+   time of C or C++ versus Java is only about factor 2 and              2000. ftp.ira.uka.de.
+   the script programs even tend to be faster than the Java
+   programs.                                                       [5] Lutz Prechelt and Barbara Unger. A controlled exper-
+                                                                        iment on the effects of PSP training: Detailed descrip-
+­ Within the script languages, Python and in particular                 tion and evaluation. Technical Report 1/1999, Fakulta¨t
+   Perl are faster than Tcl for both phases.                            fu¨r Informatik, Universita¨t Karlsruhe, Germany, March
+                                                                        1999. ftp.ira.uka.de.
+­ For all program aspects investigated, the performance
+   variability due to different programmers (as described
+
+                                                                7
+

@@ -1,0 +1,91 @@
+{
+  "id": "trunkbaseddevelopment",
+  "title": "Trunk Based Development",
+  "channel": "trunkbaseddevelopment.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://trunkbaseddevelopment.com/",
+  "summary": "Trunk-based development: everyone commits to one branch at least daily, with short-lived branches, feature flags and a build server; claimed to avoid merge hell and enable continuous delivery.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/trunk-based-development-one-small-change",
+      "stance": "asserts",
+      "quote": "This ensures the codebase is always releasable on demand and helps to make Continuous Delivery a reality.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/long-lived-branches-delay-integration-produce",
+      "stance": "asserts",
+      "quote": "Shared branches off mainline/main/trunk are bad at any release cadence",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/running-server-not-continuous-integration-branches",
+      "stance": "asserts",
+      "quote": "Trunk-Based Development is a key enabler of Continuous Integration and by extension Continuous Delivery.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/short-lived-feature-branches-pull-requests",
+      "stance": "asserts",
+      "quote": "short-lived feature branches are used for code-review and build checking (CI), but not artifact creation or publication",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Branch lifetime, not branch existence, drives integration pain; this is the consensus position in continuous delivery literature.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "DORA characterises effective trunk-based development as fewer than three active branches and branches or forks living less than a day before merging to master, so short-lived branches merged within a day count as trunk-based in its predictive model.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1023-L1024",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/feature-flags-let-unfinished-work-merge",
+      "stance": "asserts",
+      "quote": "techniques should include feature flags, branch by abstraction and \"don't break the build\"",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/teams-shared-trunk-can-scale-headcount",
+      "stance": "asserts",
+      "quote": "Development teams can casually flex up or down in size (in the trunk) without affecting throughput or quality.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Google's monorepo shows it is possible with heavy tooling investment; Brooks's-law effects do not vanish because of a branching model.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/beyond-couple-developers-build-server-needed",
+      "stance": "asserts",
+      "quote": "you are going to need to hook up a build server to verify that their commits have not broken the build",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "CI servers are near-universal practice; the threshold is a rule of thumb.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

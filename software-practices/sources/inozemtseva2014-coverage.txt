@@ -1,0 +1,801 @@
+Coverage Is Not Strongly Correlated
+     with Test Suite Effectiveness
+
+               Laura Inozemtseva and Reid Holmes
+
+                             School of Computer Science
+                                 University of Waterloo
+
+                {lminozeWma,rtethrlooolm, OeNs,}@Caunwadaaterloo.ca
+
+ABSTRACT                                                                            1. INTRODUCTION
+
+The coverage of a test suite is often used as a proxy for                              Testing is an important part of producing high quality
+its ability to detect faults. However, previous studies that                        software, but its effectiveness depends on the quality of the
+investigated the correlation between code coverage and test                         test suite: some suites are better at detecting faults than
+suite effectiveness have failed to reach a consensus about the                      others. Naturally, developers want their test suites to be good
+nature and strength of the relationship between these test                          at exposing faults, necessitating a method for measuring the
+suite characteristics. Moreover, many of the studies were                           fault detection effectiveness of a test suite. Testing textbooks
+done with small or synthetic programs, making it unclear                            often recommend coverage as one of the metrics that can
+whether their results generalize to larger programs, and some                       be used for this purpose (e.g., [29, 34]). This is intuitively
+of the studies did not account for the confounding influence                        appealing, since it is clear that a test suite cannot find bugs
+of test suite size. In addition, most of the studies were done                      in code it never executes; it is also supported by studies that
+with adequate suites, which are are rare in practice, so the                        have found a relationship between code coverage and fault
+results may not generalize to typical test suites.                                  detection effectiveness [3, 6, 14­17, 24, 31, 39].
+
+   We have extended these studies by evaluating the relation-                          Unfortunately, these studies do not agree on the strength
+ship between test suite size, coverage, and effectiveness for                       of the relationship between these test suite characteristics.
+large Java programs. Our study is the largest to date in the                        In addition, three issues with the studies make it difficult to
+literature: we generated 31,000 test suites for five systems                        generalize their results. First, some of the studies did not
+consisting of up to 724,000 lines of source code. We measured                       control for the size of the suite. Since coverage is increased
+the statement coverage, decision coverage, and modified con-                        by adding code to existing test cases or by adding new test
+dition coverage of these suites and used mutation testing to                        cases to the suite, the coverage of a test suite is correlated
+evaluate their fault detection effectiveness.                                       with its size. It is therefore not clear that coverage is related
+                                                                                    to effectiveness independently of the number of test cases in
+   We found that there is a low to moderate correlation                             the suite. Second, all but one of the studies used small or
+between coverage and effectiveness when the number of test                          synthetic programs, making it unclear that their results hold
+cases in the suite is controlled for. In addition, we found that                    for the large programs typical of industry. Third, many of the
+stronger forms of coverage do not provide greater insight                           studies only compared adequate suites; that is, suites that
+into the effectiveness of the suite. Our results suggest that                       fully satisfied a particular coverage criterion. Since adequate
+coverage, while useful for identifying under-tested parts of a                      test suites are rare in practice, the results of these studies
+program, should not be used as a quality target because it is                       may not generalize to more realistic test suites.
+not a good indicator of test suite effectiveness.
+                                                                                       This paper presents a new study of the relationship between
+Categories and Subject Descriptors                                                  test suite size, coverage and effectiveness. We answer the
+                                                                                    following research questions for large Java programs:
+D.2.5 [Software Engineering]: Testing and Debugging;
+D.2.8 [Software Engineering]: Metrics--product metrics                                 Research Question 1. Is the effectiveness of a test suite
+                                                                                    correlated with the number of test cases in the suite?
+General Terms
+                                                                                       Research Question 2. Is the effectiveness of a test suite
+Measurement                                                                         correlated with its statement coverage, decision coverage
+                                                                                    and/or modified condition coverage when the number of test
+Keywords                                                                            cases in the suite is ignored?
+
+Coverage, test suite effectiveness, test suite quality                                 Research Question 3. Is the effectiveness of a test suite
+                                                                                    correlated with its statement coverage, decision coverage
+Permission to make digital or hard copies of all or part of this work for           and/or modified condition coverage when the number of test
+personal or classroom use is granted without fee provided that copies are           cases in the suite is held constant?
+not made or distributed for profit or commercial advantage and that copies
+bear this notice and the full citation on the first page. To copy otherwise, to        The paper makes the following contributions:
+republish, to post on servers or to redistribute to lists, requires prior specific
+permission and/or a fee.                                                                · A comprehensive survey of previous studies that inves-
+ICSE '14, May 31­June 7, 2014, Hyderabad, India                                            tigated the relationship between coverage and effective-
+Copyright 14 ACM 978-1-4503-2756-5/14/05 ...$15.00.                                        ness (Section 2 and accompanying online material).
+                      Table 1: Summary of the findings from previous studies.
+
+Citation   Languages  Largest Program Coverage Types               Findings
+ [15, 16]  Pascal
+                      78 SLOC      All-use, decision               All-use related to effectiveness independently of
+    [17]   Fortran                                                 size; decision is not; relationship is highly non-
+    [14]   Pascal                                                  linear
+           C
+    [39]              78 SLOC      All-use, mutation Effectiveness improves with coverage but not until
+    [24]   C                                                   coverage reaches 80%; even then increase is small
+           C
+    [6]               5,905 SLOC   All-use, decision               Effectiveness is correlated with both all-use and
+           C                                                       decision coverage; increase is small until high levels
+    [3]                                                            of coverage are reached
+    [31]   C
+ [19, 37]  C          <2,310 SLOC  Block                           Effectiveness is more highly correlated with block
+           C++                                                     coverage than with size
+    [5]    C
+    [20]   Java       512 SLOC     All-use, decision               Effectiveness is correlated with both all-use and de-
+           C                                                       cision coverage; effectiveness increases more rapidly
+           Java                                                    at high levels of coverage
+
+                      4,512 SLOC   Block, c-use,                   Effectiveness is moderately correlated with all four
+                                   decision, p-use                 coverage types; magnitude of the correlation de-
+                                                                   pends on the nature of the tests
+
+                      5,000 SLOC   Block, c-use,                   Effectiveness is correlated with all four coverage
+                                   decision, p-use                 types; effectiveness rises steadily with coverage
+
+                      5,680 SLOC   Block, c-use,                   Effectiveness is correlated with all four coverage
+                                   decision, p-use                 types but the correlations are not always strong
+
+                      72,490 SLOC  AIMP, DBB,                      Effectiveness correlated with coverage; effective-
+                                   decision, IMP,                  ness correlated with size for large projects
+                                   PCC, statement
+
+                      4,000 SLOC   Block, c-use,                   None of the four coverage types are related to
+                                   decision, p-use                 effectiveness independently of size
+
+                      O(100, 000)  Block, decision,                Effectiveness correlated with coverage across many
+                      SLOC         path, statement                 projects; influence of project size unclear
+
+    · Empirical evidence demonstrating that there is a low         relationship between the coverage and the effectiveness of
+       to moderate correlation between coverage and effective-     a test suite, ten of which used the general procedure just
+       ness when suite size is controlled for and that the type    described. Eight of them found that at least one type of cov-
+       of coverage used has little effect on the strength of the   erage has some correlation with effectiveness independently
+       relationship (Section 4).                                   of size; however, not all studies found a strong correlation,
+                                                                   and most found that the relationship was highly non-linear.
+    · A discussion of the implications of these results for de-    In addition, some found that the relationship only appeared
+       velopers, researchers and standards bodies (Section 5).     at very high levels of coverage. For brevity, the older stud-
+                                                                   ies from Table 1 are described more fully in accompanying
+2. RELATED WORK                                                    materials1. In the remainder of this section, we discuss the
+                                                                   three most recent studies.
+   Most of the previous studies that investigated the link
+between test suite coverage and test suite effectiveness used         At the time of writing, no other study considered any
+the following general procedure:                                   subject program larger than 5,905 SLOC2. However, a recent
+                                                                   study by Gligoric et al. [19] and a subsequent master's the-
+   1. Created faulty versions of one or more programs by           sis [37] partially addressed this issue by studying two large
+       manually seeding faults, reintroducing previously fixed     Java programs (JFreeChart and Joda Time) and two large C
+       faults, or using a mutation tool.                           programs (SQLITE and YAFFS2) in addition to a number
+                                                                   of small programs. The authors created test suites by sam-
+   2. Created a large number of test suites by selecting from      pling from the pool of test cases for each program. For the
+       a pool of available test cases, either randomly or accord-  large programs, these test cases were manually written by
+       ing to some algorithm, until the suite reached either a     developers; for the small programs, these test cases were auto-
+       pre-specified size or a pre-specified coverage level.       matically generated using various tools. Suites were created
+
+   3. Measured the coverage of each suite in one or more           1http://linozemtseva.com/research/2014/icse/
+       ways, if suite size was fixed; measured the suite's size    coverage/
+       if its coverage was fixed.                                  2In this paper, source lines of code (SLOC) refers to exe-
+                                                                   cutable lines of code, while lines of code (LOC) includes
+   4. Determined the effectiveness of each suite as the frac-      whitespace and comments.
+       tion of faulty versions of the program that were detected
+       by the suite.
+
+   Table 1 summarizes twelve studies that considered the
+in two ways. First, the authors specified a coverage level and    3.1 Terminology
+selected tests until it was met; next, the authors specified a
+suite size and selected tests until it was met. They measured        Before describing the methodology in detail, we precisely
+a number of coverage types: statement coverage, decision          define three terms that will be used throughout the paper.
+coverage, and more exotic measurements based on equivalent
+classes of covered statements (dynamic basic block coverage),         · Test case: one test in a suite of tests. A test case
+program paths (intra-method and acyclic intra-method path                executes as a unit; it is either executed or not executed.
+coverage), and predicate states (predicate complete cover-               In the JUnit testing framework, each method that starts
+age). They evaluated the effectiveness of each suite using               with the word test (JUnit 3) or that is annotated with
+mutation testing. They found that the Kendall  correla-                  @Test (JUnit 4) is a test case. For this reason, we will
+tion (see Section 4.2) between coverage and mutation score               use the terms test method and test case interchangeably.
+ranged from 0.452 to 0.757 for the various coverage types
+and suite types when the size of the suite was not considered.        · Test suite: a collection of test cases.
+When they tried to predict the mutation score using suite
+size alone, they found high correlations (between 0.585 and           · Master suite: the whole test suite that was written
+0.958) for the four large programs with manually written                 by the developers of a subject program. For example,
+test suites but fairly low correlations for the small programs           the master suite for Apache POI contains 1,415 test
+with artificially generated test suites. This suggests that the          cases (test methods). The test suites that we create
+correlation between coverage and effectiveness in real systems           and evaluate are strict subsets of the master suite.
+is largely due to the correlation between coverage and size; it
+also suggests that results from automatically generated and       3.2 Subject Programs
+manually generated suites do not generalize to each other.
+                                                                     We selected five subjects from a variety of application
+   A study by Gopinath et al. [20] accepted to the same con-      domains. The first, Apache POI [4], is an open source API
+ference as the current paper did not use the aforementioned       for manipulating Microsoft documents. The second, Closure
+general procedure. The authors instead measured coverage          Compiler [7], is an open source JavaScript optimizing com-
+and test suite effectiveness for a large number of open-source    piler. The third, HSQLDB [23], is an open source relational
+Java programs and computed a correlation across all pro-          database management system. The fourth, JFreeChart [25],
+grams. Specifically, they measured statement, block, decision     is an open source library for producing charts. The fifth,
+and path coverage and used mutation testing to measure            Joda Time [26], is an open source replacement for the Java
+effectiveness. The authors measured these values for approx-      Date and Time classes.
+imately 200 developer-generated test suites ­ the number
+varies by measurement ­ then generated a suite for each              We used a number of criteria to select these projects.
+project with the Randoop tool [36] and repeated the mea-          First, to help ensure the novelty and generalizability of our
+surements. The authors found that coverage is correlated          study, we required that the projects be reasonably large (on
+with effectiveness across projects for all coverage types and     the order of 100,000 SLOC), written in Java, and actively
+for both developer-generated and automatically-generated          developed. We also required that the projects have a fairly
+suites, though the correlation was stronger for developer-        large number of test methods (on the order of 1,000) so that
+written suites. The authors found that including test suite       we would be able to generate reasonably sized random test
+size in their regression model did not improve the results;       suites. Finally, we required that the projects use Ant as
+however, since coverage was already included in the model,        a build system and JUnit as a test harness, allowing us to
+it is not clear whether this is an accurate finding or a result   automate data collection.
+of multicollinearity3.
+                                                                     The salient characteristics of our programs are summarized
+   As the above discussion shows, it is still not clear how       in Table 2. Program size was measured with SLOCCount [38].
+test suite size, coverage and effectiveness are related. Most     Rows seven through ten provide information related to mu-
+studies conclude that effectiveness is related to coverage, but   tation testing and will be explained in Section 3.3.
+there is little agreement about the strength and nature of
+the relationship.                                                 3.3 Generating Faulty Programs
+
+3. METHODOLOGY                                                       We used the open source tool PIT [35] to generate faulty
+                                                                  versions of our programs. To describe PIT's operation, we
+   To answer our research questions, we followed the general      must first give a brief description of mutation testing.
+procedure outlined in Section 2. This required us to select:
+                                                                     A mutant is a new version of a program that is created
+   1. A set of subject programs (Section 3.2);                    by making a small syntactic change to the original program.
+                                                                  For example, a mutant could be created by modifying a
+   2. A method of generating faulty versions of the programs      constant, negating a branch condition, or removing a method
+       (Section 3.3);                                             call. The resulting mutant may produce the same output as
+                                                                  the original program, in which case it is called an equivalent
+   3. A method of creating test suites (Section 3.4);             mutant. For example, if the equality test in the code snippet
+                                                                  in Figure 1 were changed to if (index >= 10), the new
+   4. Coverage metrics (Section 3.5); and                         program would be an equivalent mutant.
+
+   5. An effectiveness metric (Section 3.6).                         Mutation testing tools such as PIT generate a large number
+                                                                  of mutants and run the program's test suite on each one.
+We then measured the coverage and effectiveness of the suites     If the test suite fails when it is run on a given mutant, we
+to evaluate the relationship between these characteristics.       say that the suite kills that mutant. A test suite's mutant
+                                                                  coverage is then the fraction of non-equivalent mutants
+3The amount of variation `explained' by a variable will be        that it kills. Equivalent mutants are excluded because they
+less if it is correlated with a variable already included in the  cannot, by definition, be detected by a unit test.
+model than it would be otherwise.
+                                                                     If a mutant is not killed by a test suite, manual inspec-
+Table 2: Salient characteristics of our subject programs.
+
+Property                      Apache POI Closure HSQLDB JFreeChart                                    Joda Time
+
+Total Java SLOC               283,845                               724,089    178,018     125,659        80,462
+Test SLOC                      68,932                                93,528     18,425      44,297        51,444
+Number of test methods           1,415                                 7,947        628       1,764
+Statement coverage (%)               67                                    76         27          54       3,857
+Decision coverage (%)                60                                    77         17          45           91
+MC coverage (%)                      49                                    67          9          27           82
+                                                                                                               70
+Number of mutants             27,565                                30,779     50,302      29,699
+Number of detected mutants    17,935                                27,325     50,125      23,585          9,552
+Number of equivalent mutants                                                                               8,483
+Equivalent mutants (%)         9,630                                 3,454        177       6,114          1,069
+                                   35                                    11           0.4       21
+                                                                                                               11
+
+int index = 0;                                                      3.4 Generating Test Suites
+while (true) {
+                                                                       For each subject program, we used Java's reflection API to
+      index++;                                                      identify all of the test methods in the program's master suite.
+      if (index == 10) {                                            We then generated new test suites of fixed size by randomly
+                                                                    selecting a subset of these methods without replacement.
+             break;                                                 More concretely, we created a JUnit suite by repeatedly
+      }                                                             using the TestSuite.addTest(Test t) method. Each suite
+}                                                                   was created as a JUnit suite so that the necessary set-up and
+                                                                    tear-down code was run for each test method. Given this
+Figure 1: An example of how an equivalent mutant                    procedure for creating suites, in this paper the size of our
+can be generated. Changing the operator == to >=                    random suites should always be understood as the number of
+will result in a mutant that cannot be detected by                  test methods they contain, i.e., the number of times addTest
+an automated test case.                                             was called.
+
+tion is required to determine if it is equivalent or if it was         We made 1,000 suites of each of the following sizes: 3
+simply missed by the suite4. This is a time-consuming and           methods, 10 methods, 30 methods, 100 methods, and so on,
+error-prone process, so studies that compare subsets of a           up to the largest number following this pattern that was less
+test suite to the master suite often use a different approach:      than the total number of test methods. This resulted in a
+they assume that any mutant that cannot be detected by              total of 31,000 test suites across the five subject systems.
+the master suite is equivalent. While this technique tends          Comparing a large number of suites from the same project
+to overestimate the number of equivalent mutants, it is com-        allows us to control for size; it also allows us to apply our
+monly applied because it allows the study of much larger            results to the common research practice of comparing test
+programs.                                                           suites generated for the same subject program using different
+                                                                    test generation methodologies.
+   Although the mutants generated by PIT simulate real
+faults, it is not self-evident that a suite's ability to kill mu-   3.5 Measuring Coverage
+tants is a valid measurement of its ability to detect real faults.
+However, several previous and current studies support the              We used the open source tool CodeCover [8] to measure
+use of this measurement [2, 3, 10, 27]. Previous work has also      three types of coverage: statement, decision, and modified
+shown that if a test suite detects a large number of simple         condition coverage. Statement coverage refers to the fraction
+faults, caused by a single incorrect line of source code, it        of the executable statements in the program that are run
+will detect a large number of harder, multi-line faults [28, 32].   by the test suite. It is relatively easy to satisfy, easy to
+This implies that if a test suite can kill a large proportion of    understand and can be measured quickly, making it popular
+mutants, it can also detect a large proportion of the more          with developers. However, it is one of the weaker forms of
+difficult faults in the software. The literature thus suggests      coverage, since executing a line does not necessarily reveal
+that the mutant detection rate of a suite is a fairly good          an error in that line.
+measurement of its fault detection ability. We will return to
+this issue in Sections 6 and 7.                                        Decision coverage refers to the fraction of decisions (i.e.,
+                                                                    branches) in the program that are executed by its test suite.
+   We can now describe the remaining rows of Table 2. The           Decision coverage is somewhat harder to satisfy and measure
+seventh row shows how many mutants PIT generated for each           than statement coverage.
+project. The eighth row shows how many of those mutants
+could be detected by the suite. The ninth row shows how                Modified condition coverage (MCC) is the most difficult
+many of those mutants could not be detected by the entire           of these three to satisfy. For a test suite to be modified
+test suite and were therefore assumed to be equivalent (i.e.,       condition adequate, i.e., to have 100% modified condition
+row 7 is the sum of rows 8 and 9). The last row gives the           coverage, the suite must include 2n test cases for every deci-
+equivalent mutants as a percentage of the total.                    sion with n conditions5 in it [22]. This form of coverage is not
+                                                                    commonly used in practice; however, it is very similar to mod-
+4Manual inspection is required because automatically deter-
+mining whether a mutant is equivalent is undecidable [33].          5A condition is a boolean expression that cannot be de-
+                                                                    composed into a simpler boolean expression. Decisions are
+                                                                    composed of conditions and one or more boolean operators.
+ified condition/decision coverage (MC/DC), which is widely        measurement of 1 and a raw effectiveness measurement of
+used in the avionics industry. Specifically, Federal Aviation     1, since we decided that any mutants it did not kill are
+Administration standard DO-178B states that the most criti-       equivalent.
+cal software in the aircraft must be tested with a suite that is
+modified condition/decision coverage adequate [22]. MC/DC         4. RESULTS
+is therefore one of the most stringent forms of coverage that
+is widely and regularly used in practice. Measuring modified         In this section, we quantitatively answer the three research
+condition coverage provides insight into whether stronger         questions posed in Section 1. As Section 3 explained, we
+coverage types such as MCC and MC/DC provide practical            collected the data to answer these questions by generating
+benefits that outweigh the extra cost associated with writing     test suites of fixed size via random sampling; measuring their
+enough tests to satisfy them.                                     statement, decision and MCC coverage with CodeCover; and
+                                                                  measuring their effectiveness with the mutation testing tool
+   We did not measure any type of dataflow coverage, since        PIT.
+very few tools for Java can measure these types of coverage.
+One exception is Coverlipse [9], which can measure all-use        4.1 Is Size Correlated With Effectiveness?
+coverage but can only be used as an Eclipse plugin. To the
+best of our knowledge, there are no open source coverage tools       Research Question 1 asked if the effectiveness of a test suite
+for Java that can measure other data flow coverage criteria       is influenced by the number of test methods it contains. This
+or that can be used from the command line. Since developers       research question provides a "sanity check" that supports the
+use the tools they have, they are unlikely to use dataflow        use of the effectiveness metric. Figure 2 shows some of the
+coverage metrics. Using the measurements that developers          data we collected to answer this question. In each subfigure,
+use, whether due to tool availability or legal requirements,      the x axis indicates suite size on a logarithmic scale while the
+means that our results will more accurately reflect current       y axis shows the range of normalized effectiveness values we
+development practice. However, we plan to explore dataflow        computed. The red line on each plot was fit to the data with
+coverage in future work to determine if developers would          R's lm function6. The adjusted r2 value for each regression
+benefit from using these coverage types instead.                  line is shown in the bottom right corner of each plot. These
+                                                                  values range from 0.26 to 0.97, implying that the correlation
+3.6 Measuring Effectiveness                                       coefficient r ranges from 0.51 to 0.98. This indicates that
+                                                                  there is a moderate to very high correlation between normal-
+   We used two effectiveness measurements in this study:          ized effectiveness and size for these projects7. The results for
+the raw effectiveness measurement and the normalized effec-       the non-normalized effectiveness measurement are similar,
+tiveness measurement. The raw kill score is the number of         with the r2 values ranging from 0.69 to 0.99, implying a high
+mutants a test suite detected divided by the total number of      to very high correlation between non-normalized effective-
+non-equivalent mutants that were generated for the subject        ness and size. The figure for this measurement can be found
+program under test. The normalized effectiveness measure-         online8.
+ment is the number of mutants a test suite detected divided
+by the number of non-equivalent mutants it covers. A test                Answer 1. Our results suggest that, for large Java
+suite covers a mutant if the mutant was made by altering a            programs, there is a moderate to very high correlation
+line of code that is executed by the test suite, implying that        between the effectiveness of a test suite and the number
+the test suite can potentially detect the mutant.                     of test methods it contains.
+
+   We included the normalized effectiveness measurement in        4.2 Is Coverage Correlated With Effectiveness
+order to compare test suites on a more even footing. Suppose             When Size Is Ignored?
+we are comparing suite A, with 50% coverage, to suite B, with
+60% coverage. Suite B will almost certainly have a higher            Research Question 2 asked if the effectiveness of a test suite
+raw effectiveness measurement, since it covers more code and      is correlated with the coverage of the suite when we ignore
+will therefore almost certainly kill more mutants. However,       the influence of suite size. Tables 3 and 4 show the Kendall 
+if suite A kills 80% of the mutants that it covers, while suite   correlation coefficients we computed to answer this question;
+B kills only 70% of the mutants that it covers, suite A is        all coefficients are significant at the 99.9% level9. Table 3
+in some sense a better suite. The normalized effectiveness
+measurement captures this difference. Note that it is possible    6Size and the logarithm of size were used as the inputs.
+for the normalized effectiveness measurement to drop when         7Here we use the Guildford scale [21] for verbal description,
+a new test case is added to the suite if the test case covers a   in which correlations with absolute value less than 0.4 are
+lot of code but kills few mutants.                                described as "low", 0.4 to 0.7 as "moderate", 0.7 to 0.9 as
+                                                                  "high", and over 0.9 as "very high".
+   It may be helpful to think of the normalized effectiveness     8http://linozemtseva.com/research/2014/icse/
+measurement as a measure of depth: how thoroughly does the        coverage/
+test suite exercise the code that it runs? The raw effectiveness  9Kendall's  is similar to the more common Pearson coef-
+measurement is a measure of breadth: how much code does           ficient but does not assume that the variables are linearly
+the suite exercise?                                               related or that they are normally distributed. Rather, it
+                                                                  measures how well an arbitrary monotonic function could fit
+   Note that the number of non-equivalent mutants covered         the data. A high correlation therefore means that we can
+by a suite is the maximum number of mutants the suite could       predict the rank order of the suites' effectiveness values given
+possibly detect, so the normalized effectiveness measurement      the rank order of their coverage values, which in practice
+ranges from 0 to 1. The raw effectiveness measurement,            is nearly as useful as predicting an absolute effectiveness
+in general, does not reach 1, since most suites kill a small      score. We used it instead of the Pearson coefficient to avoid
+percentage of the non-equivalent mutants. However, note           introducing unnecessary assumptions about the distribution
+that the full test suite has both a normalized effectiveness      of the data.
+               1.00      Apache POI                                                                               Closure                                         HSQLDB
+               0.75
+               0.50  
+               0.25
+               0.00                                                                                                                                     
+               1.00                                                                                                                   
+               0.75
+               0.50                                                                                                                                       
+                                                                                                                                                          
+
+                                                                                                                                                                                                  
+                                                                                            
+                                                                                                                                                                              
+                                                                                                                                                                                                
+                                         
+                                                                                                                                                          
+                                         
+                                                                                                                
+                     
+                                                                                           
+                                                                                           
+                                                                                           
+                                                                                           
+                                                                                           
+                                                                                           
+
+Effectiveness                                                R^2 = 0.78                                             R^2 = 0.97                                                                      R^2 = 0.26
+
+                         JFreeChart                                                          Joda Time
+
+                                                                                                                                      
+                                                                                                                                      
+                                
+                                                                                             
+                                                  
+                                                                                                                  
+                                                                                                                                    
+                                                                                             
+                                                                                             
+
+                                                                                                                  
+
+                                                                                             
+
+                                                                                           
+                                                                                           
+
+               0.25                                                                                                 R^2 = 0.89
+
+               0.00 R^2 = 0.55
+
+                     3
+                           10
+                                 30
+                                        100
+                                              300
+                                                    1000
+                                                          3000
+                                                                       3
+                                                                             10
+                                                                                   30
+                                                                                          100
+                                                                                                300
+                                                                                                      1000
+                                                                                                            3000
+
+                                                                                        Size
+
+Figure 2: Normalized effectiveness scores plotted against size for all subjects. Each box represents the 1000
+suites of a given size that were created from a given master suite.
+
+gives the correlation between the different coverage types                                                        Table 3: The Kendall  correlation between nor-
+and the normalized effectiveness measurement. Table 4 gives                                                       malized effectiveness and different types of coverage
+the correlation between the different coverage types and the                                                      when suite size is ignored. All entries are significant
+non-normalized effectiveness measurement. For all projects                                                        at the 99.9% level.
+but HSQLDB, we see a moderate to very high correlation
+between coverage and effectiveness when size is not taken                                                             Project Statement Decision Mod. Cond.
+into account. HSQLDB is an interesting exception: when the
+effectiveness measurement is normalized by the number of                                                            Apache POI                              0.75                                      0.76        0.77
+covered mutants, there is a low negative correlation between                                                        Closure                                 0.83                                      0.83        0.84
+coverage and effectiveness. This means that the suites with                                                         HSQLDB                                -0.35                                     -0.35       -0.35
+higher coverage kill fewer mutants per unit of coverage; in                                                         JFreeChart                              0.50                                      0.53        0.53
+other words, the suites with higher coverage contain test                                                           Joda Time                               0.80                                      0.80        0.80
+cases that run a lot of code but do not kill many mutants
+in that code. Of course, since the suites kill more mutants                                                       Table 4: The Kendall  correlation between non-
+in total as they grow, there is a positive correlation between                                                    normalized effectiveness and different types of cov-
+coverage and non-normalized effectiveness for HSQLDB.                                                             erage when suite size is ignored. All entries are sig-
+                                                                                                                  nificant at the 99.9% level.
+      Answer 2. Our results suggest that, for many large
+   Java programs, there is a moderate to high correlation                                                             Project Statement Decision Mod. Cond.
+   between the effectiveness and the coverage of a test suite
+   when the influence of suite size is ignored. Research                                                            Apache POI                              0.94                                    0.94        0.94
+   Question 3 explores whether this correlation is caused                                                           Closure                                 0.95                                    0.95        0.95
+   by the larger size of the suites with higher coverage.                                                           HSQLDB                                  0.81                                    0.80        0.79
+                                                                                                                    JFreeChart                              0.91                                    0.95        0.92
+4.3 Is Coverage Correlated With Effectiveness                                                                       Joda Time                               0.85                                    0.85        0.85
+      When Size Is Fixed?
+                                                                                                                  the results we obtained for one project and one suite size.
+   Research Question 3 asked if the effectiveness of a test                                                       The project name is given at the top of each column, while
+suite is correlated with its coverage when the number of                                                          the suite size is given at the right of each row. Different
+test cases in the suite is controlled for. Figure 3 shows the                                                     coverage types are differentiated by colour. The bottom row
+data we collected to answer this question. Each panel shows                                                       is a margin plot that shows the results for all sizes, while the
+                                                                                                                  rightmost column is a margin plot that shows the results for
+               1.00 Apache POI  Closure  HSQLDB                   JFreeChart Joda Time  (all)
+
+               0.75                                                                            3
+               0.50
+               0.25                                                                            10
+               0.00
+               1.00                                                                            30
+               0.75
+Effectiveness  0.50                                                                            100
+               0.25
+               0.00                                                                            300
+               1.00
+               0.75                      N/A                                                   1000
+               0.50                      N/A N/A
+               0.25                                                                            3000
+               0.00
+               1.00                                                                            (all)
+               0.75
+               0.50
+               0.25
+               0.00
+               1.00
+               0.75
+               0.50
+               0.25
+               0.00
+               1.00
+               0.75
+               0.50
+               0.25
+               0.00
+               1.00
+               0.75
+
+               0.50 N/A
+
+               0.25
+               0.00
+               1.00
+               0.75
+               0.50
+               0.25
+               0.00
+
+               0.00
+                    0.25
+                          0.50
+                                0.75
+                                      1.00
+                                          0.00
+                                                0.25
+                                                      0.50
+                                                           0.75
+                                                                 1.00
+                                                                     0.00
+                                                                           0.25
+                                                                                 0.50
+                                                                                       0.75
+                                                                                             1.00
+                                                                                                 0.00
+                                                                                                       0.25
+                                                                                                            0.50
+                                                                                                                  0.75
+                                                                                                                        1.00
+                                                                                                                            0.00
+                                                                                                                                  0.25
+                                                                                                                                        0.50
+                                                                                                                                              0.75
+                                                                                                                                                    1.00
+                                                                                                                                                        0.00
+                                                                                                                                                              0.25
+                                                                                                                                                                   0.50
+                                                                                                                                                                         0.75
+                                                                                                                                                                               1.00
+
+                                         Coverage
+
+               Coverage Type  Decision coverage  Modified condition coverage  Statement coverage
+
+Figure 3: Normalized effectiveness scores (left axis) plotted against coverage (bottom axis) for all subjects.
+Rows show the results for one suite size; columns show the results for one project. N/A indicates that the
+project did not have enough test cases to fill in that frame.
+
+all projects. The figure shows the results for the normalized     age once size was controlled for while the non-normalized
+effectiveness measurement; the non-normalized effectiveness       effectiveness measurements had moderate correlations with
+measurements tend to be small and difficult to see at this size.  coverage once size was controlled for.
+The figure for the non-normalized effectiveness measurement
+can be found online with the other supplementary material.           That said, the results varied by project. Joda Time was
+                                                                  at one extreme: the correlation between coverage and ef-
+   We computed the Kendall  correlation coefficient between       fectiveness ranged from 0.80 to 0.85 when suite size was
+effectiveness and coverage for each project, each suite size,     ignored, but dropped to essentially zero when suite size was
+each coverage type, and both effectiveness measures. Since        controlled for. The same effect was seen for Closure when
+this resulted in a great deal of data, we summarize the results   the normalized effectiveness measurement was used.
+here; the full dataset can be found on the same website as
+the figures.                                                         Apache POI fell at the other extreme. For this project,
+                                                                  the correlation between coverage and the non-normalized
+   Our results were mixed. Controlling for suite size always      effectiveness measurement was 0.94 when suite size was ig-
+lowered the correlation between coverage and effectiveness.       nored, but dropped to a range of 0.46 to 0.85 when suite size
+However, the magnitude of the change depended on the ef-          was controlled for. While this is in some cases a large drop,
+fectiveness measurement used. In general, the normalized          a correlation in this range can provide useful information
+effectiveness measurements had low correlations with cover-       about the quality of a test suite.
+   A very interesting result is that, in general, the coverage    Effectiveness                     1
+type used did not have a strong impact on the results. This
+is true even though the effectiveness scores (y values) for each                                  0.80
+suite are the same for all three coverage types (x values).                                       0.2
+To clarify this, consider Figure 4. The figure shows two                                          0.6              0.4
+hypothetical graphs of effectiveness against coverage. In                                                                           0.6
+the top graph, coverage type 1 is not strongly correlated                                   0.4                                                       0.8
+with effectiveness. In the bottom graph, coverage type 2 is                                                                                                            1
+strongly correlated with effectiveness even though the y-value                                    0.2
+of each point has not changed (e.g., the triangle is at y = 0.8
+in both graphs). We do not see this difference between                                              0
+statement, decision, and MCC coverage, suggesting that the                                                                  Coverage type 1
+different types of coverage are measuring the same thing.
+We can confirm this intuition by measuring the correlation                                          1
+between different coverage types for each suite (Table 5).
+Given these high correlations, and given that the shape of                                        0.8
+the point clouds are similar for all three coverage measures
+(see Figure 3), we can conclude that the coverage type used                                       0.6
+has little effect on the relationship between coverage and
+effectiveness in this study.                                                                0.4 
+
+Table 5: The Kendall  and Pearson correlations be-                                                0.2Effectiveness
+tween different types of coverage for all suites from
+all projects.                                                                                       0
+                                                                                                                            Coverage type 2
+Coverage Types Tau Pearson
+                                                                  Figure 4: Hypothetical graphs of effectiveness
+Statement/Decision 0.92  0.99                                     against two coverage types for four test suites. The
+                         0.98                                     top graph shows a coverage type that is not corre-
+Decision/MCC   0.91      0.97                                     lated with effectiveness; the bottom graph shows a
+                                                                  coverage type that is correlated with effectiveness.
+Statement/MCC  0.92
+                                                                  clouds corresponding to the three coverage types are similar
+   Answer 3. Our results suggest that, for large Java             in shape and size. This, in combination with the high cor-0
+programs, the correlation between coverage and effec-             relation between different coverage measurements, suggests0.2
+tiveness drops when suite size is controlled for. After           that stronger coverage types provide little extra information0.4
+this drop, the correlation typically ranges from low to           about the quality of the suite.                                   0.6
+moderate, meaning it is not generally safe to assume                                                                                                  0.8
+that effectiveness is correlated with coverage. The corre-           Our findings have implications for developers, researchers,                                       1
+lation is stronger when the non-normalized effectiveness          and standards bodies. Developers may wish to use this
+measurement is used. Additionally, the type of cov-               information to guide their use of coverage. While coverage
+erage used had little influence on the strength of the            measures are useful for identifying under-tested parts of a
+relationship.                                                     program, and low coverage may indicate that a test suite is
+                                                                  inadequate, high coverage does not indicate that a test suite
+5. DISCUSSION                                                     is effective. This means that using a fixed coverage value as
+                                                                  a quality target is unlikely to produce an effective test suite.
+   The goal of this work was to determine if a test suite's       While members of the testing community have previously
+coverage is correlated with its fault detection effectiveness     made this point [13, 30], it has been difficult to evaluate their
+when suite size is controlled for. We found that there is         suggestions due to a lack of studies that considered systems of
+typically a moderate to high correlation between coverage         the scale that we investigated. Additionally, it may be in the
+and effectiveness when suite size is ignored, and that this       developer's best interest to use simpler coverage measures.
+drops to a low to moderate correlation when size is con-          These measures provide a similar amount of information
+trolled. This result suggests that coverage alone is not a        about the suite's effectiveness but introduce less measurement
+good predictor of test suite effectiveness; in many cases, the    overhead.
+apparent relationship is largely due to the fact that high
+coverage suites contain more test cases. The results for Joda
+Time and Closure, in particular, demonstrate that it is not
+safe in general to assume that coverage is correlated with
+effectiveness. Interestingly, the suites for Joda Time and
+Closure are the largest and most comprehensive of the five
+suites we studied, which might indicate that the correlation
+becomes weaker as the suite improves.
+
+   In addition, we found that the type of coverage measured
+had little impact on the correlation between coverage and
+effectiveness. This is reinforced by the shape of the point
+clouds in Figure 3: for any one project and suite size, the
+   Researchers may wish to use this information to guide          to compute each  . We found that ties rarely occurred: for
+their tool-building. In particular, test generation techniques    the worst calculation, 4.6% of the comparisons resulted in a
+often attempt to maximize the coverage of the resulting suite;    tie, but for most calculations this percentage was smaller by
+our results suggest that this may not be the best approach.       several orders of magnitude. Since there were so few ties, we
+                                                                  have assumed that they had a negligible effect on the normal
+   Finally, our results are pertinent to standards bodies that    distribution.
+set requirements for software testing. The FAA standard
+DO-178B, mentioned earlier in this paper, requires the use of        Another threat to internal validity stems from the possi-
+MC/DC adequate suites to ensure the quality of the resulting      bility of duplicate test suites: our results might be skewed if
+software; however, our results suggest that this requirement      two or more suites contain the same subset of test methods.
+may increase expenses without necessarily increasing quality.     Fortunately, we can evaluate this threat using the informa-
+                                                                  tion we collected about ties: since duplicate suites would
+   Of course, developers still want to measure the quality        naturally have identical coverage and effectiveness scores,
+of their test suites, meaning they need a metric that does        the number of tied comparisons provides an upper bound
+correlate with fault detection ability. While this is still an    on how many identical suites were compared. Since the
+open problem, we currently feel that mutation score may be        number of ties was so low, the number of duplicate suites
+a good substitute for coverage in this context [27].              must be similarly low, and so we have ignored the small skew
+                                                                  they may have introduced to avoid increasing the memory
+6. THREATS TO VALIDITY                                            requirements of our study unnecessarily.
+
+   In this section, we discuss the threats to the construct          Since we have studied correlations, we cannot make any
+validity, internal validity, and external validity of our study.  claims about the direction of causality.
+
+6.1 Construct Validity                                            6.3 External Validity
+
+   In our study we measured the size, coverage and effective-        There are six main threats to the external validity of our
+ness of random test suites. Size and coverage are straight-       study. First, previous work suggests that the relationship
+forward to measure, but effectiveness is more nebulous, as        between size, coverage and effectiveness depends on the dif-
+we are attempting to predict the fault-detection ability of a     ficulty of detecting faults in the program [3]. Furthermore,
+suite that has never been used in practice. As we described       some of the previous work was done with hand-seeded faults,
+in Section 3.3, previous and current work suggests that a         which have been shown to be harder to detect than both
+suite's ability to kill mutants is a fairly good measurement      mutants and real faults [2]. While this does not affect our
+of its ability to detect real faults [2, 3, 10, 27]. This sug-    results, it does make it harder to compare them with those
+gests that, in the absence of equivalent mutants, this metric     of earlier studies.
+has high construct validity. Unfortunately, our treatment
+of equivalent mutants introduces a threat to the validity of         Second, some of the previous studies found that a rela-
+this measurement. Recall that we assumed that any mutant          tionship between coverage and effectiveness did not appear
+that could not be detected by the program's entire test suite     until very high coverage levels were reached [14,17,24]. Since
+is equivalent. This means that we classified up to 35% of         the coverage of our generated suites rarely reached very high
+the generated mutants as equivalent (see the final row of         values, it is possible that we missed the existence of such
+Table 2). In theory, these mutants are a random subset of         a relationship. That said, it is not clear that such a rela-
+the entire set of mutants, so ignoring them should not affect     tionship would be useful in practice. It is very difficult to
+our results. However, this may not be true. For example, if       reach extremely high levels of coverage, so a relationship that
+the developers frequently test for off-by-one errors, mutants     does not appear until 90% coverage is reached is functionally
+that simulate this error will be detected more often and will     equivalent to no relationship at all for most developers.
+be less likely to be classified as equivalent.
+                                                                     Third, in object-oriented systems, most faults are usu-
+6.2 Internal Validity                                             ally found in just a few of the system's components [12].
+                                                                  This means that the relationship between size, coverage and
+   Our conclusions about the relationship between size, cov-      effectiveness may vary by class within the system. It is there-
+erage and effectiveness depend on our calculations of the         fore possible that coverage is correlated with effectiveness
+Kendall  correlation coefficient. This introduces a threat to     in classes with specific characteristics, such as high churn.
+the internal validity of the study. Kendall's original formula    However, our conclusions still hold for the common practice
+for  assumes that there are no tied ranks in the data; that       of measuring the coverage of a program's entire test suite.
+is, if the data were sorted, no two rows could be exchanged
+without destroying the sorted order. When ties do exist,             Fourth, there may be other features of a program or a suite
+two issues arise. First, since the original formula does not      that affect the relationship between coverage and effective-
+handle ties, a modified one must be used. We used the ver-        ness. For example, previous work suggests that the size of a
+sion proposed by Adler [1]. Second, ties make it difficult to     class can affect the validity of object-oriented metrics [11].
+compute the statistical significance of the correlation coef-     While we controlled for the size of each test suite in this
+ficient. It it possible to show that, in the absence of ties,     study, we did not control for the size of the class that each
+ is normally distributed, meaning we can use Z-scores to          test method came from.
+evaluate significance in the usual way. However, when ties
+are present, the distribution of  changes in a way that de-          Fifth, as discussed in Section 3.2, our subjects had to
+pends on the number and nature of the ties. This can result       meet certain inclusion criteria. This means that they are
+in a non-normal distribution [18]. To determine the impact        fairly similar, so our results may not generalize to programs
+of ties on our calculations, we counted both the number of        that do not meet these criteria. We attempted to mitigate
+ties that occurred and the total number of comparisons done       this threat by selecting programs from different application
+                                                                  domains, thereby ensuring a certain amount of variety in the
+                                                                  subjects. Unfortunately, it was difficult to find acceptable
+subjects; in particular, the requirement that the subjects         [4] Apache POI. http://poi.apache.org.
+have 1,000 test cases proved to be very difficult to satisfy. In
+practice, it seems that most open source projects do not have      [5] L. Briand and D. Pfahl. Using simulation for assessing
+comprehensive test suites. This is supported by Gopinath et             the real impact of test coverage on defect coverage. In
+al.'s study [20], where only 729 of the 1,254 open source Java          Proc. of the Int'l Symposium on Software Reliability
+projects they initially considered, or 58%, had test suites at          Engineering, 1999.
+all, much less comprehensive suites.
+                                                                   [6] X. Cai and M. R. Lyu. The effect of code coverage on
+   Finally, while our subjects were considerably larger than            fault detection under different testing profiles. In Proc.
+the programs used in previous studies, they are still not large         of the Int'l Workshop on Advances in Model-Based
+by industrial standards. Additionally, all of the projects              Testing, 2005.
+were open source, so our results may not generalize to closed
+source systems.                                                    [7] Closure Compiler.
+                                                                        https://code.google.com/p/closure-compiler/.
+7. FUTURE WORK
+                                                                   [8] CodeCover. http://codecover.org/.
+   Our next step is to confirm our findings using real faults
+to eliminate this threat to validity. We will also explore         [9] Coverlipse. http://coverlipse.sourceforge.net/.
+dataflow coverage to determine if these coverage types are
+correlated with effectiveness.                                    [10] M. Daran and P. Th´evenod-Fosse. Software error
+                                                                        analysis: a real case study involving real faults and
+   It may also be helpful to perform a longitudinal study that          mutations. In Proc. of the Int'l Symposium on Software
+considers how the coverage and effectiveness of a program's             Testing and Analysis, 1996.
+test suite change over time. By cross-referencing coverage
+information with bug reports, it might be possible to isolate     [11] K. El Emam, S. Benlarbi, N. Goel, and S. N. Rai. The
+those bugs that were covered by the test suite but were                 confounding effect of class size on the validity of
+not immediately detected by it. Examining these bugs may                object-oriented metrics. IEEE Transactions on Soft.
+provide insight into which bugs are the most difficult to               Eng., 27(7), 2001.
+detect and how we can improve our chances of detecting
+them.                                                             [12] N. E. Fenton and N. Ohlsson. Quantitative analysis of
+                                                                        faults and failures in a complex software system. IEEE
+8. CONCLUSION                                                           Transactions on Soft. Eng., 26(8), 2000.
+
+   In this paper, we studied the relationship between the         [13] M. Fowler. Test coverage. http:
+number of methods in a program's test suite, the suite's                //martinfowler.com/bliki/TestCoverage.html,
+statement, decision, and modified condition coverage, and the           2012.
+suite's mutant effectiveness measurement, both normalized
+and non-normalized. From the five large Java programs we          [14] P. G. Frankl and O. Iakounenko. Further empirical
+studied, we drew the following conclusions:                             studies of test effectiveness. In Proc. of the Int'l
+                                                                        Symposium on Foundations of Soft. Eng., 1998.
+    · In general, there is a low to moderate correlation be-
+       tween the coverage of a test suite and its effectiveness   [15] P. G. Frankl and S. N. Weiss. An experimental
+       when its size is controlled for.                                 comparison of the effectiveness of the all-uses and
+                                                                        all-edges adequacy criteria. In Proc. of the Symposium
+    · The strength of the relationship varies between software          on Testing, Analysis, and Verification, 1991.
+       systems; it is therefore not generally safe to assume
+       that effectiveness is strongly correlated with coverage.   [16] P. G. Frankl and S. N. Weiss. An experimental
+                                                                        comparison of the effectiveness of branch testing and
+    · The type of coverage used had little impact on the                data flow testing. IEEE Transactions on Soft. Eng.,
+       strength of the correlation.                                     19(8), 1993.
+
+   These results imply that high levels of coverage do not        [17] P. G. Frankl, S. N. Weiss, and C. Hu. All-uses vs
+indicate that a test suite is effective. Consequently, using a          mutation testing: an experimental comparison of
+fixed coverage value as a quality target is unlikely to produce         effectiveness. Journal of Systems and Software, 38(3),
+an effective test suite. In addition, complex coverage mea-             1997.
+surements may not provide enough additional information
+about the suite to justify the higher cost of measuring and       [18] J. D. Gibbons. Nonparametric Measures of Association.
+satisfying them.                                                        Sage Publications, 1993.
+
+9. REFERENCES                                                     [19] M. Gligoric, A. Groce, C. Zhang, R. Sharma, M. A.
+                                                                        Alipour, and D. Marinov. Comparing non-adequate test
+ [1] L. M. Adler. A modification of Kendall's tau for the               suites using coverage criteria. In Proc. of the Int'l
+      case of arbitrary ties in both rankings. Journal of the           Symp. on Soft. Testing and Analysis, 2013.
+      American Statistical Association, 52(277), 1957.
+                                                                  [20] R. Gopinath, C. Jenson, and A. Groce. Code coverage
+ [2] J. H. Andrews, L. C. Briand, and Y. Labiche. Is                    for suite evaluation by developers. In Proc. of the Int'l
+      mutation an appropriate tool for testing experiments?             Conf. on Soft. Eng., 2014.
+      In Proc. of the Int'l Conf. on Soft. Eng., 2005.
+                                                                  [21] J. P. Guilford. Fundamental Statistics in Psychology
+ [3] J. H. Andrews, L. C. Briand, Y. Labiche, and A. S.                 and Education. McGraw-Hill, 1942.
+      Namin. Using mutation analysis for assessing and
+      comparing testing coverage criteria. IEEE Transactions      [22] K. Hayhurst, D. Veerhusen, J. Chilenski, and
+      on Soft. Eng., 32(8), 2006.                                       L. Rierson. A practical tutorial on modified
+                                                                        condition/decision coverage. Technical report, NASA
+                                                                        Langley Research Center, 2001.
+
+                                                                  [23] HSQLDB. http://hsqldb.org.
+
+                                                                  [24] M. Hutchins, H. Foster, T. Goradia, and T. Ostrand.
+                                                                        Experiments of the effectiveness of dataflow- and
+                                                                        controlflow-based test adequacy criteria. In Proc. of the
+      Int'l Conf. on Soft. Eng., 1994.                           [32] A. J. Offutt. Investigations of the software testing
+                                                                       coupling effect. ACM Transactions on Soft. Eng. and
+[25] JFreeChart. http://jfree.org/jfreechart.                          Methodology, 1(1), 1992.
+
+[26] Joda Time. http://joda-time.sourceforge.net.                [33] A. J. Offutt and J. Pan. Detecting equivalent mutants
+                                                                       and the feasible path problem. In Proc. of the Conf. on
+[27] R. Just, D. Jalali, L. Inozemtseva, M. D. Ernst,                  Computer Assurance, 1996.
+      R. Holmes, and G. Fraser. Are mutants a valid
+      substitute for real faults in software testing? Technical  [34] W. Perry. Effective Methods for Software Testing.
+      Report UW-CSE-14-02-02, University of Washington,                Wiley Publishing, 2006.
+      March 2014.
+                                                                 [35] PIT. http://pitest.org/.
+[28] K. Kapoor. Formal analysis of coupling hypothesis for
+      logical faults. Innovations in Systems and Soft. Eng.,     [36] Randoop. https://code.google.com/p/randoop/.
+      2(2), 2006.
+                                                                 [37] R. Sharma. Guidelines for coverage-based comparisons
+[29] E. Kit. Software Testing in the Real World: Improving             of non-adequate test suites. Master's thesis, University
+      the Process. ACM Press, 1995.                                    of Illinois at Urbana-Champaign, 2013.
+
+[30] B. Marick. How to misuse code coverage. http://www.         [38] SLOCCount. http://dwheeler.com/sloccount.
+      exampler.com/testing-com/writings/coverage.pdf,
+      1997.                                                      [39] W. E. Wong, J. R. Horgan, S. London, and A. P.
+                                                                       Mathur. Effect of test set size and block coverage on
+[31] A. S. Namin and J. H. Andrews. The influence of size              the fault detection effectiveness. In Proc. of the Int'l
+      and coverage on test suite effectiveness. In Proc. of the        Symposium on Software Reliability Engineering, 1994.
+      Int'l Symposium on Software Testing and Analysis,
+      2009.
+
