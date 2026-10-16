@@ -1,0 +1,99 @@
+{
+  "id": "VbeGyH3R2_Y",
+  "title": "Static vs dynamic typed languages: an intentionally rigged experiment",
+  "channel": "Vivek Haldar",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCpXfS8bu7ILGCuOtsnJMtxQ",
+  "durationSec": 473,
+  "thumbnail": "https://i.ytimg.com/vi/VbeGyH3R2_Y/sddefault.jpg",
+  "summary": "Review of a Hanenberg experiment designed to favor dynamic typing: dynamic won on generics-heavy tasks, static won where the compiler located required changes.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/editor-type-errors-give-faster-feedback",
+      "stance": "asserts",
+      "quote": "the stat system identified all the places where changes needed to be made at compile time",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/complex-generic-type-annotations-slow-development",
+      "stance": "asserts",
+      "quote": "it is almost twice as fast to solve the problem in groovy a dynamically typed language",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Found in this 21-student study for Java generics; generalization beyond Java-style generics is uncertain.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Related work in the series: type casts slowed trivial tasks but not longer ones, and in Mayer et al. static typing cost more on simple tasks yet helped most precisely on tasks with complex nested generics, so simple tasks can suffer but generics were where static types paid off.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L255-L292",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/controlled-experiments-show-statically-typed-languages",
+      "stance": "asserts",
+      "quote": "this reinforces a lot of earlier studies that showed the usability benefits of statically typed languages",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Hanenberg's series found advantages for maintenance and API use, but earlier experiments found no or opposite effects, so 'well established' overstates it.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.2,
+          "note": "The one controlled experiment summarized here (Hanenberg, 49 students, custom language) found no significant positive impact of static types on development time or quality; the later Hanenberg-group experiments that did report usability advantages are not covered by this source.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L568-L577",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "This controlled within-subject experiment (33 subjects, Java vs Groovy) found static typing faster on 6 of 9 maintenance tasks and no task favouring dynamic typing, but no difference on semantic-error fixing, and the authors note earlier studies in the same series found dynamic advantages on some tasks and that the result hardly implies benefit for all tasks.",
+          "source": "software-practices/sources/kleinschmager2012-static-types-maintainability.txt#L498-L514",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "The paper's own literature review says existing evidence is partially contradictory, with some studies favouring dynamic, some static and some inconclusive; its experiment adds evidence for static typing on class-identification and type-error tasks but none on semantic-error tasks.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L157-L162",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/static-typing-forces-implementing-entire-interface",
+      "stance": "asserts",
+      "quote": "to solve this in a statically typed language you would have to implement all 26 methods",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "True of Java-style nominal interfaces; languages with structural typing or default methods avoid much of this cost.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

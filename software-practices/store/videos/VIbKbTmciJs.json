@@ -1,0 +1,68 @@
+{
+  "id": "VIbKbTmciJs",
+  "title": "The problem with comments -  Uncle Bob",
+  "channel": "Dev Tools Made Simple",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCc9psPH74QBAXXpWNe57etA",
+  "durationSec": 150,
+  "thumbnail": "https://i.ytimg.com/vi_webp/VIbKbTmciJs/sddefault.webp",
+  "summary": "Uncle Bob: comments are a failure to express intent in code and silently rot into misinformation.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/every-comment-failure-express-intent-code",
+      "stance": "asserts",
+      "quote": "every comment you write is a failure",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A coding doctrine about intent, not a measurable outcome.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "Interviewed developers listed the complete lack of comments as the single most negative aspect of the least understandable method and all said they would add comments to improve it, which runs against treating comments as failures; five-developer interview, and comment metrics showed no quantitative correlation.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L978-L982",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "Comments had only 33% relative predictive power for readability judgments, less than blank lines; the authors suggest comments appear where code was already less readable so the two balance out, giving neither strong support for comments nor for treating them as failures.",
+          "source": "software-practices/sources/buse2010-readability.txt#L622-L632",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/comments-restate-code-noise-drift-out",
+      "stance": "asserts",
+      "quote": "comments silently rot because no one maintains them",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/editors-render-comments-muted-colors-which",
+      "stance": "asserts",
+      "quote": "we paint our comments in colors that are easy to ignore because we don't want to see them",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Syntax highlighting conventions do de-emphasize comments; whether that causes neglect is untested.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

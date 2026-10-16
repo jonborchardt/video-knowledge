@@ -1,0 +1,75 @@
+{
+  "id": "adamtornhill-leprechauns",
+  "title": "The Leprechauns of Software Engineering",
+  "channel": "adamtornhill.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://adamtornhill.com/reviews/leprechauns.htm",
+  "summary": "Adam Tornhill reviews Bossavit's Leprechauns of Software Engineering: well-known claims like the cone of uncertainty and the 10x programmer lack supporting data.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/many-widely-repeated-software-engineering-facts",
+      "stance": "asserts",
+      "quote": "that data is 1) often not there, 2) measures something else, or 3) suffers serious methodical problems",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Bossavit's tracing of the cone of uncertainty, 10x and defect-cost claims to absent or weak sources is well documented.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "For agile specifically, the review grades the strength of evidence for benefits and limitations as very low: 25 of 33 studies lacked an appropriate recruitment strategy, 23 had no comparison group, only one mentioned researcher bias, and it calls this consistent with criticism of the sparse scientific support for agile claims.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L1263-L1272",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "One documented instance: the famous 28:1 programmer variability figure is wrong (two methodological mistakes, correct value 14:1), rests on 12 subjects, was published in an obscure journal, and kept being quoted after Dickey debunked it in 1981.",
+          "source": "software-practices/sources/prechelt1999-28to1-legend.txt#L84-L105",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "One worked example: the widely cited (119 papers, CACM research highlight) finding that language choice affects defect rates rested on mislabelled data, grep-based bug detection with 36% false positives and uncorrected multiple testing, and the reanalysis invalidated its key result.",
+          "source": "software-practices/sources/berger2019-languages-reproduction.txt#L1439-L1442",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/10x-spread-between-fastest-slowest-programmers",
+      "stance": "asserts",
+      "quote": "the 10x productivity difference between programmers",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/cone-uncertainty-estimation-has-empirical-basis",
+      "stance": "asserts",
+      "quote": "the cone of uncertainty",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Boehm presented it as a notional diagram; later project data did not show estimates narrowing as the cone predicts.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

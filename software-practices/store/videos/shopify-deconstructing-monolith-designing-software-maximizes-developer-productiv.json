@@ -1,0 +1,95 @@
+{
+  "id": "shopify-deconstructing-monolith-designing-software-maximizes-developer-productiv",
+  "title": "Deconstructing the Monolith - Shopify",
+  "channel": "Shopify",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://shopify.engineering/deconstructing-monolith-designing-software-maximizes-developer-productivity",
+  "summary": "Shopify explains why it chose a modular monolith over microservices: the unbounded monolith had become fragile and hard to learn, services would add pipelines and network cost, so it reorganised by domain and enforced boundaries with tooling.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/monoliths-without-enforced-boundaries-become-coupled",
+      "stance": "asserts",
+      "quote": "Making a seemingly innocuous change could trigger a cascade of unrelated test failures.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Coupling-defect and comprehension research supports it; Shopify's developer survey is a single case.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/single-process-monolith-right-default-microservices",
+      "stance": "asserts",
+      "quote": "no architecture is often the best architecture in the early days of a system",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
+      "stance": "asserts",
+      "quote": "A modular monolith is a system where all of the code powers a single application and there are strictly enforced boundaries between different domains.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/microservices-cost-more-short-term-rarely",
+      "stance": "asserts",
+      "quote": "communicating between services means crossing the network, which adds latency and decreases reliability with every call",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/moving-functionality-across-service-boundaries-far",
+      "stance": "asserts",
+      "quote": "large refactors across multiple services can be tedious, requiring changes across all dependent services and coordinating deploys",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/hype-drives-teams-adopt-microservices-they",
+      "stance": "asserts",
+      "quote": "Microservices surged in popularity in recent years and were touted as the end-all solution to all of the problems arising from monoliths.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/service-boundaries-usually-wrong-first-attempt",
+      "stance": "asserts",
+      "quote": "Designing a complex system of microservices before you have domain expertise is a risky move that too many software projects fall into.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/organising-code-business-domain-rather-technical",
+      "stance": "asserts",
+      "quote": "re-organize it by real-world concepts (like orders, shipping, inventory, and billing), in an attempt to make it easier to locate code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Package-by-feature is widely recommended; the evidence is practitioner experience.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/early-system-life-little-design-needed",
+      "stance": "asserts",
+      "quote": "in the early stages of most applications you can move very quickly with little design",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Fowler's design stamina hypothesis is a hypothesis; consistent with debt-payoff reasoning.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

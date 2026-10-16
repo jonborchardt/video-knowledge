@@ -1,0 +1,2076 @@
+{
+  "topics": [
+    {
+      "id": "software-practices",
+      "label": "Software practices",
+      "known": false,
+      "claims": [
+        {
+          "id": "software-practices/generated-code-volume-outruns-fixed-human",
+          "text": "AI-generated code volume outruns fixed human review capacity, making code review the bottleneck on shipping software",
+          "firstSeen": "_mi3alkqy4s"
+        },
+        {
+          "id": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+          "text": "Reviewer defect-finding effectiveness drops sharply once a single review exceeds a few hundred lines",
+          "firstSeen": "_mi3alkqy4s"
+        },
+        {
+          "id": "software-practices/change-passing-test-suite-weak-proxy",
+          "text": "A change passing its test suite is a weak proxy for whether a maintainer would actually merge it",
+          "firstSeen": "_mi3alkqy4s"
+        },
+        {
+          "id": "software-practices/running-several-independent-automated-review-passes",
+          "text": "Running several independent automated review passes and keeping only agreed findings reduces false positives and improves review quality",
+          "firstSeen": "_mi3alkqy4s"
+        },
+        {
+          "id": "software-practices/automated-code-reviewers-fooled-confidently-framed",
+          "text": "Automated code reviewers are fooled by confidently framed malicious changes far more often than human reviewers",
+          "firstSeen": "_mi3alkqy4s"
+        },
+        {
+          "id": "software-practices/teams-stop-reading-agent-written-code",
+          "text": "Teams that stop reading agent-written code accumulate hidden defects that later force large rewrites",
+          "firstSeen": "_mi3alkqy4s"
+        },
+        {
+          "id": "software-practices/assigning-people-review-code-full-time",
+          "text": "Assigning people to review code full time to absorb more volume burns reviewers out",
+          "firstSeen": "_mi3alkqy4s"
+        },
+        {
+          "id": "software-practices/human-role-code-review-shifting-reading",
+          "text": "The human role in code review is shifting from reading diffs to designing and tuning the systems that inspect code",
+          "firstSeen": "_mi3alkqy4s"
+        },
+        {
+          "id": "software-practices/writing-tests-after-code-leaves-holes",
+          "text": "Writing tests after the code leaves holes in the suite because hard-to-test code gets skipped",
+          "firstSeen": "4SIpyrko-x4"
+        },
+        {
+          "id": "software-practices/writing-tests-first-forces-code-decoupled",
+          "text": "Writing tests first forces the code to be decoupled and testable by construction",
+          "firstSeen": "4SIpyrko-x4"
+        },
+        {
+          "id": "software-practices/test-suite-known-gaps-gives-decision",
+          "text": "A test suite with known gaps gives no decision value when it passes, so it cannot be trusted",
+          "firstSeen": "4SIpyrko-x4"
+        },
+        {
+          "id": "software-practices/test-first-development-reduces-time-spent",
+          "text": "Test-first development reduces time spent debugging",
+          "firstSeen": "4SIpyrko-x4"
+        },
+        {
+          "id": "software-practices/making-failing-test-pass-gives-small",
+          "text": "Making a failing test pass gives a small reward that makes test-first more enjoyable than writing tests afterwards",
+          "firstSeen": "4SIpyrko-x4"
+        },
+        {
+          "id": "software-practices/trustworthy-automated-test-suite-lets-developers",
+          "text": "A trustworthy automated test suite lets developers change and deploy code without fear",
+          "firstSeen": "4SIpyrko-x4"
+        },
+        {
+          "id": "software-practices/having-whole-team-one-keyboard-eliminates",
+          "text": "Having the whole team at one keyboard eliminates waiting for answers to blocking questions",
+          "firstSeen": "5cvaCq1q9_E"
+        },
+        {
+          "id": "software-practices/mob-programming-finishes-stories-hours-took",
+          "text": "Mob programming finishes stories in hours that took individuals working separately weeks",
+          "firstSeen": "5cvaCq1q9_E"
+        },
+        {
+          "id": "software-practices/working-one-group-stream-work-removes",
+          "text": "Working as one group on one stream of work removes merge conflicts",
+          "firstSeen": "5cvaCq1q9_E"
+        },
+        {
+          "id": "software-practices/mob-programming-onboards-new-members-quickly",
+          "text": "Mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person",
+          "firstSeen": "5cvaCq1q9_E"
+        },
+        {
+          "id": "software-practices/switching-tasks-fill-time-while-blocked",
+          "text": "Switching tasks to fill time while blocked creates work-in-progress inventory instead of fixing the queueing problem",
+          "firstSeen": "5cvaCq1q9_E"
+        },
+        {
+          "id": "software-practices/sustained-mob-programming-requires-members-treat",
+          "text": "Sustained mob programming requires members to treat each other with kindness, consideration and respect",
+          "firstSeen": "5cvaCq1q9_E"
+        },
+        {
+          "id": "software-practices/pairing-mobbing-puts-best-each-participant",
+          "text": "Pairing or mobbing puts the best of each participant into the code and rarely the worst",
+          "firstSeen": "5cvaCq1q9_E"
+        },
+        {
+          "id": "software-practices/short-daily-retrospectives-keep-improvement-track",
+          "text": "Short daily retrospectives keep improvement on track better than infrequent longer ones",
+          "firstSeen": "5cvaCq1q9_E"
+        },
+        {
+          "id": "software-practices/static-typing-catches-type-errors-compile",
+          "text": "Static typing catches type errors at compile time before code reaches users",
+          "firstSeen": "87VOk4aoEkA"
+        },
+        {
+          "id": "software-practices/static-typing-yields-better-runtime-performance",
+          "text": "Static typing yields better runtime performance because the compiler knows each variable's memory layout",
+          "firstSeen": "87VOk4aoEkA"
+        },
+        {
+          "id": "software-practices/dynamic-typing-faster-prototyping-rapid-iteration",
+          "text": "Dynamic typing is faster for prototyping and rapid iteration",
+          "firstSeen": "87VOk4aoEkA"
+        },
+        {
+          "id": "software-practices/static-typing-suits-safety-performance-critical",
+          "text": "Static typing suits safety- and performance-critical domains while dynamic typing suits fast-iteration domains",
+          "firstSeen": "87VOk4aoEkA"
+        },
+        {
+          "id": "software-practices/most-software-developers-including-game-work",
+          "text": "Most software developers, including game developers, work roughly normal hours with only occasional overtime",
+          "firstSeen": "9IaKlOzUdmg"
+        },
+        {
+          "id": "software-practices/crunch-symptom-poor-planning-especially-failing",
+          "text": "Crunch is a symptom of poor planning, especially failing to schedule testing and iteration time",
+          "firstSeen": "9IaKlOzUdmg"
+        },
+        {
+          "id": "software-practices/sustained-crunch-lowers-productivity-employee-happiness",
+          "text": "Sustained crunch lowers productivity and employee happiness",
+          "firstSeen": "9IaKlOzUdmg"
+        },
+        {
+          "id": "software-practices/much-developer-overtime-self-imposed-passion",
+          "text": "Much developer overtime is self-imposed from passion rather than mandated by employers",
+          "firstSeen": "9IaKlOzUdmg"
+        },
+        {
+          "id": "software-practices/long-horizon-task-estimates-inaccurate-managers",
+          "text": "Long-horizon task estimates are inaccurate and managers should not rely on them",
+          "firstSeen": "9IaKlOzUdmg"
+        },
+        {
+          "id": "software-practices/smaller-companies-tend-have-somewhat-more",
+          "text": "Smaller companies tend to have somewhat more overtime than larger ones",
+          "firstSeen": "9IaKlOzUdmg"
+        },
+        {
+          "id": "software-practices/game-features-need-more-iteration-business",
+          "text": "Game features need more iteration than business software because feel and fun cannot be specified on paper",
+          "firstSeen": "9IaKlOzUdmg"
+        },
+        {
+          "id": "software-practices/long-lived-branches-delay-integration-produce",
+          "text": "Long-lived branches delay integration and produce merge conflicts that grow with team size",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/running-server-not-continuous-integration-branches",
+          "text": "Running a CI server is not continuous integration if branches live for days or weeks",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/trunk-based-development-one-small-change",
+          "text": "Trunk-based development with one small change per release increases release frequency and makes rollbacks easier",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/feature-flags-let-unfinished-work-merge",
+          "text": "Feature flags let unfinished work merge to trunk and decouple deployment from release",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/reusing-old-feature-flag-can-switch",
+          "text": "Reusing an old feature flag can switch on dormant code paths with catastrophic results",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/trunk-based-development-only-works-fast",
+          "text": "Trunk-based development only works with a fast comprehensive test suite and same-day code review",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/ephemeral-per-branch-environments-remove-bottleneck",
+          "text": "Ephemeral per-branch environments remove the bottleneck of shared test environments",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/trunk-based-development-unsuited-products-must",
+          "text": "Trunk-based development is unsuited to products that must tightly control released versions",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/developers-who-deploy-their-own-work",
+          "text": "Developers who deploy their own work to production are happier because they see its impact",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/feature-flags-carry-ongoing-removal-cost",
+          "text": "Feature flags carry an ongoing removal cost that teams must schedule and pay back",
+          "firstSeen": "DDkjBqlks40"
+        },
+        {
+          "id": "software-practices/writing-test-per-method-mocking-every",
+          "text": "Writing a test per method and mocking every dependency couples tests to implementation so refactoring breaks them",
+          "firstSeen": "EZ05e7EMOLM"
+        },
+        {
+          "id": "software-practices/writing-tests-slows-delivery-meaningful-fraction",
+          "text": "Writing tests slows delivery by a meaningful fraction compared with not writing them",
+          "firstSeen": "EZ05e7EMOLM"
+        },
+        {
+          "id": "software-practices/tdd-unit-isolation-test-not-class",
+          "text": "In TDD the unit of isolation is the test, not the class under test",
+          "firstSeen": "EZ05e7EMOLM"
+        },
+        {
+          "id": "software-practices/customer-readable-acceptance-test-suites-rarely",
+          "text": "Customer-readable acceptance test suites are rarely read by customers and carry a heavy maintenance burden",
+          "firstSeen": "EZ05e7EMOLM"
+        },
+        {
+          "id": "software-practices/getting-test-green-quick-dirty-code",
+          "text": "Getting a test to green with quick dirty code and then refactoring is faster than engineering the design up front",
+          "firstSeen": "EZ05e7EMOLM"
+        },
+        {
+          "id": "software-practices/refactoring-step-needs-new-tests-because",
+          "text": "The refactoring step needs no new tests because behaviour is unchanged and already covered",
+          "firstSeen": "EZ05e7EMOLM"
+        },
+        {
+          "id": "software-practices/tests-written-probe-implementation-details-should",
+          "text": "Tests written to probe implementation details should be deleted once they have served their purpose",
+          "firstSeen": "EZ05e7EMOLM"
+        },
+        {
+          "id": "software-practices/slow-driven-end-test-suites-fragile",
+          "text": "Slow UI-driven end-to-end test suites are fragile and break on cosmetic changes",
+          "firstSeen": "EZ05e7EMOLM"
+        },
+        {
+          "id": "software-practices/moving-open-plan-offices-reduces-face",
+          "text": "Moving to open-plan offices reduces face-to-face interaction and shifts communication to email and messaging",
+          "firstSeen": "FkBWLnkU-sM"
+        },
+        {
+          "id": "software-practices/open-plan-offices-increase-noise-visual",
+          "text": "Open-plan offices increase noise and visual distraction that impairs focused work",
+          "firstSeen": "FkBWLnkU-sM"
+        },
+        {
+          "id": "software-practices/alternating-collaboration-individual-work-produces-better",
+          "text": "Alternating collaboration with individual work produces better solutions than either constant collaboration or isolation",
+          "firstSeen": "FkBWLnkU-sM"
+        },
+        {
+          "id": "software-practices/taking-small-third-party-dependencies-trivial",
+          "text": "Taking on small third-party dependencies for trivial functions adds fragility out of proportion to the code saved",
+          "firstSeen": "FyCYva9DhsI"
+        },
+        {
+          "id": "software-practices/coding-conventions-spread-repetition-rather-understanding",
+          "text": "Coding conventions spread by repetition rather than understanding, producing cargo-cult practices",
+          "firstSeen": "FyCYva9DhsI"
+        },
+        {
+          "id": "software-practices/comments-restate-code-noise-drift-out",
+          "text": "Comments that restate code are noise and drift out of date because nothing checks them",
+          "firstSeen": "FyCYva9DhsI"
+        },
+        {
+          "id": "software-practices/work-expands-fill-time-headcount-given",
+          "text": "Work expands to fill the time and headcount given to it",
+          "firstSeen": "FyCYva9DhsI"
+        },
+        {
+          "id": "software-practices/applying-design-patterns-such-factories-everywhere",
+          "text": "Applying design patterns such as factories everywhere makes code harder to understand than direct code",
+          "firstSeen": "FyCYva9DhsI"
+        },
+        {
+          "id": "software-practices/names-carry-most-program-design-intent",
+          "text": "Names carry most of a program's design intent, so vague names like Manager signal weak design",
+          "firstSeen": "FyCYva9DhsI"
+        },
+        {
+          "id": "software-practices/logging-without-stated-requirements-grows-until",
+          "text": "Logging without stated requirements grows until it dominates the codebase",
+          "firstSeen": "FyCYva9DhsI"
+        },
+        {
+          "id": "software-practices/single-process-monolith-right-default-microservices",
+          "text": "A single-process monolith is the right default and microservices need a specific justifying outcome",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/main-benefits-microservices-independent-deployability-data",
+          "text": "The main benefits of microservices are independent deployability, data isolation and organisational autonomy",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/microservices-cost-more-short-term-rarely",
+          "text": "Microservices cost more in the short term and rarely save money",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/deploying-one-small-service-limits-scope",
+          "text": "Deploying one small service limits the scope and risk of each release compared with redeploying a whole monolith",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/coordination-cost-grows-faster-linearly-team",
+          "text": "Coordination cost grows faster than linearly with team count on a shared codebase, which service boundaries contain",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/process-boundaries-enforce-modularity-modules-fail",
+          "text": "Process boundaries enforce modularity that in-process modules fail to because languages let developers violate them",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/splitting-shared-relational-database-hardest-part",
+          "text": "Splitting a shared relational database is the hardest part of decomposition and gives up joins and transactions",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/adopting-microservices-without-changing-organisation-yields",
+          "text": "Adopting microservices without changing the organisation yields the costs without the benefits",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/services-always-change-together-should-merged",
+          "text": "Services that always change together should be merged or re-sliced",
+          "firstSeen": "GBTdnfD6s5Q"
+        },
+        {
+          "id": "software-practices/static-typing-produces-fewer-bugs-more",
+          "text": "Static typing produces fewer bugs and more readable code in large systems",
+          "firstSeen": "GqXpFycPWLE"
+        },
+        {
+          "id": "software-practices/type-inference-gives-static-typing-dynamic",
+          "text": "Type inference gives static typing with dynamic-like brevity, removing most of the old verbosity trade-off",
+          "firstSeen": "GqXpFycPWLE"
+        },
+        {
+          "id": "software-practices/dora-metrics-measure-delivery-velocity-stability",
+          "text": "DORA metrics measure delivery velocity and stability but do not translate directly into business outcomes",
+          "firstSeen": "H3nlvHQHb5E"
+        },
+        {
+          "id": "software-practices/dora-metrics-retrospective-cannot-acted-until",
+          "text": "DORA metrics are retrospective and cannot be acted on until after code has shipped",
+          "firstSeen": "H3nlvHQHb5E"
+        },
+        {
+          "id": "software-practices/pull-requests-spend-about-half-their",
+          "text": "Pull requests spend about half their lifetime idle waiting for someone",
+          "firstSeen": "H3nlvHQHb5E"
+        },
+        {
+          "id": "software-practices/small-pull-requests-picked-merged-faster",
+          "text": "Small pull requests are picked up and merged faster",
+          "firstSeen": "H3nlvHQHb5E"
+        },
+        {
+          "id": "software-practices/smaller-changes-mean-less-rework-fewer",
+          "text": "Smaller changes mean less rework, fewer incidents and faster restoration",
+          "firstSeen": "H3nlvHQHb5E"
+        },
+        {
+          "id": "software-practices/developers-not-care-about-dora-metrics",
+          "text": "Developers do not care about DORA metrics, only about merging their code quickly",
+          "firstSeen": "H3nlvHQHb5E"
+        },
+        {
+          "id": "software-practices/automatically-approving-trivial-changes-routing-risky",
+          "text": "Automatically approving trivial changes and routing risky ones to senior reviewers speeds flow without losing safety",
+          "firstSeen": "H3nlvHQHb5E"
+        },
+        {
+          "id": "software-practices/line-coverage-shows-code-executed-not",
+          "text": "Line coverage shows code was executed, not that the tests check its behaviour",
+          "firstSeen": "HBqhjLaZejA"
+        },
+        {
+          "id": "software-practices/mutation-score-measures-test-suite-quality",
+          "text": "Mutation score measures test suite quality better than coverage does",
+          "firstSeen": "HBqhjLaZejA"
+        },
+        {
+          "id": "software-practices/surviving-mutant-reveals-either-missing-test",
+          "text": "A surviving mutant reveals either a missing test or code that can be removed",
+          "firstSeen": "HBqhjLaZejA"
+        },
+        {
+          "id": "software-practices/mutation-testing-too-slow-run-routinely",
+          "text": "Mutation testing is too slow to run routinely without parallelisation or incremental selection",
+          "firstSeen": "HBqhjLaZejA"
+        },
+        {
+          "id": "software-practices/equivalent-mutants-cannot-detected-automatically-require",
+          "text": "Equivalent mutants cannot be detected automatically and require human judgment",
+          "firstSeen": "HBqhjLaZejA"
+        },
+        {
+          "id": "software-practices/higher-level-behavioural-tests-make-mutation",
+          "text": "Higher-level behavioural tests make mutation testing more practical than many fine-grained unit tests",
+          "firstSeen": "HBqhjLaZejA"
+        },
+        {
+          "id": "software-practices/full-line-coverage-relatively-easy-reach",
+          "text": "Full line coverage is relatively easy to reach when a team is motivated",
+          "firstSeen": "HBqhjLaZejA"
+        },
+        {
+          "id": "software-practices/reviewer-can-take-automated-first-pass",
+          "text": "An AI reviewer can take an automated first pass at a pull request before a human reviews it.",
+          "firstSeen": "IZXv6a78NDw"
+        },
+        {
+          "id": "software-practices/summarizing-change-risks-helps-reviewer-understand",
+          "text": "Summarizing a change and its risks helps a reviewer understand unfamiliar code faster.",
+          "firstSeen": "IZXv6a78NDw"
+        },
+        {
+          "id": "software-practices/keeping-review-feedback-discussion-fixes-one",
+          "text": "Keeping review feedback, discussion and fixes in one tool removes the context switching that slows review.",
+          "firstSeen": "IZXv6a78NDw"
+        },
+        {
+          "id": "software-practices/software-delivery-speed-stability-move-together",
+          "text": "Software delivery speed and stability move together rather than trading off; the best teams get both.",
+          "firstSeen": "KoL_or1P4f4"
+        },
+        {
+          "id": "software-practices/industry-regulatory-status-not-predict-whether",
+          "text": "Industry and regulatory status do not predict whether DevOps practices improve delivery performance.",
+          "firstSeen": "KoL_or1P4f4"
+        },
+        {
+          "id": "software-practices/emergency-changes-made-under-stress-usually",
+          "text": "Emergency changes made under stress usually skip testing, which is when testing is most needed.",
+          "firstSeen": "KoL_or1P4f4"
+        },
+        {
+          "id": "software-practices/high-performing-teams-rely-automated-test",
+          "text": "High-performing teams rely on automated test suites and reserve manual effort for exploratory testing.",
+          "firstSeen": "KoL_or1P4f4"
+        },
+        {
+          "id": "software-practices/infrequent-releases-leave-security-patches-compliance",
+          "text": "Infrequent releases leave security patches and compliance updates waiting months to reach production.",
+          "firstSeen": "KoL_or1P4f4"
+        },
+        {
+          "id": "software-practices/shipping-code-has-not-exercised-unit",
+          "text": "Shipping code that has not been exercised by a unit test is unprofessional, and TDD is the surest way to avoid it.",
+          "firstSeen": "KtHQGs3zFAM"
+        },
+        {
+          "id": "software-practices/driving-architecture-unit-tests-without-front",
+          "text": "Driving architecture from unit tests without an up-front domain model yields a procedural, bottom-up design that cannot be refactored out of.",
+          "firstSeen": "KtHQGs3zFAM"
+        },
+        {
+          "id": "software-practices/architecture-should-evolve-incrementally-informed-executing",
+          "text": "Architecture should evolve incrementally, informed by executing code and tests, rather than be designed in full up front.",
+          "firstSeen": "KtHQGs3zFAM"
+        },
+        {
+          "id": "software-practices/some-domain-structure-must-fixed-front",
+          "text": "Some domain structure must be fixed up front because incremental refactoring cannot reach the right architecture from a naive starting point.",
+          "firstSeen": "KtHQGs3zFAM"
+        },
+        {
+          "id": "software-practices/design-contract-covers-whole-input-range",
+          "text": "Design by contract covers the whole input range of a method, giving broader assurance than sampled unit tests.",
+          "firstSeen": "KtHQGs3zFAM"
+        },
+        {
+          "id": "software-practices/class-level-unit-tests-hard-trace",
+          "text": "Class-level unit tests are hard to trace to business value.",
+          "firstSeen": "KtHQGs3zFAM"
+        },
+        {
+          "id": "software-practices/10x-spread-between-fastest-slowest-programmers",
+          "text": "The 10x spread between fastest and slowest programmers is mostly noise: a programmer's own task-to-task variation is as large as the variation between programmers.",
+          "firstSeen": "MvLt_YppLmA"
+        },
+        {
+          "id": "software-practices/experience-lines-code-written-degrees-held",
+          "text": "Experience, lines of code written and degrees held did not predict programmer productivity.",
+          "firstSeen": "MvLt_YppLmA"
+        },
+        {
+          "id": "software-practices/productivity-differences-across-programmers-follow-long",
+          "text": "Productivity differences across programmers follow a long-tailed log-normal distribution, not a bell curve.",
+          "firstSeen": "MvLt_YppLmA"
+        },
+        {
+          "id": "software-practices/small-tasks-easier-estimate-reveal-runaway",
+          "text": "Small tasks are easier to estimate and reveal runaway work early enough for the team to intervene.",
+          "firstSeen": "MvLt_YppLmA"
+        },
+        {
+          "id": "software-practices/shortening-sprints-too-far-increases-estimation",
+          "text": "Shortening sprints too far increases estimation uncertainty because each sprint samples less work.",
+          "firstSeen": "MvLt_YppLmA"
+        },
+        {
+          "id": "software-practices/hiring-super-programmers-poor-route-team",
+          "text": "Hiring super-programmers is a poor route to team productivity compared with improving the working environment.",
+          "firstSeen": "MvLt_YppLmA"
+        },
+        {
+          "id": "software-practices/tdd-biases-design-toward-extra-abstraction",
+          "text": "TDD biases design toward extra abstraction and indirection, which harms clarity unless the designer pushes back.",
+          "firstSeen": "OAarkiAcsAk"
+        },
+        {
+          "id": "software-practices/unit-tests-alone-cannot-catch-integration",
+          "text": "Unit tests alone cannot catch integration errors, so a suite of only unit tests does not make code self-testing.",
+          "firstSeen": "OAarkiAcsAk"
+        },
+        {
+          "id": "software-practices/right-mix-unit-higher-level-tests",
+          "text": "The right mix of unit and higher-level tests depends on where a system's complexity lives, not on fixed pyramid ratios.",
+          "firstSeen": "OAarkiAcsAk"
+        },
+        {
+          "id": "software-practices/higher-level-tests-often-pay-back",
+          "text": "Higher-level tests often pay back better than unit tests at finding bugs in integration-heavy code.",
+          "firstSeen": "OAarkiAcsAk"
+        },
+        {
+          "id": "software-practices/estimates-become-deadlines-drive-overtime-destroys",
+          "text": "Estimates become deadlines, and deadlines drive the overtime that destroys sustainable pace.",
+          "firstSeen": "QVBlnCTu9Ms"
+        },
+        {
+          "id": "software-practices/hitting-estimate-has-value-software-built",
+          "text": "Hitting an estimate has no value if the software built is the wrong thing.",
+          "firstSeen": "QVBlnCTu9Ms"
+        },
+        {
+          "id": "software-practices/story-points-get-converted-back-time",
+          "text": "Story points get converted back into time, defeating their purpose of keeping estimation away from the clock.",
+          "firstSeen": "QVBlnCTu9Ms"
+        },
+        {
+          "id": "software-practices/team-velocity-mostly-set-organizational-obstacles",
+          "text": "Team velocity is mostly set by organizational obstacles, so teams cannot raise it by working harder.",
+          "firstSeen": "QVBlnCTu9Ms"
+        },
+        {
+          "id": "software-practices/simply-counting-completed-stories-forecasts-delivery",
+          "text": "Simply counting completed stories forecasts delivery as accurately as story-point estimation.",
+          "firstSeen": "QVBlnCTu9Ms"
+        },
+        {
+          "id": "software-practices/most-long-backlog-wasted-because-items",
+          "text": "Most of a long backlog is wasted because items far down will change before they are reached.",
+          "firstSeen": "QVBlnCTu9Ms"
+        },
+        {
+          "id": "software-practices/short-fixed-budget-increments-let-business",
+          "text": "Short fixed-budget increments let the business decide early whether to continue or kill a project, reducing risk without estimates.",
+          "firstSeen": "QVBlnCTu9Ms"
+        },
+        {
+          "id": "software-practices/organizations-high-software-delivery-performance-more",
+          "text": "Organizations with high software delivery performance are more likely to meet their commercial and non-commercial goals.",
+          "firstSeen": "RBuPlMTXuFc"
+        },
+        {
+          "id": "software-practices/maturity-models-out-date-too-quickly",
+          "text": "Maturity models go out of date too quickly to guide technology transformations.",
+          "firstSeen": "RBuPlMTXuFc"
+        },
+        {
+          "id": "software-practices/technology-alone-does-not-raise-performance",
+          "text": "Technology alone does not raise performance; it must be combined with lean management and organizational culture.",
+          "firstSeen": "RBuPlMTXuFc"
+        },
+        {
+          "id": "software-practices/loosely-coupled-architecture-lets-teams-test",
+          "text": "A loosely coupled architecture that lets teams test, deploy and change independently predicts delivery performance more than the platform or technology used.",
+          "firstSeen": "RBuPlMTXuFc"
+        },
+        {
+          "id": "software-practices/lightweight-change-approval-within-team-outperforms",
+          "text": "Lightweight change approval within the team outperforms heavyweight external change approval boards.",
+          "firstSeen": "RBuPlMTXuFc"
+        },
+        {
+          "id": "software-practices/generative-high-trust-blameless-organizational-culture",
+          "text": "A generative, high-trust, blameless organizational culture predicts software delivery and organizational performance.",
+          "firstSeen": "RBuPlMTXuFc"
+        },
+        {
+          "id": "software-practices/transformational-leadership-necessary-but-not-sufficient",
+          "text": "Transformational leadership is necessary but not sufficient for high delivery performance.",
+          "firstSeen": "RBuPlMTXuFc"
+        },
+        {
+          "id": "software-practices/high-performing-delivery-teams-report-less",
+          "text": "High-performing delivery teams report less deployment pain and burnout and are more likely to recommend their workplace.",
+          "firstSeen": "RBuPlMTXuFc"
+        },
+        {
+          "id": "software-practices/fatigue-raises-rate-catastrophic-errors-overworked",
+          "text": "Fatigue raises the rate of catastrophic errors, so an overworked team can make net negative progress.",
+          "firstSeen": "Sb2U_9IGgc0"
+        },
+        {
+          "id": "software-practices/long-working-hours-raise-rates-injury",
+          "text": "Long working hours raise rates of injury, illness, cardiovascular disease and mental health problems through chronic stress.",
+          "firstSeen": "Sb2U_9IGgc0"
+        },
+        {
+          "id": "software-practices/crunch-does-not-improve-product-outcomes",
+          "text": "Crunch does not improve product outcomes; it correlates with slightly worse ones.",
+          "firstSeen": "Sb2U_9IGgc0"
+        },
+        {
+          "id": "software-practices/sleep-deprivation-impairs-cognition-like-alcohol",
+          "text": "Sleep deprivation impairs cognition like alcohol intoxication and blinds people to their own impairment.",
+          "firstSeen": "Sb2U_9IGgc0"
+        },
+        {
+          "id": "software-practices/caffeine-tolerance-builds-within-days-cannot",
+          "text": "Caffeine tolerance builds within days, so it cannot offset extended overtime.",
+          "firstSeen": "Sb2U_9IGgc0"
+        },
+        {
+          "id": "software-practices/letting-workers-choose-their-own-hours",
+          "text": "Letting workers choose their own hours improves satisfaction, health and productivity.",
+          "firstSeen": "Sb2U_9IGgc0"
+        },
+        {
+          "id": "software-practices/full-day-rest-after-missed-night",
+          "text": "A full day of rest after a missed night of sleep does not restore performance to baseline.",
+          "firstSeen": "Sb2U_9IGgc0"
+        },
+        {
+          "id": "software-practices/rewriting-working-system-scratch-throws-away",
+          "text": "Rewriting a working system from scratch throws away accumulated bug fixes and hands years of lead to competitors.",
+          "firstSeen": "SoHc1Gfykb8"
+        },
+        {
+          "id": "software-practices/code-harder-read-write-programmers-misjudge",
+          "text": "Code is harder to read than to write, so programmers misjudge old code as a mess.",
+          "firstSeen": "SoHc1Gfykb8"
+        },
+        {
+          "id": "software-practices/architectural-problems-can-fixed-incremental-refactoring",
+          "text": "Architectural problems can be fixed by incremental refactoring without discarding the codebase.",
+          "firstSeen": "SoHc1Gfykb8"
+        },
+        {
+          "id": "software-practices/rewrite-team-unlikely-better-because-lacks",
+          "text": "A rewrite team is unlikely to do better because it lacks the original team's experience and repeats old mistakes.",
+          "firstSeen": "SoHc1Gfykb8"
+        },
+        {
+          "id": "software-practices/performance-problems-concentrate-small-part-system",
+          "text": "Performance problems concentrate in a small part of a system, so targeted optimization beats a full rewrite.",
+          "firstSeen": "SoHc1Gfykb8"
+        },
+        {
+          "id": "software-practices/dynamic-languages-became-popular-because-they",
+          "text": "Dynamic languages became popular because they gave fast feedback and concise syntax for early web work, not because dynamic typing is inherently better.",
+          "firstSeen": "Tml94je2edk"
+        },
+        {
+          "id": "software-practices/editor-type-errors-give-faster-feedback",
+          "text": "In-editor type errors give faster feedback than running the program and tracing a crash.",
+          "firstSeen": "Tml94je2edk"
+        },
+        {
+          "id": "software-practices/gradual-typing-requires-more-complex-type",
+          "text": "Gradual typing requires a more complex type system and keeps dynamic runtime overhead, so it is not the best of both worlds.",
+          "firstSeen": "Tml94je2edk"
+        },
+        {
+          "id": "software-practices/non-blocking-type-errors-keep-fast",
+          "text": "Non-blocking type errors keep the fast feedback of static types without preventing you from running code or tests.",
+          "firstSeen": "Tml94je2edk"
+        },
+        {
+          "id": "software-practices/nearly-every-mainstream-language-emerged-after",
+          "text": "Nearly every mainstream language that emerged after the 2000s is statically typed.",
+          "firstSeen": "Tml94je2edk"
+        },
+        {
+          "id": "software-practices/pull-request-review-delays-feedback-pushes",
+          "text": "Pull-request review delays feedback and pushes developers to batch changes, making daily integration impossible.",
+          "firstSeen": "UQrlEXU6RM8"
+        },
+        {
+          "id": "software-practices/asynchronous-review-loses-two-way-conversation",
+          "text": "Asynchronous review loses the two-way conversation that makes review educational and lets the author explain intent.",
+          "firstSeen": "UQrlEXU6RM8"
+        },
+        {
+          "id": "software-practices/pull-requests-designed-gatekeep-untrusted-open",
+          "text": "Pull requests were designed to gatekeep untrusted open-source contributors and fit poorly inside a trusted team.",
+          "firstSeen": "UQrlEXU6RM8"
+        },
+        {
+          "id": "software-practices/pair-programming-provides-continuous-code-review",
+          "text": "Pair programming provides continuous code review without adding a separate review step that slows delivery.",
+          "firstSeen": "UQrlEXU6RM8"
+        },
+        {
+          "id": "software-practices/most-developers-who-try-pair-programming",
+          "text": "Most developers who try pair programming end up preferring it.",
+          "firstSeen": "UQrlEXU6RM8"
+        },
+        {
+          "id": "software-practices/pairs-sustain-focus-better-individuals-working",
+          "text": "Pairs sustain focus better than individuals working alone.",
+          "firstSeen": "UQrlEXU6RM8"
+        },
+        {
+          "id": "software-practices/every-comment-failure-express-intent-code",
+          "text": "Every comment is a failure to express intent in code and should be treated as a necessary evil.",
+          "firstSeen": "VIbKbTmciJs"
+        },
+        {
+          "id": "software-practices/editors-render-comments-muted-colors-which",
+          "text": "Editors render comments in muted colors, which trains developers to ignore and neglect them.",
+          "firstSeen": "VIbKbTmciJs"
+        },
+        {
+          "id": "software-practices/complex-generic-type-annotations-slow-development",
+          "text": "Complex generic type annotations slow development in statically typed languages on simple algorithmic tasks.",
+          "firstSeen": "VbeGyH3R2_Y"
+        },
+        {
+          "id": "software-practices/controlled-experiments-show-statically-typed-languages",
+          "text": "Controlled experiments show statically typed languages have usability advantages over dynamically typed ones.",
+          "firstSeen": "VbeGyH3R2_Y"
+        },
+        {
+          "id": "software-practices/static-typing-forces-implementing-entire-interface",
+          "text": "Static typing forces implementing an entire interface up front even when only part of it is used.",
+          "firstSeen": "VbeGyH3R2_Y"
+        },
+        {
+          "id": "software-practices/most-software-projects-run-late-over",
+          "text": "Most software projects run late or over budget, with few finishing early.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/paper-introduced-waterfall-diagram-warned-approach",
+          "text": "The paper that introduced the waterfall diagram warned that the approach was risky and invited failure.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/replacing-guesswork-measured-experiments-what-makes",
+          "text": "Replacing guesswork with measured experiments is what makes software development an engineering discipline.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/continuous-delivery-yields-order-magnitude-improvements",
+          "text": "Continuous delivery yields order-of-magnitude improvements in quality and efficiency, not incremental gains.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/short-cycle-times-force-small-teams",
+          "text": "Short cycle times force small teams, automation and fewer handoffs, so continuous delivery drives out lean and agile practices as a side effect.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/automating-everything-except-creative-judgment-makes",
+          "text": "Automating everything except creative judgment makes releases repeatable and reliable because humans are not.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/automated-test-investment-permanently-prevents-class",
+          "text": "An automated test is an investment that permanently prevents the class of problem it checks.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/adopting-continuous-delivery-shifts-development-effort",
+          "text": "Adopting continuous delivery shifts development effort from branch merging and support to new features and lowers cost per product.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/continuous-delivery-pipeline-gives-regulated-environments",
+          "text": "A continuous delivery pipeline gives regulated environments end-to-end traceability as a side effect.",
+          "firstSeen": "Viv7bs99K0U"
+        },
+        {
+          "id": "software-practices/small-functions-easier-read-modify-but",
+          "text": "Small functions are easier to read and modify but harder to debug, so the evidence for them is mixed.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/abbreviated-identifiers-harder-debug-full-word",
+          "text": "Abbreviated identifiers are no harder to debug than full-word identifiers.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/code-smells-mark-where-bugs-likely",
+          "text": "Code smells mark where bugs are likely, but fixing the smells does not remove the bugs.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/large-scale-repository-studies-claiming-some",
+          "text": "Large-scale repository studies claiming some languages produce fewer bugs did not survive replication.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/test-driven-development-produces-better-quality",
+          "text": "Test-driven development produces no better quality or productivity than other disciplined testing approaches.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/pair-programming-shows-little-measurable-effect",
+          "text": "Pair programming shows little measurable effect on defects or productivity in controlled studies.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/code-review-catches-most-defects-reviewed",
+          "text": "Code review catches most of the defects in reviewed code.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/most-code-review-findings-maintainability-improvements",
+          "text": "Most code review findings are maintainability improvements rather than functional bugs.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/sleep-stress-hours-worked-affect-output",
+          "text": "Sleep, stress and hours worked affect output more than any technical practice.",
+          "firstSeen": "WELBnE33dpY"
+        },
+        {
+          "id": "software-practices/open-plan-offices-adopted-mainly-because",
+          "text": "Open-plan offices are adopted mainly because they cut real-estate cost per worker.",
+          "firstSeen": "YG1two-bHqs"
+        },
+        {
+          "id": "software-practices/how-much-invest-tests-depends-required",
+          "text": "How much to invest in tests depends on required feedback frequency, fidelity, overhead and the expected lifespan of the code.",
+          "firstSeen": "YNw4baDz6WA"
+        },
+        {
+          "id": "software-practices/automated-tests-give-little-feedback-whether",
+          "text": "Automated tests give little feedback on whether a feature serves users or whether the codebase is healthy.",
+          "firstSeen": "YNw4baDz6WA"
+        },
+        {
+          "id": "software-practices/confidence-programmer-written-tests-led-many",
+          "text": "Confidence from programmer-written tests led many teams to drop QA and ship lower quality.",
+          "firstSeen": "YNw4baDz6WA"
+        },
+        {
+          "id": "software-practices/strict-tdd-which-forbids-production-code",
+          "text": "Strict TDD, which forbids production code without a failing test, is incompatible with trading off coverage by criticality.",
+          "firstSeen": "YNw4baDz6WA"
+        },
+        {
+          "id": "software-practices/programmers-taking-responsibility-quality-large-improvement",
+          "text": "Programmers taking responsibility for quality was a large improvement over throwing code over the wall to QA.",
+          "firstSeen": "YNw4baDz6WA"
+        },
+        {
+          "id": "software-practices/automating-scripted-checks-lets-teams-get",
+          "text": "Automating scripted QA checks lets teams get release answers in hours instead of weeks.",
+          "firstSeen": "YNw4baDz6WA"
+        },
+        {
+          "id": "software-practices/call-production-teaches-developers-which-tests",
+          "text": "Being on call for production teaches developers which tests and feedback loops they are missing.",
+          "firstSeen": "YNw4baDz6WA"
+        },
+        {
+          "id": "software-practices/agile-has-turned-adjective-product-sold",
+          "text": "Agile has been turned from an adjective into a product sold through certification, training and consultancy, losing the original values",
+          "firstSeen": "a-BOSpxYJ9M"
+        },
+        {
+          "id": "software-practices/software-development-rule-universal-every-practice",
+          "text": "No software development rule is universal; every practice only works in a context",
+          "firstSeen": "a-BOSpxYJ9M"
+        },
+        {
+          "id": "software-practices/once-developer-has-internalised-test-driven",
+          "text": "Once a developer has internalised test-driven design thinking, the design benefit remains even if the tests are no longer written first",
+          "firstSeen": "a-BOSpxYJ9M"
+        },
+        {
+          "id": "software-practices/testing-advocacy-has-become-dogma-shames",
+          "text": "Testing advocacy has become a dogma that shames developers who do not follow it",
+          "firstSeen": "a-BOSpxYJ9M"
+        },
+        {
+          "id": "software-practices/scaled-agile-frameworks-appeal-large-organisations",
+          "text": "Scaled agile frameworks appeal to large organisations because they look complex, not because they are shown to work",
+          "firstSeen": "a-BOSpxYJ9M"
+        },
+        {
+          "id": "software-practices/good-design-one-easier-change-bad",
+          "text": "A good design is one that is easier to change than a bad design, and every design principle follows from that",
+          "firstSeen": "a-BOSpxYJ9M"
+        },
+        {
+          "id": "software-practices/agility-means-taking-small-step-evaluating",
+          "text": "Agility means taking a small step, evaluating the result and repeating, rather than following a prescribed method",
+          "firstSeen": "a-BOSpxYJ9M"
+        },
+        {
+          "id": "software-practices/short-certification-courses-produce-practitioners-who",
+          "text": "Short certification courses produce practitioners who follow prescribed steps without understanding why",
+          "firstSeen": "a-BOSpxYJ9M"
+        },
+        {
+          "id": "software-practices/some-programmers-vastly-more-productive-their",
+          "text": "Some programmers are vastly more productive than their typical peers",
+          "firstSeen": "aDCOuZ80lDQ"
+        },
+        {
+          "id": "software-practices/rapid-individual-output-often-comes-cost",
+          "text": "Rapid individual output often comes at the cost of maintainability that the rest of the team pays for",
+          "firstSeen": "aDCOuZ80lDQ"
+        },
+        {
+          "id": "software-practices/most-software-effort-goes-understanding-maintaining",
+          "text": "Most software effort goes into understanding, maintaining, extending and operating code rather than writing it",
+          "firstSeen": "aDCOuZ80lDQ"
+        },
+        {
+          "id": "software-practices/excellence-engineering-takes-different-forms-few",
+          "text": "Excellence in engineering takes different forms; a few well-judged lines can be worth more than high-volume output",
+          "firstSeen": "aDCOuZ80lDQ"
+        },
+        {
+          "id": "software-practices/pair-finishes-task-faster-one-person",
+          "text": "A pair finishes a task faster than one person but spends more total person-hours on it",
+          "firstSeen": "aItVJprLYkg"
+        },
+        {
+          "id": "software-practices/pairing-pays-off-novel-hard-work",
+          "text": "Pairing pays off on novel, hard work and wastes effort on routine or repetitive tasks",
+          "firstSeen": "aItVJprLYkg"
+        },
+        {
+          "id": "software-practices/skill-mismatch-within-pair-matters-little",
+          "text": "Skill mismatch within a pair matters little; every expert and novice combination produces value",
+          "firstSeen": "aItVJprLYkg"
+        },
+        {
+          "id": "software-practices/many-widely-repeated-software-engineering-facts",
+          "text": "Many widely repeated software engineering facts trace back to sources that are missing, measure something else, or are methodologically flawed",
+          "firstSeen": "adamtornhill-leprechauns"
+        },
+        {
+          "id": "software-practices/cone-uncertainty-estimation-has-empirical-basis",
+          "text": "The cone of uncertainty in estimation has no empirical basis",
+          "firstSeen": "adamtornhill-leprechauns"
+        },
+        {
+          "id": "software-practices/story-point-velocity-only-stable-while",
+          "text": "Story-point velocity is only stable while the team is stable; adding or removing people changes it",
+          "firstSeen": "allankelly-story-points-considered-harmful-1-of-4"
+        },
+        {
+          "id": "software-practices/story-points-forecast-delivery-only-average",
+          "text": "Story points forecast delivery only on average across several iterations, never for a single sprint",
+          "firstSeen": "allankelly-story-points-considered-harmful-1-of-4"
+        },
+        {
+          "id": "software-practices/story-point-estimation-sprint-commitment-alternative",
+          "text": "Story-point estimation and sprint commitment are alternative ways to fill an iteration, not complements",
+          "firstSeen": "allankelly-story-points-considered-harmful-1-of-4"
+        },
+        {
+          "id": "software-practices/automated-formatting-static-analysis-before-review",
+          "text": "Automated formatting and static analysis before review let reviewers focus on design and maintainability",
+          "firstSeen": "avX6Paj5Wes"
+        },
+        {
+          "id": "software-practices/code-review-major-channel-learning-knowledge",
+          "text": "Code review is a major channel for learning and knowledge transfer, especially for newcomers",
+          "firstSeen": "avX6Paj5Wes"
+        },
+        {
+          "id": "software-practices/extensive-automated-pre-submit-checks-catch",
+          "text": "Extensive automated pre-submit checks catch most breaking changes before they are merged",
+          "firstSeen": "avX6Paj5Wes"
+        },
+        {
+          "id": "software-practices/newly-joined-engineers-receive-most-review",
+          "text": "Newly joined engineers receive the most review comments, and the count falls with tenure",
+          "firstSeen": "avX6Paj5Wes"
+        },
+        {
+          "id": "software-practices/overly-harsh-demanding-reviews-discourage-future",
+          "text": "Overly harsh or demanding reviews discourage future contributions",
+          "firstSeen": "avX6Paj5Wes"
+        },
+        {
+          "id": "software-practices/tests-serve-precise-unambiguous-low-level",
+          "text": "Tests serve as precise, unambiguous low-level documentation of the system",
+          "firstSeen": "blog-cleancoder-monogamoustdd"
+        },
+        {
+          "id": "software-practices/gui-driven-integration-tests-cannot-reach",
+          "text": "GUI-driven integration tests cannot reach a large fraction of code such as error handling and edge cases",
+          "firstSeen": "blog-cleancoder-monogamoustdd"
+        },
+        {
+          "id": "software-practices/keeping-code-clean-enough-keep-development",
+          "text": "Keeping code clean enough to keep development fast is worth more than the cost of building a trustworthy test suite",
+          "firstSeen": "blog-cleancoder-monogamoustdd"
+        },
+        {
+          "id": "software-practices/focused-collaborative-work-need-different-physical",
+          "text": "Focused and collaborative work need different physical spaces",
+          "firstSeen": "blog-glitch-beyond-open-offices-the-new-fog-creek-headquarters"
+        },
+        {
+          "id": "software-practices/workspace-design-fundamental-part-how-company",
+          "text": "Workspace design is a fundamental part of how a company takes care of its people",
+          "firstSeen": "blog-glitch-beyond-open-offices-the-new-fog-creek-headquarters"
+        },
+        {
+          "id": "software-practices/claim-defect-fix-cost-rises-exponentially",
+          "text": "The claim that defect fix cost rises exponentially by lifecycle phase has no verifiable measurement behind it",
+          "firstSeen": "blog-glitch-the-10x-programmer-and-other-myths"
+        },
+        {
+          "id": "software-practices/software-project-failure-rates-crisis-figures",
+          "text": "Software project failure rates and crisis figures are exaggerated and often based on opinion surveys",
+          "firstSeen": "blog-glitch-the-10x-programmer-and-other-myths"
+        },
+        {
+          "id": "software-practices/software-folklore-spreads-because-field-fashion",
+          "text": "Software folklore spreads because the field is fashion-driven and debunking costs more effort than asserting",
+          "firstSeen": "blog-glitch-the-10x-programmer-and-other-myths"
+        },
+        {
+          "id": "software-practices/easy-repeat-claims-act-curiosity-stoppers",
+          "text": "Easy-to-repeat claims act as curiosity stoppers that prevent investigating what actually makes projects succeed",
+          "firstSeen": "blog-glitch-the-10x-programmer-and-other-myths"
+        },
+        {
+          "id": "software-practices/measuring-software-work-man-months-misleading",
+          "text": "Measuring software work in man-months is misleading because adding people does not add proportional progress",
+          "firstSeen": "blog-pragmaticengineer-the-10x-engineer-evolution"
+        },
+        {
+          "id": "software-practices/apparent-standout-productivity-can-reflect-tenure",
+          "text": "Apparent standout productivity can reflect tenure, project selection, information hoarding or credit-taking rather than skill",
+          "firstSeen": "blog-pragmaticengineer-the-10x-engineer-evolution"
+        },
+        {
+          "id": "software-practices/version-control-code-review-let-junior",
+          "text": "Version control and code review let junior engineers write production code safely, replacing hierarchical chief-programmer teams",
+          "firstSeen": "blog-pragmaticengineer-the-10x-engineer-evolution"
+        },
+        {
+          "id": "software-practices/preferring-runtime-polymorphism-over-switch-statements",
+          "text": "Preferring runtime polymorphism over switch statements makes code slower by forcing pointer indirection and hiding the code path from the compiler",
+          "firstSeen": "computerenhance-clean-code-horrible-performance"
+        },
+        {
+          "id": "software-practices/fusing-data-layout-operation-table-driven",
+          "text": "Fusing data layout with the operation in table-driven, data-oriented code can be an order of magnitude faster than encapsulated class hierarchies",
+          "firstSeen": "computerenhance-clean-code-horrible-performance"
+        },
+        {
+          "id": "software-practices/following-clean-code-structure-rules-can",
+          "text": "Following clean-code structure rules can cost performance equivalent to a decade or more of hardware improvement",
+          "firstSeen": "computerenhance-clean-code-horrible-performance"
+        },
+        {
+          "id": "software-practices/performance-penalty-class-hierarchy-designs-grows",
+          "text": "The performance penalty of class-hierarchy designs grows as the problem gets more complex",
+          "firstSeen": "computerenhance-clean-code-horrible-performance"
+        },
+        {
+          "id": "software-practices/avoiding-repeated-code-does-not-conflict",
+          "text": "Avoiding repeated code does not conflict with writing fast code",
+          "firstSeen": "computerenhance-clean-code-horrible-performance"
+        },
+        {
+          "id": "software-practices/code-organised-operation-rather-type-makes",
+          "text": "Code organised by operation rather than by type makes shared patterns visible and easier to simplify",
+          "firstSeen": "computerenhance-clean-code-horrible-performance"
+        },
+        {
+          "id": "software-practices/clean-code-rules-adopted-maintainability-without",
+          "text": "Clean-code rules were adopted for maintainability without evidence that they deliver it",
+          "firstSeen": "computerenhance-clean-code-horrible-performance"
+        },
+        {
+          "id": "software-practices/controlled-studies-find-most-small-effects",
+          "text": "Controlled studies find at most small effects of static typing on productivity or defect rates",
+          "firstSeen": "danluu-empirical-pl"
+        },
+        {
+          "id": "software-practices/differences-between-individual-programmers-dwarf-languages",
+          "text": "Differences between individual programmers dwarf differences between languages in experiments",
+          "firstSeen": "danluu-empirical-pl"
+        },
+        {
+          "id": "software-practices/type-annotations-help-developers-mainly-acting",
+          "text": "Type annotations help developers mainly by acting as documentation when using unfamiliar APIs",
+          "firstSeen": "danluu-empirical-pl"
+        },
+        {
+          "id": "software-practices/retrofitting-static-types-onto-dynamically-typed",
+          "text": "Retrofitting static types onto dynamically typed programs finds only a small fraction of their bugs",
+          "firstSeen": "danluu-empirical-pl"
+        },
+        {
+          "id": "software-practices/existing-type-system-studies-not-cover",
+          "text": "Existing type-system studies do not cover experienced programmers, large codebases or modern typed languages",
+          "firstSeen": "danluu-empirical-pl"
+        },
+        {
+          "id": "software-practices/type-system-studies-cherry-picked-confirm",
+          "text": "Type-system studies are cherry-picked to confirm whichever side one already holds",
+          "firstSeen": "danluu-empirical-pl"
+        },
+        {
+          "id": "software-practices/reaching-top-few-percent-most-activities",
+          "text": "Reaching the top few percent in most activities mainly requires correcting basic, observable mistakes rather than talent",
+          "firstSeen": "danluu-p95-skill"
+        },
+        {
+          "id": "software-practices/getting-feedback-one-own-work-yields",
+          "text": "Getting feedback on one's own work yields large improvements because almost no practitioners seek any",
+          "firstSeen": "danluu-p95-skill"
+        },
+        {
+          "id": "software-practices/tracking-where-programming-time-actually-goes",
+          "text": "Tracking where programming time actually goes reveals large, fixable waste that self-perception misses",
+          "firstSeen": "danluu-p95-skill"
+        },
+        {
+          "id": "software-practices/skilled-coaching-beats-peer-self-feedback",
+          "text": "Skilled coaching beats peer or self feedback for improving at a skill",
+          "firstSeen": "danluu-p95-skill"
+        },
+        {
+          "id": "software-practices/independent-gut-estimates-experienced-practitioners-converge",
+          "text": "Independent gut estimates from experienced practitioners converge and are reasonably accurate at project scale",
+          "firstSeen": "dannorth-blink-estimation"
+        },
+        {
+          "id": "software-practices/detailed-story-estimation-inflates-total-because",
+          "text": "Detailed story-by-story estimation inflates the total because micro-planning is fractal",
+          "firstSeen": "dannorth-blink-estimation"
+        },
+        {
+          "id": "software-practices/estimating-individual-stories-adds-little-because",
+          "text": "Estimating individual stories adds little because the biggest risks are cross-cutting unknowns no single story captures",
+          "firstSeen": "dannorth-blink-estimation"
+        },
+        {
+          "id": "software-practices/revealing-estimates-simultaneously-prevents-first-number",
+          "text": "Revealing estimates simultaneously prevents the first number spoken from anchoring the rest",
+          "firstSeen": "dannorth-blink-estimation"
+        },
+        {
+          "id": "software-practices/estimate-better-framed-investment-decision-contract",
+          "text": "An estimate is better framed as an investment decision than as a contract",
+          "firstSeen": "dannorth-blink-estimation"
+        },
+        {
+          "id": "software-practices/sometimes-honest-estimate-size-cannot-known",
+          "text": "Sometimes the honest estimate is that size cannot be known until specific unknowns are investigated",
+          "firstSeen": "dannorth-blink-estimation"
+        },
+        {
+          "id": "software-practices/merge-tools-cannot-detect-functional-conflicts",
+          "text": "Merge tools cannot detect functional conflicts between independently developed features; only integrating and testing can",
+          "firstSeen": "davefarley"
+        },
+        {
+          "id": "software-practices/choosing-which-features-release-after-integration",
+          "text": "Choosing which features to release after integration testing means shipping a combination that was never tested",
+          "firstSeen": "davefarley"
+        },
+        {
+          "id": "software-practices/trunk-based-development-feature-toggles-simpler",
+          "text": "Trunk-based development with feature toggles is simpler for most teams than disciplined branch-per-feature",
+          "firstSeen": "davefarley"
+        },
+        {
+          "id": "software-practices/keeping-branch-per-feature-lets-finished",
+          "text": "Keeping a branch per feature lets a finished feature be pulled before release, which trunk-based development cannot do",
+          "firstSeen": "davefarley"
+        },
+        {
+          "id": "software-practices/feature-toggles-hack-source-errors-proper",
+          "text": "Feature toggles are a hack and a source of errors that proper branch-per-feature avoids",
+          "firstSeen": "davefarley"
+        },
+        {
+          "id": "software-practices/generic-repository-abstractions-over-orm-lead",
+          "text": "Generic repository abstractions over an ORM lead to N+1 queries and joining in application memory",
+          "firstSeen": "deke8dAsLTI"
+        },
+        {
+          "id": "software-practices/skipping-architecture-review-project-first-weeks",
+          "text": "Skipping architecture review in a project's first weeks locks in decisions that take years to undo",
+          "firstSeen": "deke8dAsLTI"
+        },
+        {
+          "id": "software-practices/giving-requirements-without-having-engineer-explain",
+          "text": "Giving requirements without having the engineer explain them back leads to them being silently ignored",
+          "firstSeen": "deke8dAsLTI"
+        },
+        {
+          "id": "software-practices/coding-tools-reproduce-codebase-existing-anti",
+          "text": "AI coding tools reproduce a codebase's existing anti-patterns unless a new pattern is established first",
+          "firstSeen": "deke8dAsLTI"
+        },
+        {
+          "id": "software-practices/end-browser-tests-brittle-but-fastest",
+          "text": "End-to-end browser tests are brittle but the fastest way to get coverage from zero on a legacy system",
+          "firstSeen": "deke8dAsLTI"
+        },
+        {
+          "id": "software-practices/writing-down-architecture-decisions-their-reasoning",
+          "text": "Writing down architecture decisions and their reasoning helps both humans and AI tools work on a codebase",
+          "firstSeen": "deke8dAsLTI"
+        },
+        {
+          "id": "software-practices/reviewing-code-synchronously-commit-time-rather",
+          "text": "Reviewing code synchronously at commit time rather than asynchronously reduces merge delay and conflicts",
+          "firstSeen": "dora-trunk-based-development"
+        },
+        {
+          "id": "software-practices/running-automated-test-suite-before-every",
+          "text": "Running the automated test suite before every commit keeps trunk releasable",
+          "firstSeen": "dora-trunk-based-development"
+        },
+        {
+          "id": "software-practices/trunk-based-development-requires-developers-learn",
+          "text": "Trunk-based development requires developers to learn to work in small batches, which many find hard and resist",
+          "firstSeen": "dora-trunk-based-development"
+        },
+        {
+          "id": "software-practices/programs-rarely-inherently-bound-chatty-serial",
+          "text": "Programs are rarely inherently I/O bound; chatty serial chains of dependent requests make them look I/O bound",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/faster-more-responsive-software-measurably-increases",
+          "text": "Faster, more responsive software measurably increases user engagement and revenue",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/hiding-implementation-details-behind-layers-abstraction",
+          "text": "Hiding implementation details behind layers of abstraction makes it harder to find why code misbehaves because every layer must be dug through",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/readability-gains-credited-class-hierarchies-come",
+          "text": "The readability gains credited to class hierarchies come from cleaning up messy code, which well-named procedural code achieves equally well",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/switch-based-code-easier-optimise-later",
+          "text": "Switch-based code is easier to optimise later than a class hierarchy because all cases are visible in one place",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/lines-code-per-feature-useful-objective",
+          "text": "Lines of code per feature is a useful objective proxy for code that reads like what it does and stays easy to modify",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/premature-optimisation-quote-misapplied-licence-ignore",
+          "text": "The 'premature optimisation' quote is misapplied as licence to ignore performance during design when it only warned against early micro-level hand tuning",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/developer-time-savings-claimed-ignoring-performance",
+          "text": "Developer-time savings claimed from ignoring performance are erased by later ground-up performance rewrites",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/performance-trade-off-only-counts-cost",
+          "text": "A performance trade-off only counts as a trade-off if the cost was measured; otherwise it is an excuse",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/performance-must-designed-start-because-hotspot",
+          "text": "Performance must be designed in from the start because hotspot optimisation cannot fix serial dependency chains and poor data layout later",
+          "firstSeen": "ffDXc6oup3Q"
+        },
+        {
+          "id": "software-practices/decomposing-code-small-methods-can-too",
+          "text": "Decomposing code into very small methods can go too far, producing shallow interfaces and entangled methods that are harder to read than one longer method",
+          "firstSeen": "github-aposd-vs-clean-code"
+        },
+        {
+          "id": "software-practices/modular-decomposition-behind-simple-interfaces-reduces",
+          "text": "Modular decomposition behind simple interfaces reduces the information a programmer must hold in mind at once",
+          "firstSeen": "github-aposd-vs-clean-code"
+        },
+        {
+          "id": "software-practices/treating-comments-failures-leads-under-documented",
+          "text": "Treating comments as failures leads to under-documented code, and missing comments cost far more time than incorrect ones",
+          "firstSeen": "github-aposd-vs-clean-code"
+        },
+        {
+          "id": "software-practices/most-software-conserving-programmer-time-matters",
+          "text": "For most software, conserving programmer time matters more than conserving CPU cycles, so readability-first practices pay off",
+          "firstSeen": "github-cleancodeqa-md"
+        },
+        {
+          "id": "software-practices/choosing-right-algorithm-improves-efficiency-many",
+          "text": "Choosing the right algorithm improves efficiency by many orders of magnitude while cycle-level tuning gives about one",
+          "firstSeen": "github-cleancodeqa-md"
+        },
+        {
+          "id": "software-practices/clean-code-teaching-gives-performance-almost",
+          "text": "Clean Code teaching gives performance almost no attention, so its audience learns to ignore it",
+          "firstSeen": "github-cleancodeqa-md"
+        },
+        {
+          "id": "software-practices/interactive-visual-behaviour-such-guis-game",
+          "text": "Interactive and visual behaviour such as GUIs and game feel cannot practically be test-driven because the correct answer is not known up front",
+          "firstSeen": "github-cleancodeqa-md"
+        },
+        {
+          "id": "software-practices/polymorphism-makes-adding-new-types-easy",
+          "text": "Polymorphism makes adding new types easy while switch statements make adding new operations easy; neither is a free win",
+          "firstSeen": "github-cleancodeqa-md"
+        },
+        {
+          "id": "software-practices/dependency-inversion-via-polymorphism-protects-high",
+          "text": "Dependency inversion via polymorphism protects high-level policy from recompilation and redeployment when low-level details change",
+          "firstSeen": "github-cleancodeqa-md"
+        },
+        {
+          "id": "software-practices/small-changes-can-worse-mid-sized",
+          "text": "Very small changes can be worse than mid-sized ones because their implications are hidden and they are reverted more often",
+          "firstSeen": "google-github-small-cls"
+        },
+        {
+          "id": "software-practices/refactorings-should-separate-changes-feature-work",
+          "text": "Refactorings should be in separate changes from feature work and bug fixes so reviewers can understand each",
+          "firstSeen": "google-github-small-cls"
+        },
+        {
+          "id": "software-practices/every-change-adds-alters-logic-should",
+          "text": "Every change that adds or alters logic should ship with its tests in the same change",
+          "firstSeen": "google-github-small-cls"
+        },
+        {
+          "id": "software-practices/almost-any-large-change-can-decomposed",
+          "text": "Almost any large change can be decomposed into a series of small ones by an author who practises it",
+          "firstSeen": "google-github-small-cls"
+        },
+        {
+          "id": "software-practices/large-changes-merge-faster-reverted-less",
+          "text": "Very large changes merge faster and are reverted less than mid-sized ones, likely because they are generated or refactor-only",
+          "firstSeen": "graphite-the-ideal-pr-is-50-lines-long"
+        },
+        {
+          "id": "software-practices/observed-benefits-small-prs-partly-selection",
+          "text": "Observed benefits of small PRs are partly selection: teams already practising trunk-based development make smaller PRs",
+          "firstSeen": "graphite-the-ideal-pr-is-50-lines-long"
+        },
+        {
+          "id": "software-practices/unit-tests-never-fail-version-control",
+          "text": "Unit tests that never fail in version control still earn their keep because they fail transiently during development and are fixed before commit",
+          "firstSeen": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+        },
+        {
+          "id": "software-practices/tests-breaking-during-refactoring-minor-cost",
+          "text": "Tests breaking during refactoring is a minor cost in practice",
+          "firstSeen": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+        },
+        {
+          "id": "software-practices/impossibility-exhaustively-testing-program-state-space",
+          "text": "The impossibility of exhaustively testing a program's state space applies to integration tests as much as unit tests",
+          "firstSeen": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+        },
+        {
+          "id": "software-practices/unit-tests-make-easy-set-edge",
+          "text": "Unit tests make it easy to set up edge-case contexts that are hard to reproduce in the full system",
+          "firstSeen": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+        },
+        {
+          "id": "software-practices/runtime-assertions-complement-but-cannot-replace",
+          "text": "Runtime assertions complement but cannot replace unit tests because an assertion failure is still a production failure",
+          "firstSeen": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+        },
+        {
+          "id": "software-practices/combining-unit-integration-tests-catches-more",
+          "text": "Combining unit and integration tests catches more than integration tests alone",
+          "firstSeen": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+        },
+        {
+          "id": "software-practices/best-practices-inherited-what-most-successful",
+          "text": "Best practices are inherited from what the most successful programmers do, which cannot distinguish good techniques from bad ones they succeed despite",
+          "firstSeen": "hillelwayne-10x"
+        },
+        {
+          "id": "software-practices/making-expert-advocates-argue-opposing-positions",
+          "text": "Making expert advocates argue opposing positions publicly is a partial substitute for missing research",
+          "firstSeen": "hillelwayne-10x"
+        },
+        {
+          "id": "software-practices/most-damaging-software-faults-design-flaws",
+          "text": "The most damaging software faults are design flaws rather than coding slips",
+          "firstSeen": "hillelwayne-what-we-know-we-dont-know"
+        },
+        {
+          "id": "software-practices/simple-tests-error-handling-paths-could",
+          "text": "Simple tests of error-handling paths could prevent most catastrophic failures in distributed systems",
+          "firstSeen": "hillelwayne-what-we-know-we-dont-know"
+        },
+        {
+          "id": "software-practices/lines-code-predict-defects-about-well",
+          "text": "Lines of code predict defects about as well as any complexity metric",
+          "firstSeen": "hillelwayne-what-we-know-we-dont-know"
+        },
+        {
+          "id": "software-practices/organisational-structure-metrics-predict-defect-prone",
+          "text": "Organisational structure metrics predict defect-prone components better than code metrics",
+          "firstSeen": "hillelwayne-what-we-know-we-dont-know"
+        },
+        {
+          "id": "software-practices/knowledge-worker-productivity-cannot-measured-reliably",
+          "text": "Knowledge-worker productivity cannot be measured reliably, so hours-versus-output conclusions rest on analogies from other industries",
+          "firstSeen": "igda-why-crunch-mode-doesnt-work-six-lessons-2005"
+        },
+        {
+          "id": "software-practices/complex-mental-work-degrades-faster-under",
+          "text": "Complex mental work degrades faster under fatigue than physical work, so knowledge workers lose more to long hours than manual workers",
+          "firstSeen": "igda-why-crunch-mode-doesnt-work-six-lessons-2005"
+        },
+        {
+          "id": "software-practices/managers-impose-crunch-signal-effort-rather",
+          "text": "Managers impose crunch to signal effort rather than because it works",
+          "firstSeen": "igda-why-crunch-mode-doesnt-work-six-lessons-2005"
+        },
+        {
+          "id": "software-practices/much-delivered-functionality-rarely-never-used",
+          "text": "Much delivered functionality is rarely or never used, so working through a prioritised backlog wastes effort compared with selecting high-impact items",
+          "firstSeen": "infoq-book-review-noestimates"
+        },
+        {
+          "id": "software-practices/scope-growth-during-project-mostly-value",
+          "text": "Scope growth during a project is mostly value discovered while building, and following the original plan discards it",
+          "firstSeen": "infoq-book-review-noestimates"
+        },
+        {
+          "id": "software-practices/estimation-techniques-developed-other-industries-may",
+          "text": "Estimation techniques were developed for other industries and may not fit software",
+          "firstSeen": "infoq-book-review-noestimates"
+        },
+        {
+          "id": "software-practices/technical-debt-consumes-substantial-fraction-developers",
+          "text": "Technical debt consumes a substantial fraction of developers' working time",
+          "firstSeen": "infoq-business-impact-code-quality"
+        },
+        {
+          "id": "software-practices/code-unhealthy-files-has-many-times",
+          "text": "Code in unhealthy files has many times more defects and takes several times longer to change than healthy code",
+          "firstSeen": "infoq-business-impact-code-quality"
+        },
+        {
+          "id": "software-practices/low-quality-code-makes-delivery-times",
+          "text": "Low-quality code makes delivery times unpredictable, not just slower",
+          "firstSeen": "infoq-business-impact-code-quality"
+        },
+        {
+          "id": "software-practices/technical-debt-lowers-developer-happiness-drives",
+          "text": "Technical debt lowers developer happiness and drives attrition",
+          "firstSeen": "infoq-business-impact-code-quality"
+        },
+        {
+          "id": "software-practices/prioritising-refactoring-hotspots-where-change-frequency",
+          "text": "Prioritising refactoring by hotspots, where change frequency meets low code health, targets the debt with the highest interest",
+          "firstSeen": "infoq-business-impact-code-quality"
+        },
+        {
+          "id": "software-practices/code-quality-tolerated-waste-because-invisible",
+          "text": "Code quality is tolerated as waste because it is invisible to non-technical stakeholders",
+          "firstSeen": "infoq-business-impact-code-quality"
+        },
+        {
+          "id": "software-practices/splitting-services-too-finely-raises-inter",
+          "text": "Splitting services too finely raises inter-service dependencies and coordination so total cost rises again rather than falling",
+          "firstSeen": "j2AQ9eTZ3-0"
+        },
+        {
+          "id": "software-practices/service-boundaries-usually-wrong-first-attempt",
+          "text": "Service boundaries are usually wrong on the first attempt because the domain is not yet understood, so systems built as microservices from scratch tend to end in trouble",
+          "firstSeen": "j2AQ9eTZ3-0"
+        },
+        {
+          "id": "software-practices/keeping-modules-one-process-enforced-boundaries",
+          "text": "Keeping modules in one process with enforced boundaries gets most of the modularity benefit without the distribution cost",
+          "firstSeen": "j2AQ9eTZ3-0"
+        },
+        {
+          "id": "software-practices/moving-functionality-across-service-boundaries-far",
+          "text": "Moving functionality across service boundaries is far harder than refactoring inside one process",
+          "firstSeen": "j2AQ9eTZ3-0"
+        },
+        {
+          "id": "software-practices/headlines-about-big-companies-abandoning-microservices",
+          "text": "Headlines about big companies abandoning microservices usually describe one team consolidating a few components",
+          "firstSeen": "j2AQ9eTZ3-0"
+        },
+        {
+          "id": "software-practices/creating-services-which-team-free-rather",
+          "text": "Creating services by which team is free rather than by domain seams produces fragmented systems",
+          "firstSeen": "j2AQ9eTZ3-0"
+        },
+        {
+          "id": "software-practices/service-boundaries-must-repartitioned-continually-business",
+          "text": "Service boundaries must be repartitioned continually as the business changes, so owning microservices is never finished",
+          "firstSeen": "j2AQ9eTZ3-0"
+        },
+        {
+          "id": "software-practices/micro-should-mean-replaceable-not-few",
+          "text": "'Micro' should mean replaceable, not few lines of code",
+          "firstSeen": "j2AQ9eTZ3-0"
+        },
+        {
+          "id": "software-practices/estimation-learnable-skill-recording-estimates-comparing",
+          "text": "Estimation is a learnable skill: recording estimates and comparing them to outcomes calibrates future estimates",
+          "firstSeen": "jacobian-estimation"
+        },
+        {
+          "id": "software-practices/giving-accurate-timelines-builds-trust-required",
+          "text": "Giving accurate timelines builds trust and is required to advance beyond senior engineering roles",
+          "firstSeen": "jacobian-estimation"
+        },
+        {
+          "id": "software-practices/avoiding-estimates-improves-planning-conversations-but",
+          "text": "Avoiding estimates improves planning conversations, but business commitments still sometimes require a time-based estimate",
+          "firstSeen": "jacobian-estimation"
+        },
+        {
+          "id": "software-practices/legacy-code-results-technical-neglect-failure",
+          "text": "Legacy code results from technical neglect, the failure to keep refactoring, rather than from technical debt itself",
+          "firstSeen": "kTcDBYCpj7Q"
+        },
+        {
+          "id": "software-practices/automated-refactoring-tools-have-existed-decades",
+          "text": "Automated refactoring tools have existed for decades yet legacy code persists, so the obstacle is mindset not tooling",
+          "firstSeen": "kTcDBYCpj7Q"
+        },
+        {
+          "id": "software-practices/never-trust-test-you-have-not",
+          "text": "Never trust a test you have not seen fail",
+          "firstSeen": "kTcDBYCpj7Q"
+        },
+        {
+          "id": "software-practices/refactoring-small-behaviour-preserving-steps-tests",
+          "text": "Refactoring in small behaviour-preserving steps with tests or compiler checks at each step avoids the big-bang breakage trap",
+          "firstSeen": "kTcDBYCpj7Q"
+        },
+        {
+          "id": "software-practices/refactoring-oriented-development-most-commits-reposition",
+          "text": "In refactoring-oriented development most commits reposition code so that the final feature addition is a trivial change",
+          "firstSeen": "kTcDBYCpj7Q"
+        },
+        {
+          "id": "software-practices/refactor-problem-own-terms-before-migrating",
+          "text": "Refactor a problem on its own terms before migrating it to a different paradigm",
+          "firstSeen": "kTcDBYCpj7Q"
+        },
+        {
+          "id": "software-practices/programming-productivity-has-physical-ceiling-hard",
+          "text": "Programming productivity has no physical ceiling, so hard work can make anyone a 10x engineer",
+          "firstSeen": "lEmYI42slN4"
+        },
+        {
+          "id": "software-practices/continuous-delivery-does-not-require-microservices",
+          "text": "Continuous delivery does not require microservices; monoliths can be deployed continuously",
+          "firstSeen": "martinfowler-microservicepremium"
+        },
+        {
+          "id": "software-practices/hype-drives-teams-adopt-microservices-they",
+          "text": "Hype drives teams to adopt microservices they do not need, adding cost and risk",
+          "firstSeen": "martinfowler-microservicepremium"
+        },
+        {
+          "id": "software-practices/decomposing-monolith-only-works-already-has",
+          "text": "Decomposing a monolith only works if it already has a reasonably modular design; tangled monoliths just produce a mess",
+          "firstSeen": "martinfowler-monolithfirst"
+        },
+        {
+          "id": "software-practices/pairing-all-day-unsustainable-because-sustained",
+          "text": "Pairing all day is unsustainable because sustained joint focus is exhausting",
+          "firstSeen": "martinfowler-on-pair-programming"
+        },
+        {
+          "id": "software-practices/after-fact-code-review-weaker-pairing",
+          "text": "After-the-fact code review is weaker than pairing because reviewers skim, defer to the author and resist rework already invested",
+          "firstSeen": "martinfowler-on-pair-programming"
+        },
+        {
+          "id": "software-practices/juniors-who-always-pair-can-lose",
+          "text": "Juniors who always pair can lose confidence and miss learning to solve problems alone",
+          "firstSeen": "martinfowler-on-pair-programming"
+        },
+        {
+          "id": "software-practices/power-dynamics-such-seniority-gender-distort",
+          "text": "Power dynamics such as seniority or gender distort pairing when one person dominates the keyboard or dismisses suggestions",
+          "firstSeen": "martinfowler-on-pair-programming"
+        },
+        {
+          "id": "software-practices/pairing-limits-team-work-progress-which",
+          "text": "Pairing limits team work in progress, which improves flow",
+          "firstSeen": "martinfowler-on-pair-programming"
+        },
+        {
+          "id": "software-practices/pairing-value-cannot-proven-scientifically-because",
+          "text": "Pairing's value cannot be proven scientifically because development output is too hard to measure, so teams must try it themselves",
+          "firstSeen": "martinfowler-on-pair-programming"
+        },
+        {
+          "id": "software-practices/rote-repetitive-code-design-smell-pairing",
+          "text": "Rote, repetitive code is a design smell, and pairing helps find the missing abstraction",
+          "firstSeen": "martinfowler-on-pair-programming"
+        },
+        {
+          "id": "software-practices/pair-programming-practice-not-requirement-agile",
+          "text": "Pair programming is an XP practice, not a requirement of agile",
+          "firstSeen": "martinfowler-pairprogrammingmisconceptions"
+        },
+        {
+          "id": "software-practices/debt-prudent-when-taken-deliberately-ship",
+          "text": "Debt is prudent when taken deliberately to ship sooner with small interest, and reckless when taken without understanding its cost",
+          "firstSeen": "martinfowler-technicaldebtquadrant"
+        },
+        {
+          "id": "software-practices/even-excellent-teams-accumulate-inadvertent-debt",
+          "text": "Even excellent teams accumulate inadvertent debt because the right design is only learned by building the system",
+          "firstSeen": "martinfowler-technicaldebtquadrant"
+        },
+        {
+          "id": "software-practices/debt-metaphor-helps-explain-design-problems",
+          "text": "The debt metaphor helps explain design problems to non-technical stakeholders",
+          "firstSeen": "martinfowler-technicaldebtquadrant"
+        },
+        {
+          "id": "software-practices/rotating-driver-every-few-minutes-keeps",
+          "text": "Rotating the driver every few minutes keeps every team member engaged",
+          "firstSeen": "mobprogramming-mob-programming-basics"
+        },
+        {
+          "id": "software-practices/mob-group-coaches-less-skilled-driver",
+          "text": "In a mob the group coaches a less-skilled driver on the spot, raising everyone's skills",
+          "firstSeen": "mobprogramming-mob-programming-basics"
+        },
+        {
+          "id": "software-practices/rewrite-viable-when-codebase-small-product",
+          "text": "A rewrite is viable when the codebase is small, the product is not the main revenue source and there is a compelling business case",
+          "firstSeen": "natashajaffe-substack-revisiting-spolskys-things-you-should"
+        },
+        {
+          "id": "software-practices/rewrite-duration-grows-faster-linearly-codebase",
+          "text": "Rewrite duration grows faster than linearly with codebase size and complexity, making estimates for large rewrites unreliable",
+          "firstSeen": "natashajaffe-substack-revisiting-spolskys-things-you-should"
+        },
+        {
+          "id": "software-practices/tech-debt-distaste-old-code-alone",
+          "text": "Tech debt and distaste for old code alone are not a sufficient reason to rewrite a large successful product",
+          "firstSeen": "natashajaffe-substack-revisiting-spolskys-things-you-should"
+        },
+        {
+          "id": "software-practices/microservices-independent-scaling-fault-isolation-pay",
+          "text": "Microservices' independent scaling and fault isolation pay off at very large scale where downtime is costly",
+          "firstSeen": "nordicapis-back-to-the-monolith-why-did-amazon-dump-microservices"
+        },
+        {
+          "id": "software-practices/single-architecture-suits-every-scale-should",
+          "text": "No single architecture suits every scale, so architecture should be revisited with each order of magnitude of growth",
+          "firstSeen": "nordicapis-back-to-the-monolith-why-did-amazon-dump-microservices"
+        },
+        {
+          "id": "software-practices/single-process-design-suits-long-running",
+          "text": "A single-process design suits long-running compute jobs and predictable traffic better than serverless functions",
+          "firstSeen": "nordicapis-back-to-the-monolith-why-did-amazon-dump-microservices"
+        },
+        {
+          "id": "software-practices/microservices-speed-time-market",
+          "text": "Microservices speed time to market",
+          "firstSeen": "nordicapis-back-to-the-monolith-why-did-amazon-dump-microservices"
+        },
+        {
+          "id": "software-practices/programming-needs-blocks-least-half-day",
+          "text": "Programming needs blocks of at least half a day, so a single mid-block meeting destroys the block",
+          "firstSeen": "paulgraham-makersschedule"
+        },
+        {
+          "id": "software-practices/knowing-block-will-interrupted-deters-starting",
+          "text": "Knowing a block will be interrupted deters starting ambitious work, so a meeting costs more than its duration",
+          "firstSeen": "paulgraham-makersschedule"
+        },
+        {
+          "id": "software-practices/clustering-meetings-end-day-preserves-uninterrupted",
+          "text": "Clustering meetings at the end of the day preserves uninterrupted maker time",
+          "firstSeen": "paulgraham-makersschedule"
+        },
+        {
+          "id": "software-practices/managers-makers-run-different-schedules-conflict",
+          "text": "Managers and makers run on different schedules, and conflict arises when hourly manager slots are imposed on makers",
+          "firstSeen": "paulgraham-makersschedule"
+        },
+        {
+          "id": "software-practices/serverless-lets-small-teams-ship-without",
+          "text": "Serverless lets small teams ship without managing infrastructure and often within free tiers",
+          "firstSeen": "qQk94CjRvIs"
+        },
+        {
+          "id": "software-practices/there-solutions-cloud-architecture-only-trade",
+          "text": "There are no solutions in cloud architecture, only trade-offs",
+          "firstSeen": "qQk94CjRvIs"
+        },
+        {
+          "id": "software-practices/functions-should-extracted-until-each-does",
+          "text": "Functions should be extracted until each does one thing, meaning nothing further can be meaningfully extracted",
+          "firstSeen": "rXjf8eiGsSI"
+        },
+        {
+          "id": "software-practices/large-functions-classes-disguise-extracting-until",
+          "text": "Large functions are classes in disguise; extracting until stuck reveals hidden classes",
+          "firstSeen": "rXjf8eiGsSI"
+        },
+        {
+          "id": "software-practices/function-length-rules-such-fit-one",
+          "text": "Function-length rules such as fit on one screen came from historical terminal sizes, not evidence",
+          "firstSeen": "rXjf8eiGsSI"
+        },
+        {
+          "id": "software-practices/story-points-began-renamed-ideal-days",
+          "text": "Story points began as renamed ideal days, meant only to decide how much work fits an iteration",
+          "firstSeen": "ronjeffries-index"
+        },
+        {
+          "id": "software-practices/using-story-points-predict-delivery-dates",
+          "text": "Using story points to predict delivery dates is weak, and comparing teams by velocity or estimate accuracy is harmful",
+          "firstSeen": "ronjeffries-index"
+        },
+        {
+          "id": "software-practices/tracking-estimates-against-actuals-shifts-attention",
+          "text": "Tracking estimates against actuals shifts attention from delivering value to improving estimates",
+          "firstSeen": "ronjeffries-index"
+        },
+        {
+          "id": "software-practices/slicing-stories-small-enough-finish-about",
+          "text": "Slicing stories small enough to finish in about a day gives a smooth flow of value and removes most need for estimates",
+          "firstSeen": "ronjeffries-index"
+        },
+        {
+          "id": "software-practices/frequent-small-releases-deliver-more-value",
+          "text": "Frequent small releases deliver more value than big-bang releases whose dates keep receding",
+          "firstSeen": "ronjeffries-index"
+        },
+        {
+          "id": "software-practices/monoliths-without-enforced-boundaries-become-coupled",
+          "text": "Monoliths without enforced boundaries become so coupled that small changes have unexpected effects and newcomers need enormous context",
+          "firstSeen": "shopify-deconstructing-monolith-designing-software-maximizes-developer-productiv"
+        },
+        {
+          "id": "software-practices/organising-code-business-domain-rather-technical",
+          "text": "Organising code by business domain rather than technical layer makes code and its owners easier to find",
+          "firstSeen": "shopify-deconstructing-monolith-designing-software-maximizes-developer-productiv"
+        },
+        {
+          "id": "software-practices/early-system-life-little-design-needed",
+          "text": "Early in a system's life little design is needed; design investment should start when feature speed begins to slow",
+          "firstSeen": "shopify-deconstructing-monolith-designing-software-maximizes-developer-productiv"
+        },
+        {
+          "id": "software-practices/adding-public-interfaces-around-modules-without",
+          "text": "Adding public interfaces around modules without untangling the dependency graph just adds indirection and makes code harder to change",
+          "firstSeen": "shopify-shopify-monolith"
+        },
+        {
+          "id": "software-practices/modules-can-only-reasoned-about-tested",
+          "text": "Modules can only be reasoned about or tested in isolation when the dependency graph between them is sparse and acyclic",
+          "firstSeen": "shopify-shopify-monolith"
+        },
+        {
+          "id": "software-practices/large-architecture-changes-actively-developed-codebase",
+          "text": "Large architecture changes to an actively developed codebase succeed only by changing average developer behaviour, not by a central team's effort",
+          "firstSeen": "shopify-shopify-monolith"
+        },
+        {
+          "id": "software-practices/imposing-uniform-coding-conventions-adds-learning",
+          "text": "Imposing uniform coding conventions adds learning and compliance friction without making hard design problems easier",
+          "firstSeen": "shopify-shopify-monolith"
+        },
+        {
+          "id": "software-practices/static-dependency-analysis-gives-faster-more",
+          "text": "Static dependency analysis gives faster and more actionable boundary enforcement than tracing runtime calls",
+          "firstSeen": "shopify-shopify-monolith"
+        },
+        {
+          "id": "software-practices/large-scale-architecture-refactors-stay-incomplete",
+          "text": "Large-scale architecture refactors stay in an incomplete intermediate state far longer than planned",
+          "firstSeen": "shopify-shopify-monolith"
+        },
+        {
+          "id": "software-practices/explicit-module-ownership-makes-whole-codebase",
+          "text": "Explicit module ownership makes whole-codebase chores like framework upgrades easier to distribute",
+          "firstSeen": "shopify-shopify-monolith"
+        },
+        {
+          "id": "software-practices/small-team-can-maintain-large-product",
+          "text": "A small team can maintain a large product across many platforms from a single integrated codebase",
+          "firstSeen": "signalvnoise-the-majestic-monolith"
+        },
+        {
+          "id": "software-practices/many-small-services-make-easy-knowledge",
+          "text": "Many small services make it easy for knowledge to silo so only one person understands each part",
+          "firstSeen": "signalvnoise-the-majestic-monolith"
+        },
+        {
+          "id": "software-practices/extracting-one-slice-divergent-performance-needs",
+          "text": "Extracting one slice with divergent performance needs as a separate service captures most of the scaling benefit without distributing the whole system",
+          "firstSeen": "signalvnoise-the-majestic-monolith-can-become-the-citadel"
+        },
+        {
+          "id": "software-practices/many-teams-adopted-microservices-retreating-monoliths",
+          "text": "Many teams that adopted microservices are retreating to monoliths",
+          "firstSeen": "signalvnoise-the-majestic-monolith-can-become-the-citadel"
+        },
+        {
+          "id": "software-practices/measured-productivity-gaps-between-programmers-mostly",
+          "text": "Measured productivity gaps between programmers are mostly between competent and net-negative developers, not between good and great",
+          "firstSeen": "simplethread-the-10x-programmer-myth"
+        },
+        {
+          "id": "software-practices/slowing-down-investigate-problem-before-coding",
+          "text": "Slowing down to investigate a problem before coding reduces later cleanup",
+          "firstSeen": "simplethread-the-10x-programmer-myth"
+        },
+        {
+          "id": "software-practices/deep-expertise-narrow-domain-can-make",
+          "text": "Deep expertise in a narrow domain can make an engineer vastly more productive there but less useful elsewhere",
+          "firstSeen": "simplethread-the-10x-programmer-myth"
+        },
+        {
+          "id": "software-practices/reviewer-effectiveness-falls-off-after-about",
+          "text": "Reviewer effectiveness falls off after about an hour of continuous review",
+          "firstSeen": "smartbear-best-practices-for-peer-code-review"
+        },
+        {
+          "id": "software-practices/checklists-catch-omission-defects-unstructured-review",
+          "text": "Checklists catch omission defects that unstructured review tends to miss",
+          "firstSeen": "smartbear-best-practices-for-peer-code-review"
+        },
+        {
+          "id": "software-practices/using-code-review-metrics-performance-evaluation",
+          "text": "Using code review metrics for performance evaluation makes developers hostile and game the process",
+          "firstSeen": "smartbear-best-practices-for-peer-code-review"
+        },
+        {
+          "id": "software-practices/knowing-code-will-reviewed-makes-developers",
+          "text": "Knowing code will be reviewed makes developers write cleaner code even on unreviewed changes",
+          "firstSeen": "smartbear-best-practices-for-peer-code-review"
+        },
+        {
+          "id": "software-practices/lightweight-tool-assisted-review-finds-many",
+          "text": "Lightweight tool-assisted review finds as many defects as formal inspection in a fraction of the time",
+          "firstSeen": "smartbear-best-practices-for-peer-code-review"
+        },
+        {
+          "id": "software-practices/desirable-test-properties-trade-off-making",
+          "text": "Desirable test properties trade off; making tests more predictive of production makes them slower",
+          "firstSeen": "testdesiderata"
+        },
+        {
+          "id": "software-practices/tests-deterministic-independent-run-order-more",
+          "text": "Tests that are deterministic and independent of run order are more valuable because flaky results erode trust",
+          "firstSeen": "testdesiderata"
+        },
+        {
+          "id": "software-practices/passing-test-suite-should-sufficient-evidence",
+          "text": "A passing test suite should be sufficient evidence that code is ready for production",
+          "firstSeen": "testdesiderata"
+        },
+        {
+          "id": "software-practices/static-dynamic-typing-differ-when-types",
+          "text": "Static and dynamic typing differ in when types are enforced, not in how many types a language has",
+          "firstSeen": "tratt-another-non-argument-in-type-systems"
+        },
+        {
+          "id": "software-practices/any-sound-static-type-system-rejects",
+          "text": "Any sound static type system rejects some programs that would never fail at run time",
+          "firstSeen": "tratt-another-non-argument-in-type-systems"
+        },
+        {
+          "id": "software-practices/encoding-dynamically-typed-program-static-type",
+          "text": "Encoding a dynamically typed program in a static type system bloats it with explicit checks the runtime would do implicitly",
+          "firstSeen": "tratt-another-non-argument-in-type-systems"
+        },
+        {
+          "id": "software-practices/static-analysis-unsound-incomplete-can-augment",
+          "text": "Static analysis is unsound and incomplete, so it can augment but not replace a type system",
+          "firstSeen": "tratt-another-non-argument-in-type-systems"
+        },
+        {
+          "id": "software-practices/dynamic-languages-can-run-programs-deliberately",
+          "text": "Dynamic languages can run programs that are deliberately not statically type-safe, which helps when exploring or modifying large systems",
+          "firstSeen": "tratt-another-non-argument-in-type-systems"
+        },
+        {
+          "id": "software-practices/unit-tests-catch-most-type-errors",
+          "text": "Unit tests catch most type errors and can give guarantees beyond what static typing provides",
+          "firstSeen": "tratt-tratt-dynamically-typed-languages"
+        },
+        {
+          "id": "software-practices/mainstream-static-type-systems-cannot-express",
+          "text": "Mainstream static type systems cannot express many useful constraints, such as a divisor being non-zero",
+          "firstSeen": "tratt-tratt-dynamically-typed-languages"
+        },
+        {
+          "id": "software-practices/small-increases-type-system-expressiveness-cause",
+          "text": "Small increases in type system expressiveness cause disproportionately large increases in complexity",
+          "firstSeen": "tratt-tratt-dynamically-typed-languages"
+        },
+        {
+          "id": "software-practices/type-systems-themselves-contain-soundness-bugs",
+          "text": "Type systems themselves contain soundness bugs that are hard to fix without breaking existing programs",
+          "firstSeen": "tratt-tratt-dynamically-typed-languages"
+        },
+        {
+          "id": "software-practices/automatic-memory-management-saves-large-share",
+          "text": "Automatic memory management saves a large share of programmer time and removes a class of bugs",
+          "firstSeen": "tratt-tratt-dynamically-typed-languages"
+        },
+        {
+          "id": "software-practices/short-lived-feature-branches-pull-requests",
+          "text": "Short-lived feature branches with pull requests preserve the benefits of trunk-based development as long as they merge within a day or so",
+          "firstSeen": "trunkbaseddevelopment"
+        },
+        {
+          "id": "software-practices/teams-shared-trunk-can-scale-headcount",
+          "text": "Teams on a shared trunk can scale headcount up or down without losing throughput or quality",
+          "firstSeen": "trunkbaseddevelopment"
+        },
+        {
+          "id": "software-practices/beyond-couple-developers-build-server-needed",
+          "text": "Beyond a couple of developers a build server is needed to catch commits that break the trunk",
+          "firstSeen": "trunkbaseddevelopment"
+        },
+        {
+          "id": "software-practices/tools-assign-monetary-figure-technical-debt",
+          "text": "Tools that assign a monetary figure to technical debt produce made-up numbers",
+          "firstSeen": "v0D2BZuTx_g"
+        },
+        {
+          "id": "software-practices/organizations-often-scale-headcount-cope-mess",
+          "text": "Organizations often scale headcount to cope with the mess created by their own neglect rather than to add value",
+          "firstSeen": "v0D2BZuTx_g"
+        },
+        {
+          "id": "software-practices/unmanaged-technical-debt-undermines-security-because",
+          "text": "Unmanaged technical debt undermines security because code and dependencies nobody understands cannot be reasoned about",
+          "firstSeen": "v0D2BZuTx_g"
+        },
+        {
+          "id": "software-practices/focusing-one-change-inevitably-leaves-side",
+          "text": "Focusing on one change inevitably leaves side-effect mess that must be cleaned up afterwards",
+          "firstSeen": "v0D2BZuTx_g"
+        },
+        {
+          "id": "software-practices/code-does-not-decay-own-degradation",
+          "text": "Code does not decay on its own; degradation comes from the changes made to it",
+          "firstSeen": "v0D2BZuTx_g"
+        },
+        {
+          "id": "software-practices/capping-pull-request-size-makes-developers",
+          "text": "Capping pull request size makes developers chain dependent branches instead of working in smaller steps",
+          "firstSeen": "xS6yH0VqJjw"
+        },
+        {
+          "id": "software-practices/working-together-builds-psychological-safety-better",
+          "text": "Working together builds psychological safety better than anything else",
+          "firstSeen": "xS6yH0VqJjw"
+        },
+        {
+          "id": "software-practices/pairing-makes-waste-like-slow-builds",
+          "text": "Pairing makes waste like slow builds visible and fixed because two people waiting will not tolerate what one accepts",
+          "firstSeen": "xS6yH0VqJjw"
+        },
+        {
+          "id": "software-practices/per-change-pull-request-gates-break",
+          "text": "Per-change pull request gates break down under continuous delivery with many deployments a day",
+          "firstSeen": "xS6yH0VqJjw"
+        },
+        {
+          "id": "software-practices/software-complexity-whatever-makes-system-hard",
+          "text": "Software complexity is whatever makes a system hard to understand and modify, and is judged by its readers rather than its writers",
+          "firstSeen": "ybrikman-a-philosophy-of-software-design"
+        },
+        {
+          "id": "software-practices/defining-errors-out-existence-interface-removes",
+          "text": "Defining errors out of existence at the interface removes whole classes of error handling",
+          "firstSeen": "ybrikman-a-philosophy-of-software-design"
+        },
+        {
+          "id": "software-practices/consistency-across-codebase-worth-more-any",
+          "text": "Consistency across a codebase is worth more than any individual better idea that would break it",
+          "firstSeen": "ybrikman-a-philosophy-of-software-design"
+        },
+        {
+          "id": "software-practices/productivity-hard-measure-does-not-prevent",
+          "text": "Productivity being hard to measure does not prevent sound judgments about large differences between people",
+          "firstSeen": "ybrikman-the-10x-developer-is-not-myth"
+        },
+        {
+          "id": "software-practices/relative-size-estimation-more-accurate-time",
+          "text": "Relative-size estimation is more accurate than time estimates for complex or uncertain work",
+          "firstSeen": "zqSxtwb2QEU"
+        },
+        {
+          "id": "software-practices/group-estimation-sessions-surface-hidden-complexity",
+          "text": "Group estimation sessions surface hidden complexity and build shared understanding of the work",
+          "firstSeen": "zqSxtwb2QEU"
+        },
+        {
+          "id": "software-practices/velocity-completed-points-gives-reliable-forecasts",
+          "text": "Velocity from completed points gives reliable forecasts of future throughput",
+          "firstSeen": "zqSxtwb2QEU"
+        },
+        {
+          "id": "software-practices/time-spent-estimating-wasted-better-building",
+          "text": "Time spent estimating is wasted and better spent building",
+          "firstSeen": "zqSxtwb2QEU"
+        },
+        {
+          "id": "software-practices/abstract-units-shield-teams-fixed-deadline",
+          "text": "Abstract units shield teams from fixed-deadline pressure and reduce estimate padding",
+          "firstSeen": "zqSxtwb2QEU"
+        }
+      ]
+    }
+  ]
+}

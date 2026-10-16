@@ -1,0 +1,133 @@
+{
+  "id": "xS6yH0VqJjw",
+  "title": "\"Pair Programming Fixed Our Pull Request Bottlenecks\"",
+  "channel": "Modern Software Engineering",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCCfqyGl3nq_V0bo64CjZh8g",
+  "durationSec": 1070,
+  "thumbnail": "https://i.ytimg.com/vi/xS6yH0VqJjw/sddefault.jpg",
+  "summary": "Engineering Room clip: a team replaced pull-request review with pair programming, claiming it removed PR bottlenecks, kept people in flow, spread knowledge, exposed waste, and cut production defects.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/pair-programming-provides-continuous-code-review",
+      "stance": "asserts",
+      "quote": "You don't you don't have to spend time on P request because the way the work is already done as part of peering.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/capping-pull-request-size-makes-developers",
+      "stance": "asserts",
+      "quote": "when they were finished with one full request then they just started a new branch based on that full request",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Stacked PRs are a common response to size limits; whether that is worse than large PRs is unmeasured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pairs-sustain-focus-better-individuals-working",
+      "stance": "asserts",
+      "quote": "if you're pair programming then you're in flow state all the time. and and it's also like an um buffer from the outer world",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/programming-needs-blocks-least-half-day",
+      "stance": "asserts",
+      "quote": "someone interrupt me it takes around 15 minutes to get back into flow state",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+      "stance": "asserts",
+      "quote": "I have never seen teams learn as quickly or as effectively without bare programming as with it.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/working-together-builds-psychological-safety-better",
+      "stance": "asserts",
+      "quote": "nothing builds community in the team with psychological safety and all that as actually working together",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Collaboration correlates with safety, but the superlative is attributed to unnamed research.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pairing-makes-waste-like-slow-builds",
+      "stance": "asserts",
+      "quote": "when you're two people sitting on waiting this team, the first time maybe it's drinking a little coffee and it's okay",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Plausible social mechanism reported by one team; no independent evidence.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/rotating-driver-every-few-minutes-keeps",
+      "stance": "asserts",
+      "quote": "he is showing a junior for an hour and that is not pairing",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/per-change-pull-request-gates-break",
+      "stance": "asserts",
+      "quote": "If all of these four are to create pull requests all the time for all of the small changes, the team will break down immediately",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Google and others sustain high deploy rates with change-based review; the claim holds only when review latency is high.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "DORA says approving each individual change by an external board is impossible in the continuous paradigm, but it recommends shifting to per-change peer review by a teammate during development, so the breakdown applies to external gates, not to peer review itself.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1297-L1299",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.4,
+          "note": "More than 25,000 Google developers put about 20,000 changes a day through mandatory per-change review into one trunk, with median latency under 4 hours and developers confirming the process works well at scale; one highly tuned company, not a GitHub pull-request setup.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L31-L34",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+      "stance": "asserts",
+      "quote": "on the defects side we have very few defects in production",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/most-developers-who-try-pair-programming",
+      "stance": "asserts",
+      "quote": "that's much more personally rewarding even to an old introvert like me",
+      "verdicts": []
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+{
+  "id": "GBTdnfD6s5Q",
+  "title": "When To Use Microservices (And When Not To!) • Sam Newman & Martin Fowler • GOTO 2020",
+  "channel": "GOTO Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCs_tLP3AiwYKwdUHpltJPuA",
+  "durationSec": 2324,
+  "thumbnail": "https://i.ytimg.com/vi_webp/GBTdnfD6s5Q/sddefault.webp",
+  "summary": "Sam Newman and Martin Fowler discuss when microservices are justified: default to a monolith, adopt services for independent deployability, data isolation or team autonomy, and expect data and organisational pain.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/single-process-monolith-right-default-microservices",
+      "stance": "asserts",
+      "quote": "my default is a single process monolithic application simple deployment topology you sidestep lots of issues",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Architecture advice whose correctness depends on context; widely endorsed but not something a study can settle.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.2,
+          "note": "A footnote states it is important to avoid premature decomposition of new systems into services, which can inhibit delivery performance, citing Fowler's MonolithFirst; this is an authorial assertion, not a measured result.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1091-L1092",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/main-benefits-microservices-independent-deployability-data",
+      "stance": "asserts",
+      "quote": "independent deployability um i say data partitioning and i would say sort of organizational autonomy",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Practitioner surveys and case studies report these as the realised motivations, alongside maintainability and operational costs that offset them.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "DORA finds what drives performance is a loosely coupled architecture in which teams can test, deploy and change their systems independently, naming bounded contexts, APIs and microservices as ways to get there; data isolation and organisational autonomy are not measured separately.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1071-L1079",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Across 51 industrial sources independent deployment (19) and database-per-service/data isolation (20) are major gains, but scalability (31) and loose coupling (27) are cited most, decentralised governance appears in only 7, and organisational benefits were out of scope.",
+          "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1070-L1074",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/microservices-cost-more-short-term-rarely",
+      "stance": "asserts",
+      "quote": "microsoft's architectures will very rarely save you money they do not save you money",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Operational overhead of distributed systems is well documented and several public cases of consolidating back to a monolith cite cost; evidence is case studies not controlled data.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term.",
+          "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1029-L1037",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/deploying-one-small-service-limits-scope",
+      "stance": "asserts",
+      "quote": "if i'm just deploying a single service i can reduce the scope of that individual deployment",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Smaller change sets do carry less risk, but as Fowler notes in the same conversation the distributed system adds integration risk a monolith can test end to end, so the net effect depends.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.35,
+          "note": "19 of 51 industrial sources highlight that microservices deploy and undeploy independently and 14 that live updates apply to one service without touching the others, which is the mechanism behind smaller release scope; grey literature, no measured risk data.",
+          "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L971-L981",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/coordination-cost-grows-faster-linearly-team",
+      "stance": "asserts",
+      "quote": "i believe it gets exponentially harder to coordinate people's team size increases",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Communication-path growth is the classic Brooks argument and Conway-style case studies support boundaries helping, but there is no controlled measurement of microservices reducing coordination.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Coordination and administration grow nonlinearly with team and organisation size (e.g. administrative staff scales as academic staff^1.3; +50% total time from two- to four-person teams); whether service boundaries contain it is not studied.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L2779-L2788",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "More contributors to a Windows binary, especially low-expertise minor ones, means more pre- and post-release failures after controlling for size, churn and complexity, which the authors attribute to coordination and communication breakdowns; growth rate and the effect of service boundaries are not tested.",
+          "source": "software-practices/sources/bird2011-ownership.txt#L405-L411",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/process-boundaries-enforce-modularity-modules-fail",
+      "stance": "asserts",
+      "quote": "once you make that a service a process boundary violating those things becomes really painful",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Architecture erosion studies confirm in-process modules decay, but distributed monoliths show process boundaries get violated too via shared databases and chatty coupling.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/splitting-shared-relational-database-hardest-part",
+      "stance": "asserts",
+      "quote": "if you're going to micro services that's all going out the window",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Loss of cross-service joins and ACID transactions is intrinsic to the approach and migration literature consistently names data as the main difficulty.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.4,
+          "note": "Storage is the primary development-time pain in the grey literature: distributing data makes consistency hard (21 sources), distributed transactions hard (18) and cross-store queries hard (9), matching the loss of joins and transactions.",
+          "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L991-L999",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/adopting-microservices-without-changing-organisation-yields",
+      "stance": "asserts",
+      "quote": "then do nothing to change your old-fashioned top-down command and control organization you're going to end up with probably the worst of both worlds",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Consistent with Conway's law research and practitioner reports, but it is an expert judgment rather than a measured outcome.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/services-always-change-together-should-merged",
+      "stance": "asserts",
+      "quote": "that can sometimes be a sign that you might want to merge those things back together again",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A design heuristic; co-change analysis can detect the pattern but whether merging is right is a judgment.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

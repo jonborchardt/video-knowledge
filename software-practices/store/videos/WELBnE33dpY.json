@@ -1,0 +1,261 @@
+{
+  "id": "WELBnE33dpY",
+  "title": "Intro to Empirical Software Engineering: What We Know We Don't Know • Hillel Wayne • GOTO 2019",
+  "channel": "GOTO Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCs_tLP3AiwYKwdUHpltJPuA",
+  "durationSec": 2263,
+  "thumbnail": "https://i.ytimg.com/vi_webp/WELBnE33dpY/sddefault.webp",
+  "summary": "Hillel Wayne on empirical software engineering: most practice beliefs lack evidence, TDD and pairing show little effect, code review and rest show strong effects.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/small-functions-easier-read-modify-but",
+      "stance": "asserts",
+      "quote": "small functions are easier to read easier to modify and much much harder to debug",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "A few small studies point this way; the evidence base is too thin to call it settled.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Among methods of 30-70 effective lines, size metrics (LOC, number of statements) showed no non-weak correlation with perceived or actual understanding, while interviewees praised methods that implement a single task; supports 'mixed evidence' within a narrow size band, says nothing about debugging.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L864-L870",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/abbreviated-identifiers-harder-debug-full-word",
+      "stance": "asserts",
+      "quote": "there's no evidence that a full word is required when an abbreviation can fit in",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Scanniello et al. found no difference for debugging, but other comprehension studies found full words help, so results conflict.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Across 12,000 readability judgments, average identifier length had about zero predictive power and maximum identifier length predicted lower readability, which the authors say fails to support the belief that single-character identifiers hurt maintenance; the outcome is perceived readability of short snippets by students, not debugging performance.",
+          "source": "software-practices/sources/buse2010-readability.txt#L646-L652",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Shorter average identifier length correlated weakly (-0.12) with higher perceived understandability, and the identifier-abbreviation metric IMSQ showed no meaningful correlation with any understandability proxy; measured on comprehension of 50 Java methods by 63 participants, not on debugging.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L825-L827",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/code-smells-mark-where-bugs-likely",
+      "stance": "asserts",
+      "quote": "fixing the anti-patterns did nothing to the bugs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Supported by mining studies of long-lived projects; effects vary by smell type.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Code Health, a smell-based composite (God Class, God Method, duplication), separates files with 15x more reported defects, supporting that smells mark bug-prone code; the study did not test whether removing smells removes bugs and explicitly leaves open whether defects cause low quality rather than the reverse.",
+          "source": "software-practices/sources/tornhill2022-code-red.txt#L413-L419",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/large-scale-repository-studies-claiming-some",
+      "stance": "asserts",
+      "quote": "they could not find any evidence that one language was better than any other language",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Berger et al.'s 2019 replication of Ray et al. removed most significant effects after fixing labeling errors.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Independent repetition and reanalysis of Ray et al.'s 729-project study: mislabelled TypeScript files, duplicated bitcoin forks, 36% false-positive bug labels and no multiple-testing correction; only 4 of the 11 claimed language-defect associations survive and even those have exceedingly small effect sizes.",
+          "source": "software-practices/sources/berger2019-languages-reproduction.txt#L11-L19",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/test-driven-development-produces-better-quality",
+      "stance": "asserts",
+      "quote": "test-driven development is no better or worse than any other disciplined controlled testing technique",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Meta-analyses find small or no quality gains and some productivity loss, with large heterogeneity between studies.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Blind-analysis crossover replication with 21 graduate students found no difference between TDD and incremental test-last in tests written (p=1.00), external quality (p=.82) or productivity (p=.82), with negligible effect sizes, confirming the Oulu baseline experiment.",
+          "source": "software-practices/sources/fucci2016-tdd-replication.txt#L432-L447",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.55,
+          "note": "Regression over 82 task sessions by 39 professionals: test-first sequencing was dropped from both the quality and productivity models, so incremental test-last and TDD look like substitutes once cycles are equally granular and uniform.",
+          "source": "software-practices/sources/fucci2017-tdd-dissection.txt#L1034-L1049",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "Review of 15 years of TDD studies concludes there is no convincing evidence that TDD consistently fares better than other iterative development methods, and the secondary studies contradict each other on both quality and productivity.",
+          "source": "software-practices/sources/karac2018-tdd-what-we-know.txt#L186-L195",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pair-programming-shows-little-measurable-effect",
+      "stance": "asserts",
+      "quote": "pair programming type systems etc don't really have that much effect either",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Hannay et al.'s meta-analysis found small quality gains and effort increases with high heterogeneity.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "The review deliberately excluded single-practice studies such as pair-programming experiments, but across the whole-method studies it included it reports mixed findings on pair programming effectiveness; it cannot speak to controlled studies directly.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L1167-L1170",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/code-review-catches-most-defects-reviewed",
+      "stance": "asserts",
+      "quote": "it finds about 60 to 80 percent of all the bugs in the code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Inspection studies report high detection rates under limited review rates; modern lightweight review finds fewer.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Defect comments are one-eighth of review comments and mostly micro-level; authors conclude review finds defects less often than teams expect and rarely finds deep or design-level issues, so relying on it for QA 'may be fraught' (defect escape rate itself is not measured).",
+          "source": "software-practices/sources/bacchelli2013-modern-code-review.txt#L533-L538",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "In Qt, VTK and ITK, lower review coverage and participation predict more post-release defects (up to 2 and 5 extra per component), but 70-87% of defective components had 100% of changes reviewed, so review reduces defects without catching most of them.",
+          "source": "software-practices/sources/mcintosh2014-code-review-coverage.txt#L472-L492",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/most-code-review-findings-maintainability-improvements",
+      "stance": "asserts",
+      "quote": "only one out of every four comments that basically block the code significant software defects is about functionality",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Mantyla and Lassenius and Bacchelli and Bird both found most review findings concern evolvability.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.55,
+          "note": "Card sort of 570 Microsoft review comments: code improvement (readability, dead code, practices) is the largest category at 29%, defects only fourth at 14%, and 65 of 78 defect comments are small logic slips rather than design or security issues.",
+          "source": "software-practices/sources/bacchelli2013-modern-code-review.txt#L421-L433",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "Of 44 Google authors surveyed about a specific recent review, only 2 said the comments had found a bug, though most found the feedback appropriate and valuable.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L459-L465",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/sleep-deprivation-impairs-cognition-like-alcohol",
+      "stance": "asserts",
+      "quote": "when you are sleep-deprived you can't tell your work is worse",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/crunch-does-not-improve-product-outcomes",
+      "stance": "asserts",
+      "quote": "they produced games that were worse on every single metric reviewer scores profitability user satisfaction sales",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/sleep-stress-hours-worked-affect-output",
+      "stance": "asserts",
+      "quote": "no practice will make your code any better then they would make if they were well rested",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Fatigue effects are large and robust, but no study directly compares them against technical practices on the same scale.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

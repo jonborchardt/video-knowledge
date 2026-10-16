@@ -1,0 +1,141 @@
+{
+  "id": "shopify-shopify-monolith",
+  "title": "Under Deconstruction: The State of Shopify’s Monolith - Shopify",
+  "channel": "Shopify",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://shopify.engineering/shopify-monolith",
+  "summary": "Shopify's modular-monolith retrospective: componentizing a huge Rails codebase is mostly a developer-behaviour problem, interfaces without a clean dependency graph just add indirection, and static tooling beats runtime tracing.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/microservices-cost-more-short-term-rarely",
+      "stance": "asserts",
+      "quote": "splitting a single monolithic application into a distributed system of services increases the overall complexity considerably",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/adding-public-interfaces-around-modules-without",
+      "stance": "asserts",
+      "quote": "the public interface turned out to just be an added layer of indirection in the existing control flows",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Consistent with coupling research and Parnas-style modularity theory, but the evidence here is one organization's experience report.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/modules-can-only-reasoned-about-tested",
+      "stance": "asserts",
+      "quote": "A dense, cyclical dependency graph undermines the whole idea of Componentization",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Follows from how dependencies propagate change; cyclic dependency metrics correlate with defect proneness in several empirical studies.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/large-architecture-changes-actively-developed-codebase",
+      "stance": "asserts",
+      "quote": "A single centralized team can’t make change happen by working against the momentum of hundreds of developers adding features.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Plausible and matches other large-refactor reports, but it is an organizational observation without controlled evidence.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "For DevOps transformations rather than architecture changes, DORA finds low performers favour Centers of Excellence and training centres that centralise expertise and become bottlenecks, while high performers spread practice through communities of practice and grassroots efforts.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1876-L1884",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/imposing-uniform-coding-conventions-adds-learning",
+      "stance": "asserts",
+      "quote": "Pushing for consistency added rules, which always add some friction, because they have to be learned, remembered, and followed.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Rules have a cost, but consistency also has measured comprehension benefits, so the net effect depends on the rule.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/services-always-change-together-should-merged",
+      "stance": "asserts",
+      "quote": "Change Locality is a sign of both low coupling and high cohesion and makes evolving the code easier.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/static-typing-catches-type-errors-compile",
+      "stance": "asserts",
+      "quote": "it has barely any runtime performance impact, it’s more stable, and it provides advanced features like interfaces",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/static-dependency-analysis-gives-faster-more",
+      "stance": "asserts",
+      "quote": "There’s less ambiguity in static references, and because they’re always explicitly introduced by developers, highlighting them is more actionable.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Static reference analysis is cheap and deterministic; dynamic tracing depends on test coverage and is noisy, though it catches reflective calls static analysis misses.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/large-scale-architecture-refactors-stay-incomplete",
+      "stance": "asserts",
+      "quote": "all large architecture changes end up in an incomplete state",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Widely reported across migration case studies, but it is experience-based rather than measured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/explicit-module-ownership-makes-whole-codebase",
+      "stance": "asserts",
+      "quote": "with each component explicitly owned by a team, whole-codebase chores like Rails upgrades are easily distributed and collaboratively solved",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Ownership clarity is linked to lower defect rates in Microsoft's organizational-metrics studies, but the upgrade claim is a single report.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

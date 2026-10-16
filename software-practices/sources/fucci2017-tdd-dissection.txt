@@ -1,0 +1,1174 @@
+arXiv:1611.05994v1 [cs.SE] 18 Nov 2016                                                                                                                                                                                                                              1
+
+                                          A Dissection of the Test-Driven Development
+                                        Process: Does It Really Matter to Test-First or to
+
+                                                                 Test-Last?
+
+                                         Davide Fucci, Member, IEEE, Hakan Erdogmus, Member, IEEE Burak Turhan, Member, IEEE, Markku
+                                                                           Oivo, Member, IEEE Natalia Juristo, Member, IEEE
+
+                                               Abstract--Background: Test-driven development (TDD) is a technique that repeats short coding cycles interleaved with testing. The
+                                               developer first writes a unit test for the desired functionality, followed by the necessary production code, and refactors the code. Many
+                                               empirical studies neglect unique process characteristics related to TDD iterative nature. Aim: We formulate four process characteristic:
+                                               sequencing, granularity, uniformity, and refactoring effort. We investigate how these characteristics impact quality and productivity in
+                                               TDD and related variations. Method: We analyzed 82 data points collected from 39 professionals, each capturing the process used
+                                               while performing a specific development task. We built regression models to assess the impact of process characteristics on quality and
+                                               productivity. Quality was measured by functional correctness. Result: Quality and productivity improvements were primarily positively
+                                               associated with the granularity and uniformity. Sequencing, the order in which test and production code are written, had no important
+                                               influence. Refactoring effort was negatively associated with both outcomes. We explain the unexpected negative correlation with quality
+                                               by possible prevalence of mixed refactoring. Conclusion: The claimed benefits of TDD may not be due to its distinctive test-first dynamic,
+                                               but rather due to the fact that TDD-like processes encourage fine-grained, steady steps that improve focus and flow.
+
+                                               Index Terms--Test-driven development, empirical investigation, process dimensions, external quality, productivity.
+
+                                                                                                             !
+
+                                        1 INTRODUCTION                                                                  scribed order of the main activities involved: writing a
+                                                                                                                        failing test, making the test pass by adding production
+                                        Test-driven Development (TDD) is a cyclic develop-                              code, and refactoring [2]. Note that we distinguish be-
+                                        ment technique. Ideally, each cycle coincides with the                          tween test-first and TDD, with test-first referring to just
+                                        implementation of a tiny feature. Each cycle finishes                           one central aspect of TDD related to the sequencing of
+                                        once the unit-tests spanning a feature, as well as all                          the different activities involved in a typical cycle: writing
+                                        the existing regression tests, pass. In TDD, each cycle                         of test code precedes the writing of the production code
+                                        starts by writing a unit test. This is followed by the                          that the test code exercises.
+                                        implementation necessary to make the test pass and
+                                        concludes with the refactoring of the code in order to                             Generalizing the above characteristics of a cycle in
+                                        remove any duplication, replace transitional behavior,                          TDD (length, variation, and order) leads to three basic
+                                        or improve the design. The cycles can be thought of as                          dimensions: we refer to them as granularity, uniformity,
+                                        iterations of an underlying micro-process.                                      and sequencing. These dimensions do not apply just to
+                                                                                                                        TDD but to any cyclic or iterative process. In particular,
+                                           Advocates of TDD believe that each such cycle, or                            it applies to several variants that differ from the text-
+                                        iteration, should have a short duration and that devel-                         book version in one or more dimensions. Jeffries et
+                                        opers should keep a steady rhythm [1], [2]. The common                          al. [1] see idealized TDD as the endpoint of a step-
+                                        recommendation is to keep the duration of the cycles to                         wise progression from a traditional, monolithic approach
+                                        five minutes, with a maximum of ten [3], [4]. Thus TDD                          towards a modern, iterative one along these dimensions
+                                        cycles are usually fairly short: we can call them micro-                        . This progression creates a continuum of processes and
+                                        cycles or micro-iterations to distinguish them from longer                      gives rise to several viable variants of TDD, such as
+                                        notions of cycle or iteration that underlie lifecycle-scale                     incremental test-last (ITL) development [6]. 1
+                                        processes, such as sprints in Scrum [5].
+                                                                                                                           Granularity refers to the cycles length, whereas unifor-
+                                           TDD experts also recommend sticking with the pre-                            mity to their variation, i.e., how constant the duration of
+                                                                                                                        the cycles is over time. Granularity and uniformity can
+                                        · D. Fucci, B. Turhan, M. Oivo, and N. Juristo are with the Department of       be thought of as the tempo and beat in music theory,
+                                           Information Processing Science, University of Oulu, Finland                  respectively.
+                                           E-mail: name.surname@oulu.fi
+                                                                                                                           A peculiarity of TDD is in the seemingly counterin-
+                                        · N. Juristo is also with Escuela Tecnica Superior de Ingenieros Informaticos,  tuitive sequencing of the activities associated with each
+                                           Universidad Politecnica de Madrid, Spain
+                                           E-mail: natalia@fi.upm.es                                                       1. Although TDD can be as well considered an emerging-design
+                                                                                                                        practice, we focus on it as a development technique.
+                                        · H. Erdogmus is with Carnegie Mellon University, Silicon Valley Campus,
+                                           USA.
+                                           E-mail: hakan.erdogmus@sv.cmu.edu
+                                                                 2
+
+cycle: unit tests are written before production code. This       low level data (Section 4.4) about the development pro-
+particular aspect constitutes the test-first component of        cesses used by our industrial partners. During the study,
+TDD [2]. It is captured by the sequencing dimension.             in which a test-driven software development process
+This aspect is counterintuitive because the normal soft-         was compared to an iterative test-last (ITL) process,
+ware development workflow takes a test-last approach:            professional software developers tackled programming
+traditionally, unit testing follows the implementation.          tasks of different nature (Section 4.5).
+It is precisely flipping this component from a test-first
+to test-last dynamic that gives rise to the ITL variant.            We visualized the micro-process underlying the data
+Sequencing expresses the preponderance (or lack) of test-        collected from our industrial study on a participant-by-
+first cycles in the development process.                         participant basis, as shown in Figure 1. We were looking
+                                                                 for a metric that would help summarize the process data
+   A TDD cycle typically includes an additional activity,        for each participant in terms of the four dimensions. First
+refactoring [2], in which the structure of the code is im-       we captured each dimension by a quantitative measure
+proved internally without changing its external behavior         easily computable from the data. Then we attempted to
+detectable by the existing tests [7]. Refactoring may            combine them into a single TDD compliance metric with
+involve removal of duplication, other design improve-            an eye to regress this metric against the main outcome
+ments, or replacement of temporary, stub code. At the            measures of external quality and developer productivity
+end of each refactoring activity, all existing tests should      to assess its potential influence (external quality was
+pass, showing that the intended behavior has not been            equated with functional correctness and developer pro-
+affected by the design changes. However, in practice             ductivity with speed of production). To do this, three
+refactoring is often inter-mixed with other activities, and      experts independently evaluated each participant's data
+as such, it sometimes involves adding new production             and gave each resulting observation a TDD compliance
+code as well as changing existing tests and behavior.            score. We then tried to retrofit a formula that would
+These practical deviations, however, also potentially nul-       mirror the experts' overlapping assessments. However,
+lify or reverse the hypothesized benefits [8], [9].              not all of the dimensions appeared to have an equally
+                                                                 significant contribution. Additionally, some dimensions
+   In summary, the process underlying TDD can be                 appeared to have a close association with each other.
+characterized using three main dimensions: granularity,          This revelation led us to decide to investigate the four di-
+uniformity, and sequencing. The first two dimensions,            mensions individually without attempting to aggregate
+granularity and uniformity, deal with the iterative, or          them into an ultimate compliance metric.
+cyclic, nature of this process. The third dimension, se-
+quencing, deals with the particular activities and their            To accomplish our goal, we decided to use data from
+ordering within a cycle. The test-first nature of TDD            a set of ongoing quasi-experiments (i.e., studies that lack
+is related to this third dimension. In addition, a fourth        a control experimental group, and where randomization
+dimension that focuses on refactoring alone captures the         could not be applied) comparing TDD with ITL. The
+prevalence of this activity in the overall process.              underlying data of this enclosing context had sufficient
+                                                                 variation to allow us to investigate the dimensions of
+   The goal of our paper is to understand, based on              interest using a continuum of micro-processes rather
+the four dimensions, how the elementary constituents of          than using the usual dichotomy of clearly delineated
+TDD and related variants affect external software quality        treatment and control groups. Thus, this paper is the
+and developer productivity. We answer the question:              result of an overlay observational study on top of an
+which subset of these dimensions is most salient? This           experimental context. We call it an observational study [16]
+information can liberate developers and organizations            because by pooling data from all experimental groups,
+who are interested in adopting TDD, and trainers who             we effectively abstract away from them. In fact, we have
+teach it, from process dogma based on pure intuition,            no way of directly controlling the dimensions that serve
+allowing them to focus on aspects that matter most in            as factors. The dimensions emerge due to interactions
+terms of bottom line.                                            among several factors. A subject's assignment to a par-
+                                                                 ticular experimental group with a prescribed process
+   This paper is organized as follows: Section 2 presents        is only one of these factors. Others possibly include
+the rationale that motivates this study. The settings in         skill, ability, and motivation. Some factors are unknown.
+which the study took place are described in Section 3,           The dimensions are not binary in that instead of being
+and Section 4 presents the study's design. The results are       present or absent, they are present to varying extents
+presented in Section 5, the limitations are summarized           independent of an assigned treatment. This implies that
+in Section 6, and related work is reported in Section 7.         the dimensions lend themselves best to a regression-type
+The results are discussed in Section 8.                          analysis rather than hypothesis testing.
+
+2 BACKGROUND AND MOTIVATION                                         Figure 2 illustrates how the data gathered from
+                                                                 subjects in a repeated-treatment design are used in
+What makes TDD "tick" has been a topic of research               this study versus in the larger context of the quasi-
+interest for some time [1], [10], [11], [12], [13], [14], [15].  experiments. The observations are shared between the
+In 2014, we set out to investigate this topic rigorously in      studies. The outcome variables in both studies are exter-
+the context of a larger research project. We had collected
+                                                            3
+
+Fig. 1: Example visualization of the micro-process underlying the development activities of subjects from a single
+workshop run. The data were collected from Run 1 subjects in Figure 2 applying TDD or ITL to a set of programming
+tasks. Each row corresponds to a task-subject pair, the subject applying either TDD or ITL to the task (task-technique
+assignments are not specified in the figure).
+
+nal quality and developer productivity. The sole factor     Finland, with development centres in Europe, Asia, and
+in the experimental context is the treatment group: ITL     the Americas. Company B is an SME based in Estonia
+or TDD. In the current study, all the observations are      that offers on-line entertaining platforms to businesses
+pooled, and four measures are extracted from each ob-       worldwide. It has development centres in Europe, Asia,
+servation to give rise to four factors, each corresponding  and the Middle-East.
+to one process dimension.
+                                                               This study analyzes aggregate data collected from
+   Ordinarily, observational studies reveal associations:   four runs of a workshop about unit testing and TDD
+their power to reveal causality is limited. However in      that were conducted at these two companies. In the
+our case, there is a difference. The study is overlaid      unit testing portion of the workshop, we taught the
+on top of an experimental context: the factors naturally    participants the principles of unit testing and how to
+occur in the presence of a deliberate attempt to apply      apply unit testing using an iterative process, but based
+a prescribed process. Similarly the outcome measures,       on a conventional test-last dynamic. In the TDD portion
+the dependent variables, are observable as a result of the  of the workshop, we introduced how unit testing is
+experimental context. Variable omission, or unaccounted     used to drive the development based on a TDD-style
+confounding factors, is still a concern, but not more than  test-first dynamic. The workshop runs were held at the
+they normally are in an experimental context.               participating companies' sites. Three of runs were held
+                                                            at three different sites of Company A (two in Europe
+3 SETTING                                                   and one in Asia), and one run was held in Company B
+                                                            at a European site. Each run lasted five days (eight hours
+The context of this study is a larger research effort       per day, including breaks) in which interactive lectures
+investigating software engineering practices, including     were interleaved with hands-on practice sessions. Some
+test-driven development, in industry [17]. This research    of the practice sessions focused on the use of iterative
+initiative involves several industrial partners from the    unit testing with a test-last dynamic, which we refer to
+Nordic countries. Two companies, referred to as Com-        as incremental test-last (ITL). The other sessions focused
+pany A and Company B in the paper, participated in this     on TDD. Each participant took part in a single run of the
+study. Company A is a large publicly-traded provider of     workshop and implemented several tasks, designed for
+consumer and business security solutions. It is based in    the purpose of the workshop using the techniques that
+                                                           4
+
+Fig. 2: The observations gathered from participants were divided according to the particular technique used by
+distinct experimental groups formed for the original quasi-experiment (not reported in this paper). In the quasi-
+experiment, the data were collected from iterative test last (ITL) and test-driven development (TDD) sessions during
+four runs. Note that Run 4 had a different structure than the other three in terms of the order and development
+method of the tasks used. For the purpose of the study reported in this paper, however, all the observations from
+all runs and groups were pooled together, as illustrated under the column labeled "This Study".
+
+the participant was taught. We used five tasks to support  4.1 Research Questions
+the teaching in a Randori fashion; the remaining three
+tasks (see Section 4.5) were implemented in solo mode,     We focus on the following research questions with re-
+and represent the experimental objects of this study. We   gard to two outcomes-- external software quality and
+also encouraged the participants to try to apply the       developer productivity--and four factors corresponding
+techniques that they learned during the workshop in        to the four process dimensions--sequencing, uniformity,
+their regular work, although we did not collect any data   granularity, and refactoring effort.
+from these informal practice attempts. The workshop
+runs were part of a bigger, ongoing multi-object quasi-       · RQ-QLTY: Which subset of the factors best explain
+experiment on TDD with a repeated-treatment design.              the variability in external quality?
+
+4 STUDY DESIGN                                                · RQ-PROD: Which subset of the factors best explain
+                                                                 the variability in developer productivity?
+In this section, we state the research questions that are
+answered in the study. We also elaborate on the choice        The notion of external quality in RQ-QLTY is based
+of the research method, the constructs of interest, the    on functional correctness, specifically average percentage
+metrics used to measure them, the experimental tasks       correctness. We do not consider other notions of external
+used, and the data analysis techniques.                    quality, such as usefulness and usability. The notion of
+                                                           productivity in RQ-PROD is based on speed of produc-
+                                                           tion, or amount of functionality delivered per unit effort.
+                                                                                                                         5
+
+   We also consider how the factors interact with each        tests. The formula to calculate QLT Y is given in Equa-
+other (for plausible interactions) and whether these in-
+teractions matter in predicting the levels of the outcomes.   tion 1,
+
+4.2 Method                                                                                       #T U S
+
+We collected fine-grained process data from the four                                                     QLT Yi
+workshop runs to quantify the outcome (dependent)
+variables and factors (independent variables). For each                QLT Y = i=1                               × 100,  (1)
+outcome variable, we use regression analysis to explore                                          #T U S
+its relationship to the four factors and possible interac-
+tions among the factors. We also aim to understand the        where QLT Yi is the quality of the i-th tackled user-story,
+form of any underlying relationships. To have enough          and is defined as in Equation 2.
+variability among the process dimensions represented
+by the factors, we used pooled data from the four runs,                QLT Yi                 =  #ASSERTi(P ASS) .       (2)
+which mixed the application of TDD and ITL.                                                       #ASSERTi(ALL)
+
+   In our specific case, a controlled experiment was in-      In turn, the number of tackled user stories (#T U S) is
+feasible since it is not possible to control the factors. In
+this regard, this study is neither a controlled experiment    defined, similarly to Erdogmus et al. [11], as in Equation
+nor a quasi-experiment. No experimental groups (control
+and treatment groups) can be created by manipulating          3.                           n
+the factors. A priori random assignment of subjects to
+factor groups is not possible without such manipulation.               #T U S =               1 #ASSERTi(P ASS) > 0      (3)
+
+4.3 Outcome (Dependent) Variables                                      i=0 0 otherwise
+
+The outcomes under study were external quality, repre-        where n is the number of user-stories composing the
+sented by a defect-based (or dually, correctness-based)       task. #ASSERTi(P ASS) is the number of passing JUnit
+metric (QLT Y ), and productivity, represented by an          assert statements2 in the acceptance test suite associ-
+effort-based metric (P ROD). To be able to measure levels     ated with the ith user-story. Accordingly, a user-story is
+of these metrics, we divided the programming tasks            considered as tackled if at least one of its JUnit assert
+used in the workshop runs into many smaller sub-              statements passes. In particular, an empty implementa-
+tasks. Each sub-task resembled a small user story. A user     tion will not pass any assert statements; conversely, a
+story is a description of a feature to be implemented         hard-coded or stubbed implementation may pass one or
+from the perspective of the end user, and we adopted          more assert statements. In the latter case, a user story
+this perspective when defining the sub-tasks. Because         is still considered as tackled since there is an indication
+the sub-tasks were very granular, they captured the           that some work on it has been done. We use an assert
+tasks' functional requirements with high precision. The       statement as our smallest unit of compliance with the
+high level of granularity also made it possible to assess     requirements. This allows us to be able to better high-
+task completion, quality, and correctness on a numerical      light quality differences between observations, relative to
+scale rather than a binary scale. The user stories were       the enclosing acceptance test case. The QLT Y measure
+frozen and known to the subjects upfront: they did not        deliberately excludes unattempted tasks and tasks with
+change during the implementation of the tasks by the          zero success; therefore, it represents a local measure
+subjects. An acceptance test suite--a set of reference        of external quality: it is calculated over the subset of
+tests developed by the researchers--was associated with       user stories that the subject attempted. QLT Y is a ratio
+each user story, with disjoint subsets of acceptance tests    measure in the range [0, 100].
+in each suite covering specific user stories (see Section
+4.5 for details). The acceptance tests were then used to         For example, suppose that a subject tackles three user
+calculate the two outcome metrics, as explained below.        stories; i.e., #T U S = 3. This means there are three user
+Both metrics, with minor variations, have previously          stories for which at least one assert statement passes in
+been used in TDD research [11], [18], [19], [20].             the associated acceptance test suite. Say, the acceptance
+                                                              tests of the first tackled user story contains 15 assertions,
+4.3.1 External Quality                                        out of which five are passing; the seconds contains ten
+                                                              assertion, and two are passing; the third also contains
+The metric for external quality QLT Y measures how            ten assertions, and eight are passing. Then the quality
+well the system matches the functional requirements.          value of the first tackled user story is 0.33; the second
+Each user story is expressed as a subset of acceptance        user story has a quality value of 0.20, and the third 0.80.
+                                                              Therefore, the QLT Y measure for the subject is 44%, the
+                                                              average of the three attempted sub-tasks (100 × (0.33 +
+                                                              0.20 + 0.80)/3).
+
+                                                              4.3.2 Productivity
+                                                              The metric for productivity (P ROD) follows the soft-
+                                                              ware engineering definition of "work accomplished, with
+                                                              the required quality, in the specified time" [21]. The metric
+
+                                                                 2. http://junit.org/apidocs/org/junit/Assert.html
+                                                              6
+
+is calculated as in Equation 4 and is defined as a ratio      Each colored vertical section represents a cycle. The
+measure in the range is [0, 100].                             color encodes the type of a cycle. The width of the
+                                                              section represents the cycle's duration. Figure 3 captures
+              OUT P UT               (4)                      data collected from a single subject during one of the
+P ROD =                                                       runs presented in Figure 2. After a first test-first cycle
+                                                              (test-first production, light blue), the subject wrote tests
+                TIME                                          (test addition, aqua) without adding new functionality.
+                                                              New production code was implemented using a test-last
+OU T P U T (Equation 5) is the percentage of assert state-    approach (test-last production, violet), and after that the
+ments passing for a task when the subject's solution is       subject switched to adding new production code using
+ran against the whole acceptance test suite for that task.    a test-first dynamic (test-first production again, light
+It conveys the proportion of the system requirements          blue). The majority of the final cycles were dedicated
+that have been correctly implemented. Unlike QLT Y ,          to refactoring (orange).
+this metric is independent of how many of the task's
+user stories the subject tackled. It does not apply the          Having characterized the components of the develop-
+"at-least-one-assertion" filter to sub-tasks to guess which   ment process in terms of cycle types and durations, we
+sub-tasks were attempted and select only those tasks.         can now relate these components to the four process
+                                                              dimensions to determine their levels for a subject-task
+OU T P U T = #ASSERT (P ASS) × 100,  (5)                      pair. Granularity (GRA) is measured by the median of
+                   #ASSERT (ALL)                              cycle duration. Uniformity (U N I) is measured by the
+                                                              median absolute deviation (MAD) of cycle duration.
+   T IM E (Equation 6) is an estimate of the number of        We selected median and MAD, respectively, over other
+minutes a subject worked on a task. It was based on log       typical value and dispersion measures because they are
+data collected from the subject's IDE.                        more robust with respect to outliers. Sequencing (SEQ)
+                                                              is measured by the fraction of test-first cycles, that is, test-
+T IM E = tclose - topen              (6)                      first production cycles, which start with a test addition
+                   6000                                       activity, followed by the addition of production code
+                                                              in the middle, and end with successful passing of all
+where t denotes a timestamp in millisecond. Thus              tests. Finally, refactoring effort (REF ) is measured by the
+T IM E is simply the difference, in minutes, between          fraction of refactoring cycles in the development process.
+the timestamp of closing the IDE and the timestamp            In refactoring cycles, normally production or test-code is
+of opening the IDE. If the subject opended and closed         modified, but no new test or production code is added.
+the IDE several times during a run, T IM E was cal-           Table 1 summarizes these four process dimensions rep-
+culated as the sum of the all open-close intervals. The       resenting the factors, or independent variables, whereas
+maximum time allocated to a task was 300 minutes,             Table 2 summarizes the heuristics used by the IDE plug-
+and one minute was the smallest time unit considered.         in to identify the cycle type according to the underlying
+For example, suppose a subjects implements a task with        sequence of actions. In the following section, we explain
+a total of 50 assert statements in its acceptance test        the computation of the level of each process dimension
+suite. After running the acceptance test suite against the    and the implications of the chosen metrics.
+subject's solution, 45 assert statements are passing. Then
+OU T P U T = 100 × 45/50 = 90%. Suppose the subject
+delivered the solution in three hours (i.e., T IM E = 180
+minutes). The subject's P ROD is therefore 0.50, denoting
+an assertion passing rate of .50% per minute.
+
+4.4 Factors (Independent Variables)                           Fig. 3: Example visualization of a sequence of devel-
+                                                              opment cycles for a single subject working a particular
+In order to quantify the levels of the four factors--         task, equivalent to a single row of Figure 1. The width
+granularity, uniformity, sequencing, and refactoring          of each section represents the cycle's duration and the
+effort--we decompose the development process applied          color represents the type of the cycle.
+by a subject into a sequence of small cycles. A cycle
+is delimited by the successful execution of a regression      4.4.1 Granularity (GRA)
+test suite (the green bar in JUnit). Each cycle in turn is    Granularity is measured as the median cycle duration
+composed of a sequence of more elementary actions. The        in minutes. This measure captures the extent of the
+actions form a pattern which help identify a cycle's un-
+derlying type of activity--for example, refactoring, test-
+first production, test-last production, or test addition.
+This type is inferred automatically by a tool [22] installed
+in the IDE and using the heuristics devised in Kou et
+al. [23]. A cycle also has a duration calculated as the
+difference between the timestamps of the first and last
+actions in the cycle.
+
+   An example is shown in Figure 3. In the example,
+time flows from left to right, measured in minutes.
+                                                                                                                               7
+
+               TABLE 1: Summary of study factors corresponding to the four process dimensions.
+
+Dimension      Interpretation                                                                                        Range
+GRA                                                                                                                  [0, 300]
+               A fine-grained development process is characterized by a cycle duration typically between 5
+UNI            and 10 minutes. A small value indicates a granular process. A large value indicates a coarse          [0, 149]
+               process.
+SEQ                                                                                                                  [0, 100]
+               A uniform development process is characterized by cycles having approximately the same
+REF            duration. A value close to zero indicates a uniform process. A large value indicates a                [0, 100]
+               heterogeneous, or unsteady, process.
+
+               Indicates the prevalence of test-first sequencing during the development process. A value close
+               to 100 indicates the use of a predominantly test-first dynamic. A value close to zero indicates
+               a persistent violation of the test-first dynamic.
+
+               Indicates the prevalence of the refactoring activity in the development process. A value close
+               to zero indicates nearly no detectable refactoring activity (negligible refactoring effort). A value
+               close to 100 indicates a process dominated by refactoring activity (high refactoring effort).
+
+               TABLE 2: Heuristics used by the tool to infer the type of development cycle (from [23]).
+
+Type           Definition
+Test-first
+               Test creation  Test compilation error  Code editing Test failure  Code editing  Test pass
+Refactoring    Test creation  Test compilation error  Code editing  Test pass
+Test addition  Test creation  Code editing  Test failure  Code editing  Test pass
+Production     Test creation  Code editing  Test pass
+
+Test-last      Test editing (file size changes ± 100 bytes)  Test pass
+Unknown        Code editing (number of methods, or statements decrease)  Test pass
+               Test editing AND Code editing  Test pass
+
+               Test creation  Test pass
+               Test creation  Test failure  Test editing  Test pass
+
+               Code editing (number of methods unchanged, statements increase)  Test pass
+               Code editing (number of methods increase, statements increase)  Test pass
+               Code editing (size increases)  Test pass
+
+               Code editing  Test creation  Test editing  Test pass
+               Code editing  Test creation  Test editing  Test failure  Code editing  Test pass
+
+               None of the above  Test pass
+
+cyclic nature of the development process used. The lower    4.4.3 Sequencing (SEQ)
+the value, the finer-grained in general the process is. A
+subject with a low GRA value tends to use short cycles,     Sequencing characterizes the underlying development
+and completes more cycles within the same time than         process according to the extent to which a developer
+a subject with a higher GRA value. We use the median        adheres to a test-first dynamic. It is measured as the
+value rather than the average to reduce the sensitivity of  percentage of cycles having type test-first. Note that
+the measure to outliers. GRA is a ratio measure in the      SEQ does not capture the full nature of TDD, just one
+range [0, 300] because the maximum time allocated for a     central aspect that has to do with its dynamic.
+task was 300 minutes.
+                                                               SEQ (Equation 8) is a ratio measure in the range [0,
+                                                            100] and it is calculated as follows:
+
+4.4.2 Uniformity (UNI)                                             n 1 type(i) = test-first
+
+Uniformity represents the dispersion of cycle duration,     SEQ =  i=0 0 otherwise                                   × 100,    (8)
+as measured by mean absolute deviation (MAD).                                     n
+
+   Uniformity indicates the extent to which a subject was   where n is the total number of cycles.
+able to keep the rythm of the development cycles. The
+lower the value, the more uniform the cycles were. A        4.4.4 Refactoring Effort (REF)
+value of zero indicates that all the cycles had the same
+duration. UNI (Equation 7) is a ratio measure in the        Refactoring effort (refactoring in short) is measured by
+range [0, 149], and calculated as follows:                  the percentage of cycles likely to be associated with
+                                                            refactoring activity. A cycle recognized by the IDE tool
+    U N I = median(| duration(i) - GRA |), i  [0, n] (7)    to be an instance of successful refactoring activity has
+                                                            type ref actoring.
+
+                                                               REF (Equation 9) is a ratio measure in the range [0,
+                                                            100], and it is calculated as follows:
+
+where n is the total number of cycles.                      REF =  n 1 type(i) = refactoring                                   (9)
+                                                                   i=0 0 otherwise
+   We use MAD as opposed to standard deviation be-
+cause GRA is defined as a median. Again this helps                                                        × 100,
+reduce the influence of outliers, atypical cycles that are                         n
+too short or too long.
+                                                            where n is the total number of cycles.
+                                                             8
+
+4.5 Study Tasks                                              and how they interact).
+                                                                The first requirement was algorithmic, and the re-
+The participants implemented three tasks during each
+workshop run. The first two tasks were greenfield: they      maining requirements were more structural in nature.
+involved implementing a solution from scratch. The           The associated acceptance test suite consisted of 132
+third task was brownfield: it involved extending an          JUnit assert statements, covering the 11 sub-stories. We
+existing system. The third task was more difficult than      allocated five hours for this task because it was deemed
+the first two. We describe each task below.                  more difficult than Task 1 and Task 2.
+
+   Task 1 (Mars Rover) involved the implementation of           Table 3 shows how the participants were distributed
+the public API for moving a vehicle on a grid. It was sim-   over the tasks during the four runs of the workshop.
+ple and algorithmic in nature, but required several edge
+cases to be handled as well as correctly parsing the input.     The total number of data points collected over the
+The task is commonly used in the agile community             three tasks and three workshop runs was 99. After
+to practice coding techniques. The requirements were         removing the data points containing missing values, our
+described as six user stories, which were later refined      final dataset consisted of 82 data points (27 for Task 1,
+to 11 sub-stories for acceptance testing. The participants   25 for Task 2, and 30 for Task 3).
+were given the six user stories, the stub for the class
+definition, including the API signature (8 LOC), and a       4.6 Instrumentation
+stub of the JUnit test class (9 LOC). The acceptance test
+suite had 89 JUnit assert statements that covered the 11     The development environment used by the participants
+sub-stories. We allocated four hours for this task.          included Java version 6, Eclipse 4, and JUnit 4. The IDE
+                                                             was instrumented with the Besouro tool [22] to collect
+   Task 2 (Bowling Scorekeeper) required the implemen-       data about the development cycles.
+tation of a system to keep scores for a bowling game.
+This task is also well known and has been used in               Besouro's data were used to calculate the metrics
+previous TDD studies [24].                                   representing the factors. This tool is capable of recog-
+                                                             nizing development actions (e.g., creating a test class,
+   Also algorithmic in nature, its specification included    running the unit tests, modifying a method) taking place
+13 user stories to be implemented in a specific order.       inside the development environment and logging them
+Each user story contained an example scenario. The           along with a timestamp. The information is then used
+participants were given a stub containing two classes        to aggregate a sequence of development actions into
+(23 and 28 LOC) with the signatures of the methods to        identifiable micro-cycles. The cycles are then classified
+be implemented. A stubbed test class (9 LOC) was also        as test-first compliant, refactoring, or non-test-first com-
+provided. The acceptance test suite of this task had 58      pliant (with three subcategories: test-last production, test
+JUnit assert statements that covered the 13 user stories.    addition, regression test) according to an expert system
+We also allocated four hours for this task.                  based on the heuristics presented in Kou et al. [23]. This
+                                                             classification gives rise to the type of the cycle used in
+   Task 3 (MusicPhone) was about extending a con-            defining the factors SEQ and REF . For example, the
+cert recommendation system. The system has a tradi-          following sequence of development actions is classified
+tional three-tier architecture that mimics a real-world      as a test-last production cycle since the production code
+application (see the task documentation included in the      was written (and compiled) before the unit test:
+replication package [25]). We provided the participants
+with a partially working implementation consisting of               · EditAction 1397055646 Frame.java ADD int score() METHOD
+13 classes, and 4 interfaces (1033 LOC). The existing                   bytes: 127
+implementation included the UI and data access tiers.
+MusicPhone does not use any additional frameworks                   · CompilationAction 1397055689 BowlingGame OK
+with the exception of JUnit for unit testing and Swing              · EditAction 1397055691 FrameTest.java ADD void testScore()
+for the user interface. The existing part of the task
+was developed using the Singleton pattern, which was                    METHOD bytes: 391
+explained to the subjects before the start of the exper-            · UnitTestSessionAction 1397055770 FrameTest OK
+iment. The subjects were also given a cheat sheet of
+the architecture before they started working on the task.       As another example, the following sequence is clas-
+The participants were asked to implement three missing       sified as test-first compliant, or a test-first production
+requirements in the business logic tier. They did not have   cycle:
+to modify the presentation tier. These requirements were
+later refined into 11 sub-stories for acceptance testing.           · EditAction 1397056134 BowlingGameTest.java ADD void
+                                                                        testScore() METHOD bytes: 126
+   In order to implement these requirements, the partic-
+ipants needed to understand the existing system and its             · UnitTestSessionAction 1397056135 BowlingGameTest FAIL
+architecture. We provided the participants with a smoke             · FileOpenedAction 1397056152 BowlingGame.java
+test (38 LOC, 6 JUnit assertions) as an example of the              · EditAction 1397056173 BowlingGame.java ADD int score()
+usage of the existing classes (how to instantiate them
+                                                                        METHOD bytes: 340
+                                                                    · UnitTestSessionAction 1397056176 BowlingGameTest OK
+                                                                                                            9
+
+      TABLE 3: Allocation of the participants to tasks and techniques (ITL indicates iterative test-last).
+
+                                 Company                Task 1           Task 2     Task 3
+                          Company A (3 runs)           18 (ITL)        19 (TDD)   21 (TDD)
+                          Company B (1 run)     6 (ITL) 9 (TDD)  2 (ITL) 8 (TDD)  16 (TDD)
+
+   In this last example, a unit test for a not-yet-existing     the relationship between the outcome variables and the
+functionality is written first. The test fails since there      complete set of factors. Finally, we use feature selec-
+is no production code that can be exercised by it. The          tion to create the model that includes only the most
+developer then writes some production code after which          salient factors. For each model we report the effect size
+the test passes.                                                as adjusted R2, which indicates the proportion of the
+                                                                variance in the outcome variable that the factors are able
+   Each development cycle also has a duration derived           to explain. Thus 1 - adjusted R2 can be attributed to
+from the timestamps (not shown here) of the delimiting          unknown factors, or inherent variability in the outcome
+actions. The duration is used to calculate GRA and U N I.       variable. As opposed to the p-value, which informs
+                                                                whether the association is present by chance or not, the
+4.7 Subjects                                                    effect size informs about the magnitude of the association.
+                                                                The soundness of the models is checked by applying the
+The subjects were software professionals of varying             proper assumption diagnostics. The data analysis was
+levels of experience. For the workshops organized at            carried out using R version 3.1.2. with  level set to
+Company A's sites, 24 developers signed up, but 22 par-         .05. The dataset used in the analysis is included in the
+ticipated in total. In Company B, after 19 initial signups,     replication package [25].
+17 participated in the workshop. All the subjects except
+two had at least a bachelor's degree in computer science        5 RESULTS
+or a related field. The average professional experience
+in Java development was 7.3 years (standard dev. = 4.1,         We collected six measures. The main four process di-
+min. = 1, max. = 15 years). Before the workshop, the            mensions (GRA, U N I, SEQ, and REF ) constitute the
+participants were asked to state their level of skill in        factors (independent variables). QLT Y , and P ROD are
+Java and unit testing on a 4-point Likert scale. Table 4        the outcome (dependent) variables.
+shows the breakdown of their answers.
+                                                                   The dataset includes 82 complete observations. An
+TABLE 4: Distribution of the subjects over the four skill       observation was considered complete when there were
+levels for Java and unit testing (in percentage).               no missing values for any of the variables over the three
+                                                                tasks.
+Java  None          None          Unit testing  Expert
+      Novice         2.5  Novice Intermediate     2.5           5.1 Descriptive Statistics
+      Intermediate    27                           0
+      Expert         2.5    9.5 2.5                5            The descriptive statistics for the dataset are reported in
+                      0      17 9.5                5            Table 5. The histogram and probability density of each
+                            9.5 2.5                             variable is shown in Figure 4.
+                            2.5 2.5
+                                                                   QLT Y appears normally distributed, with about 75%
+   Most of the subjects had basic experience with Java          of the observations in the 50-100 range, as shown in
+and unit testing. Few subjects (5%) considered them-            Figure 4e. P ROD appears positively skewed and multi-
+selves experts in both Java and unit testing. Fewer             modal as shown in Figure 4f. Approximately 25% of the
+(2.5%) said they had neither skill. No one declared to          observations are in the 0-0.25 range (min = 0, max =
+be expert unit testers. To sum up, the subject sample           .86). The shapes of the distribution of QLT Y and P ROD
+was composed mostly of mid-level Java developers with           are consistent with those of a previous experiment con-
+basic unit testing skills, but experience and skill still       ducted with student subjects [26].
+varied. In order to establish a better baseline and level
+the playing field, the subjects were given a five-hour             The distributions of GRA (Figure 4a) and U N I (Figure
+hands-on tutorial on unit testing principles using JUnit        4b), variables capturing the cyclical characteristics of the
+and a five-hour training on applying TDD in different           process, are positively skewed. For both, the majority
+contexts.                                                       of the observations are in the 0-10 interval. The peek of
+                                                                the granularity distribution is close to the suggested five
+4.8 Data Analysis Techniques                                    minutes; also the peek and skewness of the uniformity
+                                                                distribution suggest that the majority of the subjects kept
+Our analysis starts with the characterization of the data       a consistent rhythm (U N I = 0 minute indicates that all
+with descriptive statistics. The next step is to look for cor-  the cycles had the same duration).
+relations among the variables. This allows us to evaluate
+the redundant information in the factors (independent              Figure 4c shows that some subjects, around a quarter,
+variables) and get a glimpse of the associations between        wrote tests first only to some extent (approximately
+the outcome (dependent) variables and factors. Next             one-third of the total cycles completed). Subjects in the
+we create multiple linear regression models to identify
+                                                                                                         10
+
+     TABLE 5: Descriptive statistics for the dataset used in the study (n=82).
+
+     Statistic Mean St. Dev. Min Pctl(25) Median Pctl(75) Max
+
+     QLTY    65.55 19.25 0.00 50.00                               66.67        81.67  100.00
+                                                                   .12          .35     .86
+     PROD    .24       .26 .00 .05                                4.36         8.95   48.97
+                                                                  4.52         8.17
+     GRA     7.93 9.53 .87 2.78                                                       51.32
+                                                                  33.33        47.33  87.50
+     UNI 4.52 9.14 .00 2.43                                       23.07        34.52  71.42
+
+     SEQ 32.79 21.86 .00 16.66
+
+     REF     24.39  18.50  .00                              8.71
+
+upper quantile wrote test-first approximately half of the   TABLE 7: Correlations between the factors and out-
+time. The distribution of REF is positively skewed, as      comes. The p-values are reported in parentheses.
+shown in Figure 4d. The subjects applied refactorings
+approximately one-third of the time on average, but a                          GRA UNI SEQ REF
+quarter of them refactored less than 10% of the time.
+This behavior is not surprising as it often happens in                   QLTY  -.27   -.36 .12 -.11
+real projects, as was observed by Aniche et al. [27].                          (.02)  (.01) (.29) (.31)
+
+                                                                         PROD  -.20   -.25 .03 -.17
+                                                                               (.07)  (.20) (.81) (.11)
+
+5.2 Correlation Analysis                                    optimal models that explain how useful the factors are
+                                                            in predicting the observed outcomes. We start with a
+In this section we check for significant correlations be-   full model that includes all the factors and employ a
+tween the variables, using the Spearman  coefficient        backward elimination approach to find the model that
+[28]. Spearman's correlation is a rank-based correlation    minimizes information loss according to Akaike's Infor-
+measure that does not rest upon an assumption of            mation Criterion (AIC) [30]. Minimizing AIC is preferred
+normality, and it is robust with respect to outliers.       to maximizing adjusted R2 because it favors the simplest
+                                                            model [30], whereas adjusted R2 can be biased towards
+   Table 6 summarizes the correlations among the four       the more complicated model. The initial model we
+factors. The factors dealing with the cyclical character-   propose has two high-level components, with possible
+istics of the process, GRA and U N I, are positively cor-   interaction within the two high-level components, but
+related ( = .49, p-value = .0001). The shorter the cycles   no interactions across them.
+tend to be, the more uniform they are, and vice versa.
+Another significant correlation exists between GRA and         · The high-level component CY CLE deals with the
+REF , but the magnitude is small ( = -.22, p-value                cyclical characterisics of the development process.
+= .02). Coarser processes appear to involve reduced               This component includes the factors granularity and
+refactoring effort, and vice versa.                               uniformity, and the interaction between them.
+
+   Table 7 summarizes the correlations among the depen-        · The high-level component T Y P E deals with the
+dent (outcome) variables and independent variables (fac-          specific approach used within cycles. This compo-
+tors). QLT Y is negatively correlated with GRA, i.e., the         nent includes the factors sequencing and refactor-
+smaller the cycle, the higher the quality, and vice versa.        ing, and the interaction between them.
+The correlation is significant ( = -.25, p-value=.02)
+and its magnitude is medium [29]. A similar negative        It is reasonable to assume that CY CLE and T Y P E do
+association exists between QLT Y and U N I; the more        not interact because they represent orthogonal higher-
+uniform the development cycles, the better the external     order concepts.
+quality ( = -.36, p-value = .01), and vice versa.
+                                                               Hence, our model is CY CLE + T Y P E, where:
+   Unlike QLT Y , none of the factors correlate signifi-
+cantly with the outcome variable P ROD.                        · CY CLE = GRA + U N I + (GRA : U N I)
+
+TABLE 6: Correlations among the factors.                       · T Y P E = SEQ + REF + (SEQ : REF )
+The values above the diagonal represent Spearman's
+correlation coefficient; the values below represent the p-  Here the symbol ":" denotes interaction between two
+value.                                                      factors. Thus we have:
+
+     GRA UNI SEQ REF                                           OU T COM E  GRA + U N I + GRA : U N I +
+                                                                                                                                   (10)
+GRA        .49 .11 -.22
+                                                                                         SEQ + REF + SEQ : REF
+UNI .0001    -.11 .01
+                                                            where OU T COM E  [QLT Y , P ROD].
+SEQ .15 .92         -.48                                       The results for this model are reported in Table 8. The
+
+REF .02 .30 .10                                             model in Equation 10 is statistically significant for both
+                                                            outcome variables according to F-statistic. The observed
+5.3 Regression Models                                       effect sizes (measured by adjusted R2) are considered
+                                                            small-medium [29], typical for studies involving human
+In this section, we explore the relationships between       factors [31], [32]. However, the factor coefficients and
+the four factors and two outcome variables and find         interaction terms are all statistically insignificant at the
+                                                            given -level. The correlations observed between the two
+                                                                                         11
+
+(a) Granularity                                                        (b) Uniformity
+
+(c) Sequencing                                                         (d) Refactoring
+
+(e) Quality                                                            (f) Productivity
+
+Fig. 4: Histograms and density curve for the study variables. The x-axis for the histograms of granularity and
+uniformity are cut to maximum value of the dataset, instead of extending to the theoretical maximum.
+
+factors GRA and U N I (see Section 5.2) may indicate a                    Based on these results, we drop the problematic inter-
+problem of multicollinearity in the models. Although it                action factor GRA : U N I from further analysis. There-
+does not impact the power of the model, multicollinear-                fore, we modify the candidate model for QLT Y to be:
+ity3 has the risk of inaccurate regression coefficients and
+p-values [33]. We can assess the extent of such overfitting             QLT Y  GRA+U N I +SEQ+REF +SEQ : REF (11)
+using the Variance Inflation Factor (VIF). VIF indicates to
+what extent the variances of the coefficients estimates are            5.3.1 Feature Selection
+inflated due to multicollinearity. A VIF value exceeding
+4.0 is interpreted as problematic multicollinearity [34].              We now investigate whether the model in Equation 11
+The interaction term GRA : U N I exhibits a VIF of 5.53,               can be further simplified by applying feature selection.
+which is excessive. For the factors and the other interac-             Our approach, stepwise backward selection [35], iter-
+tion term, we have VIF(GRA) = 3.39, VIF(U N I) = 1.91,                 atively drops the least significant variable to form a
+VIF(SEQ) = 2.38, VIF(REF ) = 3.24, and VIF(SEQ :                       new model based on its AIC. The re-inclusion of any
+REF ) = 2.56, which are acceptable.                                    previously dropped variables is considered at the end of
+                                                                       each iteration.
+   3. Multicollinearity results from two or more factors in a model
+being significantly correlated, resulting in redundancy, and possible     AIC represents the information loss for a given model
+overfitting.                                                           relative to the theoretical ideal, unlike the Chi-squared
+                                                                       goodness-of-fit approaches in which the absolute model
+                                                                       fit is assessed [36]. AIC takes into account the complexity
+                                                                       of the model, i.e., the number of variables. As opposed to
+                                                                                                                 12
+
+TABLE 8: Regression summary for the models in Equation 10. Standard error reported in parentheses.
+
+                                                                    Outcome variable:
+
+                                                              QLTY  PROD
+
+GRA                             -.36 (0.19)                         -5.03e-03 (2.58e-02)
+                               p-value = .65                              p-value = .05*
+UNI
+                                 -.62 (.49)                         -9.96e-03 (6.53e-03)
+SEQ                            p-value = .20                              p-value = .13
+
+REF                              .002 (.14)                         -1.48e-03 (1.80e-03)
+                               p-value = .86                              p-value = .41
+GRA:UNI
+                                -0.26 (.20)                         -4.91e-03 (2.53e-03)
+SEQ:REF                        p-value = .17                              p-value = .05
+
+Constant                         .006 (.04)                         1.57e-04 (1.87e-04)
+Adjusted R2 [conf. int.]       p-value = .65                             p-value = .40
+Residual Std. Error (df = 75)
+F Statistic (df = 6; 75)         .001 (.005)                        3.60e-05 (7.49e-05)
+p-value                        p-value = .80                             p-value = .62
+
+                                 77.27 (7.14)                          0.47 (.09)
+                               p-value = .000                       p-value = .000
+
+                                .09 [.01, .26]                       .08 [.01, .26]
+                                     18.40                                 .24
+                                      2.42                                 2.72
+                                      .03                                  .04
+
+R2-based indicators [36], it does not inflate fitness after   TABLE 9: Regression summary for the QLT Y model
+more variables have been added. Another relative fitness      having the best AIC (483.50). Standard error reported
+index that takes into account model parsimony similar         in parentheses.
+to AIC is BIC [30]. BIC tends to penalize the number of
+variables in the model more than AIC. However, unlike               GRA                       Outcome variable:
+BIC, AIC reaches an asymptotically optimal model under                                               QLTY
+the assumption that the best theoretical model is not               UNI
+among the possible candidates [37]. This property of AIC                                         -.34 (0.17)
+makes it favorable to BIC in our case: the best model for           REF                         p-value = .04
+QLT Y and P ROD cannot be constructed using only the
+factors measured in this study, and therefore we use AIC            Constant                      -.43 (.25)
+as the basis for the selection criterion. We are looking for        Adjusted R2 [conf. int.]    p-value = .09
+the model with the minimum AIC4.                                    Residual Std. Error
+                                                                    F Statistic                   -.25 (.11)
+   Applying backwards selection, after three iterations             p-value                     p-value = .03
+we obtain the models presented in Table 9 for QLT Y
+and Table 10 for P ROD. These two models represent the                                           77.70 (4.05)
+best compromise between goodness of fit and simplicity                                         p-value = .000
+with minimum loss of information.
+                                                                                                 .12 [.01, .27]
+   Both models are significant and exhibit an adjusted R2                                      17.98 (df = 78)
+indicating a medium effect size. Notice that SEQ and its                                      4.86 (df = 3; 78)
+interaction with REF (SEQ:REF ) have been dropped
+from both models. This is surprising as it implies the                                                .003
+sequence in which writing test and production code
+are interleaved is not a prominent feature. The finding       outcome variables seems counterintuitive. One reason
+counters the common folklore within the agile software        may lie in the metric REF used to measure refactoring
+development community.                                        effort. REF may not reliably measure the construct that
+                                                              it targets, which raises a construct validity threat. This
+   The factors related to the higher-level CY CLE compo-      has to do with the measure's inability to differentiate
+nent (GRA and U N I) as well as remainin T Y P E compo-       between useful and harmful variants of refactoring. Most
+nent (refactoring effort, REF ) are negatively associated     cycles detected as refactoring cycles could have been
+with both outcomes. In the end, the models for QLT Y          associated with floss refactoring [38], a practice that mixes
+and P ROD involve exactly the same factors.                   refactoring with other activities. A typical example in-
+                                                              volves sneaking in production code that implements new
+   That refactoring has a negative relationship with both     functionality while refactoring. The developer is peform-
+                                                              ing refactoring, realizes that a piece of functionality is
+   4. The theoretical best value for AIC is minus infinity.   missing and mixes in the proper production code, but
+                                                              the code is not covered by any tests, possibly causing a
+                                                             13
+
+TABLE 10: Regression summary for the P ROD model             model for the corresponding factor. This is the compo-
+having the best AIC (-239.30). Standard error reported       nent line. The circles represent the partial residuals. The
+in parentheses.                                              solid curve is fitted to the residuals using the LOESS
+                                                             method--a standard, nonparametric method to fit a
+GRA                         Outcome variable:                curve to a set of observations based on locally weighted
+                                   PROD                      polynomial regression [40]. A systematic departure of
+UNI                                                          the residuals curve from the component line indicates
+                               -.003 (.002)                  a poor fit [41], which does not appear to be the case in
+REF                           p-value = .11                  Figures 5 and 6. We observe sporadic local departures of
+                                                             the LOESS curves from the component lines, especially
+Constant                       -.003 (.002)                  at some extremes, but the curves do not "run away"
+Adjusted R2                   p-value = .08                  persistently.
+Residual Std. Error
+F Statistic                    -.003 (.001)                  5.3.3 Interpretation of Models
+p-value                       p-value = .02
+                                                             We briefly interpret the significant coefficients in the two
+                                 .39 (.05)                   models.
+                             p-value = .000
+                                                                Regarding the GRA coefficient in QLT Y (Table 9),
+                               .10 [.01, .28]                reducing the cycle length further from the often sug-
+                              .22 (df = 78)                  gested values of five to ten minutes results in little
+                            4.14 (df = 2; 78)                improvement. The improvement can be as high as 14%
+                                                             when cycle length is reduced from its maximum ob-
+                                    .008                     served value at around 50 minutes down to the average
+                                                             observation of eight minutes in the nominal range of the
+feature interaction and introducing a hidden bug. Floss      dataset.
+refactoring is believed to be potentially harmful, nega-
+tively affecting quality and productivity. Pure refactoring     With respect to REF coefficient, we have similar
+cycles are difficult to detect accurately without before-    observations, however, we have to qualify them with
+and-after code coverage comparison, which the process        the possibility that the detected refactoring cycles might
+instrumentation tool we used did not perform.                have been dominated by the harmful variety (further dis-
+                                                             cussed in the next section), hence the negative coefficient.
+5.3.2 Assumption Diagnostics                                 Limiting refactoring effort from the average level (23%)
+                                                             to its first quartile mid-point (9%), and similarly from the
+We validate the assumptions for the models by running        third quartile midpoint to the average level, results in
+the regression diagnostic proposed by Pena and Slate         less than 4% improvement in external quality. However,
+[39].                                                        a reduction from the extreme case (70%) to the average
+                                                             case results in about 12% improvement.
+TABLE 11: Multiple regression diagnostics for QLT Y
+model in Table 9.                                               In the P ROD model (Table 10), only REF has a
+                                                             significant coefficient, but again it is subject to the con-
+Skewness            Value   p-value    Decision              struct caveat of being possibly overrepresented by the
+Kurtosis                                                     harmful variety of refactoring. Keeping this qualification
+Link Function         1.93        .16  Acceptable.           in mind, doing less refactoring is associated with an
+Heteroscedasticity     .20        .65  Acceptable.           increase in productivity. This observation is not sur-
+                      1.63        .26  Acceptable.           prising since spending more time on refactoring should
+                       .10        .74  Acceptable.           imply spending less time on adding new features, thus
+                                                             reducing productivity. In particular reducing refactoring
+TABLE 12: Regression diagnostics for P ROD model in          effort from 70% of the time (the maximum observed
+Table 10.                                                    value) to the average case in the dataset--a reduction of
+                                                             45%--results in a productivity improvement of 18%.
+Skewness            Value   p-value    Decision
+Kurtosis                                                        In summary, the final optimal models include the
+Link Function         7.21        .07  Acceptable.           factors for granularity, uniformity, and refactoring ef-
+Heteroscedasticity     .81        .36  Acceptable.           fort, but not sequencing. They also omit interactions
+                      1.49        .22  Acceptable            between these factors. However, at this point the role of
+                      2.26        .13  Acceptable.           uniformity vis-a´-vis external quality and of granularity
+                                                             vis-a´-vis productivity are still uncertain since the corre-
+   As reported in Tables 11 and 12, the models overall       sponding coefficients are insignificant in the underlying
+meet their statistical assumptions (p-value > -level).       models, although the models themselves are significant.
+When a model includes several factors, partial residuals
+plots are helpful in visualizing the relationships between
+the factors and the outcome variable one at a time.
+Figures 5 and 6 show the Component and Compo-
+nent+Residuals (CCPR) plots for the QLT Y and P ROD
+models, respectively. The CCPR plot is a variation of
+a partial residual plot where the outcome values and
+the partial residuals are plotted against a chosen factor.
+The dashed line in each plot represents the fitted linear
+                                                               14
+
+Fig. 5: CCPR plots for model in Table 9
+
+6 THREATS TO VALIDITY                                          study is subject to single-group threats. The factors, or
+                                                               independent variables, represent dimensions of applying
+In this section, we discuss the threats to the validity        a particular type of development process. We are inter-
+applicable to our study following the classification by        ested in how the variation in the strength of the property
+Wohlin et al. [42]:                                            described by each dimension of the process affects the
+                                                               outcome measures. The dimensions cannot be controlled,
+   1) Internal validity: threats that can lead to a misinter-  as they arise naturally from applying a taught technique
+       pretation of the relationship between independent       on a best effort basis. They are neither all absent nor
+       and dependent variables.                                all present, but rather present to varying extents in a
+                                                               continuum. This is the reason this study uses correlation
+   2) External validity: threats that can limit the appli-     and regression analysis rather than an experimental de-
+       cability of the results to a greater extent, e.g., in   sign with defined control and experimental groups. We
+       industrial practice.                                    noted in the beginning that this study was embedded in
+                                                               a larger ongoing study structured as a quasi-experiment.
+   3) Construct validity: threats that relate to how faith-    However, the treatment and control groups, TDD and
+       fully the measures capture the theoretical con-         ITL, defined in that larger context, do not apply to this
+       structs and how suitably the constructs are oper-       study, as we generalized the groups to a higher-level
+       ationalized to preserve their integrity.                process in which TDD and ITL are specific, idealized
+                                                               cases. We are interested in the elementary dimensions of
+   4) Conclusion validity: threats that concern the            that high-level process. We acknowledge the limitations
+       soundness of the statistical inferences made.           of our design in terms of causality. Our main goal was
+                                                               to identify the most salient of those dimensions in terms
+   The threats to the validity are presented in decreas-       of their potential consequences.
+ing order of priority following the recommendations of
+Wohlin et al. [42]. We recognize that there are trade-offs        History and maturation effects are not a concern for
+between the different threats and focus on the types that      this study since they apply to all subjects equally. Threats
+are more important for applied research. Therefore, we         related to testing and statistical regression to the mean
+give higher priority to the interpretation of the results      are not applicable either due to the design.
+and their applicability to relevant populations.
+
+6.1 Internal Validity
+
+By the nature of its design, this is a single-group study.
+Therefore, there is no notion of a control group. The
+                                                             15
+
+Fig. 6: CCPR plots for model in Table 10
+
+   We mitigated the instrumentation threat by using mul-     level spanned a rather narrow range skewed towards
+tiple tasks. Two of these tasks were selected from previ-    the medium- to high-experience end. These two consid-
+ous studies, and a more complex task was introduced          erations limit the generalizability of the results to sub-
+to increase the variation in observations. We needed         populations with profiles that differ from that of the
+observations to be as diverse as possible.                   study.
+
+   The drop-out rate of 10%, together with 8% incom-            The tasks consisted of fixed user stories, all known
+plete or excluded observations, may have eliminated a        upfront to the subjects. We acknowledge that this may
+relevant subgroup of subjects. This in turn may have         not be the case in real world settings. When requirements
+skewed the dataset.                                          may change or not well known, leading the cycles with
+                                                             tests can provide advantages that were not detectable in
+   A selection threat exists due to convenience sampling.    this study: test-first can help to understand the require-
+Our sample was based on volunteers and company-              ments, discover new/missing requirements, and find
+selected subjects. Such subjects tend to have different      and fix requirements bugs.
+motivations and incentives different from those of ran-
+domly selected subjects. In general, volunteers tend to         Two of the three tasks used in the study were artificial
+be more enthusiastic and motivated. The converse might       and not particularly representative of a real-word situa-
+apply to company-selected subjects, which in addition        tion for a professional software developer. This poses a
+poses a social threat. The skill and experience profiles     threat to the generalizability of our results. To mitigate
+of the two groups may have been skewed compared              this concern and increase realism, we included a third
+to a random sample. These design choices could have          task, and the three tasks together provided sufficient
+influenced the results. However, we needed to accept the     diversity and balance between algorithmic and architec-
+compromises in the selection process because recruiting      tural problem solving. The resulting diversity moderated
+professionals is inherently difficult, and when possible,    the threat to external validity.
+often subject to selection bias [17].
+
+6.2 External Validity                                           To minimize the interaction between setting and study
+                                                             goals, the physical setting was kept as natural as possible
+The participants in the study do not represent the en-       for the participants. The subjects worked at their own
+tire population of software developers. Specifically, their  workstations throughout the study.
+skills in unit testing was limited. Professional experience
+                                                              16
+
+6.3 Construct Validity                                        vational regression study with no controlled factors is
+                                                              however less important.
+The study constructs were well defined, except possibly
+for the refactoring dimension. The factors granularity,          We believe the application domain in which the partic-
+uniformity, and sequencing are based on straightfor-          ipants worked (security and gaming) was not a concern
+ward, mechanical definitions, and were accordingly mea-       either for conclusion validity. The tasks were equally
+sured by automated tools with straightforward heuris-         new and different to all participants.
+tics. Refactoring effort is more special since the under-
+lying construct is difficult to capture, or even define          The assumptions of the statistical tests used were
+clearly. It was measured using an approximation. In the       verified for all the models. In the final models, the
+future, its detection may be made more accurate by more       effect sizes--represented by the adjusted R2--fell in the
+sophisticated analysis of developer actions--for exam-        medium range [29]. This level is acceptable in the study's
+ple through before-and-after code coverage analysis to        context because human behavior can introduce a great
+better differentiate pure refactoring from the potentially    deal of unexplained variation [32] that may be impos-
+harmful, mixed kind known as floss refactoring [27]. Since    sible to account for. We remark that over 85% of the
+the corresponding factor, REF , appears in the final          variation in the outcome variables was still unaccounted
+regression models, a construct threat arises. In particular,  for. However, the study was not focused on those factors;
+the role of refactoring in external quality deserves deeper   rather, the goal was to identify the most important ones
+investigation.                                                among four specific candidates.
+
+   The outcome variables were based on measures used          7 RELATED WORK
+in previous studies. We had no reason to doubt their
+ability to capture the underlying constructs in a rea-        The effects of TDD have been extensively studied. The
+sonable way. The productivity measure was, by design,         evidence accumulated is synthesized in several system-
+intended to capture short-term productivity. Therefore,       atic literature reviews (Table 13).
+given the short duration of the tasks, it is possible that
+the participants did not achieve sufficient maturity for         Turhan et al. [43] reviewed controlled experiments,
+robust measurement. This could suggest an interaction         quasi-experiments and case studies of different scales in
+between maturity and construct validity.                      both industry and academia. Their results suggest that
+                                                              TDD overall has a moderate positive effect on external
+   The outcome variables exhibit mono-method bias. We         quality, although this result becomes weaker when only
+used a single measure to capture each outcome construct.      the most rigorous studies are considered. The results are
+For example, the quality measure was based exclusively        contradictory for productivity overall, with controlled
+on functional correctness. Other important aspects of         experiments exhibiting a weak positive effect.
+external quality, in particular usability and usefulness,
+were disregarded. Not triangulating the result with mul-         A meta-analysis by Rafique and Misic [14] reports
+tiple measures reduces the validity. We are still looking     that TDD improves external quality when compared
+for alternative, objective, and reliable means of measur-     to a waterfall approach. However, this improvement is
+ing these constructs.                                         not strong. Further, TDD becomes disadvantageous for
+                                                              the subset containing only academic studies in which
+   Finally, the factors we studied are directly associated    it is compared to an iterative, test-last (ITL) process
+with only two particular outcome constructs, external         instead of a waterfall approach. This result suggests
+quality and developer productivity. The factors may           that sequencing might have a negative effect on exter-
+also have an association with other important outcome         nal quality, which we haven't observed. Productivity
+constructs, such as internal quality (maintainability and     results are more inconclusive in that the authors report
+understandability) and ability to deal with volatile re-      a small productivity hit for TDD when comparing TDD
+quirements. These were not addressed. The factors' im-        with waterfall (attributed to differences in testing effort,
+pact on these other constructs can be significant, and        with a larger hit for the industrial subgroup), but the
+thus worth investigating.                                     effect, even though still small, is reserved when ITL is
+                                                              compared with TDD. This latter observation suggests
+6.4 Conclusion Validity                                       sequencing might have a positive influence on produc-
+                                                              tivity, which we have not been able to confirm, either.
+Subject variability was desirable because this was a          Rafique and Misic recommend further investigation with
+regression study. The participants were professionals         longer-term studies with larger tasks to allow the effects
+from only two companies, therefore our sample was not         to become more visible. They also emphasize the impor-
+very heterogeneous. There were few subjects who were          tance of process conformance in TDD, which we capture
+experts with both relevant skills. The majority of the        using the four dimensions.
+participants had to learn the required skills to different
+extents during the workshops, which possibly further             According to a subsequent systematic literature review
+reduced variability in the sample.                            by Munir et al. [44], TDD is beneficial for external
+                                                              quality when only high-quality studies are considered.
+   Skill and experience level are often confounding fac-      However, this improvement disappears over the whole
+tors in experimental designs. Their role in an obser-         dataset, which includes studies of different levels of
+                                                                                                                 17
+
+           TABLE 13: Summary of secondary studies about TDD
+
+Reference  Primary  Result                                    Result                   Notes
+[43]       Studies  External Quality                          Productivity
+[44]       32       Some improvement                          Inconclusive             Following TDD
+           41                                                                          not enforced
+[14]                Improvement in                            Inconclusive             Inconclusive when
+           27       high-rigor,high-                                                   studies are considered
+                    relevance                                 Inconclusive,            together
+                    Small improvements,                       with a drop in industry  Task size
+                    more accentuated in in-                                            is a significant modera-
+                    dustry                                                             tor
+
+rigour. Again, the productivity results are inconclusive.        Pancur et al. [13] carried out two controlled experi-
+The authors recommend future studies to focus on in-          ments comparing TDD to ITL, while making sure that
+dustrial settings and professionals, and our study is in      the process granularity of two treatments were com-
+that category.                                                parable. Their rationale was to eliminate the possible
+                                                              effect of the granularity, thereby isolating the effect of
+   Causevic et al.'s review [10] identified what they refer   sequencing. Again, they could not produce any evidence
+to as insufficient adherence to protocol, or process confor-  that sequencing affects productivity or external quality.
+mance (i.e., the extent to which the steps of TDD are
+followed), as one of the factors leading to the abandon-         Pancur et al. thus speculate that studies showing the
+ment of the practice. The authors' review of industrial       superiority of TDD over a test-last approach are in reality
+case studies showed that, although developers deviate         due to the fact that most of the experiments employ
+from the process in several situations, conformance to        a coarse-grained test-last process--closer to the Waterfall
+the TDD process is regarded as important. The authors         approach--as control group. This creates a large dif-
+suggest that industrial investigations of TDD consider        ferential in granularity between the treatments. In the
+the underlying process, which is what we endeavored           end, it is possible that TDD performs better only when
+to do in our study.                                           compared to a coarse-grained development process [13].
+
+   Therefore, in general, there is a consensus that the no-   8 DISCUSSION
+tion of process deserves a closer look. We agree with this
+view. However, often TDD researchers equate process           In this section, we answer the research questions and
+with the test-first dynamic of TDD. We think that the         briefly discuss the implications. To answer the research
+idea of process conformance [44] or adherence to protocol     questions, we rely on the results of the multiple regres-
+[45] is not only limited to the sequencing dimension.         sion analysis, focusing on the models presented in Tables
+Indeed, by looking closer at the other dimensions, we         9 and 10 after feature selection.
+discover that granularity and uniformity of the devel-
+opment cycles trumps sequencing, at least in terms of            We remark first that the final models are highly signif-
+external quality, and developer productivity. In fact, in     icant, and have a medium-sized adjusted R2. However,
+our previous studies, we investigated the relationship        the limitations presented in Section 6 should not be
+between sequencing and external quality and sequenc-          ignored in operationalizing the results.
+ing and productivity [19], [46] for TDD-like processes,
+including ITL. We did not find any evidence of such a            RQ-QLTY--Which subset of the four factors best ex-
+relationship.                                                 plain external quality? Improvements in external qual-
+                                                              ity were associated with granular (short) development
+   Mu¨ ller and Ho¨ fer [12] investigated the ways experts    cycles with minimal variation. Refactoring, counter-
+and novices differ in applying TDD, focusing on pro-          intuitively, had a negative association with external qual-
+cess conformance. To our knowledge, they are the only         ity. Most notably, sequencing--the dimension which is
+researchers who explicitly considered characteristics of      most commonly identified with TDD--was absent in the
+TDD cycles other than sequencing. They used an auto-          model. There were no significant interactions between
+matic inference tool similar to Besouro [22], which was       granularity and uniformity. We conclude that granular-
+used in our study. Similar to our approach, Mu¨ ller and      ity, uniformity and refactoring effort together constitute
+Ho¨ fer use this tool to log developer actions and roll them  the best explanatory factors for external quality.
+into cycles with different levels of compliance to a set of
+TDD rules. Remarkably, they found that average cycle             RQ-PROD--Which subset of the four factors best
+length, close to our definition of granularity, and the       explain developer productivity? The results for produc-
+cycle length's variation, close to our definition of unifor-  tivity were similar to those of quality. Improvements
+mity, were the most important differentiators between         in productivity were also associated with the factors
+experts and novices. In our study, we found a large and       related to both cyclical characteristics of the process--
+highly significant correlation between granularity and        granular cycles with minimal variation--and refactor-
+uniformity, suggesting that these two dimensions might        ing effort. Sequencing and interactions were absent. We
+capture the same information.                                 conclude that granularity, uniformity and refactoring
+                                                              effort together constitute the best explanatory factors for
+                                                              developer productivity.
+                                                               18
+
+   Given the study limitations and the answers to the          the quality and productivity effects of refactoring activity
+research questions, we operationalize the results in terms     in the context of TDD-like processes. Such effects should
+of the following take-aways.                                   be visible once the risk of breaking the system becomes
+                                                               a significant risk and the test assets start paying off in
+   Granularity and uniformity are possibly the most            terms of the coverage required to support adding new
+important factors in TDD-like processes. According             functionality. Moreover the effects, harmful or beneficial,
+to our results, emphasizing the iterative nature of the        possibly depend on the nature and distribution of the
+process provides the "best bang for the buck". We thus         refactoring activity--e.g., whether pure or floss­and thus
+recommend focusing on breaking down development                the construct must be represented by measures that are
+tasks into as small and as uniform steps as possible.          able to differentiate between the different types.
+We think that this aspect should be emphasised over
+religiously focusing on leading each production cycle             In summary, dissecting the TDD process into its more
+with unit tests. Our results confirm the common advice         elementary aspects shed light on certain established TDD
+of limiting the length of production (test-code or code-       myths. Our results suggest that the secret of TDD, in
+test) and refactoring cycles to five to ten minutes and        particular with respect to quality, might not be centered
+keeping a steady rhythm.                                       on its test-first nature, but rather on its ability to encour-
+                                                               age developers to consistently take fine-grained steps,
+   Short cycles and a steady rhythm go hand in hand,           what Kent Beck calls baby steps [2], provided that they
+meaning these two characteristics together make a differ-      keep writing tests. Thus TDD, and its variants, can be
+ence. In isolation, they may not be as effective since some    thought of as a process that facilitates a highly fine-
+of the individual coefficients in the regression models        grained approach to software development, which in
+were insignificant. Further studies should focus on the        turn promises to improve quality and productivity. Such
+isolated effects of granularity and uniformity, specifically   improvements may be small or uncertain in the short
+on developer productivity.                                     term. Further studies are needed to investigate more
+                                                               persistent, long-term effects and the role of refactoring.
+   The order in which unit tests are written vis-a´-vis
+production code does not appear to be important for               An important corollary of our findings is that in-
+TDD-like processes. This finding goes against the com-         cremental test-last (ITL) and TDD are not necessarily
+mon folklore about TDD that stresses leading production        that different deep down: they could be substitutes and
+cycles with unit tests, above other aspects. Sequencing        equally effective provided that they are performed at the
+does not appear among the factors selected for either          same level of granularity and uniformity. Rafique and
+external quality or productivity in the final models.          Misic [14], Causevic et al. [10], [12], and Pancur et al. [13]
+                                                               previously speculated on the importance of granularity,
+   The absence of sequencing as an influential dimension       as discussed in Section 7. Our findings support their
+does not imply that a strictly develop-then-test (test-last)   intuition.
+strategy should be preferred over a test-first strategy: this
+advice would require a negative (statistically significant)       We encourage other researchers to attempt to replicate
+coefficient, which the models did not produce. Our result      this study, preferably in varying contexts and with dif-
+simply states that the order in which unit tests and           ferent subject profiles. A lab package [25] is available for
+production code are written may not be as important            replication purposes.
+as commonly thought so long as the process is iterative,
+granular, and uniform. Therefore, the developers could         ACKNOWLEDGMENTS
+follow the approach they prefer while paying particular
+attention to step size and keeping a steady rhythm.            This research is supported in part by the Academy of
+                                                               Finland Project #278354 and the TEKES FiDiPro Pro-
+   We further qualify this latter advice with the limita-      gramme. We would like to acknowledge Dr. Lucas Lay-
+tions of the study in mind. A test-first dynamic may           man, who designed one of the tasks used in the study.
+provide long-term advantages not addressed by or de-           We are indebted to the reviewers whose diligence, thor-
+tected in our study. For example we have not tackled the       oughness and attention to detail were extremely helpful.
+potential benefits of test-first in resolving requirements     They identified many mistakes and led us to uncover
+uncertainty, formalizing design decisions, and encourag-       inconsistencies in the data. In particular, through their
+ing writing more tests [6], all of which may kick in the       suggestions and insights, we were able to revise and
+longer term and tip the balance in favor of an emphasis        improve our measures and analyses considerably.
+for test-first.
+                                                               REFERENCES
+   We are not able to draw general or sweeping con-
+clusions regarding refactoring effort due to the validity      [1] R. Jeffries and G. Melnik, "TDD­The art of fearless program-
+threat associated with the representation of this construct          ming," Software, IEEE, vol. 24, no. 3, pp. 24­30, 2007.
+and the short-term nature of the study. In our study,
+refactoring effort was negatively associated with both         [2] K. Beck, Test-driven development: by example, ser. The Addison-
+external quality (an unexpected finding) and developer               Wesley signature series. Addison-Wesley, 2003.
+productivity (an expected finding). However these find-
+ings were subject to limitations. We believe that longer-      [3] R. C. Martin, Agile software development: principles, patterns, and
+term studies with better constructs are required to reveal           practices. Prentice Hall PTR, 2003.
+
+                                                               [4] R. Jeffries, A. Anderson, and C. Hendrickson, Extreme program-
+                                                                     ming installed. Addison-Wesley Professional, 2001.
+                                                                              19
+
+[5] K. Schwaber, "Scrum development process," in Business Object              [27] M. Aniche and M. Gerosa, "Most common mistakes in test-driven
+      Design and Implementation. Springer, 1997, pp. 117­134.                       development practice: results from an online survey with devel-
+                                                                                    opers," in Software Testing, Verification, and Validation Workshops
+[6] H. Erdogmus, M. Grigory, and J. Ron, "Test-driven development,"                 (ICSTW), 2010 Third International Conference on, April 2010, pp.
+      in Encyclopedia of Software Engineering, P. Laplante, Ed. New York:           469­478.
+      Taylor and Francis, 2009, pp. 1211­1229.
+                                                                              [28] E. McCrum-Gardner, "Which is the correct statistical test to use?"
+[7] M. Fowler, Refactoring: improving the design of existing code. Pear-            British Journal of Oral and Maxillofacial Surgery, vol. 46, no. 1, pp.
+      son Education, 2009.                                                          38­41, Jan. 2008.
+
+[8] P. Weißgerber and S. Diehl, "Are refactorings less error-prone than       [29] P. D. Ellis, The essential guide to effect sizes: Statistical power, meta-
+      other changes?" in Proceedings of the 2006 international workshop on          analysis, and the interpretation of research results. Cambridge
+      Mining software repositories. ACM, 2006, pp. 112­118.                         University Press, 2010.
+
+[9] G. Bavota, B. De Carluccio, A. De Lucia, M. Di Penta, R. Oliveto,         [30] K. P. Burnham and D. R. Anderson, "Multimodel inference un-
+      and O. Strollo, "When does a refactoring induce bugs? an em-                  derstanding AIC and BIC in model selection," Sociological methods
+      pirical study," in Source Code Analysis and Manipulation (SCAM),              & research, vol. 33, no. 2, pp. 261­304, 2004.
+      2012 IEEE 12th International Working Conference on. IEEE, 2012,
+      pp. 104­113.                                                            [31] J. Cohen, "A power primer." Psychological bulletin, vol. 112, no. 1,
+                                                                                    p. 155, 1992.
+[10] A. Causevic, D. Sundmark, and S. Punnekkat, "Factors limiting
+      industrial adoption of test-driven development: A systematic            [32] V. B. Kampenes, T. Dyba°, J. E. Hannay, and D. I. Sjøberg, "A
+      review," in Software Testing, Verification and Validation (ICST), 2011        systematic review of effect size in software engineering experi-
+      IEEE Fourth International Conference on. IEEE, 2011, pp. 337­346.             ments," Information and Software Technology, vol. 49, no. 11, pp.
+                                                                                    1073­1086, 2007.
+[11] H. Erdogmus, M. Morisio, and M. Torchiano, "On the effective-
+      ness of the test-first approach to programming," IEEE Transactions      [33] D. E. Farrar and R. R. Glauber, "Multicollinearity in regression
+      on Software Engineering, vol. 31, no. 3, pp. 226­237, 2005.                   analysis: the problem revisited," The Review of Economic and
+                                                                                    Statistics, vol. 49, pp. 92­107, 1967.
+[12] M. M. Mu¨ ller and A. Ho¨ fer, "The effect of experience on the
+      test-driven development process," Empirical Software Engineering,       [34] J. Jobson, Applied Multivariate Data Analysis: Regression and Exper-
+      vol. 12, no. 6, pp. 593­615, 2007.                                            imental Design (Springer Texts in Statistics). Springer, 1999.
+
+[13] M. Pancur and M. Ciglaric, "Impact of test-driven development            [35] H. Akaike, "A new look at the statistical model identification,"
+      on productivity, code and tests: A controlled experiment," Infor-             Automatic Control, IEEE Transactions on, vol. 19, no. 6, pp. 716­723,
+      mation and Software Technology, vol. 53, no. 6, pp. 557­573, 2011.            Dec 1974.
+
+[14] Y. Rafique and V. B. Misic´, "The effects of test-driven development     [36] K. P. Burnham and D. R. Anderson, Model Selection and Multimodel
+      on external quality and productivity: A meta-analysis," IEEE                  Inference: A Practical Information-Theoretic Approach. Springer,
+      Transactions on Software Engineering, vol. 39, no. 6, pp. 835­856,            2003.
+      2013.
+                                                                              [37] Y. Yang, "Can the strengths of AIC and BIC be shared? A con-
+[15] Y. Wang and H. Erdogmus, "The role of process measurement in                   flict between model indentification and regression estimation,"
+      test-driven development," in 4th Conference on Extreme Program-               Biometrika, vol. 92, no. 4, pp. 937­950, 2005.
+      ming and Agile Methods, 2004.
+                                                                              [38] E. Murphy-Hill, C. Parnin, and A. P. Black, "How we refactor,
+[16] C. Mann, "Observational research methods. Research design                      and how we know it," IEEE Transactions on Software Engineering,
+      II: cohort, cross-sectional, and case-control studies," Emergency             vol. 38, no. 1, pp. 5­18, 2012.
+      Medicine Journal, vol. 20, no. 1, pp. 54­60, 2003.
+                                                                              [39] E. A. Pena and E. H. Slate, "Global validation of linear model
+[17] A. T. Misirli, H. Erdogmus, N. Juristo, and O. Dieste, "Topic se-              assumptions," Journal of the American Statistical Association, vol.
+      lection in industry experiments," in the 2nd International Workshop.          101, no. 473, pp. 341­354, 2006.
+      New York, New York, USA: ACM Press, 2014, pp. 25­30.
+                                                                              [40] W. Cleveland and S. Devlin, "Locally weighted regression: an
+[18] D. Fucci and B. Turhan, "On the role of tests in test-driven                   approach to regression analysis by local fitting," Journal of the
+      development: a differentiated and partial replication," Empirical             American Statistical Association, vol. 83, no. 403, pp. 596­610, 1988.
+      Software Engineering, vol. 19, pp. 1­26, 2013.
+                                                                              [41] Y. Xia, "Model checking in regression via dimension reduction,"
+[19] D. Fucci, B. Turhan, and M. Oivo, "Impact of process conformance               Biometrika, vol. 96, no. 1, pp. 133­148, 2009.
+      on the effects of test-driven development," in Proceedings of the 8th
+      ACM/IEEE International Symposium on Empirical Software Engineer-        [42] C. Wohlin, Experimentation in software engineering: an introduction.
+      ing and Measurement. ACM, 2014, p. 10.                                        Springer, 2000, vol. 6.
+
+[20] L. Madeyski, "The impact of pair programming and test-                   [43] B. Turhan, L. Layman, M. Diep, H. Erdogmus, and F. Shull,
+      driven development on package dependencies in object-oriented                 "How effective is test-driven development?" in Making Software.
+      design--an experiment," Product-Focused Software Process Improve-             O'Reilly Media, 2010.
+      ment, pp. 278­289, 2006.
+                                                                              [44] H. Munir, M. Moayyed, and K. Petersen, "Considering rigor and
+[21] A. Hernndez-Lpez, R. Colomo-Palacios, and A. Garca-Crespo,                     relevance when evaluating test driven development: A systematic
+      "Productivity in software engineering: a study of its meanings for            review," Information and Software Technology, vol. 56, no. 4, pp.
+      practitioners: understanding the concept under their standpoint,"             375­394, Apr. 2014.
+      in Information Systems and Technologies (CISTI), 2012 7th Iberian
+      Conference on, June 2012, pp. 1­6.                                      [45] A. Causevic, D. Sundmark, and S. Punnekkat, "Test case quality in
+                                                                                    test driven development: a study design and a pilot experiment,"
+[22] K. Becker, B. Pedroso, and M. S. Pimenta, "Besouro: a framework                in Evaluation Assessment in Software Engineering (EASE 2012), 16th
+      for exploring compliance rules in automatic TDD behavior assess-              International Conference on, 2012, pp. 223­227.
+      ment," Information and Software Systems Journal, 2014.
+                                                                              [46] D. Fucci, B. Turhan, and M. Oivo, "Conformance factor
+[23] H. Kou, P. M. Johnson, and H. Erdogmus, "Operational definition                in test-driven development: Initial results from an enhanced
+      and automated inference of test-driven development with Zorro,"               replication," in Proceedings of the 18th International Conference
+      Automated Software Engineering, 2010.                                         on Evaluation and Assessment in Software Engineering, ser. EASE
+                                                                                    '14. New York, NY, USA: ACM, 2014, pp. 22:1­22:4. [Online].
+[24] B. George and L. Williams, "An initial investigation of test driven            Available: http://doi.acm.org/10.1145/2601248.2601272
+      development in industry," in Proceedings of the 2003 ACM sympo-
+      sium on Applied computing. New York, NY, USA: ACM, 2003, pp.
+      1135­1139.
+
+[25] D. Fucci, "A dissection of test-driven development process:
+      Does it really matter to test-first or to test-last? - lab
+      package," 6 2016. [Online]. Available: https://dx.doi.org/10.
+      6084/m9.figshare.3458996.v5
+
+[26] D. Fucci and B. Turhan, "A replicated experiment on the effective-
+      ness of test-first development," in 2013 ACM/IEEE International
+      Symposium on Empirical Software Engineering and Measurement
+      (ESEM). IEEE, 2013, pp. 103­112.
+

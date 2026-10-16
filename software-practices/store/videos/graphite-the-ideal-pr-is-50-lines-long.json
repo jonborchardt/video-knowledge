@@ -1,0 +1,77 @@
+{
+  "id": "graphite-the-ideal-pr-is-50-lines-long",
+  "title": "The ideal PR is 50 lines long",
+  "channel": "Graphite",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://graphite.com/blog/the-ideal-pr-is-50-lines-long",
+  "summary": "Graphite's PR dataset: changes around fifty lines merge fastest, get the most review per line and are reverted least, while both tiny and huge PRs do worse and the sample skews to trunk-based teams.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/small-pull-requests-picked-merged-faster",
+      "stance": "asserts",
+      "quote": "50-line code changes are reviewed and merged ~40% faster than 250-line changes.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
+      "stance": "asserts",
+      "quote": "They’re 15% less likely to be reverted than 250-line changes",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/small-changes-can-worse-mid-sized",
+      "stance": "asserts",
+      "quote": "Sub-10 line PRs are reverted noticeably more than 10-100 line PRs.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+      "stance": "asserts",
+      "quote": "There’s a practical limit to how much code your reviewer is willing to read - I suspect that 2k lines is the point",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/large-changes-merge-faster-reverted-less",
+      "stance": "asserts",
+      "quote": "post-5k lines, PRs start getting faster again. I can only assume this is a combination of blind stamps, assumed-safe refactors",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "The pattern appears in one dataset and the explanation is the author's guess; rubber-stamping would also hide defects rather than prevent them.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Google changes larger than about 1250 lines get fewer comments on average because they are mostly auto-generated code or large deletions, supporting the stated explanation, but merge time and revert rate for very large changes are not measured.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L405-L412",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/observed-benefits-small-prs-partly-selection",
+      "stance": "asserts",
+      "quote": "We find that Graphite users tend to create smaller PRs in general, since many organizations use a trunk-based development style",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "The author flags the confound; no study randomises PR size, so some of the correlation is team maturity.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

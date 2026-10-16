@@ -1,0 +1,133 @@
+{
+  "id": "KoL_or1P4f4",
+  "title": "Accelerate: The State of DevOps with Dr. Nicole Forsgren",
+  "channel": "Scott Hanselman",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCL-fHOdarou-CR2XUmK48Og",
+  "durationSec": 2028,
+  "thumbnail": "https://i.ytimg.com/vi/KoL_or1P4f4/sddefault.jpg?sqp=-oaymwEoCIAFEOAD8quKqQMcGADwAQH4AbYIgAK4CIoCDAgAEAEYciBVKDowDw==&rs=AOn4CLCI0OisiYzJdnQCkdfTLPDptdRN_A",
+  "summary": "Forsgren on the 2018 Accelerate State of DevOps report: speed and stability move together, industry does not matter, small changes have a small blast radius.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/software-delivery-speed-stability-move-together",
+      "stance": "asserts",
+      "quote": "speed and stability move in tandem the highest performers get both there is no tradeoff",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Five years of DORA survey clustering show throughput and stability correlate, but the data are self-reported and correlational rather than experimental.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "Six years of survey data show speed and stability are outcomes that enable each other: cluster analysis finds elite performers do significantly better on all four metrics and low performers worse on all, rather than trading throughput for stability.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L367-L382",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/industry-regulatory-status-not-predict-whether",
+      "stance": "asserts",
+      "quote": "there was no statistical evidence that it matters",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "The DORA models found no industry effect, but a null result from a voluntary survey sample does not prove the practices work equally everywhere.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "Controlling for industry, DORA found no evidence that industry affects SDO performance except retail (which did slightly better), including highly regulated financial services and government; organisation size over 5,000 employees did predict lower performance.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L429-L446",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
+      "stance": "asserts",
+      "quote": "when you do introduce code you're introducing very very small pieces of code so that introduction is small it has a small blast radius",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/emergency-changes-made-under-stress-usually",
+      "stance": "asserts",
+      "quote": "the big difference there is we usually skip testing which is the time that we should not be skipping testing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Skipped testing in emergency changes is widely reported in incident reviews but not quantified here.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/high-performing-teams-rely-automated-test",
+      "stance": "asserts",
+      "quote": "they have incredibly efficient test Suites they have great parallelization so that they can be very very strategic about exploratory testing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "DORA reports less manual testing among elite performers, but this is a self-reported association rather than a measured cause.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Elite performers report automated unit tests 87% vs 57% for low performers, acceptance tests 58% vs 28%, and automated production deployment 69% vs 17%; the report does not ask about exploratory or manual testing.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1535-L1549",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+      "stance": "asserts",
+      "quote": "when developers help write tests we write better and more testable code",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/infrequent-releases-leave-security-patches-compliance",
+      "stance": "asserts",
+      "quote": "if it takes you months to get a change through what happens to your security posture when you need to get a patch through",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Patch latency follows directly from lead time; the risk exposure is real though its magnitude varies.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.25,
+          "note": "The report argues high SDO performance lets organisations keep up with compliance and regulatory changes and deliver security patches quickly and reliably; this is reasoning from the delivery metrics, not a measured patch-latency result.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1372-L1378",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

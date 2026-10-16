@@ -1,0 +1,131 @@
+{
+  "id": "KtHQGs3zFAM",
+  "title": "Jim Coplien and Bob Martin Debate TDD",
+  "channel": "alexsmail",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCNLW6vkl8vLxq-d6uIVkrkw",
+  "durationSec": 1258,
+  "thumbnail": "https://i.ytimg.com/vi/KtHQGs3zFAM/hqdefault.jpg?sqp=-oaymwEmCOADEOgC8quKqQMa8AEB-AG-AoAC8AGKAgwIABABGGUgQShHMA8=&rs=AOn4CLDZ-Cac4nhzG3MU1o4mhJKjdJ69uw",
+  "summary": "Coplien and Martin debate whether TDD is a professional obligation and whether driving architecture from unit tests damages design.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/shipping-code-has-not-exercised-unit",
+      "stance": "asserts",
+      "quote": "it is irresponsible for a developer to ship a line of code that he has not executed in unit test",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A professional norm rather than a measurable outcome; whether untested code ships is checkable, whether that is unprofessional is a value judgment.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Authors concede that following the test-first rule prevents shortcuts that skip tests, but an ethnographic study found developers wrote more production code than needed, omitted refactoring and let tests fall behind even when nominally test-first; the 'unprofessional' judgment is not testable.",
+          "source": "software-practices/sources/karac2018-tdd-what-we-know.txt#L166-L177",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/driving-architecture-unit-tests-without-front",
+      "stance": "asserts",
+      "quote": "leads to a procedural bottomup architecture because the things you're testing are units",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Design damage from test-driven isolation is reported in case studies and the DHH debate, but controlled studies of TDD's design effects are mixed and small.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/architecture-should-evolve-incrementally-informed-executing",
+      "stance": "asserts",
+      "quote": "the architecture evolves it is informed by code that executes and it is informed by the test that you write",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Incremental architecture is standard agile practice, but there is no controlled evidence it beats moderate up-front design and both debaters endorse some up-front structure.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "The review reports lack of attention to design and architectural issues as a limitation found in an agile study and repeatedly raised in the literature, so incremental evolution carries a documented risk of under-investing in architecture; the studies are weak and do not test the claim directly.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L1193-L1196",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/some-domain-structure-must-fixed-front",
+      "stance": "asserts",
+      "quote": "you're not going to refactor your way to the right architecture from from that one",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Large-scale architectural decisions are known to be costly to reverse, but how much up-front design is needed is unresolved.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "Participants in an XP project said there were not enough discussions on design and architecture, and the review lists lack of attention to architecture as a recurring limitation of agile development; this supports the worry but not the specific claim that incremental refactoring cannot reach the right architecture.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L1193-L1196",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/design-contract-covers-whole-input-range",
+      "stance": "asserts",
+      "quote": "they actually give you broader coverage because you're covering the entire range of the arguments rather than just you know randomly scattering some values",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Contracts specify behaviour over all inputs but are only enforced on executed inputs unless statically verified, so coverage gains depend on tooling.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/writing-tests-slows-delivery-meaningful-fraction",
+      "stance": "asserts",
+      "quote": "the code mass is is about the same as a test mass and whereas there's code there's bugs you cut your velocity in half",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/class-level-unit-tests-hard-trace",
+      "stance": "asserts",
+      "quote": "it's really really difficult to trace those those apis at a class level sometimes all the way up to business significance",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A judgment about traceability rather than a measurable claim.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

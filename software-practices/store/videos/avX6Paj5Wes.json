@@ -1,0 +1,149 @@
+{
+  "id": "avX6Paj5Wes",
+  "title": "Critique - Google's Code Review Tool | Reaction",
+  "channel": "NeetCodeIO",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCevUmOfLTUX9MNGJQKsPdIA",
+  "durationSec": 1361,
+  "thumbnail": "https://i.ytimg.com/vi/avX6Paj5Wes/sddefault.jpg",
+  "summary": "Ex-Googler reacts to an article on Critique: small changes, pre-submit automation, static analysis and learning through review; high satisfaction attributed to tight tool integration.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/small-pull-requests-picked-merged-faster",
+      "stance": "asserts",
+      "quote": "it's easy to review someone's poll request if you send small poll requests",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/automated-formatting-static-analysis-before-review",
+      "stance": "asserts",
+      "quote": "automated analysis allow reviewers to focus on the understandability and maintainability of changes",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Google's and Mozilla's review studies both find static analysis integration reduces trivial comments.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "Google integrates 110 Tricorder analyzers into review and the authors state this lets reviewers focus on understandability and maintainability instead of trivial formatting comments; a practice description, not a controlled measurement.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L526-L532",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.25,
+          "note": "Having found that many review comments concern conventions, typos, dead code and micro-level defects that existing tools can detect, the authors recommend automating these so reviewers can look for deeper defects; a recommendation derived from comment data, not tested.",
+          "source": "software-practices/sources/bacchelli2013-modern-code-review.txt#L567-L579",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/code-review-major-channel-learning-knowledge",
+      "stance": "asserts",
+      "quote": "I learned a lot through code reviews",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Surveys at Microsoft and Google rank knowledge transfer among the top benefits of review.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.4,
+          "note": "All interviewees but one cited learning as a reason to review, managers list 'education for junior developers learning the codebase' and grooming backup developers, and 12 of 570 comments explicitly transfer knowledge; the authors note this is self-report rather than hard evidence.",
+          "source": "software-practices/sources/bacchelli2013-modern-code-review.txt#L336-L348",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "Education is the historical and current main motive for review at Google; developers in their first year get more than twice as many comments per change, falling with tenure, and the set of files a developer has seen through review grows well beyond the files they edited.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L557-L576",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/extensive-automated-pre-submit-checks-catch",
+      "stance": "asserts",
+      "quote": "if your code broke anything there's a 99% chance it would get caught before it was merged",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Pre-submit CI catches many regressions, but the share depends on test coverage; the figure is a personal estimate.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/newly-joined-engineers-receive-most-review",
+      "stance": "asserts",
+      "quote": "when you first join you're probably going to get more more comments",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Google's published review data shows comments per change declining over the first years of tenure.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Log analysis of ~9M Google changes: authors who started within the past year receive more than twice as many reviewer comments per change, and the average falls steadily over the first five years of tenure (Figure 2).",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L557-L567",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/overly-harsh-demanding-reviews-discourage-future",
+      "stance": "asserts",
+      "quote": "overly difficult reviews can discourage future improvements",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Studies of open-source projects link toxic review comments to contributor drop-off; in-company data is thin.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "Google interviewees name tone (authors sensitive to comments) and power (dragging out reviews, withholding approval) as review breakdowns that leave developers uncomfortable or frustrated; the effect on later contributions is not measured.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L392-L402",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/keeping-review-feedback-discussion-fixes-one",
+      "stance": "asserts",
+      "quote": "it's only the tight integration and extreme personalization of the tooling towards a Google specific workflow and codebase that makes it so love",
+      "verdicts": []
+    }
+  ]
+}

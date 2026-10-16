@@ -1,0 +1,185 @@
+{
+  "id": "hillelwayne-what-we-know-we-dont-know",
+  "title": "What We Know We Don't Know",
+  "channel": "Hillel Wayne",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://hillelwayne.com/talks/what-we-know-we-dont-know/",
+  "summary": "Source list and FAQ for an empirical-software-engineering talk: code review, simple tests and sleep have evidence, TDD and language choice are mixed or null, and most beliefs remain untested.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/many-widely-repeated-software-engineering-facts",
+      "stance": "asserts",
+      "quote": "There are many things in software we believe are true but very little we know.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/code-review-catches-most-defects-reviewed",
+      "stance": "asserts",
+      "quote": "there's more evidence that code review reduces bugs, and the evidence shows a bigger effect",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/pair-programming-shows-little-measurable-effect",
+      "stance": "asserts",
+      "quote": "Pairing is nice, but it's not \"continous code review.\"",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/sustained-crunch-lowers-productivity-employee-happiness",
+      "stance": "asserts",
+      "quote": "Impact of a Night of Sleep Deprivation on Novice Developers Performance",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/most-damaging-software-faults-design-flaws",
+      "stance": "asserts",
+      "quote": "Worst bugs are design bugs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Classic industrial fault studies attribute the costliest defects to requirements and design, but the split depends heavily on how faults are categorised.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Of public JavaScript bugs undetectable by Flow and TypeScript, errors implementing the specification make up 78% (SpecError alone 55%), i.e. most shipped bugs are misunderstandings of what to build rather than mechanical slips; the study does not measure how damaging each class was.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L414-L423",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/simple-tests-error-handling-paths-could",
+      "stance": "asserts",
+      "quote": "Simple Testing Can Prevent Most Critical Failures",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "A study of production outages in major distributed systems found most catastrophic failures stemmed from trivially testable error-handling bugs.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/large-scale-repository-studies-claiming-some",
+      "stance": "asserts",
+      "quote": "A Large Scale Study of Programming Languages and Code Quality in Github (original faulty study)",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/test-driven-development-produces-better-quality",
+      "stance": "asserts",
+      "quote": "Analyzing the Effects of Test Driven Development in GitHub (negative results)",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/lines-code-predict-defects-about-well",
+      "stance": "asserts",
+      "quote": "Beyond Lines of Code: Do we Need More Complexity Metrics?",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Studies of large codebases find most complexity metrics are strongly correlated with size and add little predictive power.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "On issue resolution time rather than defects, added LoC correlated only r=0.13 while the smell-based Code Health score correlated r=-0.58, so a richer metric beat raw size here; the outcome differs from the claim's and the comparison is a brief validity check.",
+          "source": "software-practices/sources/tornhill2022-code-red.txt#L119-L136",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Method length was much more strongly correlated with cyclomatic complexity than readability was, supporting the premise that size and complexity metrics largely overlap; the paper does not compare LoC and complexity as defect predictors directly.",
+          "source": "software-practices/sources/buse2010-readability.txt#L586-L590",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "Spearman correlations with Vista failures: size 0.75 pre-release / 0.69 post-release versus complexity 0.70 / 0.53 (Windows 7: 0.70/0.26 vs 0.56/0.37), so lines of code tracks defects at least as well as complexity.",
+          "source": "software-practices/sources/bird2011-ownership.txt#L265-L271",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.3,
+          "note": "With complexity normalised by size, size stays a significant explainer of post-release defects in two of four Qt/VTK/ITK release models while complexity is significant in none.",
+          "source": "software-practices/sources/mcintosh2014-code-review-coverage.txt#L396-L399",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/organisational-structure-metrics-predict-defect-prone",
+      "stance": "asserts",
+      "quote": "The Influence of Organizational Structure On Software Quality: An Empirical Case Study",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "One large industrial study found this strongly, but it has few replications outside that company.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "On 3,404 Windows Vista binaries (50M+ LOC, 50 random splits), eight organizational metrics predict failure-prone binaries with 86.2% precision and 84.0% recall versus 78.6/79.9 for churn, 79.3/66.0 for complexity, 74.4/69.9 for dependencies, 83.8/54.4 for coverage and 73.8/62.9 for pre-release bugs; single system.",
+          "source": "software-practices/sources/nagappan2008-org-structure.txt#L554-L571",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "In Vista and Windows 7 the number of minor contributors correlated more strongly with pre- and post-release failures than any other metric Microsoft collects, and adding it to a size/churn/complexity model raised variance explained from 26% to 46% (pre-release Vista).",
+          "source": "software-practices/sources/bird2011-ownership.txt#L283-L287",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.4,
+          "note": "In Qt, VTK and ITK the ownership metrics (minor authors) add significant explanatory power to every post-release defect model, while size is significant in only two and complexity in none.",
+          "source": "software-practices/sources/mcintosh2014-code-review-coverage.txt#L669-L673",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/abbreviated-identifiers-harder-debug-full-word",
+      "stance": "asserts",
+      "quote": "Fixing Faults in C and Java Source Code: Abbreviated vs. Full-Word Identifier Names (preprint)",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/decomposing-code-small-methods-can-too",
+      "stance": "asserts",
+      "quote": "Small Functions Have Problems",
+      "verdicts": []
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "signalvnoise-the-majestic-monolith-can-become-the-citadel",
+  "title": "The Majestic Monolith can become The Citadel",
+  "channel": "Signal v. Noise",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://signalvnoise.com/svn3/the-majestic-monolith-can-become-the-citadel/",
+  "summary": "DHH's follow-up: most web apps should start and stay a monolith; when one slice has divergent performance needs, extract a single Outpost rather than carving everything into services.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/single-process-monolith-right-default-microservices",
+      "stance": "asserts",
+      "quote": "the vast majority of web applications will continue to be served well by The Majestic Monolith for their entire lifespan",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/coordination-cost-grows-faster-linearly-team",
+      "stance": "asserts",
+      "quote": "Maybe you’re dealing with very large teams that constantly have people tripping over each other",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/extracting-one-slice-divergent-performance-needs",
+      "stance": "asserts",
+      "quote": "The Outposts are there to allow the Majestic Monolith to offload a particular slice of divergent behavior",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Targeted extraction is a standard migration pattern and matches Shopify's and others' reports, but 'most of the benefit' is not quantified.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/many-teams-adopted-microservices-retreating-monoliths",
+      "stance": "asserts",
+      "quote": "As more and more people come to realize that the chase for microservices ended in a blind alley, the pendulum is going to swing back.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "There are prominent consolidation stories (Amazon Prime Video, Segment) but no survey establishes a net trend.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

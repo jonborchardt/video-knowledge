@@ -1,0 +1,99 @@
+{
+  "id": "IZXv6a78NDw",
+  "title": "Code review is no longer the bottleneck",
+  "channel": "OpenAI",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "manual",
+  "watched": false,
+  "channelId": "UCXZCJLdBC09xxGZ6gcdrc6A",
+  "durationSec": 142,
+  "thumbnail": "https://i.ytimg.com/vi_webp/IZXv6a78NDw/sddefault.webp",
+  "summary": "Product demo pitching AI-assisted code review as the fix for review becoming the delivery bottleneck.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/generated-code-volume-outruns-fixed-human",
+      "stance": "asserts",
+      "quote": "there's so much code being written all the time, all over all of our companies. Code review is the new bottleneck.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/reviewer-can-take-automated-first-pass",
+      "stance": "asserts",
+      "quote": "Cloud code review has already taken a first pass.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "AI review tools do produce first-pass comments; how much of the human review they replace is not independently measured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/summarizing-change-risks-helps-reviewer-understand",
+      "stance": "asserts",
+      "quote": "I can ask, summarize this change and explain the risks for this entire project.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Change summaries plausibly cut orientation time, but there is little independent measurement of review speed or defect-finding with AI summaries.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.4,
+          "note": "Understanding the reason for a change is reviewers' main challenge; 91% of 873 developers say unfamiliar files take longer, descriptions are valued when they state what changed and why, and developers report responding better and faster when the author provides context and direction.",
+          "source": "software-practices/sources/bacchelli2013-modern-code-review.txt#L541-L549",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Google interviewees report that not knowing what gave rise to a change (urgent production fix versus nice-to-have) causes mismatched expectations, delays and frustration; the benefit of an explicit summary is inferred, not measured.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L411-L417",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/keeping-review-feedback-discussion-fixes-one",
+      "stance": "asserts",
+      "quote": "I can read the feedback alongside the change and I don't need to switch tools",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Context switching has measurable cost in general, but the size of the gain from tool consolidation is a vendor claim without independent data.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Lab experiment with 48 students answering emails while interrupted every 2 minutes: interrupted work was finished faster with no quality loss but with significantly higher stress, frustration, time pressure and effort, so the switching cost showed up as strain rather than lost time; not a code-review task.",
+          "source": "software-practices/sources/mark2008-cost-of-interrupted-work.txt#L200-L208",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "In about 7500 IDE sessions from 85 programmers only 10% had a first edit within a minute of starting and about 30% took over 30 minutes, so switching away from a programming task carries a real resumption cost; whether one tool removes it is not tested.",
+          "source": "software-practices/sources/parnin2011-resumption.txt#L190-L197",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

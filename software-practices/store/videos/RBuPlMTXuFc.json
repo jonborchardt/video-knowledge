@@ -1,0 +1,204 @@
+{
+  "id": "RBuPlMTXuFc",
+  "title": "The Key to High Performance: What the Data Says - Dr. Nicole Forsgren",
+  "channel": "IT Revolution",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCkAQCw5_sIZmj2IkSrNy00A",
+  "durationSec": 1846,
+  "thumbnail": "https://i.ytimg.com/vi_webp/RBuPlMTXuFc/sddefault.webp",
+  "summary": "Forsgren summarizes four years of State of DevOps findings: no speed-stability tradeoff, architecture over platform, culture and leadership predict performance.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/software-delivery-speed-stability-move-together",
+      "stance": "asserts",
+      "quote": "we find that software delivery performance is through putting stability and both are possible without trade-offs",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/organizations-high-software-delivery-performance-more",
+      "stance": "asserts",
+      "quote": "high performers year over a year are twice as likely to achieve or exceed their commercial goals",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "DORA finds this association in self-reported data; organizational performance is reported by the same respondents, so common-method bias is possible.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "DORA's SEM finds SDO performance predicts organisational performance on commercial and non-commercial goals, and elite performers are twice as likely to meet or exceed their organisational performance goals; both sides are self-reported in a cross-sectional survey.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1383-L1385",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/maturity-models-out-date-too-quickly",
+      "stance": "asserts",
+      "quote": "if we create maturity models they go out of date too fast",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "An argument about how to frame a transformation, not a measured outcome.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
+      "stance": "asserts",
+      "quote": "they have a much smaller blast radius and it's much much easier to identify what those changes are",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/technology-alone-does-not-raise-performance",
+      "stance": "asserts",
+      "quote": "we need technology and process and culture to really get this strong synergy",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "DORA's models and Bessen's HBR work support IT-plus-management, but the specific synergy is modeled, not experimentally shown.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "The report's model has culture of psychological safety, a clear change process and cloud implementation (only 29% of self-described cloud users met the NIST characteristics that actually predict performance) all driving delivery performance, and tells organisations to start with automation plus clear change approval and a healthy culture.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L690-L706",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "The review's strongest evidence, from studies of mature agile teams, is that success requires attention to human and social factors (balanced autonomy, trust, interpersonal skills); it concerns agile adoption rather than technology investment.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L1303-L1311",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/loosely-coupled-architecture-lets-teams-test",
+      "stance": "asserts",
+      "quote": "the thing that is most important is having a loosely coupled architecture both at the team level and at the technology level",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "DORA 2017 found architecture the strongest predictor of continuous delivery while mainframe and greenfield status were not significant; still survey-based.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "DORA revalidated that a loosely coupled architecture, defined as teams independently testing, deploying and changing their systems without depending on other teams, positively predicts continuous delivery; the 2019 report does not rank it against platform or technology choice.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1042-L1050",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/trunk-based-development-one-small-change",
+      "stance": "asserts",
+      "quote": "these are the ones that we have seen are predictive of your ability to develop and deliver software with both speed and stability",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/lightweight-change-approval-within-team-outperforms",
+      "stance": "asserts",
+      "quote": "number one or number two biggest constraint for most teams is a lightweight change approval process",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "DORA 2019 found external approvals correlated with worse performance and no better stability; correlational.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "Respondents whose organisations require CAB or senior-manager approval were 2.6 times more likely to be low performers, formal approval showed no association with lower change failure rates, and a clear, lightweight change process made teams 1.8 times more likely to be elite.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1272-L1283",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/generative-high-trust-blameless-organizational-culture",
+      "stance": "asserts",
+      "quote": "the generative group was most highly correlated with high performance",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Westrum culture measures predict performance in DORA's structural models, with survey-based data.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "A culture of psychological safety (measured with Google's Project Aristotle items) predicts software delivery performance, organisational performance and productivity, extending earlier years' finding that a Westrum generative culture of information flow, trust and risk-sharing predicts SDO performance.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1368-L1373",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/transformational-leadership-necessary-but-not-sufficient",
+      "stance": "asserts",
+      "quote": "leadership is necessary but not sufficient",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "DORA found the bottom third of leaders half as likely to be high performers while top leaders were no better than median; one survey year.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/high-performing-delivery-teams-report-less",
+      "stance": "asserts",
+      "quote": "less deployment pain less burnout higher employee Net Promoter Score",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Self-reported associations in DORA data; direction of causation is not established.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "The highest performers are half as likely to report feeling burned out, and good technical practices and clear change management reduce burnout in the model; deployment pain and willingness to recommend the workplace were studied in earlier years, not here.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1766-L1770",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

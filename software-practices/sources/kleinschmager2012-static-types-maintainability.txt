@@ -1,0 +1,773 @@
+Do Static Type Systems Improve the Maintainability
+      of Software Systems? An Empirical Study
+
+      Sebastian Kleinschmager,                 Romain Robbes,                         Andreas Stefik
+            Stefan Hanenberg
+                                                   Éric Tanter              Department of Computer Science
+       University of Duisburg-Essen      Computer Science Dept (DCC)    Southern Illinois University Edwardsville
+               Essen, Germany
+                                            University of Chile, Chile                 Edwardsville, IL
+sebastian.kleinschmager@stud.uni-due.de       rrobbes@dcc.uchile.cl                    astefik@siue.edu
+     stefan.hanenberg@icb.uni-due.de           etanter@dcc.uchile.cl
+
+   Abstract--Static type systems play an essential role in con-     The debate regarding the pros and cons of static or dynamic
+temporary programming languages. Despite their importance,          type systems is ongoing in both academia and the software
+whether static type systems influence human software devel-         industry. While statically typed programming languages such
+opment capabilities remains an open question. One frequently        as C, C++ and Java dominated the software market for
+mentioned argument for static type systems is that they improve     many years, dynamically typed programming languages such
+the maintainability of software systems--an often used claim for    as Ruby or JavaScript are increasingly gaining ground--
+which there is no empirical evidence. This paper describes an       especially in the domain of software development for the web.
+experiment which tests whether static type systems improve the      This paper contributes to this discussion with a controlled
+maintainability of software systems. The results show rigorous      experiment (see [11], [23], [19], [16] for introductions on con-
+empirical evidence that static type are indeed beneficial to these  trolled experiments) that empirically investigates the possible
+activities, except for fixing semantic errors.                      benefits of static type systems.
+
+                          I. INTRODUCTION                              The main research question for our experiment is whether
+                                                                    a static type system is helpful to humans, given the following
+   There is a long, ongoing debate about the possible pros          considerations: 1) a set of use cases involving new classes,
+and cons of static or dynamic type system in programming            and 2) in tasks involving fixing errors in an application. The
+languages (see [2], [14], [4] for a general introduction into type  programming languages used in the experiment were Java and
+systems). While many authors state that static type systems         Groovy--where Groovy was used as a dynamically typed Java.
+are extremely important (see again [2], [14], [4]), others hold     The classes given to the subjects were either statically typed
+opposite views (for instance, [22]).                                (for Java) or dynamically typed (for Groovy). The experiment
+                                                                    reveals that those subjects who used the statically typed
+   Typical examples of arguments about advantages of static         version of the classes had a significant positive benefit for tasks
+type systems can be found in many text books on programming         where different classes had to be used and where type errors
+and programming languages:                                          had to be fixed (respectively no-such-method-errors in the
+                                                                    dynamically typed classes). For semantic errors, no difference
+   · "Strong typing is important because adherence to the           between the statically and dynamically typed variants were
+      discipline can help in the design of clear and well-          found. The measurements are based on development time; the
+      structured programs. What is more, a wide range of            time developers needed to solve a given programming task.
+      logical errors can be trapped by any computer which
+      enforces it". [1, p. 8]                                          Structure of the paper. Section II gives an overview
+                                                                    of related work. Section III describes the experiment by
+   · "A static type system provides the reader of code with an      discussing initial considerations, the programming tasks given
+      implicit documentation. Because a static type system en-      to the subjects, the general experimental design, and threats to
+      forces type declarations for variables, methods parameters    validity. Then, section IV describes the results by describing
+      and return types, it implicitly increases the documentation   the measured data, giving descriptive statistics and performing
+      factor by making the code speak for itself." [14, p. 5]       significance tests on the measurements. After discussing the
+                                                                    experiment in section V, we conclude in section VI.
+Some of the drawbacks typically mentioned include [22, pp.
+149­159]:                                                                                    II. RELATED WORK
+                                                                       Gannon's early experiment [7] revealed an increase in
+   · "A type system can be overly restrictive and forces the        programming reliability for the subjects using a language with
+      programmer to sometimes work around the type system."         a static type system; each subject solved a task twice, with both
+                                                                    kinds of type systems in varying order.
+   · "They can get in the way of simple changes or additions
+      to the program which would be easily implemented in a
+      dynamic type system but make it difficult in the static
+      type system because of dependencies that always have to
+      be type correct."
+
+978-1-4673-1216-5/12/$31.00 c 2012 IEEE  157 ICPC 2012, Passau, Germany
+   Prechelt and Tichy studied the impact of static type checking    correcting errors in an existing system. Therefore we examine
+on procedure arguments using the programming languages              three kinds of programming tasks:
+ANSI C, which performs type checking on arguments of
+procedure calls, and K&R C, which does not [17]. The                   1) using the code from an existing system, where docu-
+experiment revealed, for one task, a significant positive impact           mentation is only provided by the source code;
+of the static type system with respect to the development time,
+but did not reveal a significant difference for the other.             2) fixing type errors (no-such-method-errors for dynami-
+                                                                           cally typed applications) in existing code;
+   A qualitative pilot study on type systems by Daly et al.
+observed programmers who used a new type system for an                 3) fixing semantic errors in existing code.
+existing language [5]. The authors concluded that at least in       The hypotheses followed by the experiment were:
+the specific setting, the benefit of the statically typed language
+could not be shown.                                                    1) Static type systems decrease development time if classes
+                                                                           should be used which are only documented by its source
+   An empirical evaluation of seven programming languages                  code
+performed by Prechelt [15] showed that programs written in
+(dynamically typed) scripting languages (Perl, Python, Rexx,           2) Static type systems decrease development time if type
+or Tcl), took half or less time to write than equivalent programs          errors need to be fixed
+written in C, C++, or Java.
+                                                                       3) For fixing semantic errors, the (static or dynamic) type
+   The study presented here is part of a larger experiment series          system has no influence on the resulting debugging time.
+about static and dynamic type systems (see [9]).
+                                                                    The programming tasks reflect the three hypotheses; we did
+   In [8] we studied the effect of a static and dynamic type        not want to have a single task for each hypothesis, as the
+system to implement a scanner and a parser; The dynamic             experiment's result could be heavily influenced by a compound
+type system had a significant positive time benefit for the         factor such as task description, etc. Thus we defined several
+scanner, while no significant difference could be measured          tasks for each hypothesis. Since we needed statically and
+for implementing the parser. In [21] we analyzed to what            dynamically typed programming tasks, an obvious consider-
+extent type casts, which occur in statically typed programs,        ation is the choice programming languages. Our goal was to
+influence simple programming tasks. We found out that type          use languages as similar as possible, and which do not need
+casts did negatively influence the development time of trivial      exhaustive additional training for the subjects. Since Groovy
+programming tasks, while longer tasks showed no significant         can be used as a dynamically typed Java, and the subjects
+difference.                                                         were already proficient with Java, this language pair was an
+                                                                    obvious choice.
+   A further experiment [20] revealed that the fixing of type
+errors is significantly faster with a static type system (in        B. Environment and Measurement
+comparison to no-such-method errors). In [13] we analyzed              We use the Emperior programming environment which was
+the impact of static or dynamic type systems on the use
+of undocumented APIs. The study showed for three of five            used in previous experiments [6]. It consists of a simple text
+programming tasks a positive impact of the static type system,      editor (with syntax highlighting) with a tree view that shows
+and a positive impact of the dynamic type system for two other      all necessary source files for the experiment. From within the
+tasks.                                                              text editor, subjects were permitted to edit and save changes
+                                                                    in the code and also to run both the application and test cases.
+                 III. EXPERIMENT DESCRIPTION
+                                                                       Subjects worked sequentially on each individual task, with-
+   We start with initial considerations, then discuss our pro-      out knowing the next ones. Every time a new programming
+gramming environment and methodology. After introducing             task was given to the subject, a new IDE was opened which
+the experimental design we give a detailed description of           contained all the necessary files. For each task, subjects were
+the programming tasks. Then, we describe the experiment             provided executable test cases, without their source code. We
+execution and finally, we discuss threats to validity.              measured the development time until all test cases for the
+                                                                    current programming task passed; we do not need to measure
+A. Initial Considerations for Experimental Design                   correctness, as passing tests imply correctness.
+
+   The intent of the experiment is to identify in what situations      The whole programming environment (IDE with program-
+static type systems possibly have an impact on the devel-           ming tasks, test cases, etc.) including the operating system
+opment time. The underlying motivation for this experiment          (Ubuntu 11.04) was stored on an USB stick which was used
+is that previous experiments already identified a difference        to boot the machines used in the experiment.
+between static and dynamic type system for programming
+tasks [7], [17], [8], [21]. According to previous experiments       C. Experimental Design
+and the literature on type systems, our expectations were that         The experiment in this paper follows a within-subject design
+static type systems potentially help in situations like 1) adding
+or adapting code on an existing system, and 2) finding and          that has been applied in previous experiments [21], [6], [13].
+                                                                    The motivation for the within-subject design is the relatively
+                                                                    low number of subjects: While within-subject designs poten-
+                                                                    tially suffer from the problem of learning effects, they have
+                                                                    the benefit that each individual's difference in performance can
+
+158
+be considered in the analysis, which increases the statistical     (Tables V, VI). According to the hypotheses in the experiment
+power.                                                             we designed three kinds of tasks:
+
+   In this design, we first give developers a set of statically       · Class identification tasks (CIT), where a number of
+typed programming tasks, i.e. programming tasks with a                   classes needs to be identified (Table V). The participants
+corresponding set of classes which have static type annotations          had to fill a method stub in the task.
+in the Java programming language and the same tasks with a
+set of classes without such annotations in Groovy. In order to        · Type error fixing tasks (TEFT), where a type error
+study whether there is a difference between both solutions,              needs to be fixed in existing code (Table VI).
+we divide the set of subjects into two groups and let one
+group start the development tasks with Groovy and the other           · Semantic error fixing tasks (SEFT), where a semantic
+group start with Java (often called counterbalancing). Table I           error needs to be fixed in existing code (see Table VI).
+illustrates the corresponding design.
+                                                                   In the following we describe the characteristics of each task.
+                                           Table I                 The numbering of the tasks corresponds to the order in which
+                         GENERAL EXPERIMENTAL DESIGN               the tasks were given to the subjects. We explain the task
+                                                                   description for only one of the languages to conserve space.
+Group A  Technique for all tasks  Technique for all tasks
+Group B          (round 1)                (round 2)                   1) CIT 1 (two classes to identify): For this task two classes
+                   Groovy                     Java                 have to be identified, namely a Pipeline class which would
+                     Java                   Groovy                 take a generic type parameter and the ActionsAndLoggerPipe
+                                                                   class. Instances of these have to be used by initializing a type
+   The potential problem with this approach is in cases where      ActionsAndLoggerPipe with two Pipeline instances and then
+the learning effect is too large. In such cases, the second        passing the pipe along a method call.
+measurement will always be lower than the first measurement:
+the experiment will not reveal any result. In case the learning       2) CIT 2 (Four Classes to Identify): This task requires 4
+effect and the language effect is equal, the design still reveals  classes to be identified. In Java, instances of MailStartTag
+a result since group B would not show any difference, while        and MailEndTag have to be sent to an instance of the type
+group A would (under the assumption that the static type           EMailDocument, along with an Encoding (which is an abstract
+system indeed decreases development time). A more detailed         class, but any of the provided subclasses was a correct choice
+discussion of this design can be found in [21], [13].              for instantiation). Additionally, both start and end tag have to
+                                                                   be provided with a CursorBlockPosition instance during their
+D. Base Application                                                creation.
+   The software used by the participants was based on a
+                                                                      3) CIT 3 (Six Classes to Identify): For this task six classes
+small, round-based, video game written in Java for a previous      need to be identified. A MailElement subclass of type Op-
+experiment [10], which was slightly extended. This application     tionalHeaderTag has to be instantiated, outfitted with several
+base consisted of 30 classes, with 152 methods, and contained      dependencies and then returned.
+approximately 1300 lines of code. We translated the applica-
+tion to Groovy, removing all static type system information.          4) SEFT 1: In this task a semantic error, which leads to
+                                                                   wrong program behavior, needs to be fixed. Subjects are given
+   While it is difficult to do so completely, to reduce learning   a sequence of statements that are executed during test runs and
+effects we renamed all the classes, fields, methods, and other     give a starting point for debugging. An additional consistency
+code constructs in the Java application, to produce an applica-    check shows what was expected from the program. In the code,
+tion in a different program domain--a simple e-mail client. For    when a cursor reaches the last element of an e-mail, it should
+both programs, we renamed field and method parameter names         result in a job of type ChangeMailJob in order to load the next
+so that they would not reflect the exact type they contained.      mail. Because of the error, a SetCursorJob instance is wrongly
+This was done to remove the documentation value of type            used instead, which reset the cursor back to the first element of
+names from variables, and to make the program type free.           the current mail. The consistency check provides a description
+Variables were renamed using synonyms of the types they            of the error and tells the participants that the current document
+stood for.                                                         has not changed after reaching the last element.
+
+E. Programming Tasks                                                  5) SEFT 2: Subjects are given a code sample that interacts
+   The experiment consisted of 9 tasks, each of which had to       with the application and which contains a consistency check.
+                                                                   In this task, the goal is to identify a missing method call in
+be solved in both languages. In addition to these regular tasks,   the code that leads to wrong behavior. TableVI shows both
+a warm-up task (not part of the analysis) was provided to make     the wrong code and the correct solution for the Groovy video
+the participants comfortable with the environment they had to      game. The problem is that once a player moves from one
+use. The task descriptions were provided as a class comment.       field to the next, a move command is executed. This move
+Example solutions for each task can be found in the appendix       command is supposed to set the player reference to the new
+                                                                   field and delete it from the previous. The semantic error is that
+                                                                   the call to the method is missing. This leads to duplicate player
+                                                                   references, which are detected by the consistency check. The
+                                                                   participants had to insert the missing call.
+
+                                                           159
+   6) CIT 4 (Eight Classes to Identify): This task requires        to the two groups. Two practitioners started with Java and
+instantiating the WindowsMousePointer class. This object has       all three research associates started with Groovy. A more
+to be outfitted with dependencies to other objects (e.g., icons,   detailed description of the subjects can be found in [12]. The
+cursors, theme). The task requires the subjects to identify the    experiment was performed at the University of Duisburg-Essen
+class hierarchies and subclasses that are needed. Enumeration      within a time period of one month. The machines used by the
+types were used as well, although the specific values were not     subjects where IBM Thinkpads R60, with 1GB of RAM.
+critical to the task.                                              G. Threats to Validity
+
+   7) TEFT 1: This task contains a type error where the place         As with any scientific study, this study has a number of
+with the faulty code is different from the place that leads to     potential threats to validity. Some of the threats are general for
+a program run-time exception. Because of the nature of this        these kinds of experiments (students as subjects, small pro-
+error, they are easily detected by the static type checker in      gramming tasks, artificial development environment), which
+Java. As such, only the Groovy tasks require explanation (see      are already discussed in detail in other related experiments (see
+Table VI). In the erroneous code in Groovy, a GameObject           for instance [21], [8]). Furthermore, the experimental design
+instance is inserted into a property that is supposed to be a      causes some internal threats (learning effect may hide the main
+simple String. As such, when the consistency check runs, the       effect) which is explained in more detail in [13]. As many of
+properties are concatenated, which leads to a run-time excep-      these threats have been described previously, we discuss here
+tion, because the GameObject does not have a concatenate           those most relevant to the current experiment.
+method. The solution is to remove the GameObject and keep
+the String.                                                                                                  Table II
+                                                                        SUMMARY OF PROGRAMMING TASKS FOR SUBJECTS IN GROUP A
+   8) CIT 5 (Twelve Classes to Identify): These tasks requires
+subjects to identify twelve classes; the largest construction                        (GROOVY STARTERS), G = GROOVY, J = JAVA
+effort of all type identification tasks. In Java, participants
+have to configure a MailAccount instance with dependencies         Task Number  123456789
+to other objects, which represent a part of the mail account
+configuration (e.g., user credentials). These objects also have    Task Name    CIT 1
+dependencies to other objects, resulting in a large object graph.                      CIT 2
+                                                                                               CIT 3
+   9) TEFT 2: We suspect this task is one of the more difficult                                        SEFT 1
+ones for Groovy developers. It contains a wrongly assigned                                                    SEFT 2
+object leading to a run-time error, but the distance between the                                                      CIT 4
+bug insertion and the run-time error occurrence is larger than                                                                TEFT 1
+for tasks TEFT 1. When a new TeleportCommand is created,                                                                              CIT 5
+it is outfitted with dependencies to the player and the level.                                                                               TEFT 2
+The bug is that the order of the two parameters is wrong. The
+solution is to switch the order of the two types, which may        #Identified Classes 2 4 6  8 12
+not be obvious.                                                    Language     GGGGGGGGG
+
+   10) Summary of Programming Tasks: Table II gives an             Task Number  10 11 12 13 14 15 16 17 18
+overview of the characteristics of each programming task. Five
+programming tasks required participants to identify classes--      Task Name    CIT 1
+where they varied with respect to the number of classes to                             CIT 2
+be identified. For the type errors, as well as for the semantic                                CIT 3
+errors, we designed two programming tasks.                                                             SEFT 1
+                                                                                                              SEFT 2
+   For CI Tasks, developers are given an empty method stub                                                            CIT 4
+where parameters either need to be initialized or used for                                                                    TEFT 1
+the construction of a new object (which requires additional                                                                           CIT 5
+objects as input). For TEF Tasks, Java developers have code                                                                                  TEFT 2
+that does not compile due to a type error. In contrast, for
+Groovy developers, a test case fails. In both cases, the subjects  #Identified Classes 2 4 6  8 12
+have to transform the code base. For SEF Tasks, all subjects       Language     JJJJJJJJJ
+are given failing tests and the code base must be modified
+until all pass.                                                       Chosen tasks (external validity): We explicitly designed
+                                                                   the programming tasks in a way that complicated control struc-
+F. Experiment Execution                                            tures such as loops, recursion, etc. were not used. Using those
+                                                                   control structures probably increases the variability amongst
+   The experiment was performed with 36 subjects, but only         subjects. Given this potential problem, the effects observed
+33 finished the tasks. Of these subjects, thirty students, three   here may not generalize to real-world programs in industry.
+were research associates, and three were industry practitioners.
+All subjects were volunteers and were randomly assigned               Chosen programming languages (internal and external
+                                                                   validity): For practical reasons we decided to use Java and
+                                                                   Groovy as representatives for languages with static and dy-
+                                                                   namic type systems. However, Java's type system requires ex-
+                                                                   plicit type annotations for return types, variables, parameters,
+                                                                   etc. This differs from the type system of languages such as
+                                                                   ML. As a consequence, Java source code requires more text;
+                                                                   the potential disadvantage is that writing this code requires
+                                                                   more keyboard input, while the potential benefit is that these
+                                                                   annotations present reinforcing documentation. However, the
+                                                                   characteristic of having a type annotation and its consequences
+                                                                   is not directly related to static type systems and can be
+                                                                   achieved without having a statically typed languages. If our
+                                                                   experiment reveals a difference between Java and Groovy, it
+                                                                   is possible the observed effect is not related to the type system,
+                                                                   but is instead related to the syntactical element type annotation.
+
+160
+                                                                                Table III
+DESCRIPTIVE STATISTICS OF EXPERIMENT RESULTS (TIME IN SECONDS FOR ALL BUT STANDARD DEVIATION), J = JAVA, G = GROOVY
+
+     min         CIT 1      CIT 2      CIT 3     SEFT 1     SEFT 2                          CIT 4    TEFT 1      CIT 5      TEFT 2        Sums
+    max          JG         JG         JG         JG         JG                             JG        JG         JG        JG             JG
+arith. mean   124 227    193 295    320 591    104 153      74 87                        323 537    78 149    293 564    44 246      1907 4072
+  median     1609 2215  4285 1354  1983 2433  2910 3062  2264 2262                      3240 2505  900 2565  1514 2538  535 2285    14414 14557
+  std. dev.   535 818    781 669    813 1182  1111 814    507 429                        827 1026  236 928    691 1112  147 849      5648 7827
+              480 575    567 562    711 1010  1015 639    293 282                        716 880   197 813    671 1046  116 750      4892 7349
+              336 552    787 309    410 453    798 696    528 426                        543 461   159 549    246 417   101 557      2925 2214
+
+In other words, the effect of syntax, or our choice of languages                                                                              Language4000
+(e.g., Java and Groovy), is not clear from this study.
+                                                                                                                                                                           GroovyTimes (in seconds)3000
+                    IV. EXPERIMENT RESULTS                                                                                                                                 Java
+A. Measurements and Descriptive Statistics                                              2000
+                                                                                               CIT 1 CIT 2 CIT 3 CIT 4 CIT 5 SEFT 1 SEFT 2 TEFT 1 TEFT 2
+   Table VII shows the observed development time for all                                1000
+tasks, while Table III shows the corresponding descriptive                                                        Task
+statistics. The boxplot in Figure 1 gives a more intuitive                Figure 1. Boxplot for measured data (ordered by kind of task)0
+representation of the data. Both the data and the descriptive
+statistics reveals several facts. First, no single subject had     rounds. As such, we used the standard Greenhouse-Geisser
+sums of development times for Java that were greater than the      correction in reporting our Repeated Measure ANOVA results.
+sums of development times for Groovy. Second, for all tasks
+(including the sums) the minimum time is always smaller in            Results show, first, that the dependent variable of develop-
+Java than in Groovy. However, this statements does not hold        ment time showed a significant difference in the first as well as
+for the maximum times, the arithmetic means, or the medians:       in the second round (p<.001, partial 2=.275 in the first round
+                                                                   and p<0.001, partial 2=.246 in the second round). In both
+   · Maximum: For the tasks CIT 2, SEFT 2 and CIT 4                cases the estimated effect size is comparable (with .275 and
+      the maximum development time is larger for the Java          .246). Second, there is a significant interaction between the
+      solution.                                                    factor programming task and programming language (in the
+                                                                   first round p<.001, partial 2=.181 and in the second round
+   · Arithmetic mean: For the tasks CIT 2, SEFT 1, and             p<.001, partial 2=.172). In both cases the estimated effect
+      SEFT 2 the arithmetic mean is larger for the Java solu-      size is comparable. The significance indicates that the original
+      tions.                                                       motivation holds--the effect of the programming language
+                                                                   is different for different programming tasks. Concerning the
+   · Median: For the tasks CIT 2, SEFT 1, and SEFT 2 the           impact of the between-subject factor programming language,
+      median for the Java solutions is larger.                     it turns out that it is non-significant for the first round (p>.76)
+                                                                   and significant for the second (p<.001).
+Consequently, the first impression that the Java development
+times are always faster than the Groovy development times             To summarize, different programming tasks have an influ-
+is not immediately obvious--due to the different results from      ence on the resulting development times. Furthermore, the
+the maximum, arithmetic means and medians.                         resulting development times depend on the tasks as well as on
+                                                                   the programming language. Hence, it is reasonable to analyze
+B. Repeated Measures ANOVA                                         the different tasks and the languages in separation, with a
+   We start the statistical analysis by treating each subsequent   within-subject study of each task.
+
+round of tasks separately. This is completed by first analyzing
+round 1 of programming tasks (task 1­9) with all developers
+together (i.e. those that solved the tasks in Java and those that
+solved the tasks in Groovy). Then, we do the same for the
+second round. The analysis is performed by using a Repeated
+Measure ANOVA, with the within-subject factor programming
+task and the between-subject factor programming language.
+Since this analysis combines the different languages in each
+round, it cannot benefit from the within-subject effect that each
+individual performs each task twice. Figures 2 and 3 show the
+boxplots for the two rounds. While for the type error fixing
+tasks (TEFT), there seems to be hardly a difference between
+both rounds, we see rather large differences for the other kinds
+of tasks in both rounds. Further, before conducting our tests,
+we ran Mauchly's sphericity test, which was significant in both
+
+                                                         161
+                    4000  Language                                                                             3000  Language
+                                                                                                               2000
+                             Groovy                                                                                      Groovy
+                             Java                                                                                        Java
+
+Times (in seconds)  3000                                                                   Times (in seconds)
+
+                    2000
+
+                                                                                                               1000
+
+                    1000
+
+                    0                                                                                          0
+
+                      CIT 1 CIT 2 CIT 3 CIT 4 CIT 5 SEFT 1SEFT 2TEFT 1TEFT 2                                              CIT 1 CIT 2 CIT 3 CIT 4 CIT 5 SEFT 1 SEFT 2 TEFT 1 TEFT 2
+
+                                               Task                                                                                                Task
+
+Figure 2. Boxplot for first round (no repeated measurement of same tasks,                                         Figure 4. Boxplot for group starting with Groovy
+ordered by kind of task)
+
+                          Language                                                                             4000  Language
+
+                    2500       Groovy                                                                                    Groovy
+                    2000       Java                                                                                      Java
+
+                                                                                           Times (in seconds)  3000
+
+Times (in seconds)  1500                                                                                       2000
+
+                    1000
+
+                                                                                                               1000
+
+            500                                                                                                0
+
+                0                                                                                                         CIT 1 CIT 2 CIT 3 CIT 4 CIT 5 SEFT 1 SEFT 2 TEFT 1 TEFT 2
+
+                                CIT 1 CIT 2 CIT 3 CIT 4 CIT 5 SEFT 1 SEFT 2 TEFT 1 TEFT 2                                                          Task
+
+                                                 Task                                                               Figure 5. Boxplot for group starting with Java
+Figure 3. Boxplot for second round (no repeated measurement of same tasks)
+
+C. Task-Wise and Group-Wise Analysis                                                       reports the language with less development time instead of the
+                                                                                           raw rank sums.
+   To perform a within-subject analysis on each task we
+combine, for each subject, the development times for both                                     We can see that for the group starting with Groovy, the
+rounds. In other words, we compare the group starting with                                 effect of the programming language is always significant: in all
+Java and the group starting with Groovy separately.                                        cases Java required less development time. Likely explanations
+                                                                                           are either the effect of the static type system or the learning
+   Figures 4 and 5 show boxplots for both groups. The groups                               effect from the experiment. For the group starting with Java,
+are quite different: for the group starting with Groovy there is                           we have a different result. For CIT 2, SEFT 1, and SEFT 2 the
+a clear positive impact of Java, while for the Java-first group                            subjects required less time with Groovy, while no significant
+the effect is more nuanced. In all cases, we performed the                                 impact of the programming language was found for CIT 1, CIT
+non-parametric Wilcoxon-test. The results of the test for the                              3 and CIT 4. Combining both results, we obtain a positive
+first group starting with Groovy ("Groovy first") and the group                            impact of Java for all Type Error Fixing Tasks (TEFT), all
+starting with Java ("Java first") as well as the combination of                            Class Identification Tasks (except CIT 2), and no impact on
+both analyses is given in Table IV; to ease reading, the table                             the semantic error fixing tasks.
+
+                                       162
+                                Table IV                                                         be the result of the underlying domain. Groovy developers
+WILCOXON-TEST FOR THE WITHIN-SUBJECT COMPARISON                                                  (who used the video game example) may have found the
+                                                                                                 classes to be used more intuitive than the classes for the Java
+                                       Groovy first                                              application (the mail client). Additionally, we think that the
+                                                                                                 method names in the task might have given the developers
+CIT 1                                                                                            a hint on the kinds of classes had to be used. For instance,
+           CIT 2                                                                                 the methods setStart and setGoal in the Groovy code for task
+                       CIT 3                                                                     two seem to have a larger association to the necessary types
+                                 CIT 4                                                           StartLevelField and GoalLevelField in comparison to task one
+                                           CIT 5                                                 (where setTasksAndMessages required a Queue object).
+                                                     TEFT 1
+                                                               TEFT 2                               At least, the special situation with CIT 2 gives implies that
+                                                                           SEFT 1                the argumentation for or against static types cannot be trivially
+                                                                                         SEFT 2  reduced to the question of how many (unknown) classes are
+ Task                                                                                            needed in order to solve a programming task. There seem to
+p-value .000 .001 .001 .000 .000 .000 .000 .028            .001                                  be other factors which need to be identified. Given this point,
+benefit Java Java Java Java Java Java Java Java            Java                                  we think that identifying these factors exactly is an important
+                                                                                                 avenue of future work, if nothing else, to provide future
+p-value .91         Java first                                                                   programming language designers with a roadmap for how type
+             .034 .215 .679 .003 .001 .001 .001            .003                                  systems could, or maybe should, be designed to maximize
+benefit ­ Groovy ­  ­ Java Java Java Groovy Groovy                                               human performance as best as the research community is able
+                                                                                                 (see [13] for a corresponding example and a more detailed
+                                                   Result  ­                                     discussion).
+benefit Java ­ Java Java Java Java Java ­
+                                                                                                                 VI. SUMMARY AND CONCLUSION
+                           V. DISCUSSION
+   The experiment revealed a positive impact of the static type                                     Although there is a long ongoing debate about the possible
+system for six of nine programming tasks: For all tasks where                                    pros and cons of static type systems, there is hardly any
+type errors needed to be fixed (TEFT) and for most of the tasks                                  empirical data available on their usage by human developers.
+where new classes need to be used (CIT), but no difference for                                   This paper introduced an experiment empirically analyzing the
+semantic error fixing tasks (SEFT). From this perspective, the                                   potential benefit of static type systems. Three kinds of pro-
+experiment provides evidence that static type systems benefit                                    gramming tasks--all of them potential maintenance tasks--
+developers in situations where a set of classes has to be used                                   were given to 33 subjects: tasks where a set of previously
+where documentation is limited or not available (which we                                        unknown classes had to be used by the developers, tasks
+suspect is quite common). An important implication of the                                        where developers had to fix semantic errors, and tasks where
+experimental results is that no single tasks could be used to                                    developers had to fix type errors. Altogether nine programming
+argue in favor for dynamic type systems--the best humans                                         tasks were given to the subjects.
+performed with them was a statistical tie compared to their
+static cousins.                                                                                     Each subject did the programming tasks twice: with a
+   Further, while no statistically significant differences were                                  statically typed environment and with a dynamically typed
+observed with regards to tasks involving debugging semantic                                      one. For the statically typed environment, the subjects used the
+errors, it seems plausible that learning effects masked any                                      programming language Java, while for the dynamically typed
+potential results. This is a common problem with repeated                                        environment they used Groovy. The result of the experiment
+measures designs such as ours. The trade-off here is that such                                   can be summarized as follows:
+experimental designs make it easier to obtain statistically reli-
+able results on small samples (because you obtain more data                                         · Static type systems help humans use a new set of
+from each subject), but such learning effects must be taken into                                       classes: For four of the five programming tasks that
+account, both statistically (using a Repeated Measures Anova)                                          required using new classes, the experiment revealed a
+and practically (e.g., potentially adjusting the tasks). With that                                     positive impact of the static type system with respect
+said, even if one type is ultimately found to be superior for                                          to development time. For one task, we did not observe
+this kind of task, the fact that it may be masked implies that                                         any statistically significant difference (possibly due to
+the effect size is probably small.                                                                     learning effects).
+   In CIT 2, the group starting with Groovy was faster with
+the statically typed solution, while the group starting with                                        · Static type systems make it easier for humans to fix
+Java was faster with the dynamically typed solution. Following                                         type errors: For both programming tasks that required
+the same argumentation as before, this likely means that the                                           fixing a type error, the use of the static type system
+learning effect was larger than the (possible) positive main                                           statistically significantly reduced development time.
+effect of the static type system. However, it was not obvious
+from our observations why this would be the case. Ultimately,                                       · For fixing semantic errors, we observed no differences
+the principle for solving CIT 2 was the same as for CIT 1,                                             with respect to human development times: For both
+3, 4, and 5. In all these cases, the developer had to use a                                            tasks where a semantic error had to be fixed, we did
+number of new classes which were not known to him upfront.
+In CIT 2, a relatively small number of new classes had to be
+identified (four types)--which is less than for CIT 3, 4, and
+5, but more than for CIT 1. Hence, it is not sufficient to argue
+that this task is different because of the number of classes to
+be identified.
+   We cannot exclude that the special situation of CIT 2 might
+
+                                                                                                 163
+      not observe any statistically significant differences (also              [4] Luca Cardelli. Type systems. In Allen B. Tucker, editor, The Computer
+      possibly due to learning effects).                                            Science and Engineering Handbook, chapter 103, pages 2208­2236.
+The experiment suffers (like every experiment) from a number                        CRC Press, 1997.
+of threats to validity. One of them is that the dynamically
+typed code was artificially constructed in a way that the                      [5] Mark T. Daly, Vibha Sazawal, and Jeffrey S. Foster. Work in progress:
+names of the parameters, variables, etc. did not contain any                        an empirical study of static typing in ruby. Workshop on Evaluation and
+hints with respect to the corresponding expected types. It                          Usability of Programming Languages and Tools (PLATEAU),Orlando,
+might be the case that we caused additional complexity to                           Florida, October 2009, 2009.
+the dynamically typed solutions. In fact, to what extent (or
+for which percentage or in what situation) parameter names                     [6] Stefan Endrikat and Stefan Hanenberg. Is aspect-oriented programming
+in dynamically typed code reflect the classes/types that are                        a rewarding investment into future code changes? a socio-technical study
+expected is unclear. An empirical investigation of dynamically                      on development and maintenance time. In The 19th IEEE International
+typed source code repositories could help answering this                            Conference on Program Comprehension, ICPC 2011, Kingston, ON,
+question (examples of these studies are [3], [18]).                                 Canada, June 22-24, 2011, pages 51­60, 2011.
+   It might be further noted that there is some oft occurring
+statement that tool support for statically typed languages is                  [7] J. D. Gannon. An experimental evaluation of data type conventions.
+easier to achieve (for code refactorings, etc.). Under this                         Commun. ACM, 20(8):584­595, 1977.
+assumption, using a mature IDE (such as Eclipse etc.) it seems
+reasonable that a positive impact on the development times for                 [8] Stefan Hanenberg. An experiment about static and dynamic type
+the statically typed versions would be observed. We think that                      systems: Doubts about the positive impact of static type systems on
+in our case (for the languages Java and Groovy) this would                          development time. In Proceedings of the ACM international conference
+have been the case--however, Java has much more mature                              on Object oriented programming systems languages and applications,
+IDE support than Groovy and it is important to make the                             OOPSLA '10, pages 22­35, New York, NY, USA, 2010. ACM.
+experimental conditions similar. As such, we used simple text
+editors to make our study as fair as we were able. Still, tool                 [9] Stefan Hanenberg. A chronological experience report from an initial
+support is common in industry and it seems reasonable that                          experiment series on static type systems. In 2nd Workshop on Empirical
+this factor could be considered in future studies.                                  Evaluation of Software Composition Techniques (ESCOT), Lancaster,
+   An interesting observation of this study is that the results                     UK, 2011.
+partially contradict previous work, (see e.g., [21], [8] as well
+as [13])--in those studies, a positive impact of the dynamic                  [10] Stefan Hanenberg, Sebastian Kleinschmager, and Manuel Josupeit-
+type system was found for some programming tasks. We think                          Walter. Does aspect-oriented programming increase the development
+that this partial contradiction exists (for example, compared                       speed for crosscutting code? An empirical study. In Proceedings of the
+to [21]) because our tasks here were more complex and                               2009 3rd International Symposium on Empirical Software Engineering
+potentially better suited for the kind of programming where                         and Measurement, ESEM '09, pages 156­167, Lake Buena Vista,
+we might expect to see benefits for static, but not dynamic,                        Florida, USA, 2009. IEEE Computer Society.
+typing [21], [13]. As such, while the results do differ slightly,
+our contribution here is in showing evidence that, for some                   [11] Natalie Juristo and Ana M. Moreno. Basics of Software Engineering
+tasks, humans do benefit from static type systems. This result                      Experimentation. Springer, 2001.
+hardly implies that static systems benefit programmers for all
+tasks (a conclusion that seems unlikely). However, we think                   [12] Sebastian Kleinschmager. An empirical study using Java and Groovy
+the onus is now on supporters of dynamic typing to make                             about the impact of static type systems on developer performance when
+their claims with rigorously collected empirical evidence with                      using and adapting software systems. Master Thesis at the Institute
+human subjects, so the community can evaluate if, and under                         for Computer Science and Business Information Systems, University of
+what conditions, such systems hold benefits.                                        Duisburg-Essen, 2011.
+
+                             REFERENCES                                       [13] Clemens Mayer, Stefan Hanenberg, Romain Robbes, Éric Tanter, and
+                                                                                    Andreas Stefik. Static type systems (sometimes) have a positive impact
+ [1] Richard Bird and Philip Wadler. An introduction to functional program-         on the usability of undocumented software: An empirical evaluation.
+      ming. Prentice Hall International (UK) Ltd., Hertfordshire, UK, UK,           Technical Report TR/DCC-2012-5, University of Chile, apr 2012.
+      1988.
+                                                                              [14] Benjamin C. Pierce. Types and programming languages. MIT Press,
+ [2] Kim B. Bruce. Foundations of object-oriented languages: types and              Cambridge, MA, USA, 2002.
+      semantics. MIT Press, Cambridge, MA, USA, 2002.
+                                                                              [15] Lutz Prechelt. An empirical comparison of seven programming lan-
+ [3] Oscar Callaú, Romain Robbes, Éric Tanter, and David Röthlisberger.             guages, ieee computer (33). Computer, 33:23­29, 2000.
+      How developers use the dynamic features of programming languages:
+      the case of smalltalk. In Proceedings of the 8th International Working  [16] Lutz Prechelt. Kontrollierte Experimente in der Softwaretechnik.
+      Conference on Mining Software Repositories, MSR 2011 (Co-located              Springer, Berlin, March 2001.
+      with ICSE), Waikiki, Honolulu, HI, USA, May 21-28, 2011, Proceedings,
+      pages 23­32, 2011.                                                      [17] Lutz Prechelt and Walter F. Tichy. A controlled experiment to assess
+                                                                                    the benefits of procedure argument type checking. IEEE Trans. Softw.
+                                                                                    Eng., 24(4):302­312, 1998.
+
+                                                                              [18] Gregor Richards, Christian Hammer, Brian Burg, and Jan Vitek. The
+                                                                                    eval that men do - a large-scale study of the use of eval in javascript
+                                                                                    applications. In ECOOP 2011 - Object-Oriented Programming - 25th
+                                                                                    European Conference, Lancaster, UK, July 25-29, 2011 Proceedings,
+                                                                                    pages 52­78, 2011.
+
+                                                                              [19] Dag I. K. Sjøberg, Jo E. Hannay, Ove Hansen, Vigdis By Kampenes,
+                                                                                    Amela Karahasanovic´, Nils-Kristian Liborg, and Anette C. Rekdal. A
+                                                                                    survey of controlled experiments in software engineering. IEEE Trans.
+                                                                                    Softw. Eng., 31(9):733­753, 2005.
+
+                                                                              [20] Marvin Steinberg and Stefan Hanenberg. What is the impact of static
+                                                                                    type systems on debugging type errors and semantic errors? an empirical
+                                                                                    study of differences in debugging time using statically and dynamically
+                                                                                    typed languages - unpublished work in progress.
+
+                                                                              [21] Andreas Stuchlik and Stefan Hanenberg. Static vs. dynamic type
+                                                                                    systems: An empirical study about the relationship between type casts
+                                                                                    and development time. In Proceedings of the 7th Symposium on Dynamic
+                                                                                    Languages, DLS 2011, October 24, 2011, Portland, OR, USA, pages 97­
+                                                                                    106. ACM, 2011.
+
+                                                                              [22] Laurence Tratt. Dynamically typed languages. Advances in Computers,
+                                                                                    77:149­184, July 2009.
+
+                                                                              [23] Claes Wohlin, Per Runeson, Martin Höst, Magnus C. Ohlsson, Bjöorn
+                                                                                    Regnell, and Anders Wesslén. Experimentation in software engineering:
+                                                                                    an introduction. Kluwer Academic Publishers, Norwell, MA, USA,
+                                                                                    2000.
+
+164
+                                       Table V
+       EXAMPLE SOLUTIONS FOR CLASS IDENTIFICATION TASKS
+
+CIT 1  Java solution                                                                             Groovy solutions
+        void initializeServer (                                                                   def configureManager (
+CIT 2
+            MailEditorServer server ) {                                                               def manager ) {
+CIT 3       Pipeline <String > stringPipe =                                                           def messages =
+
+CIT 4          new P i p e l i n e < S t r i n g > ( ) ;                                                 new GameQueue ( ) ;
+            P i p e l i n e <Job > j o b P i p e = new P i p e l i n e <Job > ( ) ;                   def commands = new GameQueue ( ) ;
+CIT 5       ActionsAndLoggerPipe actionsLoggerPipe =                                                  def tasksAndMessages =
+
+               new A c t i o ns AndLogge rPi pe ( s t r i n g P i p e , j o p P i p e ) ;                new TaskAndMessageQueue ( messages , commands ) ;
+            server . setActionsAndLogger ( actionsLoggerPipe );                                       manager . setTasksAndMessages ( tasksAndMessages ) ;
+        }                                                                                         }
+        void setMailStartEnd ( EMailDocument email ,                                              void configureLevel ( def level ,
+            i n t s t a r t X , i n t s t a r t Y , i n t endX , i n t endY ) {                       def startX , def startY , def goalX , def goalY ) {
+            e m a i l . s e t S t a r t E l e m e n t ( new M a i l S t a r t T a g (                 l e v e l . s e t S t a r t ( new S t a r t L e v e l F i e l d (
+
+               new C u r s o r B l o c k P o s i t i o n ( s t a r t X , s t a r t Y ) ) ) ;             new P o s i t i o n ( s t a r t X , s t a r t Y ) ) ) ;
+            e m a i l . s e t E n d E l e m e n t ( new MailEndTag (                                  l e v e l . s e t G o a l ( new G o a l L e v e l F i e l d (
+
+               new C u r s o r B l o c k P o s i t i o n ( endX , endY ) ) ) ;                           new P o s i t i o n ( goalX , goalY ) ) ) ;
+            e m a i l . s e t F o r m a t ( new UTF8Encoding ( ) ) ;                                  l e v e l . s e t L e v e l K i n d ( new DungeonLevelType ( ) ) ;
+        }                                                                                         }
+        MailElement intializeElement ( int x_position ,                                           def setUpLevelField ( def x_position
+            int y_position , char headerType )                                                        def y_position , def trapType )
+            throws InvalidHeaderException {                                                           throws InvalidTrapSymbolException {
+            Header h e a d e r = new Header ( headerType ) ;                                          d e f t r a p = new Trap ( t r a p T y p e ) ;
+            OptionalHeaderTag newTag =                                                                def trapField =
+
+               new O p t i o n a l H e a d e r T a g ( x _ p o s i t i o n ,                             new T r a p p e d L e v e l F i e l d ( x _ p o s i t i o n ,
+                     y_position , header );                                                                  y_position , trap );
+
+            newTag . s e t E l e m e n t I n f o ( new D a t a L i s t <MetaData > ( ) ) ;            t r a p F i e l d . s e t I t e m s ( new GameList ( ) ) ;
+            newTag . s e t C u r s o r ( new D e f a u l t C u r s o r (                              t r a p F i e l d . s e t S u b j e c t ( new P l a y e r (
+
+               new MetaDataCache ( ) , new M e t a D a t a D i s p l a y ( ) ) ) ;                       new I n v e n t o r y ( ) , new Body ( ) ) ) ;
+            return newTag ;                                                                           return trapField ;
+        }                                                                                         }
+        Cursor createPointer () {                                                                 def createNewActorForGame () {
+            WorkInProgressPresentation progressRep                                                    def attackType =
+
+               = new D e f a u l t W o r k I n P r o g r e s s P r e s e n t a t i o n (                 new UnarmedAttackType (
+                   Animation . HourGlass );                                                                  DamageType . default ) ;
+
+            CursorFeatures features =                                                                 def attributes =
+               new C u r s o r F e a t u r e s ( p r o g r e s s R e p ,                                 new S u b j e c t A t t r i b u t e s ( a t t a c k T y p e ,
+                   new I d l e R e p r e s e n t a t i o n ( ) ) ;                                           new R e s i s t a n c e s ( ) ) ;
+
+           Theme theme = new Theme ( new ThemeLocator ( ) ) ;                                         d e f m o n s t e r = new H i l l G i a n t ( a t t r i b u t e s ,
+            WindowsMousePointer pointer =                                                                new I n t r i n s i c s ( ) , new G i a n t s ( ) ) ;
+
+               new WindowsMousePointer ( f e a t u r e s , theme ) ;                                  monster . setDroppableItemGenerator (
+            pointer . setTipOfDayPopup (                                                                 new RandomItemBuilder ( ) ) ;
+
+               new ShowTipEventManager ( ) ) ;                                                        return monster ;
+            return pointer ;                                                                      }
+        } / / TASK 6 : Java s o l u t i o n                                                       def createPrototypeNetworkFunctionality () {
+        MailAccount createNewUserPrincipalAndAccount (
+                                                                                                      def pastEvents =
+               String userName , String password ) {                                                     new E v e n t H i s t o r y ( ) ;
+            MailFormatter mailDOMCreator =
+                                                                                                      def incidentManager =
+               new M a i l F o r m a t t e r ( ) ;                                                       new NetworkEventHandler ( p a s t E v e n t s ) ;
+            MailFormatReader rawFileInputReader
+                                                                                                      def transmissionMethod =
+               = new MailFormatReader ( ) ;                                                              T r a n s p o r t P r o t o c o l . TCP ;
+            MailReader m a i l P a r s e r = new MailReader (
+                                                                                                      def endPoint =
+               mailDOMCreator , rawFileInputReader ) ;                                                   new I P A d d r e s s ( ) ;
+            MailInServer incomingServer =
+                                                                                                      def serverFacade =
+               new M a i l I n S e r v e r (                                                             new S e r v e r P r o x y (
+                   E n c r y p t i o n T y p e . TLS , S e r v e r T y p e . IMAP ) ;                        transmissionMethod , endPoint );
+
+            SendMailServer outgoingServer =                                                           def io =
+               new S e n d M a i l S e r v e r ( E n c r y p t i o n T y p e . TLS ) ;                   new F i l e A c c e s s ( ) ;
+
+            ServerConfiguration serverData =                                                          def parser =
+               new S e r v e r C o n f i g u r a t i o n (                                               new GameLevelParser ( ) ;
+                   incomingServer , outgoingServer );
+                                                                                                      def formatter =
+            L o c a l A r c h i v e m a i l L o c a t i o n = new L o c a l A r c h i v e ( ) ;          new S e r i a l i z e r ( io , p a r s e r ) ;
+            Credentials loginInfo =
+                                                                                                      d e f r e s u l t = new NetworkAccess (
+               new C r e d e n t i a l s ( userName , password ) ;                                       incidentManager , serverFacade , formatter );
+            MailAccount r e s u l t = new MailAccount ( m a i l P a r s e r ,
+                                                                                                      d e f gameInfo = new GameData ( GameState . I d l e ) ;
+               serverData , mailLocation , loginInfo );                                               result . setNextContent (
+            U s e r I n f o u s e r P r o f i l e = new U s e r I n f o ( ) ;
+            result . setUserProfile ( userProfile );                                                     new GamePackage ( gameInfo ) ) ;
+                                                                                                      return result ;
+            return result ;                                                                       }
+        }
+
+       165
+                                                                               Table VI
+               EXAMPLE SOLUTIONS FOR SEMANTIC ERROR FIXING TASKS (SEFT) AND TYPE ERROR FIXING TASKS (TEFT)
+
+SEFT 1  Faulty code                                                  Corrected Code (Solution)
+         void doCursorOnInteraction () {                              void doCursorOnInteraction () {
+SEFT 2
+             Job j o b = new S e t C u r s o r J o b (                    Job job = new ChangeMailJob ( t h i s ) ;
+TEFT 1          cursorOnElement ,
+                MailEditorServer . getInstance ().                        MailEditorServer . getInstance ().
+TEFT 2              getCurrentDocument () , 0 , 0);                          addToActions ( job );
+
+             MailEditorServer . getInstance ().                       }
+                addToActions ( job );                                  ...
+                                                                      if ( newField . setSubject ( subject )) {
+         }
+          ...                                                             subject . setPosition (
+         if ( newField . setSubject ( subject )) {                           newField . getX_position () ,
+                                                                             newField . getY_position ( ) ) ;
+             subject . setPosition (
+                newField . getX_position () ,                             newField . subjectInteraction (
+                newField . getY_position ( ) ) ;                             I n t e r a c t i o n T y p e . Move ) ;
+
+             newField . subjectInteraction (                              oldField . removeSubject ();
+                I n t e r a c t i o n T y p e . Move ) ;              }
+                                                                       ...
+         }                                                            / / Remove GameObject
+          ...                                                         dartTrapProperties . setHitByTrapMessage (
+         / / ERROR : Wrong C l a s s GameObject
+         dartTrapProperties . setHitByTrapMessage (                       " h i t by a d a r t t r a p " ) ;
+                                                                       ...
+            new GameObject ( symbol ,                                  ...
+             " h i t by a d a r t t r a p " , 1 0 ) ) ;               / / No c h a n g e s h e r e
+          ...                                                         public def getHitByTrapMessage ( def subject ) {
+         / / Code where the error shows up
+         public def getHitByTrapMessage ( def subject ) {                 def message = myProperties . getHitByTrapMessage ( ) .
+             def message = myProperties . getHitByTrapMessage ( ) .          concat ( " " + subject . getName ( ) ) ;
+
+                concat ( " " + subject . getName ( ) ) ;                  return message ;
+             return message ;                                         }
+         }                                                            static def getTeleportCommand (
+         static def getTeleportCommand (
+             def subject , def level , def x , def y) {                   def subject , def level , def x , def y) {
+             return new TeleportCommand (                                 return new TeleportCommand (
+
+                level , subject , x ,y);                                     subject , level , x ,y);
+         }                                                            }
+
+                                                                                   Table VII
+        MEASURED DEVELOPMENT TIMES(TIME IN SECONDS) ­ START = LANGUAGE SUBJECTS STARTED WITH, G = GROOVY, J = JAVA
+
+        CIT 1  CIT 2  CIT 3  SEFT 1     SEFT 2                       CIT 4  TEFT 1  CIT 5  TEFT 2                   Sums
+
+Subject
+       Start
+                  Java
+                            Groovy
+                                       Java
+                                                  Groovy
+                                                             Java
+                                                                       Groovy
+                                                                                  Java
+                                                                                             Groovy
+                                                                                                        Java
+                                                                                                                  Groovy
+                                                                                                                             Java
+                                                                                                                                        Groovy
+                                                                                                                                                 Java
+                                                                                                                                                            Groovy
+                                                                                                                                                                       Java
+                                                                                                                                                                                 Groovy
+                                                                                                                                                                                           Java
+                                                                                                                                                                                                     Groovy
+                                                                                                                                                                                                                  Java
+                                                                                                                                                                                                                              Groovy
+
+1 G 286 1212 432 463 663 1258 1141 3062 169 174 812 1397 197 813 584 1021 70 332 4354 9732
+2 G 233 507 567 892 1163 828 554 2110 210 828 675 950 130 1009 612 780 106 1308 4250 9212
+3 G 382 886 308 516 425 901 476 492 121 990 432 1288 206 280 565 1060 80 783 2995 7196
+4 G 124 709 214 345 418 696 181 1117 136 358 536 685 100 263 385 862 67 926 2161 5961
+5 G 146 343 215 578 414 1010 104 788 127                             92 323 537 98 149 434 785 46 273 1907 4555
+6 G 413 563 301 483 520 904 187 458     76 420 367 602 88 927 514 770 44 1571 2510 6698
+7 G 522 568 293 418 579 893 489 747     86 170 473 663 172 739 671 797 210 1263 3495 6258
+8 G 170 241 209 452 468 1371 583 543 139 360 576 1621 139 258 526 884 127 510 2937 6240
+9 G 502 2215 313 748 470 799 1163 984 419 684 858 633 374 1123 374 1838 94 812 4567 9836
+10 G 621 1169 1169 1273 846 1274 1015 1707 293 382 1039 1894 298 747 1064 1608 108 398 6453 10452
+11 G 166 408 313 497 432 1008 281 1091  74 611 511 808 116 308 450 812 137 413 2480 5956
+12 G 288 476 669 516 612 2146 2562 1537 637 471 526 1422 262 847 664 1156 127 1712 6347 10283
+13 G 153 1232 196 562 535 611 220 407 467 197 344 575 129 1371 501 564 244 636 2789 6155
+14 G 321 897 275 430 793 1720 604 841 181 2262 610 1266 240 1492 409 1211 430 750 3863 10869
+15 G 411 494 286 742 381 880 350 801 673 127 443 698 169 278 543 844 116 1186 3372 6050
+16 G 271 733 193 682 320 978 626 358    90 416 358 880 137 1337 293 832 53 277 2341 6493
+17 G 459 1328 700 881 659 976 324 337 137 614 719 948 78 943 795 1248 97 246 3968 7521
+18 J 483 252 315 322 649 1055 1205 153 219 107 791 803 187 772 645 1141 114 450 4608 5055
+19 J 562 227 981 386 1038 2169 1930 222 268 774 1212 2505 175 1375 1016 1262 98 547 7280 9467
+20 J 375 684 388 419 941 2433 584 197 240 261 1127 549 563 1558 566 1326 108 315 4892 7742
+21 J 764 512 558 295 938 1093 1764 377 475 120 3240 1388 286 550 740 971 535 498 9300 5804
+22 J 1139 2179 613 1265 574 1411 2256 417 337 167 582 1479 344 1202 735 1054 153 437 6733 9611
+23 J 479 575 1178 439 1983 1054 2910 1042 1022 282 1197 818 900 665 782 758 244 2275 10695 7908
+24 J 1106 943 895 1042 893 1566 2166 809 927 177 1011 997 324 730 841 1279 103 1604 8266 9147
+25 J 914 1620 1051 508 842 869 787 226 325 140 716 741 173 728 732 798 192 381 5732 6011
+26 J 673 358 1590 677 711 591 1423 252 177                           87 650 640 160 170 691 703 102 594 6177 4072
+27 J 907 886 1713 739 773 1581 1642 330 1458 329 920 600 352 732 722 1391 144 761 8631 7349
+28 J 1609 2124 4285 756 1697 932 2278 2648 1174 1045 1541 1036 200 2565 1514 1166 116 2285 14414 14557
+29 J 1007 556 1883 1308 1757 1419 2000 686 880 742 1665 1034 268 1845 950 2104 146 1004 10556 10698
+30 J 484 325 735 349 953 1475 1356 218 320 134 626 1851 210 1118 825 904 215 1371 5724 7745
+31 J 560 563 858 669 1069 1513 312 719 2264 251 781 817 258 582 823 1189 147 958 7072 7261
+32 J 651 856 637 1085 1401 723 1384 639 885 233 915 735 348 1565 1049 2538 105 752 7375 9126
+33 J 480 339 1437 1354 899 883 1822 531 1740 142 720 1004 102 1585 772 1046 170 397 8142 7281
+
+                                            166
+

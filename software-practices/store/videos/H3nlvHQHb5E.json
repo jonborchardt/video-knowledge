@@ -1,0 +1,164 @@
+{
+  "id": "H3nlvHQHb5E",
+  "title": "DORA Metrics: We've Been Using Them Wrong",
+  "channel": "LinearB",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCYVBGWaPhP98QhYiW0lf7Gw",
+  "durationSec": 1920,
+  "thumbnail": "https://i.ytimg.com/vi/H3nlvHQHb5E/sddefault.jpg",
+  "summary": "LinearB vendor talk arguing DORA metrics are lagging indicators disconnected from business outcomes, and that pull-request size and idle time are the leading indicators to manage.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/dora-metrics-measure-delivery-velocity-stability",
+      "stance": "asserts",
+      "quote": "Dora metrics don't always equal business outcomes the two are not the same thing",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "DORA's own reports find the four keys correlate with organisational performance, so a link exists, but it is indirect and does not say whether features were the right ones.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "The four metrics do measure throughput and stability as the claim says, but DORA's own survey model finds SDO performance predicts self-reported organisational performance (profitability, market share, customer satisfaction), with elite performers twice as likely to meet their goals, so the metrics do translate statistically, if not mechanically, into business outcomes.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L80-L86",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/dora-metrics-retrospective-cannot-acted-until",
+      "stance": "asserts",
+      "quote": "when you measure them your process has already happened",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "They are lagging indicators by construction, though teams routinely act on their trends, so the practical limitation is smaller than framed.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/pull-requests-spend-about-half-their",
+      "stance": "asserts",
+      "quote": "half of all pull requests that we analyzed are idle for half of their lifespan",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "A vendor dataset with a product to sell, though independent studies at Google and Microsoft also find review wait time dominates review cycle time.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/small-pull-requests-picked-merged-faster",
+      "stance": "asserts",
+      "quote": "PR's under 200 dip size under 200 lines of code changes get merged twice as fast",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Code review studies at Google and Microsoft consistently show review latency and defect density rise with change size, in line with the vendor data.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.55,
+          "note": "At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L358-L362",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
+      "stance": "asserts",
+      "quote": "smaller PRS means less churn because there's less to review less back and forth",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "DORA's small-batch findings and defect-per-line research support the direction, but the evidence is correlational and vendor-sourced.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "DORA tested whether extra approvals lead to larger, less frequent batches with higher impact and higher change failure rates and reports the hypothesis was supported, linking batch size to incident rate; rework and restoration time are not tied to change size directly.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1272-L1283",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/developers-not-care-about-dora-metrics",
+      "stance": "asserts",
+      "quote": "developers don't really care about Dora metrics",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A generalisation about motivation that varies by team.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/automatically-approving-trivial-changes-routing-risky",
+      "stance": "asserts",
+      "quote": "minor changes like a text file or uh something like that automatically approved you know you don't even need a reviewer on that",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Risk-based review routing is plausible and used at large companies, but the benefit here rests on a vendor's product claim with no independent measurement.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "The least satisfied Google review responses concern very small changes (1 word or 2 lines) and config changes where review 'had less impact', consistent with trivial changes gaining little from review; safety of auto-approval is not tested.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L441-L444",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Because changes by low-expertise minor contributors predict pre- and post-release failures in Windows, the authors recommend giving those changes more scrutiny, preferably from major contributors; the routing policy was under evaluation, not yet tested.",
+          "source": "software-practices/sources/bird2011-ownership.txt#L672-L680",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Components with more self-approved or undiscussed changes have more post-release defects in Qt (self-approval above 0.84 adds about five), which cautions against skipping review, though the study does not separate trivial from risky changes.",
+          "source": "software-practices/sources/mcintosh2014-code-review-coverage.txt#L548-L560",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

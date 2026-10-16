@@ -1,0 +1,96 @@
+{
+  "id": "ybrikman-a-philosophy-of-software-design",
+  "title": "Review: A Philosophy of Software Design by John Ousterhout",
+  "channel": "Yevgeniy Brikman",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://www.ybrikman.com/blog/2025/04/03/a-philosophy-of-software-design/",
+  "summary": "Brikman's review of Ousterhout: complexity comes from dependencies and obscurity, information hiding and defining errors out of existence fight it, consistency beats better ideas; he disagrees on always thinking strategically and on long methods.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/software-complexity-whatever-makes-system-hard",
+      "stance": "asserts",
+      "quote": "Complexity is mostly determined by the readers of the code, not the writers. If other developers think your code is complex, then it is.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A definition.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Understandability proxies varied more between developers reading the same snippet than between snippets read by the same developer, and none of 121 code metrics captured it, supporting that difficulty is reader-dependent; the claim's definition of complexity itself is not tested.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L852-L854",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/modular-decomposition-behind-simple-interfaces-reduces",
+      "stance": "asserts",
+      "quote": "It reduces dependencies, as you can’t build dependencies on things that are hidden from you.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/defining-errors-out-existence-interface-removes",
+      "stance": "asserts",
+      "quote": "By changing the definition of the interface, you eliminate an entire set of possible errors, reducing complexity for everyone.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Works for idempotent operations like unset; many errors reflect real external failures that cannot be defined away.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/consistency-across-codebase-worth-more-any",
+      "stance": "asserts",
+      "quote": "the value of consistency over inconsistency is almost always greater than the value of one approach over another",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Consistency aids comprehension in code-reading studies, but 'almost always' ignores cases where a convention is actively harmful.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/early-system-life-little-design-needed",
+      "stance": "asserts",
+      "quote": "investing in the long-term design of your code may not pay off, as much of your code is likely to be thrown away",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/functions-should-extracted-until-each-does",
+      "stance": "asserts",
+      "quote": "you can read a handful of method names, which makes the code easier to understand",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/static-typing-catches-type-errors-compile",
+      "stance": "asserts",
+      "quote": "A very closely related idea that this book misses is to “make illegal states unrepresentable.”",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/legacy-code-results-technical-neglect-failure",
+      "stance": "asserts",
+      "quote": "invest ~20% of your time in improving the design of the code for the long term",
+      "verdicts": []
+    }
+  ]
+}

@@ -1,0 +1,1545 @@
+The Pains and Gains of Microservices: A Systematic Grey Literature Review
+
+                    Jacopo Soldania,, Damian Andrew Tamburrib, Willem-Jan Van Den Heuvelb
+
+                                              aDipartimento di Informatica, Universita´ di Pisa, Pisa, Italy
+                                    bJheronimus Academy of Data Science, TU/e, Universiteit van Tilburg, NL
+
+Abstract
+
+The design, development, and operation of microservices are picking up more and more momentum in the IT industry.
+At the same time, academic work on the topic is at an early stage, and still on the way to distilling the actual "Pains &
+Gains" of microservices as an architectural style. Having witnessed this gap, we set forth to systematically analyze the
+industrial grey literature on microservices, to identify the technical/operational pains and gains of the microservice-based
+architectural style. We conclude by discussing research directions stemming out from our analysis.
+
+Keywords: microservices, microservices design, microservices development, microservices operation, systematic grey
+literature review, systematic literature review
+
+1. Introduction                                                  Preprinteffort to figure out which are the technical/operational
+                                                                         "pains" and "gains" of microservices.
+Microservices are gaining more and more momentum in
+enterprise IT [24]. Prominent examples are Amazon, Net-                     In this paper, we try to fill the above mentioned gap by
+flix, Spotify and Twitter, which are already delivering their            complementing the academic state-of-the-art on microser-
+core business through microservice-based solutions.                      vices with a systematic analysis of the industrial grey liter-
+                                                                         ature on the topic (as recommended by Garousi et al. [8]).
+   Microservices were first introduced in 2014 by Lewis and              More precisely, we aim at identifying, taxonomically classi-
+Fowler in their famous blog post [S22]. They define an ar-               fying, and systematically comparing the existing grey lit-
+chitectural style for developing applications as suites of               erature on pains and gains of microservices, from their
+small and independent (micro)services. Each microservice                 design to their development. We conducted a systematic
+is built around a business capability, it runs in its own                review of 51 selected industrial studies, published since
+process, and it communicates with the other microser-                    2014 (when the microservice-based architectural style was
+vices in an application through lightweight mechanisms                   first defined by Lewis and Fowler) till the very end of 2017.
+(e.g., HTTP APIs). To some extent, the microservice ar-                  Following the guidelines by Garousi et al [9] (and those by
+chitectural style can be seen as a natural extension of SOA              Petersen et al. [19]), we first excerpted two taxonomies
+(Service-Oriented Architecture), which puts emphasis on                  from the selected industrial studies, one for the pains of
+the independent/self management of services, and on their                microservices, and one for their gains. We then exploited
+lightweight nature [27]. Microservices are loosely coupled               such taxonomies to classify and compare the selected in-
+architectural elements that can be independently deployed                dustrial studies, in order to distill the actual recognition
+by fully automated machinery. Such independent deploy-                   of pains and gains of microservices by the IT industry.
+ment is often achieved by exploiting lightweight, container-
+based platforms [17]. As such, microservices offer by de-                The results of our study show that the pains of mi-
+sign a scalable solution for service-oriented operation [7].             croservices are mainly due to the intrinsic complexity
+                                                                         of microservice-based applications. For instance, while
+There exist secondary studies analyzing research trends                  designing a microservice-based application, the primary
+on microservices in the academia, all concluding that aca-               pains are determining the "right" granularity of its mi-
+demic research on microservices is still in its early stage.             croservices and the design of its security policies. Manag-
+At the same time, companies are working day-by-day on                    ing distributed storage and application testing are instead
+the design, development and operation of microservices,                  the primary pains at development time. At operation time,
+as also witnessed by the huge amount of grey literature                  the primary pain of microservices is their consumption of
+on the topic. We can hence observe a sort of gap between                 network and computing resources, which is recognized as
+academic research and industry practices, especially in an               much higher with respect to that of other architectural
+                                                                         styles (e.g., monoliths, SOA).
+    Corresponding author. Mail: Dipartimento di Informatica,
+Universita´ di Pisa, Largo B. Pontecorvo, 3, 56127, Pisa, Italia.           At the same time, microservices bring various, widely
+Email: soldani@di.unipi.it.                                              recognized gains. At design time, the primary gains of
+                                                                         microservices those related to the exploitation of design
+Preprint submitted to Elsevier
+                                                                                                                                            September 27, 2018
+
+Published article: Soldani J, Tamburri DA, Van Den Heuvel WJ. "The pains and gains of microservices: A
+Systematic grey literature review", Journal of Systems and Software, Volume 146, 2018, Pages 215-232.
+DOI: 10.1016/j.jss.2018.09.082.
+patterns, which are widely recognized to help mitigat-        Preprintare the systematic analyses provided by Di Francesco et
+ing/solving some pains of microservices. Development                  al. [3], by Pahl and Jamshidi [18] and by Vural et al. [25].
+emerges by far as the stage gaining most from microser-               They all conclude that academic research on microservices
+vices, as different microservices can be independently de-            is still immature, by also outlining various research direc-
+veloped by different developers, who have all the freedom             tions.
+in choosing the technology stacks and data stores that best
+fit the microservices they are developing. Operation is also             State-of-practice analyses are instead yet to be pro-
+gaining from microservices, which can be independently                vided, as (to the best of our knowledge) the only avail-
+deployed and scaled whenever needed.                                  able efforts are those by Ghofrani et al. [10] and by
+                                                                      Taibi and Lenarduzzi [22]. Ghofrani et al. [10] provide
+   Our systematic analysis of grey literature on microser-            a preliminary analysis on state-of-practice on microser-
+vices can provide benefits to both researchers and practi-            vices, based on an online survey (with 3 questions, an-
+tioners. A systematic presentation of the industrial state-           swered by 25 interviewed practitioners). The results pre-
+of-practice on microservices provides a body of knowledge             sented by Ghofrani et al. [10] provide a high-level overview
+to develop new theories and solutions, to analyze and ex-             of industry-oriented challenges on microservices, without
+periment research implications, and to establish future re-           delving into the details of their actual pains and the gains.
+search dimensions. At the same time, it can help practi-              Our study instead aims at providing a deeper analysis on
+tioners to understand the currently recognized pains and              which are the technical/operational pains and gains of mi-
+gains of microservices, and their maturity. This can have             croservices recognized by industrial researchers and prac-
+practical value for practitioners, e.g., as a starting point          titioners working day-by-day with microservices.
+for microservices experimentation or as a guideline for day-
+by-day work with microservices.                                          Taibi and Lenarduzzi [22] illustrate 11 microservice-
+                                                                      specific bad practices, resulting from interviews of devel-
+The rest of this article is organized as follows. Sect. 2             opers experienced with microservice-based systems. Such
+discusses related work. Sect. 3 illustrates the methodol-             bad practices are reflected by some of the pains that we
+ogy, research questions and scope of our systematic study.            identify in our study, whose objective is however different
+Sect. 4 presents the results of our study. Sect. 5 discusses          from that by Taibi and Lenarduzzi. Instead of trying to
+results and limitations of our study. Sect. 6 concludes this          identify bad practices by conducting interviews, our aim
+article, by discussing findings, implications and directions          is to elicit the main technical/operational pains and gains
+for future work.                                                      of microservices by systematically analysing the grey lit-
+                                                                      erature on the topic.
+2. Related Work
+                                                                         In summary, we perceive a sort of gap between the indus-
+Besides the seminal paper by Sill [20], only a hand-                  trial understanding and state-of-practice on microservices
+ful of other efforts provide empirical evidence on effec-             and the related academic literature on the topic. The key
+tive/efficient exploitation of microservices. For instance,           motivation of our study is to try to fill this gap, by elicit-
+Balalaie et al. [1] illustrate experiences and lessons learned        ing the current state-of-practice on microservices through
+from the migration and architectural refactoring of a com-            a systematic grey literature review.
+mercial application to microservices. Hassan and Bah-
+soon. [12] provide a first investigation on design trade-offs,        3. Research Design
+when trying to partition applications in independent mi-
+croservices. Haselboch et al. [11] offer an overview of the           A major intrinsic difficulty of our study is our necessary
+microservice design space, by proposing a strategic model             reliance over what is called grey literature [8], intended as
+for instrumenting microservice design decisions. Erl et               materials and research produced by organizations outside
+al. [4] and Zimmermann [27] instantiate SOA notions in                of the traditional commercial or academic publishing and
+the world of microservices. A key observation turning out             distribution channels. Common grey literature publication
+from above mentioned research efforts (and from closely               types include reports (annual, research, technical, project,
+related efforts, as well) is that academic research on mi-            etc.), working papers, government documents, white pa-
+croservices -- from their design to their development and             pers, videos and evaluations. On the one hand, the use
+operation -- is still at an early stage.                              of grey literature is risky since there is often little or no
+                                                                      scientific factual representation of data or analyses pre-
+   The early stage of academic research on microservices              sented in grey literature itself [6]. On the other hand, a
+also impacts on surveys on the state-of-the-art or state-of-          growing interest around using grey literature for software
+practice on microservices. State-of-the-art surveys focus             engineering practitioner benefit as well as combining it to
+on classifying and comparing the existing research body               determine the state of the art and practice around a topic
+on microservices (including some non peer-reviewed con-               is gaining a considerable interest in many fields [6, 21],
+tent), in order to determine the maturity of research on              including software engineering [8].
+microservices, and on establishing the research challenges
+emerging from the analyzed literature. Concrete examples                 For the scope of this study, and in an effort to maximize
+                                                                      its validity, we followed a systematic approach based on
+
+                                                                2
+that by Petersen et al. [19] for conducting systematic lit-  PreprintQ3 What are the technical and operational "gains" of mi-
+erature reviews in software engineering. More precisely,                   croservices? We aim to elicit the technical and op-
+following the guidelines by Garousi et al. [9], we varied the              erational benefits that are provided by microservices,
+standard approach by Petersen et al. [19] as follows:                      which industrial researchers/practitioners have been
+                                                                           appreciating during the design, development and op-
+   · We exploited general web search engines for searching                 eration of microservice-based applications.
+      for grey literature (instead of indexing databases).
+                                                                     3.2. Search for industrial studies
+   · We employed "saturation" as stopping criteria
+      (i.e., we stopped our search when no new relevant re-          As recommended by Garousi et al. [9], industrial studies
+      sults/concepts were emerging from search results).             can be identified by exploiting search strings on search
+                                                                     engines (e.g., Google, Bing). Following the guidelines pro-
+   · We combined inclusion/exclusion criteria with quality           vided by Petersen et al. [19], we identified the search string
+      assessment control factors.                                    by structuring them guided by our research questions.
+                                                                     More precisely, we defined the search strings based on the
+   · We fixed the type of relevant grey literature to blog           PICO terms of our question [14], by exploiting only the
+      post, whitepapers, industrial magazines and videos.            terms Population and Intervention. The keywords were
+                                                                     taken from each aspect of a research question. Differ-
+We hereafter outline the systematic approach we followed,            ently from Petersen et al. [19], we did not restrict our
+by starting from problem definition and by also describ-             focus to specific outcomes or experimental designs in our
+ing the triangulation and inter-rater reliability assessment         study, as we wished to have a broader overview of the in-
+trials we ran to enforce the validity of our findings.               dustrial state-of-practice on microservices. By restricting
+                                                                     ourselves to certain types of studies, we could have ob-
+3.1. Research Problem Definition and Research Questions              tained a biased/incomplete analysis, as some sub-topics
+                                                                     might have been over-/under-represented for certain types
+The problem we aim to address is twofold. On the one                 of study. The above explained difference is also reflected
+hand, we aim to elicit pains, gains, best practices, and             by the strings we employed for searching for the pains of
+fallacies over using microservices in practice, by looking           microservices (Fig. 1.(a)) and for searching for the gains
+at the reported failure and success experiments directly             of microservices (Fig. 1.(b)).
+from the industrial literature. This information can have
+clear practical value since other practitioners can use the             We exploited the above indicated search strings to
+results captured in this manuscript as a starting point for          look for industrial studies (e.g., blog posts, whitepapers,
+microservices experimentation in their own practice.                 industry-oriented magazines, videos) that were published
+                                                                     since the beginning of 2014 (when microservices were first
+   On the other hand, we aim to elicit the gaps, limita-             proposed by Lewis and Fowler) until the end of 2017. The
+tions, and practical directions experimented up to this              search engines we employed are Google (primary), Bing,
+point. This can help researchers investigating microser-             Duck Duck Go, Yahoo! and Webopedia. Since engines
+vices, who can start from our findings to proceed in their           look for search strings over the whole pages they index,
+research from a basis of synergy with industry itself (as            our search resulted in a high number of irrelevant studies,
+we believe that the results captured in this manuscript are          which were further refined with a secondary search and
+one such basis of synergy).                                          manual screening, based on the inclusion/exclusion crite-
+                                                                     ria and control factors discussed in the following section.
+   Stemming from the above research problems, we formu-
+late the following research questions:
+
+Q1 How much evidence of microservices experimentation               3.3. Sample Selection & Control Factors
+     from industry is available online? We aim to provide
+     a high-level overview of the involvement of industrial         Table 1 outlines the inclusion and exclusion criteria
+     researchers and practitioners in microservices, by an-         adopted in our sample selection. The inclusion criteria
+     alyzing how much industrial studies have been pub-             (i1 - i4) were designed to focus explicitly on the kind of
+     lished in the recent past (i.e., since the beginning of        practical grey literature that identifies the design, develop-
+     2014 till the end of 2017), as well the types of contribu-     ment and operation principles currently deemed efficient
+     tions, the sources of publications, and their contents.        in industry based on their direct application. At the same
+                                                                    time, the exclusion criteria permit disqualifying studies
+Q2 What are the technical and operational "pains" of                that do not offer the necessary design/implementation de-
+     microservices? We aim to elicit the technical and              tails (e1), that refer to nonfactual or unquantifiable evi-
+     operational difficulties intrinsic to the design, devel-       dence (e2 and e3), and that do not discuss the limitations
+     opment and operation of microservice-based applica-            and practical impact for the proposed solutions or outlined
+     tions, which industrial researchers/practitioners have         issues (e4 and e5). An industrial study is to be selected if it
+     been experimenting in the recent past.                         satisfies all the inclusion criteria, while it is to be excluded
+                                                                    if it satisfies at least one of the exclusion criteria.
+
+                                                                 3
+(microservice*  micro-service*)  (pain*  disadvantage*  cons*  drawback*  pitfall*  antipattern*  code smell*)
+                                                                             (a)
+
+      (microservice*  micro-service*)  (gain*  advantage*  pros*  benefit*  ease*  pattern*  best practice*)
+                                                                            (b)
+
+Figure 1: Strings employed for searching the technical/operational (a) pains and (b) gains of microservices. In both cases, "*" matches
+lexically related terms (e.g., plurals, verb conjugations).
+
+Inclusion  i1) The study discusses the industrial applica-                    At the end of our screening, 51 industrial studies were
+Exclusion       tion of microservices.                                     selected based on the inclusion/exclusion criteria and on
+                                                                           the additional control factors. The complete list of selected
+           i2) The study discusses the benefits or short-                  industrial studies is provided in Appendix A.
+                comings of microservice design, development
+                or operation.                                              3.4. Analysis & Inter-Rater Reliability Assessment
+                                                                           To attain the findings discussed in Sect. 4 we adopted the-
+           i3) The study reports on direct experiences,                    matic coding [2]. The selected sample of articles were sub-
+                opinions or practices on microservices by ed-              ject to annotation and labeling with the goal of identifying
+                ucated practitioners.                                      themes emerging from the analyzed text. This process of
+                                                                           analysis was executed in parallel over two 50% splits of
+           i4) The study refers to a practical case-study                  the entire dataset, to ensure avoidance of observer bias.
+                of design, development or operation of mi-                 The coders of the two splits (i.e., the first two authors of
+                croservices.                                               this study) were then inverted and an inter-rater evalua-
+                                                                           tion was enacted between the two emerging lists of themes.
+           e1) The study does not offer details on design or               To evaluate inter-rater reliability, we adopted the widely
+                implementation of microservices.                           known and adopted Krippendorff  coefficient (or K),
+                                                                           which measures the agreement between two ordered lists
+           e2) The study is not referred to industrial cases               of codes applied as part of content analysis [15]. As part
+                or other factual evidence.                                 of our evaluation, K was applied twice.
+
+           e3) The benefits or pitfalls of microservices are                  We first applied the evaluation coefficient to measure
+                not justified/quantified by the study.                     the agreement between the two emerging lists of codes
+                                                                           by the two independent observers who individually coded
+           e4) The study does not provide scope and limi-                  100% of the dataset in 2 rounds. The result of apply-
+                tations of proposed solutions/patterns.                    ing K to measure the agreement between these two lists
+                                                                           amounted to 0.76, slightly lower than the typical reference
+           e5) The study does not offer evidence of a prac-                score of 0.80 (i.e., 80% agreement). A discussion and anal-
+                titioner perspective.                                      ysis of disagreement points revealed misalignment between
+           Preprint                                                        the depth of the coding strategy, which was subsequently
+Table 1: Inclusion and exclusion criteria for sample selection.            addressed. This modification brought the agreement be-
+                                                                           tween the emerging lists of codes to K = 0.81.
+   In addition to the inclusion/exclusion criteria in Table 1,
+to ensure the quality of the selected grey literature, we                     K was then applied again to triangulate the 0.81 score
+selected only those industrial studies that were satisfying                for the final list of themes with its identical counterpart,
+four additional control factors:                                           coded by the third author of this paper, who re-coded the
+                                                                           entire dataset with the final coding strategy. The agree-
+   · Practical experience  A study is to be selected only                  ment between the final list A (obtained by the first 2 au-
+      if it is written by practitioners with 5+ experience in              thors) and a final list B (obtained by the third author) was
+      service-oriented design, development and operation,                  evaluated to K = 0.92.
+      or if it refers to established microservices solutions
+      with 2+ years of operation.                                          3.5. Replication Package
+                                                                           To encourage repeatability of our approach and verifiabil-
+   · Industrial case-study  A study is to be selected only                 ity of our findings, results, and discussion points, a repli-
+      if it refers to at least 1 industrial case-study where a             cation package is freely available on GitHub2. The repli-
+      quantifiable number of microservices are operated.                   cation package contains the intermediary artifacts and the
+
+   · Heterogeneity  The selected studies reflect at least 5                the control factors was excerpted from the selected industrial studies
+      top industrial domains and markets where microser-                   themselves, from the authors' LinkedIn pages, and from the web-
+      vices were successfully applied.                                     site/portfolio of the company where each selected industrial study
+                                                                           was carried out.
+   · Implementation quantity  The selected studies re-
+      fer to/show implementation details for the benefits                      2https://tinyurl.com/microservices-study.
+      and pitfall they discuss, so that other researchers and
+      practitioners can use them in action.
+
+The control factors practical experience, industrial case-
+study and implementation quantity were checked against
+each single study, whereas the control factor heterogeneity
+was checked against the overall set of industrial studies to
+be selected1.
+
+    1The information for checking the inclusion/exclusion criteria and
+
+                                                                        4
+final results of our study. The selected industrial stud-                     summit 14%       ad-hoc blog  pros/cons           best
+ies can instead be freely accessed online, by following the               magazine                  12%         33%          practices
+bibliographic information reported in Appendix A.
+                                                                              6%                                                31%
+
+4. Results                                                                company                     community patterns              exp. report
+                                                                             39%                           29% 26%                         10%
+In this section we analyze the selected grey literature un-
+der three different perspectives, aligned with the research                               (a)                             (b)
+questions Q1, Q2 and Q3. We first provide a general
+overview of the selected industrial studies (Sect. 4.1). We               Figure 3: Distribution of selected industrial studies (a) by source
+then analyze in detail the pains and gains of microservice-               and (b) by contents.
+based applications emerging from the selected grey litera-
+ture (Sects. 4.2 and 4.3, respectively). We finally provide                     summit         community    pros/cons           best
+a summary of the findings of our analysis (Sect. 4.4).                    magaz.13%                25%          44%          practices
+
+                                                                             6%                                                 31%
+
+4.1. Overview of the Selected Grey Literature                             company                           patterns 19%      exp.
+                                                                             56%                                             report
+In order to address Q1, we hereby provide an overview                                                                   (b)
+of the selected studies [S1]-[S51] based on generic aspects,                                                                   6%
+i.e., when and where they were published, in which for-
+mat, and which was their content. Table 2 shows how we                                    (a)
+classified [S1]-[S51] based on their publication year, their
+source (i.e., ad-hoc blog maintained by experts, commu-
+nity of practitioners, company website, industry-oriented
+magazine, or industrial summit), the type of contribution
+(i.e., blog post, industrial whitepaper, or video), and their
+contents (description of patterns or best practices, expe-
+rience report, or discussion of pros/cons of microservices).
+The table also shows the companies and industrial settings
+(i.e., product, case study or consulting) where the selected
+industrial studies were carried out.
+                     Preprint                                             Figure 4: Distribution of selected industrial studies (a) by source
+                                                                          and (b) by contents (restricted to the studies published in 2017).
+
+20                   16     whitepaper                                    selected studies are mainly taken from community por-
+                                 41%                                      tals and company websites, where practitioners and re-
+15               14                                   blog post           searchers are mainly sharing their best practices, describ-
+      12                                                 39%              ing microservices-related patterns or just discussing advan-
+                                                                          tages and disadvantages of adopting microservice-based
+10 9                                       video 20%                      solutions. The above clearly witnesses the interests of the
+                                                                          IT industry in microservices, in their pains and gains, and
+5                                       (b)                               in best practices and patterns that can be exploited to
+                                                                          better leverage of microservices.
+0
+       2014 2015 2016 2017                                                   The above is even more evident if we restrict the visu-
+                                                                          alization to the selected studies that were published last
+      (a)                                                                 year (Fig. 4), where companies are involved in the major-
+                                                                          ity of the contributions, and where the contributions are
+Figure 2: Distribution of selected industrial studies (a) by year and     mainly focused on the pros and cons of microservices, and
+(b) by contribution type.                                                 on the best practices and patterns that can be exploited
+                                                                          to better leverage of microservices.
+
+                                                                             Finally, Fig. 5 plots the distribution of the selected stud-
+                                                                          ies by industrial setting. While the distribution over the
+                                                                          period 2014-2017 (Fig. 5.(a)) does not provide any par-
+
+   Fig. 2 illustrates the distribution of the selected stud-              product              case study   product          case
+ies by year and type of contribution. While the distri-                     10%                    47%        13%            study
+bution of selected studies by contribution type does not                                                                      31%
+provide any particular insight, their distribution by year
+shows that the amount of industrial contributions on mi-                  consulting                        consulting
+croservices is yearly increasing since 2014. This signals                     43%                               56%
+that microservices are steadily gaining attention in the IT
+industry since 2014, when James Lewis and Martin Fowler                                   (a) (b)
+gave rise to the microservice-based architectural style with
+their famous blog post [S22].                                             Figure 5: Distribution of selected industrial studies by industrial
+                                                                          setting (a) over the period 2014-2017, and (b) restricted to the studies
+   Fig. 3 instead illustrates the distribution of the selected            published in 2017.
+studies by source and contents. We can observe that the
+
+                                                                       5
+Study   Year  Contribution typePreprint  Source           Content           Company        Industrial setting
+  [S1]  2015        whitepaper         community          patterns             Asurion           case study
+  [S2]  2014        whitepaper         community         pros/cons            C4Media            consulting
+  [S3]  2015          blog post                          pros/cons             IGATE             case study
+  [S4]  2016        whitepaper          company         exp. report                              case study
+  [S5]  2017        whitepaper          magazine         pros/cons     Comparethemarket          consulting
+  [S6]  2017             video          company          pros/cons            Chakray            consulting
+  [S7]  2016             video           summit         exp. report          nearForm            case study
+  [S8]  2015             video           summit          pros/cons                               case study
+  [S9]  2016        whitepaper          company           patterns       SimplicityItself        case study
+ [S10]  2016          blog post        community       best practices  Dev2 Technologies         case study
+ [S11]  2016        whitepaper         ad-hoc blog        patterns     HCL Technologies          consulting
+ [S12]  2017             video          magazine        exp. report                              case study
+ [S13]  2015          blog post          summit          pros/cons            JDriven            consulting
+ [S14]  2016        whitepaper          company        best practices        Techworld           consulting
+ [S15]  2016        whitepaper         community          patterns                               case study
+ [S16]  2015          blog post        community         pros/cons             Netflix           case study
+ [S17]  2017          blog post        ad-hoc blog     best practices     ThoughtWorks           case study
+ [S18]  2014        whitepaper          company        best practices                            case study
+ [S19]  2016        whitepaper         community          patterns             Navica            case study
+ [S20]  2017          blog post        community         pros/cons          DynaTrace            case study
+ [S21]  2015          blog post        community       best practices       Spreadshirt          case study
+ [S22]  2014          blog post        ad-hoc blog        patterns          LogicRoom            consulting
+ [S23]  2015        whitepaper          company        best practices        Microsoft             product
+ [S24]  2015          blog post        community         pros/cons                               consulting
+ [S25]  2017        whitepaper          company        best practices          WSO2                product
+ [S26]  2015          blog post         magazine        exp. report              SAP               product
+ [S27]  2017        whitepaper          company           patterns       Tyro Payments           consulting
+ [S28]  2017             video          company         exp. report       ThoughtWorks           case study
+ [S29]  2015          blog post          summit        best practices          Pivotal           consulting
+ [S30]  2015             video          company          pros/cons           MadeTech            consulting
+ [S31]  2017        whitepaper          company          pros/cons              Nginx            consulting
+ [S32]  2017          blog post        community          patterns             Netflix           consulting
+ [S33]  2016        whitepaper          company        best practices           Micro            consulting
+ [S34]  2015          blog post        community       best practices       Speedment            consulting
+ [S35]  2014          blog post         company           patterns           Smartbear           case study
+ [S36]  2014          blog post        ad-hoc blog        patterns        Sam Newman             case study
+ [S37]  2014          blog post        ad-hoc blog        patterns           Apiumhub            case study
+ [S38]  2016        whitepaper         ad-hoc blog     best practices          Valtech             product
+ [S39]  2014             video          company           patterns        Avi Networks           case study
+ [S40]  2017          blog post          summit          pros/cons             Neotys            consulting
+ [S41]  2017             video          company          pros/cons           Eventuate           consulting
+ [S42]  2017             video          company          pros/cons           Eventuate           consulting
+ [S43]  2016        whitepaper           summit        best practices        Eventuate           case study
+ [S44]  2014             video          company          pros/cons              Nginx            case study
+ [S45]  2017          blog post          summit        best practices          Pivotal           case study
+ [S46]  2017        whitepaper          company        best practices          Oracle            consulting
+ [S47]  2017        whitepaper         community         pros/cons        ThoughtWorks           consulting
+ [S48]  2017        whitepaper         community          patterns        ThoughtWorks             product
+ [S49]  2017        whitepaper          company         exp. report         FacileLogin          case study
+ [S50]  2014          blog post         company        best practices          Netflix           consulting
+ [S51]  2016          blog post        community         pros/cons         Coding Sans           consulting
+                                       community                            ServisBOT
+                                                                              Nirmata
+                                                                             Microsoft
+                                                                             Microsoft
+                                                                              Contino
+                                                                           AND Digital
+
+Table 2: Classification of the selected industrial studies based on year of publication, type of contribution, source, contents, reference company
+and industrial setting.
+
+                                                    6
+ticular insight, it is interesting to note that the indus-                     security             testing        resource
+trial studies published in 2017 mainly focused on consult-                                        storage        consumption
+ing. If we cross this data with the facts that microser-
+vices gained momentum, and that the technology around                                                            monitoring
+microservices has matured [13], we can conclude that IT
+companies started focusing on increasing their consultancy
+portfolio on microservices.
+
+4.2. Microservices Pains                                                       architecture       microservices              management
+                                                                                        design    development            operation
+We hereby introduce a taxonomy for classifying the pains
+of microservices. We also show how we exploited such                           Figure 6: Coverage of the concerns in the taxonomy for pains of
+taxonomy to analyse current industrial perspectives on the                     microservices. The size of each bubble is directly proportional to the
+pains of microservices.                                                        number of selected industrial studies discussing a pain pertaining to
+                                                                               the corresponding concern.
+4.2.1. A taxonomy for pains of microservices
+Table 3 illustrates a taxonomy for the pains of microser-              Preprintconcrete development of each microservice is not signifi-
+vices. We obtained such taxonomy by following the guide-                       cantly perceived as problematic.
+lines for conducting systematic reviews in software engi-
+neering proposed by Petersen et al. [19]:                                         We hereby discuss in detail the notable concerns listed
+                                                                               above, stage by stage. We shall display the occurrences of
+   · We first established the stages, by aligning Q2 with                      the pains of each concern in a sorted table, and we will
+      common steps of the lifecycle of software (i.e., design,                 compare their weights4 by exploiting %-based pie charts.
+      development and operation).
+                                                                               Design stage. According to Fig. 6, the main concern dur-
+   · We then identified the concerns by performing a first                     ing the design of microservice-based applications is their
+      scan of the selected studies, which was focused on Q2                    architecture. This is also witnessed by the yearly cover-
+      to ensure the validity of the taxonomy.                                  age of design-related concerns (Fig. 7). The recognition of
+                                                                               pains pertaining to the architecture of microservice-based
+   · The concrete terms (i.e., the pains) were excerpted                       application is steadily increasing since 2014, and it keeps
+      directly from the selected studies, and they were man-                   higher with respect to that of security-related pains.
+      ually organized into the above mentioned sub-classes.
+                                                                                                  Architecture Security
+As we anticipated in Sect. 3, the obtained taxonomy un-
+dergone various iterations among the authors of this study,                    14                 2015           2016         2017
+and it was submitted for validation to external experts                        12
+from two organizations located in two different countries.                     10
+This has resulted in some corrections and amendments to                         8
+the first version of the taxonomy, which resulted in the                        6
+taxonomy displayed in Table 3.                                                  4
+                                                                                2
+4.2.2. Pains in the selected industrial studies                                 0
+Table 4 shows the classification of all selected industrial
+studies based on the taxonomy for pains of microservices                                    2014
+introduced earlier. The table provides a first overview of
+the coverage of pains over the selected studies, despite (due               Figure 7: Yearly evolution of the coverage of the concerns pertaining
+to reasons of readability and space) it only captures the                   to the design stage.
+classification over the concerns listed in the taxonomy of
+pains3. Such coverage is also displayed in Fig. 6, from                     The coverage of the concrete pains due to the architec-
+which it is clear that the main concerns are the design of                  ture of microservice-based applications are listed in Fig. 8,
+microservice-based architectures, the distributed and het-                  which also displays their weights in the selected industrial
+erogeneous storage hampering the work of developers, and                    studies. The figure highlights what one can obviously ex-
+the management and monitoring of operating instances of                     pect, namely that industrial researchers and practitioners
+microservice-based applications. Security, testing and re-
+source consumption are also notable concerns, while the                         4We will measure the weight of a pain as the percentage of its
+                                                                            occurrences among all occurrences of all pains pertaining to its same
+    3The detailed classification, displaying each occurrence of each        concern. This is analogous to what done by Pahl et al. [17] to measure
+pain, is publicly available in the replication package (see Sect. 3.5).     weights while classifying studies on cloud container technologies.
+
+                                                                         7
+Stage            Concern                         Pain
+Design           Architecture                    API Versioning, Communication heterogeneity, Service contracts, Service dimensioning,
+                                                 Size/complexity
+Development      Security                        Access control, Centralised support, CI/CD, Endpoint proliferation, Human errors,
+Operation                                        Size/complexity
+                 Microservices                   Microservice separation, Overhead
+                 Storage                         Data consistency, Distributed transactions, Heterogeneity, Query complexity
+                 Testing                         Integration testing, Performance testing, Size/complexity
+                 Management                      Cascading failures, Operational complexity, Service coordination, Service location
+                 Monitoring                      Logging, Problem location, Size/complexity
+                 Resource consumption            Compute, Network
+
+                                                 Table 3: A taxonomy for pains of microservices.
+
+[S1]              Design     DevelopmentPreprint    Operation           [S27]    Design         Development                   Operation
+[S2]             Arc. Sec.   Mic. Sto. Tes.      Man. Mon. Res.         [S28]  Arc. Sec.      Mic. Sto. Tes.            Man. Mon. Res.
+[S3]                                                                    [S29]
+[S4]               ·                          ·    ··                   [S30]    ·              ·                         · ··
+[S5]               ·                  ··           ··                   [S31]    ·                        ·               ··
+[S6]               ·                  ·            ·                    [S32]    ··                                  ·
+[S7]               ·                               ··                   [S33]    ·                        ··                          ··
+[S8]               ·                          ·    ··                   [S34]    ·
+[S9]                                          ·    · ··                 [S35]                             ·                           ·
+[S10]              ··                         ·    ·                    [S36]              ·                         ·    ·
+[S11]              ·                          ·    ··                   [S37]
+[S12]              ·                               ··                   [S38]    ·                        ·               ··
+[S13]              ·                  ·                                 [S39]              ·              ··              ··
+[S14]                                              ·                    [S40]                             ··              · ··
+[S15]              ··                 ··           ··                   [S41]    ·              ·                         · ··
+[S16]              ·                  ·            · ··                 [S42]    ·                        ·               ··
+[S17]              ·                  ·                                 [S43]    ·                                        ··
+[S18]              ··                                       ·           [S44]    ·                                   ·
+[S19]              ·           ··                                    ·  [S45]    ·                        ·               · ··
+[S20]              ·                          ·                         [S46]    ·                                        · ··
+[S21]              ··                              · ··                 [S47]                                        ·
+[S22]              ·                  ·            ··                   [S48]              ·              ··                          ·
+[S23]                                 ··                                [S49]    ·
+[S24]                     ·                        ··                   [S50]    ·                                   ·    · ··
+[S25]              ·                  ·            ·                    [S51]                             ··              ··
+[S26]                                 ·                                                    ·              ·               ··
+                          ·    ·                            ··                   ··                       ··              ··
+                   ·                  ·            ··                            ·              ··
+                   ··          ··                  ··                            ·
+                                                                                 ·
+                                                                     ·           ·
+
+Table 4: Classification of the selected studies based on the concerns listed in the taxonomy for pains of microservices.
+
+size/complexity  API vers.                       Pain  #                       that should be assigned to each microservice, as the bound-
+       38%          18%                                                        aries among different capabilities/contexts are usually not
+                       comm.    size/complexity 27                             that sharp.
+serv. dim. 23%          heter.
+                          8%    service dimensioning 16                           Another observation worth doing is about the pains due
+                                                                               to exploiting programmable APIs to allow microservices
+                       serv.    API versioning 13                              to intercommunicate. The group composed by the pains
+                    contracts                                                  API versioning and service contracts is also significantly
+                                service contracts 9                            covered by the selected industrial studies. Since commu-
+                        13%                                                    nications among microservices is based on APIs, the API
+                                comm. heterogeneity 6                          provided by a microservice becomes a sort of contract be-
+                                                                               tween such microservices and those consuming its API.
+Figure 8: Weights and occurrences of the pains pertaining to the               Such a kind of contracts should not be violated, if we
+architecture concern during the design stage.                                  wish to allow microservices to continue to intercommu-
+                                                                               nicate. This of course impacts on the versioning of the
+are mostly pained by the size and complexity of the archi-                     APIs provided by microservices, hence paining the design
+tectures obtained when designing application according to                      of microservice-based architectures.
+the microservice-based architectural style.
+                                                                               Fig. 9 instead displays the weights and occurrences of
+   Service dimensioning is also significantly recognized as a                  the pains related to securing a microservice-based appli-
+pain, with 16 of the selected industrial studies recognizing                   cation. Other than the intrinsic complexity of securing
+difficulties in determining how much "micro" a microser-
+vice should be. All such studies agree that it is often dif-
+ficult to identify the business capability/bounded context
+
+                                                                        8
+size/complex.               access                           Pain            #            microservices are widespreading, the more developers are
+       21%                  control                                                       pained by their testing [S6].
+                                                             access control  8
+human                         34%
+errors                                                       endpoint proliferation 7
+                          centr.
+  4%                     support                             size/complexity 5                               Storage Testing
+               CI/CD 4% 8%
+    endp.                                                    centralised support 2        10
+   prolifer.                                                                              8
+                                                             CI/CD           1             6
+     29%                                                                                  4
+                                                             human errors    1             2
+                                                                                           0
+Figure 9: Weights and occurrences of the pains pertaining to security
+during the design stage.                                                                               2014
+
+microservice-based architectures (obviously due to their                                                     2015      2016         2017
+size and complexity), the most recognized pains concern-
+ing security are due to the access control and to the end-                                Figure 10: Yearly evolution of the coverage of the concerns pertaining
+point proliferation. Access control is recognized as critical                             to the development stage.
+in 8 out of the selected industrial studies, all pointing out
+that the microservices in an architecture should be able                                  The pains due to storage concerns are listed in Fig. 11, to-
+to quickly and consistently ascertain the provenance and                                  gether with their weights and occurrences in the selected
+authenticity of a request. The industrial studies also agree                              industrial studies. From the figure it is clear how storage-
+that this is currently far from being easy, mainly because                                related pains are caused by the distributed nature of stor-
+of the distributed nature of microservice-based architec-                                 age in microservice-based applications. 21 of the selected
+tures, and since their microservices evolve asynchronously.                               industrial studies highlight that, by distributing the stor-
+The pains due to controlling accesses in microservice-based                               age over the various microservices forming an application,
+architectures could be mitigated if designers would be pro-                               it becomes a pain to ensure data consistency. They also
+vided with tools supporting a consistent, decentralized ac-                               highlight how eventual consistency may help mitigating
+cess control. However, as highlighted by [S46] and [S23],                                 this pain, even if it is not easy to ensure. Eventual consi-
+this is currently not the case, as existing tools provide a                               stency may also not be a viable option in some cases, espe-
+centralized support for securing microservices.                                           cially when consistency must be ensured on sensitive data.
+                                                             Preprint
+   Endpoint proliferation is due to partitioning of archi-                                 query complex.      data           Pain        #
+tectures in suites of independent microservices. The at-                                          18%        consist.
+tack surface in monoliths or service-oriented architectures                                                            data consistency 21
+was limited to few isolated servers. Microservice-based ar-                               heterog.             41%
+chitectures instead require to open a lot more ports, to                                     6%
+expose more APIs and to distribute authentication and                                                                  distributed transactions 18
+access control (as already discussed above). The attack                                   distr. trans.
+surface is hence much more extended, and this is the main                                      35%                     query complexity 9
+reason why endpoint proliferation is significantly recog-
+nized as a pain by industrial researchers and practitioners.                                                           heterogeneity      3
+
+Development stage. The selected industrial studies rec-                                   Figure 11: Weights and occurrences of the pains pertaining to storage
+ognize storage and testing as significant concerns while de-                              during the development stage.
+veloping microservice-based applications. The same does
+not hold for the development of the microservices forming                                    Operating with distributed data stores is another pain
+an applications (Fig. 6). Given the above, we hereby focus                                significantly recognized by industrial researchers and prac-
+on the concrete pains due to storage and testing concerns.                                titioners. The intrinsic complexity in implementing trans-
+                                                                                          actions over distributed data stores is pointed out in 18
+   The yearly coverage of such pains is displayed in Fig. 10.                             of the selected industrial studies. 9 of them also highlight
+The recognition of both storage- and testing-related pains                                the complexity of building queries combining data stored
+overall increased from 2014 to 2017, even if with a non-                                  in distributed and heterogeneous data stores.
+monotonic behaviour. It is worth observing that the recog-
+nition of storage-related pains started decreasing in 2017,                               Fig. 12 instead illustrates the weights and occurrences
+while that of testing-related pains experienced an increase                               related to the concern of testing while developing
+peak in the same year. If we cross this data with the                                     microservice-based applications. The figure highlights how
+technology waves illustrated by Jamshidi et al. [13], we                                  performance testing is by far the most challenging pain
+can observe that the technology for managing storage in                                   among those related to testing microservice-based applica-
+microservice-based application is maturing, and this re-                                  tions. As discussed in [S34] and [S6], a microservice-based
+sulted in starting to reduce storage-related pains for de-                                application is partitioned in a huge number of indepen-
+velopers of microservices. At the same time, the more                                     dently evolving services, and this makes it challenging to
+
+                                                                                       9
+size/complex.     integr. testing                                           service location cascading failures
+      30%               17%                                                         17% 14%
+
+                                         Pain                #                                                   Pain                #
+
+                                   performance testing 16                   service                              operational complexity 26
+                                                                            coordin.
+                                   size/complexity 9                                                             service location 8
+                                                                               15%
+                                                                                                                 cascading failures 7
+                                   integration testing 5                                    operat.
+                  perform.                                                                 complex.              service coordination 7
+                   testing
+                                                                                              54%
+                     53%
+
+Figure 12: Weights and occurrences of the pains pertaining to testing       Figure 14: Weights and occurrences of the pains pertaining to man-
+during the development stage.                                               agement during the operation stage.
+
+measure the performances of each of them and of the ap-                     industrial studies. The partitioning of an application in
+plication itself. This especially holds when testers wish to                microservices can change over time, as well as the num-
+measure user experience through the user interface of a                     ber of replicas of a microservice and their actual locations
+microservice-based application.                                             (i.e., the hosts where they are deployed, and the ports on
+                                                                            which they are listening). This makes it challenging to
+Operation stage. As shown by Fig. 6, all three con-                         locate and coordinate the microservices forming an appli-
+cerns of the operation stage are recognized as significant                  cation. Additionally, if not properly isolated, a failure in a
+by the selected industrial studies, with management and                     microservices may cause the failure of another, and so on.
+monitoring being slightly more covered than resource con-                   Handling cascading failure is hence another factor ham-
+sumption. This can be observed also in Fig. 13, which                       pering the operation of microservice-based applications.
+plots the yearly coverage of operation-related concerns in
+the period 2014-2017. The recognition of pains related to
+the management and monitoring increased in 2016 (if com-
+pared with that in 2014), while it kept stable from 2016 on.
+The recognition of pains related to resource consumption
+followed the opposite behaviour, as it decreased from 2014
+to 2016, by then experiencing an increase peak from 2016
+to 2017. The latter means that resource consumption be-
+came a first-class concern for the industrial researchers and
+practitioners authoring the selected industrial studies, and
+this may be due to the widespread and day-by-day work
+with microservice-based applications and tools [13].
+                  Preprint                                                  size/complex.  logging
+                                                                                  50%         29%
+
+                                                                                            probl.               Pain     #
+                                                                                           location
+                                                                                                                 size/complexity 21
+                                                                                              21%
+                                                                                                                 logging  12
+
+                                                                                                                 problem location 9
+
+                                                                            Figure 15: Weights and occurrences of the pains pertaining to mon-
+                                                                            itoring during the operation stage.
+
+                     Management Monitoring Res. Cons.                       Fig. 15 displays the weights and occurrences of the pains
+10                                                                          pertaining to monitoring microservice-based applications.
+                                                                            Similarly to the case of management, the primary chal-
+8                                                                           lenge is the intrinsic complexity of monitoring an appli-
+                                                                            cation composed by a huge number dynamically evolving,
+6                                                                           heterogeneous microservices.
+
+4                                                                              According to the industrial researchers and practition-
+                                                                            ers authoring the selected industrial studies, such a com-
+2                                                                           plexity is partly due to other two significantly discussed
+                                                                            pains, i.e., logging and problem location. 12 of the selected
+0                 2015             2016                2017                 industrial studies point out the pains due to handling a
+            2014                                                            huge number of distributed logs, one for each microservice
+                                                                            forming an application. This, along with the distributed
+Figure 13: Yearly evolution of the coverage of the concerns pertaining      nature of microservice-based application, makes it hard to
+to the operation stage.                                                     identify the source of an issue in an application, as dis-
+                                                                            cussed in 9 of the selected industrial studies.
+The concrete pains due to the management of
+microservice-based applications, their weights and                          Fig. 16 illustrates the weights of the pains related to the
+occurrences are displayed in Fig. 14. The figure highlights                 resources consumed by a microservice-based application,
+how the intrinsic complexity of operating applications                      during its operation stage. An increase in resource con-
+composed by distributed and heterogeneous microser-                         sumption (with respect to monolithic/service-oriented ap-
+vices is the main challenge in the scope of managing                        plications) is significantly recognized by the selected indus-
+microservice-based applications.                                            trial studies. 7 out of the selected industrial studies high-
+                                                                            light how the higher number of running services requires an
+   The above mentioned complexity is partly explained by
+the three other pains significantly discussed by the indus-
+trial researchers and practitioners authoring the selected
+
+                                                                        10
+         compute                                                                       security
+            29%
+
+                                                                         Pain #                                testing
+                                                                       network 17
+                                                                       compute 7                                                 management
+
+                                                                                                                        storage
+
+network                                                                                               design
+   71%                                                                                               patterns
+
+Figure 16: Weights and occurrences of the pains pertaining to re-                      architecture            microservices     deployment
+source consumption during the operation stage.
+
+increased amount of runtime environments, which in turn                                design                  development       operation
+results in an increased consumption of compute resources.
+                                                                                       Figure 17: Coverage of the concerns in the taxonomy for gains of
+   The increased consumption of network resources                                      microservices. The size of each bubble is directly proportional to the
+emerges to be by far more challenging. 17 out of the se-                               number of selected industrial studies discussing a gain pertaining to
+lected industrial studies highlight that, since the microser-                          the corresponding concern.
+vices in an application intercommunicate through remote
+API invocations, applications generate a much higher net-              Preprint        gains over the selected studies, which is even more evident
+work traffic with respect to monoliths (where modules in-                              in the bubble plot in Fig. 17. The figure clearly highlights
+teract through in-memory calls) or service-based applica-                              how biggest gains come from architecture concerns, from
+tions (composed by a lower number of services, hence re-                               the exploitation of design patterns, from the development
+ducing the amount of remote API invocations).                                          of microservices, and from application peculiarities simpli-
+                                                                                       fying their actual deployment and management. Security
+4.3. Microservices Gains                                                               design and storage implementation also provide notable
+                                                                                       gains, while application testing is not significantly impact-
+In this section, we first present a taxonomy for classifying                           ing on the advantages of developing microservice-based ap-
+the gains of microservices, and we then illustrate how we                              plications.
+exploited it to analyse current perpectives of industrial
+researchers and practitioners on the gains of microservices.                              In the following, we provide details on the notable con-
+                                                                                       cerns highlighted above. We shall proceed concern-wise,
+4.3.1. A taxonomy for gains of microservices                                           by listing the occurrences of gains in sorted tables, and by
+We hereby present a taxonomy for classifying gains of mi-                              comparing their weights through %-based pie charts.
+croservices (Table 5). It can be helpful to analyse the cur-
+rent state of the art on microservices in the IT industry, as                          Design stage. The main sources of gains during the de-
+well as to identify potential trends and research directions.                          sign stage are the architecture peculiarities and the ex-
+The proposed taxonomy for gains of microservices was ob-                               ploitation of design patterns (Fig. 17). This can be ob-
+tained with an approach similar to that for determining                                served also in Fig. 18, which shows the evolution of the
+the taxonomy for pains (Sect. 4.2.1).                                                  coverage of design concerns in the period 2014-2017. The
+                                                                                       figure also shows that the interests for gains pertaining to
+   The obtained taxonomy undergone various iterations                                  the architecture concern is steadily increasing, while that
+among the authors of this study, and it was also submit-                               for design patterns instead keeps stable. The same does
+ted to external experts from two different research institu-                           not hold for security-related gains, which (after a period
+tions. This resulted in some corrections and amendments                                of slight increase) are starting to loose their appeal for
+to the first version of the taxonomy, and the final outcome                            the industrial researchers and practitioners authoring the
+is the taxonomy displayed in Table 5. The latter was then                              selected industrial studies.
+validated through the inter-rater reliability assessment de-
+scribed in Sect. 3.4.                                                                  The concrete gains due to microservice-based architec-
+                                                                                       tures, their weights and occurrences in the selected indus-
+4.3.2. Gains in the selected industrial studies                                        trial studies are illustrated in Fig. 19. Bounded contexts
+We classified the selected industrial studies based on the                             (which are an intrinsic peculiarity of microservice-based
+taxonomy for gains of microservices (Table 5). The ob-                                 architectures) emerge as the primary architectural gain,
+tained classification is displayed in Table 6. Due to rea-                             with 24 out of the selected industrial studies highlight-
+sons of readability and space, the table only captures the                             ing their benefits. The notion of bounded contexts comes
+classification over the concerns listed in the taxonomy of                             from [5], and it makes microservices selfcontained. A mi-
+gains5. It still provides a first overview of the coverage of                          croservice can be analysed, understood and updated with-
+                                                                                       out knowing anything about the internals of the other mi-
+    5The detailed classification, displaying each occurrence of each                   croservices in an architecture. This impacts on the gover-
+gain, is publicly available in the replication package (see Sect. 3.5).                nance of an application, which can be decentralised by as-
+
+                                                                                   11
+    Stage         Concern                             Gain
+    Design        Architecture                        Bounded contexts, Cloud native, Decentralised governance, Fault tolerance, Flexibility
+                  Design patterns                     API gateway, Circuit breaker, Database per service, Message broker, Service discovery
+    Development   Security                            Automation, Fine-grained policies, Firewalling, Isolation, Layering
+                  Microservices                       CI/CD, Loose coupling, Reusability, Service size, Technology freedom
+    Operation     Storage                             Data persistence, Data isolation, Microservice-orientation
+                  Testing                             Automation, Rollback, Unit testing, Updates
+                  Deployment                          Containerisation, Independency, Reliability, Speed
+                  Management                          Fault isolation, Scalability, Updateability
+
+                                   Table 5: A classification framework for gains of microservices.
+
+    [S1]               Design   PreprintDevelopment   Operation     [S27]           Design              Development              Operation
+    [S2]          Arc. Des. Sec.  Mic. Sto. Tes.      Dep. Man.     [S28]   Arc. Des. Sec.            Mic. Sto. Tes.            Dep. Man.
+    [S3]                                                            [S29]
+    [S4]            ··              ·                   ··          [S30]     ·                         ·                         ··
+    [S5]            ··              ·                   ··          [S31]     ·                         ·                         ··
+    [S6]            ·               ··                              [S32]     ·                         ·                         ··
+    [S7]            ···             ·                            ·  [S33]     ···                       ··                        ··
+    [S8]            ··              ··                  ·           [S34]     ··                        ·                         ··
+    [S9]                                                ··          [S35]     ··                        ·                         ··
+    [S10]                  ·                       ·                [S36]
+    [S11]                           ··                  ··          [S37]                          ·                         ·                ·
+    [S12]           ··                                  ··          [S38]
+    [S13]                  ·        ·                   ··          [S39]               ··                        ·                           ·
+    [S14]                           ·                               [S40]               ·               · ··                      ··
+    [S15]           ·               ·                            ·  [S41]     ··                        ··                        ··
+    [S16]           ·                                               [S42]     ···                       ·                         ·
+    [S17]           ··                     ·            ··          [S44]               ·               ··                        ··
+    [S18]           ···             ·                   ··          [S43]     ··                        ··                        ··
+    [S19]           ·               ···                             [S45]     ·                         ··                        ··
+    [S20]           ·               ·                   ··          [S46]     ·                         ··                        ··
+    [S21]                           ·                   ··          [S47]     ··                        ·                         ·
+    [S22]                  ·        ··                              [S48]                               ·
+    [S23]           ·               ·                   ··          [S49]                          ·                                          ·
+    [S24]           ·                                               [S50]               ·                                    ·
+    [S25]           ···             ··                  ··          [S51]               ··              ·                                     ·
+    [S26]           ·                                   ··                    ·                         ··                        ··
+                                    ·                   ··                              ··              ·                         ··
+                           ··       ·                                                   ·               ··
+                    ··              ··                                        ··                        · ··                      ··
+                    ···                                                       ··
+
+                    ·
+                    ··
+
+    Table 6: Classification of the selected studies based on the concerns listed in the taxonomy for gains of microservices.
+
+           Architecture Design patterns Security                              flexibility                bounded
+                                                                                  17%                    contexts
+12                                                                                                                              Gain             #
+                                                                            fault                           37%
+10                                                                          toler.                                  bounded contexts 24
+                                                                             18%                      cloud native
+8                                                                                                          17%      fault tolerance              12
+                                                                             decentr.
+                                                                            govern. 11%                             cloud native                 11
+
+6                                                                                                                               flexibility      11
+
+4                                                                                                                   decentralised governance 7
+
+2
+
+0                 2015             2016               2017                  Figure 19: Weights and occurrences of the gains pertaining to the
+            2014                                                            architecture concern during the design stage.
+
+Figure 18: Yearly evolution of the coverage of the concerns pertaining      based architectures are cloud native. Fault tolerance and
+to the design stage.                                                        cloud nativeness of microservice-based architectures are
+                                                                            two of the main reasons why the IT industry is strongly in-
+signing the governance of microservices to different groups                 terested in them, with Netflix being one of the most promi-
+(as pointed out by 7 out of the 24 studies discussing the                   nent examples [S26],[S12].
+benefits of bounded contexts).
+                                                                            The coverage of design patterns is instead displayed in
+   Industrial researchers and practitioners are also high-                  Fig. 20. The design pattern database per service is the
+lighting that microservice-based architectures are fault tol-               most discussed in the selected industrial studies, with 20
+erant by design, that microservices can be flexibly added                   out of them highlighting that each microservice should be
+and removed from an architecture, and that microservice-                    equipped with its own database (if it needs a persistent
+
+                                                                        12
+serv. discovery     API            Gain         #                         opment of microservices is the main source of gains in
+       17%       gateway                                                  microservice-based architectures. This is also witnessed
+                                   database per service 20                by the yearly coverage of development-related concerns
+message            25%                                                    (Fig. 22). The recognition of gains pertaining to the devel-
+ broker                            API gateway 16                         opment of microservices is steadily increasing since 2014,
+    9%             circuit                                                and it keeps much higher with respect to that of the gains
+                 breaker           circuit breaker 12                     pertaining to storage.
+     datab.
+   per serv.        18%            service discovery 11
+
+       31%                         message broker 6
+
+Figure 20: Weights and occurrences of the gains pertaining to design                            Microservices Storage
+patterns during the design stage.
+                                                                          15
+
+storage, of course). API gateway and circuit breakers are                 10                    2015      2016               2017
+also significantly covered. 16 of the selected studies explain
+how the API gateway design pattern permits decoupling                      5
+the clients of a microservice-based application from its in-
+ternals, while 12 studies discuss how circuit breakers can                 0
+help mitigating issues due to failures (such as cascading                              2014
+failures, one of the pains displayed in Fig. 14). Service
+discovery and message brokers are also discussed, to miti-                Figure 22: Yearly evolution of the coverage of the concerns pertaining
+gate the pains of service location and service coordination,              to the development stage.
+and to allow asynchronous service intercommunications,
+respectively. More generally, 30 of the selected studies
+were discussing at least one of the above listed patterns,
+by also showing how designers exploit them to mitigate
+some of the pains discussed in Sect. 4.2. This highlights
+the importance of design patterns, and the need for ad-
+ditional patterns allowing to further mitigate the pains of
+microservice-based architectures [S37].
+                                 Preprint                                 The coverage of the concrete gains due to the development
+   layering      automation        Gain         #                         of microservices is displayed in Fig. 23, which also dis-
+      24%             12%                                                 plays their weights in the selected industrial studies. The
+                            fine   firewalling  9                         loose coupling (which allows to independently develop the
+isolation                grained                                          microservices forming an application) and the freedom in
+   12%                   policies                                         choosing the technology stack for implementing each mi-
+                            16%                                           croservices are the most attractive gains. They are strictly
+                                                                          related to one another, and their grouping is by far more
+                    firewalling                                           covered with respect to the other gains pertaining to the
+                         36%                                              development of microservices.
+
+                                   layering     6
+
+                                   fine-grained policies 4                technology            CI/CD
+                                                                           freedom               18%
+                                   automation   3                             28%                                      Gain        #
+
+                                   isolation    3                                                         loose coupling 27
+
+                                                                                                          technology freedom 24
+
+                                                                                                  loose         CI/CD              15
+                                                                                                coupling
+Figure 21: Weights and occurrences of the gains pertaining to secu-       service                         service size 14
+rity during the design stage.                                               size                   31%
+                                                                            16% reusability 7%            reusability              6
+
+Microservice-based architectures are also bringing some                   Figure 23: Weights and occurrences of the gains pertaining to the
+security-related gains, whose coverage in the selected in-                concrete development of microservices.
+dustrial studies is displayed in Fig. 21. Firewalling emerges
+as the primary gain, with 9 of the selected industrial                       Another significant gain emerging from the selected in-
+studies discussing how API gateways can simplify it in                    dustrial studies is related to CI/CD, a DevOps practice
+microservice-based architectures.                                         enabling the continuous release of updated versions of a
+                                                                          software [16]. As pointed out by 15 of the selected indus-
+   Other gains worth mentioning are due to the support                    trial studies, microservices natively support CI/CD. The
+of layered and fine-grained security policies. By defining                latter can be directly operated on microservices, hence al-
+hierarchical groupings of the microservices forming an ar-                lowing to continuously and independently release updated
+chitecture, designers can apply differently grained secu-                 versions of the microservices forming an application.
+rity policies to the different layers in a hierarchy. The
+partitioning of applications into small, independent mi-                     The actual size of microservices and their reusability
+croservices also simplifies the design of automated secu-                 are also discussed in the selected industrial studies. As
+rity policies and it favours a better isolation among the                 reusability is peculiar to many service-based architectural
+different components in an application (with respect to                   style, it is more interesting to comment on how the actual
+monolithic/service-oriented architectures).                               size of microservices impacts on their development. Mi-
+                                                                          croservices focus on doing one thing well, and their busi-
+Development stage. According to Fig. 17, the devel-
+
+                                                                      13
+ness logic turn out to be small and self-contained [S31].                                           bounded context. Even if a microservice is exploiting (at
+14 of the selected studies highlight how this makes them                                            runtime) some functionalities provided by other microser-
+quick to develop and easy to understand for new personnel                                           vices, it can be deployed without requiring their availabil-
+assigned to their development and maintenance.                                                      ity. Once running, if one of the required microservices is
+                                                                                                    not available (because it has not been deployed yet, or be-
+                  data persist. 5%                                                                  cause it failed), the deployed microservice continue to be
+                                                                                                    running, even if partly working [S31].
+                                data
+                             isolation                                   Gain        #
+
+                                24%                                microservice orientation 15      speed          containerisation
+                                                                                                     22%                   25%
+                                                                   data isolation    5
+
+microser.                                                          data persistence 1                                                Gain   #
+  orient.
+    71%                                                                                                                              independency 19
+
+                                                                                                                                     containerisation 12
+
+                                                                                                    reliab.                          speed  11
+                                                                                                     14%
+Figure 24: Weights and occurrences of the gains pertaining to storage                                                                reliability 7
+during the development stage.
+                                                                                                                   independency 39%
+
+Microservices have also some positive impact on storage                                             Figure 26: Weights and occurrences of the gains pertaining to de-
+concerns (Fig. 17). The coverage of the storage-related                                             ployment during the operation stage.
+gains in the selected industrial studies is reported in
+Fig. 24. The only gain significantly covered is that related                                           Other significant gains are related to containerisation
+to the microservice orientation of storage. 15 of the se-                                           and speed of deployment. Containers (and Docker, in par-
+lected industrial studies indeed highlight that, when a mi-                                         ticular) emerge as the natural way of packaging and ship-
+croservice must be equipped with a backend database, its                                            ping microservices, hence fostering the build of portable,
+developer can freely choose the database type (e.g., SQL                                            cloud-based deployments. This, along with the fact that
+or NoSQL) and how to structure the data in it. This is                                              microservices are small sized, makes microservices very
+because the only service accessing to such database will be                                         fast to get up and running.
+the microservice she is developing (following the database   Preprint
+per service design pattern).                                                                        updateability    fault                Gain #
+                                                                                                         24%       isolation           scalability 31
+Operation stage. As shown by Fig. 17, microservices                                                                                  fault isolation 14
+provide significant benefits also during the operation stage.                                       scalability       24%            updateability 14
+The recognition of gains pertaining to the deployment and                                                52%
+management of microservices is steadily increasing since
+2014 (Fig. 25). By crossing this data with the technology                                           Figure 27: Weights and occurrences of the gains pertaining to man-
+waves highlighted by Jamshidi et al. [13], we can observe                                           agement during the operation stage.
+that the more technology for supporting microservices is
+getting mature, the more microservice become attractive
+for the gains they bring while being operated.
+
+                              Deployment Management                                                 Fig. 27 instead displays the coverage and weights of the
+20                                                                                                  gains that microservices bring to the operation of the man-
+                                                                                                    agement of applications. The figure clearly shows tha scal-
+15                                                                                                  ability emerges as the primary gain for the industrial re-
+                                                                                                    searchers and practitioners authoring the selected studies.
+10                                                                                                  31 of the selected industrial studies indeed highlight how
+                                                                                                    microservice applications naturally support the horizontal
+5                                                                                                   scaling of their microservices, as well as how microservices
+                                                                                                    scale quickly and reactively (also thanks to their indepen-
+0                                                            2015  2016        2017                 dence and speed of deployment).
+            2014
+                                                                                                       Fault isolation and updateabilty are also significantly
+Figure 25: Yearly evolution of the coverage of the concerns pertaining                              recognised as gains pertaining to the management of
+to the operation stage.                                                                             microservice-based applications. 14 of the selected studies
+                                                                                                    point out that the partitioning of application in bounded
+The coverage and weights of the gains pertaining to the de-                                         microservices simplifies the operation of fault isolation,
+ployment of microservices are illustrated in Fig. 26. The                                           also thanks to the exploitation of the design pattern called
+primary gain is independency. 19 of the selected industrial                                         circuit breaker (discussed earlier). 14 of the selected stud-
+studies highlight that microservices can be deployed and                                            ies instead point out that, thanks to the independence
+undeployed independently from one to another. Microser-                                             among the microservices in an application, live upgrades
+vices are designed and developed to be self-contained in a                                          and live updates can be applied to a running microservice,
+
+                                                                                                14
+without requiring to touch the other microservices of an    Preprintrequest (which is far from being easy due to the heav-
+application.                                                        ily distributed nature of microservice-based applications).
+                                                                    Additionally, endpoints proliferate in microservice-based
+4.4. Summary                                                        applications, as all their microservices are exposing re-
+                                                                    motely accessible APIs exposed. The attack surface to
+Since 2014, when James Lewis and Martin Fowler gave rise            be secured is hence much larger with respect to classical
+to the microservice-based architectural style with their fa-        monolithic/service-oriented applications.
+mous blog post [S22], microservices are steadily attracting
+increasing attention by the IT industry. This is supported          At development time, the primary pains come from
+by the trends discussed in Sect. 4.1, which answered to             storage-related issues. By distributing the storage over
+our Q1 by illustrating how communities of practitioners             the many microservices forming an application, it becomes
+and IT companies are more and more involved in indus-               challenging to ensure data consistency. Eventual consis-
+trial research on microservices. The growing interest in            tency is an option to mitigate this pain, even if not always
+microservices by the IT industry is even more evident if            viable and not easy to implement too. At the same time,
+we focus on the contributions published last year, whose            the heavy distribution of data makes it challenging also to
+vast majority was directly provided by IT companies.                implement distributed transaction, and even to query the
+                                                                    data (also because of the heterogeneity of the data stores
+   The contents presented in the selected industrial studies        to be queried).
+span from discussing advantages and disadvantages of mi-
+croservices, to proposing design patterns and sharing best             Testing is also paining the job of developers.
+practices to better leverage of microservices. This is in           Microservice-based application partition their business
+line with our research questions Q2 and Q3, which were              logic over independently evolving services, and this makes
+answered in Sects. 4.2 and 4.3, respectively. In the follow-        it challenging to measure the performances of the applica-
+ing, we report the main findings resulting from the analysis        tion itself. This especially holds when developers are re-
+of the selected industrial studies, based on our taxonomies         quired to test the user experience of a microservice-based
+for pains and gains of microservices (Table 3 and Table 5,          application [S34].
+respectively).
+                                                                    The operation of microservice-based applications is also
+4.4.1. Summary of Pains                                             pained by their distributed and dynamic nature. Microser-
+The pains of microservice-based applications are mainly             vices can flexibly be added or removed from an application,
+due to their intrinsic complexity. As recognized by almost          they can be scaled in and out, or they can be migrated from
+all the selected industrial studies, the design, the devel-         one host to another. This, along with the huge number of
+opment and/or the operation of microservice-based appli-            microservices forming an application, makes it challenging
+cations is hampered by the fact that the business logic in          to locate and coordinate the concrete instances of the mi-
+such applications is heavily distributed over many indepen-         croservices in an application. Additionally, if not properly
+dent and asynchronously evolving microservices. This gen-           isolated, a failing instance of a microservice can generate a
+erates various design, development and operational chal-            cascade of failure in the microservice instances depending
+lenges, which are recapped below.                                   on it.
+
+At design time, the primary pain the design of                         At the same time, the distribution of the instances of
+microservice-based applications is the dimensioning of ser-         the microservices in an application, results in the distri-
+vices. It is indeed often difficult to determine the par-           bution of their logs. Delving through many distributed
+titioning of an application in bounded contexts, as the             logs is of course a pain, especially when the operators of a
+boundaries among the different business capabilities of an          microservice-based application are required to identify the
+application are usually not sharp. The fact that intercom-          reasons/problem causing an issue in such application.
+munications are purely based on remote API invocations
+is also creating concrete pains. The API provided by a                 The primary pain during the operation of microservice-
+microservice becomes a sort of contract between such mi-            based applications is however given by their resource con-
+croservice and the microservices consuming its API. This            sumption. The require to run more services with respect
+directly impacts on the versioning of APIs, as new API              to monolithic and service-based application, which require
+version must always be retro-compatible to avoid violating          more runtime environments to be distributed, and which
+the contracts among microservices, hence allowing them to           interact based on remote API invocations. This increases
+continue to intercommunicate.                                       their consumption of compute and network resources, with
+                                                                    the latter being the primary worry of the industrial re-
+   Security is also generating pains at design-time, mainly         searchers and practitioners authoring the selected studies.
+due to access control and endpoint proliferations. Ac-
+cess control is one of the main challenges, as the design           4.4.2. Summary of Gains
+of microservice-based application should allow to the mi-
+croservices forming an application to quickly and con-              The primary gains of microservices are due to peculiar
+sistently ascertain the provenance and authenticity of a            properties of microservice-based architectures, to design
+                                                                    patterns allowing to better exploit them, to the ease of
+                                                                    development of the microservices in an application, and to
+
+                                                              15
+the possibility of independently deploying and managing      Preprintthing and on doing it well, with a business logic that turns
+the microservices in an application.                                 out to be small and self-contained [S31]. This makes it
+                                                                     quick their development, as well as their understanding by
+   Consider the design of microservice-based architectures.          new personnel assigned to their development and mainte-
+Despite identifying the partitioning of applications in              nance.
+bounded contexts is not easy, microservices actually gain
+from the boundedness of their context. A microservice                Finally, consider the operation of microservice-based ap-
+is self-contained, and it can be analyzed, understood and            plications. The possibility of independently deploying the
+updated without knowing anything about the rest of the               microservices in an application is recognized as one of the
+architecture it is part of. This positively impacts on               most important gains due to microservices. A microservice
+the governance of applications, which can be decentral-              can indeed be deployed without requiring the availability
+ized by assigning the governance of different microservices          of other microservices, even if it exploits their function-
+to different groups. Additionally, bounded contexts en-              alities at runtime. Once running, if one of the required
+force fault tolerance by design, and they permit flexibly            microservices is not available (because it has not been de-
+adding and removing microservices to and from an archi-              ployed yet, or because it failed), the deployed microservice
+tecture. The resulting architectures are also cloud-native,          continue to be running, even if partly working [S31]. This
+as their bounded contexts/microservices can be indepen-              simplifies the orchestration of the deployment of microser-
+dently managed over different cloud platforms.                       vices, and it is the source of other related gains, e.g., reli-
+                                                                     ability, fault isolation, and the possibility of applying live
+   The mostly recognized gains at design-time are how-               updates/upgrades to a running microservices, without be-
+ever those related to the exploitation of design patterns.           ing required to touch the other microservices in an appli-
+The design pattern database per service permits enforc-              cation.
+ing the independence among microservices, by equipping
+each microservice with its own data store (if needed). API              Independence of deployment is second only to scalabil-
+gateways permit decoupling the clients of a microservice-            ity, which is by far recognized as the most important gain
+based application from its internals, while circuit breakers         of microservices during the operation stage. Microservice-
+and service discovery to mitigate the pains related to the           based applications naturally support the horizontal scal-
+failure and service coordination/location of microservices.          ing of their microservices, and their scaling is quick and
+The importance of design patterns for mitigating the pains           reactive (also thanks to their independence and speed of
+of microservices is also explicitly highlighted by Richard-          deployment).
+son [S37].
+                                                                        Microservices also benefit from their natural integration
+   The distributed nature of microservices can also pro-             with container-based platforms, as each microservice can
+vide some security-related gains, even the pains it brings           be packaged and shipped in its own container. This makes
+are more significantly recognized in the selected grey liter-        microservice-based applications easy to be deployed on and
+ature. Microservice-based architecture indeed naturally              migrated over multiple cloud platforms, as containers (and
+support the possibility of defining hierarchical security            Docker containers, in particular) are nowadays widely sup-
+policies, with differently grained security policies associ-         ported by cloud providers [17].
+ated with different levels in a hierarchy. Design patterns
+also help securing microservices, with the API gateway               5. Discussion
+emerging as the most prominent example, as it thoroughly
+simplifies firewalling microservice-based architectures.             5.1. Relation with previous surveys and the road ahead
+
+Development emerges by far as the stage gaining most                 We hereby discuss the relation with the results presented
+from microservices. In this perspective, the most impor-             in this study and those illustrated by previous surveys on
+tant gains recognized by the industrial researchers and              microservices. The coverage of the identified pains and
+practitioners authoring the selected studies are the loose           gains in such surveys is illustrated in Table 7.
+coupling among the microservices in an application (which
+permits independently developing them), the freedom in                  We can observe that the recognition of architecture-
+choosing the technology stack for developing a microser-             related pains and gains in previous surveys is aligned with
+vice, and the possibility of choosing the data store that            that in our study. The same applies to the recognition of
+best suits the needs of a microservice.                              the gains pertaining to design patterns, to the development
+                                                                     of microservices, and to the deployment and management
+   Other important gains come from the ease of use of De-            of microservice-based applications.
+vOps techniques in microservice-based applications, and
+from the actual size of the microservices forming an appli-             On the other hand, the recognition of pains and gains
+cation. On the one hand, CI/CD can be directly operated              pertaining to other concerns in previous surveys is not
+on each microservice in an application, hence allowing to            aligned with that in our study. This confirms that there is
+continuously release updated/upgraded versions of such               a gap between the industrial understanding and state-of-
+microservice, independently from the rest of an applica-             practice on microservices and the state-of-the-art of aca-
+tion. On the other hand, microservices focus on doing on             demic research. As highlighted by Jamshidi et al. [13],
+
+                                                               16
+   Design         Development                                        Operation             by Chris Richardson) many other are yet to be investi-
+Arc. Sec.          Sto. Tes.                                  Man. Mon. Res.               gated to further mitigate the pains of microservices [S37].
+                                                                                           A first research effort in this direction is given by Taibi et
+[3] 1/5   1/6     2/4 1/3                                     2/4 1/3 0/2                  al. [23], which further witnesses the need for investigating
+[10] 2/5  1/6     1/4 0/3                                     1/4 1/3 1/2                  and formalizing design patterns allowing to better exploit
+[18] 2/5  1/6     0/4 2/3                                     3/4 1/3 0/2                  microservices.
+[22] 5/5  0/6     0/4 1/3                                     2/4 0/3 0/2
+[23] 2/5  1/6     2/4 1/3                                     3/4 1/3 0/2                  5.2. Observations on systematic grey literature reviews
+[25] 1/5  1/6     0/4 0/3                                     1/4 1/3 0/2
+                                                                                           Our work led to two major observations on difficulties
+                              (a)                                                          and potentials of conducting systematic grey literature re-
+                                                                                           views, which could be of help for researchers willing to
+          Design                                              Development   Operation      perform them. We discuss them hereafter:
+                                                                           Dep. Man.
+Arc. Des. Sec. Mic. Sto.                                                                      · We observed that the combination of systematic lit-
+                                                                           3/4 1/3               erature review protocols with grey literature studies
+[3] 5/5   2/4     0/5 2/5                                     0/4          1/4 3/3               can be valuable to shed light on yet uncharted areas
+[10] 3/5  0/4     0/5 3/5                                     0/4          3/4 1/3               of software engineering research, especially when such
+[18] 4/5  4/4     0/5 3/5                                     0/4          1/4 2/3               areas are seeing massive industrial adoption. This is
+[22] 1/5  2/4     0/5 2/5                                     0/4          3/4 2/3               the case of microservices, where we observed a mas-
+[23] 3/5  4/4     1/5 5/5                                     2/4          2/4 2/3               sive proliferation of grey literature, with more than
+[25] 4/5  1/4     0/5 2/5                                     0/4                                10000 articles on disparate sub-topics arranged be-
+                                                                                                 tween blogs, posts, comments, articles, white-papers,
+                           (b)                                                                   technology evaluations, technical reports and videos.
+                                                                                                 A systematic review protocol allows to distill the es-
+Table 7: Coverage of the identified (a) pains and (b) gains in previous                          sential state-of-practice on a sub-topic (such as the
+surveys on microservices. (Cell i, j shows the fraction of pains or                              pains and gains of microservices, in our case), which
+gains pertaining to concern j that are recognized by survey i.)                                  can be of help for researchers and practitioners.
+
+one possible reason is that academia have limited access to   Preprint                        · At the same time, we discovered that it is very diffi-
+industry-scale microservice-based application. This makes                                        cult to uniquely measure the quality of grey literature
+it difficult to academic researchers to concretely experience                                    when conducting a systematic, controllable and repli-
+the technical and non-technical issues that might occur in                                       cable secondary study. This is mainly because grey
+real-world microservice production environments.                                                 literature lacks an unique format acknowledged across
+                                                                                                 all sources and available data. This lacking inspired
+   The above especially holds where the higher gap is reg-                                       us to build a rudimentary quality control framework
+istered, namely (i) for security-related pains and gains,                                        (see Sect. 3.3), which can be of help to researchers
+(ii) for the difficulties in testing microservice-based appli-                                   willing to perform systematic grey literature reviews
+cations (and especially their performances), (iii) for the                                       in software engineering. Anyway, strategies and ap-
+pains in monitoring microservices, and (iv) for the is-                                          proaches for multivocal literature research should be
+sues due to the fact that microservices are highly resource                                      explored further, especially concerning quality control
+consuming. All such issues are significantly recognized                                          of grey literature, both standalone and in combination
+by industrial researchers and practitioners working with                                         with white literature.
+industry-scale application, while the academia still needs
+to concretely experience and work on them. This in turn                                       It is also worth highlighting that we observed intrinsic
+means that solutions for (i) enforcing security policies in a                              differences in classifying videos with respect to the other
+decentralised manner, (ii) supporting performance testing                                  types of industrial studies (i.e., blog posts and whitepa-
+of microservice-based applications, (iii) easing their mon-                                pers). We were able to evaluate the inclusion/exclusion
+itoring, and especially logging and problem location, and                                  criteria on blog posts and whitepapers by giving them a
+(iv) optimizing their resource consumption are (and must                                   first, light read. With a second, deeper read, we were
+be) research directions for future work by both industrial                                 then able to classify them by applying our taxonomies of
+and academic researchers.                                                                  pains and gains. The same did not happen with videos,
+                                                                                           which we were required to carefully follow from the very
+   Other interesting research directions are related to con-                               first time. As a consequence, the search and classifica-
+crete pains that still need to be addressed. For instance,                                 tion of videos was significantly more time-consuming with
+there is a need for methodologies and techniques easing the                                respect to that of blog posts and whitepapers.
+dimensioning and versioning of microservices, and simpli-
+fying the execution of transactions/queries on distributed                                    At the same time, videos gave us less room for inter-
+and heterogeneous data stores.                                                             pretation, also thanks to the fact that the contributions
+
+   Nonetheless, even if some of the primary pains and
+gains have already been investigated, there is still a lot
+of work to do on them. A concrete example is the
+study of microservice-oriented design patterns, as indus-
+trial researchers and practitioners strongly believe that
+they are key to mitigate/nullify the pains of microservices.
+While various design patterns have already been proposed
+(e.g., those listed in the blog http://microservices.io
+
+                                                                                       17
+contained in videos are actually presented by the authors            and gains were submitted to two external domain-experts
+of the studies themselves (who decide what to focus on, by           from two different research institutions, and the analysis
+discussing it more in detail, and how). This resulted in us          results were checked by another external reviewer which is
+being more aligned when classifying videos with respect of           not among the authors and not belonging to the software
+when we were classifying blog posts and whitepapers.                 engineering field.
+
+5.3. Threats to Validity                                     Preprint5.3.3. Threats to conclusions validity
+                                                                     The validity of conclusions concerns the degree to which
+Based on the taxonomy developed by Wohlin et al. [26],               the conclusions of a study are reasonably based on the
+four potential threats of validity may apply to our study,           available data [26].
+i.e., threats to external validity, threats to construct and
+internal validities, and threats to conclusions validity.               To mitigate this threat, we exploited theme coding and
+                                                                     inter-rater reliability assessment to limit observer bias and
+5.3.1. Threats to external validity                                  interpretation bias, with the ultimate goal of performing
+External validity concerns the applicability of a set of re-         a sound analysis of the data we retrieved. Additionally,
+sults in a more general context [26]. Since our primary              the conclusions drawn in this article were independently
+studies are obtained from a large extent of online sources,          drawn by each of us, and they were then double-checked
+our results and observations may be only partly applica-             against the selected industrial studies or related studies in
+ble to the the broad area of practices and general dis-              a joint discussion session.
+ciplines of microservices practices and general discipline,
+hence threatening external validity.                                 6. Conclusions
+
+   To reinforce the external validity of our findings, we or-        Microservices are nowadays adopted by many IT compa-
+ganized 4 feedback sessions during our systematic analysis           nies to deliver their business, with Amazon, Netflix, Spo-
+of grey literature on microservices. We analyzed the dis-            tify, and Twitter being the most prominent examples. Due
+cussion following-up from each feedback session, and we              to the huge investment by companies, the industrial state-
+exploited this qualitative data to fine-tune both our re-            of-practice on microservices is rapidly evolving and it has
+search methods and the applicability of our findings. We             already reached some degree of maturity. At the same
+also prepared a bundle of all artifacts we produced during           time, academic research efforts are still at an early stage,
+our analysis, so as to make it available to all who wish             as also discussed by existing secondary studies, e.g., Pahl
+to deepen their understanding on our data (see Sect. 3.5).           et al. [18], Vural et al. [25]. This resulted in a sort of gap
+We are confident that this can help in making our results            between academic state-of-the-art and industrial state-of-
+and observations more explicit and applicable in practice.           practice.
+
+   On another front, there is a risk of having missed rele-             The objective of this article was to try to bridge the
+vant industrial studies, due to the fact that concepts re-           above mentioned gap by following the guidelines provided
+lated to those included in our search strings are differ-            by Garousi et al. [9]. Our aim was indeed to complement
+ently named in such studies (e.g., a study discussing some           academic state-of-the-art with a systematic analysis of the
+pains of microservices may not employ the terms "pain" or            industrial grey literature on pains and gains of microser-
+"gain", but rather some synonyms). This holds especially             vices. We followed a systematic approach based on that
+for videos, as our search strings were matched only against          proposed by Petersen et al. [19], which allowed us to se-
+their title and description. To mitigate this threat to va-          lect 51 industrial studies, and to analyse them to distill
+lidity, we have explicitly included all relevant synonyms            the pains and gains of designing, developing and operat-
+in our search strings (by looking among those listed in the          ing microservices.
+Merriam-Webster's dictionary), and we have also exploited
+the features offered by search engines, which naturally sup-            Our study showed that microservices are steadily gain-
+port considering related terms for all those contained in a          ing increasing attention by the IT industry, since 2014
+search string.                                                       (when they were first defined by Lewis and Fowler). It
+                                                                     also showed that the understanding of pains and gains
+5.3.2. Threats to construct and internal validities                  of microservices is quite mature in the industry, hence
+According to Wohlin et al. [26], construct validity concern          meaning that the academia has much to learn from the
+the generalizability of the constructs under study, while            industry on the topic. The identified pains are mainly
+internal validity concerns the validity of the methods em-           related to the intrinsic complexity of microservice-based
+ployed to study and analyze data (e.g., the types of bias            applications, while the gains relate to peculiar properties
+involved).                                                           of microservice-based architectures, to design patterns al-
+                                                                     lowing to better exploit them, and to the possibility of
+   To mitigate these threats, we adopted various triangu-            independently deploying and managing the microservices
+lation rounds and inter-rater reliability assessment meth-           in an application. Both pains and gains can be useful to
+ods (see Sect. 3.4), which were conceived to avoid bias              delineate research directions, as we discussed in Sect. 5.1.
+by triangulation. To further reinforce internal and con-
+struct validity, the initially obtained taxonomies for pains
+
+                                                               18
+   We believe that both researchers and practitioners can      PreprintReferences
+benefit from our study. Our findings can indeed be ex-
+ploited by researchers to develop new theories and solu-                [1] Armin Balalaie, Abbas Heydarnoori, and Pooyan Jamshidi. Mi-
+tions, to analyze and experiment research implications,                      croservices architecture enables DevOps: Migration to a cloud-
+and to establish future research dimensions. At the same                     native architecture. IEEE Software, 33(3):42­52, 2016.
+time, our study summarizes the currently recognized pains
+and gains of microservices, and their maturity. Practition-             [2] Ju¨rgen Buder and Ulrike Creß. Manual or electronic? the role
+ers can hence exploit our findings as a starting point for                   of coding in qualitative data analysis. Educational Research,
+microservices experimentation or as a guideline for day-                     45(2):143­154, 2003.
+by-day work with microservices.
+                                                                        [3] Paolo Di Francesco, Patricia Lago, and Ivano Malavolta. Re-
+In the scope of our future work, we plan to extend our anal-                 search on architecting microservices: Trends, focus, and poten-
+ysis, by trying to identify which design principles for mi-                  tial for industrial adoption. In 2017 IEEE International Con-
+croservices stem from the industrial literature. We indeed                   ference on Software Architecture (ICSA), pages 21­30. IEEE
+plan to understand whether there already exist a number                      Computer Society, 2017.
+of design principles for microservices, intended as sound
+microservices design, development, and deployment deci-                 [4] Thomas Erl, Paulo Merson, and Roger Stoffers. Service-
+sions that lead to beneficial or more controllable microser-                 Oriented Architecture: Analysis and Design for Services and
+vice orchestrations.                                                         Microservices. Prentice Hall, 2017.
+
+   We also plan to devise a methodology for metering                    [5] Eric Evans. Domain-Driven Design: Tacking Complexity In
+"how much" each pain is actually paining a microservice-                     the Heart of Software. Addison-Wesley Longman Publishing
+based application, and how intense are its gains. Indeed,                    Co., Inc., 2003.
+even if the selected industrial studies recognise techni-
+cal/operational pains and gains of microservices, they do               [6] Dominic Farace and Joachim Scho¨pfel, editors. Grey literature
+not provide any quantitative information. This is mainly                     in library and information studies. K.G. Saur, 2010.
+because a concrete solution for measuring the intensity of
+each pain/gain in a given microservice-based application                [7] Thomas C. Fountain. Web service oriented architecture: "Smart
+is currently lacking (as pointed out by Zimmermann [27],                     operations" and IT strategy. In Liang-Jie Zhang, editor, ICWS,
+and by [S45] and [S6], for instance). Such a metering so-                    pages 481­486. CSREA Press, 2003.
+lution would permit tackling design decisions, by allowing
+to tune microservice-based architectures in order to max-               [8] Vahid Garousi, Michael Felderer, and Mika V. M¨antyl¨a. The
+imize desired gains and to minimize unacceptable pains.                      need for multivocal literature reviews in software engineering:
+                                                                             Complementing systematic literature reviews with grey litera-
+   It is finally worth noting that our study focused on elicit-              ture. In Proceedings of the 20th International Conference on
+ing the technical/operational pains and gains of microser-                   Evaluation and Assessment in Software Engineering, EASE
+vices. However, as highlighted by Jamshidi et al. [13],                      2016, pages 26:1­26:6. ACM, 2016.
+organisational issues are also part of current and future
+challenges of microservices, from both the industrial and               [9] Vahid Garousi, Michael Felderer, and Mika V. M¨antyl¨a. Guide-
+academic perspectives. This is why we plan to comple-                        lines for including the grey literature and conducting mul-
+ment this study with a follow-up study, where we plan to                     tivocal literature reviews in software engineering. CoRR,
+systematically analyse grey literature to elicit the organi-                 abs/1707.02553, 2017.
+sational benefits and drawbacks of microservices.
+                                                                       [10] Javad Ghofrani and Daniel Lu¨bke. Challenges of microser-
+   In this perspective, another (orthogonal) direction for                   vices architecture: A survey on the state of the practice. In
+our future work is the investigation and development of                      Nico Herzberg, Christoph Hochreiner, Oliver Kopp, and Jo¨rg
+a systematic approach for grey literature reviews. To the                    Lenhard, editors, Proceedings of the 10th Central European
+best of our knowledge, ours is one of the first systematic                   Workshop on Services and their Composition, Dresden, Ger-
+grey literature reviews in the scope of software engineering,                many, February 8-9, 2018, volume 2072 of CEUR Workshop
+and there is a need for a protocol allowing to conduct sys-                  Proceedings, pages 1­8. CEUR-WS.org, 2018.
+tematic grey literature reviews [8]. This also follows from
+the lessons we learned with our study (see Sect. 5.2), where           [11] Stefan Haselbo¨ck, Rainer Weinreich, and Georg Buchgeher. De-
+we observed that the combination of systematic literature                    cision models for microservices: Design areas, stakeholders,
+review protocols (such as that by Petersen et al. [19]) with                 use cases, and requirements. In Ant´onia Lopes and Rog´erio
+grey literature studies can be valuable to shed light on                     de Lemos, editors, Software Architecture, ECSA 2017, volume
+yet uncharted areas of software engineering research, es-                    10475 of Lecture Notes in Computer Science, pages 155­170.
+pecially when such areas are characterized by a massive                      Springer, 2017.
+industrial adoption.
+                                                                       [12] Sara Hassan and Rami Bahsoon. Microservices and their de-
+                                                                             sign trade-offs: A self-adaptive roadmap. In Jia Zhang, John A.
+                                                                             Miller, and Xiaofei Xu, editors, 2016 IEEE International Con-
+                                                                             ference on Services Computing (SCC), pages 813­818. IEEE
+                                                                             Computer Society, 2016.
+
+                                                                       [13] Pooyan Jamshidi, Claus Pahl, Nabor C. Mendonca, James
+                                                                             Lewis, and Stefan Tilkov. Microservices: The journey so far
+                                                                             and challenges ahead. IEEE Software, 35(3):24­35, 2018.
+
+                                                                       [14] Barbara Kitchenham and Stuart Charters. Guidelines for per-
+                                                                             forming systematic literature reviews in software engineering.
+                                                                             Technical Report EBSE-2007-01, School of Computer Science
+                                                                             and Mathematics, Keele University, 2007.
+
+                                                                       [15] Klaus Krippendorff. Content Analysis: An Introduction to Its
+                                                                             Methodology (second edition). Sage Publications, 2004.
+
+                                                                       [16] Michael Nygard. Release It!: Design and Deploy Production-
+                                                                             Ready Software. Pragmatic Bookshelf, 2007.
+
+                                                                       [17] Claus Pahl, Antonio Brogi, Jacopo Soldani, and Pooyan
+                                                                             Jamshidi. Cloud container technologies: A state-of-the-art re-
+                                                                             view. IEEE Transactions on Cloud Computing, 2017.
+
+                                                                       [18] Claus Pahl and Pooyan Jamshidi. Microservices: A systematic
+                                                                             mapping study. In Proceedings of the 6th International Con-
+                                                                             ference on Cloud Computing and Services Science - Volume 1
+                                                                             and 2, CLOSER 2016, pages 137­146. SCITEPRESS, 2016.
+
+                                                                       [19] Kai Petersen, Robert Feldt, Shahid Mujtaba, and Michael
+                                                                             Mattsson. Systematic mapping studies in software engineering.
+
+                                                                 19
+      In Proceedings of the 12th International Conference on Eval-     [S11] John E. Dunn. What are microservices? ComputerWorldUK,
+      uation and Assessment in Software Engineering, pages 68­77.
+      BCS Learning & Development Ltd., 2008.                               2016.  https://www.computerworlduk.com/applications/
+[20] Alan Sill. The design and architecture of microservices. IEEE
+      Cloud Computing, 3(5):76­80, 2016.                                   microservices-explained-is-this-just-tweaked-soa-or-
+[21] Maximilian Stempfhuber, Philipp Schaer, and Wei Shen. En-
+      hancing visibility: Integrating grey literature in the sowiport      something-much-bigger-3638372
+      information cycle. In Ninth International Conference on Grey
+      Literature: Grey Foundations in Information Landscape, num-      [S12] Josh Evans. Mastering chaos - A Netflix guide to microservices.
+      ber 9 in GL-conference series, 2008.
+[22] Davide Taibi and Valentina Lenarduzzi. On the definition of           QCon, InfoQ, 2016. https://www.youtube.com/watch?v=
+      microservice bad smells. IEEE Software, 35(3):56­62, 2018.
+[23] Davide Taibi, Valentina Lenarduzzi, and Claus Pahl. Architec-         CZ3wIuvmHeM
+      tural Patterns for Microservices: A systematic mapping study.
+      In Proceedings of the 8th International Conference on Cloud      [S13] Martin Fowler. Microservices Trade-Offs. MartinFowler.com,
+      Computing and Services Science, CLOSER 2018, pages 221­
+      232. SCITEPRESS, 2018.                                               2015. https://martinfowler.com/articles/microservice-
+[24] Johannes Th¨ones. Microservices. IEEE Software, 32(1):113­
+      116, 2015.                                                           trade-offs.html
+[25] Hulya Vural, Murat Koyuncu, and Sinem Guney. A systematic
+      literature review on microservices. In Osvaldo Gervasi, Beni-    [S14] Bernard Golden. 5 Fundamentals to a Succesful Microser-
+      amino Murgante, Sanjay Misra, Giuseppe Borruso, Carmelo M.
+      Torre, Ana Maria A.C. Rocha, David Taniar, Bernady O. Ap-            vices Design. TechBeacon, 2016. https://techbeacon.com/
+      duhan, Elena Stankova, and Alfredo Cuzzocrea, editors, Com-
+      putational Science and Its Applications ­ ICCSA 2017, volume         5-fundamentals-successful-microservice-design
+      10409 of Lecture Notes in Computer Science, pages 203­217.
+      Springer International Publishing, 2017.                         [S15] Andreas Grabner. Locating Common Micro Service Perfor-
+[26] Claes Wohlin, Per Runeson, Martin H¨ost, Magnus C. Ohlsson,
+      Bj¨oorn Regnell, and Anders Wessl´en. Experimentation in soft-       mance Anti-Patterns. InfoQ, 2016. https://www.infoq.com/
+      ware engineering: an introduction. Kluwer Academic Publish-
+      ers, 2000.                                                           articles/Diagnose-Microservice-Performance-Anti-Patterns
+[27] Olaf Zimmermann. Microservices tenets. Computer Science -
+      Research and Development, 32(3):301­310, 2017.                   [S16] Philipp Hauer. Microservices in a Nutshell: Pros and
+
+                                                                           Cons. Philipphauer.de, 2015. https://blog.philipphauer.de/
+
+                                                                           microservices-nutshell-pros-cons
+
+                                                                       [S17] Pete Heard. What are Microservices? [Costs and Bene-
+
+                                                                           fits]. LogicRoom.co, 2017. https://www.logicroom.co/what
+
+                                                                           -are-microservices-costs-and-benefits
+
+                                                                       [S18] Troy Hunt. Your API Versioning is Wrong. DZone, 2014.
+
+                                                                           https://dzone.com/articles/your-api-versioning-wrong
+
+                                                                       [S19] Kasun Indrasiri. Microservices in Practice: From Architec-
+                     Preprint
+                                                                           ture to Deployment. DZone, 2016. https://dzone.com/
+
+                                                                           articles/microservices-in-practice-1
+
+                                                                       [S20] Siva Kumar. Advantages and Disadvantages of Microservices.
+
+                                                                           Linkedin Pulse, 2017. https://www.linkedin.com/pulse/
+
+                                                                           advantages-disadvantages-microservices-siva-kumar
+
+                                                                       [S21] Graham Lea. Microservices Security: All the Ques-
+
+                                                                           tions You Should Be Asking. Grahamlea.com, 2015.
+
+                                                                           http://www.grahamlea.com/2015/07/microservices-security
+
+                                                                           -questions
+
+                                                                       [S22] James Lewis, Martin Fowler. Microservices: A Definition
+
+                                                                           of this New Architectural Term. MartinFowler.com, 2014.
+
+Appendix A. Selected Industrial Studies                                    https://martinfowler.com/articles/microservices.html
+
+                                                                       [S23] Joshua Long. The Power, Patterns and Pains of Microser-
+
+[S1] Vijay Alagarasan. Seven Microservices Anti-Patterns. InfoQ,           vices. DZone, 2015. https://dzone.com/articles/the-power-
+
+2015. https://www.infoq.com/articles/seven-uservices-                      patterns-and-pains-of-microservices
+
+                                                                       [S24] Rory MacDonald. Microservices: Pros & Cons of Using Mi-
+
+antipatterns                                                               croservices On A Project. MadeTech.com, 2015. https://www.
+
+[S2] Abel Avram. The Strengths and Weaknesses of Microser-                 madetech.com/blog/microservices-pros-and-cons
+
+vices. InfoQ, 2014. https://www.infoq.com/news/2014/05/                [S25] Scott Matteson. 10 Tips for Securing Microservice Architec-
+
+microservices                                                              tures. TechRepublic, 2017. https://www.techrepublic.com/
+
+[S3] Vineet Badola.    Microservices Architecture: Ad-                     article/10-tips-for-securing-microservice-architecture
+
+vantages and Drawbacks.           CloudAcademy's blog,                 [S26] Tony Mauro.      Adopting Microservices at Netflix:
+
+2015.  https://cloudacademy.com/blog/microservices-                        Lessons for Architectural Design. Nginx's blog, 2015.
+
+architecture-challenge-advantage-drawback                                  https://www.nginx.com/blog/microservices-at-netflix-
+
+[S4] Scott Carey. The Pros and Cons of Microservices. Com-                 architectural-best-practices
+
+puterWorldUK, 2016. https://www.computerworlduk.com/                   [S27] Micro Technologies. Microservices. MicroDocs, 2017.
+
+applications/pros-cons-of-microservices-lessons-learned                    https://micro.mu/docs/microservices.html
+
+-by-comparethemarketcom-3642668/                                       [S28] Per Minborg, Emil Forslund. Three Microservice Patterns to
+
+[S5] Chakray. What Are Microservices? Definition, Characteris-             Tear Down Your Monoliths. JavaOne, 2017. https://www.
+
+tics, Advantages and Disadvantages. Chakray's blog, 2017.                  youtube.com/watch?v=yxZm0Fhn9Tk
+
+https://www.chakray.com/en/what-are-microservices-defin                [S29] John Mueller.       Performance Issue Considerations
+
+ition-characteristics-and-advantages-and-disadvantages                     for Microservices APIs.        Smartbear's blog, 2015.
+
+[S6] Clifton Cunnigham, Owen Garret, Matteo Col-                           https://blog.smartbear.com/software-quality/performance
+
+lina, Mark Little.     Pros/cons of highly scalable                        -issue-considerations-for-microservices-apis
+
+micorservice systems.    Microservices Day, 2017.                      [S30] Sam Newman. The Principles of Microservices. O'Reilly, 2016.
+
+https://www.youtube.com/watch?v=w 0z sKkul0                                https://www.safaribooksonline.com/videos/the-principles
+
+[S7] David Dawson. Testing Microservices: Pain or Opportunity?.            -of/9781491935811
+
+Microservices Manchester, 2016. https://www.youtube.com/               [S31] Ekaterina Novoseltseva. Benefits of Microservices Architecture
+
+watch?v=AjQlyzoFrsM                                                        Implementation. DZone, 2017. https://dzone.com/articles/
+
+[S8] Dev2. The pros and cons of microservices. Dev2 Technologies,          benefits-amp-examples-of-microservices-architectur
+
+2015. https://www.youtube.com/watch?v=li2BSeNbo8c                      [S32] Arvind Patil. Microservices Architectural Style. Valtech's
+
+[S9] Rohit Dhall. Performance Patterns in Microservices-based              blog, 2017. https://www.valtech.com/blog/microservices
+
+Integration. DZone, 2016. https://dzone.com/articles/                      -architectural-style
+
+performance-patterns-in-microservices-based- integr-1                  [S33] Ranga Rajagopalan.     Rethinking Application Secu-
+
+[S10] Niels Dommerholt. Micro Services: Versioning Strategies.             rity with Microservices Architectures.         DarkRead-
+
+Niels.nu, 2016. http://niels.nu/blog/2016/microservice-                    ing.com, 2016. https://www.darkreading.com/endpoint/
+
+versioning.html
+
+                                                                       20
+rethinking-application-security-with-microservices-                   FacileLogin's blog, 2016. https://medium.facilelogin.com/
+
+architectures/a/d-id/1325155                                          securing-microservices-with-oauth-2-0-jwt-and-xacml-
+
+[S34] Henrik Rexed.      Testing & Monitoring the Per-                d03770a9a838
+
+formances of Microservices.   NeoTys' blog, 2015.                 [S44] Sudhir Tonse. Effective IPC in the Cloud: The pros and
+
+https://www.neotys.com/blog/testing-monitoring-the-                   cons of microservices architecture. AWS re:Invent, 2014.
+
+performance-of-microservices                                          https://www.youtube.com/watch?v=CriDUYtfrjs
+
+[S35] Chris Richardson. API Gateway: Backend for Front-end.       [S45] Tam´as T¨or¨ok. Microservice Architecture: All the Best
+
+Microservices.io, 2014. http://microservices.io/patterns/             Practices You Need to Know. CodingSans' blog, 2017.
+
+apigateway.html.                                                      https://codingsans.com/blog/microservice-architecture-
+
+[S36] Chris Richardson. Database per service. Microser-               best-practices
+
+vices.io, 2014. http://microservices.io/patterns/data/            [S46] Marco Troisi. 8 Best Practices for Microservices Security. Tech-
+
+database-per-service.html.                                            Beacon, 2017. https://techbeacon.com/8-best-practices-
+
+[S37] Chris Richardson.  Microservice Architecture.  Mi-              microservices-security.
+
+croservices.io, 2014. http://microservices.io/patterns/           [S47] Manisha Verma. Microservices: Benefits and Challenges.
+
+microservices.html                                                    DZone, 2017. https://dzone.com/articles/microservices-
+
+[S38] Chris Richardson, Floyd Smith. Microservices - From Design      benefits-and-challenges
+
+To Deployment. Nginx, 2016. https://www.nginx.com/blog            [S48] Mike Wasson, Stuart Celarier. Microservices Architectural
+
+/microservices-from-design-to-deployment-ebook-nginx                  Style. Microsoft, 2017. https://docs.microsoft.com/
+
+[S39] Tammel Saleh. Microservices anti-patterns. Nordic APIs          en-us/azure/architecture/guide/architecture-styles/
+
+Platform Summit, 2014. https://www.youtube.com/watch?v=               microservices
+
+I56HzTKvZKc                                                       [S49] Maira Wenzel, Cesar De La Torre, Luke Latham, Bill Wagner,
+
+[S40] Boris Scholl. Getting Started with Microservices, Part          Alma Jenks, Mike Jones. Designing a microservice-oriented
+
+1: Advantages and Considerations. Oracle's Blog, 2017.                application. Microsoft, 2017. https://docs.microsoft.com/
+
+https://blogs.oracle.com/developers/getting-started-                  en-us/dotnet/standard/microservices-architecture/multi-
+
+with-microservices-part-one                                           container-microservice-net-applications/microservice-
+                         Preprint
+[S41] Cassandra Shum. Pros/cons of microservices. Microservices       application-design
+
+Day, 2017. https://www.youtube.com/watch?v=Fso7pTK7yT4            [S50] Benjamin Wootton. Microservices: Not a Free Lunch. High-
+
+[S42] Cassandra Shum, Rachel Laycok. Microservices: Pros              Scalability, 2014. http://highscalability.com/blog/2014/4/
+
+and Cons. O'Reilly Software Architecture Conference, 2017.            8/microservices-not-a-free-lunch.html
+
+https://www.safaribooksonline.com/library/view/oreilly-           [S51] Krzysztof Ziomek.      Microservices: Pain and Gain.
+
+software-architecture/9781491976142/video288556.html                  Linkedin Pulse, 2016. https://www.linkedin.com/pulse/
+
+[S43] Prabath Siriwadena. Securing Microservices (Part I).            microservices-pain-gain-krzysztof-ziomek
+
+                                                                  21
+

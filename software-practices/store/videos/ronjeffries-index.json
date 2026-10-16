@@ -1,0 +1,152 @@
+{
+  "id": "ronjeffries-index",
+  "title": "Story Points Revisited",
+  "channel": "ronjeffries.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://ronjeffries.com/articles/019-01ff/story-points/Index.html",
+  "summary": "Ron Jeffries regrets story points: they were renamed ideal days, are misused for date prediction and team comparison, invite pressure that erodes quality, and are better replaced by slicing stories small and releasing often.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/story-points-began-renamed-ideal-days",
+      "stance": "asserts",
+      "quote": "we really only used the points to decide how much work to take into an iteration anyway",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Historical account from a participant.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/using-story-points-predict-delivery-dates",
+      "stance": "asserts",
+      "quote": "I think comparing teams on quality of estimates or velocity is harmful.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Velocity is team-relative by construction; Goodhart effects on normalised points are widely reported.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Relative (story-point style) estimation is found no more accurate than absolute time estimation and prone to underestimating large items, supporting weak date prediction; comparing teams by velocity is not examined.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L4210-L4227",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/estimates-become-deadlines-drive-overtime-destroys",
+      "stance": "asserts",
+      "quote": "Because estimates are at least implicated in the application of undue pressure, I'd prefer to avoid them.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/tracking-estimates-against-actuals-shifts-attention",
+      "stance": "asserts",
+      "quote": "I think tracking how actuals compare with estimates is at best wasteful",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "The opposite of Kaplan-Moss's calibration advice; no outcome data either way.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "A company that paid bonuses for estimate accuracy saw accuracy improve while productivity fell because managers padded estimates and absorbed the buffer; accountability raised accuracy mainly by adjusting work content and quality to fit the estimate.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L1552-L1566",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Review finds accuracy evaluation improves software estimation accuracy but partly via self-fulfilling prophecy, and that strong accountability pressure or reward/punishment should be avoided because evaluation pressure degrades difficult judgements.",
+          "source": "software-practices/sources/jorgensen2004-expert-estimation.txt#L510-L526",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/code-unhealthy-files-has-many-times",
+      "stance": "asserts",
+      "quote": "the team tries to go faster, and wind up skimping on code quality and on tests. They soon begin shipping more defects",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/slicing-stories-small-enough-finish-about",
+      "stance": "asserts",
+      "quote": "slice stories down until they just need a single acceptance test",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Small batches improve flow in lean research; whether slicing fully replaces estimation is unproven.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Small software tasks were predicted without bias in the reviewed data while larger ones overran ~20%, which supports slicing for predictability; flow and removing the need for estimates are not examined.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L669-L676",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/short-fixed-budget-increments-let-business",
+      "stance": "asserts",
+      "quote": "the important thing in Real Agile is to pick the next few things to do, and do them promptly",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/frequent-small-releases-deliver-more-value",
+      "stance": "asserts",
+      "quote": "we do best to provide small amounts of value frequently, not wait for Big Bang releases that seem often to recede indefinitely into the future",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "DORA and lean batch-size evidence favour small frequent releases.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "In a two-project comparison the agile team that delivered in-progress software more often demonstrated business value sooner and saw a sharp rise in customer satisfaction, and a survey found agile companies prefer more releases; small, uncontrolled studies.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L1081-L1086",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Deployment frequency is one of the four metrics whose high-performer cluster is twice as likely to meet organisational goals, which supports more frequent releases delivering more value; release size and receding dates are not measured as such.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L80-L86",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

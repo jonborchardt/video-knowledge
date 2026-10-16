@@ -1,0 +1,131 @@
+{
+  "id": "igda-why-crunch-mode-doesnt-work-six-lessons-2005",
+  "title": "Why Crunch Mode Doesn’t Work: Six Lessons [2005] – IGDA",
+  "channel": "igda.org",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://www.igda.org/resources-archive/why-crunch-mode-doesnt-work-six-lessons-2005/",
+  "summary": "2005 IGDA essay arguing from a century of industrial and sleep research that long-term crunch lowers output, raises error rates and makes products ship later and worse.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/sustained-crunch-lowers-productivity-employee-happiness",
+      "stance": "asserts",
+      "quote": "When used long-term, Crunch Mode slows development and creates more bugs when compared with 40-hour weeks.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/sleep-deprivation-impairs-cognition-like-alcohol",
+      "stance": "asserts",
+      "quote": "subjects who slept four to six hours a night for fourteen consecutive nights showed significant deficits in cognitive performance",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/fatigue-raises-rate-catastrophic-errors-overworked",
+      "stance": "asserts",
+      "quote": "Error rates climb with hours worked and especially with loss of sleep. Eventually the odds catch up with you, and catastrophe occurs.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/knowledge-worker-productivity-cannot-measured-reliably",
+      "stance": "asserts",
+      "quote": "Productivity is hard to quantify for knowledge workers.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Lines of code and function points are widely criticised as proxies and no accepted output measure exists for programmers.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "The review shows how LOC-based productivity misleads: an apparent 337% XP productivity gain came from delivering 3.5 times more lines of code without more functionality, and other comparisons swung from +46% to -44%; this shows measurement is unreliable in practice, not that it is impossible.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L1106-L1111",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "DORA states productivity cannot be captured by simple metrics such as lines of code, story points or bugs closed because targeting them causes unintended consequences, and falls back on self-reported productivity; it does not claim measurement is impossible.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1427-L1435",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "The paper is itself the munitions analogy: it has a clean output measure only because piece-rate shell counts exist, and it says the 48 h threshold found 'for other workers may be more or less', i.e. transfer to other work is unverified; it does not address whether knowledge work can be measured.",
+          "source": "software-practices/sources/pencavel2014-working-hours.txt#L956-L962",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Among 23 candidate productivity metrics rated by 379 developers none stood out (overall mean 3.14 of 5, best 3.88) and developers differed on which helped, suggesting no single reliable measure; the survey says nothing about hours-versus-output analogies.",
+          "source": "software-practices/sources/meyer2014-perceptions-productivity.txt#L271-L284",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.2,
+          "note": "States, citing a systematic mapping study, that there is no consensus on how to measure productivity in software engineering; lack of consensus is weaker than 'cannot be measured' and the rest of the claim is not addressed.",
+          "source": "software-practices/sources/tornhill2022-code-red.txt#L138-L139",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/complex-mental-work-degrades-faster-under",
+      "stance": "asserts",
+      "quote": "In contrast to complex mental performance, simple psychomotor performance, physical strength and endurance are unaffected by sleep deprivation.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Sleep research shows higher-order cognition is most sensitive to sleep loss, but the inference that programmers lose more total output than factory workers is unmeasured.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "unknown",
+          "note": "Physical work also shows diminishing returns past 48 h/week, and the author states that where fatigue sets in 'is likely to vary across types of work and across workers' without comparing mental to physical work, so the source cannot say whether mental work degrades faster.",
+          "source": "software-practices/sources/pencavel2014-working-hours.txt#L1014-L1020",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/managers-impose-crunch-signal-effort-rather",
+      "stance": "asserts",
+      "quote": "Managers decide to crunch because they want to be able to tell their bosses",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Motivational attribution.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "Asks why employers kept long hours when shorter hours gave the same output and offers Hicks's answer that it 'never entered the heads of most employers' that hours could be cut without losing output; consistent with crunch not working, but attributes it to ignorance rather than effort signalling.",
+          "source": "software-practices/sources/pencavel2014-working-hours.txt#L1029-L1040",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

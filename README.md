@@ -20,7 +20,8 @@ Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checko
   store/       written by the CLI; commit it (store/transcripts/ is a gitignored cache)
   report.json  written by `npm run report`; commit it (the site is built from it)
   lean.json    written by `npm run record`: claim id → pro | pro-hype | calibrating | skeptic | neutral
-  site.json    optional: recap groups, bottom line ({hypeWrong}/{hypeTotal} are filled in), study display names
+  site.json    optional: hero title and lede, recap groups, bottom line ({hypeWrong}/{hypeTotal} are filled in), study display names
+  glyph.svg    optional: line-art icon (44x44 viewBox, stroke currentColor) shown on the home card
   changed-minds.json  optional notes from the changed-minds pass (step 6); nothing reads it
   work/        scratch for agent batches (gitignored)
 ```

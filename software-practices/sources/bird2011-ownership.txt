@@ -1,0 +1,775 @@
+                        Don't Touch My Code!
+Examining the Effects of Ownership on Software Quality
+
+     Christian Bird     Nachiappan Nagappan                                              Brendan Murphy
+
+    Microsoft Research       Microsoft Research                                            Microsoft Research
+
+cbird@microsoft.com     nachin@microsoft.com                                        bmurphy@microsoft.com
+
+   Harald Gall                                                                        Premkumar Devanbu
+
+University of Zurich                                                                University of California, Davis
+
+gall@ifi.uzh.ch                                                                     ptdevanbu@ucdavis.edu
+
+ABSTRACT                                                                            our knowledge, the effect of ownership has not been stud-
+                                                                                    ied in depth in commercial contexts. Based on our observa-
+Ownership is a key aspect of large-scale software develop-                          tions and discussions with project managers, we suspect that
+ment. We examine the relationship between different own-                            when there is no clear point of contact and the contributions
+ership measures and software failures in two large software                         to a software component are spread across many developers,
+projects: Windows Vista and Windows 7. We find that                                 there is an increased chance of communication breakdowns,
+in all cases, measures of ownership such as the number of                           misaligned goals, inconsistent interfaces and semantics, all
+low-expertise developers, and the proportion of ownership                           leading to lower quality.
+for the top owner have a relationship with both pre-release
+faults and post-release failures. We also empirically iden-                            Interestingly, unlike some aspects of software which are
+tify reasons that low-expertise developers make changes to                          known to be related to defects such as dependency com-
+components and show that the removal of low-expertise con-                          plexity, or size, ownership is something that can be delib-
+tributions dramatically decreases the performance of contri-                        erately changed by modifying processes and policies. Thus,
+bution based defect prediction. Finally we provide recom-                           the answer to the question: "How much does ownership af-
+mendations for source code change policies and utilization                          fect quality?" is important as it is actionable. Managers and
+of resources such as code inspections based on our results.                         team leads can make better decisions about how to govern
+                                                                                    a project by knowing the answer. If ownership has a big
+Categories and Subject Descriptors                                                  effect, then policies to enforce strong code ownership can be
+                                                                                    put into place; managers can also watch out for code which
+D.2.8 [Software Engineering]: Metrics--Process metrics                              is contributed by developers who have inadequate relevant
+                                                                                    prior experience. If ownership has little effect, then the nor-
+General Terms                                                                       mal bottlenecks associated with having one person in charge
+                                                                                    of each component can be removed, and available talent re-
+Measurement, Management, Human Factors                                              assigned at will.
+
+Keywords                                                                               We have observed that many industrial projects encour-
+                                                                                    age high levels of code ownership. In this paper, we examine
+Empirical Software Engineering, Ownership, Expertise, Qual-                         ownership and software quality. We make the following con-
+ity                                                                                 tributions in this paper:
+
+1. INTRODUCTION                                                                        1. We define and validate measures of ownership that are
+                                                                                           related to software quality.
+   Many recent studies [6, 9, 26, 29] have shown that hu-
+man factors play a significant role in the quality of software                         2. We present an in depth quantitative study of the effect
+components. Ownership is a general term used to describe                                   of these measures of ownership on pre-release and post-
+whether one person has responsibility for a software com-                                  release defects for multiple large software projects.
+ponent, or if there is no one clearly responsible developer.
+Within Microsoft, we have found that when more people                                  3. We identify reasons that components have many low-
+work on a binary, it has more failures [5, 26]. However, to                                expertise developers contributing to them.
+
+Permission to make digital or hard copies of all or part of this work for              4. We propose recommendations for dealing with the ef-
+personal or classroom use is granted without fee provided that copies are                  fects of low ownership.
+not made or distributed for profit or commercial advantage and that copies
+bear this notice and the full citation on the first page. To copy otherwise, to     2. THEORY & RELATED WORK
+republish, to post on servers or to redistribute to lists, requires prior specific
+permission and/or a fee.                                                               A number of prior studies have examined the effect of
+ESEC/FSE'11, September 5­9, 2011, Szeged, Hungary.                                  developer contribution behavior on software quality.
+Copyright 2011 ACM 978-1-4503-0443-6/11/09 ...$10.00.
+                                                                                       Rahman & Devanbu [30] examined the effects of owner-
+                                                                                    ship & experience on quality in several open-source projects,
+                                                                                    using a fine-grained approach based on fix-inducing frag-
+                                                                                    ments of code, and report findings similar to those of our
+paper. However, they operationalize ownership differently,        experience of a developer history (by counting prior changes)
+and ownership policies and practices in OSS and commercial        and they were significant in prediction.
+software are quite different. Thus the similarity of effect is
+striking. Furthermore, Rahman & Devanbu do not study the             In a study of offshoring and succession in software devel-
+relationship of minor contribution on software dependencies;      opment [21], Mockus evaluated a number of succession mea-
+nor do they consider social network measures.                     sures with the goal of being able to automatically identify
+                                                                  mentors for developers working on a per-component basis.
+   Weyuker et al. [35], examined the effect of including team     A succession measure based on ownership was able to accu-
+size in prediction models. They use a count of the develop-       rately pinpoint the most likely method and was used in a
+ers that worked on each component, but do not examine the         large scale study evaluating the factors affecting productiv-
+proportion of work, which we account for. They found a neg-       ity in project succession and offshoring.
+ligible increase in failure prediction accuracy when adding
+team size to their models. We differ in that we examine              Research in other domains, such as manufacturing, has
+the proportion of contributions made by each developer to         found that when a worker performs a task repeatedly, the
+a component. Further, we are not interested in prediction,        labor requirements to complete subsequent work in the same
+but rather determining if there is a statistically significant    task decreases and the quality increases [11]. Software de-
+relationship between ownership and failures.                      velopment differs from these domains in that workers do not
+                                                                  perform the exact same task repeatedly. Rather, software
+   Similarly, Meneely and Williams examined the relation-         development represents a form of constant problem solving
+ship of the number of developers working on parts of the          in which tasks are rarely exactly the same, but may be sim-
+Linux kernel with security vulnerabilities [19]. They found       ilar. Nonetheless, developers gain project and component
+that when more than nine developers contribute to a source        specific knowledge as they repeatedly perform tasks on the
+file, it is sixteen times more likely to include a security vul-  same systems [32]. Banker et al. found that increased ex-
+nerability.                                                       perience increases a developer's knowledge of the architec-
+                                                                  tural domain of the system [1]. Repeatedly using a particu-
+   New methods such as Extreme Programming (XP) [4] pro-          lar API, or working on a particular system creates episodic
+fess collective code ownership but there has been little em-      knowledge. Robillard indicates that the lack of such knowl-
+pirical evidence or backing of this data on reasonably ma-        edge negatively affects the quality of software [31]. Indeed,
+ture/complex or large systems. Our study is the first to em-      Basili and Caldiera present an approach for improving qual-
+pirically quantify the effect code owners (and low-expertise      ity in software development through learning and experience
+contributors) have on the overall code quality.                   by establishing "experience factories" [2]. They claim that
+                                                                  by reusing knowledge, products, and experience, companies
+   Domain, application, and even component-specific knowl-        can maintain high quality levels because developers do not
+edge are important aids for helping developers to maintin         need to constantly acquire new knowledge and expertise as
+high quality software. Boh et al. found that project specific     they work on different projects. Drawing on these ideas,
+expertise has a much larger impact on the time required to        we develop ownership measures which consider the number
+perform development tasks than high levels of diverse expe-       of times that a developer works on a particular component,
+rience in unrelated projects [7]. In a qualitative study of 17    with the idea that each exposure is a learning experience
+commercial software projects, Curtis et al. [10] found that       and increases the developer's knowledge and abilities.
+"the thin spread of application domain knowledge" was one
+of the top three salient problems. They also found that one          there is a knowledge-sharing factor at play as well. The
+common trait among engineers categorized as "exceptional"         set of developers that contribute to a component implicitly
+was that they had deep domain knowledge, and understood           form a team that has shared knowledge regarding the seman-
+how the system design would generate the system behavior          tics and design of the component. Coordination is a known
+customers expected, even under exceptional circumstances.         problem in software development [16]. In fact, another of
+Such knowledge is not easily obtained. One systems engi-          the top three problems identified in Curtis' study [10] was
+neer explained, "Someone had to spend a hundred million to        "communication and coordination breakdowns." Working
+put that knowledge in my head. It didn't come free."              in such a group always creates a need for sharing and in-
+                                                                  tegrating knowledge across all members [8]. Cataldo et al.
+   The question naturally arises, how can we determine who        showed that communication breakdowns delay tasks [9]. If
+has such domain knowledge? Fortunately, there is a wealth         a member of this team devotes little attention to the team
+of literature that uses the prior development activity on a       and/or the component, they may not acquire the knowledge
+component as a proxy for expertise and knowledge with re-         required to make changes to the component without error.
+spect to the component. As examples Expertise Browser             We attempt to operationalize these team members in this
+from Mockus et al. [22] and Expertise Recommender from            paper and examine their effect on quality.
+McDonald and Ackerman [18] both use measures of the
+amount of work that a developer has performed on a soft-             If ownership of a particular component in a system (whether
+ware component to recommend component experts. Fritz              it be a file, class, module, plugin, or subsystem) is a valid
+et al. found that the ability of a developer to answer ques-      proxy for expertise, then what is the effect of having most
+tions about a piece of code in a system was strongly deter-       changes made by those with little expertise? Is it better
+mined by whether the developer had authored some of the           to have one clear owner of a software component? We op-
+code, and how much time was spent authoring it [15].              erationalize ownership in two key ways here and formally
+                                                                  define our measures in section 3. One measure of ownership
+   Mockus and Weiss used properties of an individual change       is how much of the development activity for a component
+to predict the probability of that change causing a fail-         comes from one developer. If one developer makes 80% of
+ure [23]. They found that changes made by developers that         the changes to a component, then we say that the compo-
+were more experienced with a piece of code were less likely to    nent has high ownership. The other way that we measure
+induce failure. Three of their fourteen measures capture the
+                · F423-$)%')!"+%$)*%+($"34(%$&)G!-./0H)
+                · F423-$)%')!.D%$)*%+($"34(%$&)G!12/0H)
+                · ;%(./)F423-$)%')*%+($"34(%$&)G3/314H)
+                · I$%5%$("%+)%')J6+-$&7"5)'%$)(7-)#%+($"34(%$)(7.()2.K-&)(7-)2%&()#%22"(&)G/5.6078-9H)
+
+                                                                                                                                                )
+
+Figure 1: Graph of the pr!o"#p$o%&r'(t')i'o*n%+,o-f'.c/'o,%m.,m.%i0"t.s1't.o/'2.a3b3oc"04a'0m.p'+.5.d2l.l3,b67y88'd59e'7v&e:l&o8.p,e&r%4s'7d$%u"1r#i'n;"g40+t'7h&e:&V8.i,s3t&a10d'2e9v28&e6l'opment cycle, showing the
+
+four measures of oLw"?n4e$-r)shAi)p&7u%s6ed&) i(n7-t)h5is$%p5a%p$(e"%r+. ) %') #%22"(&) '%$) -.#7) %') (7-) ,->-/%5-$&) (7.() #%+($"34(-,) (%)
+
+motvahwreaeelnonacpeyolrelsmrnhmsopipnaao-rkneeiiesxnnwpgbteoyfraretkswsd#-%a,ihn%e+4'wbc)ta2g?$(ohoe"v"7++2crrao-i?-mknonn)")-(#i(gmg&ni$%7)na&pe(2g-l)%si.o2)nc)2,wod(tg.o7-no"l,m(->o&l--h)at)3wp)/Goh.%"/+o"-ncw(5e+).&noe/2)&-$Ecmre)C.m-so(n:&"7h)+pm+t)(a;.(i).o,)8np7+p#%n94)y.CIo6Re&f#)nSn%=&/l)-)m)%e'to#M):,n4(w)%"a7)$t&t2;-)-n(2he7.a)2y#xe=--n)%n)p""((d+d(2$&e%")etH#,2r5:wvh&)t-)))e"ei'#e#(Ls%lr%&$"oe+$-)el+G)pa....(adb&$/e(3/"")Crre3%e+/-e=s-l4#?).(%)(7&%"2+(-$)?,$R5)--S:-,)$)+6#://)%?))-.";2$+$7---2·")T&-.))"$)(/Ccnb)"(&3h2%eeHo:$an()...)ntnt;,$/r.C)6tg-a%)r)e7I-'cPis)n./ebQ&>,fd--NWur)>)).o--#tb)m+%i+o(an%?2(rc-d"(d+k.2-oe-/­+)w"v-t%()&$eo-'s&=)l+,))NoA$2a?Aa%p"O+.4esc),c-?pr#oo--7s%em)$n/2/Ccc&-t))iap&2rR(fi&n7ioAc)b".((n9a7&u(ce)):l.t)22son+)oomLt..)r8",,b>ip9s---eto))))oatnreacanoctmesodapfnttiwoldeaadsrocebofitmncwoapamrroye--.
+
+   We expect that having one clear "owner" for a co<m&p0o%-"2'  ;+8$&'pchoannegnets  is someone who has  made                                   commits/software
+nent will lead to fewer failures and that when man!yUFnJoVn)-                        to the component.
+                                                                8)
+
+experts are making changes, indicating that owner!sh1iWpJVi)s   A@·) Proportion of Ownership ­ The proportion of own-
+
+spread across many contributors, the component will have            ership (or simply ownership) of a contributor for a
+
+more failures.                                                      particular component is the ratio of number of com-
+                                                                    mits that the contributor has made relative to the to-
+                !"#$%&%'()*%+'",-+("./)
+
+3. TERMINOLOGY AND METRICS                                          tal number of commits for that component. Thus, if
+                                                                    Cindy has made 20 commits to ie9.dll and there are
+
+We adopt Basili's goal question metric approach [3] to              a total of 100 commits to ie9.dll then Cindy has an
+
+frame our study of ownership. Our goal is to understand             ownership of 20%.
+
+the relationship between ownership and software quality. We
+
+also hope to gain an understanding of how this relationship     · Minor Contributor ­ A developer who has made
+
+varies with the development process in use. Achievement of          changes to a component, but whose ownership is below
+
+this goal can lead to more informed development decisions           5% is considered a minor contributor to that compo-
+
+or possibly process policy changes resulting in software with       nent. This threshold was chosen based on examination
+fewer defects.                                                      of distributions of ownership1. We refer to a commit
+
+In order to reach this goal, we ask a number of specific            from a minor contributor as a minor contribution.
+
+questions:                                                      · Major Contributor ­ A developer who has made
+                                                                   changes to a component and whose ownership is at or
+   1. Are higher levels of ownership associated with less de-      above 5% is a major contributor to the component and
+       fects?
+
+2. Is there a negative effect when a software entity is de-         a commit from such a developer is a major contribu-
+   veloped by many people with low ownership?                       tion.
+
+   3. Are these effects related to the development process         Note that we examine the number of changes to a compo-
+       used?                                                    nent made by a developer rather than the actual number of
+                                                                lines modified. Within Windows, each change corresponds
+   In order to answer these questions, we propose a number of   to one fix or enhancement and individual changes are quite
+ownership metrics and use them to evaluate our hypotheses       small, usually on the order of tens of lines. We use number
+of ownership. We begin by defining some important terms         of changes because each change represents an "exposure" of
+and metrics used throughout the rest of this paper:             the developer to the code and because the previous measure
+
+· Software Component ­ This is a unit of develop-               1 A sensitivity analysis with threshold values ranging from
+   ment that has some core functionality. Defects can           2% to 10% yielded similar results.
+Ownership of A.dll by Developers                               Ownership of B.dll by Developers
+
+(a) A.dll                                                      (b) B.dll
+
+           Figure 2: Ownership graphs for two binaries in Windows
+
+of experience used by Mockus and Weiss also used the num-      Hypothesis 1 - Software components with many minor con-
+ber of changes. However, prior literature [14] has shown high  tributors will have more failures than software components
+correlation (above 0.9) between number of changes and num-     that have fewer.
+ber of lines contributed and we have found similar results in
+Windows, indicating that our results would not change sig-        We also look at the proportion of ownership for the highest
+nificantly. With these terms defined, we now introduce our     contributing developer for each component (Ownership). If
+metrics.                                                       Ownership is high, that indicates that there is one devel-
+                                                               oper who "owns" the component and has a high level of ex-
+    · Minor ­ number of minor contributors                     pertise. This person can also act as a single point of contact
+                                                               for others who need to use the component, need changes to
+    · Major ­ number of major contributors                     it, or just have questions about it. We theorize that when
+                                                               such a person exists, the software quality is higher resulting
+    · Total ­ total number of contributors                     in fewer failures.
+
+    · Ownership ­ proportion of ownership for the contrib-     Hypothesis 2 - Software components with a high level of
+       utor with the highest proportion of ownership           ownership will have fewer failures than components with
+                                                               lower top ownership levels.
+   Figure 1 shows the proportion of commits for each of the
+developers that contributed to abocomp.dll in Windows, in                                                                                                        3
+decreasing order. This library had a total of 918 commits
+made during the development cycle. The top contributing           If the number of minor contributors negatively affects soft-
+engineer made 379 commits, roughly 41%. Five engineers         ware quality, the next question to ask is, "Why do some
+made at least 5% of the commits (at least 46 commits).         binaries have so many minor contributors?" We have ob-
+Twelve engineers made less than 5% of the commits (less        served both at Microsoft and also within OSS projects such
+than 46 commits). Finally, there were a total of seventeen     as Python and Postgres, that during the process of mainte-
+engineers that made commits to the binary. Thus, our met-      nance, feature addition, or bug fixing, owners of one compo-
+rics for abocomp.dll are:                                      nent often need to modify other components that the first
+                                                               relies on or is relied upon by. As a simple example, a devel-
+Metric     Value                                               oper tasked with fixing media playback in Internet Explorer
+                                                               may need to make changes to the media playback interface li-
+Minor            12                                            brary even though the developer is not the designated owner
+Major             5                                            and has limited experience with this component. This leads
+Total                                                          to our hypothesis.
+Ownership        17
+              0.41                                             Hypothesis 3 - Minor contributors to components will be
+                                                               Major contributors to other components that are related
+4. HYPOTHESES                                                  through dependency relationships
+
+   We begin with the observation that a developer with lower      Finally, if low-expertise contributions do have a large im-
+expertise is more likely to introduce bugs into the code. A    pact on software quality, then we expect that defect predic-
+developer who has made a small proportion of the commits       tion techniques will be affected by their inclusion or removal.
+to a binary likely has less expertise and is more likely to    We therefore replicate prior defect prediction techniques and
+make an error. We expect that as the number of develop-        compare results when using all data, data derived only from
+ers working on a component increases, the component may        changes by minor contributors and, and data derived only
+become "fragmented" and the difficulty of vetting and coor-    from changes to major contributors. We expect that when
+dinating all these minor contributions becomes an obstacle     data from minor contributors is removed, the quality of the
+to good quality. Thus if Minor is high, quality suffers.       defect prediction will suffer.
+                      Windows Vista                                        Windows 7
+
+Category Metric       Pre-release Post-release                             Pre-release Post-release
+
+                      Failures                                   Failures  Failures  Failures
+
+Ownership  Total       0.84                                       0.70      0.92       0.24
+ Metrics   Minor       0.86                                       0.70      0.93       0.25
+                       0.26                                       0.29     -0.40      -0.14
+           Major      -0.49                                      -0.49     -0.29      -0.02
+
+           Ownership
+
+                Size  0.75 0.69                                            0.70 0.26
+"Classic" Churn       0.72 0.69                                            0.71 0.26
+ Metrics Complexity   0.70 0.53                                            0.56 0.37
+
+Table 1: Bivariate Spearman correlation of ownership and code metrics with pre- and post-release failures in Windows Vista
+and Windows 7. All correlations are statistically significant except for that of Ownership and post-release failures in Windows
+7.
+
+Hypothesis 4 - Removal of minor contribution information         5.1 Analysis Techniques
+from defect prediction techniques will decrease performance
+dramatically.                                                       We use a number of methods to examine the relationship
+                                                                 between ownership and software quality.
+5. DATA COLLECTION AND ANALYSIS
+                                                                    We began with a correlation analysis of both pre- and
+   This data presents an opportunity to investigate hypothe-     post-release failures with each of the ownership metrics as
+ses regarding code ownership. In this study, we examine          well as a number of other metrics such as test coverage, com-
+Windows Vista and Windows 7.                                     plexity, size, dependencies, and churn (shown in Table 1).
+                                                                 The results indicated that pre- and post-release defects in
+   Windows Vista and Windows 7 is developed entirely by          had strong relationships with Minor, Total, and Owner-
+Microsoft, who have processes and policies that favor strong     ship. In fact, Minor had a higher correlation with both pre-
+code ownership. Windows Vista and 7 were developed by            and post-release defects in Vista and pre-release defects in
+2,000+ software developers and is composed of thousands          Windows 7 than any other metric that Microsoft collects!.
+of individual executable files (.exe), shared libraries (.dll),  Post-release failures for Windows 7 present a difficulty for
+and drivers (.sys), which we collectively refer to as binaries.  analysis as at the time of this analysis many binaries had no
+We track the development history from the release of Win-        post-release failures reported. Thus the correlation values
+dows Server 2003 to the release of Windows 7 and include         between metrics and and post-release failures are noticeably
+pre-release defects as well as post-release failures in Vista    lower than the other failure categories (although all except
+and 7 as software quality indicators.                            the correlation with Ownership are still statistically signif-
+                                                                 icant).
+   We require several types of data. The most important
+data are the commit histories and software failures. Soft-          However, we also observed some relationship between code
+ware repositories record the contents of every change made       attributes and ownership metrics. For example, Figure 2
+to a piece of software, along with the change author, the        shows data for two anonymized binaries in Windows with
+time of change, and an associated log message that may be        vastly different ownership profiles. Unsurprisingly, the bi-
+indicative of the type of change (e.g. introducing a feature,    nary depicted in Figure 2-b (B.dll) has more failures than
+or fixing a bug). We collected the number of changes made        the binary in Figure 2-a (A.dll), eight times as many pre-
+by each developer to each source file and used a mapping of      release failures and twice as many post-release failures. How-
+source files to binaries in order to determine the number of     ever, B.dll is also a larger binary and experienced far more
+changes made by each developer to each binary. Although          churn during the development cycle. Thus it is not clear
+the source code management system uses branches heavily,         whether the increase in failures is attributable to more mi-
+we only recorded changes from developers that were edits to      nor contributors or other measures such as size, complexity,
+the source code. Branching operations (e.g. branching and        and churn, which are known to be related to defects [25, 28]
+merging) were not counted as changes.                            and are likely related to the number of minor contributors.
+                                                                 Prior research has shown that when characteristics such as
+   We also gathered both pre-release and post-release soft-      size are not considered, they may affect the validity of other
+ware failures for all three projects. We gathered the failures   software metrics [13].
+recorded prior to release and in the first six months after re-
+lease. Because of the information contained in the failures,        To overcome this problem, we used multiple linear regres-
+we can automatically trace them back to the binaries that        sion. Linear regression, is primarily used in two different
+caused them, but cannot reliably trace them to the source        ways. First, it can be used to make predictions about an
+files that caused the failures. We only count failures that      outcome based on prior data (for instance predicting how
+the development team deemed important enough to fix.             many failures a software component may have based on char-
+                                                                 acteristics of the components). We stress that while our re-
+   Finally, we gathered source code metrics including vari-      gression analysis does use failures as the dependent variable
+ous size, complexity, and churn metrics. This information        in our models, the purpose of this paper is not to predict
+is gathered from both the source code repositories and the       failures.
+build process.
+                                                                    Second, linear regression enables us to examine the effect
+                                                                 Windows Vista  Windows 7
+
+                       Model      Pre-release Post-release                      Pre-release Post-release
+
+Base (code metrics)               Failures                       Failures       Failures    Failures
+Base + Total
+Base + Minor                      26%                            29%            24%         18%
+Base + Minor + Major              40%(+14%)                      35%(+6%)       68% (+35%)  21% (+3%)
+Base + Minor + Major + Ownership  46%(+20%)                      41%(+12%)      70% (+46%)  21% (+3%)
+                                  48%(+2%)                       43%(+2%)       71% (+1%)
+                                  50%(+2%)                       44%(+1%)       72% (+1%)   22% (+1%)
+
+                                                                                            22% (+0%)
+
+Table 2: Variance in failures for the base model which includes standard metrics of complexity, size, and churn, as well as the
+models with Minor and Ownership added. An asterisk denotes that a model showed statistically significant improvement
+
+when the additional variable was added.
+
+of one or more variables on an outcome when controlling for      which explains 46%. the Base+Minor model explains 20%
+other variables. We use it for this purpose in an effort to      more of the variance in pre-release failures than the Base
+examine the relationship of our ownership measures when          model. Adding an independent variable to a model can never
+controlling for source code characteristics such as size, com-   decrease the variance explained, so we use the adjusted R2
+plexity, and churn.                                              measure which penalizes models that have additional vari-
+                                                                 ables.
+   A linear regression model for failures indicates which vari-
+ables have an effect on failures, how large the effect is, in       We built five statistical models of failures for pre- and
+what direction (i.e. if failures go up when a metric goes        post-release defects in Windows Vista and Windows 7 (sum-
+up or when it goes down), and how much of the variance           marized in Table 2). The first model contains only the clas-
+in the number of failures is explained by the metrics. We        sical source code metrics: size, complexity, and churn. We
+compare the amount of variance in failures explained by a        refer to this as the base model. This model showed that
+model that includes the ownership metrics to a model that        churn, size, and complexity all have a statistically signifi-
+does not include them. There are many measures of churn,         cant effect on both pre and post-release failures. In addi-
+complexity, and size. However, to avoid multi-collinearity       tion, these metrics are able to explain 26% of the variance
+and over-fitting, we include only one of each measure in the     in pre-release failures and 29% of the variance in post-release
+model; We choose the measure which results in the best           failures in Vista and 24% and 28% in Windows 7.
+base model. This gives an indication of how much own-
+ership actually affects software failures. We examined the          In the second model, we added Total to the classic vari-
+improvement in amount of variance in failures explained by       ables. This examines the effect of team size on defects and
+the metrics (commonly referred to as the adjusted R2) and        does not include any measures of the proportion of contribu-
+examine improved goodness of fit using F-tests to determine      tions made by individual members. All models exhibitted a
+if the addition of an ownership metric improves the model        statistically significant improvement in variance explained.
+by a statistically significant degree [12].
+                                                                    Next, we added Minor to the set of predictor variables
+   Linear regression models can be reliably interpreted if cer-  in the base model. This was done to determine if the total
+tain assumptions hold. Two key assumptions are that the          number of developers has a different effect on quality than
+residuals are normally distributed, and not correlated with      the number of minor contributors. The statistics showed
+any of the independent variables. In our analysis, we found      that Minor is positively related to both pre and post-release
+that the distribution of failures was almost always heavily      failures to a statistically significant degree. The addition of
+right skewed, which led to a similar skew in the residuals.      Minor increased the proportion of variance in pre-release
+When we transformed the dependent variable to be the log         failures to 46% and post-release failures to 41%. The gains
+of the number of failures, the skew diminished, and the resid-   shown by Minor were stronger than those shown by Total
+uals fit the normality assumption. This data transformation      for both types of failures to a statistically significant degree,
+was applied to all dependent variables except for post-release   in all cases except for post-release failures in Windows 7,
+failures in Vista, where linear regression assumptions were      indicating that Minor has a larger effect on failures.
+met by the raw data.
+                                                                    The addition of Major and Ownership showed smaller
+6. RESULTS                                                       gains, but were often still statistically significant. We found
+                                                                 similar results regardless of the order that these variables
+   We now present the results of our analysis of Windows         were added to the models. Ownership was found to have
+Vista and Windows 7. Table 2 illustrates the results of          a negative relationship with failures to a statistically signifi-
+our analysis. We denote with an asterisk, cases where a          cant degree and Major had a positive relationship, but was
+goodness-of-fit F-test indicated that the addition of a vari-    much smaller than Minor. Minor still showed more of an
+able improved the model by a statistically significant degree.   effect than Ownership and Major even when it was added
+The value in parentheses indicates the percent increase in       last (not shown). The final models account for up to 72% of
+variance explained over the model without the added vari-        variance in failures. In all cases, ownership had a stronger
+able. For example, in Table 2 the Base+Minor +Major              relationship with pre-release failures than post-release fail-
+model in Vista explains 48% of the variance in pre-release       ures and the models in general were less explanatory. This
+failures which is 2% more than the Base+Minor model              may indicate that there are already measures being taken
+                                                                 (e.g. increased testing, more stringent quality controls, etc.)
+between implementation completion and release to counter-          Major-Minor-Dependency Relationship
+act the effects of poor ownership.
+                                                                   CMonatjroibrutor                   Foo.exe
+   For all metrics that measure ownership levels there is a
+clear trend of having a statistically significant relationship                                         Dependency
+to failures in Windows. In all cases, Major and Ownership
+show less of an effect than Minor or Total, indicating that        ConMtriinbourtor                                                                                   Bar.dll
+the number of higher-expertise contributors has marginal
+effect on quality, although the results are still statistically
+significant.
+
+   The results of our analysis of ownership in both releases
+of Windows can be interpreted as follows:
+
+   1. The number of minor contributors has a strong posi-
+       tive relationship with both pre- and post-release failures
+       even when controlling for metrics such as size, churn,
+       and complexity.
+
+                                                                                                                                                                                                                                                                                                                                                                 2
+
+2. Higher levels of ownership for the top contributor to           Figure 3: Illustration of the major-minor-dependency rela-
+
+faorcotmheposnamenAet mrdeedsturligtcssr,ianbpufethwtherereefwaffieliucrtrineissgwsmhsealnildleceronthatraornlolitunhegnd. otniotnsohpip..commonly observed in Vista
+
+number of minor contributors.
+
+3. Ownership ahadsda sstroomngeer rtehlaotiuongshhitpbwuithbbprlee-rseletaosethe deCvaetaloldpo eetral. found that making changes to a depending
+
+failures than"Ipnoset-eredleatsoe fuaisluerest.his..."             component without coordinating with the other stakehold-
+
+4. WaMmeinausducohrwesssmo7fa."olIlwenrneerreeslahdtiipotnaonshdmipstaatonkdpeaorsdat-croecdlheeaamseneafgasiuelurertseosshitonhwat...eltciharkwsateitl(ohiihnaniocmboohuedintrwoioscfreaefcsuanoeu,nsdlttteerhsvideb[e9uloo]bt.wpoynWerrehserta)hohsof,iasfvbW.ety.hi.ndne"oedcfioornwemicstop.iorodnHn,eoomnfwttaehidvneeecrcrf,eeowatmhsemeifsufatannhciyet-
+
+7. EFFECTS OF MINOR CONTRIBUTORS                                   prior contributions to a component suggests that their par-
+                                                                   ticipation in the component's implicit team is likely minimal,
+
+One of the key findings in our analysis was that the num-          increasing the risk of a introducing a bug.
+
+ber of minor contributors has a strong relationship with fail-     But does this actually happen? Is a developer D, work-
+
+ures in both releases of Windows. Since Microsoft has the          ing on binary F oo.exe, statistically more likely to be a mi-
+
+capability to make changes to practices based on these find-       nor contributor to a binary Bar.dll, just because F oo.exe
+
+ings, we were eager to gain a deeper understanding of this         depends on Bar.dll? If so, how many of the minor con-
+
+phenomenon. To this end, we performed two more detailed            tributors to components can this phenomenon account for?
+
+analyses in order to examine the minor contributors further.       If the majority of minor contributors are a result of com-
+
+First, we observed that almost all developers were ma-             ponent owners making changes do depending or dependent
+
+jor contributors to some binaries and minor contributors to        components to accomplish their own tasks such as resolving
+
+others; very few developers never played a major contrib-          failures, then deliberate steps could be taken to avoid this
+
+utor role. This led us to investigate the obvious question:        type of risky behavior.
+
+Given a particular developer, is there a relationship between      To investigate this further, we employed a static analy-
+
+a component to which she is a major contributor, and one           sis tool, MaX [33], to detect dependency relationships be-
+
+to which she is a minor contributor?                               tween binaries. MaX uses debugging information files that
+
+Second, we adapted a fault prediction study carried out            are generated during compilation to identify these relation-
+
+by Pinzger et al. [29] and examined the effect of modifying        ships, which include method calls, read and writes to the
+
+the study in ways related to ownership.                            registry, IPC, COM calls, and use of types. We were unable
+
+7.1 Dependency Analysis                                            to obtain the required debugging information files for Win-
+                                                                   dows 7 and thus limit our analysis here to Vista. Using this
+
+The majority of developers that contributed to Windows             tool, we constructed a dependency graph that includes all
+
+acted as major contributors to some binaries and minor con-        of the binaries in Windows Vista.
+
+tributors to others. There were very few developers who are        The next step is to determine whether the major-minor-
+
+only minor contributors. This fact is an indication of strong      dependency phenomenon occurs statistically more often than
+
+code ownership, as it shows that nearly everyone has a main        would be expected by chance. But what exactly does "by
+
+responsibility for at least one binary.                            chance" mean? We model "chance" by generating a large,
+
+Discussions with engineers at Microsoft indicated that of-         plausible, random sample of contributions; we can then com-
+
+ten an engineer who was the owner of one binary would              pare the observed frequency of major-minor-dependency with
+
+make changes to another binary whose services he or she            the frequency in the generated sample. Our plausible ran-
+
+used, often in the process of addressing reported bugs. In         dom model is that each developer chooses their contribu-
+
+our context this would show up as one engineer who was             tions at random, while preserving their rate of minor and
+
+a major contributor to some binary, A, and a minor con-            major contributions. In other words, a developer is just as
+
+tributor to some binary, B, with a dependency relationship         hardworking, but her choice of where to contribute is not
+
+between A and B. We call this a Major-Minor-Dependency             influenced by dependencies in the code. Using this model,
+
+relationship, which is illustrated in Figure 3.                    we generate a large sample of simulated contribution graphs.
+Amy minor C  Amy  minor      C                                  the normally distributed frequency of this phenomenon out
+Bob minor D  Bob  minor      D                                  of all 10,000 graphs was 32% of the time, indicating that
+                                                                52% is definitely a statistically significant difference, and
+(a) before        (b) after                                     the phenomenon that we are observing does not occur by
+                                                                chance.
+Figure 4: An illustration of graph rewiring. Rewiring pre-
+serves the number of minor and major edges per developer           In Vista, one common reason that a developer is a minor
+and per binary, but randomizes the organization of the con-     contributor to a binary is that he/she is a major contributor
+tribution network.                                              to a depending binary. This allows for processes to be put
+                                                                into place to recognize and either minimize or aid minor
+This gives us a basis for comparison to evaluate observed,      contributions.
+real-world contribution behavior is influenced by dependen-
+cies between modules.                                           7.2 Effects on Network Metrics
+
+   This "bootstrapping" approach comes from the statisti-          In 2007, Pinzger et al. reported a method to find fault
+cal theory of random graphs [20, 24, 27]. A phenomenon is       prone binaries in Windows Vista based on contribution net-
+judged statistically significant if the actual, observed phe-   works [29]. A contribution network is composed of binaries
+nomenon occurs rarely in the generated sample graphs. Fol-      and the developers that contributed to those binaries. Thus,
+lowing previous techniques [24, 27], we use a graph-rewiring    a node representing a developer is connected to all binaries
+method to bootstrap our random ensemble, based on the ob-       the developer has contributed to and a node representing a
+served frequency of commits from individuals. In each gen-      binary is connected to all developers that contributed to it.
+erated random sample, each developer makes the same num-        Figure 5 shows an example of a contribution network with
+ber of major and minor contributions as in the observed real    boxes representing binaries and circles representing develop-
+sample, but the contributions are chosen at random from the     ers. Major contribution edges are solid and minor contribu-
+given set of components. We check to see how often a "ma-       tion edges are dashed.
+jorly contributed component" for a developer has an actual
+dependency on a "minorly contributed component" for the            The field of social network analysis has developed a num-
+same developer in these generated random samples. If the        ber of metrics that measure various attributes of nodes in a
+frequency of major-minor-dependency relationships that oc-      network. For instance, the degree of a node is the number
+cur in the ensemble of simulated samples differs significantly  of direct connections that it has and can be indicative of
+from that of the observed real sample, then we can conclude     how important the node is within the local network. Other
+that the phenomenon most likely represents some real, in-       metrics measure how much information can flow through a
+tended behavior, and not simply a chance occurrence.            node, the average distance from a node to all other nodes,
+                                                                how much "power" a node exerts over its neighbors, etc. An
+   Graph rewiring is performed as follows in our context.       in-depth discussion of these metrics can be found in Wasser-
+For the sake of convenience we refer to an edge connecting a    man and Faust [34]. Pinzger et al. found that these mea-
+binary to one of its major contributors as a major edge and     sures had a strong relationship with post-release failures in
+an edge connecting a binary to one if its minor contributors    Windows Vista and in a prior study [6] we found that these
+as a minor edge. Two edges that are either both major edges     measures were able to predict failures in Eclipse accurately
+or both minor edges are selected at random and endpoints        as well.
+of both are switched as shown in Figure 4. Thus, after the
+switch, the number of major and major contributions for            Specifically, Pinzger et al. built a predictor for fault prone
+each developer node and each component node remains the         binaries using this method, it identified 90% of the fault
+same.                                                           prone binaries in Vista (recall) and 85% of the binaries that
+                                                                it classified as fault prone actually were (precision). This
+   After performing E2 rewirings where E is the number          was a dramatic increase over the predictive power of prior
+of contribution edges in the graph, a sufficiently random       methods that used source code metrics.
+graph is obtained. We created 10,000 such random contri-
+bution graphs and compared the frequency of major-minor-           We adapted that study, and examined the effect of remov-
+dependency relationships to the frequency in the observed,      ing minor and major contributor edges. In Figure 5, such
+actual contribution graph. We found that in the observed        minor edges are indicated by the dashed lines. The topolog-
+Vista contribution graph, 52% of the binaries had minor         ical effect of removing minor edges, as shown in Figure 5, is
+contributors who were major contributors to other binaries      that many pairs of binaries that had short connecting paths
+that the original had a dependency with. In contrast, this      through minor contributors are disconnected. Our findings
+relationship only existed for an average of 24% of the bina-    focused on two key aspects of the results. First, we exam-
+ries in the random networks with the same minor and major       ined the correlation between social network measures and
+contribution degree distributions. The maximum value for        post-release failures in the complete network and the net-
+                                                                work with minor edges removed. Second, we measured the
+                                                                change in the ability of a predictor to identify fault prone
+                                                                binaries when removing major or minor contribution edges.
+
+                                                                   Table 3 shows the strength of relationship of six network
+                                                                measures with pre- and post-release failures. These particu-
+                                                                lar metrics are chosen because they had the highest correla-
+                                                                tion with failures among those collected. Columns labelled
+                                                                with Minor shows the correlations of SNA metrics calculated
+                                                                on networks that contain only minor contribution edges and
+                                                                those labelled with Major shows correlations from networks
+                                                                of major contribution edges. For all metrics except for node
+                               Windows Vista                                           Windows 7
+
+                        Pre-release                              Post-release   Pre-release    Post-release
+
+SNA Metric              Minor Major Minor Major                                 Minor Major Minor Major
+
+Degree Centrality       0.861   0.909                            0.668   0.599  0.931   0.797  0.269   0.319
+Closeness Centrality    0.624  -0.098                            0.602   0.107  0.737   0.167  0.130   0.013
+Reachability            0.647  -0.091                            0.618   0.119  0.747   0.176  0.135   0.018
+Betweenness Centrality  0.703   0.146                            0.601   0.132  0.748   0.285  0.289   0.154
+Hierarchy               0.420  -0.273                            0.176  -0.244  0.298  -0.302  0.136  -0.055
+Effective Size          0.775   0.311                            0.649   0.286  0.884   0.391  0.223   0.196
+
+Table 3: Correlation of Social Network Analysis metrics on the contribution network with pre- and post-release failures.
+Columns labeled "Minor" are correlations of failures with metrics computed on networks composed only of minor contribution
+edges. Columns labeled "Major" are from networks made up of major contribution edges. For the majaority of metrics,
+removing the minor edges drops the correlations considerably. For some metrics, the direction of correlation actually changes
+for "Major".
+
+Ram                     A                                               using the same methods on the network with minor con-
+                        C Sara                                          tributors removed, it identified only 58% of the fault prone
+Bob B  Fu                                                               binaries and around 44% of its fault prone predictions were
+                                                                        correct. In Pinzger's formulation of the prediction approach,
+                                      D Amy                             random guessing would result in 50% for both measures.
+                                                                        Thus a predictor based on network measures for a network
+Figure 5: An example contribution network. Boxes rep-                   containing major contributor only does marginally better
+resent binaries and circles represent developers who con-               than one that chose binaries purely at random. Table 4
+tributed to them. A dashed line between a binary and de-                shows the performance when a predictor is trained on the
+veloper indicates a minor contributor relationship.                     complete network as well as the networks with minor con-
+                                                                        tributions removed and major contributions removed.
+degree, the networks that consider major contributions have
+dramatically lower correlations. In fact, for the case of Hi-              We also show results for pre-release failures in Vista as
+erarchy, the sign of the correlation is negative, indicating            well as pre- and post-release failures for Windows 7. In all
+that higher value of hierarchy in the major contribution net-           cases, models built on minor contributions performed better
+works were associated with fewer failures. These findings               than those based on major contributions to a statistically
+clearly indicate that the edges from minor contributors em-             significant degree. In the case of Vista post-release failures,
+body much of the important structure of the contributions               minor contribution prediciton models perform better than
+graph. So much so that their removal results in a decrease              models based on the entire network, and models based on
+in the discriminatory power of these metrics.                           the entire network were never statistically better than those
+                                                                        based on minor contributions
+   We also built a predictor from these measures for identi-
+fying fault prone binaries in Windows Vista and Windows 7                  We therefore conclude the minor contribution edges pro-
+using the same approach as Pinzger et al. [29]. They trained            vide the "signal" used by defect predictors that are based on
+a logistic regression model on a randomly chosen two thirds             the contribution network. Without them, the ability to pre-
+of the binaries in the contribution network and then eval-              dict failure prone components is greatly diminished, further
+uated the model based on its results when classifying the               supporting our hypothesis that they are strongly related to
+remaining third.                                                        software quality.
+
+   This process was repeated fifty times, each with a different         8. DISCUSSION
+random split of the data and the measures of performance,
+precision, recall, and F-score -- standard measures of infor-              Our findings are valuable in a number of ways. We have
+mation retrieval [17] -- were averaged across all runs.                 shown that for both versions of Windows, ownership does in-
+                                                                        deed have a relationship with code quality. This observation
+   Their original model based on the complete network iden-             is an actionable result, as this is an aspect of software devel-
+tified 90% of the fault prone binaries and 85% of its fault             opment that can be controlled and monitored to some degree
+prone predictions were correct (their evaluation was based              by management decisions on development process and poli-
+on a prior Windows release). When the predictor was trained             cies. In all projects, the addition of Minor improved the
+                                                                        regression models for both pre- and post-release failures to
+                                                                        a statistically significant degree. After controlling for known
+                                                                        software quality factors, binaries with more minor contribu-
+                                                                        tors had more pre- and post-release failures in both versions
+                                                                        of Windows. Thus hypothesis 1 is empirically supported in
+                                                                        both projects.
+
+                                                                           The analysis of Ownership is a little bit different. In this
+                                                                        case, we saw a small, but still statistically significant effect
+                                                                        in pre- and post-release failures for Vista and pre-release
+            Windows Vista                                                     Windows 7
+
+            Pre-release  Post-release                            Pre-release  Post-release
+
+SNA Metric  All Minor Major All Minor Major                      All Minor Major All Minor Major
+
+Precision   90% 87% 83% 75% 84% 44%                              89% 88% 80% 12% 11% 8%
+Recall      91% 93% 91% 82% 88% 58%                              92% 93% 87% 66% 75% 61%
+F-Score     91% 89% 87% 78% 86% 50%                              90% 90% 84% 21% 20% 14%
+
+Table 4: Performance of network based failure predictors for pre- and post-release failures for Vista and Windows 7
+
+failures for Windows 7. Part of this may be attributable to         It may not always be possible to follow these recommen-
+a moderate relationship between the Minor and Owner-             dations (for instance, in cases where too many potential con-
+ship, but although Ownership was significant in all models       tributors need changes to a component for one developer to
+when removing Minor, the effect was smaller. Nonetheless,        handle), however they should be followed as much as pos-
+in all cases, higher values for Ownership was associated         sible within reason. These recommendations are currently
+with lower numbers of failures. We therefore conclude that       being evaluated at Microsoft. We plan to investigate the re-
+hypothesis 2 is supported in the case of Windows Vista and       lationship of the ownership measures used in this paper with
+in pre-release data for Windows 7.                               software quality in other projects at Microsoft that differ in
+                                                                 size and process domain (e.g. projects utilizing agile). Fur-
+   The results of empirical software engineering studies do      ther, we plan to observe the results of projects that follow
+not always generalize to settings where a different process      these recommendations.
+is used. The process that is used may dictate the effect of
+other factors on software quality as well. Therefore, when       9. CONCLUSION
+determining the applicability of a research result to a soft-
+ware project, the context of the study must be taken in             We have examined the relationship between ownership
+account. Microsoft employs strong ownership practices and        and software quality in two large software development projects.
+our results are much more likely to hold in other indus-         We found that high levels of ownership, specifically opera-
+trial settings where similar policies are in place. Examining    tionalized as high values of Ownership and Major, and
+the effect of ownership in contexts where ownership is not       low values of Minor, are associated with less defects.
+stressed as highly, such as in many open source software
+(OSS) projects, is an area of continued study as we attempt         An investigation into the effects of minor and major con-
+to understand the interaction between ownership, quality,        tributions on network based defect prediction found that
+and varying software processes.                                  removing minor contribution edges severely impaired pre-
+                                                                 dictive power. We also found that when a component has
+   For contexts in which strong ownership is practiced or        a minor contributor, the same developer is a major contrib-
+where empirical studies are consistent with our own find-        utor to a dependent component approximately half of the
+ings, we make the following recommendations regarding the        time, uncovering at least one significant reason for high lev-
+development process based on our findings:                       els of minor contributions. Changes to policies regarding
+                                                                 tasks that would lead to this behavior, such as defect reso-
+   1. Changes made by minor contributors should be reviewed      lution and feature implementation, should be implemented
+       with more scrutiny. Changes made by minor con-            and evaluated.
+       tributors should be exposed to greater scrutiny than
+       changes made by developers who are experienced with          For organizations where ownership has a strong relation-
+       the source for a particular binary. When possible, ma-    ship with defects, we have presented recommendations which
+       jor contributors should perform these code inspections.   are currently being evaluated at Microsoft. As our measures
+       If a major contributor cannot perform all inspections,    of ownership are cheap and lightweight, we encourage other
+       he or she should focus on inspecting changes by minor     researchers and practitioners to perform and report their
+       contributors.                                             findings of similar analyses so that we can build a body of
+                                                                 knowledge regarding ownership and quality in various do-
+   2. Potential minor contributors should communicate de-        mains and contexts.
+       sired changes to developers experienced with the respec-
+       tive binary. Often minor contributors to one binary       10. REFERENCES
+       are major contributors to a depending binary. Rather
+       than making a desired change directly, these develop-      [1] R. Banker, G. Davis, and S. Slaughter. Software
+       ers should contact a major contributor and commu-               development practices, software complexity, and
+       nicate the desired change so that it can be made by             software maintenance performance: A field study.
+       someone who has higher levels of expertise.                     Management Science, 44(4):433­450, 1998.
+
+   3. Components with low ownership should be given pri-          [2] V. Basili and G. Caldiera. Improve Soft-ware Quality
+       ority by QA resources. Metrics such as Minor and                by Reusing Knowledge and Experience. Sloan
+       Ownership should be used in conjunction with source             Management Review, 37:55­55, 1995.
+       code based metrics to identify those binaries with a
+       high potential for having many post-release failures.      [3] V. Basili, G. Caldiera, and H. Rombach. The Goal
+       When faced with limited resources for quality-control           Question Metric Approach. Encyclopedia of Software
+       efforts, these binaries should have priority.                   Engineering, 1:528­532, 1994.
+
+                                                                  [4] K. Beck and C. Andres. Extreme Programming
+      Explained: Embrace Change. Addison-Wesley Reading,     [20] R. Milo, N. Kashtan, S. Itzkovitz, M. E. J. Newman,
+      MA, 2005.                                                    and U. Alon. On the uniform generation of random
+                                                                   graphs with prescribed degree sequences. Arxiv
+ [5] C. Bird, N. Nagappan, P. Devanbu, H. Gall, and                preprint cond-mat/0312028, 2003.
+      B. Murphy. Does distributed development affect
+      software quality? an empirical case study of windows   [21] A. Mockus. Succession: Measuring transfer of code
+      vista. In Proc. of the International Conference on           and developer productivity. In Proceedings of the 31st
+      Software Engineering, 2009.                                  International Conference on Software Engineering,
+                                                                   2009.
+ [6] C. Bird, N. Nagappan, P. Devanbu, H. Gall, and
+      B. Murphy. Putting it All Together: Using              [22] A. Mockus and J. D. Herbsleb. Expertise browser: a
+      Socio-Technical Networks to Predict Failures. In             quantitative approach to identifying expertise. In
+      Proceedings of the 17th International Symposium on           Proc. of the 24th International Conference on
+      Software Reliability Engineering. IEEE Computer              Software Engineering, 2002.
+      Society, 2009.
+                                                             [23] A. Mockus and D. Weiss. Predicting risk of software
+ [7] W. Boh, S. Slaughter, and J. Espinosa. Learning from          changes. Bell Labs Technical Journal, 5(2):169­180,
+      experience in software development: A multilevel             2000.
+      analysis. Management Science, 53(8):1315­1331, 2007.
+                                                             [24] M. Molloy and B. Reed. A critical point for random
+ [8] F. Brooks. The Mythical Man-Month: Essays on                  graphs with a given degree sequence. Random Struct.
+      Software Engineering, 20th Anniversary Edition.              Algorithms, 6(2-3):161­179, 1995.
+      Addison-Wesley, 1995.
+                                                             [25] N. Nagappan and T. Ball. Use of relative code churn
+ [9] M. Cataldo, P. Wagstrom, J. Herbsleb, and K. Carley.          measures to predict system defect density. Proceedings
+      Identification of coordination requirements:                 of the 27th International Conference on Software
+      implications for the Design of collaboration and             Engineering, pages 284­292, May 2005.
+      awareness tools. Proceedings of the 2006 20th
+      anniversary conference on Computer supported           [26] N. Nagappan, B. Murphy, and V. Basili. The influence
+      cooperative work, pages 353­362, 2006.                       of organizational structure on software quality: an
+                                                                   empirical case study. In Proc. of the 30th international
+[10] B. Curtis, H. Krasner, and N. Iscoe. A field study of         conference on Software engineering, 2008.
+      the software design process for large systems.
+      Communication of the ACM, 31(11):1268­1287, 1988.      [27] M. E. J. Newman, S. H. Strogatz, and D. J. Watts.
+                                                                   Random graphs with arbitrary degree distributions
+[11] E. Darr, L. Argote, and D. Epple. The acquisition,            and their applications. Phys. Rev. E, 64(2):026118, Jul
+      transfer, and depreciation of knowledge in service           2001.
+      organizations: Productivity in franchises. Management
+      Science, 41(11):1750­1762, 1995.                       [28] T. Ostrand, E. Weyuker, and R. Bell. Where the bugs
+                                                                   are. In Proceedings of the ACM SIGSOFT
+[12] S. Dowdy, S. Wearden, and D. Chilko. Statistics for           international symposium on Software testing and
+      research. John Wiley & Sons, third edition, 2004.            analysis, 2004.
+
+[13] K. El Emam, S. Benlarbi, N. Goel, and S. N. Rai. The    [29] M. Pinzger, N. Nagappan, and B. Murphy. Can
+      confounding effect of class size on the validity of          developer-module networks predict failures? In
+      object-oriented metrics. IEEE Transactions of                Proceedings of the 16th ACM SIGSOFT International
+      Software Engineering, 27(7):630­650, 2001.                   Symposium on Foundations of software engineering,
+                                                                   2008.
+[14] S. Elbaum and J. Munson. Code churn: A measure for
+      estimating the impact of code change. In Proceedings   [30] F. Rahman and P. Devanbu. Ownership, Experience
+      of the International Conference on Software                  and Defects: a fine-grained study of Authorship. In
+      Maintenance, 1998.                                           Proceedings ICSE 2011, To appear, 2011.
+
+[15] T. Fritz, G. Murphy, and E. Hill. Does a programmer's   [31] P. Robillard. The role of knowledge in software
+      activity indicate knowledge of code? In Proc. of the         development. Communications of the ACM, 42(1):92,
+      ACM SIGSOFT symposium on The foundations of                  1999.
+      software engineering, page 350. ACM, 2007.
+                                                             [32] M. Sacks. On-the-Job Learning in the Software
+[16] R. Kraut and L. Streeter. Coordination in software            Industry. Corporate Culture and the Acquisition of
+      development. Communications of the ACM,                      Knowledge. Quorum Books, 88 Post Road West,
+      38(3):69­81, 1995.                                           Westport, CT 06881., 1994.
+
+[17] F. W. Lancaster. Information Retrieval Systems:         [33] A. Srivastava, J. Thiagarajan, and C. Schertz.
+      Characteristics, Testing, and Evaluation. Wiley, 2nd         Efficient Integration Testing using Dependency
+      edition, 1979.                                               Analysis. Technical Report MSR-TR-2005-94,
+                                                                   Microsoft Research, 2005.
+[18] D. W. McDonald and M. S. Ackerman. Expertise
+      recommender: a flexible recommendation system and      [34] S. Wasserman and K. Faust. Social network analysis:
+      architecture. In Proc. of the ACM conference on              Methods and applications. Cambridge University
+      Computer supported cooperative work, 2000.                   Press, 1994.
+
+[19] A. Meneely and L. A. Williams. Secure open source       [35] E. J. Weyuker, T. J. Ostrand, and R. M. Bell. Do too
+      collaboration: an empirical study of linus' law. In          many cooks spoil the broth? using the number of
+      Proceedings of the ACM Conference on Computer and            developers to enhance defect prediction models.
+      Communications Security, 2009.                               Empirical Softw. Engg., 13(5):539­559, 2008.
+

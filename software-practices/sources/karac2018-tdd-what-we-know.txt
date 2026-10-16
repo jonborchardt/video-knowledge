@@ -1,0 +1,271 @@
+FRROEMDIRTHECETEIODNITSOR                                                       EEdditiotorr: :ETdiimtoMr Nenazmiees
+                                                                                aetUNmfi fmnoiaril@vtiihaelm@rtCesieoaintmnrzyoiael isinl. u.acsSotma t e
+
+What Do We (Really)
+Know about Test-Driven
+Development?
+
+Itir Karac and Burak Turhan
+
+Call for Submissions
+Do you have a surprising result or industrial experience? Something that chal-
+lenges decades of conventional thinking in software engineering? If so, email a
+one-paragraph synopsis to timm@ieee.org (use the subject line "REDIRECTIONS:
+Idea: your idea"). If that looks interesting, I'll ask you to submit a 1,000- to 2,400-
+word article (in which each figure or table counts as 250 words) for review for the
+Redirections department. Please note: heresies are more than welcome (if sup-
+ported by well-reasoned industrial experiences, case studies, or other empirical
+results).--Tim Menzies
+
+TEST-DRIVEN DEVELOPMENT                     Let us guess: your response is      we told you that some of these cogs
+(TDD) is one of the most contro-         most likely along the lines of, "TDD   contribute more toward fulfilling
+versial agile practices in terms of its  is a practice in which you write       the promises of TDD than the order
+impact on software quality and pro-      tests before code." This emphasis      of test implementation? (Hint: you
+grammer productivity. After more         on its test-first dynamic, strongly    should ask for evidence.)
+than a decade's research, the jury is    implied by the name, is perhaps the
+still out on its effectiveness. TDD      root of most, if not all, of the con-  15 Years of (Contradictory)
+promised all: increased quality and      troversy about TDD. Unfortunately,     Evidence
+productivity, along with an emerg-       it's a common misconception to use     Back in 2003, when the software
+ing, clean design supported by the       "TDD" and "test-first" interchange-    development paradigm started to
+safety net of a growing library          ably. Test-first is only one part of   change irrevocably (for the bet-
+of tests. What's more, the recipe        TDD. There are many other cogs         ter?), Kent Beck posed a claim based
+sounded surprisingly simple: Don't       in the system that potentially make    on anecdotal evidence and paved
+write code without a failing test.       TDD tick.                              the way for software engineering
+                                                                                researchers:
+   Here, we revisit the evidence of         How about working on small
+the promises of TDD.1 But, before        tasks, keeping the red­green­refactor      No studies have categorically
+we go on, just pause and think of an     cycles short and steady, writing only      demonstrated the difference be-
+answer to the following core ques-       the code necessary to pass a fail-         tween TDD and any of the many
+tion: What is TDD?                       ing test, and refactoring? What if
+
+0740-7459/18/$33.00 © 2018 IEEE          J U LY / A U G U S T 2 0 1 8 | I E E E S O F T W A R E                                                            81
+               Table 1. Systematic literature reviews on test-driven development (TDD).
+
+Study                             Overall conclusion for quality  Overall conclusion for        Inconsistent results in the study
+Bissi et al.3                     with TDD                        productivity with TDD         categories
+                                  Improvement                     Inconclusive
+Munir et al.4                                                                                   Productivity:
+                                  Improvement or no difference    Degradation or no difference  Academic vs. industrial setting
+
+Rafique and Misic´5               Improvement                     Inconclusive                  Quality:
+                                                                  Inconclusive                  · L ow vs. high rigor
+Turhan et al.6 and Shull et al.1  Improvement                                                   · Low vs. high relevance
+                                                                                                Productivity:
+Kollanus7                         Improvement                     Degradation                   · Low vs. high rigor
+Siniaalto8                        Improvement                     Inconclusive                  · L ow vs. high relevance
+
+                                                                                                Quality:
+                                                                                                Waterfall vs. iterative test-last
+                                                                                                Productivity:
+                                                                                                · Waterfall vs. iterative test-last
+                                                                                                · Academic vs. industrial
+
+                                                                                                Quality:
+                                                                                                · A mong controlled experiments
+                                                                                                · A mong studies with high rigor
+                                                                                                Productivity:
+                                                                                                · Among pilot studies
+                                                                                                · C ontrolled experiments vs.
+
+                                                                                                  industrial case studies
+                                                                                                · Among studies with high rigor
+
+                                                                                                Quality:
+                                                                                                · Among academic studies
+                                                                                                · A mong semi-industrial studies
+
+                                                                                                Productivity:
+                                                                                                · A mong academic studies
+                                                                                                · A mong semi-industrial studies
+
+    alternatives in quality, productiv-   productivity and within subgroups        Identifying the inconsistencies'
+    ity, or fun. However, the anecdotal   for quality.                             sources is important for designing
+    evidence is overwhelming, and the                                              further studies that control for those
+    secondary effects are unmistakable.2     Why the inconsistent results? Be-     sources.
+                                          sides the differences in the study con-
+   Since then, numerous studies--         texts listed in Table 1, other likely       Matjaz Pancur and Mojca
+for example, experiments and case         reasons are that                         Ciglaric speculated that the results of
+studies--have investigated TDD's                                                   studies showing TDD's superiority
+effectiveness. These studies are           · TDD has too many cogs,                over a test-last approach were due to
+periodically synthesized in sec-           · its effectiveness is highly influ-    the fact that most of the experiments
+ondary studies (see Table 1), only                                                 employed a coarse-grained test-last
+to reveal contradictory results               enced by the context (for ex-        process closer to the waterfall ap-
+across the primary studies. This              ample, the tasks at hand or skills   proach as a control group.9 This
+research has also demonstrated                of individuals),                     created a large differential in granu-
+no consistent overall benefit from         · the cogs highly interact with         larity between the treatments, and
+TDD, particularly for overall                 each other, and                      sometimes even a complete lack
+                                           · most studies have focused on          of tests in the control, resulting in
+                                              only the test-first aspect.
+
+82  IEEE SOFTWARE | W W W.COMPUTER.ORG/SOFT WARE | @IEEESOFT WARE
+                                        REDIRECTIONS
+
+unfair, misleading comparisons. In      Additionally, a comparison of the        explaining the Elephant Carpaccio
+the end, TDD might perform better       number of pull requests and the dis-     concept, states that "agile developers
+only when compared to a coarse-         tribution of commits per author          apply micro-, even nano-incremental
+grained development process.            didn't indicate any effect on devel-     development in their work."15
+                                        oper collaboration.
+Industry Adoption                                                                   Another claim of Elephant Car-
+(or Lack Thereof)                          Adnan Causevic and his col-           paccio, related to the TDD concept
+Discussions on TDD are common           leagues identified seven factors limit-  of working on small tasks, is that
+and usually heated. But how com-        ing TDD's use in the industry:12         agile developers can deliver fast
+mon is the use of TDD in practice?                                               "not because we're so fast we can
+Not very--at least, that's what the      · increased development time            [develop] 100 times as fast as other
+evidence suggests.                          (productivity hits),                 people, but rather, we have trained
+                                                                                 ourselves to ask for end-user-visible
+   For example, after monitoring the     · insufficient TDD experience or        functionality 100 times smaller than
+development activity of 416 devel-          knowledge,                           most other people."15 To test this,
+opers over more than 24,000 hours,                                               we conducted experiments in which
+researchers reported that the develop-   · insufficient design,                  we controlled for the framing of task
+ers followed TDD in only 12 percent      · insufficient developer testing        descriptions (finer-grained user sto-
+of the projects that claimed to use                                              ries versus coarser-grained generic
+it.10 We've observed similar patterns       skills,                              descriptions). We observed that the
+in our work with professional devel-     · insufficient adherence to TDD         type of task description and the task
+opers. Indeed, if it were possible to                                            itself are significant factors affect-
+reanalyze all existing evidence con-        protocol,                            ing software quality in the context
+sidering this facet only, the shape of   · domain- and tool-specific limita-     of TDD.
+things might change significantly (for
+better or worse). We'll be the devil's      tions, and                              In short, working on small,
+advocate and ask, what if the anec-      · legacy code.                          well-defined tasks in short, steady
+dotal evidence from TDD enthusiasts                                              development cycles has a more
+is based on misconceived personal       It's not surprising that three of these  positive impact on quality and
+experience from non-TDD activities?     factors are related to the developers'   productivity than the order of test
+                                        capacity to follow TDD and their         implementation.
+   Similarly, a recent study analyzed   rigor in following it.
+a September 2015 snapshot of all the                                             Deviations from the
+(Java) projects in GitHub.11 Using      What Really Makes TDD Tick?              Test-First Mantra
+heuristics for identifying TDD-like     A more refined look into TDD is          Even if we consider the studies that
+repositories, the researchers found     concerned with not only the order        focus on only the test-first nature
+that only 0.8 percent of the projects   in which production code and test        of TDD, there's still the problem of
+adhered to TDD protocol. Further-       code are written but also the average    conformance to the TDD process.
+more, comparing those projects to       duration of development cycles, that     TDD isn't a dichotomy in which
+a control set, the study reported no    duration's uniformity, and the refac-    you either religiously write tests
+difference between the two groups in    toring effort. A recent study of 39      first every time or always test after
+terms of                                professionals reported that a steady     the fact. TDD is a continuous spec-
+                                        rhythm of short development cycles       trum between these extremes, and
+ · the commit velocity as a measure     was the primary reason for improved      developers tend to dynamically span
+    of productivity,                    quality and productivity.13 Indeed,      this spectrum, adjusting the TDD
+                                        the effect of test-first completely di-  process as needed. In industrial set-
+ · the number of bug-fixing com-        minished when the effects of short       tings, time pressure, lack of disci-
+    mits as an indicator of the num-    and steady cycles were considered.       pline, and insufficient realization of
+    ber of defects, and                 These findings are consistent with       TDD's benefits have been reported
+                                        earlier research demonstrating that      to cause developers to deviate from
+ · the number of issues reported        TDD experts had much shorter and         the process.12
+    for the project as a predictor of   less variable cycle lengths than nov-
+    quality.                            ices did.14 The significance of short
+                                        development cycles extends be-
+                                        yond TDD; Alistair Cockburn, in
+
+ J U LY/A U G U S T 2 0 1 8 | I E E E S O F T WA R E  83
+    REDIRECTIONS
+
+   To gain more insight, in an ethno-    some tasks are better (suited) than            Productivity: A Systematic Review,"
+graphically informed study, research-    others with respect to "TDD-bility."           Information and Software Technol-
+ers monitored and documented the                                                        ogy, June 2016, pp. 45­54.
+TDD development process more                This doesn't mean you should            4.H. Munir, M. Moayyed, and K.
+closely by means of artifacts includ-    avoid trying TDD or stop using it.             Petersen, "Considering Rigor and Rel-
+ing audio recordings and notes.16        For example, if you think that TDD             evance When Evaluating Test Driven
+They concluded that developers per-      offers you the self-discipline to write        Development: A Systematic Review,"
+ceived implementation as the most        tests for each small functionality,            Information and Software Technol-
+important phase and didn't strictly      following the test-first principle will        ogy, vol. 56, no. 4, 2014, pp. 375­394.
+follow the TDD process. In par-          certainly prevent you from taking          5.Y. Rafique and V.B. Misic, "The Ef-
+ticular, developers wrote more pro-      shortcuts that skip tests. In this case,       fects of Test-Driven Development on
+duction code than necessary, often       there's value in sticking with the rule        External Quality and Productivity:
+omitted refactoring, and didn't keep     that implies not to write any produc-          A Meta-analysis," IEEE Trans. Soft-
+test cases up to date in accordance      tion code without a failing unit test.         ware Eng., vol. 39, no. 6, 2013, pp.
+with the progression of the produc-      However, you should primarily con-             835­856; http://dx.doi.org/10.1109
+tion code. Even when the develop-        sider those tests' quality (without ob-        /TSE.2012.28.
+ers followed the test-first principle,   sessing over coverage),17 instead of       6.B. Turhan et al., "How Effective Is
+they thought about how the produc-       fixating on whether you wrote them             Test-Driven Development?," Making
+tion code (not necessarily the design)   before the code. Although TDD does             Software: What Really Works, and
+should be before they wrote the test     result in more tests,1,6 the lack of at-       Why We Believe It, A. Oram and
+for the next feature. In other words,    tention to testing quality,12 including        G. Wilson, eds., O'Reilly Media,
+perhaps we should simply name this       maintainability and coevolution with           2010, pp. 207­219.
+phenomenon "code-driven testing"?        production code,16 could be alarming.      7.S. Kollanus, "Test-Driven
+                                                                                        Development--Still a Promising
+T DD's internal and external                As long as you're aware of and              Approach?," Proc. 7th Int'l Conf.
+          dynamics are more complex      comfortable with the potential trade           Quality of Information and Commu-
+          than the order in which tests  off between productivity and test-             nications Technology (QUATIC 10),
+are written. There's no convincing       ability and quality (perhaps paying            2010, pp. 403­408; http://dx.doi
+evidence that TDD consistently fares     off in the long term?), using TDD              .org/10.1109/QUATIC.2010.73.
+better than any other development        is fine. If you're simply having fun       8.M. Siniaalto, "Test Driven Develop-
+method, at least those methods that      and feeling good while performing              ment: Empirical Body of Evidence,"
+are iterative. And enough evidence ex-   TDD without any significant draw-              tech. report, Information Technology
+ists to question whether TDD fulfils     backs, that's also fine. After all, the        for European Advancement, 3 Mar.
+its promises.                            evidence shows that happy develop-             2006.
+                                         ers are more productive and produce        9.M. Pancur and M. Ciglaric, "Im-
+   How do you decide whether and         better code!18                                 pact of Test-Driven Development on
+when to use TDD, then? And what                                                         Productivity, Code and Tests: A Con-
+about TDD's secondary effects?           Acknowledgments                                trolled Experiment," Information
+                                         Academy of Finland Project 278354 partly       and Software Technology, vol. 53,
+   As always, context is the key, and                                                   no. 6, 2011, pp. 557­573.
+any potential benefit of TDD is likely   supports this research.                   10.M. Beller et al., "When, How, and
+not due to whatever order of writing                                                    Why Developers (Do Not) Test in
+tests and code developers follow. It     References                                     Their IDEs," Proc. 10th Joint Meet-
+makes sense to have realistic expecta-    1.F. Shull et al., "What Do We Know           ing Foundations of Software Eng.
+tions rather than worship or discard                                                    (ESEC/FSE 15), 2015, pp. 179­190;
+TDD. Focus on the rhythm of devel-            about Test-Driven Development?,"          http://doi.acm.org/10.1145/2786805
+opment; for example, tackle small                                                       .2786843.
+tasks in short, steady development            IEEE Software, vol. 27, no. 6,       11.N.C. Borle et al., "Analyzing the
+cycles, rather than bother with the                                                     Effects of Test Driven Development
+test order. Also, keep in mind that           pp. 16­19, 2010.
+
+                                          2.K. Beck, Test-Driven Development:
+
+                                              By Example, Addison-Wesley, 2003.
+
+                                          3.W. Bissi et al., "The Effects of Test
+
+                                              Driven Development on Internal
+
+                                              Quality, External Quality and
+
+84  IEEE SOFTWARE | W W W.COMPUTER.ORG/SOFT WARE | @IEEESOFT WARE
+                                            REDIRECTIONS
+
+ABOUT THE AUTHORS  ITIR KARAC is a project researcher in the M-Group research group                     SUBMIT
+                   and a doctoral student in the Department of Information Processing
+                   Science at the University of Oulu. Contact her at itir.karac@oulu.fi.              TODAY
+
+                   BURAK TURHAN is a senior lecturer in Brunel University's                   BIG DATAIEEE TRANSACTIONS ON
+                   Department of Computer Science and a professor of software
+                   engineering at the University of Oulu. Contact him at turhanb@                SUBSCRIBE
+                   computer.org.                                                                 AND SUBMIT
+
+                                                                                              For more information
+                                                                                              on paper submission,
+                                                                                              featured articles, calls for
+                                                                                              papers, and subscription
+                                                                                              links visit:
+                                                                                              www.computer.org/tbd
+
+     in GitHub," Empirical Software              Software Technology, Sept. 2017,                  TBD is financially cosponsored
+     Eng., Nov. 2017.                            pp. 64­77.                                       by IEEE Computer Society, IEEE
+12.A. Causevic, D. Sundmark, and            17.D. Bowes et al., "How Good Are My                   Communications Society, IEEE
+     S. Punnekkat, "Factors Limiting             Tests?," Proc. IEEE/ACM 8th Work-              Computational Intelligence Society,
+     Industrial Adoption of Test Driven          shop Emerging Trends in Software             IEEE Sensors Council, IEEE Consumer
+     Development: A Systematic Review,"          Metrics (WETSoM 17), 2017, pp.                   Electronics Society, IEEE Signal
+     Proc. 4th IEEE Int'l Conf. Software         9­14.                                           Processing Society, IEEE Systems,
+     Testing, Verification and Validation,  18.D. Graziotin et al., "What Happens                 Man & Cybernetics Society, IEEE
+     2011, pp. 337­346.                          When Software Developers Are (Un)                Systems Council, IEEE Vehicular
+13.D. Fucci et al., "A Dissection of the         happy," J. Systems and Software,
+     Test-Driven Development Process:            June 2018, pp. 32­47.                                     Technology Society
+     Does It Really Matter to Test-First                                                         TBD is technically cosponsored by
+     or to Test-Last?," IEEE Trans. Soft-                            Read your subscriptions    IEEE Control Systems Society, IEEE
+     ware Eng., vol. 43, no. 7, 2017, pp.                            through the myCS          Photonics Society, IEEE Engineering
+     597­ 614.                                                       publications portal at     in Medicine & Biology Society, IEEE
+14.M.M. Müller and A. Höfer, "The Ef-                                                            Power & Energy Society, and IEEE
+     fect of Experience on the Test-Driven      http://mycs.computer.org
+     Development Process," Empirical                                                                       Biometrics Council
+     Software Eng., vol. 12, no. 6, 2007,
+     pp. 593­615; https://doi.org/10.1007
+     /s10664-007-9048-2.
+15.A. Cockburn, "Elephant Carpaccio,"
+     blog; http://alistair.cockburn.us
+     /Elephant1carpaccio.
+16.S. Romano et al., "Findings from a
+     Multi-method Study on Test-Driven
+     Development," Information and
+
+ J U LY/A U G U S T 2 0 1 8 | I E E E S O F T WA R E  85
+

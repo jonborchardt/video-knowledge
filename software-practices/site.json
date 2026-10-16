@@ -1,0 +1,130 @@
+{
+  "hero": {
+    "title": "TDD, pairing, trunk-based, no estimates: which practices does the evidence actually back?",
+    "lede": "Conference talks state them as laws. Most come out \"partly\": a real mechanism whose payoff depends on dose and context. This page lines up every claim against the studies that exist, and flags where the folklore and the data disagree."
+  },
+  "recap": {
+    "bottomLine": "the advice is more confident than the evidence. Most practice claims come out \"partly\": a real mechanism whose payoff depends on dose and context, and only a minority have a study that settles them either way. Where studies do speak they mostly cut against folklore: TDD is no better than disciplined test-last, language choice barely moves bug rates and the big GitHub study did not replicate, organisational structure predicts defects better than code metrics, open-plan offices cut face-to-face talk rather than raising it, and recording your estimates does not make you better at estimating. Small changes, fast review and trunk-based delivery are the practices with the most consistent support.",
+    "groups": [
+      {
+        "title": "Testing and TDD",
+        "claims": [
+          "writing-tests-first-forces-code-decoupled",
+          "test-first-development-reduces-time-spent",
+          "test-driven-development-produces-better-quality",
+          "trustworthy-automated-test-suite-lets-developers",
+          "line-coverage-shows-code-executed-not",
+          "writing-test-per-method-mocking-every"
+        ]
+      },
+      {
+        "title": "Static vs dynamic typing",
+        "claims": [
+          "static-typing-catches-type-errors-compile",
+          "large-scale-repository-studies-claiming-some",
+          "dynamic-typing-faster-prototyping-rapid-iteration",
+          "static-typing-yields-better-runtime-performance"
+        ]
+      },
+      {
+        "title": "Pairing and code review",
+        "claims": [
+          "pairing-mobbing-puts-best-each-participant",
+          "mob-programming-onboards-new-members-quickly",
+          "pair-programming-provides-continuous-code-review",
+          "small-pull-requests-picked-merged-faster",
+          "reviewer-defect-finding-effectiveness-drops-sharply",
+          "smaller-changes-mean-less-rework-fewer"
+        ]
+      },
+      {
+        "title": "Microservices vs monolith",
+        "claims": [
+          "microservices-cost-more-short-term-rarely",
+          "hype-drives-teams-adopt-microservices-they",
+          "coordination-cost-grows-faster-linearly-team",
+          "keeping-modules-one-process-enforced-boundaries",
+          "service-boundaries-usually-wrong-first-attempt"
+        ]
+      },
+      {
+        "title": "Estimation and agile",
+        "claims": [
+          "long-horizon-task-estimates-inaccurate-managers",
+          "most-software-projects-run-late-over",
+          "estimates-become-deadlines-drive-overtime-destroys",
+          "short-fixed-budget-increments-let-business"
+        ]
+      },
+      {
+        "title": "10x developers and productivity",
+        "claims": [
+          "some-programmers-vastly-more-productive-their",
+          "10x-spread-between-fastest-slowest-programmers",
+          "many-widely-repeated-software-engineering-facts",
+          "hiring-super-programmers-poor-route-team"
+        ]
+      },
+      {
+        "title": "Clean code and technical debt",
+        "claims": [
+          "preferring-runtime-polymorphism-over-switch-statements",
+          "code-unhealthy-files-has-many-times",
+          "modular-decomposition-behind-simple-interfaces-reduces",
+          "rewriting-working-system-scratch-throws-away",
+          "architectural-problems-can-fixed-incremental-refactoring"
+        ]
+      },
+      {
+        "title": "Continuous delivery",
+        "claims": [
+          "trunk-based-development-one-small-change",
+          "long-lived-branches-delay-integration-produce",
+          "software-delivery-speed-stability-move-together",
+          "feature-flags-let-unfinished-work-merge"
+        ]
+      },
+      {
+        "title": "Hours, interruptions and offices",
+        "claims": [
+          "sustained-crunch-lowers-productivity-employee-happiness",
+          "sleep-deprivation-impairs-cognition-like-alcohol",
+          "programming-needs-blocks-least-half-day",
+          "open-plan-offices-increase-noise-visual",
+          "moving-open-plan-offices-reduces-face"
+        ]
+      }
+    ]
+  },
+  "docs": {
+    "bacchelli2013-modern-code-review.txt": "Bacchelli & Bird 2013 (Microsoft code review)",
+    "berger2019-languages-reproduction.txt": "Berger et al. 2019 (languages reproduction)",
+    "bernstein2018-open-workspace.txt": "Bernstein & Turban 2018 (open offices)",
+    "bird2011-ownership.txt": "Bird et al. 2011 (code ownership)",
+    "buse2010-readability.txt": "Buse & Weimer 2010 (readability)",
+    "dora2019-state-of-devops.txt": "DORA State of DevOps 2019",
+    "dyba2008-agile-review.txt": "Dybå & Dingsøyr 2008 (agile review)",
+    "fucci2016-tdd-replication.txt": "Fucci et al. 2016 (TDD replication)",
+    "fucci2017-tdd-dissection.txt": "Fucci et al. 2017 (TDD dissection)",
+    "gao2017-type-or-not.txt": "Gao, Bird & Barr 2017 (types vs JS bugs)",
+    "halkjelsvik2018-time-predictions-book.txt": "Halkjelsvik & Jørgensen 2018 (Time Predictions)",
+    "hanenberg2014-static-types-emse.txt": "Hanenberg et al. 2014 (static types)",
+    "inozemtseva2014-coverage.txt": "Inozemtseva & Holmes 2014 (coverage)",
+    "jorgensen2004-expert-estimation.txt": "Jørgensen 2004 (expert estimation)",
+    "karac2018-tdd-what-we-know.txt": "Karac & Turhan 2018 (TDD review)",
+    "kleinschmager2012-static-types-maintainability.txt": "Kleinschmager et al. 2012 (static types)",
+    "mark2008-cost-of-interrupted-work.txt": "Mark et al. 2008 (interruptions)",
+    "mcintosh2014-code-review-coverage.txt": "McIntosh et al. 2014 (review coverage)",
+    "meyer2014-perceptions-productivity.txt": "Meyer et al. 2014 (productivity perceptions)",
+    "nagappan2008-org-structure.txt": "Nagappan et al. 2008 (org structure)",
+    "parnin2011-resumption.txt": "Parnin & Rugaber 2011 (resumption)",
+    "pencavel2014-working-hours.txt": "Pencavel 2014 (working hours)",
+    "prechelt1999-28to1-legend.txt": "Prechelt 1999 (28:1 legend)",
+    "prechelt2000-seven-languages.txt": "Prechelt 2000 (seven languages)",
+    "ray2014-languages-github.txt": "Ray et al. 2014 (languages on GitHub)",
+    "sadowski2018-code-review-google.txt": "Sadowski et al. 2018 (Google code review)",
+    "scalabrino2019-understandability.txt": "Scalabrino et al. 2019 (understandability)",
+    "soldani2018-microservices-pains-gains.txt": "Soldani et al. 2018 (microservices review)",
+    "tornhill2022-code-red.txt": "Tornhill & Borg 2022 (Code Red)"
+  }
+}

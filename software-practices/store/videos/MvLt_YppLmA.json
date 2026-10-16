@@ -1,0 +1,135 @@
+{
+  "id": "MvLt_YppLmA",
+  "title": "Challenging the Myth of the 10x Programmer",
+  "channel": "Software Engineering Institute | Carnegie Mellon University",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCrmnnE3yzpAyAuX_hRqyLdg",
+  "durationSec": 1010,
+  "thumbnail": "https://i.ytimg.com/vi_webp/MvLt_YppLmA/sddefault.webp",
+  "summary": "SEI researcher on data showing the 10x programmer range is mostly within-person variation, with implications for small tasks and sprint length.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/10x-spread-between-fastest-slowest-programmers",
+      "stance": "asserts",
+      "quote": "the variation within a programmer within a programmer's own 10 programs was comparable to the variation between programmers",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Nichols' repeated-measures PSP data support this, but the sample is trained PSP students on small exercises and other studies still find stable individual differences.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Re-analysis of 61 experiments (614 subjects) finds the slowest-quarter to fastest-quarter median ratio is typically 2-3x and max/min ratios above 10 are rare, so the 10x spread is an artifact of best-vs-worst comparison; the report does not measure a programmer's own task-to-task variation.",
+          "source": "software-practices/sources/prechelt1999-28to1-legend.txt#L395-L401",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/experience-lines-code-written-degrees-held",
+      "stance": "asserts",
+      "quote": "what about degrees obtained nothing mattered",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "This null result holds in the PSP dataset, but other studies find modest effects of relevant experience, so it is not settled.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/productivity-differences-across-programmers-follow-long",
+      "stance": "asserts",
+      "quote": "the distribution isn't a bells curve it's more log normal long tail",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Task-time distributions are commonly right-skewed, consistent with this, though the exact form varies by dataset.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Work time distributions across 1491 observations show a clear long right tail (skewness about 1 to 2) and a normal assumption over-estimates variability almost always; the paper confirms long-tailed non-normal shape but does not fit a log-normal.",
+          "source": "software-practices/sources/prechelt1999-28to1-legend.txt#L643-L648",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/small-tasks-easier-estimate-reveal-runaway",
+      "stance": "asserts",
+      "quote": "it's easier to estimate it's easier to know when it's gone off the rails",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Estimation error grows with task size in most estimation research; the early-intervention benefit is plausible but less directly measured.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.2,
+          "note": "In one three-week student XP project, initial estimates were about one third of actuals, blamed on inexperience and coarse user stories, and improved as the project went on; a single small case bearing only on the story-granularity half of the claim.",
+          "source": "software-practices/sources/dyba2008-agile-review.txt#L778-L786",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Controlled experiments show a magnitude effect: smaller tasks are overestimated or at least less underestimated while larger tasks are underestimated, so small tasks carry less bias; the early-warning benefit is not studied.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L3165-L3170",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/shortening-sprints-too-far-increases-estimation",
+      "stance": "asserts",
+      "quote": "what happens when you reduce your sample size the uncertainty becomes bigger",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Statistically sound for sprint-level forecasting, but no study pins down where the diminishing returns begin.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/hiring-super-programmers-poor-route-team",
+      "stance": "asserts",
+      "quote": "you're going to be hard-pressed to really up the productivity by finding that super fast programmer",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Follows from the variance finding, but environmental interventions have not been compared head-to-head with hiring in controlled studies.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

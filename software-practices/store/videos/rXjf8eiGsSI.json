@@ -1,0 +1,68 @@
+{
+  "id": "rXjf8eiGsSI",
+  "title": "How small should a function be? - Robert C. Martin (Uncle Bob)",
+  "channel": "Dev Tools Made Simple",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCc9psPH74QBAXXpWNe57etA",
+  "durationSec": 230,
+  "thumbnail": "https://i.ytimg.com/vi_webp/rXjf8eiGsSI/sddefault.webp",
+  "summary": "Robert C. Martin: functions should be small, then smaller; extract until nothing more can be extracted, and the tiny named functions reveal the hidden classes.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/functions-should-extracted-until-each-does",
+      "stance": "asserts",
+      "quote": "a function does one thing if you cannot meaningfully extract another function from it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Smaller methods correlate with fewer defects up to a point, but studies find very small, deeply delegating methods hurt comprehension.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.2,
+          "note": "Interviewed developers cited 'implements a single task' as a positive for the most understandable method and 'too many responsibilities' as a negative for the least understandable one; five-developer opinion on four methods, no test of the 'extract until nothing further' rule.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L976-L978",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/large-functions-classes-disguise-extracting-until",
+      "stance": "asserts",
+      "quote": "every large function is really a class with a bunch of little tiny functions inside it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Extract Class from shared locals is a standard refactoring; 'every' overstates.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/function-length-rules-such-fit-one",
+      "stance": "asserts",
+      "quote": "the rule came about your function should fit on a screen well that meant that the functions had to be about 20 lines",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Historical framing.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

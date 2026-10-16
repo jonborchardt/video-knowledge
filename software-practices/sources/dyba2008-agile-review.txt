@@ -1,0 +1,1890 @@
+Available online at www.sciencedirect.com
+
+Information and Software Technology 50 (2008) 833­859
+
+                                                       www.elsevier.com/locate/infsof
+
+Empirical studies of agile software development: A systematic review
+
+                                      Tore Dyba° *, Torgeir Dingsøyr
+
+                                                    SINTEF ICT, S.P. Andersensv. 15B, NO-7465 Trondheim, Norway
+                                 Received 22 October 2007; received in revised form 22 January 2008; accepted 24 January 2008
+
+                                                                          Available online 2 February 2008
+
+Abstract
+
+   Agile software development represents a major departure from traditional, plan-based approaches to software engineering. A system-
+atic review of empirical studies of agile software development up to and including 2005 was conducted. The search strategy identified
+1996 studies, of which 36 were identified as empirical studies. The studies were grouped into four themes: introduction and adoption,
+human and social factors, perceptions on agile methods, and comparative studies. The review investigates what is currently known about
+the benefits and limitations of, and the strength of evidence for, agile methods. Implications for research and practice are presented. The
+main implication for research is a need for more and better empirical studies of agile software development within a common research
+agenda. For the industrial readership, the review provides a map of findings, according to topic, that can be compared for relevance to
+their own settings and situations.
+Ó 2008 Elsevier B.V. All rights reserved.
+
+Keywords: Empirical software engineering; Evidence-based software engineering; Systematic review; Research synthesis; Agile software development; XP;
+Extreme programming; Scrum
+
+Contents
+
+  1. Introduction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 834
+  2. Background ­ agile software development . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 834
+
+        2.1. The field of agile software development. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 834
+        2.2. Summary of previous reviews . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 836
+        2.3. Objectives of this review . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 837
+  3. Review method . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 837
+        3.1. Protocol development . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 837
+        3.2. Inclusion and exclusion criteria. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 837
+        3.3. Data sources and search strategy . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 838
+        3.4. Citation management, retrieval, and inclusion decisions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 838
+        3.5. Quality assessment . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 839
+        3.6. Data extraction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 840
+        3.7. Synthesis of findings . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 840
+  4. Results . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 840
+        4.1. Overview of studies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 840
+        4.2. Research methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 841
+        4.3. Methodological quality . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 841
+        4.4. Introduction and adoption of agile development methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 842
+
+  * Corresponding author. Tel.: +47 73 59 29 47; fax: +47 73 59 29 77.
+    E-mail addresses: tore.dyba@sintef.no (T. Dyba°), torgeir.dingsoyr@sintef.no (T. Dingsøyr).
+
+0950-5849/$ - see front matter Ó 2008 Elsevier B.V. All rights reserved.
+doi:10.1016/j.infsof.2008.01.006
+834 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+                 4.4.1. Introduction and adoption . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 843
+                 4.4.2. Development process . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 843
+                 4.4.3. Knowledge and project management . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 844
+        4.5. Human and social factors . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 844
+                 4.5.1. Organizational culture. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 844
+                 4.5.2. Collaborative work . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 845
+                 4.5.3. Team characteristics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 846
+        4.6. Perceptions on agile methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 846
+                 4.6.1. Customer perceptions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 846
+                 4.6.2. Developer perceptions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 847
+                 4.6.3. Student perceptions. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 847
+        4.7. Comparative studies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 847
+                 4.7.1. Project management . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 847
+                 4.7.2. Productivity . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 848
+                 4.7.3. Product quality. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 849
+                 4.7.4. Work practices and job satisfaction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 849
+  5. Discussion. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 849
+        5.1. Benefits and limitations of agile development. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 850
+        5.2. Strength of evidence . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 851
+        5.3. Implications for research and practice . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 851
+        5.4. Limitations of this review . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 853
+  6. Conclusion . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 853
+        Appendix A . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 853
+        Appendix B . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 855
+        Appendix C . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 857
+        Appendix D. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 857
+        References . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 858
+
+1. Introduction                                                    The article is organized as follows: In Section 2, we give
+                                                                an overview of agile software development, identify the
+   The issue of how software development should be orga-        theoretical roots, and existing reviews. Section 3 describes
+nized in order to deliver faster, better, and cheaper solu-     the methods used for this review. Section 4 reports the find-
+tions has been discussed in software engineering circles        ings of the review after first presenting an overview of the
+for decades. Many remedies for improvement have been            studies, the research methods used, the quality of the meth-
+suggested, from the standardization and measurement of          odology, and a description of the studies in four main the-
+the software process to a multitude of concrete tools, tech-    matic groups. Section 5 discusses benefits and limitations,
+niques, and practices.                                          strength of evidence, and implications for research and
+                                                                practice. Section 6 concludes and provides recommenda-
+   Recently, many of the suggestions for improvement            tions for further research on agile software development.
+have come from experienced practitioners, who have
+labelled their methods agile software development. This         2. Background ­ agile software development
+movement has had a huge impact on how software is devel-
+oped worldwide. However, though there are many agile               We first describe the field of agile development, core
+methods, little is known about how these methods are car-       ideas, how this field relates to other disciplines, and sum-
+ried out in practice and what their effects are.                marize the critique of agile development. We then summa-
+                                                                rize previous reviews of the agile literature, justify the need
+   This systematic review seeks to evaluate, synthesize, and    for this review, and state the research questions that moti-
+present the empirical findings on agile software develop-       vated the review.
+ment to date, and provide an overview of topics researched,
+their findings, strength of the findings, and implications for  2.1. The field of agile software development
+research and practice. We believe this overview will be
+important for practitioners who want to stay up to date            Methods for agile software development constitute a set
+with the state of research, as well as for researchers who      of practices for software development that have been cre-
+want to identify topic areas that have been researched or       ated by experienced practitioners [68]. These methods can
+where research is lacking. This review will also help the sci-  be seen as a reaction to plan-based or traditional methods,
+entific community that works with agile development to          which emphasize ``a rationalized, engineering-based
+build a common understanding of the challenges that must        approach" [21,47] in which it is claimed that problems
+be faced when investigating the effectiveness of agile meth-    are fully specifiable and that optimal and predictable solu-
+ods. The results of such investigation will be relevant to the
+software industry.
+                               T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859                             835
+
+Table 1
+Description of main agile development methods, with key references
+
+Agile method                   Description                                                                                                Reference
+                                                                                                                                          [16]
+Crystal methodologies          A family of methods for co-located teams of different sizes and criticality: Clear, Yellow, Orange,
+                               Red, Blue. The most agile method, Crystal Clear, focuses on communication in small teams                   [60]
+                               developing software that is not life-critical. Clear development has seven characteristics: frequent
+                               delivery, reflective improvement, osmotic communication, personal safety, focus, easy access to            [50]
+                               expert users, and requirements for the technical environment                                               [52]
+                                                                                                                                          [56]
+Dynamic software development   Divides projects in three phases: pre-project, project life-cycle, and post project. Nine principles
+   method (DSDM)               underlie DSDM: user involvement, empowering the project team, frequent delivery, addressing                [9,10]
+                               current business needs, iterative and incremental development, allow for reversing changes, high-level
+                               scope being fixed before project starts, testing throughout the lifecycle, and efficient and effective
+                               communication
+
+Feature-driven development     Combines model-driven and agile development with emphasis on initial object model, division of
+                               work in features, and iterative design for each feature. Claims to be suitable for the development of
+                               critical systems. An iteration of a feature consists of two phases: design and development
+
+Lean software development      An adaptation of principles from lean production and, in particular, the Toyota production system to
+                               software development. Consists of seven principles: eliminate waste, amplify learning, decide as late
+                               as possible, deliver as fast as possible, empower the team, build integrity, and see the whole
+
+Scrum                          Focuses on project management in situations where it is difficult to plan ahead, with mechanisms for
+                               ``empirical process control"; where feedback loops constitute the core element. Software is developed
+                               by a self-organizing team in increments (called ``sprints"), starting with planning and ending with a
+                               review. Features to be implemented in the system are registered in a backlog. Then, the product
+                               owner decides which backlog items should be developed in the following sprint. Team members
+                               coordinate their work in a daily stand-up meeting. One team member, the scrum master, is in charge
+                               of solving problems that stop the team from working effectively
+
+Extreme programming (XP; XP2)  Focuses on best practice for development. Consists of twelve practices: the planning game, small
+                               releases, metaphor, simple design, testing, refactoring, pair programming, collective ownership,
+                               continuous integration, 40-h week, on-site customers, and coding standards. The revised ``XP2" consists
+                               of the following ``primary practices": sit together, whole team, informative workspace, energized work,
+                               pair programming, stories, weekly cycle, quarterly cycle, slack, 10-minute build, continuous integration,
+                               test-first programming, and incremental design. There are also 11 ``corollary practices"
+
+tions exist for every problem. The ``traditionalists" are said        Working software over comprehensive documentation.
+to advocate extensive planning, codified processes, and rig-          Customer collaboration over contract negotiation.
+orous reuse to make development an efficient and predict-             Responding to change over following a plan.
+able activity [11].
+                                                                       In an article that describes the history of iterative and
+   By contrast, agile processes address the challenge of an         incremental development, Larman and Basili [40] identify
+unpredictable world by relying on ``people and their crea-          Dynamic Systems Development Method (DSDM) [60] as
+tivity rather than on processes" [21,47].                           the first agile method, followed by extreme programming
+                                                                    (XP) [9], which originated from the Chrysler C3 project in
+   Ericksson et al. [27] define agility as follows:                 1996 [5]. In 1998, the word ``agile" was used in combination
+                                                                    with ``software process" for the first time [6]. Several further
+   agility means to strip away as much of the heaviness, com-       methods followed, including the Crystal family of methods
+   monly associated with the traditional software-develop-          [16], EVO [28], Feature-Driven Development [50], Lean
+   ment methodologies, as possible to promote quick                 Development [52] and Scrum [56]. In 2004, a new version
+   response to changing environments, changes in user require-      of XP appeared [10]. See Table 1 for an overview of the most
+   ments, accelerated project deadlines and the like. (p. 89)       referenced agile development methods, and Table 2 for a
+                                                                    comparison of traditional and agile development.
+   Williams and Cockburn [66] state that agile develop-
+ment is ``about feedback and change", that agile methodol-             Many have tried to explain the core ideas in agile soft-
+ogies are developed to ``embrace, rather than reject, higher        ware development, some by examining similar trends in
+rates of change".                                                   other disciplines. Conboy and Fitzgerald [19], for example,
+                                                                    describe agility as what is known in other fields as ``flexibil-
+   In 2001, the ``agile manifesto" was written by the prac-         ity" and ``leanness". They refer to several sources of inspi-
+titioners who proposed many of the agile development                ration, primarily:
+methods. The manifesto states that agile development
+should focus on four core values1:                                    Agile manufacturing, which was introduced by researchers
+                                                                       from Lehigh University in an attempt for the USA to regain
+  Individuals and interactions over processes and tools.               its competitive position in manufacturing. Key concepts in
+
+  1 http://agilemanifesto.org
+836 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+Table 2
+Main differences between traditional development and agile development [47]
+
+                        Traditional development                                    Agile development
+
+Fundamental             Systems are fully specifiable, predictable, and are built  High-quality adaptive software is developed by small
+   assumption           through meticulous and extensive planning                  teams using the principles of continuous design
+                                                                                   improvement and testing based on rapid feedback and
+Management style        Command and control                                        change
+Knowledge management    Explicit                                                   Leadership and collaboration
+Communication           Formal                                                     Tacit
+Development model       Life-cycle model (waterfall, spiral or some variation)     Informal
+Desired organizational  Mechanistic (bureaucratic with high formalization), aimed  The evolutionary-delivery model
+                        at large organizations                                     Organic (flexible and participative encouraging
+   form/structure                                                                  cooperative social action), aimed at small and medium-
+                        Heavy planning and strict control. Late, heavy testing     sized organizations
+Quality control                                                                    Continuous control of requirements, design and solutions.
+                                                                                   Continuous testing
+
+   agile manufacturing are integrating customer-supplier rela-                  It has also been suggested that the social values
+   tionships, managing change, uncertainty, complexity, uti-                 embraced by extreme programming makes agile teams
+   lizing human resources, and information [30,55].                          make ineffective decisions, which are contrary to those that
+  Lean development [67], which is rooted in the Toyota                       the group members desire [41].
+   Production System [49] from the 1950s. Some of the core
+   ideas in this system were to eliminate waste, achieve                     2.2. Summary of previous reviews
+   quality first time, and focus on problem solving.
+                                                                                Introductions to and overviews of agile development are
+   Meso and Jain [44] have compared ideas in agile devel-                    given by Abrahamsson et al. [2], Cohen et al. [17], and
+opment to those in Complex Adaptive Systems by provid-                       Erickson et al. [27]. These three reports describe the state
+ing a theoretical lens for understanding how agile                           of the art and state of the practice in terms of characteris-
+development can be used in volatile business environments.                   tics of the various agile methods and lessons learned from
+Turk et al. [64] have clarified the assumptions that underlie                applying such methods in industry. We summarize each of
+processes of agile development and also identifies the limi-                 these previous overviews briefly.
+tations that may arise from these assumptions. In the liter-
+ature, we also find articles that trace the roots of agile                      The first review of the existing literature on agile soft-
+development to the Soft Systems Methodology of Peter                         ware development was done in a technical report published
+Checkland [14], New product development [63] and Ack-                        by Abrahamsson et al. at VTT in 2002 [2]. The report dis-
+off's interactive planning [4].                                              cusses the concept of agile development, presents processes,
+                                                                             roles, practices, and experience with 10 agile development
+   Nerur and Balijepally [46] compare agile development to                   methods, and compares the methods with respect to the
+maturing design ideas in architectural design and strategic                  phases that they support and the level of competence that
+management: ``the new design metaphor incorporates learn-                    they require. Only DSDM and the Rational Unified Pro-
+ing and acknowledges the connectedness of knowing and                        cess [38] were found to give full coverage to all phases of
+doing (thought and action), the interwoven nature of means                   development, while Scrum mainly covers aspects related
+and ends, and the need to reconcile multiple world-views" (p.                to project management. Abrahamsson et al. found anec-
+81).                                                                         dotal evidence that agile methods are ``effective and suit-
+                                                                             able for many situations and environments", but state
+   However, agile development methods have also been                         that very few empirically validated studies support these
+criticized by some practitioners and academics, mainly                       claims. The report was followed by a comparative analysis
+focusing on five aspects:                                                    of nine agile methods in 2003 [3], where it is stated that
+                                                                             empirical support for the suggested methods remains
+1. Agile development is nothing new; such practices have                     scarce.
+   been in place in software development since the 1960s [43].
+                                                                                Cohen et al.'s review published in 2004 [17] emphasizes
+2. The lack of focus on architecture is bound to engender                    the history of agile development, shows some of the roots
+   suboptimal design-decisions [42,61].                                      to other disciplines, and, in particular, discusses relations
+                                                                             between agile development and the Capability Maturity
+3. There is little scientific support for many of the claims                 Model (CMM) [51]. They further describe the state of the
+   made by the agile community [42].                                         art with respect to the main agile methods and their char-
+                                                                             acteristics. They also describe the state of the practice,
+4. The practices in XP are rarely applicable, and are rarely                 which resulted from an online discussion between 18 prac-
+   applied by the book [34].
+
+5. Agile development methods are suitable for small teams,
+   but for larger projects, other processes are more appro-
+   priate [17].
+                     T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859  837
+
+titioners, many of whom were involved in defining the var-        We hope that this article will be useful for both groups,
+ious agile development methods. They discuss issues such          and that it will make clear which claims on agile software
+as the introduction of, and project management in, agile          development are supported by scientific studies.
+development. They also present experiments and surveys,
+and seven case studies of agile development. The authors             The objective of the review is to answer the following
+believe that agile methods will be consolidated in the            research questions:
+future, just as object-oriented methods were consolidated.
+Further, they do not believe that agile methods will rule         1. What is currently known about the benefits and limita-
+out traditional methods. Rather, they believe that agile             tions of agile software development?
+and traditional methods will have a symbiotic relationship,
+in which factors such as the number of people working on a        2. What is the strength of the evidence in support of these
+project, application domain, criticality, and innovativeness         findings?
+will determine which process to select.
+                                                                  3. What are the implications of these studies for the soft-
+   In 2005, Erickson et al. [27] described the state of research     ware industry and the research community?
+on XP, agile software development, and agile modelling.
+With respect to XP, they found a small number of case stud-          In addition to producing substantive findings regarding
+ies and experience reports that promote the success of XP.        agile software development, the review also aims to advance
+The XP practice of pair programming is supported by a more        methodology for integrating diverse study types, including
+well-established stream of research, and there are some stud-     qualitative research, within systematic reviews of software
+ies on iterative development. Erickson et al. recommend that      engineering interventions. The result of this work has been
+the other core practices in XP be studied separately in order     reported separately [23], and is not further described here.
+to identify what practices are working (for recent studies of
+practices, see [22,26]). Further, they see challenges with        3. Review method
+matching agile software development methods with stan-
+dards such as ISO, and they argue that this is an area that          Informed by the established method of systematic
+needs further research. There was much less research on agile     review [31,35,36], we undertook the review in distinct
+modelling than on XP.                                             stages: the development of review protocol, the identifica-
+                                                                  tion of inclusion and exclusion criteria, a search for rele-
+2.3. Objectives of this review                                    vant studies, critical appraisal, data extraction, and
+                                                                  synthesis. In the rest of this section, we describe the details
+   In a short time, agile development has attracted huge          of these stages and the methods used.
+interest from the software industry. A survey in the USA
+and Europe reveals that 14% of companies are using agile          3.1. Protocol development
+methods, and that 49% of the companies that are aware of
+agile methods are interested in adopting them [1]. In just six       We developed a protocol for the systematic review by fol-
+years, the Agile2 conference has grown to attract a larger        lowing the guidelines, procedures, and policies of the Camp-
+attendance than most conferences in software engineering.         bell Collaboration,3 the Cochrane Handbook for Systematic
+                                                                  Reviews of Interventions [31], the University of York's Cen-
+   Rajlich [53] describes agile development as a paradigm         tre for Reviews and Dissemination's guidance for those car-
+shift in software engineering, which has emerged from inde-       rying out or commissioning reviews [35], and consultation
+pendent sources: studies of software life cycles and iterative    with software engineering specialists on the topic and meth-
+development. ``The new paradigm brings a host of new topics       ods. This protocol specified the research questions, search
+into the forefront of software engineering research. These        strategy, inclusion, exclusion and quality criteria, data
+topics have been neglected in the past by researchers inspired    extraction, and methods of synthesis.
+by the old paradigm, and therefore there is a backlog of
+research problems to be solved." (p. 70).                         3.2. Inclusion and exclusion criteria
+
+   No systematic review of agile software development                Studies were eligible for inclusion in the review if they
+research has previously been published. The existing              presented empirical data on agile software development
+reviews that were presented in the previous section only          and passed the minimum quality threshold (see Section
+partially cover the empirical studies that exist today. Fur-      3.5). Studies of both students and professional software
+ther, the previous reviews do not include any assessment          developers were included. Inclusion of studies was not
+of the quality of the published studies, as in this systematic    restricted to any specific type of intervention or outcome
+review.                                                           measure. The systematic review included qualitative and
+                                                                  quantitative research studies, published up to and includ-
+   This means that practitioners and researchers have to          ing 2005. Only studies written in English were included.
+rely on practitioner books in order to get an overview.
+
+2 www.agile200X.org                                               3 www.campbellcollaboration.org
+838 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+   Studies were excluded if their focus, or main focus, was            (1) agile AND software
+not agile software development or if they did not present              (2) extreme programming
+empirical data. Furthermore, as our research questions                 (3) xp AND software
+are concerned with agile development as a whole, and its               (4) scrum AND software
+underlying assumptions, studies that focused on single                 (5) crystal AND software AND (clear OR orange OR
+techniques or practices, such as pair programming, unit                red OR blue)
+testing, or refactoring, were excluded. In addition to agile           (6) dsdm AND software
+methods in general, we included the following specific                 (7) fdd AND software
+methods: XP, Scrum, Crystal, DSDM, FDD, and Lean.                      (8) feature AND driven AND development AND
+                                                                       software
+   Finally, given that our focus was on empirical research,            (9) lean AND software AND development
+``lessons learned" papers (papers without a research ques-
+tion and research design) and papers merely based on                   All these search terms for agile articles were combined
+expert opinion were also excluded.                                  by using the Boolean ``OR" operator, which entails that
+                                                                    an article only had to include any one of the terms to be
+3.3. Data sources and search strategy                               retrieved. That is, we searched:
+
+   The search strategy included electronic databases and               1 OR 2 OR 3 OR 4 OR 5 OR 6 OR 7 OR 8 OR 9
+hand searches of conference proceedings. The following
+electronic databases were searched:                                    Excluded from the search were editorials, prefaces, arti-
+                                                                    cle summaries, interviews, news, reviews, correspondence,
+  ACM Digital Library                                               discussions, comments, reader's letters and summaries of
+  Compendex                                                         tutorials, workshops, panels, and poster sessions. This
+  IEEE Xplore                                                       search strategy resulted in a total of 2946 ``hits" that
+  ISI Web of Science                                                included 1996 unduplicated citations.
+  Kluwer Online
+  ScienceDirect ­ Elsevier                                          3.4. Citation management, retrieval, and inclusion decisions
+  SpringerLink
+  Wiley Inter Science Journal Finder                                   Relevant citations from stage 1 (n = 1996) were
+                                                                    entered into and sorted with the aid of EndNote. They
+   In addition, we hand-searched all volumes of the follow-         were then imported to Excel, where we recorded the
+ing conference proceedings for research papers:                     source of each citation, our retrieval decision, retrieval
+                                                                    status, and eligibility decision. For each subsequent
+  XP                                                                stage, separate EndNote databases and Excel sheets were
+  XP/Agile Universe                                                 established.
+  Agile Development Conference
+                                                                       At stage 2, both authors sat together and went through
+   Fig. 1 shows the systematic review process and the num-          the titles of all studies that resulted from stage 1, to deter-
+ber of papers identified at each stage. In stage 1, the titles,     mine their relevance to the systematic review. At this stage,
+abstracts, and keywords of the articles in the included elec-       we excluded studies that were clearly not about agile soft-
+tronic databases and conference proceedings were searched           ware development, independently of whether they were
+using the following search terms:                                   empirical or not. As an example, because our search strat-
+                                                                    egy included the term ``xp and software", we got several
+Stage 1  Identify relevant studies ­                     n = 1,996  ``hits" on articles about Microsoft's Windows XP operat-
+         search databases and                                       ing system. In addition, because we used the term ``agile
+         conference proceedings                                     and software", we got several hits on articles related to
+                                                                    agile manufacturing. Articles with titles that indicated
+Stage 2  Exclude studies on the basis                    n = 821    clearly that the articles were outside the scope of this sys-
+         of titles                                                  tematic review were excluded. However, titles are not
+                                                                    always clear indicators of what an article is about. Some
+Stage 3  Exclude studies on the basis                    n = 270    authors' use of ``clever" or witty titles can sometimes
+         of abstracts                                               obscure the actual content of an article. In such cases,
+                                                                    the articles were included for review in the next stage. At
+Stage 4  Obtain primary papers and                       n = 36     this stage, 1175 articles were excluded.
+         critically appraise studies
+                                                                       At stage 3, studies were excluded if their focus, or main
+         Fig. 1. Stages of the study selection process.             focus, was not agile software development or if they did
+                                                                    not present empirical data. However, we found that
+                                                                    abstracts were of variable quality; some abstracts were
+T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859  839
+
+missing, poor, and/or misleading, and several gave little       3. There was an adequate description of the context in
+indication of what was in the full article. In particular, it      which the research was carried out.
+was not always obvious whether a study was, indeed, an
+empirical one. Therefore, at this stage, we included all stud-     The first of these three criteria represents the minimum
+ies that indicated some form of experience with agile devel-    quality threshold of the review and was used to exclude
+opment. If it was unclear from the title, abstract, and         non-empirical research papers (see Appendix B). As part
+keywords whether a study conformed to the screening cri-        of this screening process, any single-technique or single-
+teria, it was included for a detailed quality assessment (see   practice papers were also identified and excluded.
+below).
+                                                                   Five criteria were related to the rigour of the research
+   At this stage, we divided the abstracts among ourselves      methods employed to establish the validity of data collec-
+and a third researcher in such a way that each abstract was     tion tools and the analysis methods, and hence the trust-
+reviewed by two researchers independently of each other.        worthiness of the findings. Consequently, each study was
+For the 821 abstracts assessed, the number of observed          assessed according to whether:
+agreements was 738 (89.9%). We also computed the Kappa
+coefficient of agreement, which corrects for chance agree-       4. The research design was appropriate to address the
+ment [18]. The Kappa coefficient for stage 3 assessments             aims of the research.
+was 0.78, which is characterized as ``substantial agreement"
+by Landis and Koch [39]. All disagreements were resolved         5. There was an adequate description of the sample used
+by discussion that included all three researchers, before            and the methods for identifying and recruiting the
+proceeding to the next stage. As a result of this discussion,        sample.
+another 551 articles were excluded at this stage, which left
+270 articles for the detailed quality assessment.                6. Any control groups were used to compare treatments.
+                                                                 7. Appropriate data collection methods were used and
+3.5. Quality assessment
+                                                                     described.
+   Each of the 270 studies that remained after stage 3 was       8. There was an adequate description of the methods used
+assessed independently by both authors, according to 11
+criteria. These criteria were informed by those proposed             to analyze data and whether appropriate methods for
+for the Critical Appraisal Skills Programme (CASP)4 (in              ensuring the data analysis were grounded in the data.
+particular, those for assessing the quality of qualitative
+research [29]) and by principles of good practice for con-         In addition, two criteria were related to the assessment
+ducting empirical research in software engineering [37].        of the credibility of the study methods for ensuring that
+                                                                the findings are valid and meaningful. In relation to this,
+   The 11 criteria covered three main issues pertaining to      we judged the studies according to whether:
+quality that need to be considered when appraising the
+studies identified in the review (see Appendix B):               9. The relationship between the researcher and partici-
+                                                                     pants was considered to an adequate degree.
+
+                                                                10. The study provided clearly stated findings with credible
+                                                                     results and justified conclusions.
+
+ Rigour. Has a thorough and appropriate approach been              The final criterion was related to the assessment of the
+  applied to key research methods in the study?                 relevance of the study for the software industry at large
+                                                                and the research community. Thus, we judged the studies
+ Credibility. Are the findings well-presented and               according to whether:
+  meaningful?
+                                                                11. They provided value for research or practice.
+ Relevance. How useful are the findings to the software
+  industry and the research community?
+
+   We included three screening criteria that were related to       Taken together, these 11 criteria provided a measure of
+the quality of the reporting of a study's rationale, aims, and  the extent to which we could be confident that a particular
+context. Thus, each study was assessed according to             study's findings could make a valuable contribution to the
+whether:                                                        review. Each of the 11 criteria was graded on a dichoto-
+                                                                mous (``yes" or ``no") scale. Again, only criterion 1 was
+1. The study reported empirical research or whether it was      used as the basis for including or excluding a study.
+   merely a ``lessons learned" report based on expert
+   opinion.                                                        Of the 270 articles assessed for quality, the number
+                                                                of observed agreements regarding inclusion/exclusion
+2. The aims and objectives were clearly reported (including     based on the screening criterion was 255 (94.4%).
+   a rationale for why the study was undertaken).               The corresponding Kappa coefficient was 0.79. Again,
+                                                                all disagreements were resolved by discussion that
+  4 www.phru.nhs.uk/Pages/PHD/CASP.htm                          included all three researchers. At this stage, another
+                                                                234 lessons-learned or single-practice articles were
+                                                                excluded, leaving 33 primary and 3 secondary studies
+840 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+Table 3                                                                   be explained by the differences in methods or characteris-
+Quality criteria                                                          tics of the study setting.
+
+1. Is the paper based on research (or is it merely a ``lessons learned"      In a meta-ethnographic synthesis, studies can relate to
+   report based on expert opinion)?                                       one another in one of three ways: they may be directly
+                                                                          comparable as reciprocal translations; they may stand in
+2. Is there a clear statement of the aims of the research?                opposition to one another as refutational translations; or
+3. Is there an adequate description of the context in which the research  taken together they may represent a line of argument
+                                                                          [13]. Table 4 shows Noblit and Hare's seven-step process
+   was carried out?                                                       for conducting a meta-ethnography.
+4. Was the research design appropriate to address the aims of the
+                                                                             This process of reciprocal and refutational translation
+   research?                                                              and synthesis of studies achieved three things with respect
+5. Was the recruitment strategy appropriate to the aims of the            to answering our overarching question about the benefits
+                                                                          and limitations of agile software development. First, it iden-
+   research?                                                              tified a set of higher-order interpretations, or themes, which
+6. Was there a control group with which to compare treatments?            recurred across studies. Second, it documented that agile
+7. Was the data collected in a way that addressed the research issue?     software development contains both positive and negative
+8. Was the data analysis sufficiently rigorous?                           dimensions. Finally, it highlighted gaps in the evidence about
+9. Has the relationship between researcher and participants been          the applicability of agile methods to software development.
+
+   considered to an adequate degree?                                      4. Results
+10. Is there a clear statement of findings?
+11. Is the study of value for research or practice?
+
+for data extraction and synthesis. A summary of the
+quality assessment criteria for these studies is presented
+in Table 3.
+
+3.6. Data extraction                                                         We identified 36 empirical studies on agile software devel-
+                                                                          opment. Thirty-three are primary studies (S1-S33) and three
+   During this stage, data was extracted from each of the                 are secondary studies (S34-S36); see Appendix A. In what
+33 primary studies included in this systematic review                     follows, we discuss the primary studies. These cover a range
+according to a predefined extraction form (see Appendix                   of research topics, were done with a multitude of research
+C). This form enabled us to record full details of the articles           methods, and were performed in settings that ranged from
+under review and to be specific about how each of them                    professional projects to university courses. Key data, along
+addressed our research questions.                                         with a description of the domain in which each primary study
+                                                                          was conducted, is presented in Appendix D.
+   When we piloted the extraction process we found that
+extracting data was hindered by the way some of the pri-                     We categorized the studies into four main groups: (1)
+mary studies were reported. Due to this, we also found that               introduction and adoption, (2) human and social factors,
+we differed too much in what we actually extracted for                    (3) customer and developer perceptions, and (4) compara-
+independent extraction to be meaningful. As a conse-                      tive studies. Three studies did not fit into any of these cat-
+quence, all data from all primary studies were extracted                  egories. They provide baseline data on various aspects of
+by both authors in consensus meetings.                                    agile development (S1, S8, S11).
+
+   The aims, settings, research methods descriptions, find-                  We now describe characteristics of the studies, describe
+ings, and conclusions, as reported by the authors of the pri-             the research methods applied, and assess the quality of
+mary studies, were copied verbatim into NVivo, from QSR                   the studies. Then, we present the studies included in the
+Software,5 a specialist software package for undertaking                  four categories mentioned above.
+the qualitative analysis of textual data.
+                                                                          4.1. Overview of studies
+3.7. Synthesis of findings
+                                                                             With respect to the kinds of agile method that have been
+   Meta-ethnographic methods were used to synthesize the                  studied, we see from Table 5 that 25 (76%) of the studies in
+data extracted from the primary studies [48]. The first stage             this review were done on XP. Studies on agility in general
+of the synthesis was to identify the main concepts from                   come next, with five (15%) of the studies. Scrum and Lean
+each primary study, using the original author's terms.
+The key concepts were then organized in tabular form to                   Table 4
+enable comparison across studies and the reciprocal trans-                Seven phases of meta-ethnography (Noblit and Hare [48])
+lation of findings into higher-order interpretations. This
+process is analogous to the method of constant comparison                 1. Getting started
+used in qualitative data analysis [45,62]. When we identified             2. Deciding what is relevant to the initial interest
+differences in findings, we investigated whether these could              3. Reading the studies
+                                                                          4. Determining how the studies are related
+  5 See http://www.qsrinternational.com/                                  5. Translating the studies into one another
+                                                                          6. Synthesizing translations
+                                                                          7. Expressing the synthesis
+                                T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859          841
+
+Table 5                                                                    Table 7
+Studies after type of agile method used in the study                       Studies by research method
+
+Agile method                    Number                            Percent  Research method                      Number  Percent
+
+XP                              25                                 76      Single-case                          13       39
+Generala                         5                                 15      Multiple-case                        11       33
+                                 1                                   3     Survey                                4       12
+Scrum                            1                                   3     Experiment                            3         9
+                                 1                                   3     Mixed                                 2         6
+Lean software development
+Otherb                                                            100      Total                                33      100
+
+Total                           33
+
+a ``General" refers to studies on agility in general.
+b ``Other" refers to a company-internal agile method.
+
+Software Development were studied in only one empirical                    Most of the studies were published in conferences (26 of
+research article each.                                                     33, 79%), while seven (21%) appeared in scientific journals.
+
+   If we look at the level of experience of the employees                     Regarding the year of publication, we found no empiri-
+who perform agile development in the reviewed studies                      cal studies of agile software development prior to 2001.
+(Appendix D), we see that 24 (73%) of the studies that                     However, from 2001 we found a steady increase of studies
+investigated agile projects dealt with employees who are                   with one empirical research study published in 2001, one in
+beginners (less than a year of experience in agile develop-                2002, three in 2003, 12 in 2004, and 16 published in 2005.
+ment). Four (12%) studies dealt with mature agile develop-
+ment teams (at least one year of experience in agile                       4.2. Research methods
+development). Two studies did not indicate whether it
+was a beginner or mature team that was studied and for                        The number and percentage of publications using each
+three studies (surveys) this classification was not applicable.            research method is listed in Table 7. Information on which
+                                                                           studies belong to which category is given in Appendix D.
+   Most studies (24 of 33, 73%) dealt with professional                    Of the 13 single-case studies, nine were done in projects
+software developers. The remaining nine (27%) were con-                    in industry. The material for the other four studies was
+ducted in a university setting. Most projects were of short                taken from projects where students did the development.
+duration and were completed in small teams.                                Interestingly, three of these studies took their data from
+                                                                           the same project. Only one of the single-case studies in
+   Table 6 gives an overview of the studies according to                   industry was done on a mature development team.
+publication channel. We see that the conferences XP and
+Agile Development have the largest number of studies.                         For the 11 multiple-case studies, all were done in indus-
+                                                                           try, but only three of the studies were on mature teams.
+Table 6                                                                    The number of cases varied from two to three.
+Distribution of studies after publication channel and occurrence
+                                                                              Three of the four surveys were done on employees in
+Publication channel             Type                  Number Percent       software companies, while one was done on students. The
+                                                                           three experiments were all done on students, with team
+XP 200X                         Conference             5          15       sizes ranging from three to 16. For the two mixed-method
+Agile Development Conference    Conference             5          15       studies, Melnik and Maurer (S22) reported on a survey
+IEEE Software                   Journal                3           9       amongst students in addition to interviews and notes from
+Profes                          Conference             2           6       discussions. The study by Baskerville et al. (S3), reported
+ASEE FEC                        Conference             1           3       on 10 case studies in companies, in combination with find-
+Computer Supported Cooperative  Journal                1           3       ings from group discussions in a ``discovery colloquium"
+                                                                           that was inspired by principles in action research [8].
+   Work                         Conference             1           3
+CSMR                            Journal                1           3       4.3. Methodological quality
+Empirical Software Engineering  Conference             1           3
+ENCBS                           Conference             1           3          As mentioned in Section 3, we chose to assess each of
+ENC                             Conference             1           3       the primary studies according to 11 quality criteria based
+EuroMicro                       Conference             1           3       on the Critical Appraisal Skills Programme (CASP)6 and
+EuroSPI                         Conference             1           3       by principles of good practice for conducting empirical
+HICCS                           Conference             1           3       research in software engineering (e.g., [37]). A summary
+HSSE                            Conference             1           3       of the questions used to assess the quality of these studies
+IASTED ICSEA                    Conference             1           3       is presented in Table 3. The detailed subcriteria are pre-
+ICSE                            Conference             1           3       sented in Appendix B. Both authors rated each criterion
+ISESE                           Conference             1           3       of each study independently. When discrepancies arose,
+ITIICT                          Journal                1           3
+Journal of database management  Conference             1           3         6 www.phru.nhs.uk/casp/casp.htm.
+Metrics                         Journal                1           3
+Software Quality Journal        Conference             1           3
+XP/Agile Universe
+
+Total                                                 33 100
+842 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+Table 8                23     4   5  6                           7  8  9            10 11 Total
+Quality assessment
+                       Aim Context R. design Sampling Ctrl. Grp Data coll. Data anal Reflexivity Findings Value
+Study 1
+                       11     0   0  0                           1  1  0            1 17
+             Research                                                               1 1 10
+                       11     1   1  1                           1  1  0            1 16
+S1 1                                                                                1 19
+S2 1                   11     1   0  0                           0  0  0            1 19
+S3 1                                                                                1 19
+S4 1                   11     1   1  0                           1  1  0            1 19
+S5 1                                                                                1 17
+S6 1                   11     1   0  1                           1  1  0            1 19
+S7 1                                                                                1 18
+S8 1                   11     1   0  1                           1  1  0            1 16
+S9 1                                                                                1 19
+S10 1                  11     1   0  1                           1  1  0            1 17
+S11 1                                                                               1 19
+S12 1                  11     1   0  0                           1  0  0            1 19
+S13 1                                                                               1 18
+S14 1                  11     1   1  0                           1  1  0            1 18
+S15 1                                                                               1 17
+S16 1                  01     1   0  1                           1  1  0            1 18
+S17 1                                                                               1 18
+S18 1                  11     1   0  0                           0  0  0            1 18
+S19 1                                                                               1 19
+S20 1                  11     1   1  0                           1  1  0            1 14
+S21 1                                                                               1 18
+S22 1                  11     1   0  0                           0  1  0            1 16
+S23 1                                                                               1 16
+S24 1                  11     1   0  1                           1  1  0            1 18
+S25 1                                                                               1 1 10
+S26 1                  11     1   0  1                           1  1  0            1 19
+S27 1                                                                               1 19
+S28 1                  11     1   0  0                           1  1  0            1 16
+S29 1                                                                               1 19
+S30 1                  11     1   0  0                           1  1  0            1 19
+S31 1
+S32 1                  11     1   0  0                           1  0  0
+S33 1
+                       11     1   0  0                           1  1  0
+Total 33
+                       11     1   0  0                           1  1  0
+
+                       11     1   0  0                           1  1  0
+
+                       11     1   1  0                           1  1  0
+
+                       01     0   0  0                           0  0  0
+
+                       11     1   0  0                           1  1  0
+
+                       11     1   0  0                           0  0  0
+
+                       11     1   0  0                           0  0  0
+
+                       11     1   0  0                           1  1  0
+
+                       11     1   1  1                           1  1  0
+
+                       11     1   1  0                           1  1  0
+
+                       11     1   1  0                           1  1  0
+
+                       11     0   0  0                           0  0  1
+
+                       11     1   0  1                           1  1  0
+
+                       11     1   0  1                           1  1  0
+
+                       31 33  30  8  10 26 25 1                                     33 33
+
+these were discussed and the study was reread to determine       ies, respectively, did not adequately describe their data col-
+the final scores of each criterion.                              lection and data analysis procedures. In only one study was
+                                                                 the recognition of any possibility of researcher bias
+   Taken together, these 11 criteria provide a measure of        mentioned.
+the extent to which we can be confident that a particular
+study's findings can make a valuable contribution to the            We frequently found the following: methods were not
+review. The grading of each of the 11 criteria was done          well described; issues of bias, validity, and reliability were
+on a dichotomous (``yes" or ``no") scale. The results of         not always addressed; and methods of data collection
+the quality assessment are shown in Table 8, in which a          and analysis were often not explained well. None of the
+``1" indicates ``yes" (or OK) to the question, while ``0" indi-  studies got a full score on the quality assessment and only
+cates ``no" (or not OK).                                         two studies got one negative answer. Twenty-one studies
+                                                                 were rated at two or three negative answers, while 10 stud-
+   Because we only included research papers in this review,      ies were rated as having four or more negative answers.
+all included studies were rated as OK on the first screening     The highest number of negative answers was seven.
+criterion. However, two of the included studies still did not
+have a clear statement of the aims of the research. All stud-    4.4. Introduction and adoption of agile development methods
+ies had some form of description of the context in which
+the research was carried out. For three of the studies, the         Several studies addressed how agile development meth-
+chosen research design did not seem appropriate to the           ods are introduced and adopted in companies; see Table
+aims of the research. As many as 25 out of the 33 primary        9. We characterized these studies as falling into three broad
+studies did not have a recruitment strategy that seemed          groups: those that discuss introduction and adoption, those
+appropriate for the aims stated for the research. Ten of         that discuss how the development process is changed, and
+the studies included one or more groups with which to
+compare agile methods. As many as seven and eight stud-
+                  T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859  843
+
+Table 9
+Study aims for studies on the introduction and adoption of agile development methods
+
+Study  Study aim
+
+S2 Understand what differentiates waterfall and XP development, and examine the impact of knowledge creation on the adoption of XP
+S9 Study why and how XP is adopted and used in everyday software production
+S12 Study the integration of agile teams into stage-gate software product development
+S23 Test the applicability of lean techniques to developing software
+S29 Study how an agile process affects collaboration in a software development organization
+S30 Study the introducing of a process based on XP in an evolutionary and maintenance-based software development environment
+S31 Understand how newcomers practice extreme programming, and how practice is improved over time
+
+those that discuss how knowledge and projects are              rience with XP (except one week of training), they found
+managed.                                                       the model easy to use and useful to develop information
+                                                               systems". A development manager described the shift as
+   However, some researchers argue that there is nothing       follows:
+new about agile methods. Hilkka et al. (S9) studied two
+development organizations in Finland, and concluded that          The first week was tough, no one of my guys have a
+XP is ``old wine in new bottles". XP ``formalizes several         strong experience with XP. But they quickly caught up
+habits that appear naturally (. . .) close customer involve-      and we got quite good results. A lot of work is needed
+ment, short release cycles, cyclical development, and fast        to master XP but we are getting there. (p. 8)
+response to change requests". In a company-internal devel-
+opment department, the researchers found that:                    The study reports that the development team found
+                                                               using the waterfall model to be an ``unpleasant experi-
+   the tools and techniques of XP had been employed for        ence", while XP was found to be ``beneficial and a good
+   more than 10 years and had been applied in a quite sys-     move from management". The XP project was delivered
+   tematic fashion, though the company had never made a        a bit less late (50% time-overrun, versus 60% for the tradi-
+   deliberate decision to use XP. (p. 52)                      tional), and at a significantly reduced cost overrun (25%,
+                                                               compared to 50% cost overrun for the traditional project).
+   Another ``new economy" company was more aware of
+developments in the field:                                        Bahli and Zeid claim that the adoption of XP was facil-
+                                                               itated by ``a high degree of knowledge creation enabled by
+   the XP process had more or less emerged as a novel way      mutual development of information systems developers
+   of solving time and budget constraints. The developers      and users".
+   were aware of XP practices, but did not choose to
+   engage in it by the book. (p. 52)                              Karlstro¨ m and Runeson (S29) found that XP teams
+                                                               experienced improved communication, but were perceived
+   However, most studies treated agile development as          by other teams as more isolated. Their study is described
+something ``new" and that consequently requires introduc-      in detail below.
+tion and adoption.
+                                                               4.4.2. Development process
+4.4.1. Introduction and adoption                                  Tessem (S31) set up a project with researchers and stu-
+   Svensson and Ho¨ st (S30) present the results of introduc-
+                                                               dents to learn more about how practices in XP work.
+ing a process based on XP to a large software development      The project lasted for three weeks and had two deliveries
+company. The process was introduced to a pilot team that       (three planned, but reduced because of ``severe underesti-
+worked for eight months. Svensson and Ho¨st concluded          mation in the beginning"). Six people worked on the pro-
+that the introduction of the process proved difficult, due     ject. The experience of the people varied from
+to the complexity of the organization. They advise compa-      programming experience only from university courses to
+nies that want to introduce agile development methods to       people experienced with professional development. The
+assess existing processes, with the following goals in mind:   aim of the project was to develop a web application for
+determining what to introduce; clarifying terminology to       group work in university courses. Tessem reports on expe-
+simplify communication with the rest of the company;           rience with key practices of XP. Pair programming was
+avoiding underestimating the effort needed to introduce        found to be a ``positive experience, enhancing learning
+and adapt XP; and introducing the practice of continuous       and also leading to higher quality". However, three of
+testing early, because it takes time and effort to introduce   the programmers also reported it to be ``extremely ineffi-
+this properly.                                                 cient", ``very exhausting", and ``a waste of time". Towards
+                                                               the end of the project, single programming was used to a
+   In contrast, Bahli and Zeid (S2) studied how a Canadian     greater extent than pair programming. Tessem suggests
+organization shifted from a waterfall process to XP, and       that there is a connection between this shift in program-
+found that ``even though team members had no prior expe-       ming methods and a higher occurrence of problems in
+844 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+the end. Frequent partner changes are suggested as a way           Hilkka et al. also underline the importance of skilled
+to achieve optimal learning and to increase collective code     team members with solid domain knowledge: ``without
+ownership. Further, the on-site customer role was per-          these kinds of persons, the chosen approach would proba-
+ceived as ``very valuable by all programmers". Tessem also      bly have little possibility to succeed" (S9).
+found that test-first programming contributed to ``higher
+quality in code", while the project struggled to get func-         Karlstro¨ m and Runeson (S12) studied the feasibility of
+tional tests running.                                           applying agile methods in large software development pro-
+                                                                jects, using stage-gate project management models. They
+   A study by Svensson and Ho¨ st (S29) also provides           report findings from introductory trials with XP in three
+insight into the development process, but focused primarily     companies: ABB, Ericsson Microwave Systems, and Voda-
+on how agile development affects customer collaboration.        phone Group. They found that the engineers were moti-
+This study was done in a software development company           vated by the principles of agile development, but that the
+in Sweden with 250 software developers, who were respon-        managers were initially afraid and needed to be trained.
+sible for over 30 software systems. A modified process was      They also found that as a result of using agile development,
+introduced that mainly followed XP. The researchers found       the engineers focused on past and current releases, while
+that having the customer on-site enabled better collabora-      the managers focused increasingly on current and future
+tion with the customer, because it provided an arena for        releases. A potential problem was that technical issues were
+detailed discussions.                                           raised too early for management.
+
+   Concepts from lean development were introduced in a             In the study by Tessem (S31), the planning game prac-
+large company's information systems department in a study       tice of XP was used to estimate the size of work. Estimates
+organized by Middleton (S23). The techniques were tried on      made by the project team at the beginning of the project
+two two-person teams that were maintaining a financial and      were about one third of what turned out to be correct,
+management information system. The teams were instructed        which is explained by both the team's lack of estimation
+to change their work practice, so that it involved shorter      experience and coarse user stories. Estimates improved
+feedback cycles and completing work before taking on more.      towards the end of the project. Several of the study partic-
+In the beginning, many errors were discovered in the work,      ipants mentioned that during the project, there were not
+which led to a time of ``frustration and low productivity".     enough discussions on design and architecture.
+One of the teams made fewer errors over time, but the other
+team continued to make a high number of errors, which also         In a study by Svensson and Ho¨ st (S30), the planning
+led to an early termination of the study. According to Mid-     game activity was found to have a positive effect on collab-
+dleton, this was because one person in the fault-prone team     oration within the company, because it provided the orga-
+felt overqualified for the work and was not willing to discuss  nization with better insight into the software development
+his work with others, and was ``unable to produce work with-    process.
+out errors". There was no infrastructure in the company to
+handle this problem. Although the experiment was short          4.5. Human and social factors
+and only successful for one team, Middleton claimed that
+``by moving responsibility for measuring quality from the          Several studies examined various human and social fac-
+manger to the workers, a much quicker and more thorough         tors related to agile development; see Table 10. Three broad
+response to defects was obtained".                              topics were investigated: the impact of organizational cul-
+                                                                ture, how collaborative work takes place in agile develop-
+   Hilkka et al. (S9) found that in the cases they studied,     ment, and what characterizes agile development teams.
+XP worked best with experienced developers with domain
+and tool knowledge. The tools facilitated fast delivery         4.5.1. Organizational culture
+and easy modification of prototypes. In addition, continu-         Robinson and Sharp (S26) found that XP has the ability
+ous feedback was found to be a key factor for success.
+                                                                to thrive in radically different organizational settings in an
+4.4.3. Knowledge and project management                         ethnographically informed study of three companies in the
+   The study by Bahli and Zeid (S2) examined knowledge          UK. The companies were studied with respect to three fac-
+                                                                tors: organizational type, organizational structure, and
+sharing in an XP project and a traditional project. They        physical and temporal settings. These factors are described
+found that when the XP model was used, the creation of          in Table 11.
+tacit knowledge improved as a result of frequent contacts:
+                                                                   Case A was a large multinational bank with an XP team
+   Because the XP model's main characteristics are short        that was ``a small part of the bank's software development
+   iterations with small releases and rapid feedback, close     activities". Case B was a medium-sized company that pro-
+   user participation, constant communication and coordi-       duces content security software, using only XP. Case C was
+   nation and collective ownership, knowledge and the           a small start-up company that had used XP since the begin-
+   capability to create and utilize knowledge among the         ning to develop web-based intelligent advertisements.
+   development team members are eminent. (p. 4)
+                                                                   Robinson and Sharp (S26) found that, despite the vari-
+                                                                ations in organization type, structure, and physical setting,
+                                                                XP was working well. They list a number of consequences
+                           T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859  845
+
+Table 10
+Study aims for studies on human and social factors
+
+Study   Study aim
+
+S5 Study how the social behaviour of individuals reflects beliefs and understanding with regard to software development
+S16 Evaluate key aspects of XP in a real-world setting as well as contemporary practices of software engineering
+S24 Study the characteristics of XP teams
+S25 Explore the social side of practices in mature XP teams
+S26 Explore the impact of organizational culture on XP practice in mature teams
+S27 Gain insight into the culture and community of XP
+S33 Explore whether it is possible to identify roles within an extreme programming team that has associated personality characteristics
+
+Table 11
+Differences in organization type, structure, and physical setting for the three cases studied in S26
+
+        Organization type             Organizational structure                                        Physical setting
+                                                                                                      Large, open-plan floor with workstations
+Case A  Hierarchical                  XP team collaborated with two
+Case B  Collaborative                 customer representatives                                        Open-plan space with groups of workstations
+                                      Internal ``on-site" customers, outside testers                  for pair programming, meeting rooms and cubicles
+                                                                                                      Open-plan office with pair programming area
+Case C  Little or no central control  Minimal organizational structure
+
+for development that were generated by the organizational          talk has a complex structure with identifiable episodes
+culture.                                                           of exploration, creation, fixing & refining, overlaid with
+                                                                   explaining, justifying & scrutinising. (p. 102)
+   Case C is further described in another publication (S27).
+Here, the development team is described as:                        Paring is described as intense and stressful, and one
+                                                                pair's conversation would frequently spread to other pairs.
+   a self-managing, self-organizing community with a cul-       Mackenzie and Monk (S16) also emphasize the importance
+   ture that emphasized shared responsibility. There was        of conversations, claiming that it constitutes ``talking code
+   a rhythm to life that enabled people to organize their       into existence".
+   work tasks in a way that gave them common ownership
+   of the work product and control over how it was                 With respect to tracking progress, Robinson and Sharp
+   achieved. The rhythm was comfortable and relaxed,            described it as happening on two levels: the daily rhythm
+   yet purposeful and productive. (p. 373)                      and the rhythm oriented around the iteration. Progress
+                                                                was communicated in daily stand-up meetings, and teams
+   In case C, the authors claim that the organization           would often have ceremonies around releasing code. One
+seemed to behave in an agile fashion. They found no signs       team studied by Robinson and Sharp used a toy cow that
+of such normal software development artefacts as model-         was tilted to make a `moo' sound when new code was
+ling techniques, requirements documents, or minutes of          released. Chong (S5) reports similar findings, stating that
+meetings. The working mode in this company resembles            ``XP makes developing software visually and aurally
+descriptions of communities of practice in the literature       available".
+on knowledge management [65].
+                                                                   Studies of collaborative work also find that the work
+   The organizational culture affected how XP was carried       patterns are standardized. Chong (S5) observed that:
+out, with respect to behaviour, beliefs, attitudes and values,
+organizational structure, as well as physical and temporal         shared understandings manifested themselves in the con-
+settings.                                                          sistent, uniform patterns of work in which the team
+                                                                   members engaged . . . the XP framework required that
+4.5.2. Collaborative work                                          they work at the same time, in the same place, and in lar-
+   Collaborative work in XP development has been studied           gely the same ways. (p. 8)
+
+from three angles: the role of conversation in collaborative       One practice that standardizes work in XP is the plan-
+work, how progress is tracked, and how work is                  ning game, which is described in use by Mackenzie and
+standardized.                                                   Monk (S16):
+
+   With respect to conversation, Robinson and Sharp (S25)          the card game knit together in a rule-governed process a
+describe pairing as a process of:                                  very disparate set of work processes and relations
+                                                                   involving management, the customer or client and all
+   purposeful talk where they [two developers] discuss,            the members of the software development team. (p. 114)
+   explore, negotiate and progress the task at hand. This
+846 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+Mackenzie and Monk claimed that the process spans the          team member. Good XP team members are described as
+usual boundaries between project managers and software         ``analytical, with good interpersonal skills and a passion
+developers.                                                    for extending his knowledge base (and passing this on to
+                                                               others)."
+4.5.3. Team characteristics
+   Robinson and Sharp (S24) claim that agile development       4.6. Perceptions on agile methods
+
+teams have faith in their own abilities, show respect and         Several studies have investigated how agile methods are
+responsibility, establish trust, and preserve the quality of   perceived by different groups. We describe findings from
+working life. Young et al. (S33) used a technique called       studies that examined the perceptions amongst customers,
+``repertory grid analysis" to identify good personality char-  developers, and university students. Table 12 gives an over-
+acteristics for members of XP development teams.               view of the aims of these studies.
+
+   Faith in one's own abilities was observed to have two       4.6.1. Customer perceptions
+aspects in the study by Robinson and Sharp (S24): believ-         Several aspects of customer perceptions are discussed in
+ing that the team was capable of achieving the tasks at
+hand, and understanding what the limitations were. The         the literature on agile development. Some have addressed
+team received feedback on their beliefs from successfully      how satisfied customers are with agile methods, others
+executing code, from a satisfied customer, and from sup-       describe the customer role, and some focus on the collabo-
+port and encouragement from each other.                        ration between a customer and the development team.
+
+   Preserving the quality of working life was observed            With respect to the customer's satisfaction with agile
+through constructive discussions in the planning game, tak-    development methods, Ilieva et al. (S10) studied the intro-
+ing into account the needs of individuals in pair program-     duction of an agile method based on XP and the Personal
+ming, and adhering to 40-h work-weeks. In addition, one        Software Process [32]. They state that the customer had
+team took regular breaks and identified several ways to        constant control over the development process, which
+relieve developers in hectic periods.                          was ``highly praised by the customer at the project sign-
+                                                               off". In addition, Mann and Maurer (S17) found, in a study
+   Respect for one's team members and a sense of respon-       on the impact of Scrum on overtime and customer satisfac-
+sibility were manifested via the way in which work was         tion, that customers believed that the daily meetings kept
+assigned; active agreement was required. ``Individuals         them up to date and that planning meetings were helpful
+clearly felt that they had the respect of their fellow team    to ``reduce the confusion about what should be developed".
+members and were therefore empowered to take on respon-        The attitude of the customers was found to change from
+sibility in this way".                                         ``one of ambivalence to becoming involved". The custom-
+                                                               ers stated that their satisfaction with the project that was
+   In the study by Robinson and Sharp (S24), trust was         based on XP was greater than with previous projects at
+found to be pervasive:                                         the company.
+
+   The nature of the trust relationship here transcends the       However, Mann and Maurer stress that the customer
+   immediate business of two individuals pairing and is        should be trained in the Scrum process so that they will
+   persistent. It also applies across pairs (and sub-teams),   understand the new expectations that the developers will
+   with each pair trusting the others to do their part, and    have of them.
+   it extends beyond the 12 practices. (p. 146)
+                                                                  The role of the customer is also the focus in the study by
+   Young et al. (S33) investigated what personality traits it  Martin et al. (S19), on three XP projects with on-site cus-
+is beneficial for team members to possess in agile develop-    tomers. In all cases, they found that the customer was
+ment. They discussed the traits of roles such as team leader,  under stress and committed working long hours, although
+technical lead, architect, good (XP) team member, and bad
+
+Table 12
+Study aims for the perceptions of customers, developers, and students
+
+Study Study aim
+
+S2 Understand what differentiates waterfall and XP development, and examine the impact of knowledge creation on the adoption of XP
+S10 Compare empirical findings of an agile method based on XP with a baseline, with respect to productivity, defect rates, cost, and schedule
+
+             deviations
+S13 Provide empirical data on customer effort usage, customer perceptions, and project team perceptions of on-site customer in an XP project
+S17 Study the impact of Scrum on overtime, as well as on customer and developer experience
+S18 Compare the job satisfaction of developers that use XP practices with developers that do not use XP practices
+S19 Provide empirical data on the role of on-site customer role in XP
+S20 Study the role of the customer in projects using XP and outsourcing
+S21 Study student perceptions of agile practices
+S22 Study how students perceive agile development methods
+T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859       847
+
+all the customers were supported by an acceptance team, and that employees intended to use this development pro-
+
+various technical advisors, or senior personnel:                cess in the future.
+
+   The existing XP Customer practices appears to be             4.6.3. Student perceptions
+   achieving excellent results, but they also appear to be         Melnik and Maurer (S21, S22) report on student percep-
+   unsustainable, and so constitute a great risk to XP pro-
+   jects, especially in long or high pressure projects (p. 12)  tions of agile development methods in two studies, one
+                                                                from 2002 and one from 2005. They found that 240 stu-
+   Martin et al. (S20) also studied the role of the customer    dents who responded to a survey at the Southern Alberta
+in outsourced projects, and found that this was challenging     Institute of Technology and at the University of Calgary
+because the customer was required to become acclimatized        in Canada were ``very enthusiastic about core agile prac-
+to the different cultures or organizations of the developers.   tices". The findings were consistent across educational
+                                                                programmes.
+   Koskela and Abrahamsson (S13) analyzed the role of
+the customer in an XP project and found that most of               The students found that working in agile teams helped
+the time was spent on participating in planning game ses-       them to develop professional skills such as communication,
+sions and acceptance testing, followed by retrospective ses-    commitment, cooperation, and adaptability. Seventy-eight
+sions at the end of release cycles.                             percent of the respondents stated that they believe that
+                                                                XP improves the productivity of small teams. This figure
+4.6.2. Developer perceptions                                    is comparable to the findings of Mannaro et al. (S18) on
+   Mannaro et al. (S18) surveyed the job satisfaction           pair programming and productivity for employees in soft-
+                                                                ware companies.
+amongst employees in software companies that used XP
+and companies that did not use agile development meth-             Further, 76% of the respondents believed that using XP
+ods. One hundred and twenty-two people completed a              improved the quality of code, and 65% would recommend
+web-based questionnaire. The bulk of these were from Eur-       using XP to any company for which they may work in the
+ope and the United States.                                      future. Of those that recommended using XP to their future
+                                                                employers, a large number preferred to work in pairs.
+   Ninety-five percent of the employees who used XP
+answered that they would like their company to continue            In the 2002 study, Melnik and Maurer (S21) present
+using their current development process, while the number       qualitative findings on perceptions of XP in general, pair
+for the employees in companies that did not use agile devel-    programming, test-first design, and the planning game.
+opment methods was 40%. In addition, the employees in           Most students found pair programming to be helpful, but
+the companies that used XP were significantly more willing      some expressed concern when the the members of the pair
+to use the development process in the future than the           had different levels of competence. One student stated that
+employees in companies that did not use XP. Further,            ``There was a huge difference in skill level in my pair, so we
+Mannaro et al. (S18) claimed that employees who use XP          weren't very productive when I wasn't driving". In addi-
+have greater job satisfaction, feel that the job environment    tion, test-first design was difficult for many students. The
+is more comfortable, and believe that their productivity is     authors believe that this is because design in itself is very
+higher. In particular, 73% of the employees who used pair       difficult, and writing the tests first forces students to make
+programming claim that this practice speeds up the soft-        design decisions early.
+ware development process.
+                                                                4.7. Comparative studies
+   In the study by Ilieva et al. (S10), developers found pair
+programming to be ``a very useful style of working as              One third (11) of the reviewed primary studies provided
+everyone was strictly conforming to the coding standards".      some form of comparison of agile development against an
+However, the authors also note that working 40 h a week in      alternative; see Table 13. Using our interpretations as a basis,
+pairs requires a lot of concentration, and that as a result,    these comparisons can be grouped into four higher-order
+the developers became exhausted.                                comparative topics: project management, productivity,
+                                                                product quality, and team characteristics. Non-comparative
+   Mann and Maurer (S17) found that the introduction of         studies that mention one or more of these issues are also
+Scrum led to a reduction of overtime, and all developers        included in this section.
+recommended the use of Scrum in future projects. The
+developers were more satisfied with the product, and saw        4.7.1. Project management
+that the Scrum process fostered more customer involve-             The management of software projects has long been a
+ment and communication. One developer said that ``the
+Scrum process is giving me confidence that we are develop-      matter of interest. Agile methods have reinforced this inter-
+ing the software that the customer wants".                      est, because many conventional ideas about management
+                                                                are challenged by such methods. Ceschi et al. (S4) found,
+   A study by Bahli and Zeid (S2) used the Technology           in their survey of plan-based and agile companies, that
+Acceptance Model [54] to study the adoption of XP in a          agile methods improved the management of the develop-
+company that develops medical information systems. They         ment process as well as relationships with the customer.
+found that employees saw XP as easy to use and useful,
+848 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+Table 13
+Study aims for comparative studies
+
+Study Study aim
+
+S3 Understand how and why Internet-speed software development differs from traditional software development
+S4 Compare agile methods with plan-based methods with respect to project management practices
+S6 Compare the effectiveness of incremental and evolutionary process models for technology development projects
+S7 Compare differences in resource utilization and efficiency in products developed using sequential, incremental, evolutionary, and extreme
+
+             programming
+S10 Compare empirical findings of an agile method based on XP with a baseline, with respect to productivity, defect rates, cost, and schedule
+
+             deviations
+S12 Study the integration of agile teams into stage-gate software product development
+S14 Compare the effectiveness of XP with traditional development, with respect to pre- and post-release quality, programmer productivity, customer
+
+             satisfaction, and team moral
+S15 Compare XP with a traditional approach with respect to quality
+S18 Compare the job satisfaction of developers that use XP practices with developers that do not use XP practices
+S28 Compare agile and document-driven approaches in managing uncertainty in software development
+S32 Compare plan-driven and agile development with respect to team cohesion and product quality
+
+In particular, they found that companies that use agile             Similarly, Ceschi et al. (S4) found that the tighter links
+methods prefer to organize their processes in more releases      between the customer and the development team resulted
+and that the managers of such companies are more satisfied       in agile companies being more satisfied with their customer
+with the way they plan their projects than are plan-based        relationships than plan-based companies. Furthermore,
+companies. Moreover, Baskerville et al. (S3) found that          Sillitti et al.'s (S28) survey of project managers found that
+``Internet-speed development" project management differs         companies that use agile methods are more customer-cen-
+from that of traditional development in that ``Projects do       tric and flexible than document-driven ones, and that com-
+not begin or end, but are an ongoing operation more akin         panies that use agile methods seem to have a more
+to operations management." (Baskerville et al. (S3), p. 77).     satisfactory relationship with the customer.
+
+   Karlstro¨ m and Runeson (S12) studied how traditional            However, with respect to human resource management,
+stage-gate project management could be combined with             Baskerville et al. (S3) concluded that compared to tradi-
+agile methods. In a case study of three large companies,         tional development, team members of agile teams are less
+they found that agile methods give the stage-gate model          interchangeable, and more difficult to describe and identify.
+powerful tools for microplanning, day-to-day work con-
+trol, and reporting on progress. They also found that they       4.7.2. Productivity
+were able to communicate much more effectively when                 Four studies compared the productivity of agile teams
+using the working software and face-to-face meetings of
+agile methods than when using written documents. In turn,        with the productivity of teams using traditional develop-
+the stage-gate model provided the agile methods with a           ment methods (S7, S10, S14, S32); see Table 14. Ilieva
+means to coordinate with other development teams and             et al. (S10) compared the productivity of two similar pro-
+to communicate with marketing and senior management.             jects, one of which used traditional methods and the other
+Their conclusion was that it is feasible to integrate agile      of which used XP. They measured the productivity for
+methods with stage-gate project management to improve            three iterations of each project. Overall, the results showed
+cost control, product functionality, and on-time delivery.       a 42% increase in productivity for the agile team. The
+                                                                 increase in productivity was largest for the first iteration,
+   A central concern for agile methods is to attend to the real  while there was virtually no difference in productivity for
+needs of the customer, which are often not stated explicitly in  the last iteration.
+a more or less complete requirements specification. Thus,
+Dagnino et al. (S6) compared and contrasted the use of an           The case study by Layman et al. (S14) compared an old
+evolutionary agile approach with a more traditional incre-       release developed with traditional methods with a new
+mental approach in two different technology development
+projects. They showed that by planning in detail only the fea-   Table 14
+tures and requirements to be implemented in a specific cycle,    Comparisons of productivity
+the agile team was more able to incorporate changes in
+requirements at a later stage with less impact on the project.   Study  ProductivityTRAD  ProductivityAGILE  Productivity gain (%)
+In addition, by delivering in-progress software to the cus-
+tomer more frequently, the agile team was able to demon-         S7     3 LOC/ha          13.1 LOC/h                                337
+strate business value more quickly and more often than the       S10    3.8 LOC/h         5.4 LOC/h                                   42
+traditional, iterative team. Combined with continuous feed-      S14    300 LOC/month     440 LOC/month                               46
+back by the customer, this lead to a sharp increase in cus-      S32    157 LOC/          88 LOC/engineer                          À44
+tomer satisfaction on the agile project.                                engineerb
+
+                                                                   a V-model.
+                                                                  b Comparisons were made between two one-semester courses; however,
+
+                                                                 the actual hours worked by the members of the teams were not measured.
+T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859  849
+
+release developed with agile methods. The results showed a     internal or external quality between the XP teams and
+46% increase in productivity for the new agile release com-    the traditional teams.
+pared with the old, traditional release. However, the agile
+team had notably greater domain and programming lan-              With respect to product size, the XP model teams in
+guage expertise and project manager experience, because        Dalcher et al.'s (S7) study delivered 3.5 times more lines
+three of the team members on the new release had previ-        of code than the V-model teams. This is in sharp contrast
+ously worked on the old release.                               to Wellington et al.'s (S32) results, which showed that the
+                                                               traditional team delivered 78% more lines of code than
+   Dalcher et al. (S7) performed an experiment in which fif-   the XP team. However, in contrast to both Dalcher et al.
+teen software teams developed comparable software prod-        and Wellington et al., Macias et al. (S15) found no differ-
+ucts using four different development approaches (V-           ence in product size between the XP teams and the tradi-
+model, incremental, evolutionary, and XP). The greatest        tional teams.
+difference in productivity was between the V-model teams
+and the XP teams, with the XP teams being, on average,         4.7.4. Work practices and job satisfaction
+337% more productive than the V-model teams. However,             A few studies made qualitative comparisons of social
+this productivity gain was due to the XP team delivering
+3.5 times more lines of code without delivering more           behaviour. Chong (S5), for example, performed an ethno-
+functionality.                                                 graphic study to compare the work routines and work
+                                                               practices of the software developers on an XP team and
+   Contrary to the studies by Dalcher et al. (S7), Ilieva      a non-XP team. Chong's observations suggest that certain
+et al. (S10), and Layman et al. (S14), Wellington et al.       features of XP promote greater uniformity in work routine
+(S32) found a 44% decrease in productivity for an XP team      and work practice across individual team members and
+compared with a traditional team. Furthermore, Svensson        that, consequently, XP provides a framework for standard-
+and Ho¨st (S30) found no change in overall productivity        izing the work of software development and making it
+when comparing results from before and after the introduc-     more visible and accessible to the members of a software
+tion of an agile process. However, they did find evidence      development team.
+that when the agile process was introduced, the team
+improved their productivity during the first iterations.          An important part of the XP philosophy is to increase
+                                                               overall team cohesion by making everyone in the team
+   In addition, Mannaro et al. (S18) asked their subjects      responsible for the source code. However, Wellington
+whether the team's productivity had increased significantly    et al.'s (S32) study of team cohesion and individuals'
+as a result of the development process that was used. On a     attachment to the project in XP and non-XP teams yielded
+scale from 1 (Strongly Disagree) to 6 (Strongly Agree), the    equal or higher scores for every aspect of cohesion for the
+mean for the non-XP developers was 3.78, while the mean        non-XP teams. However, at the same time, the study indi-
+for the XP developers was one scale point higher (4.75).       cated a lack of cohesion across subteams for the non-XP
+Similarly, 78% of Melnik and Maurer's (S22) respondents        team (the XP team was not divided into subteams).
+either believed or believed strongly that using XP improves
+the productivity of small teams.                                  The point of departure for Mannaro et al. (S18) was the
+                                                               importance of job satisfaction for the effectiveness of the
+4.7.3. Product quality                                         software development process. Consequently, they per-
+   Several aspects of product quality were examined by the     formed a survey to compare the job satisfaction of develop-
+                                                               ers that used XP practices with that of developers that did
+studies in this review. For example, comparing the results     not use them. The results of their study showed that the
+for a new release of a project to those for an old release,    developers viewed XP practices favourably and indicated
+Layman et al. (S14) found a 65% improvement in pre-            that developers who use XP practices are more comfortable
+release quality and a 35% improvement in post-release          with their job environment and more satisfied with their
+quality. Ilieva et al. (S10) found 13% fewer defects reported  jobs than developers that do not use XP practices.
+by the customer or by the quality assurance team in an XP
+project than in a non-XP project.                              5. Discussion
+
+   In Wellington et al.'s (S32) study, the XP team's code         The present review identified a greater number of studies
+scored consistently better on the quality metrics used than    than did previous reviews. Abrahamsson et al. (S34) wrote
+the traditional team. In addition, the quality of the code     in their 2002 review that the existing evidence consists
+delivered by the XP team was significantly greater than that   mainly of practitioners' success stories. Cohen et al. (S35)
+delivered by the traditional team. However, both teams         found seven case studies on agile development in their
+agreed that the traditional team had developed a better        2004 report, we included none of these in our final set of
+and much more consistent user interface.                       studies, because they were either lessons learned studies
+                                                               or single-practice studies. Further, Erickson et al.'s (S36)
+   Macias et al. (S15) measured the internal and external      2004 review found four ``case studies and lessons learned
+quality of the products developed by 10 XP teams and 10        reports", none of which we included in our review. This
+traditional teams. However, in contrast to Layman et al.       systematic review shows that there are many more empiri-
+and Wellington et al., they found no difference in either
+850 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+cal studies on agile development methods in general than           Many studies have sought to identify how agile methods
+have previously been acknowledged. In contrast to the pre-      are perceived by different groups. Studies on customer per-
+vious reviews, this review used an explicit search strategy     ceptions report that customers are satisfied with the oppor-
+combined with explicit inclusion and exclusion criteria.        tunities for feedback and responding to changes. However,
+                                                                we also found that the role of on-site customer can be
+   We now address our research questions, starting by dis-      stressful and cannot be sustained for a long period. Devel-
+cussing what we found regarding the benefits and limitations    opers are mostly satisfied with agile methods. Companies
+of agile software development. The second subsection dis-       that use XP have reported that their employees are more
+cusses the strength of evidence of these findings, while the    satisfied with their job and that they are more satisfied with
+third subsection discusses the implications of the findings     the product. There were mixed findings regarding the effec-
+for research and practice. Finally, we discuss the limitations  tiveness of pair programming and several developers
+of this systematic review.                                      regard it as an exhausting practice, because it requires
+                                                                heavy concentration. University students perceive agile
+5.1. Benefits and limitations of agile development              methods as providing them with relevant training for their
+                                                                future work and believe that these methods improve the
+   The studies that address the introduction and adoption       productivity in teams. However, they reported that pair
+of agile methods do not provide a unified view of current       programming was difficult when there was a large skill dif-
+practice, but offer a broad picture of experience and some      ferential between the members of the pairs. In addition,
+contradictory findings. XP was found to be difficult to         test-first development was reported to be difficult for many
+introduce in a complex organization, yet seemingly easy         students.
+in other types of organizations. This is consistent with ear-
+lier findings that suggest that agile development methods          The group of comparative studies, in which variations of
+are more suitable for small teams than for larger projects      traditional development are compared to variations of
+[17]. It is likely that the ease with which XP can be intro-    agile development, is very interesting. It has been found
+duced will depend on how interwoven software develop-           that traditional and agile development methods are accom-
+ment is with the other functions of the organization.           panied by differing practices of project management. Some
+Most studies reported that agile development practices          studies suggest benefits in projects that use agile methods
+are easy to adopt and work well. Benefits were reported         because changes are incorporated more easily and business
+in the following areas: customer collaboration, work pro-       value is demonstrated more efficiently. In addition, we
+cesses for handling defects, learning in pair programming,      found that it is also possible to combine agile project man-
+thinking ahead for management, focusing on current work         agement with overall traditional principles, such as the
+for engineers, and estimation. With respect to limitations,     stage-gate project management model. A limitation that
+the lean development technique did not work well for            was mentioned is that team members are less interchange-
+one of the teams trying it out, pair programming was seen       able in agile teams, which has consequences for how pro-
+as inefficient, and some claimed that XP works best with        jects are managed. With respect to the productivity of
+experienced development teams. A further limitation that        agile and traditional teams, three of the four comparative
+was reported by one of the studies, which has also been         studies that address this issue found that using XP results
+repeatedly mentioned in the literature [42,61], was the lack    in increased productivity in terms of LOC/h. However,
+of attention to design and architectural issues.                none of these studies had an appropriate recruitment strat-
+                                                                egy to ensure an unbiased comparison. There are also find-
+   A recurring theme in studies on agile development is         ings from several of the non-comparative studies that
+what we have called human and social factors and how            indicate that the subjects themselves believe that the pro-
+these factors affect, and are affected by, agile development    ductivity increases with the use of agile methods.
+methods. A benefit of XP was that it thrived in radically
+different environments; in organizations that varied from          With respect to product quality, most studies report
+having a hierarchical structure to little or no central con-    increased code quality when agile methods are used,
+trol. In addition, customer involvement and physical set-       but, again, none of these studies had an appropriate
+tings varied greatly for the successful XP teams studied.       recruitment strategy to ensure an unbiased comparison.
+It seems to be possible to adopt XP in various organiza-        The size of the end product seems not to be correlated
+tional settings. Further, conversation, standardization,        with the method of development used. Different studies
+and the tracking of progress have been studied and are          have reported larger, smaller, and equal sizes of end
+described as mechanisms for creating awareness within           product for traditional versus agile methods. The effect
+teams and organizations. In addition, studies of XP indi-       on work practices and job satisfaction of using agile
+cate that successful teams manage to balance a high level       and traditional methods has not been established conclu-
+of individual autonomy with a high level of team autonomy       sively. Some studies have found that work practice is
+and corporate responsibility. They have faith in their own      more standardized when agile methods are used and that
+abilities and preserve the quality of their working lives.      job satisfaction is greater. However, a study of team
+Good interpersonal skills and trust were found to be            cohesion did not find any improvement of cohesion in
+important characteristic for a successful XP team.              an XP team.
+          T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859  851
+
+Table 15
+Definitions used for grading the strength of evidence [7]
+
+High      Further research is very unlikely to change our confidence in the estimate of effect
+Moderate  Further research is likely to have an important impact on our confidence in the estimate of effect and may change the estimate
+Low       Further research is very likely to have an important impact on our confidence in the estimate of effect and is likely to change the estimate
+Very low  Any estimate of effect is very uncertain
+
+5.2. Strength of evidence                                        did not have a recruitment strategy that seemed appropri-
+                                                                 ate for the aims stated for the research and 23 of the studies
+   Several systems exist for making judgments about the          did not use other groups or baselines with which to com-
+strength of evidence in systematic reviews (see [7] for an       pare their findings. Furthermore, in only one study was
+overview). Most of these systems suggest that the strength       the possibility of researcher bias mentioned (see Table 9).
+of evidence can be based on a hierarchy with evidence from       Using these findings as a basis, we conclude that there
+systematic reviews and randomized experiments at the top         are serious limitations to the quality of the studies that
+of the hierarchy and evidence from observational studies         inevitably increasesthe risk of bias or confounding. Hence,
+and expert opinion at the bottom of the hierarchy [36].          we must be circumspect about the studies' reliability.
+The inherent weakness with evidence hierarchies is that
+randomized experiments are not always feasible and that,            With respect to consistency, i.e., the similarity of esti-
+in some instances, observational studies may provide better      mates of effect across studies, we found differences in both
+evidence.                                                        the direction of effects and the size of the differences in
+                                                                 effects, i.e., we found no consistent evidence of association
+   To cope with the weaknesses of evidence hierarchies, we       from two or more studies with no plausible confounders
+used the GRADE (Gradingof Recommendations Assess-                nor did we find direct evidence from studies with no major
+ment, Development and Evaluation) workinggroup defini-           threats to validity. These inconsistencies might by due to
+tions to grade the overall strength of the evidences high,       imprecise or sparse data, and reporting bias.
+moderate, low, or very low [7] (see Table 15). According
+to GRADE, the strength of evidence can be determined                With respect to directness, i.e., the extent to which the
+on the basis of the combination of four key elements, i.e.,      people, interventions, and outcome measures are similar
+in addition to study design, study quality, consistency,         to those of interest, we found that most studies were con-
+and directness are also evaluated. The GRADE system ini-         cerned with XP. This leaves an uncertainty about the
+tially categorizes evidence concerning study design by           directness of evidence for other agile methods. However,
+assigning randomized experiments a high grade and obser-         given that most of the studies regarding XP were per-
+vational studies a low grade. However, by considering the        formed with student subjects or professionals who had lit-
+quality, consistency, and directness of the studies in the evi-  tle or no experience in agile development, this also raises an
+dence base, the initial overall grade could be increased or      issue regarding the directness of evidence for XP. In addi-
+decreased, i.e., evidence from inconsistent, low-quality         tion, very few studies provided direct comparisons of inter-
+experiments may be assigned a low grade, while strong or         ventions; hence, we had to make comparisons across
+very strong evidence of association from two or more             studies. However, such indirect comparisons leave greater
+high-quality observational studies may be assigned a high        uncertainty than direct comparisons because of all the
+grade [7].                                                       other differences between studies that can affect the results.
+                                                                 Our judgment is thus that there are major uncertainties
+   Regarding study design, there were only three experi-         about the directness of the included studies.
+ments in the review (two randomized trials), while the
+remaining primary studies were observational. That there            Combining the four components of study design, study
+are few experiments is natural because we included only          quality, consistency, and directness, we find that the
+studies that addressed agile methods as a whole and              strength of the evidence in the current review regarding
+excluded ones that investigated specific practices in isola-     the benefits and limitations of agile methods, and for deci-
+tion. This is consistent with Shadish et al.'s comments that     sions related to their adoption, is very low. Hence, any esti-
+experiments are best used to investigate specific cause-effect   mate of effect that is based on evidence of agile software
+phenomena [57]. Consequently, our initial categorization         development from current research is very uncertain. This
+of the total evidence in this review based on study design       is consistent with criticisms that have been raised regarding
+is low. We now consider the quality, consistency, and            the sparse scientific support for many of the claims made
+directness of the studies in the evidence base.                  by the agile community [42].
+
+   With respect to the quality of the studies, methods were      5.3. Implications for research and practice
+not, in general, described well; issues of bias, validity, and
+reliability were not always addressed; and methods of data          This systematic review has a number of implications for
+collection and analysis were often not explained well (see       research and practice. For research, the review shows a
+Section 4.3). As many as 25 out of the 33 primary studies        clear need for more empirical studies of agile development
+852 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+methods. Agile development has had a deep impact on the             trolled experiments has been described thoroughly in a sur-
+software industry in recent years. In our opinion, this             vey by Sjøberg et al. [59].
+should lead to a greater interest amongst researchers as
+to what has driven the trend and what the effects are of               In order to increase the usefulness of the research for
+the changes that emerge in response to the adoption of              industry and to provide a sufficient number of studies of
+agile development.                                                  high quality on subtopics related to agile development,
+                                                                    we think that researchers in the field should collaborate
+   This review also shows that, with rare exceptions, only          to determine a common research agenda. It lies beyond
+XP has been studied. Hence, research on other agile                 the scope of this article to suggest such an agenda, but
+approaches that are popular in industry should be a prior-          we hope that the synthesis of research presented herein
+ity when designing future studies. In our opinion, manage-          may provide the inspiration to create one.
+ment-oriented approaches, such as Scrum, are clearly the
+most under-researched compared to their popularity in                  For practitioners, this review shows that many promis-
+industry.                                                           ing studies of the use of agile methods have been reported.
+                                                                    Although serious limitations have been identified, e.g., that
+   Another striking finding is that only one research group         the role of on-site customer seems to be unsustainable for
+in the world has studied mature agile development teams.            long periods and that it is difficult to introduce agile meth-
+If we want to investigate the potential of agile methods,           ods into large and complex projects, the results of the
+we clearly need to direct more resources towards investigat-        review suggest that it is possible to achieve improved job
+ing the practices of mature teams.                                  satisfaction, productivity, and increased customer
+                                                                    satisfaction.
+   The review shows that a range of research methods have
+been applied. We need to employ both flexible and fixed                The strongest, and probably most relevant, evidence for
+research designs if we are to gain a deeper understanding           practice is from the studies of mature agile teams, which
+of agile development. Edmondson and McManus [25]                    suggests that it is necessary to focus on human and social
+argue that the research design needs to fit the current state       factors in order to succeed. Specifically, it seems that a high
+of theory and research. They divide this state into three cat-      level of individual autonomy must be balanced with a high
+egories: nascent, intermediate, and mature; see Table 16.           level of team autonomy and corporate responsibility. It
+For agile software development, we believe the current              also seems important to staff agile teams with people that
+state of theory and research on methods is clearly nascent,         have faith in their own abilities combined with good inter-
+which suggests a need for exploratory qualitative studies.          personal skills and trust.
+Rajlich [53] phrased it as a ``backlog of research problems
+to be solved".                                                         Evidence also suggests that instead of abandoning tradi-
+                                                                    tional project management principles, one should rather
+   Other areas of research on agile software development,           take advantage of these principles, such as state-gate pro-
+such as studies of particular practices, like pair program-         ject management models, and combine them with agile pro-
+ming, or areas that connect well to existing streams of soft-       ject management. The evidence also suggests that agile
+ware engineering research, might be described as being at           methods not necessarily are the best choice for large pro-
+an intermediate, or even a mature, state.                           jects. Thus, consistent with recommendations provided by
+                                                                    others [11,12,15], we suggest that practitioners carefully
+   A major challenge is to increase the quality of studies on       study their projects' characteristics and compare them with
+agile software development. In [58], Sjøberg et al. discuss         the relevant agile methods' required characteristics.
+measures to increase the quality of empirical studies in soft-
+ware engineering in general. Recently, Ho¨ st and Runeson              Due to the limited number and relatively poor quality of
+[33] have suggested a checklist to use in case studies in soft-     the primary studies in this review, it is impossible to offer
+ware engineering. The recent special issue of Information           more definitive and detailed advice. Rather, this review
+and Software Technology on qualitative software engineer-           provides an overview of research carried out to date, which
+ing research [20] provides many useful examples of                  must be critically appraised by companies in order to iden-
+approaches for study designs, data collection, and analysis         tify similarities and differences between the studies reported
+that should be relevant for future studies of agile software        and their own situation. A particular important aid in this
+development. The state of research with respect to con-             appraisal is the description of the context of the studies in
+
+Table 16
+Categories of methodological fit in field research [25]
+
+State of prior theory and Nascent                             Intermediate                                  Mature
+research
+
+Research questions        Open-ended inquiry about a phenomenon Proposed relationships between new and      Focused questions and/or hypotheses
+Type of data collected                                                                                      relating existing constructs
+Theoretical contribution  of interest                         established constructs                        Quantitative data: focused measures
+                                                                                                            where extent or amount is meaningful
+                          Qualitative, initially open-ended data that Hybrid (both qualitative and          A supported theory that may add
+                                                                                                            specificity, new mechanisms, or new
+                          need to be interpreted for meaning  quantitative)                                 boundaries to existing theories
+
+                          A suggestive theory, often an invitation A provisional theory, often one that
+
+                          for further work on the issue or set of integrates previously separate bodies of
+
+                          issues opened up by the study       work
+T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859  853
+
+this review (Appendix D). A further aid would be to apply        and that samples and study settings were often not
+the principles of evidence-based software engineering in         described well. There is therefore a possibility that the
+order to support and improve the decisions about what            extraction process may have resulted in some inaccuracy
+methods and technologies to employ [24].                         in the data.
+
+   The review clearly shows the need for more research in        6. Conclusion
+order to determine the situations in which advice on agile
+development that has been offered by practitioners may              We identified 1996 studies from searches of the litera-
+suitably be applied. We would like to urge companies to          ture, of which 36 were found to be research studies of
+participate in research projects in the future, in order to      acceptable rigour, credibility, and relevance. Thirty-three
+target research goals that are relevant for the software         of the 36 studies identified were primary studies, while
+industry. Action research is one such way of organizing          three were secondary studies.
+collaboration between industry and researchers that would
+be highly relevant for a nascent field such as agile software       The studies fell into four thematic groups: introduction
+development.                                                     and adoption, human and social factors, perceptions of
+                                                                 agile methods, and comparative studies. We identified a
+5.4. Limitations of this review                                  number of reported benefits and limitations of agile devel-
+                                                                 opment within each of these themes. However, the strength
+   The main limitations of the review are bias in the selection  of evidence is very low, which makes it difficult to offer spe-
+of publications and inaccuracy in data extraction. To help to    cific advice to industry. Consequently, we advise readers
+ensure that the process of selection was unbiased, we devel-     from industry to use this article as a map of findings
+oped a research protocol in advance that defined the research    according to topic, which they can use to investigate rele-
+questions. Using these questions as a basis, we identified key-  vant studies further and compare the settings in the studies
+words and search terms that would enable us to identify the      to their own situation.
+relevant literature. However, it is important to recognize that
+software engineering keywords are not standardized and              The studies investigated XP almost exclusively, and only
+that they can be both discipline- and language-specific.         a few of the studies on XP were done on mature develop-
+Therefore, due to our choice of keywords and search strings,     ment teams. A clear finding of the review is that we need
+there is a risk that relevant studies were omitted. To avoid     to increase both the number and the quality of studies on
+selection bias, we piloted every part of the review process,     agile software development. In particular, agile project
+and in particular, the search strategy and citation manage-      management methods, such as Scrum, which are popular
+ment procedure, in order to clarify weaknesses and refine        in industry, warrant further attention. We see that there
+the selection process. Furthermore, since our focus was on       is a backlog of research issues to be addressed. In this con-
+empirical research, we excluded ``lessons learned" papers        text, there is a clear need to establish a common research
+and papers that were based merely on expert opinion. If          agenda for agile software development and for future field
+the review had included this literature, the current study       studies to pay more attention to the fit between their
+could, in principle, have provided more data. In that event,     research methods and the state of prior work.
+it might have been possible to draw more general conclu-
+sions. To further ensure the unbiased selection of articles, a   Acknowledgements
+multistage process was utilized that involved three research-
+ers who documented the reasons for inclusion/exclusion at           The work in this paper was supported by the Research
+every step, as described in Section 3 and also as suggested      Council of Norway through the project Evidence-Based
+by Kitchenham [36].                                              Software Engineering (181685/I30). We are grateful to
+                                                                 Geir K. Hanssen at SINTEF ICT, who participated in
+   When we piloted the data extraction process, we found         selecting and assessing the studies included in this review.
+that several articles lacked sufficient details about the        We are also grateful to Chris Wright for proofreading the
+design and findings of a study and that, due to this, we dif-    paper.
+fered too much in what we actually extracted. As a conse-
+quence, all data from all the 33 primary studies were            Appendix A. Studies included in the review
+extracted by the two authors in consensus meetings accord-
+ing to a predefined extraction form (Appendix C). How-            [S1] P. Abrahamsson, J. Koskela, Extreme program-
+ever, we often found that the extraction process was                     ming: a survey of empirical data from a controlled
+hindered by the way some of the primary studies were                     case study, in: Proceedings ­ 2004 International
+reported. Many articles lacked sufficient information for                Symposium on Empirical Software Engineering,
+us to be able to document them satisfactorily in the extrac-             ISESE 2004, Aug 19­20 2004, Redondo Beach,
+tion form. More specifically, we frequently found that                   CA, United States, 2004.
+methods were not described adequately, that issues of bias
+and validity were not always addressed, that methods of           [S2] B. Bahli, E.S.A. Zeid, The role of knowledge crea-
+data collection and analysis were often not explained well,              tion in adopting extreme programming model: an
+                                                                         empirical study, in: ITI 3rd International Confer-
+854 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+        ence on Information and Communications Technol-                  of the Fourth Mexican International Conference
+        ogy: Enabling Technologies for the New Knowledge                 on Computer Science (ENC 2003), 2003.
+        Society, 2005.                                           [S16] A. Mackenzie, S. Monk, From Cards to Code: How
+ [S3] R. Baskerville, B. Ramesh, L. Levine, J. Pries-Heje,               Extreme Programming Re-Embodies Programming
+        S. Slaughter, Is internet-speed software development             as a Collective Practice, Computer Supported Coop-
+        different? IEEE Software 20(6) (2003) 70­77.                     erative Work, vol. 13, 2004, pp. 91­117.
+ [S4] M. Ceschi, A. Sillitti, G. Succi, S. De Panfilis, Pro-     [S17] C. Mann, F. Maurer, A case study on the impact of
+        ject management in plan-based and agile companies,               scrum on overtime and customer satisfaction, Agile
+        IEEE Software 22(3) (2005) 21­27.                                Development Conference, 2005.
+ [S5] J. Chong, Social behaviours on XP and non-XP               [S18] K. Mannaro, M. Melis, and M. Marchesi, Empirical
+        teams: a comparative study, in: Proceedings of the               analysis on the satisfaction of IT employees compar-
+        Agile Development Conference (ADC'05), 2005.                     ing XP practices with other software development
+ [S6] A. Dagnino, K. Smiley, H. Srikanth, A.I. Anton, L.                 methodologies, in: Extreme Programming and Agile
+        Williams, Experiences in applying agile software devel-          Processes in Software Engineering, Proceedings,
+        opment practices in new product development, in: Pro-            Lecture Notes in Computer Science, vol. 3092,
+        ceedings of the 8th IASTED International Conference              Springer Verlag, 2004, pp. 166­174.
+        on Software Engineering and Applications, November       [S19] A. Martin, R. Biddle, J. Noble, The XP customer
+        9­11, Cambridge, MA, United States, 2004.                        role in practice: three studies, Agile Development
+ [S7] D. Dalcher, O. Benediktsson, H. Thorbergsson,                      Conference, 2004.
+        Development life cycle management: a multiproject        [S20] A. Martin, R. Biddle, J. Noble, When XP met out-
+        experiment, in: Proceedings of the 12th Interna-                 sourcing, in Extreme Programming and Agile Pro-
+        tional Conference and Workshops on the Engineer-                 cesses in Software Engineering, Proceedings,
+        ing of Computer-Based Systems (ECBS'05), 2005.                   Lecture Notes in Computer Science, vol. 3092,
+ [S8] A. Fruhling, K. Tyser, G.-J. De Vreede, Experiences                Springer Verlag, Berlin, 2004, pp. 51­59.
+        with extreme programming in telehealth: developing       [S21] G. Melnik, F. Maurer, Perceptions of agile practices:
+        and implementing a biosecurity health care applica-              a student survey, in: Proceedings, eXtreme Program-
+        tion, in: Proceedings of the 38th Hawaii International           ming/Agile Universe 2002, Lecture Notes in Com-
+        Conference on System Sciences (HICCS), Hawaii,                   puter Science, vol. 2418, Springer Verlag, 2002, pp.
+        USA, 2005.                                                       241­250.
+ [S9] M.-R. Hilkka, T. Tuure, R. Matti, Is extreme pro-          [S22] G. Melnik, F. Maurer, A cross-program investiga-
+        gramming just old wine in new bottles: a comparison              tion of student's perceptions of agile methods, in:
+        of two cases, Journal of Database Management                     International Conference on Software Engineering
+        16(4) (2005) 41­61.                                              (ICSE), St. Louis, MI, USA, 2005.
+[S10] S. Ilieva, P. Ivanov, E. Stefanova, Analyses of an         [S23] P. Middleton, Lean software development: two case
+        agile methodology implementation, in: Proceedings                studies, Software Quality Journal 9(4) (2001) 241­
+        30th Euromicro Conference, IEEE Computer Soci-                   252.
+        ety Press, 2004, pp. 326­333.                            [S24] H. Robinson, H. Sharp, The characteristics of XP
+[S11] T. Jokela, P. Abrahamsson, Usability assessment of                 teams, in: Extreme Programming and Agile Pro-
+        an extreme programming project: close co-operation               cesses in Software Engineering, Lecture Notes in
+        with the customer does not equal to good usability,              Computer Science, vol. 3092, Springer Verlag, Ber-
+        in: Product Focused Software Process Improvement,                lin, 2004, pp. 139­147.
+        Lecture Notes in Computer Science, vol. 3009,            [S25] H. Robinson, H. Sharp, The social side of technical
+        Springer Verlag, Berlin, 2004, pp. 393­407.                      practices, in: Extreme Progamming and Agile Pro-
+[S12] D. Karlstro¨ m, P. Runeson, Combining agile meth-                  cesses in Software Engineering, Lecture Notes in
+        ods with stage-gate project management, IEEE Soft-               Computer Science, vol. 3556, Springer Verlag, Ber-
+        ware 22(3) (2005) 43­49.                                         lin, 2005, pp. 100­108.
+[S13] J. Koskela, P. Abrahamsson, On-site customer in an         [S26] H.S. Robinson, Organisational culture and XP:
+        XP project: empirical results from a case study, in:             three case studies, in: Proceedings of the Agile Con-
+        T. Dingsøyr (Ed.), Software Process Improvement,                 ference (ADC'05), 2005.
+        Proceedings, Lecture Notes in Computer Science,          [S27] H. Sharp H. Robinson, An ethnographic study of
+        vol. 3281, Springer-Verlag, Berlin, 2004, pp. 1­11.              XP practice, Empirical Software Engineering, 9(4)
+[S14] L. Layman, L. Williams, L. Cunningham, Exploring                   (2004) 353­375.
+        extreme programming in context: an industrial case       [S28] A. Sillitti, M. Ceschi, B. Russo, G. Succi, Managing
+        study, Agile Development Conference, 2004.                       uncertainty in requirements: a survey in documenta-
+[S15] F. Macias, M. Holcombe, M. Gheorghe, A formal                      tion-driven and agile companies, in: Proceedings of
+        experiment comparing extreme programming with                    the 11th International Software Metrics Symposium
+        traditional software construction, in: Proceedings               (METRICS), 2005.
+T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859                              855
+
+[S29] H. Svensson, M. Ho¨ st, Introducing agile process in a   [S33] S.M. Young, H.M. Edwards, S. Mcdonald, J.B.
+        software maintenance and evolution organization,               Thompson, Personality characteristics in an XP
+        in: Ninth European Conference on Software Main-                team: A repertory grid study, in: Proceedings of
+        tenance and Reengineering (CSMR'05), 2005.                     Human and Social Factors of Software Engineering
+                                                                       (HSSE), St. Louis, MI, USA, 2005.
+[S30] H. Svensson, M. Ho¨ st, Views from an organization
+        on how agile development affects its collaboration     [S34] P. Abrahamsson, O. Salo, J. Ronkainen, J. Warsta,
+        with a software development team, Lecture Notes                Agile software development methods: Review and
+        in Compuer Science, vol. 3547, Springer Verlag, Ber-           analysis, VTT Technical report, 2002.
+        lin, 2005, pp. 487­501.
+                                                               [S35] D. Cohen, M. Lindvall, P. Costa, An introduction
+[S31] Tessem, Experiences in learning xp practices: a qual-            to agile methods, in: M. V. Zelkowitz (Ed.),
+        itative study, in: XP 2003, vol. 2675, Springer Ver-           Advances in Computers, Advances in Software
+        lag, Berlin, 2003, pp. 131­137.                                Engineering, vol. 62, Elsevier, Amsterdam, 2004.
+
+[S32] C.A. Wellington, T. Briggs, C.D. Girard, Compari-        [S36] J. Erickson, K. Lyytinen, K. Siau, Agile modeling,
+        son of student experiences with plan-driven and agile          Agile software development, and extreme program-
+        methodologies, in: Proceeedings of the 35th ASEE/              ming: the state of research, Journal of Database
+        IEEE Frontiers in Education Conference, 2005.                  Management 16(4) (2005) 88­100.
+
+Appendix B. Quality assessment form
+
+            Screening questions:
+
+1. Is this a research paper?                                                                       Yes No
+Consider:
+
+    ­Is the paper based on research (or is it merely a "lessons l earned" report based on expert
+       opinion?
+
+2. Is there a clear statement of the aims of the research?                                         Yes No
+Consider:
+
+­Is there a rationale for why the study was undertaken?
+
+­Is the study's focus or main focus on Agile Software Development?
+
+­Does the study present empirical data?
+
+­Is there a clear statement of the study's primary outcome (i.e. time-to-market, cost, or product
+
+or process quality)?
+
+3. Is there an adequate description of the context in which the research was carried out?          Yes No
+Consider whether the researcher has iden tified:
+
+    ­The industry in which products are used (e.g. banking, telecommunications, consumer goods,
+       travel, etc)
+
+    ­The nature of the software development organization (e.g. in-house department or
+       independent software supplier)
+
+    ­The skills and experience of software staff (e.g. wi th a language, a method, a tool, an
+       application domain)
+
+    ­The type of software products used (e.g. a design tool, a compiler)
+    ­The software processes being us ed (e.g. a company standard pro cess, the quality assurance
+
+       procedures, the configuration management process)
+
+If question 1, or both of questions 2 and 3, receive a "No" response do not continue with the
+quality assessment.
+
+Detailed questions:
+
+Research design                                                                                    Yes  No
+
+4. Was the research design appropriate to address the aims of the research?
+Consider:
+
+    ­ Has the researcher justified the research design (e.g. have they discussed how they decided
+       which methods to use)?
+856 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+Sampling                                                                                            Yes No
+
+5. Was the recruitment strategy appropriate to the aims of the research?
+Consider:
+
+    ­Has the researcher explained how the participants or cases were identified and selected?
+    ­Are the cases defined and described precisely?
+    ­Were the cases representative of a d efined population?
+    ­Have the researchers explained why the participants or cases they selected were the most
+
+       appropriate to provide access to the type of knowledge sought by the study?
+    ­Was the sa mple size sufficiently large?
+
+Control group                                                                                       Yes No
+
+6. Was there a control group with which to compare treatments?
+Consider:
+
+    ­How were the contro ls selected?
+    ­Were they repres entative of a defined population?
+    ­Was there anyth ing special about the controls?
+    ­Was the no n-response high? Could non-respondents be different in any way?
+
+Data collection                                                                                     Yes No
+
+7. Was the data collected in a way that addressed the research issue?
+Consider:
+
+    ­Were all measures clearly defined (e.g. unit and counting rules)?
+    ­Is it clear how data was collected (e.g. semi-structured interviews, focus group etc.)?
+    ­Has the researcher justified the methods that were chosen?
+    ­Has the researcher mad e the methods explicit (e.g. is there an indication of how interviews
+
+       were conducted, did they use an interview guide)?
+    ­If the methods were modified during the study, has the researcher explained how and why?
+    ­Whether the form of the data is clear (e.g. tape recordin g, video material, notes etc.)
+    ­Whether quality control methods were used to ensure completeness and accuracy of data
+
+       collection
+
+Data analysis                                                                                       Yes No
+
+8. Was the data analysis sufficiently rigorous?
+Consider:
+
+    ­Was there an i n-depth description of the analysis process?
+    ­If thematic analysis was used, is it clear how the categories/ themes were derived from th e
+
+       data?
+    ­Has sufficient data been presented to support the findings?
+    ­To wh at extent has contradictory data been taken into account?
+    ­Whether quality control methods were used to verify the results
+
+Reflexivity (research partnership relations/recognition of researcher bias)                         Yes No
+
+9. Has the relationship between researcher and participants been considered adequately?
+Consider:
+
+    ­Did the researcher critically examine their own role, potential bias and influence during the
+       formulation of research questio ns, sample recruitment, data collection, and analysis and
+       selection of data for presentation?
+
+    ­How the researcher respond ed to events during the study and whether they considered the
+       implications of any changes in the research d esign.
+
+Findings
+
+10. Is there a clear statement of findings?                                                         Yes No
+Consider:
+
+­Are the findings explicit (e.g. magnitude of effect)?
+
+­Has an adequate discussion of the evidence, both for and against the researcher's arg uments,
+
+been demonstrated?
+
+­Has the researcher discussed the credibility of their findings (e.g. triangulation, respondent
+
+validation, more than one analyst)?
+
+­Are limitations of the study discussed explicitly?
+
+­Are the findings discussed in relation to the original research questions?
+
+­Are the conclusions justified by the results?
+                              T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859             857
+
+           Value of the research                                                                                 Yes No
+
+           11. Is the study of value for research or practice?
+           Consider:
+
+               ­Does the researcher discuss the contribution the study makes to existing knowledge or
+                  understanding (e.g. do they consider the findings in relation to current practice or relevant
+                  research-based li terature)?
+
+               ­Does the research id entify new areas in which research is necessary?
+               ­Does the researcher discuss wheth er or how the findings can be transferred to other
+
+                  populations, or consider other ways in which the research can be used?
+
+Appendix C. Data extraction form
+
+Study description  Study identifier                          Unique id for the study
+1.                 Date of data extraction
+2.                 Bibliographic reference                   Author, year, title, source
+3.                 Type of article                           Journal article, conference paper, workshop paper, book section
+4.                 Study aims                                What were the aims of the study?
+5.                 Objectives                                What were the objectives?
+6.                 Design of study                           Qualitative, quantitative (experiment, survey,
+7.                                                           case study, action research)
+                   Research hypothesis                       Statement of hypotheses, if any
+8.                 Definition of agile software              Verbatim from the study
+9.                 development given in study
+                   Sample description                        Size, students, professionals (age, education, experience)
+10.                Setting of study                          Industry, in-house/supplier, products and processes used
+11.                Control group                             Yes, no (number of groups, sample size)
+12.                Data collection                           How was the data obtained? (questionnaires, interviews, forms)
+13.                Data analysis                             How was the data analyzed? (qualitative, quantitative)
+14.
+                   Findings and conclusions                  What were the findings and conclusions?
+Study findings                                               (verbatim from the study)
+1.                 Validity                                  Limitations, threats to validity
+                   Relevance                                 Research, practice
+2.
+3.
+
+Appendix D. Overview of primary studies
+
+ID Research Agile Agile           Professional/ Project      Team  Domain, comment
+                                                             size
+method             method experience Student     duration          Research prototype developed
+                                                             4     Medical information systems
+S1 Singlecase XP   Beginner Student              8,4 weeks   9     Web development
+                                                             NA    NA
+S2 Multicase XP    Beginner Professional 1 year              NA    Mid-size software start-up
+                                                             7­12  Industrial automation
+S3 Mixed           General ­      Professional ­             5     NA
+                                                             3­4   Medical information systems
+S4 Survey          General NA     Professional ­             4     Factory system + communication system
+                                                             6/4   Financial software
+S5 Multicase XP    Beginner Professional ­                   4     Research prototype developed
+                                                             4     Industrial automation/Defence/Telecom
+S6 Multicase Other Beginner Professional 2700 h              ­     Research prototype developed
+                                                             4     Airline company software
+S7 Experiment XP   Beginner Student              1 year      10    NA
+                                                             4­5   Knowledge management software
+S8 Singlecase XP   Beginner Professional 21 months           6­12  Oil and gas software
+                                                             4­6   NA
+S9 Multicase XP    Beginner Professional NA/18 months        NA
+                                                                                                       (continued on next page)
+S10 Singlecase XP  Beginner Professional 900 h
+
+S11 Singlecase XP  Beginner Student              8,4 weeks
+
+S12 Multicase General Beginner Professional ­
+
+S13 Singlecase XP  Beginner Student              8,4 weeks
+
+S14 Singlecase XP  Beginner Professional 3,5 months
+
+S15 Experiment XP  Beginner Student              1 semester
+
+S16 Singlecase XP  Beginner Professional ­
+
+S17 Singlecase Scrum Beginner Professional 22 months
+
+S18 Survey XP NA                  Professional NA
+858 T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859
+
+Appendix C. (continued)
+
+ID Research Agile Agile     Professional/ Project                             Team  Domain, comment
+                                                                              size
+method      method experience Student      duration
+
+S19 Multicase XP         Beginner Professional 15/45/18                       11/8/16 ­
+
+S20 Multicase XP         Beginner Professional 15 months/18+ months 11/60 ­
+
+S21 Survey XP Beginner Student             NA                                 NA NA
+
+S22 Mixed   General Beginner Student       ­                                  NA NA
+
+S23 Multicase LSD        Beginner Professional 3 days                         2 Financial system
+
+S24 Multicase XP         Mature Professional ­                                8/23 Web applications/document software
+
+S25 Multicase XP         Mature Professional ­                                7/23/8 Mid-size software start-up
+
+S26 Multicase XP         Mature Professional ­                                12/20/8 Banking/Content security software/web-applications
+
+S27 Singlecase XP        Mature Professional ­                                10 ­
+
+S28 Survey  General NA      Professional ­                                    NA NA
+
+S29 Singlecase XP        Beginner Professional ­                              ­ Software house
+
+S30 Singlecase XP        Beginner Professional ­                              ­ Software maintenance and evolution
+
+S31 Singlecase XP        Beginner Student  3 weeks                            6 Educational software
+
+S32 Experiment XP        Beginner Student  1 semester                         16 NA
+
+S33 Singlecase XP        ­  Professional ­                                    6 Software house
+
+Several numbers for a study in the columns `Project duration' and `Team size' indicate that the study included several teams.
+
+References                                                                    [15] A. Cockburn, Selecting a project's methodology, IEEE Software 17
+                                                                                   (4) (2000) 64­71.
+ [1] North American and European Enterprise Software and Services
+     Survey, Business Technographics Ed., 2005.                               [16] A. Cockburn, Crystal Clear: A Human-Powered Methodology for
+                                                                                   Small Teams, Addison-Wesley, 2004, ISBN 0-201-69947-8.
+ [2] P. Abrahamsson, O. Salo, J. Ronkainen, J. Warsta, Agile software
+     development methods: review and analysis, VTT Technical report,          [17] D. Cohen, M. Lindvall, P. Costa, An introduction to agile methods,
+     2002.                                                                         in: M.V. Zelkowitz (Ed.), Advances in Computers, Advances in
+                                                                                   Software Engineering, vol. 62, Elsevier, Amsterdam, 2004.
+ [3] P. Abrahamsson, J. Warsta, M.T. Siponen, J. Ronkainen, New
+     directions on agile methods: a comparative analysis, in: Proceedings     [18] J. Cohen, A coefficient of agreement for nominal scales, Educational
+     of the 25th International Conference on Software Engineering                  and Psychological Measurement 20 (1960) 37­46.
+     (ICSE'03), IEEE Press, 2003.
+                                                                              [19] K. Conboy, B. Fitzgerald, Toward a conceptual framework of agile
+ [4] R.L. Ackoff, Alternative types of planning, in: Ackoff's Best: His            methods: a study of agility in different disciplines, in: Proceedings of
+     Classic Writings on Management, Wiley, New York, 1999, pp. 104­               XP/Agile Universe, Springer Verlag, 2004.
+     114.
+                                                                              [20] Y. Dittrich, M. John, J. Singer, B. Tessem, For the special issue on
+ [5] A. Anderson, R. Beattie, K. Beck, D. Bryant, M. Dearment, M.                  qualitative software engineering research, Information and Software
+     Fowler, M. Fronczak, R. Garzaniti, D. Gore, B. Hacker, C.                     Technology 49 (6) (2007) 531­539.
+     Hendrickson, R. Jeffries, D. Joppie, D. Kim, P. Kowalsky, D.
+     Mueller, T. Murasky, R. Nutter, A. Pantea, D. Thomas, Chrysler           [21] T. Dyba°, Improvisation in small software organizations, IEEE
+     goes to extremes, Distributed Computing Magazine (October) (1998)             Software 17 (5) (2000) 82­87.
+     24­28.
+                                                                              [22] T. Dyba°, E. Arisholm, D. Sjøberg, J. Hannay, F. Shull, Are two
+ [6] M. Aoyama, Web-based agile software development, IEEE Software                heads better than one? On the effectiveness of pair-programming,
+     15 (6) (1998) 56­65.                                                          IEEE Software 24 (6) (2007) 10­13.
+
+ [7] D. Atkins, D. Best, P.A. Briss, M. Eccles, Y. Falck-Ytter, S. Flottorp,  [23] T. Dyba°, T. Dingsøyr, G.K. Hanssen, Applying systematic reviews to
+     G.H. Guyatt, R.T. Harbour, M.C. Haugh, D. Henry, S. Hill, R.                  diverse study types: an experience report, in: Proceedings of the 1st
+     Jaeschke, G. Leng, A. Liberati, N. Magrini, J. Mason, P. Middleton,           International Symposium on Empirical Software Engineering and
+     J. Mrukowicz, D. O'connell, A. D Oxman, B. Phillips, H.J.                     Measurement (ESEM'07), IEEE Computer Society, Madrid, Spain,
+     Schu¨ nemann, T.T.-T. Edejer, H. Varonen, G.E. Vist, J.W. Williams            2007, pp. 225­234.
+     Jr., Z. Stephanie, Grading quality of evidence and strength of
+     recommendations, BMJ 328 (1490) (2004).                                  [24] T. Dyba°, B. Kitchenham, M. Jørgensen, Evidence-based soft-
+                                                                                   ware engineering for practitioners, IEEE Software 22 (1) (2005)
+ [8] D. Avison, F. Lau, M. Myers, P.A. Nielsen, Action research,                   58­65.
+     Communications of the ACM 42 (1) (1999) 94­97.
+                                                                              [25] A.C. Edmondson, S.E. Mcmanus, Methodological fit in management
+ [9] K. Beck, Extreme Programming Explained: Embrace Change, Addi-                 field research, Academy of Management Review 32 (4) (2007) 1155­
+     son-Wesley, 2000, ISBN 0-201-61641-6.                                         1179.
+
+[10] K. Beck, Extreme Programming Explained: Embrace Chage, second            [26] H. Erdogmus, M. Morisio, M. Torchiano, On the effectiveness of the
+     ed., Addison-Wesley, 2004, ISBN 978-0321278654.                               test-first approach to programming, IEEE Transactions on Software
+                                                                                   Engineering 31 (3) (2005) 226­237.
+[11] B. Boehm, Get ready for agile methods, with care, IEEE Computer 35
+     (1) (2002) 64­69.                                                        [27] J. Erickson, K. Lyytinen, K. Siau, Agile Modeling, Agile software
+                                                                                   development, and extreme programming: the state of research,
+[12] B. Boehm, R. Turner, Balancing Agility and Discipline: A Guide for            Journal of Database Management 16 (4) (2005) 88­100.
+     the Perplexed, Addison-Wesley, Boston, 2003, ISBN 978-0321186126.
+                                                                              [28] T. Gilb, Competitive Engineering: A Handbook for Systems Engi-
+[13] N. Britten, R. Campbell, C. Pope, J. Donovan, M. Morgan, R. Pill,             neering, Requirements Engineering, and Software, Elsevier Butter-
+     Using meta ethnography to synthesise qualitative research: a worked           worth-Heinemann, Oxford, 2005, ISBN 0-7506-6507-6.
+     example, Journal of Health Services Research and Policy 7 (4) (2002)
+     209­215.                                                                 [29] T. Greenhalgh, How to Read a Paper, second ed., BMJ Publishing
+                                                                                   Group, London, 2001.
+[14] P. Checkland, J. Scholes, Soft Systems Methodology in Action,
+     Wiley, Chichester, 1990, ISBN 0-471-98605-4.                             [30] A. Gunasekaran, Agile manufacturing: A framework for research and
+                                                                                   development, International Journal of Production Economics 62 (1­
+                                                                                   2) (1999) 87­105.
+T. Dyba° , T. Dingsøyr / Information and Software Technology 50 (2008) 833­859  859
+
+[31] J.P.T. Higgins, S. Green (Eds.), Cochrane Handbook for System-          [50] S.R. Palmer, J.M. Felsing, A Practical Guide to Feature-driven
+     atic Reviews of Interventions, Version 5.0.0 (updated February               Development, Prentice Hall, Upper Saddle River, NJ, 2002, ISBN 0-
+     2008), The Cochrane Collaboration, 2008. Available from:                     13-067615-2.
+     <www.cochrane-handbook.org>.
+                                                                             [51] M.C. Paulk, C.V. Weber, B. Curtis, M.B. Chrissis, The Capability
+[32] W.S. Humphrey, PSP: A Self-Improvement Process for Software                  Maturity Model: Guidelines for Improving the Software Process,
+     Engineers, Addison-Wesley, 2005, ISBN 978-0321305497.                        Addison-Wesley, Boston, 1995, ISBN 0-201-54664-7.
+
+[33] M. Ho¨ st, P. Runeson, Checklists for software engineering case study   [52] M. Poppendieck, T. Poppendieck, Lean Software Development ­ An
+     research, in: Proceedings of the First International Symposium on            Agile Toolkit for Software Development Managers, Addison-Wesley,
+     Empirical Software Engineering and Measurement, IEEE, Madrid,                Boston, 2003, ISBN 0-321-15078-3.
+     Spain, 2007, pp. 479­481.
+                                                                             [53] V. Rajlich, Changing the paradigm of software engineering, Com-
+[34] G. Keefer, Extreme Programming Considered Harmful for Reliable               munications of the ACM 49 (8) (2006) 67­70.
+     Software Development 2.0, AVOCA GmbH, Online Report, 2003.
+                                                                             [54] C.K. Riemenschneider, B.C. Hardgrave, F.D. Davis, Explaining
+[35] K.S. Khan, G. Ter Riet, J. Glanville, A.J. Sowden, J. Kleijnen,              software developer acceptance of methodologies: a comparison of five
+     Undertaking Systematic Review of Research on Effectiveness, CRD's            theoretical models, IEEE Transactions on Software Engineering 28
+     Guidance for those Carrying Out or Commissioning Reviews, CRD                (12) (2002) 1135­1145.
+     Report Number 4, second ed., NHS Centre for Reviews and
+     Dissemination, University of York, 2001.                                [55] L.M. Sanchez, R. Nagi, A review of agile manufacturing systems,
+                                                                                  International Journal of Production Research 39 (16) (2001) 3561­
+[36] B.A. Kitchenham, Guidelines for performing Systematic Literature             3600.
+     Reviews in Software Engineering Version 2.3, Keele University and
+     University of Durham, EBSE Technical Report, 2007.                      [56] K. Schwaber, M. Beedle, Agile Software Development with Scrum,
+                                                                                  Prentice Hall, Upper Saddle River, 2001.
+[37] B.A. Kitchenham, S.L. Pfleeger, L.M. Pickard, P.W. Jones, D.C.
+     Hoaglin, K. El Emam, J. Rosenberg, Preliminary guidelines for           [57] W.R. Shadish, T.D. Cook, D.T. Campbell, Experimental and Quasi-
+     empirical research in software engineering, IEEE Transactions on             Experimental Designs for Generalized Causal Inference, Houghton
+     Software Engineering 28 (8) (2002) 721­734.                                  Mifflin Company, Boston, 2002.
+
+[38] P. Krutchen, The Rational Unified Process: An Introduction, third       [58] D. Sjøberg, T. Dyba°, M. Jørgensen, The Future of Empirical
+     ed., Addison-Wesley, Boston, 2003.                                           Methods in Software Engineering Research, in: Future of Software
+                                                                                  Engineering (FOSE'07), IEEE, 2007, pp. 358­378.
+[39] J.R. Landis, G.G. Koch, The measurement of observer agreement for
+     categorical data, Biometrics 33 (1) (1977) 159­174.                     [59] D. Sjøberg, J.E. Hannay, O. Hansen, V.B. Kampenes, A. Karahasa-
+                                                                                  novic, N.-K. Liborg, A.C. Rekdal, A survey of controlled experi-
+[40] C. Larman, V.R. Basili, Iterative and incremental development: a             ments in software engineering, IEEE Transactions on Software
+     brief history, IEEE Computer 36 (6) (2003) 47­56.                            Engineering 31 (9) (2005) 733­753.
+
+[41] J. Mcavoy, T. Butler, The impact of the Abilene Paradox on double-      [60] J. Stapleton, DSDM: Business Focused Development, second ed.,
+     loop learning in an agile team, Information and Software Technology          Pearson Education, 2003, ISBN 978-0321112248.
+     49 (6) (2007) 552­563.
+                                                                             [61] M. Stephens, D. Rosenberg, Extreme Programming Refactored: The
+[42] P. Mcbreen, Questioning Extreme Programming, Pearson Education,              Case Against XP, Apress, Berkeley, CA, 2003, ISBN 1-59059-096-1.
+     Boston, MA, USA, 2003, ISBN 0-201-84457-5.
+                                                                             [62] A. Strauss, J. Corbin, Basics of Qualitative Research, second ed., Sage
+[43] H. Merisalo-Rantanen, T. Tuure, R. Matti, Is extreme programming             Publications, 1998, ISBN 0-8039-5939-7.
+     just old wine in new bottles: a comparison of two cases, Journal of
+     Database Management 16 (4) (2005) 41­61.                                [63] H. Takeuchi, I. Nonaka, The new product development game,
+                                                                                  Harvard Business Review (January) (1986) 137­146.
+[44] P. Meso, R. Jain, Agile software development: adaptive systems
+     principles and best practices, Information Systems Management 23        [64] D. Turk, R. France, B. Rumpe, Assumptions underlying agile software-
+     (3) (2006) 19­30.                                                            development processes, Journal of Database Management 16 (4) (2005)
+                                                                                  62­87.
+[45] M.B. Miles, M. Huberman, Qualitative Data Analysis: An
+     Expanded Sourcebook, second ed., Sage Publications, 1994, ISBN          [65] E. Wenger, Communities of Practice: Learning, Meaning and Identity,
+     0803955405.                                                                  Cambridge University Press, Cambridge, UK, 1998, ISBN 0-521-
+                                                                                  43017-8.
+[46] S. Nerur, V. Balijepally, Theoretical reflections on agile development
+     methodologies, Communications of the ACM 50 (3) (2007) 79­83.           [66] L. Williams, A. Cockburn, Agile software development: it's about
+                                                                                  feedback and change, IEEE Computer 36 (6) (2003) 39­43.
+[47] S. Nerur, R. Mahapatra, G. Mangalaraj, Challenges of migrating to
+     agile methodologies, Communications of the ACM (May) (2005) 72­         [67] J.P. Womack, D.T. Jones, D. Roos, The Machine that Changed the
+     78.                                                                          World: The Story of Lean Production ­ Toyota's Secret Weapon in
+                                                                                  the Global Car Wars that is Now Revolutionizing World Industry,
+[48] G.W. Noblit, R.D. Hare, Meta-Ethnography: Synthesizing Qualita-              Free Press, 2007, ISBN 978-0743299794.
+     tive Studies, Sage Publications, London, 1988.
+                                                                             [68] P. A° gerfalk, B. Fitzgerald, Flexible and distributed software pro-
+[49] T. Ohno, Toyota Production System: Beyond Large-scale Production,            cesses: old petunias in new bowls? Communications of the ACM 49
+     Productivity Press, New York, USA, 1988, ISBN 0-915299-14-3.                 (10) (2006) 27­34.
+

@@ -1,0 +1,125 @@
+{
+  "id": "4SIpyrko-x4",
+  "title": "Why you should write tests first - Uncle Bob",
+  "channel": "Dev Tools Made Simple",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCc9psPH74QBAXXpWNe57etA",
+  "durationSec": 233,
+  "thumbnail": "https://i.ytimg.com/vi_webp/4SIpyrko-x4/sddefault.webp",
+  "summary": "Short clip arguing that writing tests after the fact leaves holes in the suite, while test-first forces decoupled design and produces a suite you can trust.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/writing-tests-after-code-leaves-holes",
+      "stance": "asserts",
+      "quote": "you walk away and you leave a hole in the test Suite",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "The mechanism is plausible and matches practitioner experience, but controlled TDD studies measure defects and productivity rather than coverage gaps, so the size of the effect is not established.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.3,
+          "note": "Test-last developers wrote as many unit-test asserts as TDD developers (sign test p=1.00, Cliff's delta 0.07), though in a 3-hour kata with incremental test-last there is little hard-to-test code to skip.",
+          "source": "software-practices/sources/fucci2016-tdd-replication.txt#L440-L447",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "The review grants that TDD yields more tests than test-last, but reports that test quality, maintainability and co-evolution with production code get little attention, so more tests is not the same as fewer holes.",
+          "source": "software-practices/sources/karac2018-tdd-what-we-know.txt#L178-L184",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+      "stance": "asserts",
+      "quote": "you cannot write the code that's hard to test if you write the test first",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Studies of TDD find modest improvements in some internal quality metrics such as coupling and cohesion, with mixed results overall and effects that depend on developer experience.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/test-suite-known-gaps-gives-decision",
+      "stance": "asserts",
+      "quote": "a test Suite that does does not allow you to make a decision when it passes is a useless test Suite",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A framing about what trust in a suite means rather than a measurable outcome; partial suites still catch some regressions.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/test-first-development-reduces-time-spent",
+      "stance": "asserts",
+      "quote": "it reduces your debug time",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Controlled studies show TDD lowers defect density at some cost in development time; direct measurements of debugging time are scarce.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/making-failing-test-pass-gives-small",
+      "stance": "asserts",
+      "quote": "every time you make a test pass there's a little shot of endorphins to the back of your brain",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A claim about enjoyment and motivation that varies by person.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/trustworthy-automated-test-suite-lets-developers",
+      "stance": "asserts",
+      "quote": "the most profound effect is that button and the fact that you trust it",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Survey research such as DORA links reliable test automation with higher delivery confidence and performance, but the direction of causation is not isolated.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "DORA 2019 finds automated testing predicts continuous integration, which predicts continuous delivery, and frames the mechanism as developers trusting that a passing suite means deployable code; the fear/confidence effect itself is asserted, not measured, and the data are survey self-reports.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1006-L1015",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "id": "danluu-empirical-pl",
+  "title": "Literature review on the benefits of static types",
+  "channel": "danluu.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://danluu.com/empirical-pl/",
+  "summary": "Dan Luu reviews the empirical literature on static types: most studies find small or no effects, programmer variance dominates, and realistic conditions are unstudied.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/controlled-studies-find-most-small-effects",
+      "stance": "asserts",
+      "quote": "most studies find very small effects, if any",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "The reviewed experiments are small and student-based, but the consistent null-to-small pattern has held in later work.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.25,
+          "note": "Related-work summary: Hanenberg's year-long experiment with 49 students writing a parser in a custom language with and without static types found no significant positive impact of static typing on development time or code quality.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L568-L577",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.2,
+          "note": "Related-work summary of Hanenberg's 48-programmer, 27-hour experiment: no significant difference in code quality between static and dynamic typing; the authors' own observational GitHub effect sizes are also described as modest.",
+          "source": "software-practices/sources/ray2014-languages-github.txt#L711-L715",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Here the effect of type system on development time was not small: partial eta-squared .275 and .246 across rounds, type-error fixing 2-5x faster in Java and every subject's Java total below their Groovy total; effects were nil for semantic errors and defect rates were not measured, and tasks were small student exercises.",
+          "source": "software-practices/sources/kleinschmager2012-static-types-maintainability.txt#L298-L315",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Repeated-measures ANOVA gave significant, medium-to-large effects of language on development time in both rounds (partial eta-squared .275 and .246) with a strong task-language interaction; the exploratory measures showed 35-69 percent of variance in test runs and file switches explained by the type system in the second round, which is not a small effect, though confined to small tasks.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L971-L991",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/differences-between-individual-programmers-dwarf-languages",
+      "stance": "asserts",
+      "quote": "the variance between programmers was still much greater than the variance between languages in all but two tasks",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "Reported in nearly every multi-language experiment, including Prechelt's.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Typical slower/faster programmer differences of about 2:1 are much larger than the typical difference between two experimental conditions (de-biased median effect 14%); the dataset covers experimental variables in general, not language comparisons specifically.",
+          "source": "software-practices/sources/prechelt1999-28to1-legend.txt#L521-L524",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Across 80 programs the within-language bad/good ratios for time, length, memory and run time were on average about as large as or larger than the between-language differences, which supports the direction but not 'dwarf', since scripts still took half the time of C/C++/Java.",
+          "source": "software-practices/sources/prechelt2000-seven-languages.txt#L496-L501",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/large-scale-repository-studies-claiming-some",
+      "stance": "asserts",
+      "quote": "the study appears to use a fundamentally flawed methodology that's not capable of revealing much information",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/type-annotations-help-developers-mainly-acting",
+      "stance": "asserts",
+      "quote": "static type systems acted as a form of implicit documentation, benefiting developer productivity",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Hanenberg's experiments find the benefit on undocumented APIs and strengthened by docs; effect sizes are modest.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Static types sped up using undocumented classes on 4 of 5 tasks, which the authors read as types acting as documentation, but they also produced a large separate benefit on type-error fixing from the compiler check itself, so documentation is one confirmed mechanism rather than the main one.",
+          "source": "software-practices/sources/kleinschmager2012-static-types-maintainability.txt#L427-L435",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "The exploratory data show static types cut file switches on class-identification tasks, which the authors interpret as annotations guiding developers to the right API without searching, but they cannot separate annotation from checking and type-error fixing benefited at least as strongly.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L1579-L1596",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/retrofitting-static-types-onto-dynamically-typed",
+      "stance": "asserts",
+      "quote": "you'd expect that this technique caught between 4% and 15% of the bugs in this code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Later work on JavaScript found roughly fifteen percent of public bugs detectable by TypeScript or Flow; still a minority.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Flow and TypeScript each detect 60 of 400 sampled public JavaScript bugs (15%, 95% CI 11.5-18.5%), so retrofitted types find a minority of bugs, but the authors stress this is a lower bound (public bugs only, two weak type systems, non-expert annotators) and an engineering manager called a 10% reduction a no-brainer.",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L372-L377",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/existing-type-system-studies-not-cover",
+      "stance": "asserts",
+      "quote": "Some notable omissions from the studies are comprehensive studies using experienced programmers",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "The gap remains; most later studies are still small-scale or observational.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "The authors agree most prior type-system studies are small scale or use students with a custom language as a confound, but their own study applies TypeScript 2.0 and Flow to bugs from 398 real GitHub projects up to 1.1M LOC, so modern typed languages on large codebases are covered (though with non-expert annotators, not experienced users).",
+          "source": "software-practices/sources/gao2017-type-or-not.txt#L579-L586",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Ray et al. note that controlled typing experiments used students on limited tasks, and position their own work as a field study of 729 popular projects (Linux, Rails, Spark, Haskell's pandoc) in 17 languages including Go, Scala and Haskell, so large codebases and modern languages have been studied, if only observationally.",
+          "source": "software-practices/sources/ray2014-languages-github.txt#L42-L48",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "This study is an instance of the pattern: 30 of 33 subjects were students, the program was 30 classes and 1300 lines with tasks deliberately free of loops and recursion, and the authors warn the effects may not generalise to industrial programs.",
+          "source": "software-practices/sources/kleinschmager2012-static-types-maintainability.txt#L251-L257",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "The threats section concedes mostly student subjects, small tasks without complex control flow in a bare text editor, and Java as a type system 'not known for being the most expressive'; the related-work survey lists only similar small experiments, matching all three gaps in the claim.",
+          "source": "software-practices/sources/hanenberg2014-static-types-emse.txt#L833-L867",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/type-system-studies-cherry-picked-confirm",
+      "stance": "asserts",
+      "quote": "most of them are passed around to justify one viewpoint or another",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A claim about discourse rather than about types.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "The original study's static-typing and functional-language results drew the most attention because they confirmed commonly held beliefs, and of 30 citing papers that discussed the results, 26 restated the correlations as causal effects; confirmation-driven over-reading of one study rather than cherry-picking across studies.",
+          "source": "software-practices/sources/berger2019-languages-reproduction.txt#L86-L99",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

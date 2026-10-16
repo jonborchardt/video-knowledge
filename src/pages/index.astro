@@ -21,19 +21,24 @@ const firstSentence = (s: string) => s[0].toUpperCase() + s.slice(1).split('. ')
     {
       topics.map((t) => (
         <a
-          class="grid gap-2 rounded-lg border bg-card p-4 text-card-foreground no-underline hover:border-primary"
+          class="grid content-start gap-2 rounded-lg border bg-card p-4 text-card-foreground no-underline hover:border-primary"
           href={href(`/${t.name}/`)}
         >
-          <h2 class="text-title font-semibold text-primary">{t.label}</h2>
-          <span class="font-mono text-xs text-muted-foreground">
-            {t.counted} sources · {t.claims.length} claims · {t.studies} studies
-          </span>
+          <div class="flex items-start gap-3">
+            {t.glyph && <span class="size-11 flex-none text-primary [&>svg]:size-full" set:html={t.glyph} />}
+            <div class="grid gap-1">
+              <h2 class="text-title font-semibold text-primary">{t.label}</h2>
+              <span class="font-mono text-xs text-muted-foreground">
+                {t.counted} sources · {t.claims.length} claims · {t.studies} studies
+              </span>
+            </div>
+          </div>
           {t.bottomLine && <span class="text-sm text-muted-foreground">{firstSentence(t.bottomLine)}</span>}
         </a>
       ))
     }
     <div
-      class="grid gap-2 rounded-lg border border-dashed bg-card p-4 text-card-foreground opacity-70"
+      class="grid content-start gap-2 rounded-lg border border-dashed bg-card p-4 text-card-foreground opacity-70"
       aria-disabled="true"
     >
       <h2 class="text-title font-semibold text-muted-foreground">More topics</h2>

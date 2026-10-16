@@ -1,0 +1,146 @@
+{
+  "id": "_mi3alkqy4s",
+  "title": "The Death of the Code Review: What the Data Actually Says — Laurie Voss, Arize AI",
+  "channel": "AI Engineer",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCLKPca3kwwd-B59HNr-_lvA",
+  "durationSec": 1480,
+  "thumbnail": "https://i.ytimg.com/vi_webp/_mi3alkqy4s/sddefault.webp",
+  "summary": "Argues human code review has become the shipping bottleneck in the agent era, surveys automated-review experiments, and concludes review is being rebuilt as a human-designed system rather than dying.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/generated-code-volume-outruns-fixed-human",
+      "stance": "asserts",
+      "quote": "the speed at which humans can review code has stayed exactly the same",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "One large telemetry study reports code output rising far faster than shipped software after agent adoption, but attributing the gap to review is the authors' inference and other bottlenecks (testing, deployment, product decisions) are not separated out.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+      "stance": "asserts",
+      "quote": "reviewers stop finding defects effectively if they try to read more than 400 lines of code in one sitting",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "The SmartBear Cisco field study found defect density per line falling past roughly 200-400 lines per review, though it is a single vendor-run industrial dataset rather than a controlled experiment.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Google data show comments per change keep rising with size up to about 1250 lines before falling (large changes are generated code or deletions); the paper cites prior work that useful comments decrease with size but does not measure defect-finding per line itself.",
+          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L405-L412",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Changes approved faster than 200 lines per hour ('hastily reviewed') are associated with more post-release defects in Qt 5.1.0, and only 10% of such changes are needed before a component is expected to have a defect; this is about review rate, not a fixed lines-per-review threshold.",
+          "source": "software-practices/sources/mcintosh2014-code-review-coverage.txt#L604-L611",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/change-passing-test-suite-weak-proxy",
+      "stance": "asserts",
+      "quote": "it was only good enough to merge about half of the time",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Tests only cover specified behaviour and cannot see maintainability, scope or hidden coupling; the METR maintainer study cited here supports this, though it is one study on agent-written PRs.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/running-several-independent-automated-review-passes",
+      "stance": "asserts",
+      "quote": "Run several review passes, see keep what they agree on",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Ensemble and self-consistency effects are well documented for language models, but the size of the review-quality gain rests on one academic paper and vendor reports.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/automated-code-reviewers-fooled-confidently-framed",
+      "stance": "asserts",
+      "quote": "fooled an autonomous review agent in 88% of attempts",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Prompt injection against LLM reviewers is a documented weakness and vendors warn about it themselves, but the specific human-versus-agent comparison comes from a single study.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/teams-stop-reading-agent-written-code",
+      "stance": "asserts",
+      "quote": "We tried not reading the code for like six months. It did not end well.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Supported by a public retraction and by audits of agent-ported code finding unusual numbers of unsafe constructs, but the evidence is anecdotal with no controlled comparison.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/assigning-people-review-code-full-time",
+      "stance": "asserts",
+      "quote": "those people burn out really fast",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Review fatigue and the tedium of full-time review are widely reported by practitioners, but there is no measured burnout study specific to this arrangement.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/human-role-code-review-shifting-reading",
+      "stance": "asserts",
+      "quote": "the human role isn't disappearing. It is moving up the stack",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A forecast about how roles will evolve rather than a claim that can be checked against evidence.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

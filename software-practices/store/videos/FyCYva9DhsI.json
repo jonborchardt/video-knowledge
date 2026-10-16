@@ -1,0 +1,139 @@
+{
+  "id": "FyCYva9DhsI",
+  "title": "Clean Coders Hate What Happens to Your Code When You Use These Enterprise Programming Tricks",
+  "channel": "NDC Conferences",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCTdw38Cw6jcm0atBPA39a0Q",
+  "durationSec": 4283,
+  "thumbnail": "https://i.ytimg.com/vi_webp/FyCYva9DhsI/sddefault.webp",
+  "summary": "Kevlin Henney tours enterprise coding habits (trivial dependencies, cargo-cult conventions, noisy comments, factory overuse, verbose names, logging everything) and closes by refactoring a function down to its essence.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/taking-small-third-party-dependencies-trivial",
+      "stance": "asserts",
+      "quote": "one developer just broke node bab and thousands of projects and 11 lines of JavaScript",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "The left-pad incident and subsequent supply-chain research show deep transitive dependency trees in npm expose projects to removals and malicious updates.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/coding-conventions-spread-repetition-rather-understanding",
+      "stance": "asserts",
+      "quote": "this is how coding guidelines and Enterprise cultures are created by the repetition of an idea",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A sociological framing about how practices propagate.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/comments-restate-code-noise-drift-out",
+      "stance": "asserts",
+      "quote": "a misleading comment can be very confusing third the issue of typography comments clutter code",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Studies find comment-code inconsistency common after change, but comprehension research also shows explanatory comments help readers, so the claim holds for restating comments not all comments.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/work-expands-fill-time-headcount-given",
+      "stance": "asserts",
+      "quote": "if you tell people this is going to be six months worth of work they will pack it full to the six months and Beyond",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Parkinson's law and Brooks's law have anecdotal and some experimental support for deadline effects, but the ten-versus-hundred example is a single anecdote.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Software teams allowed to plan with their original (higher) estimates were less productive than those cut by up to 20%, and a company rewarding accurate estimates saw padded estimates with the buffer absorbed into extra work ('work stretching'); headcount is not addressed.",
+          "source": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L1518-L1539",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Review notes a self-fulfilling-prophecy effect: projects that over-estimate most likely effort can reach high accuracy by spending the remaining effort gold-plating the product.",
+          "source": "software-practices/sources/jorgensen2004-expert-estimation.txt#L1134-L1137",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/applying-design-patterns-such-factories-everywhere",
+      "stance": "asserts",
+      "quote": "and this has led to as it were the over adoption of factory",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Prechelt's controlled pattern experiments found patterns help only when their flexibility is needed and otherwise add comprehension cost.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/names-carry-most-program-design-intent",
+      "stance": "asserts",
+      "quote": "the name is not merely a label on your design your name is your design",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Identifier studies show descriptive names improve comprehension; the specific heuristic about vague suffixes is expert opinion.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "All five interviewed developers named identifier quality as a factor in understandability (generic names like processChar were called ambiguous), but none of the quantitative identifier metrics across 444 evaluations correlated more than weakly with understanding; nothing on 'Manager'-style names signalling weak design.",
+          "source": "software-practices/sources/scalabrino2019-understandability.txt#L1077-L1079",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/logging-without-stated-requirements-grows-until",
+      "stance": "asserts",
+      "quote": "logging is the most important single most important activity in that code base",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "Anecdotal from client codebases; no measurement of logging proportion across projects.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

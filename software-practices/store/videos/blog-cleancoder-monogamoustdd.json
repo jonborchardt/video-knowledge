@@ -1,0 +1,82 @@
+{
+  "id": "blog-cleancoder-monogamoustdd",
+  "title": "Clean Coder Blog",
+  "channel": "blog.cleancoder.com",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://blog.cleancoder.com/uncle-bob/2014/04/25/MonogamousTDD.html",
+  "summary": "Uncle Bob replies to DHH: TDD's ancillary benefits are debatable, but a fast, trusted test suite that enables fearless cleanup is not; GUI tests cannot meet that bar.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/trustworthy-automated-test-suite-lets-developers",
+      "stance": "asserts",
+      "quote": "developers can quickly and easily clean the code without fear of breaking anything",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/test-first-development-reduces-time-spent",
+      "stance": "asserts",
+      "quote": "We spend less time debugging.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+      "stance": "asserts",
+      "quote": "Writing tests first requires decoupling that other testing strategies do not",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/tests-serve-precise-unambiguous-low-level",
+      "stance": "asserts",
+      "quote": "The tests act as accurate, precise, and unambiguous documentation at the lowest level of the system.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Tests document behaviour but are hard to navigate as documentation; evidence is practitioner opinion.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/gui-driven-integration-tests-cannot-reach",
+      "stance": "asserts",
+      "quote": "you can’t reach all the code from the GUI",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.65,
+          "note": "Coverage from end-to-end tests is typically well below unit-level coverage; the 'bit more than half' figure is a guess.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/slow-driven-end-test-suites-fragile",
+      "stance": "asserts",
+      "quote": "Databases and GUIs are slow.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/keeping-code-clean-enough-keep-development",
+      "stance": "asserts",
+      "quote": "the benefit of keeping the code clean, and keeping the team moving fast, is so great",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A cost-benefit judgment with no agreed way to measure either side.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

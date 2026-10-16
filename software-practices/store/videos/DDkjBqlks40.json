@@ -1,0 +1,191 @@
+{
+  "id": "DDkjBqlks40",
+  "title": "code.talks 2023 - Our journey from Gitflow to Trunk Based Development",
+  "channel": "code.talks (ehem. Developer Conference)",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCfuj1MM5p37CRzWYPv_PsWA",
+  "durationSec": 2324,
+  "thumbnail": "https://i.ytimg.com/vi_webp/DDkjBqlks40/sddefault.webp",
+  "summary": "Case study of a team moving from Gitflow to trunk-based development with feature flags and ephemeral per-branch environments, reporting more frequent releases and happier developers.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/long-lived-branches-delay-integration-produce",
+      "stance": "asserts",
+      "quote": "we spend a lot of time to handle conflicts because we have so many branches",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "The mechanism is direct, and DORA research associates short-lived branches and trunk-based development with higher delivery performance.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "DORA observes that merging patches sooner avoids rebases and that short-lived branches and small patches make everyone more productive, but it does not measure merge conflicts or how they scale with team size.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1059-L1070",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/running-server-not-continuous-integration-branches",
+      "stance": "asserts",
+      "quote": "it's not because you are using Jenkins GitHub gitlab Circle CI that you are doing continuous integration",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Matches the standard definition of continuous integration as frequent integration to a shared mainline, which tooling alone does not guarantee.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "DORA defines impactful CI as every commit producing a build and test run, and separately defines effective trunk-based development as fewer than three active branches with lifetimes under a day; both predict continuous delivery, but branch lifetime is treated as a distinct capability rather than part of the definition of CI.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1006-L1024",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/trunk-based-development-one-small-change",
+      "stance": "asserts",
+      "quote": "it also allows us to increase the release frequency to have much more stable iteration",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "DORA data correlate trunk-based development with better delivery metrics and small changes are easier to revert, but the gains are correlational and the team's own numbers are self-reported.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Survey data show trunk-based development with frequent check-in and deployment to production is predictive of software delivery performance (deploy frequency, lead time, change failure rate, time to restore); rollback ease is not measured.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1039-L1041",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/feature-flags-let-unfinished-work-merge",
+      "stance": "asserts",
+      "quote": "we are actually decoupling deployment from release",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "A well-established mechanism used at scale by large web companies, with documented costs in flag management.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/reusing-old-feature-flag-can-switch",
+      "stance": "asserts",
+      "quote": "they recycled an old future flag and when they turn it on the last machine that did not receive the new version",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.75,
+          "note": "The Knight Capital incident is documented in the SEC order as a repurposed flag plus an incomplete deployment, and flag hygiene guidance exists because of such cases.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/trunk-based-development-only-works-fast",
+      "stance": "asserts",
+      "quote": "you need to have a pretty strong test Suite in terms of completeness a good coverage and it needs to execute fasts",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Practitioner accounts and DORA both treat fast automated tests as a prerequisite for continuous delivery; synchronous review is one way to meet the merge cadence but not the only one.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/ephemeral-per-branch-environments-remove-bottleneck",
+      "stance": "asserts",
+      "quote": "we remove the bottleneck okay it's been completely removed",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "The queueing mechanism is sound and widely reported, but evidence is practitioner case studies and the environments bring their own cost and data-seeding work.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/trunk-based-development-unsuited-products-must",
+      "stance": "asserts",
+      "quote": "maybe trunk base development is not suitable for you and git flow still is a good option",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Release branches cut from trunk are a standard way to ship versioned products from trunk, so the limit is weaker than stated, though strict version control does reduce the practice's advantages.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "DORA notes open-source releases are cut from a branch at a point in time after significant testing, a different cadence from continuous delivery, yet says short-lived branches and small patches still apply there; it does not test products with tightly controlled versions directly.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1044-L1070",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/developers-who-deploy-their-own-work",
+      "stance": "asserts",
+      "quote": "they are way much happier than before when they were just like okay I finished this feature somebody else is going to validate",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "DORA surveys associate continuous delivery with lower burnout and higher job satisfaction, but causation is not isolated and this is one team's impression.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/feature-flags-carry-ongoing-removal-cost",
+      "stance": "asserts",
+      "quote": "we need to remove video Flex that there is an extra cost",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Stale-flag debt is well documented and large companies have built tooling specifically to remove dead flags.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

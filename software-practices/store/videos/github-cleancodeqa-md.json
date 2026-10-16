@@ -1,0 +1,133 @@
+{
+  "id": "github-cleancodeqa-md",
+  "title": "cmuratori-discussion/cleancodeqa.md at main · unclebob/cmuratori-discussion",
+  "channel": "GitHub",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://github.com/unclebob/cmuratori-discussion/blob/main/cleancodeqa.md",
+  "summary": "Muratori and Martin converge: clean-code structures do cost cycles, most business software can afford them, Clean Code teaching neglected performance, tests should be selective, and OO versus switch is a symmetric trade-off.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/most-software-conserving-programmer-time-matters",
+      "stance": "asserts",
+      "quote": "It is economically better for most organizations to conserve programmer cycles than computer cycles.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Much business software is not CPU-bound and developer salaries dominate costs, but published latency experiments show slowness has measurable revenue costs too.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Readability correlated with defect reports, version churn, bug-fix commits and project maturity, and a readability drop in jUnit coincided with rising defect density, supporting that readability relates to quality; correlational and silent on the CPU-vs-programmer-time trade-off.",
+          "source": "software-practices/sources/buse2010-readability.txt#L612-L619",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/preferring-runtime-polymorphism-over-switch-statements",
+      "stance": "asserts",
+      "quote": "Indeed, using those structures can cost you a lot of nanoseconds. They are not efficient at the nanosecond level.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/choosing-right-algorithm-improves-efficiency-many",
+      "stance": "asserts",
+      "quote": "Cycle-lean code can increase efficiency by an order of magnitude; but the right choice of algorithm can increase efficiency by many orders of magnitude.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "Asymptotic improvements dominate constant-factor ones on large inputs, though for fixed-size hot loops constant factors are all that remain.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/clean-code-teaching-gives-performance-almost",
+      "stance": "asserts",
+      "quote": "not a single one of the things you mentioned here are discussed in the nine hour runtime",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "The author conceded the point about his own lecture series; whether audiences actually absorb a disregard for performance is not measured.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/trustworthy-automated-test-suite-lets-developers",
+      "stance": "asserts",
+      "quote": "When I have a suite of tests that I trust, and that has high coverage, I can refactor that code without fear.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/how-much-invest-tests-depends-required",
+      "stance": "asserts",
+      "quote": "tests that you don't use, or that don't find bugs, or that took longer to write and maintain than the number of bugs they prevented",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/interactive-visual-behaviour-such-guis-game",
+      "stance": "asserts",
+      "quote": "I cannot practically write tests for things that I have to see in order to know that they work. GUIs, Game behaviors, Hardware interactions, etc.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "Both debaters and the game industry agree; snapshot and replay testing cover regressions but not the initial judgement of correctness.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/polymorphism-makes-adding-new-types-easy",
+      "stance": "asserts",
+      "quote": "OO (Operand Primal) is a great way to add types to existing functions without changing those functions.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.8,
+          "note": "This is the well-known expression problem; the two designs are mirror images for the two kinds of extension.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/dependency-inversion-via-polymorphism-protects-high",
+      "stance": "asserts",
+      "quote": "it prevents changes at to low level modules from forcing a wave of recompilation and redeployment from sweeping through the system towards higher level modules",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "The mechanism is real, but link-time binding through opaque pointers gives the same isolation, so the benefit specific to runtime polymorphism is mainly plugins and frameworks.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/applying-design-patterns-such-factories-everywhere",
+      "stance": "asserts",
+      "quote": "the idea of structuring code around swappable types is generally wrong",
+      "verdicts": []
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "id": "nordicapis-back-to-the-monolith-why-did-amazon-dump-microservices",
+  "title": "Back to the Monolith: Why Did Amazon Dump Microservices? | Nordic APIs |",
+  "channel": "Nordic APIs",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://nordicapis.com/back-to-the-monolith-why-did-amazon-dump-microservices/",
+  "summary": "Nordic APIs on the Prime Video post: consolidating serverless components into one process cut the AWS bill 90%, microservices add a call per hop, and architecture should fit scale rather than hype.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/microservices-cost-more-short-term-rarely",
+      "stance": "asserts",
+      "quote": "This monolithic conversion ended up saving their organization 90% on their monthly AWS bill.",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/decomposing-monolith-only-works-already-has",
+      "stance": "asserts",
+      "quote": "converting to microservices without proper planning simply trades bad code for faulty infrastructures",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/microservices-independent-scaling-fault-isolation-pay",
+      "stance": "asserts",
+      "quote": "microservices and serverless solutions often make sense for an organization of Amazon's size",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Netflix and Amazon cases support it; there is no evidence about where the threshold lies.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.35,
+          "note": "Scalability is the most cited gain (31 of 51 sources) and fault isolation is cited by 14, confirming these as the recognised payoffs, but the review gives no evidence on a scale threshold at which they start to pay.",
+          "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L962-L976",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/single-architecture-suits-every-scale-should",
+      "stance": "asserts",
+      "quote": "with every order of magnitude of growth you should revisit your architecture",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Heuristic.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/hype-drives-teams-adopt-microservices-they",
+      "stance": "asserts",
+      "quote": "it's just a lot of buzz that people are attaching their assignment to, when honestly it's not gonna necessarily solve their problem",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/single-process-design-suits-long-running",
+      "stance": "asserts",
+      "quote": "consider a monolithic approach for long-running computing jobs or when there are predictable traffic spikes",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.55,
+          "note": "Lambda pricing and duration limits make this true for sustained workloads; Cockcroft's advice is widely echoed.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/microservices-speed-time-market",
+      "stance": "asserts",
+      "quote": "Microservices can help you get a product to market much more quickly, for one thing.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Independent deploys can speed large organisations, but monolith-first advocates argue the opposite for small teams; no comparative data.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Architectures that permit testing and deploying services independently help teams achieve higher delivery performance, but it is the loose coupling that predicts, and the report warns that premature or overly fine-grained decomposition into services can inhibit delivery performance.",
+          "source": "software-practices/sources/dora2019-state-of-devops.txt#L1071-L1092",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Industrial sources credit microservices with per-service CI/CD (15), fast deployment (11) and small services that are quick to develop (14), but the review notes none provide quantitative data and time to market itself is not measured.",
+          "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1100-L1108",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

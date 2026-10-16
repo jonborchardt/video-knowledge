@@ -1,0 +1,84 @@
+{
+  "id": "google-github-small-cls",
+  "title": "Small CLs",
+  "channel": "eng-practices",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://google.github.io/eng-practices/review/developer/small-cls.html",
+  "summary": "Google's engineering-practices guide: small self-contained changes are reviewed faster and better, carry fewer bugs, merge and roll back more easily, and almost any large change can be split.",
+  "topics": {
+    "primary": "software-practices",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "software-practices/small-pull-requests-picked-merged-faster",
+      "stance": "asserts",
+      "quote": "It’s easier for a reviewer to find five minutes several times to review small CLs than to set aside a 30 minute block",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
+      "stance": "asserts",
+      "quote": "Since you’re making fewer changes, it’s easier for you and your reviewer to reason effectively about the impact of the CL",
+      "verdicts": []
+    },
+    {
+      "claim": "software-practices/small-changes-can-worse-mid-sized",
+      "stance": "asserts",
+      "quote": "The CL is not so small that its implications are difficult to understand.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "One vendor dataset shows higher revert rates under ten lines, plausibly from config changes; the pattern has not been replicated.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/refactorings-should-separate-changes-feature-work",
+      "stance": "asserts",
+      "quote": "It’s usually best to do refactorings in a separate CL from feature changes or bug fixes.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Tangled changes are shown to confuse both reviewers and defect analysis, though no study measures the review-quality gain directly.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/every-change-adds-alters-logic-should",
+      "stance": "asserts",
+      "quote": "A CL that adds or changes logic should be accompanied by new or updated tests for the new behavior.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "unknown",
+          "note": "Widely adopted policy, but no study compares co-committed tests against tests landed separately.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "software-practices/almost-any-large-change-can-decomposed",
+      "stance": "asserts",
+      "quote": "Authors who practice writing small CLs can almost always find a way to decompose functionality into a series of small changes.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Stacking and vertical slicing work for most feature work, but generated code, large migrations and some refactors resist splitting.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

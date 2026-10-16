@@ -1,0 +1,701 @@
+Modern Code Review: A Case Study at Google
+
+         Caitlin Sadowski, Emma Söderberg,                                              Alberto Bacchelli
+               Luke Church, Michal Sipko
+                                                                                           University of Zurich
+                               Google, Inc.
+       {supertri,emso,lukechurch,sipkom}@google.com                                         bacchelli@ifi.uzh.ch
+
+ABSTRACT                                                               novel context. Rigby and Bird quantitatively analyzed code
+                                                                       review data from software projects spanning varying domains
+Employing lightweight, tool-based code review of code changes          as well as organizations and found five strongly convergent
+(aka modern code review) has become the norm for a wide                aspects [33], which they conjectured can be prescriptive to
+variety of open-source and industrial systems. In this pa-             other projects. The analysis of Rigby and Bird is based on the
+per, we make an exploratory investigation of modern code               value of a broad perspective (that analyzes multiple projects
+review at Google. Google introduced code review early on               from different contexts). For the development of an empirical
+and evolved it over the years; our study sheds light on why            body of knowledge, championed by Basili [7], it is essential
+Google introduced this practice and analyzes its current               to also consider a focused and longitudinal perspective that
+status, after the process has been refined through decades of          analyzes a single case. This paper expands on work by Rigby
+code changes and millions of code reviews. By means of 12              and Bird to focus on the review practices and characteristics
+interviews, a survey with 44 respondents, and the analysis             established at Google, i.e., a company with a multi-decade
+of review logs for 9 million reviewed changes, we investigate          history of code review and a high-volume of daily reviews to
+motivations behind code review at Google, current practices,           learn from. This paper can be (1) prescriptive to practitioners
+and developers' satisfaction and challenges.                           performing code review and (2) compelling for researchers
+                                                                       who want to understand and support this novel process.
+CCS CONCEPTS
+                                                                          Code review has been a required part of software develop-
+· Software and its engineering  Software maintenance tools;            ment at Google since very early on in the company's history;
+                                                                       because it was introduced so early on, it has become a core
+ACM Reference format:                                                  part of Google culture. The process and tooling for code
+Caitlin Sadowski, Emma Söderberg,                                      review at Google have been iteratively refined for more than
+Luke Church, Michal Sipko and Alberto Bacchelli. 2018. Modern          a decade and is applied by more than 25,000 developers
+Code Review: A Case Study at Google. In Proceedings of 40th            making more than 20,000 source code changes each workday,
+International Conference on Software Engineering: Software En-         in dozens of offices around the world [30].
+gineering in Practice Track, Gothenburg, Sweden, May 27-June 3,
+2018 (ICSE-SEIP '18), 10 pages.                                           We conduct our analysis in the form of an exploratory
+DOI: 10.1145/3183519.3183525                                           investigation focusing on three aspects of code review, in line
+                                                                       with and expanding on the work by Rigby and Bird [33]:
+1 INTRODUCTION                                                         (1) The motivations driving code review, (2) the current
+                                                                       practices, and (3) the perception of developers on code review,
+Peer code review, a manual inspection of source code by                focusing on challenges encountered with a specific review
+developers other than the author, is recognized as a valuable          (breakdowns in the review process) and satisfaction. Our
+tool for improving the quality of software projects [2, 3]. In         research method combines input from multiple data sources:
+1976, Fagan formalized a highly structured process for code            12 semi-structured interviews with Google developers, an
+reviewing--code inspections [16]. Over the years, researchers          internal survey sent to engineers who recently sent changes
+provided evidence on the benefits of code inspection, espe-            to review with 44 responses, and log data from Google's code
+cially for defect finding, but the cumbersome, time-consuming,         review tool pertaining to 9 million reviews over two years.
+and synchronous nature of this approach hindered its uni-
+versal adoption in practice [37]. Nowadays, most organiza-                We find that the process at Google is markedly lighter
+tions adopt more lightweight code review practices to limit            weight than in other contexts, based on a single reviewer,
+the inefficiencies of inspections [33]. Modern code review is          quick iterations, small changes, and a tight integration with
+(1) informal (in contrast to Fagan-style), (2) tool-based [32],        the code review tool. Breakdowns still exist, however, due to
+(3) asynchronous, and (4) focused on reviewing code changes.           the complexity of the interactions that occur around code re-
+                                                                       view. Nevertheless, developers consider this process valuable,
+   An open research challenge is understanding which prac-             confirm that it works well at scale, and conduct it for several
+tices represent valuable and effective methods of review in this       reasons that also depend on the relationship between author
+                                                                       and reviewers. Finally, we find evidence on the use of the code
+ICSE-SEIP '18, Gothenburg, Sweden                                      review tool beyond collaborative review and corroboration
+© 2018 Copyright held by the owner/author(s). This is the author's     for the importance of code review as an educational tool.
+version of the work. It is posted here for your personal use. Not
+for redistribution. The definitive Version of Record was published in
+Proceedings of 40th International Conference on Software Engineer-
+ing: Software Engineering in Practice Track, May 27-June 3, 2018 ,
+http://dx.doi.org/10.1145/3183519.3183525.
+ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden                                                                      C. Sadowski et al.
+
+2 BACKGROUND AND RELATED WORK                                                 Table 1: Convergent review practices [33].
+
+We describe the review processes investigated in literature,         id Convergent Practice
+then we detail convergent code review practices across these        CP1 Contemporary peer review follows a lightweight,
+processes [33].
+                                                                             flexible process
+2.1 Code Review Processes and Contexts                              CP2 Reviews happen early (before a change is commit-
+
+Code Inspections. Software inspections are one of the first                  ted), quickly, and frequently
+formalized processes for code review. This highly structured        CP3 Change sizes are small
+process involves planning, overview, preparation, inspection        CP4 Two reviewers find an optimal number of defects
+meeting, reworking, and follow-up [16]. The goal of code            CP5 Review has changed from a defect finding activity
+inspections is to find defects during a synchronized inspec-
+tion meeting, with authors and reviewers sitting in the same                 to a group problem solving activity
+room to examine code changes. Kollanus and Koskinen com-
+piled the most recent literature survey on code inspection        master branch after explicit approval from reviewers and
+research [25] . They found that the vast majority of studies on   automated verification that the change does not break the
+code inspections are empirical in nature. There is a consensus    build [12]. In Gerrit, unassigned reviewers can also make
+about the overall value of code inspection as a defect finding    comments. VMware developed the open-source ReviewBoard,
+technique and the value of reading techniques to engage the       which integrates static analysis into the review process; this
+inspectors. Overall, research on code inspection has declined     integration relies on change authors manually requesting anal-
+from 2005, in line with the spread of the internet and the        ysis and has been shown to improve code review quality [5].
+growth of asynchronous code review processes.                     Facebook's code review system, Phabricator [29], allows re-
+Asynchronous review via email. Until the late 2000s, most         viewers to "take over" a change and commit it themselves and
+large OSS projects adopted a form of remote, asynchronous         provides hooks for automatic static analysis or continuous
+reviews, relying on patches sent to communication channels        build/test integration.
+such as mailing lists and issue tracking systems. In this         In the context of tool-based reviews, researchers have in-
+setting, project members evaluate contributed patches and         vestigated the relationship between code change acceptance
+ask for modifications through these channels. When a patch        or response time and features of the changed code and au-
+is deemed of high enough quality, core developers commit          thors [41], as well as the agreement among reviewers [22].
+it to the codebase. Trusted committers may have a commit-         Qualitative investigations have been also conducted to define
+then-review process instead of doing pre-commit reviews [33].     what constitutes a good code review according to indus-
+Rigby et al. were among the first to do extensive work in         trial [11] and OSS developers [26].
+this setting; they found that this type of review "has little     Pull-based development model. In the GitHub pull request
+in common [with code inspections] beyond a belief that peers      process [18] a developer wanting to make a change forks an
+will effectively find software defects" [34]. Kononenko et al.    existing git repository and then makes changes in their fork.
+analyzed the same setting and find that review response           After a pull request has been sent out, it appears in the
+time and acceptance are related to social factors, such as        list of pull requests for the project in question, visible to
+reviewer load and change author experience [26], which were       anyone who can see the project. Gousios et al. qualitatively
+not present in code inspections.                                  investigated work practices and challenges of pull-request
+Tool-based review. To bring structure to the process of re-       integrators [21] and contributors [20], finding analogies to
+viewing patches, several tools emerged in OSS and industrial      other tool-based code reviews.
+settings. These tools support the logistics of the review pro-
+cess: (1) The author of a patch submits it to the code review     2.2 Convergent Practices in Code Review
+tool, (2) the reviewers can see the diff of the proposed code
+change and (3) can start a threaded discussion on specific lines  Rigby and Bird presented the first and most significant work
+with the author and other reviewers, and then (4) the author      that tries to identify convergent practices across several code
+can propose modifications to address reviewers' comments.         review processes and contexts [33]. They considered OSS
+This feedback cycle continues until everybody is satisfied or     projects that use email based reviews, OSS projects that use
+the patch is discarded. Different projects adapted their tools    Gerrit, an AMD project that uses a basic code review tool,
+to support their process. Microsoft uses CodeFlow, which          and Microsoft with CodeFlow. They analyzed the process
+tracks the state of each person (author or reviewer) and          and the data available from these projects to describe several
+where they are in the process (signed off, waiting, review-       angles, such as iterative development, reviewer selection, and
+ing); CodeFlow does not prevent authors from submitting           review discussions. They identified five practices of modern
+changes without approval [33] and supports chats in com-          code review to which all the considered projects converged
+ment threads [4]. Google's Chromium project (along with           (Table 1). We will refer to these practices using their id, e.g.,
+several other OSS projects) relies on the externally-available    CP1. Substantially, they found an agreement in terms of a
+Gerrit [17]; in Chromium, changes are only merged into the        quick, lightweight process (CP1,CP2,CP3) with few people
+                                                                  involved (CP4) who conduct group problem solving (CP5).
+Modern Code Review: A Case Study at Google                           ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden
+
+3 METHODOLOGY                                                    3.3 Research Method
+
+This section describes our research questions and settings; it   To answer our research questions, we follow a mixed quali-
+also outlines our research method and its limitations.           tative and quantitative approach [13], which combines data
+                                                                 from several sources: semi-structured interviews with employ-
+3.1 Research Questions                                           ees involved in software development at Google, logs from the
+                                                                 code review tool, and a survey to other employees. We use
+The overall goal of this research is to investigate modern code  the interviews as a tool to collect data on the diversity (as
+review at Google, which is a process that involves thousands     opposed to frequencies [23]) of the motivations for conducting
+of developers and that has been refined over more than a         code review (RQ1) and to elicit developers' perceptions of
+decade. To this aim, we conduct an exploratory investigation     code review and its challenges (RQ3). We use Critique logs
+that we structure around three main research questions.          to quantify and describe the current review practices (RQ2).
+                                                                 Finally, we use the survey to confirm the diverse motivations
+RQ1: What are the motivations for code review at Google?         for code review that emerged from the interviews (RQ1) and
+ Rigby and Bird found the motivations to be one of the           elicit the developers' satisfaction with the process.
+ converging traits of modern code review (CP5). Here we
+ study what motivations and expectations drive code reviews         Interviews. We conducted a series of face-to-face semi-
+ at Google. In particular, we consider both the historical       structured [13] interviews with selected Google employees,
+ reasons for introducing modern code review (since Google        each taking approximately 1 hour.The initial pool of possible
+ is one of the first companies that used modern code review)     participants was selected using snowball sampling, starting
+ and the current expectations.                                   with developers known to the paper authors. From this pool,
+                                                                 participants were selected to ensure a spread of teams, tech-
+RQ2: What is the practice of code review at Google? The          nical areas, job roles, length of time within the company,
+ other four convergent practices found by Rigby and Bird         and role in the code review process. The interview script (in
+ regard how the process itself is executed, in terms of flow     appendix [1]) included questions about perceived motivations
+ (CP1), speed and frequency (CP2), size of the analyzed          for code review, a recently reviewed/authored change, and
+ changes (CP3), and number of reviewers (CP4). We analyze        best/worst review experiences. Before each interview we re-
+ these aspects at Google to investigate whether the same         viewed the participant's review history and located a change
+ findings hold for a company that has a longer history of code   to discuss in the interview; we selected these changes based
+ review, an explicit culture, and larger volume of reviews       on the number of interactions, the number of people involved
+ compared to those analyzed in previous studies [4, 33].         in the conversation and whether there were comments that
+                                                                 seemed surprising. In an observation part of the interview,
+RQ3: How do Google developers perceive code review? Fi-          the participant was asked to think-aloud while reviewing
+ nally, in our last research question, we are interested in      the pending change and to provide some explicit informa-
+ understanding how Google developers perceive modern code        tion, such as the entry point for starting the review. The
+ review as implemented in their company. This exploration        interviews continued until saturation [19] was achieved and
+ is needed to better understand practices (since perceptions     interviews were bringing up broadly similar concepts. Overall,
+ drive behavior [39]) and to guide future research. We focus     we conducted 12 interviews with staff who had been working
+ on two aspects: breakdowns of the review process developers     at Google from 1 month to 10 years (median 5 years), in
+ experience during specific reviews and whether developers       Software Engineering and Site Reliability Engineering. They
+ are satisfied with review despite these challenges.             included technical leads, managers and individual contrib-
+                                                                 utors. Each interview involved three to four people: The
+3.2 Research Setting                                             participant and 2-3 interviewees (two of which are authors
+                                                                 of this paper). Interviews were live-transcribed by one of the
+We briefly describe our research setting for context on our      interviewers while another one asked questions.
+methodology. See Section 5.1 for a comprehensive description
+of Google's code review process and tooling.                        Open Coding on Interview Data. To identify the broad
+                                                                 themes emerging from the interview data we performed an
+   Most software development at Google occurs in a mono-         open coding pass [27]. Interview transcripts were discussed
+lithic source repository, accessed via an internal version con-  by two authors to establish common themes, then converted
+trol system [30]. Since code review is required at Google,       into a coding scheme. An additional author then performed
+every commit to Google's source control system goes first        a closed coding of the notes of the discussions to validate the
+through code review using Critique: an internally developed,     themes. We iterated this process over one of the interviews
+centralized, web-based code review tool. The development         until we had agreement on the scheme. We also tracked in
+workflow in Google's monolithic repository, including the        what context (relationship between reviewer and author)
+code review process, is very uniform. As with other tools        these themes were mentioned. The combination of the design
+described in Section 2, Critique allows reviewers to see a diff  of the questions and the analysis process means that we can
+of the proposed code change and start a threaded discussion      discuss stable themes in the results, but cannot meaningfully
+on specific lines with the author and other reviewers. Cri-      discuss relative frequencies of occurrence [23].
+tique offers extensive logging functionalities; all developer
+interactions with the tool are captured (including opening
+the tool, viewing a diff, making comments, and approving
+changes).
+ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden           C. Sadowski et al.
+
+   Analysis of Review Data. We analyzed quantitative data        to try to mitigate this issue, we combine information from
+about the code review process by using the logs produced by      both interviews and survey. Moreover, we used a snowball
+Critique. We mainly focus on metrics related to convergent       sampling method to identify engineers to interview, this
+practices found by Rigby and Bird [33]. To allow for com-        is at the risk of sampling bias. Although we attempted to
+parison, we do not consider changes without any reviewers,       mitigate this risk by interviewing developers with a range
+as we are interested in changes that have gone through an        of job roles and responsibilities, there may be other factors
+explicit code review process. We consider a "reviewer" to be     the developers we interviewed share that would not apply
+any user who approves a code change, regardless of whether       across the company. To mitigate moderator acceptance bias,
+they were explicitly asked for a review by the change author.    the researchers involved in the qualitative data collection
+We use a name-based heuristic to filter out changes made         were not part of the Critique team. Social desirability bias
+by automated processes. We focus exclusively on changes          may have influenced the answers to align more favorably to
+that occur in the main codebase at Google. We also exclude       Google culture; however, at Google people are encouraged
+changes not yet committed at the time of study and those         to criticize and improve broken workflows when discovered,
+for which our diff tool reports a delta of zero source lines     thus reducing this bias. Finally, we did not interview research
+changed, e.g., a change that only modifies binary files.         scientists or developers that interact with specialist reviewers
+On an average workday at Google, about 20,000 changes are        (such as security reviews), thus our results are biased towards
+committed that meet the filter criteria described above. Our     general developers.
+final dataset includes the approximately 9 million changes
+created by more than 25,000 authors and reviewers from              Generalizability - Transferability. We designed our study
+January 2014 until July 2016 that meet these criteria, and       with the stated aim of understanding modern code review
+about 13 million comments collected from all changes between     within a specific company. For this reason, our results may
+September 2014 and July 2016.                                    not generalize to other contexts, rather we are interested in
+                                                                 the diversity of the practices and breakdowns that are still
+   Survey. We created an online questionnaire that we sent       occurring after years and millions of reviews of refinement.
+to 98 engineers who recently submitted a code change. The        Given the similarity of the underlying code review mechanism
+code change had already been reviewed, so we customized          across several companies and OSS projects, it is reasonable
+the questionnaire to ask respondents about how they per-         to think that should a review process reach the same level of
+ceived the code review for their specific recent change; this    maturity and use comparable tooling, developers would have
+strategy allowed us to mitigate recall bias [35], yet collect    similar experiences.
+comprehensive data. The survey consisted of three Likert
+scale questions on the value of the received review, one multi-  4 RESULTS: MOTIVATIONS
+ple choice on the effects of the review on their change (based
+on the expectations that emerged from the interviews) with       In our first research question, we seek to understand motiva-
+an optional `other' response, and one open-ended question        tions and expectations of developers when conducting code
+eliciting the respondent's opinion on the received review, the   review at Google, starting by investigating what led to the
+code review tool, and/or the process in general. We received     introduction of this process in the first place.
+44 valid responses to our survey (45% response rate, which
+is considered high for software engineering research [31]).      4.1 How it All Started
+
+3.4 Threats to Validity and Limitations                          Code review at Google was introduced early on by one of the
+                                                                 first employees; the first author of this paper interviewed this
+We describe threats to validity and limitations of the results   employee (referred to as E in the following) to better under-
+of our work, as posed by our research method, and the actions    stand the initial motivation of code review and its evolution.
+that we took to mitigate them.                                   E explained that the main impetus behind the introduction
+                                                                 of code review was to force developers to write code that other
+   Internal validity - Credibility. Concerning the quantitative  developers could understand; this was deemed important since
+analysis of review data, we use heuristics to filter out robot-  code must act as a teacher for future developers. E stated
+authored changes from our quantitative analysis, but these       that the introduction of code review at Google signaled the
+heuristics may allow some robot authored changes; we miti-       transition from a research codebase, which is optimized to-
+gated this as we only include robot-authored changes that        wards quick prototyping, to a production codebase, where
+have a human reviewer. Concerning the qualitative investiga-     it is critical to think about future engineers reading source
+tion, we used open coding to analyze the interviewees' answers.  code. Code review was also perceived as capable of ensuring
+This coding could have been influenced by the experience         that more than one person would be familiar with each piece
+and motivations of the authors conducting it, although we        of code, thus increasing the chances of knowledge staying
+tried to mitigate this bias by involving multiple coders. The    within the company.
+employees that decided to participate in our interviews and
+the survey freely decided to do so, thus introducing the risk       E reiterated on the concept that, although it is great if
+of self-selection bias. For this reason, results may have been   reviewers find bugs, the foremost reason for introducing code
+different for developers who would not choose to participate;    review at Google was to improve code understandability and
+Modern Code Review: A Case Study at Google                         ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden
+
+maintainability. However, in addition to the initial educa-        Figure 1: Relationship diagram describing which themes of
+tional motivation for code review, E explained that three          review expectations appeared primarily within a particular
+additional benefits soon became clear to developers internally:    author/reviewer context.
+checking the consistency of style and design; ensuring ade-
+quate tests; and improving security by making sure no single       reviewer (Figure 1). For example, maintaining norms came
+developer can commit arbitrary code without oversight.             up between an engineer and those with a different seniority
+                                                                   (project leads, expert readability reviewers or "new" team
+4.2 Current expectations                                           members) but less so with their peers or other teams, where
+                                                                   instead gatekeeping and accident prevention are primary.
+By coding our interview data, we identified four key themes        The educational benefits are broadly valued and encompass
+for what Google developers expect from code reviews: edu-          several different relationships.
+cation, maintaining norms, gatekeeping, and accident preven-
+tion. Education regards either teaching or learning from a              Finding 2. Expectations about a specific code review
+code review and is in line with the initial reasons for introduc-       at Google depend on the work relationship between the
+ing code review; norms refer to an organization preference              author and reviewers.
+for a discretionary choice (e.g., formatting or API usage
+patterns); gatekeeping concerns the establishment and main-        5 RESULTS: PRACTICES
+tenance of boundaries around source code, design choices or
+another artifact; and accidents refer to the introduction of       In our second research question, we describe the code re-
+bugs, defects or other quality related issues.                     view process and compare its quantitative aspects with the
+                                                                   convergent practices found in previous work [33].
+   These are the main themes during the review process, but
+code review is also used retrospectively for tracking history.     5.1 Describing The Review Process
+Developers value the review process after it has taken place;
+code review enables the ability to browse the history of a         The code review at Google is linked to two concepts: own-
+code change, including what comments occurred and how the          ership and readability. We first introduce them, then we
+change evolved. We also noticed developers using code review       describe the flow of the review process, and we conclude
+history to understand how bugs were introduced. Essentially,       with the distinct characteristics of the internal review tool,
+code review enables future auditing of changes.                    Critique, that serve in contrast with other review tools.
+
+   In our survey, we further validated this coding scheme.            Ownership. The Google codebase is arranged in a tree
+We asked what authors found valuable about code review             structure, where each directory is explicitly owned by a set of
+comments; they could select one or more of the four themes         people. Although any developer can propose a change to any
+and/or write in their own. Each of the four themes identified      part of the codebase, an owner of the directory in question
+earlier was selected by between 8 and 11 respondents in the        (or a parent directory) must review and approve the change
+context of a particular code review, thus providing additional     before it is committed; even directory owners are expected
+confidence that the coding scheme described above aligns           to have their code reviewed before committing.
+with developers' perception of the value of the code review.
+                                                                      Readability. Google defines a concept called readability,
+   Although these expectations can map over those found            which was introduced very early on to ensure consistent code
+previously at Microsoft [4], the main focus at Google, as          style and norms within the codebase. Developers can gain
+explained by our participants, is on education as well as code     readability certification in a particular language. To apply for
+readability and understandability, in line with the historical     readability, a developer sends changes to a set of readability
+impetus for review. For this reason, the focus does not align      reviewers; once those reviewers are confident the developer
+with that found by Rigby and Bird (i.e., a group problem           understands the code style and best practices for a language,
+solving activity) [33].                                            the developer is granted readability for that language. Every
+                                                                   change must be either authored or reviewed by someone with
+    Finding 1. Expectations for code review at Google              a readability certification for the language(s) used.
+    do not center around problem solving. Reviewing was
+    introduced at Google to ensure code readability and
+    maintainability. Today's developers also perceive this
+    educational aspect, in addition to maintaining norms,
+    tracking history, gatekeeping, and accident prevention.
+    Defect finding is welcomed but not the only focus.
+
+   As stated earlier, when coding interview transcripts we also
+tracked the review context in which a theme was mentioned.
+We found that the relative importance of these different
+themes depends on the relationship between the author and
+ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden           C. Sadowski et al.
+
+   Code Review Flow. The flow of a review is tightly coupled     edits, which can be both proposed and applied to the change
+with Critique and works as follows:                              via Critique. To vet changes before they are committed, de-
+                                                                 velopment at Google also includes pre-commit hooks: checks
+1. Creating: Authors start modifying, adding, or deleting        where a failure requires an explicit override by the developer
+ some code; once ready, they create a change.                    to enable a commit. Pre-commit checks include things like
+                                                                 basic automated style checking and running automated test
+2. Previewing: Authors then use Critique to view the diff of     suites related to a change. The results of all pre-commit
+ the change and view the results of automatic code analyzers     checks are visible in the code review tool. Typically, pre-
+ (e.g. from Tricorder [36]). When they are ready, authors        commit checks are automatically triggered. These checks
+ mail the change out to one or more reviewers.                   are configurable such that teams can enforce project-specific
+                                                                 invariants and automatically add email lists to changes to
+3. Commenting: Reviewers view the diff in the web UI, draft-     raise awareness and transparency. In addition to pre-commit
+ ing comments as they go. Program analysis results, if present,  results, Critique displays the result of a variety of automated
+ are also visible to reviewers. Unresolved comments represent    code analyses through Tricorder [36] that may not block com-
+ action items for the change author to definitely address.       mitting a change. Analysis results encompass simple style
+ Resolved comments include optional or informational com-        checks, more complicated compiler-based analysis passes and
+ ments that may not require any action by a change author.       also project-specific checks. Currently, Tricorder includes 110
+                                                                 analyzers, 5 of which are plugin systems for hundreds of
+4. Addressing Feedback: The author now addresses comments,       additional checks, in total analyzing more than 30 languages.
+ either by updating the change or by replying to comments.
+ When a change has been updated, the author uploads a                 Finding 3. The Google code review process is aligned
+ new snapshot. The author and reviewers can look at diffs             with the convergent practice of being lightweight and
+ between any pairs of snapshots to see what changed.                  flexible. In contrast to other studied systems, however,
+                                                                     ownership and readability are explicit and play a key
+5. Approving: Once all comments have been addressed, the              role. The review tool includes reviewer recommenda-
+ reviewers approve the change and mark it `LGTM' (Looks              tion and code analysis results.
+ Good To Me). To eventually commit a change, a developer
+ typically must have approval from at least one reviewer.        5.2 Quantifying The Review Process
+ Usually, only one reviewer is required to satisfy the afore-
+ mentioned requirements of ownership and readability.            We replicate quantitative analysis that Rigby and Bird con-
+                                                                 ducted that led to the discovery CP2-4 so as to compare
+We attempt to quantify how "lightweight" reviews are (CP1).      these practices to the traits that Google has converged to.
+We measure how much back-and-forth there is in a review, by
+examining how many times a change author mails out a set            Review frequency and speed. Rigby and Bird found that
+of comments that resolve previously unresolved comments.         fast-paced, iterative development also applies to modern
+We make the assumption that one iteration corresponds to         code review: In their projects, developers work in remarkably
+one instance of the author resolving some comments; zero         consistent short intervals. To find this, they analyzed review
+iterations means that the author can commit immediately.         frequency and speed.
+We find that over 80% of all changes involve at most one         At Google, in terms of frequency, we find that the median
+iteration of resolving comments.                                 developer authors about 3 changes a week, and 80 percent
+                                                                 of authors make fewer than 7 changes a week. Similarly, the
+   Suggesting Reviewers. To identify the best person to re-      median for changes reviewed by developers per week is 4,
+view a change, Critique relies on a tool that analyzes the       and 80 percent of reviewers review fewer than 10 changes a
+change and suggests possible reviewers. This tool identifies     week. In terms of speed, we find that developers have to wait
+the smallest set of reviewers needed to fulfill the review       for initial feedback on their change a median time of under
+requirements for all files in a change. Note that often only     an hour for small changes and about 5 hours for very large
+one reviewer is required since changes are often authored by     changes. The overall (all code sizes) median latency for the
+someone with ownership and/or readability for the files in       entire review process is under 4 hours. This is significantly
+question. This tool prioritizes reviewers that have recently     lower than the median time to approval reported by Rigby
+edited and/or reviewed the included files. New team members      and Bird [33], which is 17.5 hours for AMD, 15.7 hours for
+are explicitly added as reviewers since they have not yet built  Chrome OS and 14.7, 19.8, and 18.9 hours for the three
+up reviewing/editing history. Unassigned reviewers can also      Microsoft projects. Another study found the median time to
+make comments on (and can potentially approve) changes.          approval at Microsoft to be 24 hours [14].
+Tool support for finding reviewers is typically only necessary
+for changes to files beyond those for a particular team. Within     Review size. Rigby and Bird argued that quick review
+a team, developers know who to send changes to. For changes      time could only be enabled by smaller changes to review and
+that could be sent to anyone on the team, many teams use a       subsequently analyzed review sizes. At Google, over 35% of
+system that assigns reviews sent to the team email address to    the changes under consideration modify only a single file and
+configured team members in a round-robin manner, taking
+into account review load and vacations.
+
+   Code Analysis Results. Critique shows code analysis re-
+sults as comments along with human ones (although in differ-
+ent colors). Analyzers (or reviewers) can provide suggested
+Modern Code Review: A Case Study at Google                         ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden
+
+about 90% modify fewer than 10 files. Over 10% of changes             Five main themes emerged from the analysis of our inter-
+modify only a single line of code, and the median number of        view data. The first four themes regard breakdowns concern-
+lines modified is 24. The median change size is significantly      ing aspects of the process:
+lower than reported by Rigby and Bird for companies such as
+AMD (44 lines), Lucent (263 lines), and Bing, Office and SQL       Distance: Interviewees perceive distance in code review from
+Server at Microsoft (somewhere between those boundaries),           two perspectives: geographical (i.e., the physical distance
+but in line for change sizes in open source projects [33].          between the author and reviewers) and organizational (e.g.,
+                                                                    between different teams or different roles). Both these types
+   Number of reviewers and comments. The optimal number             of distance are perceived as the cause of delays in the review
+of reviewers has been controversial among researchers, even in      process or as leading to misunderstandings.
+the deeply investigated code inspections [37]. Rigby and Bird
+investigated whether the considered projects converged to a        Social interactions: Interviewees perceive the communication
+similar number of involved reviewers. They found this number        within code review as possibily leading to problems from two
+to be two, remarkably regardless of whether the reviewers           aspects: tone and power. Tone refers to the fact that some-
+were explicitly invited (such as in Microsoft projects, who         times authors are sensitive to review comments; sentiment
+invited a median of up to 4 reviewers) or whether the change        analysis on comments has provided evidence that comments
+was openly broadcasted for review [33].                             with negative tone are less likely to be useful [11]. Power
+At Google, by contrast, fewer than 25% of changes have more         refers to using the code review process to induce another
+than one reviewer,1 and over 99% have at most five reviewers        person to change their behavior; for example, dragging out
+with a median reviewer count of 1. Larger changes tend to           reviews or withholding approvals. Issues with tone or power
+have more reviewers on average. However, even very large            in reviews can make developers uncomfortable or frustrated
+changes on average require fewer than two reviewers.                with the review process.
+Rigby and Bird also found a "minimal increase in the number
+of comments about the change when more [than 2] reviewers          Review subject: The interviews referenced disagreements as
+were active" [33], and concluded that two reviewers find            to whether code review was the most suitable context for re-
+an optimal number of defects. At Google, the situation is           viewing certain aspects, particularly design reviews. This re-
+different: A greater number of reviewers results in a greater       sulted in mismatched expectations (e.g., some teams wanted
+average number of comments on a change. Moreover, the               most of the design to be complete before the first review,
+average number of comments per change grows with the                others wanted to discuss design in the review), which could
+number of lines changed, reaching a peak of 12.5 comments           cause friction among participants and within the process.
+per change for changes of about 1250 lines. Changes larger
+than this often contain auto-generated code or large deletions,    Context: Interviewees allowed us to see that misunderstand-
+resulting in a lower average number of comments.                    ings can arise based on not knowing what gave rise to
+                                                                    the change; for example, if the rationale for a change was
+    Finding 4. Code review at Google has converged to               an urgent fix to a production problem or a "nice to have"
+    a process with markedly quicker reviews and smaller             improvement. The resulting mismatch in expectations can
+    changes, compared to the other projects previously              result in delays or frustration.
+    investigated. Moreover, one reviewer is often deemed
+    as sufficient, compared to two in the other projects.          The last theme regarded the tool itself:
+
+6 RESULTS: DEVELOPERS' PERCEPTIONS                                 Customization: Some teams have different requirements for
+                                                                    code review, e.g., concerning how many reviewers are re-
+Our last research question investigates challenges and satis-       quired. This is a technical breakdown, since arbitrary cus-
+faction of developers with code review at Google.                   tomizations are not always supported in Critique, and
+                                                                    may cause misunderstandings around these policies. Based
+6.1 Code Review Breakdowns at Google                                on feedback, Critique recently released a new feature that
+                                                                    allows change authors to require that all reviewers sign off.
+Previous studies investigated challenges in the review process
+overall [4, 26] and provided compelling evidence, also corrobo-    6.2 Satisfaction and Time Invested
+rated by our experience as engineers, that understanding code
+to review is a major hurdle. To broaden our empirical body of      To understand the significance of the identified concerns, we
+knowledge, we focus here on challenges encountered in specific     used part of the survey to investigate whether code review is
+reviews ("breakdowns"), such as delays or disagreements.           overall perceived as valuable.
+
+130% of changes have comments by more than one commenter, meaning     We find (Table 2) that code review is broadly seen as being
+that about 5% of changes have additional comments from someone     valuable and efficient within Google ­ all respondents agreed
+that did not act as an approver for the change.                    with the statement that code review is valuable. This senti-
+                                                                   ment is echoed by internal satisfaction surveys we conducted
+                                                                   on Critique: 97% of developers are satisfied with it.
+
+                                                                      Within the context of a specific change, the sentiment is
+                                                                   more varied. The least satisfied replies were associated with
+                                                                   changes that were very small (1 word or 2 lines) or with
+                                                                   changes which were necessary to achieve some other goal,
+                                                                   e.g., triggering a process from a change in the source code.
+ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden                               C. Sadowski et al.
+
+                                                                  Strongly disagree  Strongly agree
+
+For this change, the review process was a good use of my time     2 4 14 11 13
+
+Overall, I find code review at Google valuable                    0 0 0 14 30
+
+                                                                  Too little         Too much
+
+For this change, the amount of feedback was                       2 2 34 5 0
+
+Table 2: User satisfaction survey results
+
+However, the majority of respondents felt that the amount         in other projects [14, 33, 34]. We postulate that these dif-
+of feedback for their change was appropriate. 8 respondents       ferences are due to the culture of Google on code review
+described the comments as not being helpful, of these 3           (strict reviewing standards and expectations around quick
+provided more detail, stating that the changes under review       turnaround times for review). Moreover, there is a significant
+were small configuration changes for which code review had        difference with reviewer counts (one at Google vs. two in
+less impact. Only 2 respondents said the comments had found       most other projects); we posit that having one reviewer helps
+a bug.                                                            make reviews fast and lightweight.
+
+   To contextualize the answers in terms of satisfaction, we         Both low review times and reviewer counts may result from
+also investigate the time developers spend reviewing code.        code review being a required part of the developer workflow;
+To accurately quantify the reviewer time spent, we tracked        they can also result from small changes. The median change
+developer interactions with Critique (e.g., opened a tab,         size in OSS projects varies from 11 to 32 lines changed [34],
+viewed a diff, commented, approved a change) as well as           depending on the project. At companies, this change size
+other tools to estimate how long developers spend reviewing       is typically larger [33], sometimes as high as 263 lines. We
+code per week. We group sequences of developer interactions       find that change size at Google more closely matches OSS:
+into blocks of time, considering a "review session" to be a       most changes are small. The size distribution of changes
+sequence of interactions related to the same uncommitted          is an important factor in the quality of the code review
+change, by a developer other than the change author, with         process. Previous studies have found that the number of
+no more than 10 minutes between each successive interaction.      useful comments decreases [11, 14] and the review latency
+We sum up the total number of hours spent across all review       increases [8, 24] as the size of the change increases. Size also
+sessions in the five weeks that started in October 2016 and       influences developers' perception of the code review process; a
+then calculate the average per user per week, filtering out       survey of Mozilla contributors found that developers feel that
+users for whom we do not have data for all 5 weeks. We find       size-related factors have the greatest effect on review latency
+that developers spend an average of 3.2 (median 2.6 hours         [26]. A correlation between change size and review quality is
+a week) reviewing changes. This is low compared to the 6.4        acknowledged by Google and developers are strongly encour-
+hours/week of self-reported time for OSS projects [10].           aged to make small, incremental changes (with the exception
+                                                                  of large deletions and automated refactoring). These findings
+    Finding 5. Despite years of refinement, code review at        and our study support the value of reviewing small changes
+    Google still faces breakdowns. These are mostly linked        and the need for research and tools to help developers create
+    to the complexity of the interactions that occur around       such small, self-contained code changes for review [6, 15].
+    the reviews. Yet, code review is strongly considered a
+    valuable process by developers, who spend around 3            7.2 Software Engineering Research in Practice
+    hours a week reviewing.
+                                                                  Some of the practices that are part of code review at Google
+7 DISCUSSION                                                      are aligned with practices proposed in software engineering
+                                                                  research. For example, a study of code ownership at Microsoft
+We discuss the themes that have emerged from this investiga-      found that changes made by minor contributors should be
+tion, which can inspire practitioners in the setting up of their  received with more scrutiny to improve code quality [9]; we
+code review process and researchers in future investigations.     found that this concept is enforced at Google through the
+                                                                  requirement of an approval from an owner. Also, previous
+7.1 A Truly Lightweight Process                                   research has shown that typically one reviewer for a change
+                                                                  will take on the task of checking whether code matches con-
+Modern code review was born as a lighter weight alternative       ventions [4]; readability makes this process more explicit. In
+to the cumbersome code inspections [4]; indeed Rigby and          the following, we focus on the features of Critique that
+Bird confirmed this trait (CP1) in their investigation across     make it a `next generation code review tool' [26].
+systems [33]. At Google, code review has converged to an
+even more lightweight process, which developers find both            Reviewer recommendation. Researchers found that review-
+valuable and a good use of their time.                            ers with prior knowledge of the code under review give more
+                                                                  useful comments [4, 11], thus tools can add support for re-
+   Median review times at Google are much shorter than            viewer selection [11, 26]. We have seen that reviewer recom-
+                                                                  mendation is tool-supported, prioritizing those who recently
+Modern Code Review: A Case Study at Google                         ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden
+
+edited/reviewed the files under review. This corroborates                                        Comments vs. tenure at GoogleAverage number of comments
+recent research that frequent reviewers make large contribu-
+tions to the evolution of modules and should be included                  10
+along with frequent editors [40]. Detecting the right reviewer                                                                                  Comments per change
+does not seem problematic in practice at Google, in fact the
+model of recommendation implemented is straightforward                     8 Comments per 100 LoC
+since it can programmatically identify owners. This is in
+contrast with other proposed tools that identify reviewers                 6
+who have reviewed files with similar names [43] or take into
+account such features as the number of comments included                   4
+in reviews [42]. At Google, there is also a focus on dealing
+with reviewers' workload and temporary absences (in line                   2
+with a study at Microsoft [4]).
+                                                                           0
+   Static Analysis integration. A qualitative study of 88 Mozilla            012345
+developers [26] found that static analysis integration was the
+most commonly-requested feature for code review. Auto-                                               Tenure at Google (years)
+mated analyses allow reviewers to focus on the understand-
+ability and maintainability of changes, instead of getting         Figure 2: Reviewer comments vs. author's tenure at Google
+distracted by trivial comments (e.g., about formatting). Our
+investigation at Google showed us the practical implications                                  Files seen vs. tenure at Google
+of having static analysis integration in a code review tool. Cri-
+tique integrates feedback channels for analysis writers [36]:        700
+Reviewers have the option to click "Please fix" on an analysis-                       Median number of files edited
+generated comment as a signal that the author should fix the
+issue, and either authors or reviewers can click "Not useful"        600 Median number of files reviewed
+in order to flag an analysis result that is not helpful in the                        Median number of files edited or reviewed
+review process. Analyzers with high "Not useful" click rates
+are fixed or disabled. We found that this feedback loop is           500
+critical for maintaining developer trust in the analysis results.
+                                                                     400
+   A Review Tool Beyond Collaborative Review. Finally, we
+found strong evidence that Critique's uses extend beyond             300
+reviewing code. Change authors use Critique to examine
+diffs and browse analysis tool results. In some cases, code          200
+review is part of the development process of a change: a
+reviewer may send out an unfinished change in order to decide        100
+how to finish the implementation. Moreover, developers also
+use Critique to examine the history of submitted changes                0
+long after those changes have been approved; this is aligned              0 3 6 9 12 15 18
+with what Sutherland and Venolia envisioned as a beneficial
+use of code review data for development [38]. Future work                                        Tenure at Google (months)
+can investigate these unexpected and potentially impactful
+non-review uses of code review tools.                              Figure 3: The number of distinct files seen (edited or reviewed,
+                                                                   or both) by a full-time employee over time.
+7.3 Knowledge spreading
+                                                                   Developers at Google who have started within the past year
+Knowledge transfer is a theme that emerged in the work             typically have more than twice as many comments per change.
+by Rigby and Bird [33]. In an attempt to measure knowl-            Prior work found that authors considered comments with
+edge transfer due to code review, they built off of prior          questions from the reviewer as not useful, and the number
+work that measured expertise in terms of the number of             of not useful comments decreases with experience [11]. We
+files changed [28], by measuring the number of distinct files      postulate that this decrease in commenting is a result of
+changed, reviewed, and the union of those two sets. They find      reviewers needing to ask fewer questions as they build famil-
+that developers know about more files due to code review.          iarity with the codebase and corroborates the hypothesis that
+                                                                   the educational aspect of code review may pay off over time.
+   At Google, knowledge transfer is part of the educational        Also, we can see that the number of distinct files edited and
+motivation for code review. We attempted to quantify this          reviewed by engineers at Google, and the union of those two
+effect by looking at comments and files edited/reviewed. As        sets, increase with seniority (Figure 3) and the total number
+developers build experience working at Google, the average         of files seen is clearly larger than the number of files edited.
+number of comments on their changes decreases (Figure 2).          For this graph, we bucket our developers by how long they
+                                                                   have been at the company (in 3-month increments) and then
+                                                                   compute the number of files they have edited and reviewed.
+                                                                   It would be interesting in future work to better understand
+                                                                   how reviewing files impacts developer fluency [44].
+
+                                                                   8 CONCLUSION
+
+                                                                   Our study found code review is an important aspect of the
+                                                                   development workflow at Google. Developers in all roles
+                                                                   see it as providing multiple benefits and a context where
+                                                                   developers can teach each other about the codebase, maintain
+ICSE-SEIP '18, May 27-June 3, 2018, Gothenburg, Sweden                                                                          C. Sadowski et al.
+
+the integrity of their teams' codebases, and build, establish,         [19] Barney G Glaser and Anselm L Strauss. 2009. The discovery of
+and evolve norms that ensure readability and consistency                      grounded theory: Strategies for qualitative research. Transaction
+of the codebase. Developers reported they were happy with                     Books.
+the requirement to review code. The majority of changes are
+small, have one reviewer and no comments other than the                [20] Georgios Gousios, Margaret-Anne Storey, and Alberto Bacchelli.
+authorization to commit. During the week, 70% of changes                      2016. Work Practices and Challenges in Pull-Based Development:
+are committed less than 24 hours after they are mailed out                    The Contributor's Perspective. In ICSE.
+for an initial review. These characteristics make code review
+at Google lighter weight than the other projects adopting              [21] Georgios Gousios, Andy Zaidman, Margaret-Anne Storey, and
+a similar process. Moreover, we found that Google includes                    Arie van Deursen. 2015. Work Practices and Challenges in Pull-
+several research ideas in its practice, making the practical                  Based Development: The Integrator's Perspective. In ICSE.
+implications of current research trends visible.
+                                                                       [22] Toshiki Hirao, Akinori Ihara, Yuki Ueda, Passakorn Phannachitta,
+ACKNOWLEDGMENTS                                                               and Ken-ichi Matsumoto. 2016. The Impact of a Low Level of
+                                                                              Agreement Among Reviewers in a Code Review Process. In IFIP
+The authors would like to thank Elizabeth Kemp for her assis-                 International Conference on Open Source Systems.
+tance with the qualitative study, Craig Silverstein for context,
+and past and present members of the Critique team for                  [23] Harrie Jansen. 2010. The logic of qualitative survey research
+feedback, including in particular Ben Rohlfs, Ilham Kurnia,                   and its position in the field of social research methods. In Forum
+and Kate Fitzpatrick. A. Bacchelli gratefully acknowledges                    Qualitative Sozialforschung, Vol. 11.
+the support of the Swiss National Science Foundation through
+the SNF Project No. PP00P2_170529.                                     [24] Yujuan Jiang, Bram Adams, and Daniel M German. 2013. Will
+                                                                              my patch make it? and how fast?: Case study on the linux kernel.
+REFERENCES                                                                    In MSR.
+
+[1] 2017. Appendix to this paper. https://goo.gl/dP4ekg. (2017).       [25] Sami Kollanus and Jussi Koskinen. 2009. Survey of software
+                                                                              inspection research. The Open Software Engineering Journal 3,
+[2] A.F. Ackerman, L.S. Buchwald, and F.H. Lewski. 1989. Software             1 (2009), 15­34.
+
+inspections: An effective verification process. IEEE Software 6,       [26] Oleksii Kononenko, Olga Baysal, and Michael W Godfrey. 2016.
+                                                                              Code review quality: How developers see it. In ICSE.
+3 (1989), 31­36.
+                                                                       [27] Matthew B Miles and A Michael Huberman. 1994. Qualitative
+[3] A.F. Ackerman, P.J. Fowler, and R.G. Ebenau. 1984. Software               data analysis: An expanded sourcebook. Sage.
+
+inspections and the industrial production of software. In Sym-         [28] Audris Mockus and James D Herbsleb. 2002. Expertise browser:
+                                                                              a quantitative approach to identifying expertise. In ICSE.
+posium on Software validation: inspection-testing-verification-
+                                                                       [29] phabricator 2016. Meet Phabricator, The Witty Code Review Tool
+alternatives.                                                                 Built Inside Facebook. https://techcrunch.com/2011/08/07/oh-
+                                                                              what-noble-scribe-hath-penned-these-words/. (August 2016).
+[4] Alberto Bacchelli and Christian Bird. 2013. Expectations, out-
+                                                                       [30] Rachel Potvin and Josh Levenburg. 2016. Why Google Stores
+comes, and challenges of modern code review. In ICSE.                         Billions of Lines of Code in a Single Repository. Commun. ACM
+                                                                              (2016).
+[5] Vipin Balachandran. 2013. Reducing Human Effort and Improving
+                                                                       [31] Teade Punter, Marcus Ciolkowski, Bernd Freimut, and Isabel
+Quality in Peer Code Reviews Using Automatic Static Analysis                  John. 2003. Conducting on-line surveys in software engineering.
+                                                                              In Empirical Software Engineering.
+and Reviewer Recommendation. In ICSE.
+                                                                       [32] P. Rigby, B. Cleary, F. Painchaud, M.A. Storey, and D. German.
+[6] Mike Barnett, Christian Bird, João Brunet, and Shuvendu K                 2012. Open Source Peer Review­Lessons and Recommendations
+                                                                              for Closed Source. IEEE Software (2012).
+Lahiri. 2015. Helping developers help themselves: Automatic
+                                                                       [33] Peter C Rigby and Christian Bird. 2013. Convergent software
+decomposition of code review changesets. In ICSE.                             peer review practices. In FSE.
+
+[7] V.R. Basili, F. Shull, and F. Lanubile. 1999. Building knowledge   [34] Peter C. Rigby, Daniel M. German, Laura Cowen, and Margaret-
+                                                                              Anne Storey. 2014. Peer Review on Open-Source Software
+through families of experiments. IEEE Trans. on Software Eng.                 Projects: Parameters, Statistical Models, and Theory. IEEE
+                                                                              Transactions on Software Engineering 23, 4, Article 35 (2014).
+25, 4 (1999), 456­473.
+                                                                       [35] David L Sackett. 1979. Bias in analytic research. Journal of
+[8] Olga Baysal, Oleksii Kononenko, Reid Holmes, and Michael W                chronic diseases 32, 1-2 (1979), 51­63.
+
+Godfrey. 2013. The influence of non-technical factors on code          [36] Caitlin Sadowski, Jeffrey van Gogh, Ciera Jaspan, Emma Söder-
+                                                                              berg, and Collin Winter. 2015. Tricorder: building a program
+review. In WCRE.                                                              analysis ecosystem. In ICSE.
+
+[9] Christian Bird, Nachiappan Nagappan, Brendan Murphy, Harald        [37] F. Shull and C. Seaman. 2008. Inspecting the History of In-
+                                                                              spections: An Example of Evidence-Based Technology Diffusion.
+Gall, and Premkumar Devanbu. 2011. Don't touch my code!:                      IEEE Software 25, 1 (2008), 88­90.
+
+examining the effects of ownership on software quality. In FSE.        [38] Andrew Sutherland and Gina Venolia. 2009. Can peer code
+                                                                              reviews be exploited for later information needs?. In ICSE.
+[10] Amiangshu Bosu and Jeffrey C Carver. 2013. Impact of peer code
+                                                                       [39] William Isaac Thomas and Dorothy Swaine Thomas. 1928. The
+review on peer impression formation: A survey. In ESEM.                       methodology of behavior study. The child in America: Behavior
+                                                                              problems and programs (1928), 553­576.
+[11] Amiangshu Bosu, Michaela Greiler, and Christian Bird. 2015.
+                                                                       [40] Patanamon Thongtanunam, Shane McIntosh, Ahmed E Hassan,
+Characteristics of useful code reviews: an empirical study at                 and Hajimu Iida. 2016. Revisiting code ownership and its rela-
+                                                                              tionship with software quality in the scope of modern code review.
+Microsoft. In MSR.                                                            In ICSE.
+
+[12] chromium 2016. Chromium developer guidelines. https://www.        [41] Patanamon Thongtanunam, Shane McIntosh, Ahmed E Hassan,
+                                                                              and Hajimu Iida. 2017. Review participation in modern code
+chromium.org/developers/contributing-code. (August 2016).                     review. Empirical Software Engineering 22, 2 (2017), 768­817.
+
+[13] J.W. Creswell. 2009. Research design: Qualitative, quantitative,  [42] Patanamon Thongtanunam, Chakkrit Tantithamthavorn,
+                                                                              Raula Gaikovina Kula, Norihiro Yoshida, Hajimu Iida, and
+and mixed methods approaches (3rd ed.). Sage Publications.                    Ken-ichi Matsumoto. 2015. Who should review my code? A
+                                                                              file location-based code-reviewer recommendation approach for
+[14] Jacek Czerwonka, Michaela Greiler, and Jack Tilford. 2015. Code          modern code review. In SANER.
+
+Reviews Do Not Find Bugs: How the Current Code Review Best             [43] Motahareh Bahrami Zanjani, Huzefa Kagdi, and Christian Bird.
+                                                                              2016. Automatically recommending peer reviewers in modern
+Practice Slows Us Down. In ICSE (SEIP).                                       code review. IEEE Transactions on Software Engineering 42, 6
+                                                                              (2016), 530­543.
+[15] Martín Dias, Alberto Bacchelli, Georgios Gousios, Damien Cas-
+                                                                       [44] Minghui Zhou and Audris Mockus. 2010. Developer Fluency:
+sou, and Stéphane Ducasse. 2015. Untangling fine-grained code                 Achieving True Mastery in Software Projects. In FSE.
+
+changes. In SANER.
+
+[16] M.E. Fagan. 1976. Design and code inspections to reduce errors
+
+in program development. IBM Systems Journal 15, 3 (1976),
+
+182­211.
+
+[17] gerrit 2016. https://www.gerritcodereview.com/. (August 2016).
+
+[18] githubpull 2016.   GitHub pull request process.
+
+https://help.github.com/articles/using-pull-requests/. (2016).
+
