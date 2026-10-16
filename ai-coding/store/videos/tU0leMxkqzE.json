@@ -1,0 +1,181 @@
+{
+  "id": "tU0leMxkqzE",
+  "title": "Nobody Agrees About Agentic Development",
+  "channel": "Convex",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "pasted",
+  "watched": false,
+  "channelId": "UCoC_9mdiPwIu1sDxDtGQggQ",
+  "durationSec": 2930,
+  "thumbnail": "https://i.ytimg.com/vi_webp/tU0leMxkqzE/sddefault.webp",
+  "summary": "Conference panel of three founders (an observability vendor, an AI-assistant startup, an open-source coding-tool maintainer) disagreeing on agentic development: whether production has changed at all, when to skip code review, whether agents can architect, how a two-person team ships hundreds of agent PRs, and whether AI makes learning engineering easier or harder.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/most-generated-code-reaches-few-users",
+      "stance": "asserts",
+      "quote": "A lot of people are writing code now, but that code doesn't have many users, so it's not that there are more bugs",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Release-volume data show no surge in shipped software, which fits, but there is no direct before-and-after measurement of production bug rates.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Across 302.6k verified AI-authored commits in 6,299 GitHub repos, AI commits fix slightly more code smells than they introduce but introduce more correctness and security issues than they fix, and 22.7% of introduced issues still survive at HEAD; this shows AI code is measurably adding persistent defects to real repos, though the study does not measure user reach or aggregate bug volumes against a human baseline.",
+          "source": "ai-coding/sources/2603.28592v3.txt#L887-L889",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+      "stance": "asserts",
+      "quote": "the speed of getting to product-market fit goes up, but the result may be somewhat brittle or less durable",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/coding-agents-degrade-codebase-quality-when",
+      "stance": "asserts",
+      "quote": "agents aren't much help with proper engineering, because they keep breaking the abstractions, the core structure. They seem to love spaghetti code.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/coding-agents-sometimes-game-tests-deleting",
+      "stance": "asserts",
+      "quote": "I love that you can't do TDD, because it will just change the tests.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/triage-incoming-pull-requests-lets-small",
+      "stance": "asserts",
+      "quote": "a two-person team like ours couldn't review thousands of PRs unless agents tested them and flagged the important ones for us to look at",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "A single project's self-report; AI review tools do catch real issues, but independent evaluations find they miss most real bugs, so triage reduces load without replacing review.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/how-much-human-review-output-gets",
+      "stance": "asserts",
+      "quote": "if the agent gets it wrong, will that be a really big problem? How important is it? That's where you make your decision.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/speeding-human-verification-diff-views-visual",
+      "stance": "asserts",
+      "quote": "from a product perspective you can just watch the video to check whether it works the way you need, without having to click through",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/coding-agents-can-help-developers-understand",
+      "stance": "asserts",
+      "quote": "You have a genius on your computer who can tell you exactly how it works. So you can keep asking questions",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/handling-agent-scale-code-volume-requires",
+      "stance": "asserts",
+      "quote": "you should build your systems so that failures are less expensive. So that when something goes wrong you can catch it quickly, fix it quickly",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Consistent with DORA findings that fast feedback and small batches sustain throughput, but the evidence is from practice rather than controlled comparison, and some failures (security, data loss) are never cheap.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.35,
+          "note": "Airbnb migrated ~3.5K test files by running each through automated validation steps (Jest, lint, tsc) and feeding failures back to the LLM in retry loops of up to 10+ attempts, reaching 75% in 4 hours and 97% after tuning, with humans only fixing the last ~3%; a single company case study of exactly this cheap-detect-and-fix design rather than proportional human review.",
+          "source": "ai-coding/sources/airbnb-test-migration.txt#L15-L22",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "The multivocal review frames the central risk of vibe coding as a verification gap between generation speed and the capacity of developers and processes to verify outputs, with validation mechanisms and human-in-the-loop review the primary recommended controls; it supports verification as the bottleneck but notes safeguard effectiveness is largely unevaluated, so it does not show cheap-failure systems beat more human review.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1907-L1921",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/system-design-architecture-judgment-remain-human",
+      "stance": "asserts",
+      "quote": "Architecting a system is harder now, because the agent never gets it quite right.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/because-makes-experiments-nearly-free-curious",
+      "stance": "asserts",
+      "quote": "I'm learning much more because the cost of making mistakes is now nearly zero, since you can rewrite anything if you want.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Cheaper trial and error plausibly speeds learning for motivated users, but studies of AI-assisted learning show gains depend on active engagement and that passive delegation reduces skill formation.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Anthropic's survey of 132 engineers plus 53 interviews reports capability expansion enabling tighter feedback loops and faster learning (a 'couple week process' becoming 'a couple hour working session') and enthusiasm for quick prototyping, but others worry about losing the incidental learning of manual problem-solving; self-reported at one AI company, so it supports faster learning for some while showing the opposite for others.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L84-L91",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/software-built-quickly-accumulates-more-technical",
+      "stance": "asserts",
+      "quote": "with AI there's a point where the drift gets too large, the complexity grows a lot, and then the cost of that drift becomes huge",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/codebases-should-restructured-legible-agents-smaller",
+      "stance": "asserts",
+      "quote": "Good architecture is an architecture that helps the LLM meet your product's requirements without special human intervention",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/increases-demand-senior-engineers-relative-juniors",
+      "stance": "asserts",
+      "quote": "OpenAI and Anthropic are quite openly saying that they're now hiring only experienced engineers",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/products-pay-per-token-inference-costs",
+      "stance": "asserts",
+      "quote": "LLM products, which carry the burden of token costs, can't generate that kind of margin.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Reported gross margins at AI-native companies have been well below classic SaaS levels, though margins vary widely and inference costs are falling.",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

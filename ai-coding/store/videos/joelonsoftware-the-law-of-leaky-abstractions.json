@@ -1,0 +1,57 @@
+{
+  "id": "joelonsoftware-the-law-of-leaky-abstractions",
+  "title": "The Law of Leaky Abstractions",
+  "channel": "Joel on Software",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/",
+  "summary": "2002 essay stating the Law of Leaky Abstractions: every non-trivial abstraction (TCP, SQL, NFS, C++ strings, code generators) leaks, so tools save time working but not time learning, and programmers must still understand what their tools hide.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+      "stance": "asserts",
+      "quote": "Code generation tools which pretend to abstract out something, like all abstractions, leak",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+      "stance": "asserts",
+      "quote": "the only way to deal with the leaks competently is to learn about how the abstractions work and what they are abstracting",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/classic-software-engineering-fundamentals-matter-much",
+      "stance": "asserts",
+      "quote": "All high level tools compared to the old K&R stuff, but I still have to know the K&R stuff or I’m toast.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/higher-level-tools-save-time-working",
+      "stance": "asserts",
+      "quote": "So the abstractions save us time working, but they don’t save us time learning.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Debugging a failure inside a tool's abstraction does require understanding what it hides, but well-designed abstractions let most users avoid that learning most of the time.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Anthropic engineers self-report that delegating to Claude saves time but skips the incidental learning of doing the work manually ('skip the part where I learn how to perform a task by solving an easy instance, and then struggle to solve a more complicated instance later'), and describe a 'paradox of supervision' where checking the tool's output still requires the underlying skills; interview quotes from one company, and others in the same study report faster learning.",
+          "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L87-L94",
+          "date": "2026-10-15"
+        }
+      ]
+    }
+  ]
+}

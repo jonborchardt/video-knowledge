@@ -1,0 +1,151 @@
+{
+  "id": "zanlib-do-you-still-read-the-code",
+  "title": "\"Do You Still Read the Code?\" • zanlib",
+  "channel": "zanlib",
+  "origin": "manual",
+  "fetched": "2026-10-15",
+  "transcript": "article",
+  "watched": false,
+  "url": "https://zanlib.dev/blog/do-you-still-read-the-code/",
+  "summary": "Essay contrasting 'accelerators' who read generated code to keep a theory of the program with 'vibecoders' who delegate implementation; argues intent debt, skill decay and unstated maintenance expectations make the choice a team-level commitment.",
+  "topics": {
+    "primary": "ai-coding",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+      "stance": "asserts",
+      "quote": "Vibecoders seem to bet that the theory can be built by specifying and running software, without dealing with its implementation. I am not so sure",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/cognitive-debt-loss-developers-shared-understanding",
+      "stance": "asserts",
+      "quote": "eventually the only practical way to find out what it is that you’ve actually built is to ask the model",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-code-loses-rationale-behind-decisions",
+      "stance": "asserts",
+      "quote": "The decision’s result is in the code, but on its own it doesn’t preserve enough of its history to reconsider it fully.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Code never recorded why a value was chosen, which is why decision records exist; that agents multiply unrecorded incidental choices is plausible but so far anecdotal.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Review finds 11 of 47 sources raise maintainability concerns and links them to shallow understanding, incremental patching and limited documentation of design intent, quoting that conversationally generated code lacks cohesive structure and proper documentation; supports intent loss as a reported problem but is a count of mentions and does not test whether reading the code can recover the rationale.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1434-L1447",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Crossover experiment with 69 participants: those who coded with AI answered fewer questions about code they had just written (median 87.5% vs 100% correct; OR 0.58, 5.95-point drop), with the effect concentrated on open questions about program logic and the reasons behind implementation choices (OR 0.45) rather than where-is-it questions; this measures the author's own short-term ability to explain the rationale, in mostly student samples, not whether a later reader can recover it from the code.",
+          "source": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L681-L708",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/developers-who-stop-reading-generated-code",
+      "stance": "asserts",
+      "quote": "A drifting accelerator doesn’t end up somewhere between the two approaches; he ends up a vibecoder by default",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "A description of a behavioral failure mode; no study has measured the drift.",
+          "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Multivocal review of 47 vibe-coding sources concludes outcomes hinge on the rigor of the evaluation loop: with defined acceptance criteria and automated tests it is productive, but with limited review and unchecked outputs the same speed yields hallucinations, technical debt and cognitive debt; supports the harness mechanism, though the drift dynamic is not studied and the minimal-review-commit failure mode rests on 2 grey sources.",
+          "source": "ai-coding/sources/2607.21652v1.txt#L1881-L1893",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/heavy-reliance-coding-assistance-erodes-developers",
+      "stance": "asserts",
+      "quote": "Skills deteriorate when they are not used, and it remains to be seen if merely reviewing AI-generated code, rather than typing it out, is enough",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/intensive-agentic-coding-raises-cognitive-load",
+      "stance": "asserts",
+      "quote": "It might turn out that the accelerator approach is just a fast track to burnout.",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/teams-must-agree-before-merging-how",
+      "stance": "asserts",
+      "quote": "putting people who prefer different approaches on the same team without establishing expectations and boundaries beforehand, and then keeping to them",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "untestable",
+          "note": "Team-process advice; its value is a matter of judgment rather than measurement.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/coding-agents-ignore-costs-not-visible",
+      "stance": "asserts",
+      "quote": "it doesn’t really matter to that agent that the tests now take three times longer to run. But speed matters to a human.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.5,
+          "note": "Agents only see what their tools print, so wall-clock and similar side costs are invisible unless surfaced; evidence is anecdotal.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/llm-output-quality-degrades-context-window",
+      "stance": "asserts",
+      "quote": "agents with polluted context windows drifting into the “dumb zone” will start making obvious local mistakes",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/passing-test-suite-shows-program-does",
+      "stance": "asserts",
+      "quote": "A green test suite only proves that the program does what you said, not that what you said corresponds to reality.",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "The standard verification-versus-validation distinction: tests check code against the spec, while validating the spec needs contact with the domain.",
+          "date": "2026-10-15"
+        }
+      ]
+    },
+    {
+      "claim": "ai-coding/open-weight-coding-models-now-handle",
+      "stance": "asserts",
+      "quote": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it",
+      "verdicts": []
+    },
+    {
+      "claim": "ai-coding/generated-code-lacks-surface-signals-reviewers",
+      "stance": "asserts",
+      "quote": "Code quality was a useful proxy for that understanding in the time before Claude Code, but a language model can now feign that understanding convincingly.",
+      "verdicts": []
+    }
+  ]
+}
