@@ -1,0 +1,1796 @@
+BIS Working Papers
+
+No 1049
+Crypto trading and Bitcoin
+prices: evidence from a new
+database of retail adoption
+
+by Raphael Auer, Giulio Cornelli, Sebastian Doerr,
+Jon Frost and Leonardo Gambacorta
+
+Monetary and Economic Department
+
+November 2022 (revised July 2023)
+
+JEL classification: E42, E51, E58, F31, G28, L50, O32.
+Keywords: Bitcoin, cryptocurrencies, cryptoassets,
+regulation, decentralised finance, DeFi, retail
+investment.
+BIS Working Papers are written by members of the Monetary and Economic
+Department of the Bank for International Settlements, and from time to time by other
+economists, and are published by the Bank. The papers are on subjects of topical
+interest and are technical in character. The views expressed in them are those of their
+authors and not necessarily the views of the BIS.
+
+This publication is available on the BIS website (www.bis.org).
+
+© Bank for International Settlements 2022. All rights reserved. Brief excerpts may be
+      reproduced or translated provided the source is stated.
+
+ISSN 1020-0959 (print)
+ISSN 1682-7678 (online)
+          Crypto trading and Bitcoin prices:
+  evidence from a new database of retail adoption
+
+         R. Auer, G. Cornelli, S. Doerr, J. Frost and L. Gambacorta
+
+                                        July 2023
+
+                                         Abstract
+
+Prices for cryptocurrencies have undergone multiple boom-bust cycles, together with
+ongoing entry by retail investors. To investigate the drivers of crypto adoption, we
+assemble a novel publicly available database on retail use of crypto exchange apps at
+daily frequency for 95 countries over 2015­22. We show that a rising Bitcoin price is
+followed by entry of new users, in particular among more risk-seeking segments of
+the population. Moreover, we find that when prices rise larger holders sell, likely
+making a return at retail users' expense. We confirm these findings by exploiting an
+exogenous decline in the Bitcoin price during the social unrest in Kazakhstan in early
+2022.
+
+JEL classification: E42, E51, E58, F31, G28, L50, O32.
+Keywords: Bitcoin, cryptocurrencies, cryptoassets, regulation, decentralised finance,
+DeFi, retail investment.
+
+ Raphael Auer is with the Bank for International Settlements (BIS) and is a research fellow of the Centre
+for Economic Policy Research (CEPR). Giulio Cornelli is with the BIS and the University of Zurich. Sebastian
+Doerr is with the BIS. Jon Frost is with the BIS and is a research affiliate of the Cambridge Centre for
+Alternative Finance (CCAF). Leonardo Gambacorta is with the BIS and is a research fellow of CEPR. The
+authors thank Priscilla Koo Wilkens, Steven Ongena, Marina Sanchez del Villar, Vatsala Shreeti, Luciano
+Somoza, participants at the Bank of England BEAR Research Conference and at the IMF Macrofinancial
+seminar series for helpful comments. The views expressed here are those of the authors and not necessarily
+those of the BIS.
+
+                                                                                                                                                   1
+1. Introduction
+
+Over the past 13 years, cryptocurrencies have evolved from a niche technological
+proposal for peer-to-peer payments to a financial asset class traded by millions of
+users around the world. The largest cryptocurrency by market capitalisation remains
+Bitcoin, introduced in 2009 by an anonymous developer under the pseudonym
+Satoshi Nakamoto (2008). The price of Bitcoin rose from $1 in February 2011 to a
+peak of $69,000 in November 2021. Globally, it was estimated that over 220 million
+people owned a cryptocurrency in June 2021 ­ up from 5 million in 2016 (Blandin et
+al (2021), de Best (2022)).
+
+      To date, the volatile price of cryptocurrencies prevents them from becoming
+widely used as a means of payment. Nor is crypto used as a unit of account; the same
+volatility makes it impractical to set a fixed price in a specific cryptocurrency, or to use
+cryptocurrencies as a yardstick for valuing real economy flows. Moreover, the system
+is still largely self-referential and oftentimes does not finance real-world investments
+(Aramonte et al (2022)).
+
+      Why then do people invest in cryptocurrencies? In advanced economies, there is
+evidence that distrust of domestic financial institutions or the domestic fiat currency
+is not a key driver (Auer and Tercero-Lucas (2022), FCA (2021)). As they fluctuate
+widely in value and can sustain only a limited volume of transactions (Boissay et al
+(2022)), cryptocurrencies have also not proven useful to date for payments in real
+transactions or cross-border money transfers. Some users may however see
+cryptocurrencies as a store of value and safe haven (ie "digital gold") that cannot be
+appropriated. And certainly, cryptocurrencies could be seen as a speculative
+investment asset.1
+
+      In this paper, we shed further light on the role of speculative and safe haven
+considerations as drivers of cryptocurrency adoption. For this, we assemble a novel
+cross-country database on retail downloads and the use of crypto exchange apps at
+daily frequency for 95 countries over 2015 to 2022.2 We first use the database to
+establish a series of stylised facts on crypto adoption across countries and over time.
+We then provide novel evidence on the relationship between the use of crypto
+trading apps, the Bitcoin price as well as other macroeconomic variables in a global
+context.
+
+      Our main findings are as follows.
+
+      First, we show that a rise in the price of Bitcoin is associated with a significant
+increase in new users, ie entry of new investors. This positive correlation remains
+robust when we control for other potential drivers, such as overall financial market
+conditions (eg equity price indices or stock market turnover), global uncertainty or
+observable and unobservable country characteristics. In particular, the price of Bitcoin
+remains the most important factor in explaining adoption when we control for global
+uncertainty or volatility, suggesting that explanations based on Bitcoin as a safe haven
+fall short of explaining adoption. Likewise, when controlling for variables that proxy
+institutional quality or trust, as well as the level of economic development, the Bitcoin
+price still has an economically and statistically highly significant effect on the number
+
+1 See Hileman (2015), Foley et al (2019), Knittel et al (2019) and Swartz (2020).
+
+2 The data can be downloaded here: https://www.bis.org/publ/work1049.htm.
+
+2
+of new users. It also explains the lion's share of the variation in the entry of new users.
+These results suggest that an increase in the price of Bitcoin leads to new users
+entering the crypto system.
+
+      A concern for our estimation is that the entry of new users could itself lead to
+price increases, potentially leading to reverse causality. To address this issue, we focus
+on a specific episode of an exogenous shock to the price of Bitcoin: the social unrest
+in Kazakhstan in early 2022. In the wake of China's crackdown on Bitcoin mining in
+2021, Kazakhstan became one of the worlds' most important countries for mining
+Bitcoin. However, mining activity in Kazakhstan was severely disrupted in January 2022,
+when rising fuel prices led to deadly riots. In consequence, the Bitcoin price fell by
+almost 20% between late December and early January. The reason is that lower
+mining capacity implies higher transaction costs due to higher fees. Importantly, the
+decline in the global price of Bitcoin was largely independent of changes in the
+number of users in other countries. Excluding users in Kazakhstan from the sample,
+we find that the exogenous change in the Bitcoin price during the episode had a
+strong and significant dampening effect on the entry of new users ­ confirming our
+main result that the Bitcoin price affects investor entry.3
+
+      To further support our results and interpretation, we analyse the demographic
+composition of app users. We find that 40% of users are men under 35, commonly
+identified as the most "risk-seeking" segment of the population. We also find that
+young male users are more sensitive to changes in the price of Bitcoin than female
+users and older men. These patterns are consistent with a speculative motive arising
+from feedback trading considerations, ie users being drawn to the crypto ecosystem
+by rising Bitcoin prices ­ rather than a dislike for traditional banks, the search for a
+store of value or distrust in public institutions. Our findings for a large number of
+countries expand upon results obtained for Germany (Hackethal et al (2021)) and the
+US (Purisainen and Toczynski (2022)).
+
+      Our second main finding is that smaller users are buying Bitcoin when prices
+increase, while the largest holders (so-called whales) are selling. We combine our data
+on app users with complementary data from the Bitcoin blockchain to assess changes
+in holdings based on the total holdings of the wallet. The uncovered patterns suggest
+that larger holders are making a return at the smaller users' expense. This result is
+consistent with recent evidence on the Terra/Luna crash and FTX bankruptcy (Liu et
+al (2023), Cornelli et al (2023)).
+
+      And third, based on our novel cross-country data and adoption patterns, we
+perform simulations and find that, at the time of writing, about three-quarters of users
+had likely lost money on their investments in cryptocurrencies. We first estimate the
+distribution of the number of users downloading crypto exchange apps at different
+levels of the Bitcoin price. We find that 73% of users downloaded their app when the
+price of Bitcoin was above $20,000 ­ above the price of Bitcoin in October 2022.
+Second, assuming that each new user bought $100 of Bitcoin in the month of the first
+app download and in each subsequent month, our computation shows that over 75%
+of users would have lost money. The median investor would have lost 48% of their
+total $900 in funds invested.
+
+3 As an additional test for causality we estimate a panel vector autoregression (PVAR) model, tackling
+       endogeneity issues by means of a Cholesky decomposition, which orders the Bitcoin price last. For
+       more details see Appendix B.
+
+                                                                                                                                                   3
+      Our results have relevance for policy discussions on the regulation of
+cryptocurrencies for consumer and investor protection, as well as to ensure financial
+stability. In particular, they raise concerns that individual decisions are backward-
+looking and that many retail investors are not fully informed about the risks or
+volatility of the crypto sector. As recent events have made clear, rising interest rates
+and other shocks can lead to a large fall in the prices of Bitcoin and other crypto-
+assets, as the dynamics that buoyed the market move into reverse. In light of our
+findings that retail investors tend to lose out during such episodes, policy that aims
+at protecting investors from losses in the crypto space seems necessary.
+
+      Our paper makes two contributions to the emerging literature on crypto-
+currency adoption.
+
+      First, we construct a novel and publicly available database on cryptocurrency
+adoption for a large number of countries and show that retail investors enter the
+market when the Bitcoin price increases. Our results on investor entry and exit,
+obtained with data from a large number of apps, are consistent with Kogan et at
+(2023), who focus on the trading behaviour of crypto investors. In a sample of 200,000
+retail traders on crypto exchange eToro, they show that crypto traders follow a
+momentum-like strategy in cryptocurrencies, even when they are contrarian in stocks
+and gold. We also complement recent evidence on investors' decision to buy
+cryptocurrencies and stocks, which helps to explain the recent positive correlation in
+price movements (Somoza and Didisheim, 2022).4 Moreover, our results could imply
+that entry of retail investors could further fuel price increases, as established in
+Benetton and Compinai (2022).
+
+      Second, our result that larger investors sell to smaller investors as prices rise
+suggests that sophisticated investors are able to profit at the expense of retail
+investors in crypto. They echo findings in Liu et al (2023) for the Terra/Luna collapse,
+as well as in Cornelli et al (2023) for the FTX bankruptcy. In particular, Liu et al (2023)
+use data from the Terra blockchain and find that wealthier and more sophisticated
+investors ran first and experience smaller losses, while smaller investors ran later and
+experienced larger losses. Our results for a large sample of countries generalise these
+findings to periods outside of dramatic shocks in the crypto space. Even in calmer
+times, larger investors appear to cash out at the expense of smaller investors.
+
+      The paper is organised as follows. Section 2 introduces our dataset, provides a
+number of novel stylised facts on crypto adoption across countries and preforms
+simulations to assess to what extent investors have gained or lost money in crypto.
+Section 3 discusses our empirical strategy and presents the key empirical findings on
+crypto app use and Bitcoin prices. Section 4 exploits a shock episode to obtain
+exogenous variation in the price of Bitcoin and reports results that support a causal
+interpretation of our findings. Finally, Section 5 concludes.
+
+4 Our results also relate to and build on work that seeks to explain Bitcoin pricing, from a theoretical
+       and empirical perspective (Garratt and Wallace, 2018; Bolt and van Oordt, 2019; Schilling and Uhlig,
+       2019; Shams, 2020; Liu and Tsyvinski, 2021; Biais et al, 2022).
+
+4
+2. Data description
+
+Our data on the adoption of crypto apps come from Sensor Tower, a proprietary app
+intelligence data provider. Sensor Tower collects data on various app statistics for
+apps from the Apple and the Google Play store, among which downloads and active
+use. These statistics are available for up to 95 countries, where the country refers to
+the location of the downloading users. The data are at daily frequency. Additionally,
+we collect information on the operating system of the downloading device ­ Apple
+iOS vs Android users, whereby the former is a common proxy for relatively higher-
+income individuals (see Berg et al (2020)). We also have information on the gender
+(men vs women) and age group (young vs old) of the user downloading the app. The
+latter are only available at the app-quarter level.
+
+      For our empirical analysis, we draw on more than 200 crypto exchange apps at
+monthly frequency over August 2015 to June 2022. To select the sample of apps, we
+rely on the list of crypto exchanges from the CCData (formerly CryptoCompare) "All
+Exchanges General Info" application programming interface (API) endpoint. We find
+a match with the Sensor Tower database for 187 of these exchanges (out of 296). We
+complement this selection with a list of 26 apps identified as crypto exchange apps
+by Sensor Tower directly.
+
+      Sensor Tower gauges unique downloads per iOS or Google Play account. This
+methodology avoids double-counting due to re-downloads, ie if a user installs,
+deletes, then reinstalls the same app on the same device or a new device from the
+same iOS or Google Play account. Active users are defined as any user that has at
+least one session on an app over a specific time period (eg day, week or month). If a
+user has more than one session over the selected period, they will still only count as
+one active user for that time period. The active user metric is estimated by Sensor
+Tower based on a representative sample of users. Bearing this caveat in mind, these
+data offer the unique possibility of measuring real user-adoption directly rather than
+through a proxy.
+
+      Data on Bitcoin prices are obtained from CCData, a leading source of data on
+cryptocurrency prices.5 In addition to the price and volume data, CCData, in
+collaboration with IntoTheBlock, collects statistics on the distribution of Bitcoin
+holdings at daily frequency. This dataset provides both the number of addresses and
+the total volume, broken down by various buckets ranging from balances smaller than
+0.001 up to more than 100,000 Bitcoin.
+
+      We further collect data on stock market prices (MSCI indices), volumes and
+turnover (Datastream indices), consumer price index (CPI) inflation and foreign
+exchange (FX) volatility for the country in which the app is downloaded. We also use
+global gold prices and economic policy uncertainty, as measured by the Global
+Economic Policy Uncertainty (GEPU) Index of Baker et al (2016). In addition, we collect
+information on commercial bank branches per 100,000 adults, regulatory quality, total
+
+5 While Bitcoin and other cryptocurrency markets are in principle borderless, there can be differences
+       in the prices quoted on exchanges in different countries, eg due to regulation. See Auer and Claessens
+       (2018). These price differences are generally small. As such, we use global price indicators.
+
+                                                                                                                                                   5
+            population, and real GDP at the country-year level.6 Finally, we obtain measures of
+            risk aversion at the country level from Rieger et al (2015).
+
+                  Our final panel includes 95 countries at monthly frequency over the period
+            August 2015 ­ June 2022. Table 1 provides descriptive statistics for our main variables.
+            Table A1 in the appendix provides further details.
+
+Descriptive statistics                                                                                                             Table 1
+
+                               No observations    Mean      Standard   Min                                                         Max
+                                                            deviation
+
+Panel A: Crypto adoption analysis
+
+Monthly average daily active               6,677  83,419    309,128    0.32                                                        5,983,340
+users
+
+Bitcoin price                              6,677  14,912    17,519     236.51                                        62,080
+MSCI equity index price1                   5,260   4,380    35,600       0.00                                       396,000
+Stock market turnover2                     4,701   328                       0
+                                                             1,450                                                   21,500
+
+Gold price                                 6,677  1,486.57  274.08     1,076.11                                                    1,993.31
+
+Global economic policy                     6,677  222.01    67.57      101.50    430.26
+uncertainty index
+
+FX standard deviation                      6,270  1.66      99.17      0 7,853
+
+CPI, yoy change                            6,538  340.34    8,354      ­100                                         344,510
+
+Panel B: country characteristics analysis
+
+Monthly average daily active               4,575  109,763   364,275    0.34                                                        5,983,340
+users
+
+Bitcoin price                              4,575  14,273    17,322     236.51                                                      62,080
+
+Commercial bank branches per               4,409  19.54     11.64      3.45 67.51
+100k adults
+
+Regulatory quality                         4,575  0.83      0.78 ­0.92                                                             2.26
+
+Control of corruption                      4,575  0.67      0.97 ­0.95                                                             2.28
+
+Male population below 35                   4,492  14.72     4.47       9.90 37.82
+
+Remittance received, % of GDP              4,088  1.45      2.26       0 10.49
+
+1 Country-specific MSCI equity index price, in local currency. Reported in millions, in regressions in actual values. 2 Based on the country
+specific Datastream equity index, in local currency. Reported in billions, in regressions in thousands.
+
+Sources: Baker et al (2016); CCData; Datastream; World Bank; Refinitiv Eikon; Sensor Tower; national data; authors' calculations.
+
+            6 Gold and stock market prices come from Refinitiv Eikon; volumes and turnover come from
+                   Datastream; consumer prices indices and FX data come from national sources and Datastream;
+                   commercial bank branches per 100,000 adults, regulatory quality, total population, and real GDP
+                   come from the World Bank.
+
+            6
+2.1 Stylised facts on global crypto adoption
+
+Between August 2015 and its peak in November 2021, the price of Bitcoin rose from
+$250 to $69,000. Meanwhile, the monthly average number of daily active users (DAUs)
+has increased from about 120,000 to more than 32.5 million per day. During the rapid
+price increases in late 2017 and early 2021, alone, around 105 and 511 million new
+monthly active app users joined. As of mid-2022, there were a total of about 700
+million instances of monthly active use in our global sample, and a cumulative total
+of 565 million crypto exchange app downloads over the full sample period.7
+
+      Several countries registered monthly downloads of crypto exchange apps
+exceeding 15,000 per 100,000 inhabitants with a peak of more than 35,000 (Graph 1,
+left-hand panel). Daily active users of these apps exceeded 10,000 per 100,000
+inhabitants on average, with a peak of about 35,000 (right-hand panel). The group of
+top downloading jurisdictions comprises both advanced economies such as the
+United States, Canada, Australia, the United Kingdom, the Netherlands, Ireland and
+New Zealand as well as emerging market and developing economies (EMDEs) such
+as the United Arab Emirates, Hong Kong SAR, Korea, Singapore, El Salvador and
+Turkey.
+
+Adoption of crypto exchange apps over time                                                                                                                              Graph 1
+
+Downloads of crypto exchange apps per 1 million people DAUs of crypto exchange apps per 1 million people1
+
+Number of downloads                           Number of DAUs
+
+1 Monthly average number of daily active users.
+Sources: Sensor Tower; World Bank; authors' calculations.
+
+                   Crypto exchange app adoption, measured with the number of total downloads
+             per 1,000,000 people, is highest in Turkey, Singapore, the United States and the
+             United Kingdom (Graphs 2 and 3). It is lowest in China and in India, where legal
+             restrictions likely prevent greater retail adoption.
+
+                 7 This number is higher than the global estimates from Blandin et al (2021) and de Best (2022). This
+                        likely relates to the same users having multiple crypto exchange apps.
+
+                                                                                                                                                                     7
+Crypto app adoption is highest in Turkey, Singapore, the US and UK  Graph 2
+
+Number of downloads, logarithmic scale1
+
+AE = United Arab Emirates, AR = Argentina, AU = Australia, BG = Bulgaria, BR = Brazil, CA = Canada, CN = China, CY = Cyprus, DE = Germany,
+FR = France, GB = United Kingdom, HK = Hong Kong SAR, HR = Croatia, ID = Indonesia, IE = Ireland, IN = India, IT = Italy, JP = Japan, KR =
+Korea, LT = Lithuania, MT = Malta, MX = Mexico, NL = Netherlands, NO = Norway, NZ = New Zealand, RU = Russia, SA = Saudi Arabia, SG =
+Singapore, SI = Slovenia, TR = Turkey, US = United States, UY = Uruguay and ZA = South Africa"
+
+1 Total downloads are calculated for the period Aug 2015­Jun 2022. 2 Ratio of the total number of downloads to the population for 2020,
+or latest available.
+
+Sources: World Bank; Sensor Tower; authors' calculations.
+
+World map of crypto trading app adoption                            Graph 3
+
+The use of this map does not constitute, and should not be construed as constituting, an expression of a position by the BIS regarding the
+legal status of, or sovereignty of any territory or its authorities, to the delimitation of international frontiers and boundaries and/or to the
+name and designation of any territory, city or area. Based on data for June 2022.
+Sources: World Bank; Sensor Tower; authors' calculations.
+
+                   The largest group of users by far ­ nearly 40% ­ were men under the age of 35.
+             This compares to 26% of young men in the general population in the countries in our
+             sample. Men between 35 and 54 made up a further 25% on average. Less than 35%
+             of all users globally are female (Graph 4), and the majority of female crypto app users
+             are under 35.
+
+                  8
+All the young dudes? More than 40% of crypto app users are young men                                                Graph 4
+
+In per cent
+
+Women  Men
+
+Based on active users of 45 crypto exchanges android and iOS apps. Simple averages for the period Q1 2020­Q2 2022.
+Sources: Sensor Tower; authors' calculations.
+
+                   This pattern is consistent with the findings of surveys on cryptocurrency and
+             fintech use; here, too, young men are overrepresented (Auer and Tercero-Lucas
+             (2022); Chen et al (2023)).8
+
+           2.2 Simulating returns on crypto investments
+
+             While our database does not contain information on the actual performance of crypto
+             currency investments of individuals, we can perform simulations to obtain an
+             estimate.
+
+                   First, we estimate the distribution of the number of users downloading crypto
+             exchange apps at different levels of the Bitcoin price. We find that 73% of users
+             downloaded their app when the price of Bitcoin was above $20,000 ­ above the price
+             of Bitcoin in October 2022 (Graph 5). If these users invested in Bitcoin on the same
+             day they downloaded a crypto exchange app, they would have incurred a loss on this
+             initial investment.
+
+       8 This finding also mirrors those of Bohr and Bashir (2014), Stix (2019) and Fujiki (2020).
+
+                                                                                                    9
+Most retail investors downloaded crypto apps when prices were high                                 Graph 5
+
+Almost three-quarters of users downloaded the app when Bitcoin was higher than $20,000  Percentage of users
+
+The graph shows a histogram of the share of daily downloads of crypto-exchange apps by Bitcoin price at the time of first download.
+Estimations of losses or gains assume that the users purchased bitcoin on the same daily they downloaded the crypto-exchange app.
+Sources: CCData; Sensor Tower; authors' calculations.
+
+                    Second, assuming that each new user bought $100 of Bitcoin in the month of
+             the first app download and in each subsequent month, 81% of users would have lost
+             money (Graph 6). The median investor would have lost 48% of their total $900 in
+             funds invested.
+
+Only few investors made large gains, while the majority likely lost money
+
+Assuming an investment of $100 per month, over three-quarters of users have lost money                Graph 6
+
+Percentage of users, by simulated gain or loss in USD
+
+Sources: CCData; Sensor Tower; authors' calculations.
+
+                   Taken together these findings suggest that the vast majority of Bitcoin investors
+             has lost money, with the exception of a few players who made substantial large gains.
+
+                  10
+3. Empirical analysis
+
+Bitcoin prices and user numbers have moved in lockstep, with a correlation coefficient
+of more than 0.9 in the time series (Graph 7, left-hand panel), but the relationship is
+not fully contemporaneous. An increase in user numbers has generally lagged rises
+in prices.9 A scatterplot confirms these patterns: weekly changes in users are positively
+correlated with past changes in Bitcoin prices (right-hand panel). This lagged
+relationship could suggest that users enter the system attracted by high prices and in
+the expectation that prices continue to rise. In what follows, we examine these
+patterns in greater detail.
+
+Chained to speculation? New users enter as the Bitcoin price rises                                                                                   Graph 7
+
+Daily active users increase as Bitcoin price trends higher Inflows of users are correlated with price increases2
+
+USD Millions of users
+
+1 Cross-country monthly average of daily active users. Calculated on a sample of more than 200 crypto-exchange apps over 95 countries. 2 The graph
+shows a binned scatterplot at the country-month level.
+
+Sources: CCData; Sensor Tower; authors' calculations.
+
+      To investigate the relationship between the Bitcoin price and new users, we
+estimate variants of the following regression:
+
+ln (), =   ln () +   , +  + ,                                       (1)
+
+The dependent variable is the log of the monthly average number of daily active users
+(DAU) in jurisdiction i and month t. It is obtained by summing the daily numbers of
+daily active users of all apps at the country level each day and then taking a monthly
+average. The main independent variable is the Bitcoin price in month t in logs. We
+choose the maximum, rather than the average, as it generally attracts the greatest
+attention of investors. We include a set of macro-economic control variables (at the
+country-time or time level) discussed in more detail below. Further, in each
+specification we include country fixed effects to account for any observable and
+unobservable time-invariant country characteristics. For example, these fixed effects
+account for the level of development or country size.
+
+9 Similar price dynamics can be observed for the price of Ether and new users on the Ethereum
+       blockchain (Boissay et al (2022)).
+
+                                                                                                                                                 11
+      Table 2 shows that an increase in the Bitcoin price is associated with a significant
+increase in the number of new users. In column (I), a one percent increase in the
+Bitcoin price is associated with an increase in the monthly average number of daily
+active users by 1.1%. The estimated coefficient is significant at the 1% level. To see
+whether this correlation is driven by other financial or country-specific conditions, we
+control for various factors in columns (II)­(V). When controlling for countries' stock
+market returns (column II) or turnover (column III), the global gold price (column IV),
+or global economic policy uncertainty, countries' FX volatility and countries' CPI
+inflation (column V), the coefficient on the Bitcoin price remains highly significant and
+similar in economic magnitude. In the most stringent specification in column (V), a
+one percent increase in the Bitcoin price is associated with an increase in new users
+by 0.91%.10
+
+      Note that the positive correlation between the CPI and the number of users in
+column (V) is consistent with Aiello et al (2023), who show that higher expected
+inflation increases crypto investing.
+
+Crypto adoption rises following increases in the global Bitcoin price                                                              Table 2
+
+                                        Dependent variable: ln(monthly average daily active users)
+
+                              (I) (II) (III) (IV) (V)
+
+Ln(Bitcoin price)             1.109***  1.075***   1.036***            0.946***                                   0.912***
+
+                              (0.008)    (0.008)    (0.009)             (0.013)                                   (0.012)
+                                        ­0.095***  ­0.430***           ­0.271***                                   0.058
+Ln(MSCI equity index price)1
+
+                                        (0.022)    (0.076)             (0.077)                                    (0.077)
+                                                   0.304***            0.249***                                   0.185***
+Stock market turnover2,
+
+                                                   (0.031)             (0.032)                                    (0.032)
+
+Gold price                                                             0.967***                                   0.326***
+
+                                                                       (0.085)                                    (0.092)
+
+Global economic policy                                                                                            0.556***
+
+uncertainty index                                                                                                 (0.041)
+
+FX standard deviation                                                                                             ­0.041
+
+                                                                                                                  (0.028)
+
+CPI, yoy change                                                                                                   0.037***
+
+                                                                                                                  (0.003)
+
+Number of observations        6,677     5,260      4,701               4,701                                                       4,516
+
+R-squared                     0.903     0.907      0.902               0.904                                                       0.914
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level. Regressions include country fixed effects.
+
+1 Country specific MSCI equity index price, in local currency. 2 Based on the country specific Datastream equity index, in local currency.
+
+Sources: Baker et al (2016); World Bank; CCData; Datastream; Refinitiv Eikon; Sensor Tower; national data; authors' calculations.
+
+10 As a robustness check we run the specification from column (I) on the sample of 4,516 observations
+       from column (V). The results are similar (ie coefficient of 1.04, and significant at the 1% level) to the
+       ones from column I suggesting that we can consistently trace the decrease in the coefficient size of
+       the natural logarithm of the price of bitcoin to the introduction of controls.
+
+12
+      All in all, these findings suggest that the relation between daily active users and
+the Bitcoin price is not fully explained by other observable macro-factors.11
+
+      Moreover, the Bitcoin explains the lion's share of the overall variation in entry of
+new users across countries and time. Graph 8, panel (a) plots the results from a
+Shapley decomposition of the R-squared of Equation (1). The Bitcoin price explains
+almost 35% of the overall variation in the entry of new users, followed by time-
+invariant country-level unobservables, captured through country fixed effects, with
+slightly more than 30%. All other time-varying factors combined explain the residual
+35%.
+
+Shapley decompositions                                                                      Graph 8
+
+In per cent                  Country characteristics
+
+Time-varying macro controls
+
+The graph shows the shapley decomposition of the R2 resulting from a regression of the natural logarithm of the monthly average number
+of daily active users of the crypto apps on the variables indicated on the x-axis of the panels. To all the variables, with the exception of the FX
+standard deviation, the CPI, the regulatory quality, the control of corruption, and country fixed effects is applied the natural logarithm. For
+the left-hand panel, the underlying regression correspond to table 2, column (V). For the right-hand panel the underlying regression is based
+on data in yearly frequency, as most of the country-level indicators are not available in higher frequency. The dependent variable corresponds
+to the yearly average of the number of daily active users of crypto exchange apps. The independent variables correspond to the number of
+bank branches per 100,000 adults, real GDP, regulatory quality, control of corruption, male population below 35, remittances received as
+percentage of GDP and a set of country-level dummies.
+Sources: Baker et al (2016); World Bank; CCData; Datastream; Refinitiv Eikon; Sensor Tower; national data; authors' calculations.
+
+           3.1 Differences by user characteristics
+
+             Previous literature has established differences in risk tolerance across groups. For
+             example, data from the Survey of Consumer Expectations (SCE) for the United States
+
+                 11 In additional robustness tests, we control for the network factors identified in Liu and Tsyvinski (2021),
+                        namely number of wallets, number of active addresses, number of transactions, number of payments,
+                        and the first principal component of these four measures. Overall, our results are robust after
+                        controlling for these network factors (unreported).
+
+                                                                                                                                                                    13
+shows that younger men are more willing to take financial risks than both women
+and older male respondents (Graph 9). Similar findings have been reported in other
+contexts (see, for example, Borghans et al, 2009; Arano et al, 2010).12
+
+      Investigating to what extent the relationship between price development and
+new users differs across demographic groups could hence offer additional insights
+on its drivers. If, for example, risk-seeking segments of the population (ie young men)
+respond the most to a rising Bitcoin price, this would be consistent with a speculative
+motive, rather than the search for a safe asset.
+
+Willingness to take financial risks among US consumers                                   Graph 9
+
+Index, 1 (lowest willingness)­7 (highest willingness)
+
+Willingness to take financial risks for US consumers of age 20­79. Weighted average (by survey weights) across respondents. The sample
+covers the period January 2020­July 2021.
+Sources: Federal Reserve Bank of New York, Survey of consumer expectations; authors' calculations.
+
+                   To test these arguments, we estimate regressions similar to regression (1), but
+             use the number of new users among different population subgroups as dependent
+             variable. Since the breakdown among subgroups is only available at the app and not
+             the country level, we aggregate our data to the monthly level. The dependent
+             variables correspond to the simple average of the country-level monthly average
+             number of active users of crypto exchange apps for each gender-age bucket.
+
+                   Table 3, columns I­IV show that young men have a higher sensitivity to changes
+             in the Bitcoin price than older men or women of any age. The coefficient on the
+             Bitcoin price is 1.5 times larger for young men (column I) compared to older men
+             (column II), and more than two (three) times as large relative to women below (above)
+             age 35 (columns III and IV). Yet the relationship remains significant at the 1% level for
+             all population groups even after controlling for the local stock market price and
+             turnover, gold price, the global economic policy uncertainty index, exchange rate
+             standard deviation and the year-on-year change in CPI.
+
+                 12 A substantial body of work argues that women tend to be more risk-averse than men (Jianakoplos
+                        and Bernasek, 1998). Also on the technology side, there are also significant differences in trust and
+                        the use of fintech by gender, with implications for use and adoption (Armantier et al, 2021; Chen et
+                        al, 2023; Doerr et al, 2023).
+
+                  14
+                 To further shed light on the importance of risk-aversion, columns V and VI report
+           results of panel regressions on country-month level data (see Equation (1)). The
+           dependent variable corresponds to the natural logarithm of the monthly average of
+           daily active users. We control for the standard deviation of the exchange rate, the
+           year-on-year change in CPI, the natural logarithm of the local stock market price and
+           turnover, gold price, and the global economic policy uncertainty index, and country-
+           level unobservables through the inclusion of country fixed-effects. The coefficients of
+           interest correspond to the interaction terms between the natural logarithm of the
+           price of bitcoin and indicators of risk aversion at the country-level as derived by Rigier
+           et al. (2015).
+
+                 Results show that that adoption is lower in more risk-averse countries for a given
+           increase in the Bitcoin price. These findings lend further support to the argument that
+           rising prices attract speculative users with a high tolerance for risk. Consistent with
+           this interpretation, recent survey evidence from the UK finds that one of the main
+           reasons for buying cryptocurrencies is "as a gamble that could make or lose money"
+           (FCA (2021)). Further analysis (see Graph A1 in the appendix) confirms that the
+           stronger reaction of young male users occurs mostly during periods of pronounced
+           price swings.
+
+Risk aversion: young vs old, male vs female, iOS vs Android users                                      Table 3
+
+                                    Monthly average number of users1            Ln(monthly average
+                                                                                 daily active users)
+
+                            Male      Male     Female                  Female
+                          below 35  above 35  below 35                above 35
+
+                          (I) (II) (III) (IV) (V) (VI)
+
+Bitcoin price             1.505***  0.979***  0.707***                0.467***
+
+                          (0.398)   (0.263)   (0.183)                 (0.125)
+
+Ln(Bitcoin price)                                                               0.910***               0.974***
+
+                                                                                 (0.028)               (0.036)
+                                                                                ­0.015***
+Risk aversion (losses)2*
+
+ln(Bitcoin price)                                                               (0.001)
+Risk aversion (gains)2*
+                                                                                           ­0.066**
+
+ln(Bitcoin price)                                                                                      (0.033)
+
+Number of observations    83        83        83                      83        3,557                  3,557
+
+R-squared                 0.910     0.911     0.915                   0.910     0.905                  0.898
+
+***/**/* indicates statistical significance at the 1/5/10% level. Regressions in columns I­IV include the local stock market price and turnover,
+gold price, the global economic policy uncertainty index, exchange rate standard deviation and the year-on-year change in CPI as controls;
+robust standard errors in brackets. Panel regressions with country fixed effects in columns V­VI include the natural logarithm of the local
+stock market price and turnover, gold price, and the global economic policy uncertainty index, in addition to the exchange rate standard
+deviation and the year-on-year change in CPI as controls; standard errors clustered by time in brackets.
+
+1 Simple average of the country-level monthly average of DAUs by age and gender. Based on active users of 45 crypto exchanges android
+and iOS apps. 2 Risk aversion measures correspond to the relative risk premiums (RRP) from Rieger et al (2015). RRP losses (gains)
+
+correspond to the country-level median value based on lotteries with a negative (positive) expected value. Negative values for the RRPs
+
+indicate risk seeking.
+
+Sources: Baker et al (2016); Rieger et al (2015); CCData; World Bank; Datastream; Refinitiv Eikon; Sensor Tower; national data; authors'
+calculations.
+
+                                                                                           15
+3.2 Differences by country characteristics
+
+Beyond user characteristics, different arguments have been put forth for why people
+might want to hold Bitcoin. For example, they may do so because of distrust in
+domestic institutions or the domestic fiat currency. In light of weak property rights,
+others may also see cryptocurrencies as a store of value and safe haven ("digital gold")
+that cannot be appropriated by public authorities. Alternatively, they may want to use
+cryptocurrencies for real transactions (purchases) or cross-border money transfers
+instead of transfers in fiat currency, particularly in countries with under-developed
+financial systems.
+
+      Table 4 investigates to what extent such country characteristics matter in
+amplifying or mitigating the relationship between the Bitcoin price and user entry.
+Column (I) shows that the relationship is slightly stronger in countries with more bank
+branches, ie in countries with a better-developed traditional financial system.
+
+16
+Crypto adoption and institutional characteristics                                                                                  Table 4
+
+                                             Dependent variable: ln(monthly average daily active users)
+
+                                   (I) (II) (III) (IV) (V)
+
+Ln(bitcoin price)                  0.910***  1.047***     1.003***   0.666***                            0.835***
+
+                                   (0.016)   (0.014)      (0.013)    (0.086)                             (0.013)
+
+No commercial bank branches        0.016***
+per 100k adults                    (0.006)
+No commercial bank branches        0.001**
+per 100k adults*ln(bitcoin price)  (0.001)
+
+Regulatory quality                           1.268***
+                                              (0.112)
+Regulatory quality*ln(bitcoin                ­0.158***
+price)                                        (0.009)
+
+Control of corruption                                     1.710***
+                                                           (0.128)
+Control of corruption* ln(bitcoin                         ­0.127***
+price)                                                     (0.007)
+
+Ln(male population below 35)                                         ­2.404***
+                                                                      (0.274)
+Ln(male population below 35) *                                       0.090***
+ln(bitcoin price)                                                     (0.031)
+
+Remittance received, % of GDP                                                                            ­0.329***
+
+                                                                                                         (0.059)
+
+Remittance received, % of GDP *                                                                          0.054***
+
+ln(bitcoin price)                                                                                        (0.005)
+
+Number of observations             4,409           4,575  4,575      4,492                                                         4,088
+
+R-squared                          0.909     0.919        0.920      0.912                                                         0.912
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level. Regressions include country fixed effects.
+Other controls include the natural logarithm of the MSCI equity index price, the stock market turnover, the gold price and the global economic
+policy uncertainty index, in addition to the exchange rate standard deviation and the year-on-year change in the CPI.
+
+Sources: Baker et al (2016); CCData; World Bank; Datastream; Refinitiv Eikon; Sensor Tower; national data; authors' calculations.
+
+           Columns (II) and (III) show that higher regulatory quality and control of corruption
+           mitigate the positive effect of the price on users ­ consistent with incentives to adopt
+           Bitcoin in countries with weaker public institutions. Column (IV) shows that, consistent
+           with the results from Table 3 and Graph 4, the relationship is more pronounced in
+           countries with a higher male population below 35. Finally, column (V) shows the
+           relationship between the Bitcoin price and user entry is stronger in countries with a
+           higher inflow of remittances as a percentage of GDP.
+
+                                                                                17
+      Taken together, results in Tables 2, 3 and 4 suggest that the Bitcoin price has a
+positive and highly significant association with the entry of new users, even when
+controlling for other time-varying macro-economic factors or country characteristics.
+
+      To contrast the relative importance of country-level factors, panel (b) in Graph 8
+again shows how much of the variation in the entry of new users (measured with the
+R-squared) they can explain. To ensure an adequate comparison of the Bitcoin price
+with country-level indicators at yearly frequency, we aggregate the data in Equation
+(1) to the yearly level. The dependent variable thus corresponds to the natural
+logarithm of the yearly average of the number of daily active users of crypto exchange
+apps. The independent variables correspond to the natural logarithm of the Bitcoin
+price, the log of the number of bank branches per 100,000 adults, real GDP, and male
+population below 35, plus regulatory quality, control of corruption, remittances
+received as percentage of GDP and a set of country-level dummies. While the price
+of Bitcoin explains almost 35% of the total variation, time-varying country
+characteristics explain less than 30% overall. Consistent with results for time-series
+control variables in panel (a), these findings suggest that the association between the
+price of Bitcoin and new users is not only highly significant, but that the price also
+explains the lion's share of the overall variation in entry of new users across countries
+and time.
+
+4. Exploiting exogenous variation in the Bitcoin price
+
+While our analysis so far suggests that new users are attracted by rising prices, the
+relationship between Bitcoin prices and the influx of new users could also operate in
+the other direction. As new users download apps and use their fiat money to buy
+Bitcoin, they might drive up the price of Bitcoin (Benetton and Compinai (2022)).
+While the patterns in Graph 1 suggest that user inflows tend to follow price increases
+with a lag of around two months, in what follows, we address the issue of reverse
+causality through an event study of an episode with an arguably exogenous change
+to the price of Bitcoin: the social unrest in Kazakhstan in 2022.
+
+      In May 2021, the Chinese government announced a crackdown on Bitcoin mining
+and trading in China. Since Chinese miners had been responsible for up to three-
+quarters of all mining at its peak, this policy move had a large and swift effect on
+Bitcoin mining capacity. Bitcoin mining equipment was subsequently exported from
+China and miners eventually set up shop in other countries with cheap and abundant
+energy supplies. One such location was neighbouring Kazakhstan, which had large,
+vacant warehouses and factories well-suited to house mining operations, as well as
+cheap energy from coal (70% of electricity production) and natural gas. In a few
+months, Kazakhstan became one of the worlds' most important countries for mining
+Bitcoin.
+
+      However, mining activity in Kazakhstan was severely disrupted in January 2022,
+when rising fuel prices led to deadly riots. In consequence, the Bitcoin price fell by
+about 15% between late December and early January, from over $48,000 to about
+$42,000, as shown in Graph 10, panel (a). The reason is that lower mining capacity
+implies higher transaction costs due to higher fees.
+
+18
+Kazakhstan unrest leads to a price drop  Graph 10
+
+In US dollars
+
+               The vertical line corresponds to January 5, 2022, the day on which, after social unrest in
+               Kazakhstan broke out in response to higher gas prices, a "nation-scale internet blackout"
+               occurred. The horizontal axis indicates the number of days around the event.
+               Sources: CCData.
+
+      We argue that during the days around the riot, the price of Bitcoin fell due to
+reasons unrelated to the adoption of crypto apps in countries other than Kazakhstan.
+We can hence exploit this episode as an exogenous shock to the price of Bitcoin and
+study its effect on daily active users.13
+
+      We thus estimate equation (1) but limit the sample period to the 15 days around
+the event window (5 January 2022). Table 5 reports the results. The main independent
+variable is a dummy with a value of one during the 15 days after the start of the riots
+and a value of zero in the 15 days prior. This dummy hence captures the global drop
+in the price of Bitcoin. Additionally, we control for the change in local stock market
+price and turnover, the price of gold and the VIX, and include a set of country-level
+dummies to capture the effect of unobservable country characteristics. To strengthen
+identification, we exclude the country in which the shock originated (ie Kazakhstan)
+from the sample.
+
+13 One remaining concern is that the drop in mining capacity could have repercussions on users based
+       outside of Kazakhstan, too ­ eg in the form of longer transaction processing times. However, this
+       would affect predominantly on-chain transactions. Instead, our measure of adoption is based on
+       monthly active usage of crypto-exchange apps, and hence captures off-chain adoption. Most of the
+       volume on crypto-exchanges is accounted for by off-chain transactions which, in turn, would not be
+       affected by such a structural change in a third country.
+
+                                                                                                                                                 19
+Event study: impact of exogenous shocks to Bitcoin prices on user numbers                                             Table 5
+
+                                         Dependent variable: daily change in active users
+
+                              (I) (II) (III)
+
+Event dummy                   ­0.006***  ­0.005**                                                           ­0.004**
+
+                              (0.002)    (0.002)                                                            (0.002)
+
+Daily change in MSCI equity              0.587***                                                           0.644***
+index price1                             (0.102)                                                            (0.098)
+
+Daily change in stock market             ­0.011                                                             ­0.010
+turnover2,                               (0.011)                                                            (0.010)
+
+Daily change in gold price               0.192                                                              0.185
+
+                                         (0.207)                                                            (0.208)
+
+Daily change in VIX                      0.015                                                              ­0.006
+
+                                         (0.024)                                                            (0.013)
+
+FX standard deviation                    ­0.002                                                             ­0.004
+
+                                         (0.005)                                                            (0.004)
+
+Number of observations        932        932                                                                897
+
+R-squared                     0.090      0.109                                                              0.121
+
+Standard errors clustered by country in brackets; ***/**/* indicates statistical significance at the 1/5/10% level. Regressions include country
+fixed effects.
+
+1 Country specific MSCI equity index price, in local currency. 2 Based on the country specific Datastream equity index, in local currency.
+
+Sources: CCData; Datastream; Refinitiv Eikon; Sensor Tower; national data; authors' calculations.
+
+      Results from Table 5 show that, across the different speciation's, the inflow of
+new users slows markedly following the event. The price drop of almost 15% reduced
+the inflow of new users by 6% in column (1). The estimated coefficient is significant
+at the 1% level. Adding macroeconomic control variable only leads to a modest
+decline in the coefficient in column (II). Finally, to further tighten identification column
+III excludes Kazakhstan's neighbouring countries from the analysis and yields similar
+results. This pattern suggests that the positive relationship between prices and users
+allows for a causal interpretation.14
+
+5. Behaviour of large vs small investors
+
+The supply of Bitcoin is fixed by protocol, with a maximum global supply of 21 million.15
+This raises the question: if retail investors tend to enter the market when prices rise,
+who is exiting, ie selling their Bitcoins? Complementary data from the Bitcoin
+blockchain allow us to assess changes in holdings based on the total holdings of the
+
+14 We provide additional evidence on the causal link between crypto trading and Bitcoin prices in
+       Appendix B, where we perform a panel vector autoregression (PVAR) analysis on monthly data for 57
+       countries over the period October 2015 ­ April 2022.
+
+15 As the network nears this threshold, block rewards are periodically reduced by half ­ or "halving". It
+       has been argued that as block rewards approach zero, payments security will decrease (Auer (2019)).
+
+20
+wallet. We can assess small Bitcoin holders (those with less than 1 Bitcoin in their
+wallet), and compare these with so-called "whales", ie holders of large wallets.
+
+      Table 6 shows that in periods of price increases, small Bitcoin holdings tend to
+increase (ie small investors might follow the trend). The dependent variable in columns
+(I) and (III) corresponds to the natural logarithm of number of BTC held in addresses
+with balance less than 1 BTC (ie retail investors), in columns (II) and (IV) it corresponds
+to the coins in miners' accounts (ie large investors). In column (V) it corresponds to
+the share of the overall Bitcoin supply held in accounts with a balance below one BTC.
+There is a positive and statistically significant coefficient for the Bitcoin price in
+columns (I) and (III). Among the largest Bitcoin holders ­the miners which belong to
+the whale category ­ there is a negative coefficient for the Bitcoin price in column (II)
+and (IV). The coefficients are highly significant from both a statistical and an economic
+point of view ­ a one percent increase in the price of Bitcoin corresponds to 42.1%
+increase and a 4.1% decrease in the number of Bitcoin held by small investors and
+miners, respectively. Our results are robust to the inclusion of controls for crypto
+exchange-inflows and outflows.16
+
+      Additionally, Table 6 sheds light on the behaviour of small investors and miners
+at times of heightened market volatility. The variable "high volatility" captures periods
+of higher fluctuations in the bitcoin price by taking a value of one when the daily
+Bitcoin price change is larger than two standard deviations in absolute value. The
+positive and statistically significant coefficient for the interaction term in column (III)
+indicates that small investors behave in a procyclical way by even more during times
+of higher volatility. On the other hand, the economically and statistically insignificant
+coefficient for the interaction term in column (IV) suggests that miners don't behave
+differently in times of higher market volatility than in normal times.
+
+      We repeat the same analysis using the natural logarithm of the share of Bitcoin
+held in small accounts as dependent variables (column V) and we find consistent
+results. This evidence, again, is consistent with a market sustained by new entrants
+and unsophisticated investors, allowing early investors and insiders to cash out at
+their expense.17
+
+      One should note that these results are based on on-chain data. This is dictated
+by the absence of equivalent account balance information for off-chain data ­ ie
+crypto exchanges do not disclose statistics on the holdings based on the total
+holdings of their clients' wallet. However, the strong positive correlation between on-
+and off-chain trading volume, gives us confidence on claiming that our findings can
+reasonably be generalised.18
+
+16 Crypto exchanges hold large amounts of crypto on behalf of their clients, and might have to trade in
+       response to clients buy- and sell-orders. The inclusion of this control addresses the concern that our
+       results might be influenced by this specific trading behaviour.
+
+17 This is one channel by which crypto trading may redistribute wealth to insiders, along with broader
+       rents in the crypto and decentralised finance sector (Makarov and Schoar (2022)).
+
+18 Depending on the data source used and the respective assumptions adopted to estimate the relevant
+       metrics, we find a correlation between on- and off-chain trading volume for Bitcoin which ranges
+       between 0.4 and 0.6 for the period 2020­February 2023.
+
+                                                                                                                                                 21
+Bitcoin distributional data                                                                                Table 6
+
+                                                            Holding size                                   Share of Bitcoin
+                                                                                                                 supply
+Natural logarithm:                Retail investors1  Miners     Retail investors1               Miners
+                                                                                                           Retail investors1
+
+                                  (I) (II)                                             (III) (IV)          (V)
+
+Bitcoin price                     0.421***           ­0.041***  0.292***                        ­0.038***  0.236***
+
+                                  (0.002)            (0.000)                           (0.004)  (0.001)    (0.003)
+
+Bitcoin price * high volatility2                                                       0.023**  0.002      0.023***
+
+                                                                                       (0.010)  (0.002)    (0.009)
+
+Other controls3                   NN Y Y Y
+
+Number of observations            3,787              3,787                             3,787    3,787      3,787
+
+R-squared                         0.955              0.897                             0.979    0.899      0.975
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level. All variables are expressed as natural
+logarithms and are winsorised at the 1.5th and 98.5th percentiles.
+
+1 Number of BTC held in addresses with balance less than 1 BTC. 2 High volatility corresponds to a dummy that takes value 1 when the
+bitcoin price change is more than 2 standard deviations in absolute value. 3 Regressions include the global economic policy uncertainty
+
+index, gold price, CBOE VIX index, crypto exchange-outflows and -inflows, and high volatility dummy as controls.
+
+Sources: Baker et al (2016); CCData; Datastream; IntoTheBlock; authors' calculations.
+
+      Our findings in Table 6 are consistent with results from Cornelli et al (2023) and
+Liu et al (2023). Cornelli et al (2023) provide descriptive evidence for two shock
+episodes in the crypto ecosystem ­ the Terra/Luna crash and the FTX bankruptcy.
+Graph 11 replicates their main findings. As cryptocurrency prices fell (Graph 11, left-
+hand panel), trading activity on major crypto exchanges increased markedly (centre
+panel) suggesting that users tried to adjust their portfolios away from owning tokens
+under stress towards other cryptoassets, including asset-backed stablecoins.
+However, owners of large wallets reduced their holdings of Bitcoin in the days after
+the episodes, probably cashing out at the expense of smaller retail holders. On the
+other hand, medium-sized holders, and even more so small retail holders, increased
+their holdings of Bitcoin.
+
+      Liu et at (2023) analyse the Terra/Luna crash with detailed data from the Terra
+blockchain and trading data from centralised exchanges. They show that the run on
+Terra was a by-product of growing concerns about the sustainability of the system.
+After few large holders of UST reduced their exposures, the run was in action as other
+large traders followed suit. Blockchain technology empowered investors with (almost)
+real-time monitoring tools of other's actions, which resulted in an acceleration of the
+run. Consistently with our findings, not everyone traded at the same time and/or in
+the same direction. Due to the complexity of the system, less sophisticated and
+poorer investors found themselves at greater informational disadvantage. This
+resulted in larger and more sophisticated investors running first and experiencing
+much smaller losses. Meanwhile small retail and less sophisticated investors ran later
+and suffered larger losses.
+
+22
+In stormy seas, "the whales eat the krill"                                        Graph 11
+
+As prices tumbled...                     ...all users traded more...1             ...but whales sold while krill bought2
+
+                      31 Mar 2022 = 100                                t­1 = 100  t­1 = 100
+
+a Terra USD and Luna collapse, 8 May 2022. b FTX collapse, 7 November 2022.
+1 Based on daily active users of cryptoexchange apps. 2 Based on the number of BTC held in addresses with balance less than 1 BTC (small),
+1­1000 BTC (medium), and more than 1000 BTC (large).
+Sources: Cornelli et al (2023); CoinGecko; IntoTheBlock; Sensor Tower.
+
+                   6. Conclusion
+
+                           Our analysis has shown that, around the world, Bitcoin price increases have been tied
+                           to greater entry by retail investors. Using a novel dataset on crypto app use over
+                           2015­22, we show that users are more likely to make active use of crypto exchange
+                           apps in the months after a rise in the price of Bitcoin. This is particularly true for young
+                           men, who tend to have a higher risk tolerance than women and older users. These
+                           findings hold when controlling for a range of global and country-specific factors. An
+                           analysis of an unanticipated shock that led to a fall in the price of Bitcoin in January
+                           2022 suggests that the relationship can be interpreted as causal.
+
+                                 Our findings shed light on the motivation for retail investors to enter crypto
+                           markets. They support the notion that, by and large, investors view cryptocurrencies
+                           as a speculative investment. Furthermore, our findings show that as the Bitcoin price
+                           rises larger investors ("whales") tend to sell while smaller investors are buying. This
+                           evidence raises concerns around consumer protection: if users are driven primarily by
+                           backward-looking price movements, are they fully prepared for the potential
+                           consequences of a price correction? Our estimations that 73­81% of global investors
+                           have likely lost money on their crypto investment, and procyclical trading behaviour
+                           characterising small investors, may give grounds for deeper investigation of claims
+                           that crypto will "democratise" the financial system.
+
+                                 Without attempting to predict future market developments, our study does
+                           hence raise questions about the implications of greater crypto adoption for the
+
+                                                                                                                                                                                      23
+economy and consumer welfare. As recent developments have shown, if interest rates
+rise and global risk appetite suddenly wanes, the overall market could dry up. If,
+following price declines, retail investors make losses and exit the market, there is the
+potential for self-reinforcing dynamics. For authorities tasked with consumer
+protection and financial stability, a deeper understanding of these scenarios and the
+associated knock-on effects would be constructive.
+
+24
+References
+
+Aiello, D, S R Baker, Scott, T Balyuk, M Di Maggio, J M Johnson, and J Kotter (2022),
+"Cryptocurrency Investing: Stimulus Checks and Inflation Expectations", Working
+Paper.
+
+Andrews, D W, and B Lu (2001), "Consistent model and moment selection procedures
+for GMM estimation with application to dynamic panel data models", Journal of
+Econometrics, vol 101, no 1, pp 123­64.
+
+Aramonte, S, S Doerr, W Huang and A Schrimpf (2022), "DeFi lending: intermediation
+without information?", BIS Bulletin, no 57.
+
+Armantier, O, S Doerr, J Frost, A Fuster and K Shue (2021): "Whom do consumers trust
+with their data? US survey evidence", BIS Bulletin, no 42, May.
+
+Auer, R (2019), "Beyond the doomsday economics of "proof-of-work", in
+cryptocurrencies", BIS Working Paper, no 765, January.
+
+Auer, R and S Claessens (2018), "Regulating cryptocurrencies: assessing market
+reactions", BIS Quarterly Review, September, pp 51­65.
+
+Auer, R and D Tercero-Lucas (2022), "Distrust or speculation? the socioeconomic
+drivers of U.S. cryptocurrency investments", Journal of Financial Stability, forthcoming.
+
+Baker, S, N Bloom and S Davis (2016), "Measuring economic policy uncertainty",
+The Quarterly Journal of Economics, vol 131, no 4, pp 1593­636.
+
+Benetton, M and G Compiani (2022): "Investors' Beliefs and Asset Prices: A Structural
+Model of Cryptocurrency Demand", Working Paper.
+
+Berg, T, V Burg, A Gombovi and M Puri (2020), "On the rise of fintechs: credit scoring
+using digital footprints", The Review of Financial Studies, vol 33, no 7, pp 2845­97.
+
+de Best, R (2022), "Number of identity-verified cryptoasset users from 2016 to June
+2021", Statista, January.
+
+Biais, B, C Bisiere, M Bouvard, C Casamatta and A Menkveld (2022), "Equilibrium
+Bitcoin Pricing", Journal of Finance, forthcoming.
+
+Blandin, A, G Pieters, Y Wu, T Eisermann, A Dek, S Taylor and D Njoki (2021),
+3rd global cryptoasset benchmarking study, Cambridge Centre for Alternative Finance.
+
+Bohr, J and M. Bashir (2014), "Who Uses Bitcoin? An exploration of the Bitcoin
+community", 2014 Twelfth Annual International Conference on Privacy, Security and
+Trust, pp. 94­101.
+
+Boissay F, G Cornelli, S Doerr and J Frost (2022), "Blockchain scalability and the
+fragmentation of crypto", BIS Bulletin, no 56.
+
+Bolt, W and M van Oordt (2019), "On the value of virtual currencies", Journal of Money,
+Credit and Banking, vol 52, no 4, pp 835­62.
+
+Chen, S, S Doerr, J Frost, L Gambacorta and H S Shin (2023), "The fintech gender gap",
+Journal of Financial Intermediation, no 54(101026).
+
+Cong, L W, Y Li and N Wang (2020), "Tokenomics: Dynamic Adoption and Valuation",
+The Review of Financial Studies, 34(3):1105­1155.
+
+                                                                                                                                                 25
+Cornelli, G, S Doerr, J Frost and L Gambacorta (2023), "Crypto shocks and retail losses",
+BIS Bulletins, no 69, February.
+
+Cornelli, G, J Frost, J Warren and C Z Yang, "Digital finance app adoption", BIS Working
+Paper, forthcoming.
+
+Daníelsson, J and R Love (2006), "Feedback trading", International Journal of Finance
+and Economics, no 11, pp 35-53.
+
+Doerr, S, L Gambacorta, L Guiso, and M Sanchez del Villar (2023), "Privacy regulation
+and fintech lending", BIS Working Paper, no 1103.
+
+Financial Conduct Authority (2021), Research note: cryptoasset consumer research
+2021, 17 June.
+
+Foley, S, J Karlsen and T Putnins (2019), "Sex, drugs, and Bitcoin: how much illegal
+activity is financed through cryptocurrencies?", The Review of Financial Studies, vol 32,
+no 5: 1798­853.
+
+Fujiki, H (2020), "Who adopts crypto assets in Japan? Evidence from the 2019 financial
+literacy survey", Journal of the Japanese and International Economies, Elsevier,
+vol 58(C).
+
+Garratt, R and N Wallace (2018), "Bitcoin 1, Bitcoin 2, ...: An Experiment on Privately
+Issued Outside Monies", Economic Inquiry, no 56, pp 1887­97.
+
+Hackethal, A, T Hanspal, D M Lammer and K Rink (2022), "The Characteristics and
+Portfolio Behavior of Bitcoin Investors: Evidence from Indirect Cryptocurrency
+Investments", Review of Finance, Volume 26, Issue 4, Pages 855­898
+
+Hileman, G (2015), "The Bitcoin market potential index", Proceedings of the 2nd
+Workshop on Bitcoin Research in Association with Financial Cryptography and Data
+Security, Springer.
+
+Jianakoplos, N and A Bernasek (1998), "Are Women More Risk Averse?" Economic
+Inquiry, vol 36, no 4, pp 620­30.
+
+Kogan, S, I Makarov, M Niessner and A Schoar (2023), "Are Cryptos Different?
+Evidence from Retail Trading", NBER Working Paper, no 31317, June.
+
+Koutmos, G (1997), "Feedback trading and the autocorrelation pattern of stock
+returns: further empirical evidence", Journal of International Money and Finance, vol
+16, no 4, pp 625-636.
+
+Knittel, M, S Pitts and R Wash (2019), "'The most trustworthy coin': how ideological
+tensions drive trust in Bitcoin", Proceedings of the ACM on Human-Computer
+Interaction, vol 3, no 36, pp 1­23.
+
+Liu, J, I Makarov and A Schoar (2023), "Anatomy of a Run: The Terra Luna Crash", NBER
+Working Paper, no 31160, April.
+
+Liu, Y and A Tsyvinski (2021), "Risks and returns of cryptocurrency", Review of Financial
+Studies, vol 34, no 6, pp 2689­727.
+
+Makarov, I and A Schoar (2022), "Cryptocurrencies and decentralized finance (DeFi)",
+NBER Working Paper no 30006.
+
+Pursiainen, V and J Toczynski (2022), "Retail Investors' Cryptocurrency Investments",
+Working Paper.
+
+26
+Rigier, M O, M Wang and T Hens (2015), "Risk Preferences Around the World",
+Management Science, vol 61, no 3, pp 637­648.
+Schilling, L and H Uhlig (2019), "Some Simple Bitcoin Economics", Journal of Monetary
+Economics, no 106, pp 16­26.
+Shams, A (2020), "The structure of cryptocurrency returns", Ohio State University
+Working Paper, 2020-11.
+Sockin, M and W Xiong (2023), "Decentralization through tokenization", The Journal
+of Finance, 78(1):247­299
+Somoza, L and A Didisheim (2022), "The end of the crypto-diversification myth", Swiss
+Finance Institute Research Paper no 22-53.
+Stix, H (2019), "Ownership and purchase intention of crypto-assets ­ survey results",
+Oesterreichische Nationalbank Working Paper, no 226.
+Swartz, L (2020), New money: how payment became social media, New Haven: Yale
+University Press.
+
+                                                                                                                                                 27
+         Appendix A: further tests                                             Graph A1
+
+Young male users enter mostly during periods of pronounced price swings  Number of users
+
+USD
+
+Simple average of the country-level monthly average of DAUs by age and gender. Based on active users of 45 crypto exchanges android and
+iOS apps.
+
+Sources: CCData; Sensor Tower; authors' calculations.
+
+28
+Descriptive statistics for additional regressions                                                       Table A1
+
+                                 No observations  Mean       Standard   Min                             Max
+                                                             deviation
+
+Panel A: risk aversion analysis
+
+Monthly average number of users1
+
+Male below 35                        83           29,484     35,584     678                             127,005
+
+Male above 35                        83           19,536     23,374     317                             82,700
+
+Female below 35                      83           14,215     16,885     272                             59,589
+
+Female above 35                      83           9,633      11,239     163                             39,142
+
+Bitcoin price                        83           14,345     17,469     237                             62,080
+
+Monthly average daily active         3,557        131,734    409,363    0.34                            5,983,340
+users
+
+Bitcoin price                        3,557         14,364    17,370     236.51                           62,080
+Risk aversion (losses)2              3,557        ­1.64      7.79       ­53.00                          ­0.17
+Risk aversion (gains)2               3,557         0.71      0.11                                        0.93
+                                                                          0.44
+
+Panel B: event study
+
+Daily change in active users 932 ­0.01                       0.05 ­0.47                                 0.24
+
+Event dummy                          932 0.51 0.50                      0 1.00
+
+Daily change in MSCI equity
+
+index price3                         932 0.001               0.01 ­0.08                                 0.04
+
+Daily change in stock market         932          0.005      0.14 ­1.59                                 0.60
+turnover4
+
+Daily change in gold price           932 0.001               0.01 ­0.01                                 0.01
+
+Daily change in VIX                  932 0.01 0.08 ­0.12 0.17
+
+FX standard deviation                932 0.48 0.94                      0 7.26
+
+Panel C: Trading behaviour analysis
+
+Retail investors holdings size5      3,787        495,017    364,628    18,996                          1,143,231
+
+Miners holdings size                 3,787        2,374,634  267,254    1,944,223                       3,265,029
+
+Share of bitcoin supply held by      3,787        3.04       1.94       0.28                            5.99
+retail investors5
+
+High volatility6                     3,787        0.04       0.20       0                               1
+
+Bitcoin price                        3,787        9,712      15,732     4.68                            68,979
+
+Global economic policy               3,787        188.95     72.73      86.29                           430.26
+uncertainty index
+
+Gold price                           3,787        1,452      254.64     1,061                           2,072
+
+1 Simple average of the country-level monthly average of DAUs by age and gender. Based on active users of 45 crypto exchanges android
+and iOS apps. 2 Risk aversion measures correspond to the relative risk premiums (RRP) from Rieger et al (2015). RRP losses (gains)
+
+correspond to the country-level median value based on lotteries with a negative (positive) expected value. Negative values for the RRPs
+indicate risk seeking. 3 Country-specific MSCI equity index price, in local currency. 4 Based on the country specific Datastream equity
+index, in local currency. 5 Number of BTC held in addresses with balance less than 1 BTC. 6 High volatility corresponds to a dummy that
+
+takes value 1 when the bitcoin price change is more than 2 standard deviations in absolute value.
+
+Sources: Baker et al (2016); Rieger et al (2015); CCData; Datastream; IntoTheBlock; World Bank; Refinitiv Eikon; Sensor Tower; national data;
+authors' calculations.
+
+                  Table A1 gives additional descriptive statistics for variables used in our analysis.
+
+                                                                                   29
+                 Table A2 shows that in periods of price increases, small Bitcoin holdings tend to
+           increase ­ positive and statistically significant coefficient for the Bitcoin price percent
+           change in column I ­ while especially the largest Bitcoin holders ­ the whales ­ tend
+           to sell ­ negative and statistically significant coefficient for the Bitcoin price percent
+           change in column I. Our results are robust to the inclusion of a control for crypto
+           exchange outflows. Crypto exchanges hold large amounts of crypto on behalf of their
+           clients, and might have to trade in response to clients' buy and sell orders. The
+           inclusion of this control addresses the concern that our results might be influenced
+           by this specific trading behaviour.
+
+Bitcoin distributional data1                                                                                       Table A2
+
+                                         Holding size
+
+                              Small      Medium                                                        Whale
+
+                              (I) (II) (III)
+
+Bitcoin price, % change       0.006***                                                 0.002**         ­0.002**
+
+                              (0.002)                                                  (0.001)         (0.001)
+
+Global economic policy         0.000                                                   ­0.000           0.000
+uncertainty index2, % change  (0.000)                                                  (0.000)         (0.000)
+
+Gold price, % change          ­0.012                                                   0.008*          ­0.009**
+
+                              (0.011)                                                  (0.004)         (0.004)
+
+CBOE VIX index, % change      ­0.001                                                   ­0.000          ­0.000
+
+                              (0.001)                                                  (0.000)         (0.000)
+
+Ln(crytoexchange outflows)    ­0.017***  ­0.006***                                                     ­0.007***
+
+                              (0.002)                                                  (0.001)         (0.001)
+
+Number of observations        3786                                                     3786            3786
+
+R-squared                     0.024                                                    0.018           0.021
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level.
+
+1 All the variables correspond to the percent change in the specific variable. The dependent variable corresponds to the number of BTC held
+in addresses with balance less than 1 BTC (small), 1­1000 BTC (medium), and more than 1000 BTC (whale). Winsorised at the 1.5th and 98.5th
+
+percentiles. 2 Standardised to a mean of zero and a standard deviation of one.
+
+Sources: Baker et al (2016); CCData; Datastream; IntoTheBlock; authors' calculations.
+
+                 Table A3 replicates the same analysis for Ether. Data from the Ethereum
+           blockchain on the daily change in the amounts of ETH held by the three types of
+
+           holders yields similar evidence as for Bitcoin ­ when the price of ETH increases, small
+           and medium holders increase their holdings, whereas whales sell their coins.19
+
+           19 The summary statics for the variables used in tables A2 and A3 are reported in table A1 in appendix
+                  A.
+
+           30
+Ethereum distributional data1                                                                                                                                   Table A3
+
+                                          Holding size
+
+                               Small      Medium                                                       Whale
+
+                               (I) (II) (III)
+
+Ether price, % change          0.014***                                                0.010***        ­0.001***
+
+                               (0.004)                                                 (0.002)         (0.000)
+
+Global economic policy         ­0.001*                                                  0.000          ­0.000
+uncertainty index2, % change   (0.001)                                                 (0.000)         (0.000)
+
+Gold price, % change           0.016                                                   ­0.009          0.001
+
+                               (0.027)                                                 (0.014)         (0.001)
+
+CBOE VIX index, % change       0.003                                                   ­0.000          0.000
+
+                               (0.003)                                                 (0.001)         (0.000)
+
+Ln(crytoexchange outflows)     ­0.165***  ­0.096***                                                    ­0.006***
+
+                               (0.016)                                                 (0.007)         (0.001)
+
+Number of observations         2532                                                    2532            2532
+
+R-squared                      0.062                                                   0.085           0.027
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level.
+
+1 All the variables correspond to the percent change in the specific variable. The dependent variable corresponds to the number of ETH held
+in addresses with balance less than 1 ETH (small), 1­1000 ETH (medium), and more than 1000 ETH (whale). Winsorised at the 1.5th and 98.5th
+percentiles. 2 Standardised to a mean of zero and a standard deviation of one.
+
+Sources: Baker et al (2016); CCData; Datastream; IntoTheBlock; authors' calculations.
+
+                 Results are very similar when we look at Bitcoin and additionally control for
+           crypto exchange inflows, or we replace crypto exchange outflows with net flows
+           (tables A4­A7). This evidence, again, is consistent with a market sustained by new
+           entrants and unsophisticated investors, allowing early investors and insiders to cash
+           out at their expense.20
+
+           20 This is one channel by which crypto trading may redistribute wealth to insiders, along with broader
+                  rents in the crypto and decentralised finance sector (Makarov and Schoar (2022)).
+
+                                                                                                                                                            31
+Bitcoin distributional data1                                                                                     Table A4
+
+                                        Holding size
+
+                              Small     Medium                                                         Whale
+
+                              (I) (II) (III)
+
+Bitcoin price, % change       0.006***                                                 0.002**         ­0.002**
+
+                              (0.002)                                                  (0.001)         (0.001)
+
+Global economic policy         0.000                                                   ­0.000           0.000
+uncertainty index2, % change  (0.000)                                                  (0.000)         (0.000)
+
+Gold price, % change          ­0.012                                                   0.008*          ­0.009**
+
+                              (0.011)                                                  (0.004)         (0.004)
+
+CBOE VIX index, % change      ­0.001                                                   ­0.000          ­0.000
+
+                              (0.001)                                                  (0.000)         (0.000)
+
+Ln(crytoexchange outflows)    ­0.020**                                                 ­0.011          0.002
+
+                              (0.010)                                                  (0.008)         (0.006)
+
+Ln(crytoexchange inflows)     0.003                                                    0.005           ­0.009
+
+                              (0.011)                                                  (0.008)         (0.007)
+
+Number of observations        3786                                                     3786            3786
+
+R-squared                     0.024                                                    0.018           0.023
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level.
+
+1 All the variables correspond to the percent change in the specific variable. The dependent variable corresponds to the number of BTC held
+in addresses with balance less than 1 BTC (small), 1­1000 BTC (medium), and more than 1000 BTC (whale). Winsorised at the 2nd and 98th
+percentiles. 2 Standardised to a mean of zero and a standard deviation of one.
+
+Sources: Baker et al (2016); CCData; Datastream; IntoTheBlock; authors' calculations.
+
+           32
+Bitcoin distributional data1                                                                                     Table A5
+
+                                        Holding size
+
+                              Small     Medium                                                         Whale
+
+                              (I) (II) (III)
+
+Bitcoin price, % change       0.006***                                                 0.002***        ­0.002**
+
+                              (0.002)                                                  (0.001)         (0.001)
+
+Global economic policy         0.000                                                   ­0.000           0.000
+uncertainty index2, % change  (0.000)                                                  (0.000)         (0.000)
+
+Gold price, % change          ­0.014                                                   0.007*          ­0.010**
+
+                              (0.011)                                                  (0.005)         (0.005)
+
+CBOE VIX index, % change      ­0.001                                                   ­0.000          ­0.000
+
+                              (0.001)                                                  (0.000)         (0.000)
+
+Crytoexchange net flows, in   ­0.105                                                   ­0.150          ­0.495
+
+BTC mn                        (1.198)                                                  (0.480)         (0.553)
+
+Number of observations        3786                                                     3786            3786
+
+R-squared                     0.004                                                    0.004           0.004
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level.
+
+1 All the variables correspond to the percent change in the specific variable. The dependent variable corresponds to the number of BTC held
+in addresses with balance less than 1 BTC (small), 1­1000 BTC (medium), and more than 1000 BTC (whale). Winsorised at the 2nd and 98th
+percentiles. 2 Standardised to a mean of zero and a standard deviation of one.
+
+Sources: Baker et al (2016); CCData; Datastream; IntoTheBlock; authors' calculations.
+
+                                                                                                       33
+Ethereum distributional data1                                                                                     Table A6
+
+                                         Holding size
+
+                               Small     Medium                                                        Whale
+
+                               (I) (II) (III)
+
+Ether price, % change          0.013***                                                0.009***        ­0.001***
+
+                               (0.004)                                                 (0.002)         (0.000)
+
+Global economic policy         ­0.001*                                                  0.000          ­0.000
+uncertainty index2, % change   (0.001)                                                 (0.000)         (0.000)
+
+Gold price, % change           0.016                                                   ­0.009          0.002
+
+                               (0.027)                                                 (0.014)         (0.001)
+
+CBOE VIX index, % change       0.003                                                   ­0.000          0.000
+
+                               (0.003)                                                 (0.001)         (0.000)
+
+Ln(crytoexchange outflows)     ­0.094*                                                 0.050**         ­0.014***
+
+                               (0.057)                                                 (0.024)         (0.002)
+
+Ln(crytoexchange inflows)      ­0.076    ­0.158***                                                     0.009***
+
+                               (0.057)                                                 (0.025)         (0.002)
+
+Number of observations         2532                                                    2532            2532
+
+R-squared                      0.063                                                   0.108           0.033
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level.
+
+1 All the variables correspond to the percent change in the specific variable. The dependent variable corresponds to the number of ETH held
+in addresses with balance less than 1 ETH (small), 1­1000 ETH (medium), and more than 1000 ETH (whale). Winsorised at the 2nd and 98th
+percentiles. 2 Standardised to a mean of zero and a standard deviation of one.
+
+Sources: Baker et al (2016); CCData; Datastream; IntoTheBlock; authors' calculations.
+
+           34
+Ethereum distributional data1                                                                                     Table A7
+
+                                         Holding size
+
+                               Small     Medium                                                        Whale
+
+                               (I) (II) (III)
+
+Ether price, % change          0.012***                                                0.008***        ­0.001***
+
+                               (0.004)                                                 (0.002)         (0.000)
+
+Global economic policy         ­0.000                                                   0.000          ­0.000
+uncertainty index2, % change   (0.001)                                                 (0.000)         (0.000)
+
+Gold price, % change           0.010                                                   ­0.014          0.001
+
+                               (0.028)                                                 (0.014)         (0.001)
+
+CBOE VIX index, % change       0.003                                                   0.000           ­0.000
+
+                               (0.003)                                                 (0.001)         (0.000)
+
+Crytoexchange net flows, in    ­0.208    ­0.589***                                                     0.087***
+
+ETH mn                         (0.187)                                                 (0.099)         (0.011)
+
+Number of observations         2532                                                    2532            2532
+
+R-squared                      0.008                                                   0.035           0.042
+
+Robust standard errors in brackets; ***/**/* indicates statistical significance at the 1/5/10% level.
+
+1 All the variables correspond to the percent change in the specific variable. The dependent variable corresponds to the number of ETH held
+in addresses with balance less than 1 ETH (small), 1­1000 ETH (medium), and more than 1000 ETH (whale). Winsorised at the 2ndh and 98th
+percentiles. 2 Standardised to a mean of zero and a standard deviation of one.
+
+Sources: Baker et al (2016); CCData; Datastream; IntoTheBlock; authors' calculations.
+
+                                                                                                       35
+Appendix B: panel vector autoregression analysis
+
+To provide additional evidence on the link between crypto trading and bitcoin prices,
+we develop a simple panel vector autoregression (PVAR) analysis on monthly data for
+57 countries over the period October 2015 ­ April 2022. The interaction between
+Bitcoin prices, financial markets and crypto exchange users is analysed by means of
+the following variables: (i) Bitcoin price (bitcoin); (ii) monthly average of crypto
+exchange app DAUs (users); (iii) country-level equity market price (pk), (iv) equity
+market turnover (turnover) and (v) the global policy uncertainty index (uncertainty).
+
+To overcome spurious correlation, we express all variables in first differences of
+
+logs. We model a five-variable vector autoregression (VAR) system; all the variables
+that are found to be I(0), are treated as endogenous.21 Therefore the starting point of
+
+the multivariate analysis is:
+
+                               
+
+ =  +   - +                       = 1, ... , 
+
+                =1
+
+              ~VWN(0,)
+
+where  = [, , , , ] and  is a vector of residuals,
+for i = 1, ..., N, where N is the number of countries and time is denoted by t. The
+
+deterministic part of the model includes a constant, while the number of lags (p) has
+been set equal to 1 according to the Andrews and Lu (2001) criteria.22
+
+      Graph B1 shows the dynamic responses to exogenous shock to the Bitcoin price
+(panel A) and to the number of crypto exchange app user (panel B). We use a standard
+Cholesky decomposition and order the Bitcoin price as the last variable. 23 This implies
+that the Bitcoin price reacts contemporaneously to all variables included in the PVAR.
+At the same time, we consider the app users as second last variable in the Cholesky
+decomposition, implying that they react contemporaneously to all variables except
+the Bitcoin price. The complete ordering of the variables is reported in vector .
+
+21 Unit root Phillips­Perron tests for all variables show that the null hypothesis that variables
+      contain unit roots is always rejected. The results for the unit root Phillips­Perron tests for all
+      variables in first differences are shown in Table B2 in the Appendix. Graph B2 in the appendix
+      shows that our PVAR is stable because all the moduli of the companion matrix are smaller than
+      one and the roots of the companion matrix are all inside the unit circle.
+
+22 The choice of the deterministic component (constant versus trend) has been verified by testing
+      the joint hypothesis of both the rank order and the deterministic component (so-called Pantula
+      principle). The number of lags (p) has been set equal to 1 based on model-selection criteria by
+      Andrews and Lu (2001).
+
+23 Because the ordering of the variable is likely to affect orthogonalised impulse response functions
+      (IRFs) and the interpretation of the results, we follow the theory and order the variable of interest
+      last so they reacts to all variables within one month. This choice is in line with the PVAR literature
+      that analyses the effectiveness of monetary policy shocks using VAR models. Confidence intervals
+      are calculated using Monte Carlo simulation with p-value bands of 90%. The results do not change
+      when altering the order of the variables in the Cholesky decomposition.
+
+36
+Impulse response functions to Bitcoin price and number of crypto exchange users  Graph B1
+
+                                                       (A) Shock in bitcoin prices
+Response of bitcoin price to a shock in the bitcoin price Response of app usage to a shock in the bitcoin price
+
+(B) Shock in number of crypto exchange app users
+
+Response of app usage to a shock in the app usage  Response of bitcoin price to a shock in the app usage
+
+The graphs show the impulse response functions for a shock in the monthly change in bitcoin price (top panels) or in the monthly number of
+crypto exchange apps active users (bottom panels). The other variables included in the PVAR model are the monthly changes in the country-
+level equity market price, equity market turnover and the global policy uncertainty index.
+Sources: CCData; Sensor Tower; authors' calculations.
+
+                                 The results in panel A suggest that the number of app users respond strongly to
+                           a Bitcoin price shock. In case of a 15-percentage point increase in Bitcoin prices
+                           (corresponding to a one standard deviation shock), the number of crypto exchange
+                           app users increases by 3 percentage points on impact and continues to significantly
+                           increase for seven months after the shock.
+
+                                 A similar effect is detected in case of an exogenous shock to the number of users
+                           of the crypto exchange. A 12-percentage point increase in the number of crypto
+                           exchange app users (corresponding to one standard deviation shock) raises the
+                           Bitcoin price immediately by 6 percentage points. The effect continues to be
+                           significant for one month with a further 1.5 percentage point increase in the Bitcoin
+                           price. It vanishes after two months.
+
+                                                                                                                                                                                      37
+      Similar results are obtained when using formal Granger tests (see Table B3 in the
+appendix). We find evidence (estimates are significant at the 1% level) that Bitcoin
+price changes Granger-cause an increase in new crypto exchange app users.
+
+Unit root tests1                                                                                                         Table B2
+
+                      Ln(monthly     Ln(bitcoin    Ln(MSCI equity                                       Ln(stock market       Ln(global
+                     average daily     price )     index price)2                                          turnover)3      economic policy
+                     active users)                                                                                       uncertainty index)
+
+                     Stat P-value Stat P-value Stat P-value Stat P-value Stat P-value
+
+Inverse chi-squared  2,839.09 0.00 3,365.14 0.00 4,052.00 0.00 4,158.90 0.00 6,395.97 0.00
+
+Inverse normal       ­48.22 0.00 ­51.98 0.00 ­59.30 0.00 ­61.46 0.00 ­75.75 0.00
+
+Inverse logit t      ­85.49 0.00 ­95.23 0.00 ­135.61 0.00 ­149.51 0.00 ­181.08 0.00
+
+Modified inv chi-squared 145.72 0.00 162.88 0.00 237.44 0.00 263.04 0.00 318.36 0.00
+
+1 Based on Phillips­Perron tests. The null hypothesis is that all panels contain unit roots. The sample includes 57 countries over the period
+Oct 2015­Apr2022. Data winsorised at the 1st and 99th percentiles. 2 Country specific MSCI equity index price, in local currency. 3 Based
+on the country specific Datastream equity index, in local currency.
+
+Sources: Baker et al (2016); CCData; Datastream; Refinitiv Eikon; Sensor Tower; authors' calculations.
+
+Roots of the companion matrix                                                                           Graph B2
+
+Source: Baker et al (2016); CCData; Datastream; Refinitiv Eikon; Sensor Tower; authors' calculations.
+38
+PVAR Granger test1                                                                                                              Table B3
+
+Equation/                Ln(monthly        Ln(bitcoin   Ln(MSCI equity    Ln(stock market                               Ln(global
+excluded            average daily active      price)      index price)2       turnover)3                            economic policy
+                                                                                                                   uncertainty index)
+                             users)
+
+                    chi2 df p-value chi2 df p-value chi2 df p-value chi2 df p-value chi2 df p-value
+
+ Ln(monthly                               32.92 1 0.00 17.93 1 0.00 0.34 1 0.559 73.00                                    1 0.00
+average daily
+active users)
+
+ Ln(bitcoin         203.92 1 0.00                      1.05 1 0.305 30.02 1 0.00 29.56                                    1 0.00
+price)
+
+ Ln(MSCI equity 18.18      1 0.00 1.42 1 0.233         0.00 3.65 1 0.056 306.26 1 0.00
+index price)2
+
+ Ln(stock market 2.56      1 0.11 3.23 1 0.072 8.49 1 0.004                                                        13.35  1 0.00
+turnover)3
+
+ Ln(global          45.06  1 0.00 102.19 1 0.00 218.60 1 0.00 65.62 1                                        0.00
+
+economic policy
+
+uncertainty index)
+
+All 265.49 4 0.00 152.65 4 0.00 241.96 4 0.00 136.84 4 0.00 368.16 4 0.00
+
+The null hypothesis of the test is that the excluded variable does not Granger-cause the equation variable.
+
+1 The sample includes 57 countries over the period Oct 2015­Apr2022. Data winsorised at the 1st and 99th percentiles. 2 Country specific
+MSCI equity index price, in local currency. 3 Based on the country specific Datastream equity index, in local currency.
+
+Sources: Baker et al (2016); CCData; Datastream; Refinitiv Eikon; Sensor Tower; authors' calculations.
+
+                                                                                                                          39
+Previous volumes in this series
+
+1048            Is the Covid-19 pandemic fast-tracking       Leonardo Bonilla, Luz A Flórez,
+November 2022   automation in developing countries?          Didier Hermida, Francisco Lasso,
+                Evidence from Colombia                       Leonardo Fabio Morales,
+                                                             Juan Jose Ospina and José Pulido
+1047            What drives inflation? Disentangling
+November 2022   demand and supply factors                    Sandra Eickmeier and
+                                                             Boris Hofmann
+
+1046            The case for convenience: how CBDC design Rodney Garratt, Jiaheng Yu and
+November 2022   choices impact monetary policy pass-through Haoxiang Zhu
+
+1045            The term structure of carbon premia          Dora Xia and Omar Zulaica
+October 2022
+
+1044            Gender diversity in bank boardrooms and      Leonardo Gambacorta, Livia
+October 2022    green lending: evidence from euro area       Pancotto, Alessio Reghezza and
+                credit register data                         Martina Spaggiari
+1043
+October 2022    The scarring effects of deep contractions    David Aikman, Mathias Drehmann,
+                                                             Mikael Juselius and Xiaochuan Xing
+
+1042            Emerging market bond flows and exchange Peter Hördahl and Giorgio Valente
+
+September 2022 rate returns
+
+1041            The impact of fintech lending on credit access Giulio Cornelli, Jon Frost, Leonardo
+
+September 2022 for U.S. small businesses                     Gambacorta and Julapa Jagtiani
+
+1040            Quantifying the role of interest rates,      Emanuel Kohlscheen
+
+September 2022 the Dollar and Covid in oil prices
+
+1039            Cyber risk in central banking                Sebastian Doerr, Leonardo
+                                                             Gambacorta, Thomas Leach,
+September 2022                                               Bertrand Legros and David Whyte
+
+1038            Building portfolios of sovereign securities  Gong Cheng, Eric Jondeau and
+                                                             Benôit Mojon
+September 2022 with decreasing carbon footprints
+
+1037            Big Techs vs Banks                           Leonardo Gambacorta,
+August 2022                                                  Fahad Khalil and Bruno M Parigi
+
+1036            The scarring effects of deep contractions    David Aikman, Mathias Drehmann,
+August 2022                                                  Mikael Juselius and Xiaochuan Xing
+
+1035            Cross-border financial centres               Pamela Pogliani and
+July 2022                                                    Philip Wooldridge
+
+                All volumes are available on our website www.bis.org.
+
