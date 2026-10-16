@@ -55,7 +55,6 @@ interface Report {
 interface StoreVideo {
   id: string;
   title: string;
-  channel?: string;
   durationSec?: number;
   transcript: string;
   url?: string;
@@ -126,7 +125,7 @@ export interface Topic {
   noCaptions: number;
   studies: number;
   decided: number;
-  hero: { title: string | null; lede: string | null };
+  hero: { title?: string; lede?: string };
   glyph: string | null; // <topic>/glyph.svg, inlined on the home card
   bottomLine: string | null;
   recap: { title: string; claims: ClaimView[] }[];
@@ -277,7 +276,7 @@ export function loadTopic(name: string): Topic {
     noCaptions: recs.filter((v) => v.transcript === 'none' && !v.assertions).length,
     studies: new Set(t.claims.flatMap((c) => c.documents)).size,
     decided: claims.filter((c) => c.decidedBy).length,
-    hero: { title: cfg.hero?.title ?? null, lede: cfg.hero?.lede ?? null },
+    hero: cfg.hero ?? {},
     glyph: existsSync(glyphPath) ? readFileSync(glyphPath, 'utf8').trim() : null,
     bottomLine,
     recap,
