@@ -19,7 +19,9 @@ citations refer to the `.txt`.
 4. For each one:
    - verdict ∈ right | wrong | partly | untestable | unknown. partly = right mechanism,
      wrong dose or scope, or supported only in a narrower setting. A narrow study limits a
-     general claim ("partly"); it doesn't refute it. unknown = the source explicitly can't tell.
+     general claim ("partly"); it doesn't refute it. But a base rate that contradicts the
+     claim's promise does: if the claim says anyone or most can do X and the data show most
+     who try don't, that is "wrong". unknown = the source explicitly can't tell.
    - confidence 0–1 (null for unknown/untestable): how strongly THIS source settles the claim,
      given design, sample and caveats. An RCT on the exact question: 0.7–0.85. A company
      self-report, case study or count-the-mentions review: 0.2–0.5. Confidence decides
