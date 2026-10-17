@@ -9,8 +9,10 @@ interface Props {
   source: SourceView;
   /** Shown under the title inside the summary (channel, novelty, superseded...). */
   meta?: string;
+  /** Radio-group scope: a source appears in Top 5 and the table, and radios with one name would act as one group. */
+  group: string;
 }
-const { source: s, meta } = Astro.props;
+const { source: s, meta, group } = Astro.props;
 const small = 'text-sm text-muted-foreground';
 const chips = [
   { v: 'novel', label: 'Novel', has: (c: SourceClaimView) => c.novel },
@@ -55,8 +57,8 @@ const chips = [
             <input
               type="radio"
               class="sr-only"
-              id={`f-${s.id}-${f.v}`}
-              name={`f-${s.id}`}
+              id={`f-${group}-${s.id}-${f.v}`}
+              name={`f-${group}-${s.id}`}
               value={f.v}
               checked={i === 0}
               disabled={!n}

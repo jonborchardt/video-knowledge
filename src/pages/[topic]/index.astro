@@ -17,12 +17,12 @@ const { t } = Astro.props as { t: Topic };
 const tabs = [
   { id: 'recap', label: 'Recap' },
   { id: 'top', label: 'Top 5' },
-  ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'What the studies changed' }] : []),
   ...(t.superseded.length ? [{ id: 'minds', label: 'Changed minds' }] : []),
   { id: 'wrong-claims', label: `Wrong (${t.wrong.length})` },
   { id: 'contested-claims', label: `Contested (${t.contested.length})` },
   { id: 'claims', label: `All claims (${t.claims.length})` },
   { id: 'sources', label: `Videos & posts (${t.counted})` },
+  ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'What the studies changed' }] : []),
 ];
 const filters = (['right', 'partly', 'wrong', 'untestable', 'unknown'] as const)
   .map((v) => ({ v, n: t.claims.filter((c) => (c.verdict ?? 'unknown') === v).length }))
@@ -255,7 +255,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       {
         t.top.map((s) => (
           <li>
-            <SourceDetails source={s} meta={`${s.channel} · novelty ${s.novelty.toFixed(2)}`}>
+            <SourceDetails source={s} group="top" meta={`${s.channel} · novelty ${s.novelty.toFixed(2)}`}>
               {s.summary && <p class:list={[small, 'ml-[1.4em]']}>{s.summary}</p>}
             </SourceDetails>
           </li>
@@ -276,6 +276,115 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
         </p>
       )
     }
+  </section>
+
+  {
+    t.superseded.length > 0 && (
+      <section id="minds">
+        <h2 class={h2}>Changed minds</h2>
+        <p class:list={[small, 'mb-3']}>
+          When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts
+          toward claims or novelty. Evidence recorded on it still counts.
+        </p>
+        <ul class={list}>
+          {t.superseded.map((s) => (
+            <li>
+              {s.title} → superseded by {s.by}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section id="wrong-claims">
+    <h2 class={h2}>Judged wrong</h2>
+    <p class:list={[small, 'mb-3']}>
+      The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.
+    </p>
+    {t.wrong.map((c) => <ClaimCard claim={c} group="wrong" />)}
+    {t.wrong.length === 0 && <p class={small}>None.</p>}
+  </section>
+
+  <section id="contested-claims">
+    <h2 class={h2}>Contested</h2>
+    <p class:list={[small, 'mb-3']}>Claims some sources assert and others deny.</p>
+    {t.contested.map((c) => <ClaimCard claim={c} group="contested" />)}
+    {t.contested.length === 0 && <p class={small}>None.</p>}
+  </section>
+
+  <section id="claims">
+    <h2 class={h2}>All claims</h2>
+    <div class="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter by verdict" data-filters>
+      <input
+        id="q"
+        type="search"
+        placeholder="Search claims"
+        aria-label="Search claims"
+        class="min-w-0 flex-[1_1_200px] rounded-md border border-input bg-card px-2.5 py-1.5 text-sm"
+      />
+      {
+        [{ v: 'all', n: t.claims.length }, ...filters].map((f) => (
+          <button
+            type="button"
+            data-filter={f.v}
+            aria-pressed={f.v === 'all' ? 'true' : 'false'}
+            class="cursor-pointer rounded-md border border-input bg-card px-2.5 py-1.5 text-sm aria-pressed:border-primary aria-pressed:font-medium aria-pressed:text-primary"
+          >
+            {f.v} ({f.n})
+          </button>
+        ))
+      }
+    </div>
+    <p class:list={[small, 'mb-3']} role="status" data-status>
+      Showing {t.claims.length} of {t.claims.length} claims.
+    </p>
+    <div data-claims>
+      {t.claims.map((c) => <ClaimCard claim={c} group="all" />)}
+    </div>
+  </section>
+
+  <section id="sources">
+    <h2 class={h2}>Videos and posts</h2>
+    <p class:list={[small, 'mb-3']}>
+      Score: −1 mostly wrong, 0 mixed, 1 mostly right, 2 right, from the verdicts on the claims each source makes.
+      Novelty adds up, for each claim a source gets right or correctly refutes, the verdict's confidence divided by how
+      many sources take the same stance; 1 is about one unique, well-supported point.
+    </p>
+    <div class="overflow-x-auto">
+      <table
+        class="w-full border-collapse text-sm [&_td]:border-t [&_td]:px-1.5 [&_td]:py-2 [&_td]:align-top [&_th]:px-1.5 [&_th]:py-2 [&_th]:text-left [&_th]:font-mono [&_th]:text-xs [&_th]:font-normal [&_th]:tracking-[.04em] [&_th]:text-muted-foreground [&_th]:uppercase"
+      >
+        <thead>
+          <tr>
+            <th scope="col">Score</th>
+            <th scope="col">Source</th>
+            <th scope="col">Novelty</th>
+            <th scope="col" class="max-sm:hidden">Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            t.sources.map((s) => (
+              <tr class:list={[s.superseded && 'text-muted-foreground [&_a]:text-muted-foreground']}>
+                <td class:list={['font-mono font-semibold whitespace-nowrap tabular-nums', scoreColour(s.score)]}>
+                  {s.score == null ? '–' : `${s.score > 0 ? '+' : ''}${s.score}`}
+                </td>
+                <td>
+                  <SourceDetails
+                    source={s}
+                    group="sources"
+                    meta={`${s.channel}${s.superseded ? ' · superseded' : ''}`}
+                  />
+                </td>
+                <td class="font-mono whitespace-nowrap tabular-nums">{s.novelty.toFixed(2)}</td>
+                <td class:list={[small, 'max-sm:hidden']}>{s.worthWatching}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
   </section>
 
   {
@@ -308,111 +417,6 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       </section>
     )
   }
-
-  {
-    t.superseded.length > 0 && (
-      <section id="minds">
-        <h2 class={h2}>Changed minds</h2>
-        <p class:list={[small, 'mb-3']}>
-          When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts
-          toward claims or novelty. Evidence recorded on it still counts.
-        </p>
-        <ul class={list}>
-          {t.superseded.map((s) => (
-            <li>
-              {s.title} → superseded by {s.by}
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
-
-  <section id="wrong-claims">
-    <h2 class={h2}>Judged wrong</h2>
-    <p class:list={[small, 'mb-3']}>
-      The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.
-    </p>
-    {t.wrong.map((c) => <ClaimCard claim={c} />)}
-    {t.wrong.length === 0 && <p class={small}>None.</p>}
-  </section>
-
-  <section id="contested-claims">
-    <h2 class={h2}>Contested</h2>
-    <p class:list={[small, 'mb-3']}>Claims some sources assert and others deny.</p>
-    {t.contested.map((c) => <ClaimCard claim={c} />)}
-    {t.contested.length === 0 && <p class={small}>None.</p>}
-  </section>
-
-  <section id="claims">
-    <h2 class={h2}>All claims</h2>
-    <div class="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter by verdict" data-filters>
-      <input
-        id="q"
-        type="search"
-        placeholder="Search claims"
-        aria-label="Search claims"
-        class="min-w-0 flex-[1_1_200px] rounded-md border border-input bg-card px-2.5 py-1.5 text-sm"
-      />
-      {
-        [{ v: 'all', n: t.claims.length }, ...filters].map((f) => (
-          <button
-            type="button"
-            data-filter={f.v}
-            aria-pressed={f.v === 'all' ? 'true' : 'false'}
-            class="cursor-pointer rounded-md border border-input bg-card px-2.5 py-1.5 text-sm aria-pressed:border-primary aria-pressed:font-medium aria-pressed:text-primary"
-          >
-            {f.v} ({f.n})
-          </button>
-        ))
-      }
-    </div>
-    <p class:list={[small, 'mb-3']} role="status" data-status>
-      Showing {t.claims.length} of {t.claims.length} claims.
-    </p>
-    <div data-claims>
-      {t.claims.map((c) => <ClaimCard claim={c} />)}
-    </div>
-  </section>
-
-  <section id="sources">
-    <h2 class={h2}>Videos and posts</h2>
-    <p class:list={[small, 'mb-3']}>
-      Score: −1 mostly wrong, 0 mixed, 1 mostly right, 2 right, from the verdicts on the claims each source makes.
-      Novelty adds up, for each claim a source gets right or correctly refutes, the verdict's confidence divided by how
-      many sources take the same stance; 1 is about one unique, well-supported point.
-    </p>
-    <div class="overflow-x-auto">
-      <table
-        class="w-full border-collapse text-sm [&_td]:border-t [&_td]:px-1.5 [&_td]:py-2 [&_td]:align-top [&_th]:px-1.5 [&_th]:py-2 [&_th]:text-left [&_th]:font-mono [&_th]:text-xs [&_th]:font-normal [&_th]:tracking-[.04em] [&_th]:text-muted-foreground [&_th]:uppercase"
-      >
-        <thead>
-          <tr>
-            <th scope="col">Score</th>
-            <th scope="col">Source</th>
-            <th scope="col">Novelty</th>
-            <th scope="col" class="max-sm:hidden">Verdict</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            t.sources.map((s) => (
-              <tr class:list={[s.superseded && 'text-muted-foreground [&_a]:text-muted-foreground']}>
-                <td class:list={['font-mono font-semibold whitespace-nowrap tabular-nums', scoreColour(s.score)]}>
-                  {s.score == null ? '–' : `${s.score > 0 ? '+' : ''}${s.score}`}
-                </td>
-                <td>
-                  <SourceDetails source={s} meta={`${s.channel}${s.superseded ? ' · superseded' : ''}`} />
-                </td>
-                <td class="font-mono whitespace-nowrap tabular-nums">{s.novelty.toFixed(2)}</td>
-                <td class:list={[small, 'max-sm:hidden']}>{s.worthWatching}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
-  </section>
 </Base>
 
 <style is:global>
@@ -426,6 +430,12 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
   [data-source]:has([value='wrong']:checked) li:not([data-v='wrong']),
   [data-source]:has([value='partly']:checked) li:not([data-v='partly']),
   [data-source]:has([value='untestable']:checked) li:not([data-v='untestable'], [data-v='unknown']) {
+    display: none;
+  }
+  /* Claim chips, same idea: asserting sources, denying sources, or the verdicts. */
+  [data-claim]:has([value='asserts']:checked) li:not([data-k='asserts']),
+  [data-claim]:has([value='denies']:checked) li:not([data-k='denies']),
+  [data-claim]:has([value='verdict']:checked) li:not([data-k='verdict']) {
     display: none;
   }
 </style>

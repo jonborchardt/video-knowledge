@@ -1,5 +1,6 @@
 ---
 // One claim, expandable to the sources behind its asserted/denied counts and every verdict recorded on it.
+// The chip filter is CSS only; the rules keyed on [data-claim] live in the topic page's style block.
 import type { ClaimView } from '../lib/topics';
 import { site } from '../config/site';
 import SourceLink from './SourceLink.astro';
@@ -7,8 +8,10 @@ import VerdictBadge from './VerdictBadge.astro';
 
 interface Props {
   claim: ClaimView;
+  /** Radio-group scope: the same claim appears in several sections, and radios with one name would act as one group. */
+  group: string;
 }
-const { claim: c } = Astro.props;
+const { claim: c, group } = Astro.props;
 const decided = c.decidedBy
   ? `decided by study: ${c.decidedBy}${c.studies > 1 ? ` (+${c.studies - 1} more)` : ''}`
   : c.studies
@@ -16,14 +19,20 @@ const decided = c.decidedBy
     : 'AI guess only';
 const asserts = c.sources.filter((s) => s.stance === 'asserts');
 const denies = c.sources.filter((s) => s.stance === 'denies');
+const chips = [
+  { v: 'asserts', label: 'Asserts', n: asserts.length },
+  { v: 'denies', label: 'Denies', n: denies.length },
+  { v: 'verdict', label: 'Verdicts', n: c.verdicts.length },
+];
+const first = chips.findIndex((f) => f.n);
+const slug = c.id.split('/').pop();
 const small = 'text-sm text-muted-foreground';
-const h = 'mt-3 mb-1 font-mono text-xs tracking-[.04em] text-muted-foreground uppercase';
 // Study citations point at the committed sources text in the repo; GitHub honours the #L10-L24 anchor.
 const citeHref = (cite: string) => `${site.repo}/blob/main/${cite}`;
 const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
 ---
 
-<details class="group border-t py-3" data-verdict={c.verdict ?? 'unknown'}>
+<details class="group border-t py-3" data-verdict={c.verdict ?? 'unknown'} data-claim>
   <summary class="grid cursor-pointer list-none gap-1 [&::-webkit-details-marker]:hidden">
     <div class="flex items-baseline justify-between gap-2.5">
       <p>
@@ -38,55 +47,60 @@ const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
     </span>
   </summary>
   <div class="ml-[1.4em]">
-    {
-      [
-        { label: 'Asserted by', list: asserts },
-        { label: 'Denied by', list: denies },
-      ].map(
-        (g) =>
-          g.list.length > 0 && (
-            <>
-              <h4 class={h}>
-                {g.label} ({g.list.length})
-              </h4>
-              <ul class="grid gap-1.5">
-                {g.list.map((s) => (
-                  <li class="grid gap-0.5">
-                    <span>
-                      <SourceLink source={s} /> <span class={small}>({s.channel})</span>
-                    </span>
-                    {s.quote && <span class={small}>“{s.quote}”</span>}
-                  </li>
-                ))}
-              </ul>
-            </>
-          ),
-      )
-    }
-    {
-      c.verdicts.length > 0 && (
-        <>
-          <h4 class={h}>Verdicts ({c.verdicts.length})</h4>
-          <ul class="grid gap-1.5">
-            {c.verdicts.map((v) => (
-              <li class="grid gap-0.5">
-                <span>
-                  <VerdictBadge verdict={v.verdict} confidence={v.confidence} /> {v.by}
-                  {v.cite && (
-                    <>
-                      {' '}
-                      <a class={small} href={citeHref(v.cite)}>
-                        lines {citeLines(v.cite)}
-                      </a>
-                    </>
-                  )}
-                </span>
-                {v.note && <span class={small}>{v.note}</span>}
-              </li>
-            ))}
-          </ul>
-        </>
-      )
-    }
+    <fieldset class="mt-2 flex flex-wrap gap-1.5">
+      <legend class="sr-only">Show</legend>
+      {
+        chips.map((f, i) => (
+          <label
+            class:list={[
+              'cursor-pointer rounded-full border px-2 py-0.5 font-mono text-xs has-checked:border-foreground has-checked:bg-foreground has-checked:text-background',
+              !f.n && 'text-muted-foreground opacity-50',
+            ]}
+          >
+            <input
+              type="radio"
+              class="sr-only"
+              id={`c-${group}-${slug}-${f.v}`}
+              name={`c-${group}-${slug}`}
+              value={f.v}
+              checked={i === first}
+              disabled={!f.n}
+            />
+            {f.label} ({f.n})
+          </label>
+        ))
+      }
+    </fieldset>
+    <ul class="mt-1 grid gap-2 py-1">
+      {
+        [...asserts, ...denies].map((s) => (
+          <li data-k={s.stance} class="grid gap-0.5 border-t pt-2">
+            <span>
+              {s.stance === 'denies' && <span class="font-mono text-xs text-muted-foreground">DENIES </span>}
+              <SourceLink source={s} /> <span class={small}>({s.channel})</span>
+            </span>
+            {s.quote && <span class={small}>“{s.quote}”</span>}
+          </li>
+        ))
+      }
+      {
+        c.verdicts.map((v) => (
+          <li data-k="verdict" class="grid gap-0.5 border-t pt-2">
+            <span>
+              <VerdictBadge verdict={v.verdict} confidence={v.confidence} /> {v.by}
+              {v.cite && (
+                <>
+                  {' '}
+                  <a class={small} href={citeHref(v.cite)}>
+                    lines {citeLines(v.cite)}
+                  </a>
+                </>
+              )}
+            </span>
+            {v.note && <span class={small}>{v.note}</span>}
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </details>
