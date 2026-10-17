@@ -66,39 +66,5 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       <slot />
     </main>
     <SiteFooter />
-
-    <!-- Back to top, as on the blog: shown once the page is scrolled past 400px. -->
-    <button
-      id="back-to-top"
-      aria-label="Back to top"
-      hidden
-      class="fixed right-4 bottom-4 z-20 cursor-pointer rounded-full border bg-card p-3 text-muted-foreground shadow-md hover:text-foreground print:hidden"
-    >
-      <svg
-        aria-hidden="true"
-        width="20"
-        height="20"
-        viewBox="0 0 20 20"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      >
-        <path d="M10 16V4M4 10l6-6 6 6"></path>
-      </svg>
-    </button>
-    <script is:inline>
-      {
-        const toTop = document.getElementById('back-to-top');
-        addEventListener('scroll', () => (toTop.hidden = scrollY < 400), { passive: true });
-        toTop.addEventListener('click', () =>
-          scrollTo({
-            top: 0,
-            behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-          }),
-        );
-      }
-    </script>
   </body>
 </html>
