@@ -1,22 +1,24 @@
 {
  "topic": "get-rich-quick",
  "story": "decision:mlm-and-seminars",
- "revision": 2,
- "date": "2026-10-17T19:14:26.403Z",
- "status": "blocked",
- "scriptFingerprint": "e798a4fd2c",
+ "revision": 3,
+ "date": "2026-10-17T22:25:35.789Z",
+ "status": "needs-review",
+ "scriptFingerprint": "bc0f3418c8",
  "packageFingerprint": "c189733721",
  "wordsPerMinute": 150,
- "words": 1790,
+ "words": 1696,
+ "spokenWords": 1788,
  "minutes": 11.9,
  "counts": {
-  "sentences": 67,
-  "factual": 50,
-  "assertions": 59,
+  "sentences": 66,
+  "factual": 49,
+  "assertions": 56,
   "verified": 0,
-  "blocking": 9,
-  "warnings": 30,
-  "unreviewed": 58
+  "blocking": 0,
+  "warnings": 18,
+  "dispositioned": 0,
+  "unreviewed": 66
  },
  "revisionLimitReached": false,
  "sentences": [
@@ -47,25 +49,26 @@
   {
    "id": "s03",
    "section": "hook",
-   "text": "The recruiters have a word for that second part: one trainer promises to show you how to \"finally create the leverage that you need inside of your network marketing business\".",
+   "text": "The recruiters have a word for that second part: one trainer, Frazer Brookes, promises to show you how to \"finally create the leverage that you need inside of your network marketing business\".",
    "type": "attributed",
-   "fingerprint": "70b057d3eb",
-   "words": 30,
+   "fingerprint": "f9a72bb1f7",
+   "words": 32,
    "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s03.a",
-     "text": "A network-marketing trainer promises to show viewers how to \"finally create the leverage that you need inside of your network marketing business\".",
+     "text": "Network-marketing trainer Frazer Brookes promises to show viewers how to \"finally create the leverage that you need inside of your network marketing business\".",
      "kind": "attribution",
      "quote": {
       "text": "finally create the leverage that you need inside of your network marketing business",
-      "source": "m1jU_e8ogok"
+      "source": "m1jU_e8ogok",
+      "speaker": "Frazer Brookes"
      },
      "status": "needs-review",
      "validation": {
       "id": "s03.a",
-      "text": "A network-marketing trainer promises to show viewers how to \"finally create the leverage that you need inside of your network marketing business\".",
+      "text": "Network-marketing trainer Frazer Brookes promises to show viewers how to \"finally create the leverage that you need inside of your network marketing business\".",
       "kind": "attribution",
       "modality": "plain",
       "status": "supported",
@@ -157,15 +160,6 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s03.a"
-      },
-      {
-       "sentence": "s03",
-       "category": "speaker-missing",
-       "severity": "warning",
-       "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-       "by": "deterministic",
-       "assertion": "s03.a",
-       "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
       }
      ]
     }
@@ -351,11 +345,11 @@
   {
    "id": "s08",
    "section": "setup",
-   "text": "To answer it we have three kinds of evidence: 70 of the companies' own income disclosure statements, read closely by Federal Trade Commission staff; a nationally representative survey of 601 participants by AARP; and an analysis of 30 companies by Jon Taylor, an independent analyst who argues against the industry.",
+   "text": "To answer it we have the companies' own numbers first: 70 income disclosure statements, read closely by Federal Trade Commission staff.",
    "type": "factual",
-   "fingerprint": "27cfec392b",
-   "words": 50,
-   "status": "blocked",
+   "fingerprint": "c0052ef64c",
+   "words": 21,
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
@@ -428,14 +422,27 @@
        "assertion": "s08.a"
       }
      ]
-    },
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s68",
+   "section": "setup",
+   "text": "Then a nationally representative survey of 601 participants by AARP.",
+   "type": "factual",
+   "fingerprint": "14c9c3c1c0",
+   "words": 10,
+   "status": "needs-review",
+   "approved": false,
+   "assertions": [
     {
-     "id": "s08.b",
+     "id": "s68.a",
      "text": "AARP surveyed a nationally representative probability sample of 601 current and former MLM participants.",
      "kind": "fact",
      "status": "needs-review",
      "validation": {
-      "id": "s08.b",
+      "id": "s68.a",
       "text": "AARP surveyed a nationally representative probability sample of 601 current and former MLM participants.",
       "kind": "fact",
       "modality": "plain",
@@ -491,22 +498,35 @@
      },
      "issues": [
       {
-       "sentence": "s08",
+       "sentence": "s68",
        "category": "wording",
        "severity": "info",
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s08.b"
+       "assertion": "s68.a"
       }
      ]
-    },
+    }
+   ],
+   "issues": []
+  },
+  {
+   "id": "s69",
+   "section": "setup",
+   "text": "And an analysis of 30 companies by Jon Taylor, an independent analyst who argues against the industry.",
+   "type": "factual",
+   "fingerprint": "5f99294acf",
+   "words": 17,
+   "status": "needs-review",
+   "approved": false,
+   "assertions": [
     {
-     "id": "s08.c",
+     "id": "s69.a",
      "text": "Jon Taylor analysed the compensation plans and earnings data of 30 MLMs.",
      "kind": "fact",
      "status": "needs-review",
      "validation": {
-      "id": "s08.c",
+      "id": "s69.a",
       "text": "Jon Taylor analysed the compensation plans and earnings data of 30 MLMs.",
       "kind": "fact",
       "modality": "plain",
@@ -566,50 +586,42 @@
      },
      "issues": [
       {
-       "sentence": "s08",
+       "sentence": "s69",
        "category": "needs-qualification",
        "severity": "warning",
        "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
-       "assertion": "s08.c",
+       "assertion": "s69.a",
        "suggestion": "The writer says the narration carries it: The sentence itself says he argues against the industry; s52 repeats it."
       }
      ]
     }
    ],
-   "issues": [
-    {
-     "sentence": "s08",
-     "category": "figure-without-assertion",
-     "severity": "blocking",
-     "explanation": "the figure \"3\" is in no assertion of this sentence",
-     "by": "deterministic",
-     "suggestion": "Add an assertion that states \"3\" and cites the passage it comes from."
-    }
-   ]
+   "issues": []
   },
   {
    "id": "s09",
    "section": "setup",
-   "text": "First, the promise, in the recruiters' own words: one coach tells his audience that once the team grows, \"it starts to compound\", like a snowball; another says the person you bring in \"might recruit 10 people themselves and have an organization of a thousand people\".",
+   "text": "First, the promise, in the recruiters' own words: one coach, Darin Kidd, tells his audience that once the team grows, \"it starts to compound\", like a snowball; Frazer Brookes says the person you bring in \"might recruit 10 people themselves and have an organization of a thousand people\".",
    "type": "attributed",
-   "fingerprint": "517dbc6867",
-   "words": 45,
+   "fingerprint": "4686cf0983",
+   "words": 48,
    "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s09.a",
-     "text": "A network-marketing coach tells his audience that a growing team means \"it starts to compound\" and likens it to a snowball.",
+     "text": "Network-marketing coach Darin Kidd tells his audience that a growing team means \"it starts to compound\" and likens it to a snowball.",
      "kind": "attribution",
      "quote": {
       "text": "it starts to compound",
-      "source": "KL2HjMUP7gA"
+      "source": "KL2HjMUP7gA",
+      "speaker": "Darin Kidd"
      },
      "status": "needs-review",
      "validation": {
       "id": "s09.a",
-      "text": "A network-marketing coach tells his audience that a growing team means \"it starts to compound\" and likens it to a snowball.",
+      "text": "Network-marketing coach Darin Kidd tells his audience that a growing team means \"it starts to compound\" and likens it to a snowball.",
       "kind": "attribution",
       "modality": "plain",
       "status": "supported",
@@ -701,30 +713,22 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s09.a"
-      },
-      {
-       "sentence": "s09",
-       "category": "speaker-missing",
-       "severity": "warning",
-       "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-       "by": "deterministic",
-       "assertion": "s09.a",
-       "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
       }
      ]
     },
     {
      "id": "s09.b",
-     "text": "A network-marketing trainer says the person you bring in \"might recruit 10 people themselves and have an organization of a thousand people\".",
+     "text": "Frazer Brookes says the person you bring in \"might recruit 10 people themselves and have an organization of a thousand people\".",
      "kind": "attribution",
      "quote": {
       "text": "might recruit 10 people themselves and have an organization of a thousand people",
-      "source": "1eWkeNDmQj4"
+      "source": "1eWkeNDmQj4",
+      "speaker": "Frazer Brookes"
      },
      "status": "needs-review",
      "validation": {
       "id": "s09.b",
-      "text": "A network-marketing trainer says the person you bring in \"might recruit 10 people themselves and have an organization of a thousand people\".",
+      "text": "Frazer Brookes says the person you bring in \"might recruit 10 people themselves and have an organization of a thousand people\".",
       "kind": "attribution",
       "modality": "possibility",
       "status": "supported",
@@ -816,15 +820,6 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s09.b"
-      },
-      {
-       "sentence": "s09",
-       "category": "speaker-missing",
-       "severity": "warning",
-       "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-       "by": "deterministic",
-       "assertion": "s09.b",
-       "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
       }
      ]
     }
@@ -834,25 +829,26 @@
   {
    "id": "s10",
    "section": "setup",
-   "text": "Another trainer puts the whole idea in one line: it would be \"better to have a smaller percentage of 100 people than 100 of yourself\".",
+   "text": "Another trainer, Eric Worre, puts the whole idea in one line: it would be \"better to have a smaller percentage of 100 people than 100 of yourself\".",
    "type": "attributed",
-   "fingerprint": "f58da1f3b7",
-   "words": 25,
+   "fingerprint": "9bb3fc1560",
+   "words": 27,
    "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s10.a",
-     "text": "A prominent network-marketing trainer says it is \"better to have a smaller percentage of 100 people than 100 of yourself\".",
+     "text": "Network-marketing trainer Eric Worre says it is \"better to have a smaller percentage of 100 people than 100 of yourself\".",
      "kind": "attribution",
      "quote": {
       "text": "better to have a smaller percentage of 100 people than 100 of yourself",
-      "source": "ZKva-dT6g8E"
+      "source": "ZKva-dT6g8E",
+      "speaker": "Eric Worre"
      },
      "status": "needs-review",
      "validation": {
       "id": "s10.a",
-      "text": "A prominent network-marketing trainer says it is \"better to have a smaller percentage of 100 people than 100 of yourself\".",
+      "text": "Network-marketing trainer Eric Worre says it is \"better to have a smaller percentage of 100 people than 100 of yourself\".",
       "kind": "attribution",
       "modality": "plain",
       "status": "supported",
@@ -944,15 +940,6 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s10.a"
-      },
-      {
-       "sentence": "s10",
-       "category": "speaker-missing",
-       "severity": "warning",
-       "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-       "by": "deterministic",
-       "assertion": "s10.a",
-       "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
       }
      ]
     }
@@ -976,7 +963,7 @@
    "section": "setup",
    "text": "The critics have their own one-liner; in a clip John Oliver's show played, a former Herbalife distributor puts it this way: \"You make money from signing people up.\"",
    "type": "attributed",
-   "fingerprint": "6701ba4e90",
+   "fingerprint": "3da6b7b551",
    "words": 28,
    "status": "needs-review",
    "approved": false,
@@ -987,7 +974,8 @@
      "kind": "attribution",
      "quote": {
       "text": "You make money from signing people up.",
-      "source": "s6MwGeOm8iI"
+      "source": "s6MwGeOm8iI",
+      "speaker": "distributor"
      },
      "status": "needs-review",
      "validation": {
@@ -1052,15 +1040,6 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s12.a"
-      },
-      {
-       "sentence": "s12",
-       "category": "speaker-missing",
-       "severity": "warning",
-       "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-       "by": "deterministic",
-       "assertion": "s12.a",
-       "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
       }
      ]
     }
@@ -1070,25 +1049,26 @@
   {
    "id": "s13",
    "section": "setup",
-   "text": "Even the FTC's own consumer page says, flatly, that \"Most people who join legitimate MLMs make little or no money.\"",
+   "text": "Even the FTC's own Consumer Advice page says, flatly, that \"Most people who join legitimate MLMs make little or no money.\"",
    "type": "attributed",
-   "fingerprint": "e259266104",
-   "words": 20,
+   "fingerprint": "dc65a7843c",
+   "words": 21,
    "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s13.a",
-     "text": "The FTC's consumer advice page states that \"Most people who join legitimate MLMs make little or no money.\"",
+     "text": "The FTC's Consumer Advice page states that \"Most people who join legitimate MLMs make little or no money.\"",
      "kind": "attribution",
      "quote": {
       "text": "Most people who join legitimate MLMs make little or no money.",
-      "source": "consumer-ftc-multi-level-marketing-businesses-pyramid-schemes"
+      "source": "consumer-ftc-multi-level-marketing-businesses-pyramid-schemes",
+      "speaker": "Consumer Advice"
      },
      "status": "needs-review",
      "validation": {
       "id": "s13.a",
-      "text": "The FTC's consumer advice page states that \"Most people who join legitimate MLMs make little or no money.\"",
+      "text": "The FTC's Consumer Advice page states that \"Most people who join legitimate MLMs make little or no money.\"",
       "kind": "attribution",
       "modality": "typical",
       "status": "supported",
@@ -1131,15 +1111,6 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s13.a"
-      },
-      {
-       "sentence": "s13",
-       "category": "speaker-missing",
-       "severity": "warning",
-       "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-       "by": "deterministic",
-       "assertion": "s13.a",
-       "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
       }
      ]
     }
@@ -1427,27 +1398,27 @@
    "section": "investigation",
    "text": "First, who gets counted: of the 70 statements, 29 leave out participants who earned no commission, and another 24 leave out anyone the company has labelled inactive.",
    "type": "factual",
-   "fingerprint": "42ec80afb0",
+   "fingerprint": "3c76bd0b1a",
    "words": 27,
-   "status": "blocked",
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s19.a",
      "text": "Of the 70 disclosures, 29 exclude from their income distribution participants who earned no commissions, and another 24 exclude participants the MLM deems inactive.",
      "kind": "fact",
-     "status": "blocked",
+     "status": "needs-review",
      "validation": {
       "id": "s19.a",
       "text": "Of the 70 disclosures, 29 exclude from their income distribution participants who earned no commissions, and another 24 exclude participants the MLM deems inactive.",
       "kind": "fact",
       "modality": "plain",
-      "status": "unverified",
-      "decision": "blocked",
-      "review": false,
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
       "verbatim": false,
       "strength": 0.5,
-      "independent": 1,
+      "independent": 2,
       "supporting": [
        {
         "ref": {
@@ -1464,6 +1435,22 @@
         "applicability": "direct",
         "basis": "heuristic",
         "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "get-rich-quick/most-mlm-participants-earn-little-nothing",
+         "cite": "get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "FTC MLM report summary",
+        "verdict": "right",
+        "confidence": 0.4,
+        "note": "FTC summary of 70 income disclosures: most participants made $1,000 or less a year before expenses, and in at least 17 MLMs most participants made nothing at all.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
        }
       ],
       "contradicting": [],
@@ -1471,22 +1458,19 @@
       "context": [],
       "problems": [],
       "limitations": [
-       "The figure \"70\" does not appear in the cited passages."
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
-      "suggestions": [
-       "Drop \"70\" or cite a passage that states it."
-      ],
-      "explanation": "unverified (blocked): 1 supporting (1 independent, strongest 0.5)."
+      "suggestions": [],
+      "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.5)."
      },
      "issues": [
       {
        "sentence": "s19",
-       "category": "invented-number",
-       "severity": "blocking",
-       "explanation": "The figure \"70\" does not appear in the cited passages.",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s19.a",
-       "suggestion": "Drop \"70\" or cite a passage that states it."
+       "assertion": "s19.a"
       }
      ]
     }
@@ -1856,11 +1840,11 @@
   {
    "id": "s25",
    "section": "investigation",
-   "text": "The top row averages just over $1,018,350, and holds fewer than 0.01 percent of participants; as the FTC puts it, half the rows in that table describe half of one percent of the people.",
+   "text": "The top row averages just over $1,018,350, and holds fewer than 0.01 percent of participants; as the FTC puts it, half the rows in that table describe half a percent of the people.",
    "type": "factual",
-   "fingerprint": "1ef21460c1",
-   "words": 34,
-   "status": "blocked",
+   "fingerprint": "105cda9f6c",
+   "words": 33,
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
@@ -2050,16 +2034,7 @@
      ]
     }
    ],
-   "issues": [
-    {
-     "sentence": "s25",
-     "category": "figure-without-assertion",
-     "severity": "blocking",
-     "explanation": "the figure \"1\" is in no assertion of this sentence",
-     "by": "deterministic",
-     "suggestion": "Add an assertion that states \"1\" and cites the passage it comes from."
-    }
-   ]
+   "issues": []
   },
   {
    "id": "s26",
@@ -2160,10 +2135,10 @@
   {
    "id": "s28",
    "section": "investigation",
-   "text": "Among the 601 current and former participants it reached, 47 percent said they lost money, 27 percent said they broke even, and 25 percent said they made a profit, counting their entire time in the business.",
+   "text": "Among the 601 people it reached, 47 percent said they lost money, 27 percent said they broke even, and the rest, a quarter, said they made a profit, counting their entire time in the business.",
    "type": "factual",
-   "fingerprint": "5078ca61b5",
-   "words": 36,
+   "fingerprint": "6b3cf2314c",
+   "words": 35,
    "status": "needs-review",
    "approved": false,
    "assertions": [
@@ -2244,21 +2219,21 @@
   {
    "id": "s29",
    "section": "investigation",
-   "text": "Profit, for most of that quarter, was small: 14 percent of all participants made under $5,000 in total, and only 3 percent made $25,000 or more.",
+   "text": "Profit, for most of that quarter, was small, and so were most of the losses: on both sides of the ledger the commonest outcome was under $5,000.",
    "type": "factual",
-   "fingerprint": "2f397d7968",
-   "words": 26,
+   "fingerprint": "187b44dc0d",
+   "words": 27,
    "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s29.a",
-     "text": "Of the 601 participants, 14% made less than $5,000 in profit and 3% made $25,000 or more.",
+     "text": "Of the 601 participants, 14% made less than $5,000 in profit (of the 25% who profited) and 41% lost less than $5,000 (of the 47% who lost money).",
      "kind": "fact",
      "status": "needs-review",
      "validation": {
       "id": "s29.a",
-      "text": "Of the 601 participants, 14% made less than $5,000 in profit and 3% made $25,000 or more.",
+      "text": "Of the 601 participants, 14% made less than $5,000 in profit (of the 25% who profited) and 41% lost less than $5,000 (of the 47% who lost money).",
       "kind": "fact",
       "modality": "plain",
       "status": "supported",
@@ -2283,6 +2258,22 @@
         "applicability": "direct",
         "basis": "review",
         "why": "the survey measures exactly the claim's population and question (profit or loss over the whole time in the MLM, nationally representative sample); self-report limits precision, not scope, and the narration must say so"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "get-rich-quick/most-mlm-participants-earn-little-nothing",
+         "cite": "get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "AARP MLM survey 2018",
+        "verdict": "right",
+        "confidence": 0.65,
+        "note": "Nationally representative probability sample of 601 current/former MLM participants: 47% reported losing money, 27% broke even and only 25% made any profit over their whole time in the MLM.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
        }
       ],
       "contradicting": [],
@@ -2293,7 +2284,7 @@
        "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
       "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.65)."
+      "explanation": "supported (approved): 2 supporting (1 independent, strongest 0.65)."
      },
      "issues": [
       {
@@ -2312,21 +2303,21 @@
   {
    "id": "s30",
    "section": "investigation",
-   "text": "Three people, half of one percent of the sample, reported profits of $100,000 or more; those three had each been in the business more than five years, and one of them had founded the company.",
+   "text": "Only three people in the whole sample reported profits of $100,000 or more, and one of them had founded the company.",
    "type": "factual",
-   "fingerprint": "c5d6dc45e2",
-   "words": 35,
+   "fingerprint": "3946ef4f69",
+   "words": 21,
    "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s30.a",
-     "text": "Three individuals, half of one percent of the sample, reported profits of $100,000 or more; the three had each worked as direct sellers for more than 5 years, and one reported founding the organization.",
+     "text": "Only three individuals, half of one percent of the sample, reported profits of $100,000 or more; one of them reported founding the organization.",
      "kind": "fact",
      "status": "needs-review",
      "validation": {
       "id": "s30.a",
-      "text": "Three individuals, half of one percent of the sample, reported profits of $100,000 or more; the three had each worked as direct sellers for more than 5 years, and one reported founding the organization.",
+      "text": "Only three individuals, half of one percent of the sample, reported profits of $100,000 or more; one of them reported founding the organization.",
       "kind": "fact",
       "modality": "plain",
       "status": "supported",
@@ -2371,74 +2362,6 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s30.a"
-      }
-     ]
-    }
-   ],
-   "issues": []
-  },
-  {
-   "id": "s31",
-   "section": "investigation",
-   "text": "On the other side of the ledger, 41 percent lost less than $5,000, 3 percent lost $5,000 to $9,999, and 1 percent lost more than $10,000.",
-   "type": "factual",
-   "fingerprint": "a27ce99d5b",
-   "words": 26,
-   "status": "needs-review",
-   "approved": false,
-   "assertions": [
-    {
-     "id": "s31.a",
-     "text": "Of the 601 participants, 41% lost less than $5,000, 3% lost $5,000 to $9,999 and 1% lost more than $10,000.",
-     "kind": "fact",
-     "status": "needs-review",
-     "validation": {
-      "id": "s31.a",
-      "text": "Of the 601 participants, 41% lost less than $5,000, 3% lost $5,000 to $9,999 and 1% lost more than $10,000.",
-      "kind": "fact",
-      "modality": "plain",
-      "status": "supported",
-      "decision": "approved",
-      "review": true,
-      "verbatim": false,
-      "strength": 0.65,
-      "independent": 1,
-      "supporting": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "get-rich-quick/most-mlm-participants-earn-little-nothing",
-         "cite": "get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392"
-        },
-        "cited": true,
-        "role": "supports",
-        "by": "AARP MLM survey 2018",
-        "verdict": "right",
-        "confidence": 0.65,
-        "note": "Of the 601 surveyed participants, 25% made any profit over their whole time in the MLM: 14% under $5,000, 6% $5,000 to $9,999, 3% $10,000 to $24,999, 3% $25,000 or more, and 3 people (0.5%) $100,000 or more; 47% lost money (41% under $5,000, 3% $5,000 to $9,999, 1% over $10,000) and 27% broke even; all self-reported.",
-        "applicability": "direct",
-        "basis": "review",
-        "why": "the survey measures exactly the claim's population and question (profit or loss over the whole time in the MLM, nationally representative sample); self-report limits precision, not scope, and the narration must say so"
-       }
-      ],
-      "contradicting": [],
-      "qualifying": [],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [],
-      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.65)."
-     },
-     "issues": [
-      {
-       "sentence": "s31",
-       "category": "wording",
-       "severity": "info",
-       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-       "by": "deterministic",
-       "assertion": "s31.a"
       }
      ]
     }
@@ -2838,7 +2761,7 @@
    "section": "investigation",
    "text": "The recruiters reject that framing; the same trainer insists that \"you don't get paid for the act of building the team you only get paid when sales happen to a customer\".",
    "type": "attributed",
-   "fingerprint": "7db2e95a0e",
+   "fingerprint": "356b343d8a",
    "words": 31,
    "status": "needs-review",
    "approved": false,
@@ -2849,7 +2772,8 @@
      "kind": "attribution",
      "quote": {
       "text": "you don't get paid for the act of building the team you only get paid when sales happen to a customer",
-      "source": "ZKva-dT6g8E"
+      "source": "ZKva-dT6g8E",
+      "speaker": "Eric Worre"
      },
      "status": "needs-review",
      "validation": {
@@ -2932,15 +2856,6 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s36.a"
-      },
-      {
-       "sentence": "s36",
-       "category": "speaker-missing",
-       "severity": "warning",
-       "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-       "by": "deterministic",
-       "assertion": "s36.a",
-       "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
       }
      ]
     }
@@ -3250,26 +3165,26 @@
   {
    "id": "s41",
    "section": "investigation",
-   "text": "His own estimate is blunter: across the 30 companies, after subtracting required purchases and modest expenses, he puts the share losing money at 99.6 percent, about one in 238 profiting.",
+   "text": "His own estimate is blunter: across those companies, after subtracting required purchases and modest expenses, he puts the share losing money at 99.6 percent, about one in 238 profiting.",
    "type": "factual",
-   "fingerprint": "ac8361e981",
-   "words": 30,
-   "status": "blocked",
+   "fingerprint": "b3c685e871",
+   "words": 29,
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s41.a",
-     "text": "Across 30 MLMs, after subtracting required purchases and modest expenses, Taylor calculates that an average of 99.6% of participants lost money and about one in 238 profited.",
+     "text": "Across the MLMs he analysed, after subtracting required purchases and modest expenses, Taylor calculates that an average of 99.6% of participants lost money and about one in 238 profited.",
      "kind": "fact",
-     "status": "blocked",
+     "status": "needs-review",
      "validation": {
       "id": "s41.a",
-      "text": "Across 30 MLMs, after subtracting required purchases and modest expenses, Taylor calculates that an average of 99.6% of participants lost money and about one in 238 profited.",
+      "text": "Across the MLMs he analysed, after subtracting required purchases and modest expenses, Taylor calculates that an average of 99.6% of participants lost money and about one in 238 profited.",
       "kind": "fact",
       "modality": "plain",
-      "status": "unverified",
-      "decision": "blocked",
-      "review": false,
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
       "verbatim": false,
       "strength": 0.55,
       "independent": 1,
@@ -3296,22 +3211,19 @@
       "context": [],
       "problems": [],
       "limitations": [
-       "The figure \"30\" does not appear in the cited passages."
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
-      "suggestions": [
-       "Drop \"30\" or cite a passage that states it."
-      ],
-      "explanation": "unverified (blocked): 1 supporting (1 independent, strongest 0.55)."
+      "suggestions": [],
+      "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.55)."
      },
      "issues": [
       {
        "sentence": "s41",
-       "category": "invented-number",
-       "severity": "blocking",
-       "explanation": "The figure \"30\" does not appear in the cited passages.",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s41.a",
-       "suggestion": "Drop \"30\" or cite a passage that states it."
+       "assertion": "s41.a"
       }
      ]
     }
@@ -3391,7 +3303,7 @@
    "section": "investigation",
    "text": "Critics like to finish with arithmetic; in John Oliver's version, if each recruit brings in a handful more, \"you could only do that 13 cycles and you would exceed the population of the earth.\"",
    "type": "attributed",
-   "fingerprint": "83dae697cc",
+   "fingerprint": "c05ef26ca7",
    "words": 34,
    "status": "needs-review",
    "approved": false,
@@ -3402,7 +3314,8 @@
      "kind": "attribution",
      "quote": {
       "text": "you could only do that 13 cycles and you would exceed the population of the earth.",
-      "source": "s6MwGeOm8iI"
+      "source": "s6MwGeOm8iI",
+      "speaker": "John Oliver"
      },
      "status": "needs-review",
      "validation": {
@@ -3499,35 +3412,11 @@
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
        "assertion": "s43.a"
-      },
-      {
-       "sentence": "s43",
-       "category": "speaker-missing",
-       "severity": "warning",
-       "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-       "by": "deterministic",
-       "assertion": "s43.a",
-       "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
       }
      ]
     }
    ],
-   "issues": [
-    {
-     "sentence": "s43",
-     "assertion": "s43.a",
-     "fingerprint": "83dae697cc",
-     "revision": 1,
-     "category": "needs-human",
-     "severity": "info",
-     "explanation": "The attribution is accurate: Oliver himself says 'Let's say five. Then you let the five do their five ... you could only do that 13 cycles and you would exceed the population of the earth', so 'a handful' is fair. Note for the editor: with five per person the cumulative total after 13 cycles is about 1.5 billion, not the world's population; the script does not endorse the figure and s54 calls it an untested thought experiment, which covers it.",
-     "refs": [
-      "get-rich-quick/store/transcripts/s6MwGeOm8iI.txt"
-     ],
-     "suggestion": "No change required; avoid any later wording that treats the 13-cycle figure as correct.",
-     "by": "review"
-    }
-   ]
+   "issues": []
   },
   {
    "id": "s44",
@@ -3864,9 +3753,9 @@
    "section": "findings",
    "text": "The companies' own statements: most participants received $1,000 or less in a year, before expenses, and most of the tables leave some participants out entirely.",
    "type": "factual",
-   "fingerprint": "0214523532",
+   "fingerprint": "a81fc39b12",
    "words": 25,
-   "status": "blocked",
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
@@ -3942,20 +3831,20 @@
     },
     {
      "id": "s46.b",
-     "text": "Most of the 70 disclosures do not depict the income distribution across all participants: 29 exclude those with no commissions and another 24 exclude participants deemed inactive.",
+     "text": "Most of the 70 disclosures do not depict the full income distribution: 29 exclude those with no commissions and another 24 exclude participants deemed inactive.",
      "kind": "fact",
-     "status": "blocked",
+     "status": "needs-review",
      "validation": {
       "id": "s46.b",
-      "text": "Most of the 70 disclosures do not depict the income distribution across all participants: 29 exclude those with no commissions and another 24 exclude participants deemed inactive.",
+      "text": "Most of the 70 disclosures do not depict the full income distribution: 29 exclude those with no commissions and another 24 exclude participants deemed inactive.",
       "kind": "fact",
-      "modality": "universal",
-      "status": "unverified",
-      "decision": "blocked",
-      "review": false,
+      "modality": "typical",
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
       "verbatim": false,
       "strength": 0.5,
-      "independent": 1,
+      "independent": 2,
       "supporting": [
        {
         "ref": {
@@ -3972,6 +3861,22 @@
         "applicability": "direct",
         "basis": "heuristic",
         "why": "the verdict bears on the claim as worded"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "get-rich-quick/most-mlm-participants-earn-little-nothing",
+         "cite": "get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "FTC MLM report summary",
+        "verdict": "right",
+        "confidence": 0.4,
+        "note": "FTC summary of 70 income disclosures: most participants made $1,000 or less a year before expenses, and in at least 17 MLMs most participants made nothing at all.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
        }
       ],
       "contradicting": [],
@@ -3979,23 +3884,19 @@
       "context": [],
       "problems": [],
       "limitations": [
-       "\"all\" is stronger than the evidence (strongest support 0.5).",
-       "The figure \"70\" does not appear in the cited passages."
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
-      "suggestions": [
-       "Drop \"70\" or cite a passage that states it."
-      ],
-      "explanation": "unverified (blocked): 1 supporting (1 independent, strongest 0.5)."
+      "suggestions": [],
+      "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.5)."
      },
      "issues": [
       {
        "sentence": "s46",
-       "category": "invented-number",
-       "severity": "blocking",
-       "explanation": "\"all\" is stronger than the evidence (strongest support 0.5). The figure \"70\" does not appear in the cited passages.",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s46.b",
-       "suggestion": "Drop \"70\" or cite a passage that states it."
+       "assertion": "s46.b"
       }
      ]
     }
@@ -4005,10 +3906,10 @@
   {
    "id": "s47",
    "section": "findings",
-   "text": "The survey: 47 percent lost, 27 percent broke even, 25 percent profited, and of that 25, 14 points made under $5,000.",
+   "text": "The survey: 47 percent lost, 27 percent broke even, a quarter profited, mostly under $5,000; the analyst: 99.6 percent losing, once required purchases are counted as a cost.",
    "type": "factual",
-   "fingerprint": "04c40b620a",
-   "words": 21,
+   "fingerprint": "321be85bf4",
+   "words": 28,
    "status": "needs-review",
    "approved": false,
    "assertions": [
@@ -4082,27 +3983,14 @@
        "assertion": "s47.a"
       }
      ]
-    }
-   ],
-   "issues": []
-  },
-  {
-   "id": "s48",
-   "section": "findings",
-   "text": "The analyst: 99.6 percent losing, once required purchases are counted as a cost.",
-   "type": "factual",
-   "fingerprint": "0d872814ed",
-   "words": 13,
-   "status": "needs-review",
-   "approved": false,
-   "assertions": [
+    },
     {
-     "id": "s48.a",
+     "id": "s47.b",
      "text": "Taylor calculates an average of 99.6% of participants losing money after subtracting required purchases and expenses.",
      "kind": "fact",
      "status": "needs-review",
      "validation": {
-      "id": "s48.a",
+      "id": "s47.b",
       "text": "Taylor calculates an average of 99.6% of participants losing money after subtracting required purchases and expenses.",
       "kind": "fact",
       "modality": "plain",
@@ -4142,177 +4030,12 @@
      },
      "issues": [
       {
-       "sentence": "s48",
+       "sentence": "s47",
        "category": "wording",
        "severity": "info",
        "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s48.a"
-      }
-     ]
-    }
-   ],
-   "issues": []
-  },
-  {
-   "id": "s49",
-   "section": "findings",
-   "text": "And on the central promise: the plans do route money upward from a downline, and the rank tables show where that leaves most people, because in table after table the FTC looked at, the vast majority sit in the two or three lowest ranks with the smallest amounts.",
-   "type": "factual",
-   "fingerprint": "3ed55f56e5",
-   "words": 48,
-   "status": "needs-review",
-   "approved": false,
-   "assertions": [
-    {
-     "id": "s49.a",
-     "text": "MLM pay plans route commissions to participants for the purchases of people they recruit.",
-     "kind": "fact",
-     "status": "needs-review",
-     "validation": {
-      "id": "s49.a",
-      "text": "MLM pay plans route commissions to participants for the purchases of people they recruit.",
-      "kind": "fact",
-      "modality": "plain",
-      "status": "qualified",
-      "decision": "qualify",
-      "review": true,
-      "verbatim": false,
-      "strength": 0,
-      "independent": 0,
-      "supporting": [],
-      "contradicting": [],
-      "qualifying": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "get-rich-quick/mlm-income-comes-mainly-recruiting-leading",
-         "cite": "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205"
-        },
-        "cited": true,
-        "role": "qualifies",
-        "by": "FTC MLM income disclosure report 2024",
-        "verdict": "partly",
-        "confidence": 0.3,
-        "note": "The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income.",
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [
-       "Add the qualification: the evidence supports a narrower or weaker statement."
-      ],
-      "explanation": "qualified (qualify): no direct support, 1 qualifying."
-     },
-     "issues": [
-      {
-       "sentence": "s49",
-       "category": "needs-qualification",
-       "severity": "warning",
-       "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
-       "by": "deterministic",
-       "assertion": "s49.a",
-       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
-      }
-     ]
-    },
-    {
-     "id": "s49.b",
-     "text": "In nearly each rank-based disclosure the FTC reviewed, the vast majority of participants are in the two or three lowest ranks with correspondingly low income amounts.",
-     "kind": "fact",
-     "status": "needs-review",
-     "validation": {
-      "id": "s49.b",
-      "text": "In nearly each rank-based disclosure the FTC reviewed, the vast majority of participants are in the two or three lowest ranks with correspondingly low income amounts.",
-      "kind": "fact",
-      "modality": "typical",
-      "status": "qualified",
-      "decision": "qualify",
-      "review": true,
-      "verbatim": false,
-      "strength": 0,
-      "independent": 0,
-      "supporting": [],
-      "contradicting": [],
-      "qualifying": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "get-rich-quick/exponential-recruiting-exhausts-population-within-dozen",
-         "cite": "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L801-L866"
-        },
-        "cited": true,
-        "role": "qualifies",
-        "by": "FTC MLM income disclosure report 2024",
-        "verdict": "partly",
-        "confidence": 0.5,
-        "note": "In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       },
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "get-rich-quick/exponential-recruiting-exhausts-population-within-dozen",
-         "cite": "get-rich-quick/sources/taylor-case-against-mlm.txt#L1328-L1335"
-        },
-        "cited": false,
-        "role": "qualifies",
-        "by": "Taylor, The Case against MLM",
-        "verdict": "partly",
-        "confidence": 0.4,
-        "note": "Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       },
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "get-rich-quick/exponential-recruiting-exhausts-population-within-dozen",
-         "cite": "get-rich-quick/sources/aarp-2018-mlm-study.txt#L463-L467"
-        },
-        "cited": false,
-        "role": "qualifies",
-        "by": "AARP MLM survey 2018",
-        "verdict": "partly",
-        "confidence": 0.3,
-        "note": "Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test.",
-        "applicability": "partial",
-        "basis": "heuristic",
-        "why": "the verdict note limits its own scope (\"self-reported\")"
-       }
-      ],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic.",
-       "Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic.",
-       "AARP MLM survey 2018: Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test. [partial: the verdict note limits its own scope (\"self-reported\")]",
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [
-       "Add the qualification: the evidence supports a narrower or weaker statement."
-      ],
-      "explanation": "qualified (qualify): no direct support, 3 qualifying."
-     },
-     "issues": [
-      {
-       "sentence": "s49",
-       "category": "needs-qualification",
-       "severity": "warning",
-       "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
-       "by": "deterministic",
-       "assertion": "s49.b",
-       "suggestion": "The writer says the narration carries it: The sentence reports the structure and the tables side by side without a causal claim; s53 and s54 state what is described and what is untested."
+       "assertion": "s47.b"
       }
      ]
     }
@@ -4630,11 +4353,11 @@
   {
    "id": "s54",
    "section": "qualifications",
-   "text": "And the thirteen-cycles arithmetic is a thought experiment that none of these studies tested; the rank tables show where people end up, not why.",
+   "text": "And the population arithmetic is a thought experiment that none of these studies tested; the rank tables show where people end up, not why.",
    "type": "factual",
-   "fingerprint": "0130e43450",
+   "fingerprint": "943964d06f",
    "words": 24,
-   "status": "blocked",
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
@@ -4731,16 +4454,7 @@
      ]
     }
    ],
-   "issues": [
-    {
-     "sentence": "s54",
-     "category": "figure-without-assertion",
-     "severity": "blocking",
-     "explanation": "the figure \"13\" is in no assertion of this sentence",
-     "by": "deterministic",
-     "suggestion": "Add an assertion that states \"13\" and cites the passage it comes from."
-    }
-   ]
+   "issues": []
   },
   {
    "id": "s55",
@@ -4757,11 +4471,11 @@
   {
    "id": "s56",
    "section": "implications",
-   "text": "The survey says the most likely outcome, by a wide margin, is that you lose money or break even: 74 percent of participants did, nearly three in four.",
+   "text": "The survey says the most likely outcome, by a wide margin, is that you lose money or break even: 74 percent of participants did.",
    "type": "factual",
-   "fingerprint": "c17e08aa88",
-   "words": 28,
-   "status": "blocked",
+   "fingerprint": "30757deb28",
+   "words": 24,
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
@@ -4835,40 +4549,31 @@
      ]
     }
    ],
-   "issues": [
-    {
-     "sentence": "s56",
-     "category": "figure-without-assertion",
-     "severity": "blocking",
-     "explanation": "the figure \"3\" is in no assertion of this sentence",
-     "by": "deterministic",
-     "suggestion": "Add an assertion that states \"3\" and cites the passage it comes from."
-    }
-   ]
+   "issues": []
   },
   {
    "id": "s57",
    "section": "implications",
    "text": "If you do profit, the same survey suggests it will most likely be under $5,000 over your whole time in the business.",
    "type": "factual",
-   "fingerprint": "3cdf067781",
+   "fingerprint": "42744d41df",
    "words": 22,
-   "status": "blocked",
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s57.a",
      "text": "Of the 25% of surveyed participants who made a profit, the largest group, 14% of participants, made less than $5,000 over their entire time in the MLM.",
      "kind": "fact",
-     "status": "blocked",
+     "status": "needs-review",
      "validation": {
       "id": "s57.a",
       "text": "Of the 25% of surveyed participants who made a profit, the largest group, 14% of participants, made less than $5,000 over their entire time in the MLM.",
       "kind": "fact",
       "modality": "plain",
-      "status": "unverified",
-      "decision": "blocked",
-      "review": false,
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
       "verbatim": false,
       "strength": 0.65,
       "independent": 1,
@@ -4888,6 +4593,22 @@
         "applicability": "direct",
         "basis": "review",
         "why": "the survey measures exactly the claim's population and question (profit or loss over the whole time in the MLM, nationally representative sample); self-report limits precision, not scope, and the narration must say so"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "get-rich-quick/most-mlm-participants-earn-little-nothing",
+         "cite": "get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "AARP MLM survey 2018",
+        "verdict": "right",
+        "confidence": 0.65,
+        "note": "Nationally representative probability sample of 601 current/former MLM participants: 47% reported losing money, 27% broke even and only 25% made any profit over their whole time in the MLM.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
        }
       ],
       "contradicting": [],
@@ -4895,22 +4616,19 @@
       "context": [],
       "problems": [],
       "limitations": [
-       "The figure \"25\" does not appear in the cited passages."
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
-      "suggestions": [
-       "Drop \"25\" or cite a passage that states it."
-      ],
-      "explanation": "unverified (blocked): 1 supporting (1 independent, strongest 0.65)."
+      "suggestions": [],
+      "explanation": "supported (approved): 2 supporting (1 independent, strongest 0.65)."
      },
      "issues": [
       {
        "sentence": "s57",
-       "category": "invented-number",
-       "severity": "blocking",
-       "explanation": "The figure \"25\" does not appear in the cited passages.",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s57.a",
-       "suggestion": "Drop \"25\" or cite a passage that states it."
+       "assertion": "s57.a"
       }
      ]
     }
@@ -5085,24 +4803,24 @@
    "section": "conclusion",
    "text": "A quarter made some profit, mostly small, and half of one percent made a lot.",
    "type": "factual",
-   "fingerprint": "208a80126b",
+   "fingerprint": "536974eb33",
    "words": 15,
-   "status": "blocked",
+   "status": "needs-review",
    "approved": false,
    "assertions": [
     {
      "id": "s61.a",
      "text": "25% of surveyed participants made a profit, 14% of participants making less than $5,000, and half of one percent reported profits of $100,000 or more.",
      "kind": "fact",
-     "status": "blocked",
+     "status": "needs-review",
      "validation": {
       "id": "s61.a",
       "text": "25% of surveyed participants made a profit, 14% of participants making less than $5,000, and half of one percent reported profits of $100,000 or more.",
       "kind": "fact",
       "modality": "plain",
-      "status": "unverified",
-      "decision": "blocked",
-      "review": false,
+      "status": "supported",
+      "decision": "approved",
+      "review": true,
       "verbatim": false,
       "strength": 0.65,
       "independent": 1,
@@ -5122,6 +4840,22 @@
         "applicability": "direct",
         "basis": "review",
         "why": "the survey measures exactly the claim's population and question (profit or loss over the whole time in the MLM, nationally representative sample); self-report limits precision, not scope, and the narration must say so"
+       },
+       {
+        "ref": {
+         "kind": "study",
+         "claim": "get-rich-quick/most-mlm-participants-earn-little-nothing",
+         "cite": "get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139"
+        },
+        "cited": true,
+        "role": "supports",
+        "by": "AARP MLM survey 2018",
+        "verdict": "right",
+        "confidence": 0.65,
+        "note": "Nationally representative probability sample of 601 current/former MLM participants: 47% reported losing money, 27% broke even and only 25% made any profit over their whole time in the MLM.",
+        "applicability": "direct",
+        "basis": "heuristic",
+        "why": "the verdict bears on the claim as worded"
        }
       ],
       "contradicting": [],
@@ -5129,22 +4863,19 @@
       "context": [],
       "problems": [],
       "limitations": [
-       "The figure \"25\" does not appear in the cited passages."
+       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
       ],
-      "suggestions": [
-       "Drop \"25\" or cite a passage that states it."
-      ],
-      "explanation": "unverified (blocked): 1 supporting (1 independent, strongest 0.65)."
+      "suggestions": [],
+      "explanation": "supported (approved): 2 supporting (1 independent, strongest 0.65)."
      },
      "issues": [
       {
        "sentence": "s61",
-       "category": "invented-number",
-       "severity": "blocking",
-       "explanation": "The figure \"25\" does not appear in the cited passages.",
+       "category": "wording",
+       "severity": "info",
+       "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
        "by": "deterministic",
-       "assertion": "s61.a",
-       "suggestion": "Drop \"25\" or cite a passage that states it."
+       "assertion": "s61.a"
       }
      ]
     }
@@ -5360,159 +5091,13 @@
  ],
  "issues": [
   {
-   "sentence": "s08",
-   "category": "figure-without-assertion",
-   "severity": "blocking",
-   "explanation": "the figure \"3\" is in no assertion of this sentence",
-   "by": "deterministic",
-   "suggestion": "Add an assertion that states \"3\" and cites the passage it comes from."
-  },
-  {
-   "sentence": "s19",
-   "category": "invented-number",
-   "severity": "blocking",
-   "explanation": "The figure \"70\" does not appear in the cited passages.",
-   "by": "deterministic",
-   "assertion": "s19.a",
-   "suggestion": "Drop \"70\" or cite a passage that states it."
-  },
-  {
-   "sentence": "s25",
-   "category": "figure-without-assertion",
-   "severity": "blocking",
-   "explanation": "the figure \"1\" is in no assertion of this sentence",
-   "by": "deterministic",
-   "suggestion": "Add an assertion that states \"1\" and cites the passage it comes from."
-  },
-  {
-   "sentence": "s41",
-   "category": "invented-number",
-   "severity": "blocking",
-   "explanation": "The figure \"30\" does not appear in the cited passages.",
-   "by": "deterministic",
-   "assertion": "s41.a",
-   "suggestion": "Drop \"30\" or cite a passage that states it."
-  },
-  {
-   "sentence": "s46",
-   "category": "invented-number",
-   "severity": "blocking",
-   "explanation": "\"all\" is stronger than the evidence (strongest support 0.5). The figure \"70\" does not appear in the cited passages.",
-   "by": "deterministic",
-   "assertion": "s46.b",
-   "suggestion": "Drop \"70\" or cite a passage that states it."
-  },
-  {
-   "sentence": "s54",
-   "category": "figure-without-assertion",
-   "severity": "blocking",
-   "explanation": "the figure \"13\" is in no assertion of this sentence",
-   "by": "deterministic",
-   "suggestion": "Add an assertion that states \"13\" and cites the passage it comes from."
-  },
-  {
-   "sentence": "s56",
-   "category": "figure-without-assertion",
-   "severity": "blocking",
-   "explanation": "the figure \"3\" is in no assertion of this sentence",
-   "by": "deterministic",
-   "suggestion": "Add an assertion that states \"3\" and cites the passage it comes from."
-  },
-  {
-   "sentence": "s57",
-   "category": "invented-number",
-   "severity": "blocking",
-   "explanation": "The figure \"25\" does not appear in the cited passages.",
-   "by": "deterministic",
-   "assertion": "s57.a",
-   "suggestion": "Drop \"25\" or cite a passage that states it."
-  },
-  {
-   "sentence": "s61",
-   "category": "invented-number",
-   "severity": "blocking",
-   "explanation": "The figure \"25\" does not appear in the cited passages.",
-   "by": "deterministic",
-   "assertion": "s61.a",
-   "suggestion": "Drop \"25\" or cite a passage that states it."
-  },
-  {
-   "sentence": "-",
-   "category": "stale-package",
-   "severity": "warning",
-   "explanation": "the script was written from evidence package 4824306bfc; the current package is c189733721",
-   "by": "deterministic"
-  },
-  {
-   "sentence": "s43",
-   "category": "unreproducible-ref",
-   "severity": "warning",
-   "explanation": "the finding cites \"get-rich-quick/store/transcripts/s6MwGeOm8iI.txt\", which is outside the repository",
-   "by": "deterministic",
-   "suggestion": "Cite the package context or a committed source path."
-  },
-  {
-   "sentence": "s03",
-   "category": "speaker-missing",
-   "severity": "warning",
-   "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-   "by": "deterministic",
-   "assertion": "s03.a",
-   "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
-  },
-  {
-   "sentence": "s08",
+   "sentence": "s69",
    "category": "needs-qualification",
    "severity": "warning",
    "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
-   "assertion": "s08.c",
+   "assertion": "s69.a",
    "suggestion": "The writer says the narration carries it: The sentence itself says he argues against the industry; s52 repeats it."
-  },
-  {
-   "sentence": "s09",
-   "category": "speaker-missing",
-   "severity": "warning",
-   "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-   "by": "deterministic",
-   "assertion": "s09.a",
-   "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
-  },
-  {
-   "sentence": "s09",
-   "category": "speaker-missing",
-   "severity": "warning",
-   "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-   "by": "deterministic",
-   "assertion": "s09.b",
-   "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
-  },
-  {
-   "sentence": "s10",
-   "category": "speaker-missing",
-   "severity": "warning",
-   "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-   "by": "deterministic",
-   "assertion": "s10.a",
-   "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
-  },
-  {
-   "sentence": "s12",
-   "category": "speaker-missing",
-   "severity": "warning",
-   "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-   "by": "deterministic",
-   "assertion": "s12.a",
-   "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
-  },
-  {
-   "sentence": "s13",
-   "category": "speaker-missing",
-   "severity": "warning",
-   "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-   "by": "deterministic",
-   "assertion": "s13.a",
-   "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
   },
   {
    "sentence": "s23",
@@ -5578,15 +5163,6 @@
    "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
   },
   {
-   "sentence": "s36",
-   "category": "speaker-missing",
-   "severity": "warning",
-   "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-   "by": "deterministic",
-   "assertion": "s36.a",
-   "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
-  },
-  {
    "sentence": "s37",
    "category": "needs-qualification",
    "severity": "warning",
@@ -5614,15 +5190,6 @@
    "suggestion": "The writer says the narration carries it: s41 and s52 say Taylor's loss rate is an estimate under stated assumptions."
   },
   {
-   "sentence": "s43",
-   "category": "speaker-missing",
-   "severity": "warning",
-   "explanation": "the quotation names no speaker; the reviewer confirms the narration does not say who spoke",
-   "by": "deterministic",
-   "assertion": "s43.a",
-   "suggestion": "Set quote.speaker to the name, role or show the narration attributes the words to."
-  },
-  {
    "sentence": "s44",
    "category": "needs-qualification",
    "severity": "warning",
@@ -5648,24 +5215,6 @@
    "by": "deterministic",
    "assertion": "s67.a",
    "suggestion": "The writer says the narration carries it: The sentence says these are reasons people gave for leaving, which s50 notes are self-reported."
-  },
-  {
-   "sentence": "s49",
-   "category": "needs-qualification",
-   "severity": "warning",
-   "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
-   "by": "deterministic",
-   "assertion": "s49.a",
-   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
-  },
-  {
-   "sentence": "s49",
-   "category": "needs-qualification",
-   "severity": "warning",
-   "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
-   "by": "deterministic",
-   "assertion": "s49.b",
-   "suggestion": "The writer says the narration carries it: The sentence reports the structure and the tables side by side without a causal claim; s53 and s54 state what is described and what is untested."
   },
   {
    "sentence": "s53",
@@ -5743,12 +5292,12 @@
    "assertion": "s08.a"
   },
   {
-   "sentence": "s08",
+   "sentence": "s68",
    "category": "wording",
    "severity": "info",
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
-   "assertion": "s08.b"
+   "assertion": "s68.a"
   },
   {
    "sentence": "s09",
@@ -5815,6 +5364,14 @@
    "assertion": "s17.a"
   },
   {
+   "sentence": "s19",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s19.a"
+  },
+  {
    "sentence": "s21",
    "category": "wording",
    "severity": "info",
@@ -5863,14 +5420,6 @@
    "assertion": "s30.a"
   },
   {
-   "sentence": "s31",
-   "category": "wording",
-   "severity": "info",
-   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
-   "by": "deterministic",
-   "assertion": "s31.a"
-  },
-  {
    "sentence": "s65",
    "category": "wording",
    "severity": "info",
@@ -5895,26 +5444,20 @@
    "assertion": "s36.a"
   },
   {
+   "sentence": "s41",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s41.a"
+  },
+  {
    "sentence": "s42",
    "category": "wording",
    "severity": "info",
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
    "assertion": "s42.a"
-  },
-  {
-   "sentence": "s43",
-   "assertion": "s43.a",
-   "fingerprint": "83dae697cc",
-   "revision": 1,
-   "category": "needs-human",
-   "severity": "info",
-   "explanation": "The attribution is accurate: Oliver himself says 'Let's say five. Then you let the five do their five ... you could only do that 13 cycles and you would exceed the population of the earth', so 'a handful' is fair. Note for the editor: with five per person the cumulative total after 13 cycles is about 1.5 billion, not the world's population; the script does not endorse the figure and s54 calls it an untested thought experiment, which covers it.",
-   "refs": [
-    "get-rich-quick/store/transcripts/s6MwGeOm8iI.txt"
-   ],
-   "suggestion": "No change required; avoid any later wording that treats the 13-cycle figure as correct.",
-   "by": "review"
   },
   {
    "sentence": "s43",
@@ -5933,6 +5476,14 @@
    "assertion": "s46.a"
   },
   {
+   "sentence": "s46",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s46.b"
+  },
+  {
    "sentence": "s47",
    "category": "wording",
    "severity": "info",
@@ -5941,12 +5492,12 @@
    "assertion": "s47.a"
   },
   {
-   "sentence": "s48",
+   "sentence": "s47",
    "category": "wording",
    "severity": "info",
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
-   "assertion": "s48.a"
+   "assertion": "s47.b"
   },
   {
    "sentence": "s50",
@@ -5981,6 +5532,14 @@
    "assertion": "s56.a"
   },
   {
+   "sentence": "s57",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s57.a"
+  },
+  {
    "sentence": "s60",
    "category": "wording",
    "severity": "info",
@@ -5995,6 +5554,14 @@
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
    "assertion": "s60.b"
+  },
+  {
+   "sentence": "s61",
+   "category": "wording",
+   "severity": "info",
+   "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
+   "by": "deterministic",
+   "assertion": "s61.a"
   }
  ],
  "resolved": [
@@ -6274,6 +5841,20 @@
    ],
    "suggestion": "Say 'in the nationally representative survey' or 'in the one nationally representative survey we have here'.",
    "resolvedBy": 2
+  },
+  {
+   "sentence": "s43",
+   "assertion": "s43.a",
+   "fingerprint": "83dae697cc",
+   "revision": 1,
+   "category": "needs-human",
+   "severity": "info",
+   "explanation": "The attribution is accurate: Oliver himself says 'Let's say five. Then you let the five do their five ... you could only do that 13 cycles and you would exceed the population of the earth', so 'a handful' is fair. Note for the editor: with five per person the cumulative total after 13 cycles is about 1.5 billion, not the world's population; the script does not endorse the figure and s54 calls it an untested thought experiment, which covers it.",
+   "refs": [
+    "get-rich-quick/store/transcripts/s6MwGeOm8iI.txt"
+   ],
+   "suggestion": "No change required; avoid any later wording that treats the 13-cycle figure as correct.",
+   "resolvedBy": 3
   }
  ],
  "history": [
@@ -6290,6 +5871,13 @@
    "status": "blocked",
    "blocking": 9,
    "warnings": 30
+  },
+  {
+   "revision": 3,
+   "date": "2026-10-17T22:25:35.789Z",
+   "status": "needs-review",
+   "blocking": 0,
+   "warnings": 18
   }
  ]
 }
