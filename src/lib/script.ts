@@ -607,7 +607,8 @@ export function validateScript(
   // A finding's references must be reproducible from the repository: no URLs, no absolute paths, no gitignored caches.
   const unreproducible = (ref: string) =>
     /^https?:/i.test(ref) || /^([A-Za-z]:)?[\\/]/.test(ref) || /(^|\/)(store\/transcripts|work)\//.test(ref);
-  for (const f of open)
+  for (const f of review?.findings ?? [])
+    // open or resolved: history must stay reproducible too
     for (const ref of f.refs ?? [])
       if (unreproducible(ref))
         top.push(

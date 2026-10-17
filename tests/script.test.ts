@@ -693,6 +693,9 @@ describe('reproducible evidence', () => {
     expect(run(s, { ...r, findings: [finding([DOC_D])] }).issues.map((i) => i.category)).not.toContain(
       'unreproducible-ref',
     );
+    // A resolved finding (its sentence changed) is history that must stay reproducible too.
+    const resolved = { ...finding(['demo/store/transcripts/s1a.txt']), fingerprint: 'stale' };
+    expect(run(s, { ...r, findings: [resolved] }).issues.map((i) => i.category)).toContain('unreproducible-ref');
   });
 
   it('resolved findings survive their removal from the review file', () => {
