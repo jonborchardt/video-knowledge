@@ -257,6 +257,17 @@ const facts = [
                 </tbody>
               </table>
             )}
+            {s.visual.assetIds?.length ? (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Assets.</strong>{' '}
+                {s.visual.assetIds
+                  .map(
+                    (id) =>
+                      `${id} (${sb.assets?.[id]?.kind ?? '?'}: ${sb.assets?.[id]?.description ?? 'unregistered'})`,
+                  )
+                  .join('; ')}
+              </p>
+            ) : null}
             {s.citations?.length ? (
               <p class:list={[small, 'mt-1']}>
                 <strong>Cite.</strong>{' '}

@@ -118,6 +118,7 @@ export const plan = (scenes: StoryboardPlan['scenes'], s = good()): StoryboardPl
   story: s.story,
   scriptFingerprint: scriptFingerprint(s),
   generation: { model: 'test', brief: 'b', date: 'd' },
+  assets: {},
   scenes,
 });
 export const scene = (

@@ -11,7 +11,13 @@ import {
   words,
 } from '../src/lib/script';
 import { spokenWords } from '../src/lib/numbers';
-import { type ChartPoint, type ChartSpec, type ChartType, buildStoryboard } from '../src/lib/storyboard';
+import {
+  type ChartPoint,
+  type ChartSpec,
+  type ChartType,
+  type StoryboardPlan,
+  buildStoryboard,
+} from '../src/lib/storyboard';
 import { TOPIC, claim, study } from './corpus';
 import {
   DOC_D,
@@ -481,6 +487,50 @@ describe('storyboard', () => {
     expect(sb.scenes[1].duration).toBeCloseTo(sb.scenes[1].timing[0].duration + 1, 5);
     expect(t[1].duration).toBeGreaterThan((words(sentences(s)[1].text) / 150) * 60); // "601" and "47" lengthen it
     expect(sb.scenes[1].timing[0].start).toBeCloseTo(sb.scenes[1].start, 5); // absolute, not scene-relative
+  });
+
+  it('scenes reference registered assets by id', () => {
+    const s = good();
+    const v = run(s, approveAll(s, pkg()));
+    const withAssets = (
+      ids: string[],
+      assets: StoryboardPlan['assets'],
+      extra: Partial<StoryboardPlan['scenes'][0]['visual']> = {},
+    ) => ({
+      ...plan([
+        scene('sc1', ['s01', 's02', 's03'], {
+          visual: { category: 'diagram', description: 'tree', assetIds: ids, ...extra },
+        }),
+      ]),
+      assets,
+    });
+    const issues = (p: StoryboardPlan) => buildStoryboard(p, s, v, pkg(), read).issues;
+    expect(
+      buildStoryboard(
+        withAssets(['tree'], { tree: { kind: 'component', description: 'node tree' } }),
+        s,
+        v,
+        pkg(),
+        read,
+      ).status,
+    ).toBe('ok');
+    expect(issues(withAssets(['ghost'], {})).map((i) => i.category)).toContain('asset');
+    expect(
+      issues(withAssets([], { unused: { kind: 'image', description: 'x' } })).some(
+        (i) => i.category === 'asset' && i.severity === 'warning',
+      ),
+    ).toBe(true);
+    const doc = { page: { kind: 'document-render' as const, description: 'the rank table' } };
+    expect(issues(withAssets(['page'], doc)).some((i) => i.category === 'asset' && i.severity === 'warning')).toBe(
+      true,
+    );
+    expect(
+      issues(withAssets(['page'], doc, { excerpt: { cite: DOC_D } })).filter((i) => i.category === 'asset'),
+    ).toEqual([]);
+    const legacy = withAssets([], {}, { assets: ['a free-text asset'] } as unknown as Partial<
+      StoryboardPlan['scenes'][0]['visual']
+    >);
+    expect(issues(legacy).map((i) => i.category)).toContain('asset');
   });
 
   it('accepts numeric points whose display matches the value and the passage', () => {

@@ -55,18 +55,25 @@ export interface ScenePlan {
     onScreenText?: string[];
     chart?: ChartSpec;
     excerpt?: { cite: string; highlight?: string }; // document-excerpt: the passage to show and the words to mark
-    assets?: string[]; // what has to be made or found
+    assetIds?: string[]; // ids in StoryboardPlan.assets: what has to be made or found for this scene
   };
   citations?: { label: string; cite?: string; source?: string }[]; // shown on screen, tied to this scene's claim
   direction?: string; // transition, animation, timing guidance
   pauseSeconds?: number; // intentional silence added to the narration time
   narration?: string; // optional: if present it must equal the script's words exactly
 }
+// Required assets, registered once and referenced by id, kept apart from the prose guidance in visual.description.
+export type AssetKind = 'component' | 'animation' | 'image' | 'document-render';
+export interface Asset {
+  kind: AssetKind;
+  description: string;
+}
 export interface StoryboardPlan {
   topic: string;
   story: string;
   scriptFingerprint: string; // of the script the scenes were planned against
   generation: { model: string; brief: string; date: string; notes?: string };
+  assets: Record<string, Asset>;
   scenes: ScenePlan[];
 }
 /** One narration sentence on the timeline, in absolute seconds from the start of the video. */
@@ -95,6 +102,7 @@ export interface Storyboard {
   wordsPerMinute: number;
   runtime: number; // seconds, including pauses
   generation: StoryboardPlan['generation'];
+  assets: Record<string, Asset>;
   status: 'ok' | 'blocked';
   issues: Issue[];
   scenes: Scene[];
@@ -132,6 +140,8 @@ export function buildStoryboard(
       `the validation was run against evidence package ${v.packageFingerprint ?? '(none)'}; the package is now ${pkg.fingerprint}; re-run validate`,
     );
   const known = new Set(pkg.documents.flatMap((d) => d.cites));
+  const assets = plan.assets ?? {};
+  const usedAssets = new Set<string>();
   const sourceIds = new Set(pkg.claims.flatMap((c) => c.statements.map((s) => s.source)));
 
   const used = new Map<string, string>();
@@ -167,6 +177,17 @@ export function buildStoryboard(
     if (!(VISUALS as readonly string[]).includes(p.visual?.category))
       issue(p.id, 'visual', 'blocking', `unknown visual category "${p.visual?.category}"`);
     if (!p.visual?.description) issue(p.id, 'visual', 'blocking', 'no visual description');
+    if (p.visual && 'assets' in p.visual)
+      issue(p.id, 'asset', 'blocking', 'visual.assets was replaced by visual.assetIds and a top-level assets registry');
+    for (const id of p.visual?.assetIds ?? []) {
+      const a = assets[id];
+      if (!a) issue(p.id, 'asset', 'blocking', `asset "${id}" is not in the assets registry`);
+      else {
+        usedAssets.add(id);
+        if (a.kind === 'document-render' && !p.visual.excerpt)
+          issue(p.id, 'asset', 'warning', `asset "${id}" renders a document but the scene names no excerpt to render`);
+      }
+    }
     for (const c of p.citations ?? []) {
       if (c.cite && !known.has(c.cite))
         issue(p.id, 'citation', 'blocking', `on-screen citation ${c.cite} is not a passage in the evidence package`);
@@ -278,6 +299,8 @@ export function buildStoryboard(
     if (dup.has(s.id)) issue(s.id, 'duplicate-scene', 'blocking', `scene id ${s.id} repeats`);
     dup.add(s.id);
   }
+  for (const id of Object.keys(assets))
+    if (!usedAssets.has(id)) issue('-', 'asset', 'warning', `asset "${id}" is registered but no scene uses it`);
   const chartScenes = scenes.filter(
     (s) => s.visual?.category === 'data-chart' || s.visual?.category === 'diagram',
   ).length;
@@ -300,6 +323,7 @@ export function buildStoryboard(
     wordsPerMinute: wpm,
     runtime: Math.round(t * 10) / 10,
     generation: plan.generation,
+    assets,
     status: issues.some((i) => i.severity === 'blocking') ? 'blocked' : 'ok',
     issues,
     scenes,
@@ -321,6 +345,12 @@ export function renderStoryboardMd(sb: Storyboard, pkg: EvidencePackage, read: P
   if (sb.issues.length) {
     out.push('## Issues', '');
     for (const i of sb.issues) out.push(`- **${i.severity}** ${i.sentence} ${i.category}: ${i.explanation}`);
+    out.push('');
+  }
+  const assets = Object.entries(sb.assets ?? {});
+  if (assets.length) {
+    out.push('## Assets', '');
+    for (const [id, a] of assets) out.push(`- \`${id}\` (${a.kind}): ${a.description}`);
     out.push('');
   }
   for (const s of sb.scenes) {
@@ -352,7 +382,7 @@ export function renderStoryboardMd(sb: Storyboard, pkg: EvidencePackage, read: P
       );
       out.push(...(p ?? '(passage not found)').split('\n').map((l) => `> ${l}`), '');
     }
-    if (s.visual.assets?.length) out.push(`**Assets.** ${s.visual.assets.join('; ')}`, '');
+    if (s.visual.assetIds?.length) out.push(`**Assets.** ${s.visual.assetIds.map((id) => `\`${id}\``).join(', ')}`, '');
     if (s.citations?.length)
       out.push(
         `**On-screen citations.** ${s.citations.map((c) => `${c.label}${c.cite ? ` (${label(c.cite)})` : ''}`).join('; ')}`,
