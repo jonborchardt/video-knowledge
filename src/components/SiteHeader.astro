@@ -17,7 +17,10 @@ import logo from '../assets/logo.svg?raw';
         {
           site.nav.map((item) => (
             <li>
-              <a href={item.href} class="rounded-sm px-2 py-1 text-muted-foreground no-underline hover:text-foreground">
+              <a
+                href={item.href.startsWith('/') ? href(item.href) : item.href}
+                class="rounded-sm px-2 py-1 text-muted-foreground no-underline hover:text-foreground"
+              >
                 {item.label}
               </a>
             </li>

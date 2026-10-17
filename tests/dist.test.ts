@@ -6,7 +6,7 @@ import { topicNames } from '../src/lib/topics';
 
 const DIST = join(process.cwd(), 'dist');
 const BASE = '/video-knowledge/';
-const pages = ['index.html', ...topicNames().map((n) => join(n, 'index.html'))];
+const pages = ['index.html', 'about/index.html', ...topicNames().map((n) => join(n, 'index.html'))];
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
   it.each(pages)('%s exists without template leaks', (p) => {
@@ -34,7 +34,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it('only built pages for real topics', () => {
     const dirs = readdirSync(DIST, { withFileTypes: true }).filter((d) => d.isDirectory() && d.name !== '_astro');
-    expect(dirs.map((d) => d.name).sort()).toEqual(topicNames().sort());
+    expect(dirs.map((d) => d.name).sort()).toEqual(['about', ...topicNames()].sort());
   });
 
   it('serves a 404 page', () => {

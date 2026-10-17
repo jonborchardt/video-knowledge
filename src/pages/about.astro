@@ -1,0 +1,151 @@
+---
+import Base from '../layouts/Base.astro';
+import VerdictBadge from '../components/VerdictBadge.astro';
+import { author, site } from '../config/site';
+import { href } from '../lib/url';
+
+const h2 = 'mt-10 mb-3 text-featured font-semibold';
+const p = 'mt-3 max-w-prose';
+const list = 'mt-3 grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
+// One row per confidence band; the three columns are the same band applied to each verdict.
+const rows = [
+  { band: '90 to 100%', c: 0.95 },
+  { band: '75 to 89%', c: 0.8 },
+  { band: '60 to 74%', c: 0.65 },
+  { band: 'under 60%', c: 0.5 },
+];
+---
+
+<Base
+  title={`About · ${site.name}`}
+  description="How this site turns videos into judged claims, and how to read its verdict labels."
+>
+  <header>
+    <div class="eyebrow text-muted-foreground">{site.name}</div>
+    <h1 class="mt-1 text-display font-semibold">What this site does</h1>
+    <p class={`${p} text-muted-foreground`}>
+      Videos and blog posts make claims. Most are never checked. This site collects the sources on a subject, pulls out
+      the distinct things they claim, and judges every claim against the best evidence available. The result is a page
+      per subject that says which claims hold up, which do not, and which sources are worth your time.
+    </p>
+  </header>
+
+  <h2 class={h2}>How a subject is built</h2>
+  <ol class={list}>
+    <li>
+      <strong>Collect.</strong> YouTube videos with captions and blog posts, chosen to cover the pitches, the critics and
+      the explainers on a subject, not just one side.
+    </li>
+    <li>
+      <strong>Extract.</strong> From each source, the four to twelve claims a viewer would walk away believing, each tied
+      to a short verbatim quote. Claims are written once in canonical form, so the same idea from twenty videos is one claim
+      with twenty sources behind it.
+    </li>
+    <li>
+      <strong>Guess.</strong> Every new claim gets an AI judgment with a one-line reason. It counts for at most 50% confidence,
+      however sure the model sounds.
+    </li>
+    <li>
+      <strong>Check.</strong> Studies, official data releases and reports go in a sources folder. Each is read against every
+      claim, and a verdict is recorded only where a passage bears directly on the claim as worded, with a line citation. A
+      study verdict replaces the AI guess when it is at least as confident.
+    </li>
+    <li>
+      <strong>Score.</strong> Evidence belongs to the claim, not the source. A verdict on a claim counts for every source
+      that makes it, including ones added later. Each source's score comes from the verdicts on its claims.
+    </li>
+  </ol>
+
+  <h2 class={h2} id="verdicts">How to read a verdict</h2>
+  <p class={p}>
+    Each claim carries one of five verdicts. <em>Right</em>, <em>wrong</em> and <em>partly right</em> are judgments with a
+    confidence from 0 to 100%. <em>Untestable</em> means framing, taste or a value judgment with no operational definition.{
+      ' '
+    }
+    <em>Unknown</em> means testable, but the available evidence cannot settle it yet, including predictions.
+  </p>
+  <p class={p}>
+    The label puts the confidence into words. The adverb comes from how sure the deciding evidence is; the colour comes
+    from the verdict and fades as confidence drops. A <em>leans</em> label with a dashed border is an unverified AI guess
+    or a weak study: it shows which way the evidence points, not a settled answer.
+  </p>
+  <table class="mt-4 w-full max-w-wide border-collapse text-sm">
+    <thead>
+      <tr class="border-b text-left text-muted-foreground">
+        <th scope="col" class="py-2 pr-4 font-medium">Confidence</th>
+        <th scope="col" class="py-2 pr-4 font-medium">Judged right</th>
+        <th scope="col" class="py-2 pr-4 font-medium">Judged partly right</th>
+        <th scope="col" class="py-2 font-medium">Judged wrong</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        rows.map((r) => (
+          <tr class="border-b">
+            <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground tabular-nums">{r.band}</td>
+            <td class="py-2.5 pr-4">
+              <VerdictBadge verdict="right" confidence={r.c} />
+            </td>
+            <td class="py-2.5 pr-4">
+              <VerdictBadge verdict="partly" confidence={r.c} />
+            </td>
+            <td class="py-2.5">
+              <VerdictBadge verdict="wrong" confidence={r.c} />
+            </td>
+          </tr>
+        ))
+      }
+      <tr>
+        <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground">no judgment</td>
+        <td class="py-2.5 pr-4" colspan="3">
+          <VerdictBadge verdict="untestable" />
+          <VerdictBadge verdict="unknown" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p class={`${p} text-sm text-muted-foreground`}>
+    Confidence measures how strongly that evidence settles that claim, not how reputable the publisher is. A direct
+    reading from an official release scores high. One econometric study scores lower, and lower still when a claim
+    reaches beyond what the study measured. Hover a label to see the raw verdict and percentage.
+  </p>
+
+  <h2 class={h2}>How sources are scored</h2>
+  <p class={p}>
+    A source's score averages its claims: right counts 1, partly right counts half, wrong counts minus 1, and the sign
+    flips when the source argues against a claim. The average maps to four labels: <em>mostly wrong</em>,
+    <em>mixed</em>, <em>mostly right</em> and <em>right</em>. Mixed means the source's correct and incorrect claims
+    roughly cancel, or it only makes half-true ones.
+  </p>
+  <p class={p}>
+    Novelty breaks ties. It rewards a source for claims that hold up and that few other sources make, weighted by how
+    sure the verdict is. A video that repeats what twenty others say scores the same but ranks lower than one that adds
+    something sound.
+  </p>
+
+  <h2 class={h2}>What it does not do</h2>
+  <ul class={list}>
+    <li>
+      It does not judge people or politics. Each verdict applies to one claim, in one period, against one body of
+      evidence. Claims whose truth changes over time carry a period in brackets, and the same claim in another period is
+      a different claim.
+    </li>
+    <li>
+      It does not force a verdict. Predictions stay unknown until the data arrive. Value judgments stay untestable.
+    </li>
+    <li>
+      It does not treat an AI guess as evidence. The guess is a starting point that a study can overturn, and the Recap
+      tab of each subject lists every claim where that happened.
+    </li>
+  </ul>
+
+  <h2 class={h2}>Who</h2>
+  <p class={p}>
+    Built by <a href={author.links.GitHub}>{author.name}</a>, who writes at <a href={site.blog.url}>{site.blog.name}</a
+    >. The data, the agent briefs and this site are open at <a href={site.repo}>GitHub</a>. Every claim links back to
+    its quote and every study verdict to the lines it rests on, so you can check the checking.
+  </p>
+  <p class={`${p} text-sm text-muted-foreground`}>
+    <a href={href('/')}>See all subjects</a>.
+  </p>
+</Base>

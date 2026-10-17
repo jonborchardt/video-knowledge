@@ -220,7 +220,8 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
         t.studies
           ? `Studies decide ${t.decided} claims; the rest use an AI guess, which counts for at most 50% confidence.`
           : 'No studies have been checked yet, so every verdict is an AI guess.'
-      }{t.noCaptions ? ` ${t.noCaptions} more videos had no captions and are not counted.` : ''}
+      }{t.noCaptions ? ` ${t.noCaptions} more videos had no captions and are not counted.` : ''}{' '}
+      <a href={href('/about/#verdicts')}>How to read the verdict labels.</a>
     </p>
     {
       t.bottomLine && (
@@ -462,7 +463,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
                               )}
                               {c.text}
                             </p>
-                            <VerdictBadge verdict={c.verdict} />
+                            <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
                           </div>
                           <p class={small}>“{c.quote}”</p>
                           <span class="font-mono text-xs text-muted-foreground tabular-nums">

@@ -85,6 +85,7 @@ export interface SourceClaimView {
   quote: string;
   stance: 'asserts' | 'denies';
   verdict: Verdict; // for this source: denying a wrong claim is right
+  confidence: number | null; // of the claim-level verdict
   share: number; // sources taking the same stance, this one included
   novel: boolean; // right and few others say it
 }
@@ -195,6 +196,7 @@ export function loadTopic(name: string): Topic {
             quote: a.quote,
             stance: a.stance,
             verdict,
+            confidence: c.confidence,
             share,
             novel: verdict === 'right' && share <= NOVEL_SHARE,
           },
