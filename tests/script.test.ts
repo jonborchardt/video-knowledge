@@ -1,9 +1,13 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   type EvidencePackage,
   type Release,
   type Script,
   buildPackage,
+  docHasher,
   evalExpr,
   releaseCheck,
   scriptDir,
@@ -811,5 +815,16 @@ describe('release lock', () => {
     expect(releaseCheck(rel, v, sb)).toEqual([]);
     expect(releaseCheck(rel, v, { ...sb, scriptFingerprint: 'other' })[0].category).toBe('release-stale');
     expect(releaseCheck(null, v, sb)).toEqual([]);
+  });
+});
+
+describe('document hashing', () => {
+  it('docHasher and buildPackage shas do not depend on the checkout line endings', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'vk-sha-'));
+    mkdirSync(join(dir, 'demo', 'sources'), { recursive: true });
+    writeFileSync(join(dir, 'demo', 'sources', 'lf.txt'), ['one', 'two', ''].join('\n'));
+    writeFileSync(join(dir, 'demo', 'sources', 'crlf.txt'), ['one', 'two', ''].join('\r\n'));
+    expect(docHasher(dir)('demo/sources/crlf.txt')).toBe(docHasher(dir)('demo/sources/lf.txt'));
+    expect(docHasher(dir)('demo/sources/missing.txt')).toBeNull();
   });
 });

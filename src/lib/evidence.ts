@@ -93,6 +93,9 @@ export interface Validation {
 
 export type PassageReader = (cite: string) => string | null;
 
+/** Line endings as checked out (CRLF on Windows, LF elsewhere) must not change a passage, a sha or a fingerprint. */
+export const lf = (s: string) => s.replace(/\r\n?/g, '\n');
+
 /** Reads `<topic>/sources/<file>.txt#L10-L24` from the repo; null when the file or the lines do not exist. */
 export function passageReader(root = process.cwd()): PassageReader {
   return (cite) => {
@@ -100,7 +103,7 @@ export function passageReader(root = process.cwd()): PassageReader {
     if (!m) return null;
     const file = join(root, m[1]);
     if (!existsSync(file)) return null;
-    const lines = readFileSync(file, 'utf8').split('\n');
+    const lines = lf(readFileSync(file, 'utf8')).split('\n');
     const [from, to] = [Number(m[2]), Number(m[3] ?? m[2])];
     if (from < 1 || to < from || to > lines.length) return null;
     return lines.slice(from - 1, to).join('\n');

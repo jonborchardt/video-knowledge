@@ -23,6 +23,7 @@ import {
   type Validation,
   applicabilityOf,
   judgmentKey,
+  lf,
   validate,
 } from './evidence';
 import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
@@ -134,7 +135,7 @@ export type DocHasher = (file: string) => string | null;
 export function docHasher(root = process.cwd()): DocHasher {
   return (file) => {
     const p = join(root, file);
-    return existsSync(p) ? sha(readFileSync(p, 'utf8')) : null;
+    return existsSync(p) ? sha(lf(readFileSync(p, 'utf8'))) : null;
   };
 }
 export type TranscriptReader = (sourceId: string) => string | null;
@@ -180,7 +181,7 @@ export function buildPackage(
     let d = docs.get(file);
     if (!d) {
       const p = join(root, file);
-      const text = existsSync(p) ? readFileSync(p, 'utf8') : '';
+      const text = existsSync(p) ? lf(readFileSync(p, 'utf8')) : '';
       const same = t.sameStudy[fileOf(cite)];
       d = {
         file,
