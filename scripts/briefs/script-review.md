@@ -69,6 +69,12 @@ the sheet prints; a later edit changes it and the approval lapses.
 
 - Copy the package fingerprint from `evidence-package.json` into `packageFingerprint`; a review of
   another package counts for nothing (its findings still apply, its approvals do not).
+- For each deterministic warning (`needs-qualification`, `speaker-missing`, `figure-in-non-factual`)
+  you judge a false positive or already carried by the narration, add a `dispositions` entry keyed
+  by the assertion id (or the sentence id for a sentence-level warning) with the sentence fingerprint
+  and a one-sentence reason: `"dispositions": { "s23.a": { "fingerprint": "<fp>", "reason": "s51 says the figures are self-reported" } }`.
+  A warning you judge real becomes a finding instead. A disposition lapses when the sentence
+  changes; blocking issues cannot be dispositioned. Only the reviewer writes dispositions.
 - Severity: `blocking` (a viewer would come away believing something the evidence does not
   establish), `warning` (true but imprecise, or a limitation stated too far away), `info`.
   Use category `needs-human` with severity `warning` when only an editor can decide.

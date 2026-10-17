@@ -63,7 +63,7 @@ const badge =
   'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase';
 const small = 'text-sm text-muted-foreground';
 const h3 = 'mt-4 mb-1 text-title font-semibold';
-const open = (v?.issues ?? []).filter((i) => i.severity !== 'info');
+const open = (v?.issues ?? []).filter((i) => i.severity !== 'info' && !i.disposition);
 const facts = [
   ['Validation', v ? `${v.status} (revision ${v.revision})` : 'not run'],
   ['Runtime', v ? `${v.words} words, about ${v.minutes} min at ${v.wordsPerMinute} wpm` : ''],

@@ -378,6 +378,7 @@ export interface Issue {
   by: 'deterministic' | 'review';
   revision?: number; // review findings: the revision they were raised against
   fingerprint?: string; // review findings: the sentence fingerprint they were raised against
+  disposition?: string; // deterministic warnings: the reviewer's reason for retiring it at this fingerprint
 }
 export interface ReviewFinding extends Omit<Issue, 'by'> {
   fingerprint: string; // of the sentence as reviewed; a finding whose fingerprint no longer matches is resolved
@@ -392,6 +393,9 @@ export interface ScriptReviewFile {
   /** sentence id -> fingerprint approved: every assertion entailed by its passages, every factual claim covered. */
   approved: Record<string, string>;
   findings: ReviewFinding[];
+  /** assertion id (or sentence id) -> why a deterministic warning there is a false positive or already carried by the
+   *  narration, valid at that sentence fingerprint only. Blocking issues cannot be dispositioned. */
+  dispositions?: Record<string, { fingerprint: string; reason: string }>;
 }
 
 export interface AssertionResult {
@@ -434,7 +438,8 @@ export interface ScriptValidation {
     assertions: number;
     verified: number;
     blocking: number;
-    warnings: number;
+    warnings: number; // open warnings (dispositioned ones excluded)
+    dispositioned: number; // warnings the reviewer retired at the current fingerprint
     unreviewed: number; // sentences without a current approval
   };
   revisionLimitReached: boolean;
@@ -810,6 +815,11 @@ export function validateScript(
 
     const reviewHere = open.filter((f) => f.sentence === s.id).map<Issue>((f) => ({ ...f, by: 'review' }));
     issues.push(...reviewHere);
+    // A reviewer may retire a deterministic warning (never a blocking issue) at this exact fingerprint.
+    for (const i of [...issues, ...ar.flatMap((a) => a.issues)]) {
+      const d = review?.dispositions?.[i.assertion ?? s.id];
+      if (i.by === 'deterministic' && i.severity === 'warning' && d && d.fingerprint === fp) i.disposition = d.reason;
+    }
     const approved = reviewCurrent && review!.approved?.[s.id] === fp;
     const blocking = [...issues, ...ar.flatMap((a) => a.issues)].some((x) => x.severity === 'blocking');
     for (const a of ar) if (a.status !== 'blocked') a.status = approved && !blocking ? 'verified' : 'needs-review';
@@ -845,6 +855,8 @@ export function validateScript(
     (a, b) => ['blocking', 'warning', 'info'].indexOf(a.severity) - ['blocking', 'warning', 'info'].indexOf(b.severity),
   );
   const blocking = issues.filter((x) => x.severity === 'blocking').length;
+  const warnings = issues.filter((x) => x.severity === 'warning' && !x.disposition).length;
+  const dispositioned = issues.filter((x) => x.disposition).length;
   const unreviewed = results.filter((s) => s.status === 'needs-review').length;
   const status: ScriptStatus = blocking ? 'blocked' : unreviewed || !review ? 'needs-review' : 'passed';
   const date = new Date().toISOString();
@@ -855,7 +867,7 @@ export function validateScript(
       date,
       status,
       blocking,
-      warnings: issues.filter((x) => x.severity === 'warning').length,
+      warnings,
     },
   ];
   return {
@@ -876,7 +888,8 @@ export function validateScript(
       assertions: results.reduce((n, s) => n + s.assertions.length, 0),
       verified: results.reduce((n, s) => n + s.assertions.filter((a) => a.status === 'verified').length, 0),
       blocking,
-      warnings: issues.filter((x) => x.severity === 'warning').length,
+      warnings,
+      dispositioned,
       unreviewed,
     },
     revisionLimitReached: status === 'blocked' && script.revision >= MAX_REVISIONS,
@@ -922,9 +935,10 @@ export function renderScriptMd(script: Script, v: ScriptValidation, read: Passag
       '',
     );
   }
-  if (v.issues.length) {
+  const openIssues = v.issues.filter((i) => !i.disposition);
+  if (openIssues.length) {
     out.push('## Open issues', '');
-    for (const i of v.issues)
+    for (const i of openIssues)
       out.push(
         `- **${i.severity}** ${i.sentence}${i.assertion ? ` (${i.assertion})` : ''} ${i.category} (${i.by}): ${i.explanation}${i.suggestion ? ` Suggestion: ${i.suggestion}` : ''}`,
       );
@@ -975,10 +989,11 @@ export function renderReviewMd(
   pkg: EvidencePackage | null,
   sb: StoryboardSummary | null,
 ): string {
-  const open = v.issues.filter((i) => i.severity !== 'info');
+  const open = v.issues.filter((i) => i.severity !== 'info' && !i.disposition);
+  const dispositioned = v.issues.filter((i) => i.disposition);
   const decisions = [
     ...v.issues
-      .filter((i) => i.severity === 'warning' && i.category !== 'runtime')
+      .filter((i) => i.severity === 'warning' && i.category !== 'runtime' && !i.disposition)
       .map((i) => `${i.sentence}${i.assertion ? ` ${i.assertion}` : ''}: ${i.explanation}`),
     ...(v.revisionLimitReached
       ? [
@@ -997,7 +1012,7 @@ export function renderReviewMd(
     `| Words / runtime | ${v.words} words, about ${v.minutes} min at ${v.wordsPerMinute} wpm |`,
     `| Sentences | ${v.counts.sentences} (${v.counts.factual} factual or attributed) |`,
     `| Assertions | ${v.counts.assertions}, ${v.counts.verified} verified |`,
-    `| Issues | ${v.counts.blocking} blocking, ${v.counts.warnings} warnings |`,
+    `| Issues | ${v.counts.blocking} blocking, ${v.counts.warnings} warnings, ${v.counts.dispositioned ?? 0} dispositioned |`,
     `| Unreviewed sentences | ${v.counts.unreviewed} |`,
     `| Scenes | ${sb ? `${sb.scenes}, ${mmss(sb.runtime)} (${sb.status})` : 'no storyboard yet'} |`,
     `| Evidence package | ${v.packageFingerprint ?? '?'}${pkg ? ` (${pkg.documents.length} documents, ${pkg.claims.length} claims)` : ''} |`,
@@ -1021,6 +1036,17 @@ export function renderReviewMd(
           ...sb.issues.map((i) => `- **${i.severity}** ${i.sentence} ${i.category}: ${i.explanation}`),
         ]
       : []),
+    '',
+    '## Dispositions',
+    '',
+    'Deterministic warnings the reviewer judged false positives or already carried by the narration, at the current sentence fingerprint.',
+    '',
+    ...(dispositioned.length
+      ? dispositioned.map(
+          (i) =>
+            `- ${i.sentence}${i.assertion ? ` (${i.assertion})` : ''} ${i.category}: ${i.disposition} (warning was: ${i.explanation})`,
+        )
+      : ['None.']),
     '',
     '## Resolved review findings',
     '',

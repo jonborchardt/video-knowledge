@@ -105,6 +105,18 @@ export const hashOf = (q: EvidencePackage | null) => () => q?.documents[0].sha ?
 export const cats = (v: ReturnType<typeof run>) =>
   v.issues.filter((i) => i.severity === 'blocking').map((i) => i.category);
 
+/** A sentence whose only evidence is a 'partly' verdict: the gate says needs-qualification (a warning). */
+export const partlySentence = (): Sentence =>
+  sentence('s01', 'Rental property lets investors borrow against appreciation.', 'factual', [
+    {
+      id: 's01.a',
+      text: 'Rental property lets investors borrow against appreciation.',
+      kind: 'fact',
+      claims: [{ id: RENTAL, stance: 'asserts' }],
+      evidence: [{ kind: 'study', claim: RENTAL, cite: `${TOPIC}/sources/field-c.txt#L20-L21` }],
+    },
+  ]);
+
 export const good = () =>
   script([
     sentence('s01', 'Say you join under a friend.', 'hypothetical'),

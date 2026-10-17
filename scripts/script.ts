@@ -104,9 +104,9 @@ function stageValidate(): { script: Script; v: ScriptValidation; pkg: EvidencePa
   writeArtifact(dir, FILES.scriptMd, renderScriptMd(script, v, read));
   writeArtifact(dir, FILES.reviewMd, renderReviewMd(script, v, pkg, summary()));
   console.log(
-    `${v.status}: ${v.words} words (~${v.minutes} min at ${v.wordsPerMinute} wpm), ${v.counts.assertions} assertions, ${v.counts.verified} verified, ${v.counts.blocking} blocking, ${v.counts.warnings} warnings, ${v.counts.unreviewed} sentences unreviewed${review ? '' : ' (no script-review.json yet)'}`,
+    `${v.status}: ${v.words} words (${v.spokenWords} as spoken, ~${v.minutes} min at ${v.wordsPerMinute} wpm), ${v.counts.assertions} assertions, ${v.counts.verified} verified, ${v.counts.blocking} blocking, ${v.counts.warnings} warnings, ${v.counts.dispositioned} dispositioned, ${v.counts.unreviewed} sentences unreviewed${review ? '' : ' (no script-review.json yet)'}`,
   );
-  for (const i of v.issues.filter((x) => x.severity !== 'info'))
+  for (const i of v.issues.filter((x) => x.severity !== 'info' && !x.disposition))
     console.log(
       `  ${i.severity.toUpperCase()} ${i.sentence}${i.assertion ? ` ${i.assertion}` : ''} ${i.category} [${i.by}]: ${i.explanation.length > 240 ? i.explanation.slice(0, 240) + '…' : i.explanation}`,
     );

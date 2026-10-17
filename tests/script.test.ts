@@ -30,6 +30,7 @@ import {
   fact,
   good,
   hashOf,
+  partlySentence,
   pkg,
   plan,
   read,
@@ -756,5 +757,30 @@ describe('reproducible evidence', () => {
     expect(
       buildStoryboard(plan([scene('sc1', ['s01', 's02', 's03'])]), s, v, pkg(), read).issues.map((i) => i.category),
     ).toContain('stale-validation');
+  });
+});
+
+describe('reviewer dispositions', () => {
+  it('a reviewer disposition retires a warning until the sentence changes', () => {
+    const s1 = script([partlySentence()]);
+    const q = pkg();
+    const r = {
+      ...approveAll(s1, q),
+      dispositions: {
+        's01.a': {
+          fingerprint: sentenceFingerprint(sentences(s1)[0]),
+          reason: 'the narration says "in a narrower setting"',
+        },
+      },
+    };
+    const v1 = validateScript(s1, corpus(), read, r, {}, null, q, hashOf(q));
+    expect(v1.counts.dispositioned).toBe(1);
+    expect(v1.issues.find((i) => i.category === 'needs-qualification')?.disposition).toMatch(/narrower/);
+    expect(v1.status).toBe('passed');
+    const s2 = script([{ ...partlySentence(), text: partlySentence().text + ' Really.' }], 2);
+    const v2 = validateScript(s2, corpus(), read, r, {}, null, q, hashOf(q));
+    expect(v2.counts.dispositioned).toBe(0);
+    expect(v2.counts.warnings).toBe(v1.counts.warnings + 1);
+    expect(v2.issues.find((i) => i.category === 'needs-qualification')?.disposition).toBeUndefined();
   });
 });
