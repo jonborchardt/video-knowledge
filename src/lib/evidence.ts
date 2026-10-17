@@ -2,7 +2,8 @@
 //
 // Three layers, kept apart:
 // 1. Deterministic: do the referenced claims, sources, study verdicts and passages exist; which way does each verdict
-//    point; is every figure in the sentence present in the cited evidence. Any failure blocks.
+//    point; is every figure in the sentence present in a cited passage (digits or words; a verdict note never counts,
+//    it is an AI's reading of the passage). Any failure blocks.
 // 2. Applicability: does a verdict on the canonical claim decide THIS sentence? A base rate ("most lose") cannot decide
 //    a possibility claim ("an expert can"); a verdict whose own note limits its scope ("though the setting is futures,
 //    not stocks") is partial. Defaults come from conservative wording heuristics; a reviewer's judgment (see
@@ -14,9 +15,11 @@
 // contradictions and qualifications are pulled from every study verdict on the claim, so none can be hidden.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { hasFigure, nums } from './numbers';
 import type { ClaimVerdictView, ClaimView, Topic, Verdict } from './topics';
 
-export type Corpus = Pick<Topic, 'name' | 'claims'>;
+/** sameStudy: '<summary file>.txt' -> '<primary file>.txt' when two documents report one study (site.json). */
+export type Corpus = Pick<Topic, 'name' | 'claims'> & { sameStudy?: Record<string, string> };
 export type Stance = 'asserts' | 'denies';
 
 export type EvidenceRef =
@@ -32,6 +35,8 @@ export interface Assertion {
   /** The canonical claims the sentence rests on, and whether it affirms or negates each. */
   claims: { id: string; stance: Stance }[];
   evidence: EvidenceRef[];
+  /** Figures the caller has established by a recorded calculation from cited inputs (see src/lib/script.ts). */
+  derived?: string[];
 }
 
 export type Status = 'supported' | 'qualified' | 'disputed' | 'unsupported' | 'unverified';
@@ -88,6 +93,9 @@ export interface Validation {
 
 export type PassageReader = (cite: string) => string | null;
 
+/** Line endings as checked out (CRLF on Windows, LF elsewhere) must not change a passage, a sha or a fingerprint. */
+export const lf = (s: string) => s.replace(/\r\n?/g, '\n');
+
 /** Reads `<topic>/sources/<file>.txt#L10-L24` from the repo; null when the file or the lines do not exist. */
 export function passageReader(root = process.cwd()): PassageReader {
   return (cite) => {
@@ -95,7 +103,7 @@ export function passageReader(root = process.cwd()): PassageReader {
     if (!m) return null;
     const file = join(root, m[1]);
     if (!existsSync(file)) return null;
-    const lines = readFileSync(file, 'utf8').split('\n');
+    const lines = lf(readFileSync(file, 'utf8')).split('\n');
     const [from, to] = [Number(m[2]), Number(m[3] ?? m[2])];
     if (from < 1 || to < from || to > lines.length) return null;
     return lines.slice(from - 1, to).join('\n');
@@ -116,6 +124,14 @@ const BASE_RATE =
 const SCOPE_HEDGE =
   /\b(though|although|however|rather than|narrow(er|ly)?|only in|limited to|not .{0,40} as such|different (setting|population|instrument|market|era|period)|in a (lab|different)|self-report(ed|s)?|proxy|indirect(ly)?|not directly|does not directly|doesn't directly|tangential|older models|earlier models|not the same)\b/i;
 const docOf = (cite: string) => cite.split('#')[0];
+/** The document a citation counts as: its file, mapped one hop through sameStudy by basename, so that a summary and
+ *  the report it summarises are one study wherever independence is counted. A self-mapping or a cycle stays put. */
+export function docKey(cite: string, sameStudy: Record<string, string> = {}): string {
+  const file = docOf(cite);
+  const base = file.split('/').pop()!;
+  const primary = sameStudy[base];
+  return primary && primary !== base ? `${file.slice(0, file.length - base.length)}${primary}` : file;
+}
 const isStudy = (x: EvidenceItem): x is EvidenceItem & { ref: { kind: 'study'; claim: string; cite: string } } =>
   x.ref.kind === 'study';
 const isJudgment = (v: Verdict | null) => v === 'right' || v === 'wrong' || v === 'partly';
@@ -132,12 +148,15 @@ export function modalityOf(text: string): Modality {
 const newest = (a: ClaimVerdictView, b: ClaimVerdictView) =>
   (b.date ?? '').localeCompare(a.date ?? '') || (b.confidence ?? 0) - (a.confidence ?? 0);
 
-/** The study verdicts on a claim, one per document: the newest record. */
-export function studyVerdicts(c: ClaimView): ClaimVerdictView[] {
+/** The study verdicts on a claim, one per study: the newest record on the primary document; a summary document
+ *  (sameStudy) only stands in when the primary has no verdict. */
+export function studyVerdicts(c: ClaimView, sameStudy: Record<string, string> = {}): ClaimVerdictView[] {
   const latest = new Map<string, ClaimVerdictView>();
-  for (const v of [...c.verdicts].sort(newest)) {
-    if (v.by === 'AI guess' || !v.cite) continue;
-    const doc = docOf(v.cite);
+  const primaryFirst = (a: ClaimVerdictView, b: ClaimVerdictView) =>
+    Number(docKey(b.cite!, sameStudy) === docOf(b.cite!)) - Number(docKey(a.cite!, sameStudy) === docOf(a.cite!)) ||
+    newest(a, b);
+  for (const v of c.verdicts.filter((x) => x.by !== 'AI guess' && x.cite).sort(primaryFirst)) {
+    const doc = docKey(v.cite!, sameStudy);
     if (!latest.has(doc)) latest.set(doc, v);
   }
   return [...latest.values()];
@@ -168,9 +187,6 @@ export function applicabilityOf(modality: Modality, verdict: Verdict | null, not
 const applyLevel = (direction: Role, level: Applicability): Role =>
   level === 'contextual' ? 'context' : level === 'partial' && direction !== 'inconclusive' ? 'qualifies' : direction;
 
-// ponytail: digits only; "twenty percent" or "2x" written as "twice" slip past. Add number words if writers use them.
-const numbers = (s: string) => [...s.matchAll(/\d[\d,]*(?:\.\d+)?/g)].map((m) => m[0].replaceAll(',', ''));
-
 export function validate(
   a: Assertion,
   corpus: Corpus,
@@ -180,6 +196,8 @@ export function validate(
   const byId = new Map(corpus.claims.map((c) => [c.id, c]));
   const stanceOf = new Map(a.claims.map((c) => [c.id, c.stance]));
   const modality = modalityOf(a.text);
+  const same = corpus.sameStudy ?? {};
+  const keyOf = (cite: string) => docKey(cite, same);
   const problems: string[] = [];
   if (!a.claims.length) problems.push('no canonical claim referenced');
   for (const c of a.claims) if (!byId.has(c.id)) problems.push(`unknown claim ${c.id}`);
@@ -238,10 +256,10 @@ export function validate(
   });
 
   // 2. Every other study verdict on the claims stays visible, whether or not the author cited it.
-  const citedDocs = new Set(cited.filter(isStudy).map((x) => `${x.ref.claim}|${docOf(x.ref.cite)}`));
+  const citedDocs = new Set(cited.filter(isStudy).map((x) => `${x.ref.claim}|${keyOf(x.ref.cite)}`));
   const uncited: EvidenceItem[] = a.claims.flatMap(({ id, stance }) =>
-    studyVerdicts(byId.get(id) ?? ({ verdicts: [] } as unknown as ClaimView))
-      .filter((v) => !citedDocs.has(`${id}|${docOf(v.cite!)}`))
+    studyVerdicts(byId.get(id) ?? ({ verdicts: [] } as unknown as ClaimView), same)
+      .filter((v) => !citedDocs.has(`${id}|${keyOf(v.cite!)}`))
       .map((v) => studyItem(id, stance, v, false)),
   );
   const all = [...cited, ...uncited];
@@ -253,7 +271,7 @@ export function validate(
   const uncitedSupport = uncited.filter((x) => x.role === 'supports');
   const statements = cited.filter((x) => x.role === 'statement');
   const strength = Math.max(0, ...supporting.map((x) => x.confidence ?? 0));
-  const independent = new Set(supporting.filter(isStudy).map((x) => docOf(x.ref.cite))).size;
+  const independent = new Set(supporting.filter(isStudy).map((x) => keyOf(x.ref.cite))).size;
   const verbatim =
     a.claims.length > 0 &&
     a.claims.every((c) => a.text.toLowerCase().includes((byId.get(c.id)?.text ?? '\0').toLowerCase()));
@@ -269,7 +287,7 @@ export function validate(
         (x) => byId.get(x.ref.claim)?.sources.find((s) => s.id === (x.ref as { source: string }).source)?.channel,
       ),
     );
-    const need = PLURAL.test(a.text) ? 2 : 1;
+    const need = PLURAL.test(a.text.replace(/"[^"]*"/g, '')) ? 2 : 1; // the frame, not the quoted words
     const stated = Number(a.text.match(/^(\d+) sources?\b/)?.[1] ?? 0); // "12 sources claim": all twelve must be cited
     if (statements.length < stated) {
       status = 'unverified';
@@ -291,7 +309,7 @@ export function validate(
       (x) => isStudy(x) && x.cited && isJudgment(x.verdict) && x.applicability !== 'contextual',
     );
     const sides = new Set(decisive.map((x) => x.verdict));
-    const docs = new Set(decisive.filter(isStudy).map((x) => docOf(x.ref.cite)));
+    const docs = new Set(decisive.filter(isStudy).map((x) => keyOf(x.ref.cite)));
     if (docs.size >= 2 && sides.has('right') && sides.has('wrong')) {
       status = 'supported';
       decision = 'approved';
@@ -364,11 +382,13 @@ export function validate(
       if (decision === 'approved') decision = 'qualify';
       if (status === 'supported') status = 'qualified';
     }
-    // Figures must come from the cited evidence, not from the writer.
-    const evidenceText = [...supporting, ...qualifying].map((x) => `${x.passage ?? ''}\n${x.note}`).join('\n');
-    for (const n of numbers(a.text))
-      if (!evidenceText.includes(n)) {
-        limitations.push(`The figure "${n}" does not appear in the cited evidence.`);
+    // Figures must come from a cited passage, not from the writer and not from a verdict note. A figure that is part
+    // of a referenced claim's own wording ("ten times as productive") is what the verdict judged, not the writer's.
+    const evidenceText = [...supporting, ...qualifying].map((x) => x.passage ?? '').join('\n');
+    const claimText = a.claims.map((c) => byId.get(c.id)?.text ?? '').join('\n');
+    for (const n of nums(a.text))
+      if (!hasFigure(evidenceText, n) && !hasFigure(claimText, n) && !a.derived?.includes(n)) {
+        limitations.push(`The figure "${n}" does not appear in the cited passages.`);
         suggestions.push(`Drop "${n}" or cite a passage that states it.`);
         status = 'unverified';
         decision = 'blocked';

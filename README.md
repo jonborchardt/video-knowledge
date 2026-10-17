@@ -25,6 +25,8 @@ Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checko
   changed-minds.json  optional notes from the changed-minds pass (step 6); nothing reads it
   stories.json  written by `npm run stories -- discover`; commit it (the story-ideas page is built from it)
   story-review.json  optional, written by the review agent (scripts/briefs/stories.md); discover merges it
+  scripts/<story slug>/  one generated script per story: evidence-package.json, script.json, script-review.json,
+               validation.json, storyboard.json and the readable script.md, storyboard.md, review.md; commit them
   work/        scratch for agent batches (gitignored)
 ```
 
@@ -117,6 +119,52 @@ endorsing X.
   }
 ]
 ```
+
+## Scripts and storyboards
+
+A `ready` story becomes a narration script and a storyboard in `<topic>/scripts/<story slug>/`. The code builds
+the evidence package, checks the script and fills in the storyboard; three agent briefs do the writing and the
+judging (`scripts/briefs/script.md`, `script-review.md`, `storyboard.md`). Every stage persists its output, so a
+rejected script is revised and rechecked without touching research or story discovery.
+
+```
+npm run script -- package <topic> <story-id>      # evidence-package.json: the story, its final claims, every passage, statement and gap
+# an agent writes script.json from scripts/briefs/script.md
+npm run script -- validate <topic> <story-id>     # validation.json, script.md, review.md (exit 2 when blocked)
+npm run script -- show <topic> <story-id> [s12]   # the reviewer's sheet: sentences, assertions, fingerprints, passages
+# an independent agent writes script-review.json from scripts/briefs/script-review.md, then validate again
+# an agent writes storyboard.json from scripts/briefs/storyboard.md
+npm run script -- storyboard <topic> <story-id>   # fills narration and timing, checks charts and citations; storyboard.md
+npm run script -- run <topic> <story-id>          # every stage whose inputs exist, then the next agent step
+npm run script -- lock <topic> <story-id> --approved-by "<name>"   # release.json: the approved fingerprints (passed + ok only)
+```
+
+The script is sentences with stable ids, each typed `factual`, `attributed`, `hypothetical`, `rhetorical` or
+`transitional`. A factual or attributed sentence carries one assertion per independent claim it makes, with the
+canonical claims and evidence references it rests on, and optionally a quotation or a calculation. The deterministic
+layer runs the evidence gate on each assertion and adds its own checks: a factual sentence without an assertion, a
+figure no assertion owns, a figure absent from the cited passage, a quotation not in the passage, a calculation whose
+inputs are not cited or whose arithmetic does not reproduce, or a reference that does not resolve all block. The
+semantic layer is the reviewer's file: approvals and findings keyed by sentence id and a fingerprint of the sentence
+and its assertions, so an edit lapses the approval and a revision never inherits one. Status is `blocked` (an open
+blocking issue), `needs-review` (sentences without a current approval) or `passed`; at most three revisions, after
+which the output stays with its blockers listed. The storyboard references sentence ids and never carries words of
+its own; it is machine-readable: per-sentence timing (absolute seconds from a numeral-aware spoken-word estimate at
+`generation.wordsPerMinute`, default 150, plus declared pauses), a closed set of chart types with numeric points
+(`value`, `unit`, `display`, `cite`), and an asset registry scenes reference by id, while `visual.description` stays
+guidance for a designer. Every chart point and on-screen figure must be in a cited passage. The site shows each script at
+`/<topic>/scripts/<slug>/`.
+
+Everything needed to inspect and re-validate a script is committed: the package records the sha of every cited
+document and a transcript window around every recorded source quote (`statements[].context`, the only place a
+speaker attribution can be confirmed from), so `<topic>/sources/*.txt` plus `<topic>/scripts/<slug>/` is enough.
+Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
+only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
+gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without
+them keeps the persisted contexts and the same fingerprint. The reviewer may retire a deterministic warning with a
+`dispositions` entry (reason plus sentence fingerprint); it lapses when the sentence changes. `lock` records the
+approved script, package, validation and storyboard fingerprints in `release.json` (refused unless validation is
+`passed` and the storyboard `ok`); a later `validate` or `storyboard` run that drifts from them warns `release-stale`.
 
 ## Website
 

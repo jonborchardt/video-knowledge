@@ -5,6 +5,7 @@
 import Base from '../../layouts/Base.astro';
 import { site } from '../../config/site';
 import type { EvidenceItem, Validation } from '../../lib/evidence';
+import { scriptDirs, storySlug } from '../../lib/script';
 import { loadStories, storyTopicNames, type Format, type Readiness, type StoriesFile } from '../../lib/stories';
 import { loadTopic, type Topic } from '../../lib/topics';
 import { href } from '../../lib/url';
@@ -17,6 +18,11 @@ export function getStaticPaths() {
 }
 const { t, f } = Astro.props as { t: Topic; f: StoriesFile };
 const claimText = new Map(t.claims.map((c) => [c.id, c.text]));
+const scripted = new Set(
+  scriptDirs()
+    .filter((d) => d.topic === t.name)
+    .map((d) => d.slug),
+);
 const sourceOf = (id: string) => t.sources.find((s) => s.id === id);
 
 const READY: Record<Readiness, { label: string; colour: string; help: string }> = {
@@ -135,6 +141,11 @@ const pct = (x: number | null) => (x == null ? '' : ` ${Math.round(x * 100)}%`);
             </span>
           </summary>
           <div class="ml-[1.4em] max-w-prose">
+            {scripted.has(storySlug(s.id)) && (
+              <p class="mt-2 text-sm">
+                <a href={href(`/${t.name}/scripts/${storySlug(s.id)}/`)}>Script and storyboard</a>
+              </p>
+            )}
             <p class="mt-2">{s.whyWatch}</p>
             <p class:list={[small, 'mt-2']}>
               <strong>Tension:</strong> {s.tension}

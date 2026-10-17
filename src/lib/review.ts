@@ -29,6 +29,8 @@ export interface StoryReview {
   qualificationsAccepted?: boolean;
   /** Hold the story at needs-research for this reason, whatever the audit says (an essential gap the code cannot see). */
   research?: string;
+  /** Who the script is written for; the evidence package carries it to the writer (a stated default otherwise). */
+  audience?: string;
 }
 
 export interface ReviewFile {

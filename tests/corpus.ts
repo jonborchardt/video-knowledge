@@ -11,7 +11,8 @@ export const DOC_C = `${TOPIC}/sources/field-c.txt#L20-L21`;
 export const passages: Record<string, string> = {
   [DOC_A]: 'In the trial, developers using the tool finished tasks 26 percent faster on average.',
   [DOC_B]: 'Survey respondents reported mixed results; experienced staff saw smaller gains.',
-  [DOC_C]: 'In the field study experienced developers were slower with the tool.',
+  [DOC_C]:
+    'In the field study experienced developers were slower with the tool; the gain was 18 percent, not ten times.',
 };
 export const reader: PassageReader = (cite) => passages[cite] ?? null;
 
@@ -36,7 +37,7 @@ export function source(id: string, channel: string, stance: 'asserts' | 'denies'
     kind: 'video',
     href: `https://youtu.be/${id}`,
     stance,
-    quote: `quote ${id}`,
+    quote: `quote ${id} words`,
   };
 }
 /** Sources from distinct channels: s1 on channel c1, s2 on c2, ... */
@@ -80,9 +81,14 @@ export function claim(
 }
 
 export const corpus = (...claims: ClaimView[]): Corpus => ({ name: TOPIC, claims });
-export const topic = (claims: ClaimView[], recap: StoryInput['recap'] = []): StoryInput => ({
+export const topic = (
+  claims: ClaimView[],
+  recap: StoryInput['recap'] = [],
+  sameStudy?: Record<string, string>,
+): StoryInput => ({
   name: TOPIC,
   label: 'Demo',
   claims,
   recap,
+  ...(sameStudy ? { sameStudy } : {}),
 });

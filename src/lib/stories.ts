@@ -17,6 +17,7 @@ import {
   type PassageReader,
   PRIOR_CAP,
   type Validation,
+  docKey,
   studyVerdicts,
   validate,
 } from './evidence';
@@ -26,7 +27,7 @@ import { type ClaimView, type Topic, topicNames, VAL } from './topics';
 export type { Format } from './review';
 export type StoryKind = 'contradicted' | 'conflict' | 'surprise' | 'gap' | 'decision';
 export type Readiness = 'ready' | 'needs-review' | 'needs-research' | 'rejected';
-export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'>;
+export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'> & { sameStudy?: Record<string, string> };
 export type Arc = Record<'hook' | 'conflict' | 'evidence' | 'resolution' | 'takeaway', string>;
 
 export interface Finding {
@@ -96,7 +97,8 @@ const studyRefs = (c: ClaimView): EvidenceRef[] =>
 const statementRefs = (c: ClaimView, stance = 'asserts'): EvidenceRef[] =>
   c.sources.filter((s) => s.stance === stance).map((s) => ({ kind: 'statement', claim: c.id, source: s.id }));
 const uniq = <T>(xs: T[]) => [...new Set(xs)];
-const docOf = (x: EvidenceItem) => (x.ref.kind === 'study' ? x.ref.cite.split('#')[0] : null);
+const docOf = (x: EvidenceItem, sameStudy: Record<string, string> = {}) =>
+  x.ref.kind === 'study' ? docKey(x.ref.cite, sameStudy) : null;
 const STOP = new Set(
   'that than then with from this what when which more most into over about their there they them some only also very much like just'.split(
     ' ',
@@ -160,7 +162,7 @@ interface Draft {
   evidenceNeeded: string;
   premise: string;
   arc: Arc;
-  unresolved: string[];
+  unresolved: (core: ClaimView[]) => string[]; // from the final claim list, so a reviewer's pruning removes stale gaps
   claims: string[];
   central: (core: ClaimView[]) => Assertion;
 }
@@ -204,7 +206,7 @@ function drafts(t: StoryInput): Draft[] {
           resolution: `Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.`,
           takeaway: `What a viewer should do differently now that the claim is not what it seemed.`,
         },
-        unresolved: sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by} only partly agrees: ${v.note}`),
+        unresolved: () => sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by} only partly agrees: ${v.note}`),
         claims: [c.id],
         central: () => ({
           id: 'central',
@@ -242,7 +244,7 @@ function drafts(t: StoryInput): Draft[] {
           resolution: `Where the disagreement comes from, and which answer applies to which situation.`,
           takeaway: `The conditions under which the claim holds, instead of a yes or no.`,
         },
-        unresolved: [
+        unresolved: () => [
           `What explains the split between ${names(c)}?`,
           ...sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by}: ${v.note}`),
         ],
@@ -282,7 +284,7 @@ function drafts(t: StoryInput): Draft[] {
           resolution: `Why the expectation was wrong, or what the sources were missing.`,
           takeaway: `The corrected belief, with its limits.`,
         },
-        unresolved: sv.filter((v) => v.verdict !== c.verdict).map((v) => `${v.by} differs: ${v.note}`),
+        unresolved: () => sv.filter((v) => v.verdict !== c.verdict).map((v) => `${v.by} differs: ${v.note}`),
         claims: [c.id],
         central: () => factAbout(c, 'central'),
       });
@@ -308,7 +310,7 @@ function drafts(t: StoryInput): Draft[] {
           resolution: `Absence of evidence is not evidence of absence: what would change the picture.`,
           takeaway: `How to treat the claim until it is checked.`,
         },
-        unresolved: [`Has anyone measured whether ${ask(c)}?`, 'Which study or dataset would settle it?'],
+        unresolved: () => [`Has anyone measured whether ${ask(c)}?`, 'Which study or dataset would settle it?'],
         claims: [c.id],
         central: () => attributionAbout(c, 'central'),
       });
@@ -346,9 +348,10 @@ function drafts(t: StoryInput): Draft[] {
         resolution: `What the evidence settles and what it leaves open.`,
         takeaway: `A decision rule the viewer can apply.`,
       },
-      unresolved: core
-        .filter((c) => !c.decidedBy)
-        .map((c) => `${c.studies ? 'No study strong enough to decide' : 'Unchecked'}: ${q(c)}`),
+      unresolved: (cs) =>
+        cs
+          .filter((c) => !c.decidedBy)
+          .map((c) => `${c.studies ? 'No study strong enough to decide' : 'Unchecked'}: ${q(c)}`),
       claims: core.map((c) => c.id),
       central: (cs) => {
         const l = lead(cs.length ? cs : core);
@@ -370,7 +373,8 @@ function evaluate(
   const reviewed = d.id in (review.stories ?? {});
   if (r.reject) return { rejected: r.reject };
   const byId = new Map(t.claims.map((c) => [c.id, c]));
-  const corpus = { name: t.name, claims: t.claims };
+  const same = t.sameStudy ?? {};
+  const corpus = { name: t.name, claims: t.claims, sameStudy: same };
   const claims = uniq(r.claims ?? d.claims).filter((id) => byId.has(id));
   if (!claims.length) return { rejected: 'no known claims left after review' };
   if (d.kind !== 'decision' && !claims.includes(d.claims[0]))
@@ -402,7 +406,7 @@ function evaluate(
   const decisive = [central, ...findings.filter((f) => f.role === 'evidence').map((f) => f.validation)].flatMap((v) =>
     [...v.supporting, ...v.contradicting, ...v.qualifying].filter((x) => x.applicability !== 'contextual'),
   );
-  const docs = new Set(decisive.map(docOf).filter(Boolean)).size;
+  const docs = new Set(decisive.map((x) => docOf(x, same)).filter(Boolean)).size;
   const sources = new Set(core.flatMap((c) => c.sources.map((s) => s.id)));
   const channels = new Set(core.flatMap((c) => c.sources.map((s) => s.channel)));
   const flipped = core.some((c) => c.decidedBy && prior(c) && prior(c)!.verdict !== c.verdict);
@@ -441,7 +445,7 @@ function evaluate(
   const weight = (x: EvidenceItem) => (x.confidence ?? 0) * (x.applicability === 'partial' ? 0.6 : 1);
   const strength = Math.max(0, ...sides.map(weight));
   const strongest = [...sides].sort((a, b) => weight(b) - weight(a))[0];
-  const independent = new Set(sides.map(docOf).filter(Boolean)).size;
+  const independent = new Set(sides.map((x) => docOf(x, same)).filter(Boolean)).size;
   const evidence =
     central.decision === 'blocked' || central.kind === 'attribution'
       ? 0
@@ -514,7 +518,7 @@ function evaluate(
       .flatMap((v) => v.context.filter((x) => x.role === 'context'))
       .map((x) => `${x.by} is context only: ${x.why}`),
   );
-  const gaps = uniq([...blocking, ...contextOnly, ...d.unresolved]);
+  const gaps = uniq([...blocking, ...contextOnly, ...d.unresolved(core)]);
   return {
     id: d.id,
     kind: d.kind,
