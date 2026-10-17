@@ -1,0 +1,1911 @@
+Source: Carlson A, Jaenicke E. Changes in Retail Organic Price Premiums from 2004 to 2010. USDA Economic Research Service, Economic Research Report ERR-209, May 2016, https://www.ers.usda.gov/sites/default/files/_laserfiche/publications/45547/59472_err209.pdf (full report text, references and appendix regression tables omitted; retrieved 2026-10-17)
+
+            United States Department of Agriculture
+
+Economic    Changes in Retail Organic Price
+Research    Premiums from 2004 to 2010
+Service
+            Andrea Carlson and Edward Jaenicke
+Economic
+Research
+Report
+Number 209
+
+May 2016
+United States Department of Agriculture
+
+  Economic Research Service
+  www.ers.usda.gov
+
+   Access this report online:
+   www.ers.usda.gov/publications/err-economic-research-report/err209
+
+   Download the charts contained in this report:
+    · Go to the report's index page www.ers.usda.gov/publications/
+   err-economic-research-report/err209
+    · Click on the bulleted item "Download err209zip"
+    · Open the chart you want, then save it to your computer
+
+   Recommended citation format for this publication:
+   Carlson, Andrea and Edward Jaenicke. Changes in Retail Organic Price Premiums from
+   2004 to 2010, ERR-209, U.S. Department of Agriculture, Economic Research Service,
+   May 2016.
+
+     Cover images: Shutterstock and USDA logo.
+    Use of commercial and trade names does not imply approval or constitute endorsement by
+    USDA.
+
+   In accordance with Federal civil rights law and U.S. Department of Agriculture (USDA) civil rights regu-
+   lations and policies, the USDA, its Agencies, offices, and employees, and institutions participating in or
+   administering USDA programs are prohibited from discriminating based on race, color, national origin,
+   religion, sex, gender identity (including gender expression), sexual orientation, disability, age, marital status,
+   family/parental status, income derived from a public assistance program, political beliefs, or reprisal or
+   retaliation for prior civil rights activity, in any program or activity conducted or funded by USDA (not all
+   bases apply to all programs). Remedies and complaint filing deadlines vary by program or incident.
+   Persons with disabilities who require alternative means of communication for program information (e.g.,
+   Braille, large print, audiotape, American Sign Language, etc.) should contact the responsible Agency or
+   USDA's TARGET Center at (202) 720-2600 (voice and TTY) or contact USDA through the Federal Relay
+   Service at (800) 877-8339. Additionally, program information may be made available in languages other
+   than English.
+   To file a program discrimination complaint, complete the USDA Program Discrimination Complaint Form,
+   AD-3027, found online at How to File a Program Discrimination Complaint and at any USDA office or write
+   a letter addressed to USDA and provide in the letter all of the information requested in the form. To request
+   a copy of the complaint form, call (866) 632-9992. Submit your completed form or letter to USDA by: (1)
+   mail: U.S. Department of Agriculture, Office of the Assistant Secretary for Civil Rights, 1400 Independence
+   Avenue, SW, Washington, D.C. 20250-9410; (2) fax: (202) 690-7442; or (3) email: program.intake@usda.gov.
+   USDA is an equal opportunity provider, employer, and lender.
+Economic    United States Department of Agriculture
+Research
+Service     Changes in Retail Organic Price
+            Premiums from 2004 to 2010
+Economic
+Research    Andrea Carlson and Edward Jaenicke
+Report
+Number 209  Abstract
+
+May 2016    Organic foods are one of the most rapidly growing sectors of the retail food market.
+            This study applies a hedonic model to 2004-10 Nielsen Homescan data to estimate the
+            organic price premiums for 17 products. Eggs and dairy products generally have the
+            highest premiums, while fresh produce has the widest spread of premiums (ranging
+            from 7 percent of the nonorganic price for spinach to 60 percent for salad mix).
+            Processed food premiums range from 22 percent for granola to 54 percent for canned
+            beans. The strong organic premiums, combined with increased sales, suggest that there
+            is continued room for growth in the organic supply.
+
+            Keywords: organic food, organic price premiums, organic label, Homescan data, fruit
+            and vegetable prices, milk prices, egg prices, processed food prices, hedonic price
+            model, organic consumers
+
+            Acknowledgments
+
+            The authors thank Catherine Greene, Diansheng Dong, and Hayden Stewart of USDA's
+            Economic Research Service (ERS) for their comments. We also thank Betsy Rakola,
+            Organic Policy Advisor of USDA's Agricultural Marketing Service, and Terry Long
+            of USDA's Specialty Crops Market News, AMS, for their comments, as well as peer
+            reviewers Ilya Rahkovsky of ERS, Travis Smith of the University of Georgia, Carolyn
+            Dimitri of New York University, and Mark Bradley of USDA's Agricultural Marketing
+            Service, National Organic Program. We also thank ERS editor Susmita Pendurthi and
+            ERS designer Cynthia A. Ray.
+
+            About the Authors
+
+            Andrea Carlson is an economist at the USDA's Economic Research Service.
+            Edward Jaenicke is an Associate Professor of Agricultural Economics at Penn
+            State University.
+Contents
+
+Summary.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . iii
+Introduction. .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 1
+Background.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 2
+Methods.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 6
+
+   Model. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+   Data . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+Results .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 14
+   Store Type, Season, and Geographic Market. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  18
+   Eggs and Dairy. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20
+   Fresh Fruits and Vegetables. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+   Processed Foods. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+Conclusion.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 32
+References .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 34
+Appendix Tables--Regression Results.  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 38
+
+                                                                  ii
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+                                                     United States Department of Agriculture              Summary
+
+                                                     A report summary from the Economic Research Service  May 2016
+
+            United States Department of Agriculture  Changes in Retail Organic Price Premiums
+                                                     from 2004 to 2010
+Economic    Changes in Retail Organic Price
+Research    Premiums from 2004 to 2010
+Service
+            Andrea Carlson and Edward Jaenicke
+Economic
+Research
+Report
+Number 209
+
+May 2016
+
+                                                     Andrea Carlson and Edward Jaenicke
+
+ Find the full report                                What Is the Issue?
+  at www.ers.usda.
+gov/publications/err-                                The organic food sector has been one of the fastest growing parts of the food industry since the
+economic-research-                                   U.S. Department of Agriculture (USDA) began regulating organic labels on food in 2002. It
+                                                     even grew during the Great Recession (December 2007-June 2009), as organic products became
+    report/err209                                    available in more retail outlets. Bringing organic products to retail incurs costs at every level--
+                                                     from farmers and ranchers who must follow the USDA organic regulations (including avoiding
+                                                     synthetic fertilizers, sewage sludge, irradiation, or genetic engineering), to food processors and
+                                                     retailers who must ensure that organic and nonorganic products are not comingled by their
+                                                     transporters or within their facilities. In order to earn a return on these costs, all participants in
+                                                     the organic food supply chain must receive a higher price (ordinary price plus a premium) for
+                                                     the product. While the wholesale price premium can be determined by comparing the prices of
+                                                     organic and nonorganic agricultural products, the products available at the retail level are more
+                                                     diverse, and therefore the price premium cannot be determined by a simple price comparison.
+
+                                                     What Did the Study Find?
+
+                                                     Retail-level organic price premiums were more than 20 percent of the nonorganic price for
+                                                     all but 1 (spinach) of the 17 products analyzed in this study. Between 2004 and 2010, most
+                                                     premiums fluctuated--i.e., they did not steadily increase or decrease. Only three products
+                                                     demonstrated a steady decrease in their premiums (spinach, canned beans, and coffee), and
+                                                     only the yogurt premium steadily increased throughout the entire study period.
+
+                                                     Eggs and dairy had the highest premiums in 2010, ranging from 52 percent of the nonorganic
+                                                     price for yogurt to 82 percent for eggs. Fresh fruits and vegetables, generally recognized as the
+                                                     largest part of the organic market, had the widest spread of premiums (ranging from 7 percent
+                                                     for spinach to 60 percent for salad mix). Processed food premiums ranged from 22 percent for
+                                                     granola to 54 percent for canned beans.
+
+  ERS is a primary source                            The share of organic product sold (of the total market) increased steadily for all products
+ of economic research and                            studied. Sales in 2010 were generally higher for the organic products with lower premiums (e.g.,
+                                                     spinach, granola, and carrots); sales were also higher for foods frequently fed to children (such
+   analysis from the U.S.                            as baby food).
+Department of Agriculture,
+ providing timely informa-                                                                       www.ers.usda.gov
+tion on economic and policy
+issues related to agriculture,
+food, the environment, and
+
+        rural America.
+How Was the Study Conducted?
+
+The analysis was based on data from Nielsen's Homescan data for 2004-10. The participating Homescan house-
+holds used a barcode scanner to record all food purchases from stores, including grocery stores, supercenters,
+club stores, drug stores, convenience, and health food stores. The authors used a hedonic price-estimation model
+to isolate the organic price premium from the other attributes of the various products, such as package size,
+level of convenience, type of package, or the variety of the product (e.g., salad mix with spring greens versus a
+cabbage mix). Other factors that affected price were the type of store, month of the year, region of the country,
+and whether or not the product was sold under a brand name or a private label (store brand).
+
+     Organic price premiums, 2010
+
+        Spinach, 7
+        Granola, 22
+        Carrots, 27
+        Potatoes, 28
+        Apples, 29
+        Baby food - junior, 29
+        Bread, 30
+        Baby food - strained, 31
+        Soup, 33
+        Celery, 44
+        Coffee, 47
+        Yogurt, 52
+        Spaghetti sauce, 53
+        Canned beans, 54
+        Salad, 60
+        Milk, 72
+        Eggs, 82
+      0 10 20 30 40 50 60 70 80 90
+
+                                                          Percent above nonorganic price
+      Notes: Bars depict the size of the relative price premium for each product in 2010.
+      Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2010).
+
+                                                          www.ers.usda.gov
+Changes in Retail Organic Price
+Premiums from 2004 to 2010
+
+Introduction
+
+Organic food sales have risen rapidly since the U.S. Department of Agriculture (USDA) introduced
+the USDA organic seal and started regulating organic labels in 2002. Although some studies find
+that consumers feel the higher price for organic food is a barrier to purchasing it, the organic market
+continued to expand even during the Great Recession.1 As more consumers demanded organic prod-
+ucts, retailers responded by making organic foods available well beyond health food stores and food
+co-ops. Most major food retailers have also introduced their own private-label organic line, in addi-
+tion to carrying major organic brands.
+
+The increased demand for organic products put a strain on the supply and led to the inclusion of
+a goal in the USDA strategic plan to increase the number of certified organic operations (USDA,
+2014). One key factor to achieving this goal is whether farmers know that they will receive a suffi-
+cient economic return if they switch to organic farming. McBride et al. (2015) find that the economic
+return on organic field crops is higher than for nonorganic field crops. This is primarily due to the
+higher price premium that organic farmers receive for their crops. Organic field crops are also used
+as feed for organic animals and ingredients in organic food sold to consumers.
+
+While field-crop farmers can determine their organic premium by examining prices at the whole-
+sale terminal-market2 level, retailers and investment firms need to know the retail-level organic
+price premium--i.e., the extra cost consumers pay for purchasing certified organic foods. For
+farmers who use direct marketing (generally not used for field crops), studies find that prices are set
+based on local demand and supply (King et al., 2010) and these farmers can compete with grocery
+stores, particularly in rural areas (Valpiani et al., 2015). Knowledge of the organic price premium
+at the retail level can assist these farmers in setting prices for the direct-sale market.3 In addi-
+tion, consumers may be interested in knowing whether the extra price they pay for organic food is
+because it is organic, or because of some other factor (such as the flavor or some level of processing
+desired by the consumer).
+
+This report estimates the organic price premium for 17 products (including eggs and dairy products,
+fresh fruits and vegetables, and processed foods) for 2004-10, using Nielsen Homescan consumer
+panel data to determine the major trends in organic price premiums.
+
+   1The National Bureau of Economic Research defines the Great Recession as an 18-month downturn in the economy,
+lasting from December 2007 through June 2009.
+
+   2A terminal market is a central hub where agricultural commodities are brought for sale to food manufacturers and
+retailers.
+
+   3This statement is based on personal correspondence with Terry Long of USDA's Specialty Crops Market News re-
+garding unpublished results from the USDA, Agricultural Marketing Service's 2014 Survey of Organic Producers (March
+31, 2015).
+
+                                                                  1
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Background
+
+In order to sell an organic product in the United States, there are specific rules at each stage of the
+food supply chain--from the farmers and livestock producers, through the food processors and
+transporters, to the food retailers (see box, "What Does It Mean To Be Organic?"). Producers and
+handlers must maintain a current organic certification through a USDA-accredited third party,
+as well as take steps to ensure that organic products are not comingled with nonorganic ingredi-
+ents (including ensuring that the transportation services they employ do not allow comingling) or
+contaminated with prohibited substances. Although retailers are not required to maintain a certifica-
+tion, some choose to maintain a single certification at the retail level for their private-label products.
+Retailers also incur additional costs to keep organic and nonorganic products separated in the store.
+All these extra costs are reflected in the higher price of organic products. The best current estimates
+of the higher costs of organic food are at the wholesale level through USDA's Market News. The
+retail price premiums listed for fresh produce are based on store flyers and are for very specific
+products (such as Fuji apples in a 3-pound bag)--these are not necessarily representative of the
+entire retail market.
+
+Despite higher costs, organic food is the fastest growing sector in retail food today. According to
+the National Business Journal, total sales for organic food were just under $11.5 billion in 2004,
+climbing to $35.9 billion in 2014 (Organic Trade Association, 2015c). Some of this growth occurred
+during the Great Recession, as evidenced by Mintel Group's 2011 description of organic as "one of
+the few bright spots in a generally dreary consumer economy" during the last recession. The posi-
+tive growth trend continued after the recession--from 2011 to 2012, organic food sales grew 10.2
+percent, compared with only a 3.7-percent growth rate for all food sales (Organic Trade Association,
+2013a); they also grew 11.3 percent from 2013 to 2014 (Organic Trade Association, 2015c).
+
+In 2012, 75 percent of all consumers bought organic food at least occasionally, up from 66 percent
+in the early 2000s (Hartman Group, 2010). Additionally, 24 percent of all organic consumers today
+are considered core shoppers, meaning that they look for both the USDA organic seal and seek rela-
+tionships with the farmer. An additional 24 percent purchase organic foods on a regular basis; the
+remaining organic consumers are occasional purchasers with a range of understanding of what it
+means for a food to be labeled organic (Hartman Group, 2010).
+
+Although once believed to be a sector for the high-income consumer, organic consumers have always
+been fairly diverse in terms of income, race, and ethnicity (Dimitri and Oberholtzer, 2009; Lin et
+al., 2008; Organic Trade Association, 2015b; Organic Trade Association, 2015c; Smith et al., 2009;
+Stevens-Garmon et al., 2007). However, while organic consumers come from all income groups,
+studies indicate that price may continue to be a barrier for some consumers purchasing organic prod-
+ucts during economic hardships. In a 2010 study of consumers, the main reason cited by consumers
+who reduced their organic purchases from one year to the next was a change in their financial situa-
+tion (Hartman Group, 2010).
+
+Additionally, organic food purchases are also strong among families with at least one child under
+age 18 living in the home: 81 percent of these families chose organic foods at least some of the
+time in 2013 (Organic Trade Association, 2013b). The Organic Trade Association further notes that
+organic shoppers with children tend to visit more stores per week than consumers with children who
+do not purchase any organic products (Organic Trade Association, 2013b).
+
+                                                                  2
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+What Does It Mean To Be Organic?
+
+When an agricultural product sold in the United States has the word organic somewhere on the
+package or is otherwise represented as organic, the product has been produced through approved
+methods and is regulated by the U.S. Department of Agriculture's Agricultural Marketing
+Service's National Organic Program. The main goal of the program is to ensure the integrity
+of products marketed in the United States as organic. The organic label requires that foods and
+other agricultural products be produced and handled "through approved methods that integrate
+cultural, biological, and mechanical practices that foster cycling of resources, promote ecological
+balance, and conserve biodiversity. Synthetic fertilizers, sewage sludge, irradiation, and genetic
+engineering may not be used" (USDA, National Organic Program, 2011, p. 2). Once a product
+leaves the farm, the transporters, food processors, and retailers must guarantee that the organic
+products are not comingled with nonorganic products or contaminated with substances prohibited
+by the National Organic Program to ensure transparency and verification throughout the entire
+supply chain. (While we mention consumer preferences about the health and safety of organic
+foods, the USDA organic regulations do not address these topics.)
+
+In order to maintain the integrity of the organic label, USDA's National Organic Program regu-
+lates all organic crops, livestock, and agricultural products. Farmers, ranchers, processors, and
+handlers must maintain a current organic certificate through a USDA-accredited third party
+(also known as a certifier). Both producers and handlers must keep accurate records which
+verify that they used only approved organic methods, including the use of organic ingredients
+in processed food. Certifiers inspect all certified operations at least once each year to verify
+that all USDA organic regulations are being followed in the growing or raising, transporting,
+and processing of organic products. In addition, USDA conducts audits and investigations using
+both monitoring and enforcement to ensure that all products labeled organic actually meet the
+USDA organic regulations.
+
+If a product carries the USDA organic seal, that product must be both certified organic and have
+95 percent or more organic content. However, products do not need to display the USDA organic
+seal to fall under the regulation. Some food processors may choose not to put the seal on their
+package; other products are labeled "made with organic ____," which indicates that the ingredi-
+ents listed as organic meet the USDA organic standards, and that the product contains at least 70
+percent organic ingredients. "Made with organic ___" products must also be certified, but they
+may not carry the seal. If the seller represents the product as organic and/or the word organic
+appears on the package, then it must follow the USDA organic regulations.
+
+In this study, we chose to define a product as organic if it made any organic claim on the prin-
+ciple display panel (including products that contain at least 70 percent organic ingredients)--we
+cannot infer a product's organic status from brand names, ingredient lists, or other indicators due
+to data limitations. For more information on USDA's National Organic Program, visit the USDA
+Agricultural Marketing Service's National Organic Program website at http://www.ams.usda.
+gov/about-ams/programs-offices/national-organic-program.
+
+                                                               3
+                           Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                           Economic Research Service/USDA
+The growing consumer base has increased organic's share of total food sales--the total is nearly 5
+percent of total food sales, and it is significantly higher for some categories (such as fresh fruits and
+vegetables) (Organic Trade Association, 2015c). The fresh fruits and vegetables category continues
+to be the largest segment of organic food, occupying about 35 percent of all organic sales in 2012
+(Organic Trade Association, 2013a). This is down slightly from earlier in the decade as snacks,
+packaged goods, condiments, meat, poultry, and fish occupy a slightly larger share than they did in
+the early 2000s (Dimitri and Oberholtzer, 2009).
+
+Another trend affecting both organic and nonorganic produce is the rise of prepackaged produce
+items. In the past, consumers selected produce items from a bin and placed them in a bag them-
+selves. Most produce items are now available in prewrapped packages, allowing for an expansion in
+national brands and private-label offerings (also called store brands). Prepackaged produce allows
+for an even greater diversity within each produce item as different levels of processing are available
+(e.g., prewashed, chopped, and microwave-ready bags).
+
+Another trend that has contributed to the growing organic market share is the increase in the number
+of retail chains that offer both national- and regional-brand organic and private-label organic prod-
+ucts. In 2000, only Whole Foods offered an organic private label; however, all major chains had
+an organic private label, and organic foods were available in most major grocery stores by 2008
+(Dimitri and Oberholtzer, 2009). Organic snacks saw the largest growth in private-label sales in
+2012, followed by dairy, breads, and grains (Organic Trade Association, 2013a). As private-label
+brands spread beyond the natural food stores, consumers are purchasing organic food from a broader
+spectrum of food outlets. About 58 percent of organic food was purchased in stores that were not
+health or natural food stores in 2012. Club stores were a small, but rapidly growing outlet for organic
+products in 2011 (Organic Trade Association, 2013a); in 2015, Costco was the largest seller of
+organic products in the United States (Ledbetter, 2015).
+
+These changes to the organic sector led Dimitri and Oberholtzer (2009) to conclude that the market
+had shifted from supply driven (where farmers had trouble finding customers) to a demand-driven
+market with inadequate supply. The increased sales in the sector and previous estimates of organic
+price premiums suggest that consumers are willing to pay more for organic foods for certain prod-
+ucts, particularly those like milk or baby food that are frequently fed to children. However, the
+number of dairy cows in the organic herds has not grown as rapidly as the demand for milk, mainly
+due to shortages in organic feed as well as the 3-year transition period required to convert nonor-
+ganic pastureland to organic pastureland (Greene, 2014; Greene, 2015). This may lead to higher
+organic price premiums in the future for milk.
+
+USDA's Agricultural Market Service currently estimates the prices of organic products at the whole-
+sale terminal market level, and at the retail level based on store flyers (USDA Market News), but
+there is not a complete retail estimate of price premiums. Consumers are clearly willing to pay for
+the extra costs of producing organic food but estimating how much more they are actually paying
+for organic is no small feat, even for a relatively simple product like carrots (let alone for more
+complex products, such as soup or bread). For example, carrots come in several different size pack-
+ages, can be purchased with or without the tops, as baby carrots, or prechopped. While it is possible
+to compare the price of an organic and nonorganic, 1-pound bag of baby carrots sold under the
+same label, this would leave out chopped, shredded, and whole carrots, as well as other bag sizes.
+This method would also not allow researchers to capture any brand differences that the consumer
+may perceive. Likewise, soup and bread have multiple varieties, and soup can come in different
+types of packages. Thus, we cannot determine the organic price premium by simply comparing the
+
+                                                                  4
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+difference in price between an organic product and a nonorganic product at the broad retail-product
+category. The organic product may be more expensive simply because it has some additional level of
+processing or flavor desired by the consumer. Additionally, the organic premium would be underesti-
+mated if nonorganic products are in a more expensive package, such as a microwave-ready container,
+than the organic products.
+Previous USDA research estimated price premiums for several produce items in 2005 and 2006
+(Greene et al., 2009; Lin et al., 2008; Smith et al., 2009). These premiums ranged from about 15
+percent for onions and carrots to about 109 percent for skim milk. These studies also note that prod-
+ucts with the lowest organic premiums also had the highest organic market share (although organic
+milk has a high market share despite its high premium). However, these studies were not able to
+examine trends in organic price premiums.
+In 2010, the Hartman group said that consumers believe that the price gap between organic and
+conventional food was getting smaller (Hartman Group, 2010). The Hartman Group further
+reports that many consumers are not willing to pay more than about 30 percent more for organic
+food. If the retail organic price premium is shrinking, then it may not be sufficient to offset the
+additional costs of production, leading farmers, ranchers, and handlers to exit the organic market.
+In this study, we test whether the organic price premium is getting smaller over time by estimating
+the premium for 17 products from 2004 to 2010, including milk and eggs, fresh fruits and vegeta-
+bles, and processed foods.
+
+                                                                  5
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Methods
+
+We used Nielsen Homescan data to estimate a hedonic price model, which incorporated both
+demand and supply factors in one equation. Results from the estimated model allowed us to esti-
+mate the organic price premium over all specific products in a category, allowing us to estimate the
+organic price premium for an entire category (such as soup or bread) even though specific products
+come in a wide variety of flavors, packages, sizes, and health attributes. This model allowed us to
+control for these product characteristics.
+
+Model
+
+We use the concept of product differentiation to determine the trends in the organic price premium
+for 17 products. For organic food products to sustain a higher price than their nonorganic counter-
+parts, consumers and producers must believe that that the two product versions are fundamentally
+different (see box, "The Organic Price Premium Depends On Product Differentiation").
+
+We defined the organic price premium as the difference between the organic price and the nonor-
+ganic price when all other factors are equal. For example, to determine the premium for carrots, we
+could have defined carrots as whole carrots sold in 1-pound bags, where all carrots in the organic
+and conventional bag are of a similar size and taste. Unfortunately, this premium would have left
+out baby or prechopped carrots, larger and smaller bag sizes, and different levels of quality. While
+the taste and freshness of the carrots are not observable in most data containing prices, the brand is
+observable and some consumers may use the brand as a measure of quality. In other words, we need
+to be able to control for these factors to isolate the organic price premium.
+
+The hedonic model was developed from a model introduced by Lancaster (1966) as an alterna-
+tive to the neoclassical demand theory where consumers choose products available on the market
+or bundles of products. Instead, under Lancaster's model, consumers choose characteristics, such
+as flavor, nutritional value, color, package size, or level of convenience. The assumption was that
+each of these product attributes has a separate value and, therefore, an implicit price. Rosen (1974)
+augmented the theory by combining supply and demand into a single equation, assuming that each
+characteristic carried costs from the supply equation and willingness to pay from the demand equa-
+tion. Rosen (1974) showed that, when a product market is in equilibrium, a product's price can be
+framed as a function of individual product attributes, and this function can be estimated with observ-
+able data. Underlying assumptions included the neoclassical assumption of perfect competition, and
+two additional assumptions: that the attributes can be separated, and that the product attribute space
+is continuous. Ladd and Suvannunt (1976) presented the combined equation and empirically tested it
+with prices of meat, dairy, and poultry items and the nutritional characteristics of each. Other studies
+used hedonic models to estimate the marginal price of characteristics of frozen meat and seafood
+(Ahmad and Anders, 2011), the treatment of laying hens and the price of eggs (Chang et al., 2010),
+and the price premium for organic food (He and Bernard, 2011; Kiesel and Villas-Boas, 2007; Lin et
+al., 2008; Smith et al., 2009). However, this study is the first to estimate the organic price premium
+over a broad range of products and years. In examining results over several years, we were able to
+identify additional attributes to include in our model; these were not identified in previous work,
+which generally covered a short timespan.
+
+In our model, consumers purchase and stores supply a general product that can be decomposed
+into a collection of product characteristics, such as organic, taste, flavor, nutritional characteristics,
+
+                                                                  6
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+The Organic Price Premium Depends On Product Differentiation
+
+Product differentiation occurs when both consumers and producers accept that the organic and
+nonorganic products are fundamentally different. Economic theory requires product differentia-
+tion to exist in order for producers to charge more, and for consumers to be willing to pay more
+for one product than the other.
+
+On the producer side, a large part of the organic certification process focuses on rules and
+requirements that (a) describe how organic production is different from nonorganic produc-
+tion and (b) document those differences via detailed farm records. For example, the certifica-
+tion process requires organic farmers to avoid materials that are commonly used in nonorganic
+production, such as synthetic fertilizers and pesticides in crop production and the use of antibi-
+otics and hormones in livestock production.
+
+On the consumer side, the U.S. Department of Agriculture's (USDA) organic labeling require-
+ments guarantee that the differences established by certified organic producers are maintained in
+the market place. Only products that meet production certification requirements can use the term
+organic or carry the USDA organic seal. Thus, a consumer knows that USDA Organic is intrinsi-
+cally linked to the production practices specified by the USDA's National Organic Program.
+
+With production and market differentiation firmly established by the USDA organic standards
+and labeling requirements, the price of organic products is determined by supply and demand
+factors. Because of the additional requirements and restrictions, organic crops and foods
+can have higher production costs than nonorganic crops and foods. At the same time, some
+consumers may have a higher willingness to pay for organic products than nonorganic prod-
+ucts. These two factors (i.e., potentially higher production costs and willingness to pay) are the
+supply and demand forces that support a significant organic price premium; however, it is the
+establishment of product differentiation via the USDA standards and labels that allows the price
+premium to be sustained in the market.
+
+and the package size and type. In equilibrium, the product price is influenced by both the cost of
+supplying these attributes and the demand for them. The model is:
+
+(1) p = 0 + 1(organic) + 2 ( private label) + 3(organic * private label) +
+ 61                         8                                  J
+    k =1  k  (market )k  +     l =1  l  (retail  channel)l  +      j =1    j  (  product  char) j  +  e,
+
+where p is the price paid in the purchase observation, organic is an indicator variable for whether or
+not the product claims to be organic on the package, private label indicates whether the product is
+sold under a store's private label brand, product char is a set of product characteristics that affects
+both the supply and the demand of the product, market is a set of binary indicators for the retail
+market, retail channel indicates the type of store (grocery, health food store, supercenter, mass
+merchandiser, etc.), i, k, l, and j are estimable parameters, and e is the error term. The product
+characteristics include the package size, flavor, type of product, purchase month, and indicators of
+quality (e.g., brand). Each of these impacts the supply and the demand of the product. For example,
+growing and producing organic food has a different set of costs than nonorganic food does, which
+affects supply (Greene et al., 2009; McBride et al., 2015; Slattery et al., 2011). At the same time,
+some consumers are willing to pay more for organic than they would for conventional food, which
+
+                                                   7
+             Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                         Economic Research Service/USDA
+impacts demand. When the market is in equilibrium, the organic attribute variable can accurately
+represent the combined contribution that organic makes to the product price.
+
+A number of other product attributes, besides organic, will impact the price of the product. For
+example, many stores now sell organic products under their own private label. Because stores typi-
+cally contract with other manufacturers to make the product, the supply chain for private label
+is different than for branded products (where the company which owns the brand also owns the
+processing facility). For consumers, it may also be less convenient to purchase some private labels
+because, unlike the potential presence of multiple national or regional brands, only one private label
+is generally available in any one store.
+
+The season of the year also affects the price. For example, hot soup is not very appealing on a hot
+summer day in August, so consumers are not as likely to purchase soup in August as they are in
+November. Likewise, some fruits and vegetables can only be produced and harvested at certain
+times of the year, and must be stored (if possible) for other times. Additionally, stores sometimes
+reduce the price of some products when they are in high demand (Chevalier et al., 2003). The retail
+channel also affects the price since different channels represent different levels of retail services,
+and various retail services are appealing to different consumers at different levels (and have various
+levels of costs for the retailer). Technically, the retail channel is a general indication for a bundle of
+attributes (e.g., onsite bank, in-store bakery, range of fresh produce, only organic produce, or avail-
+ability of nonfood items); these characteristics were beyond the scope of this paper, so we used a
+simple set of indicator variables for the retail channel to represent them.
+
+The hedonic price model is typically estimated for one specific geographic market. Since we have
+national data and are interested in a national organic premium, we included indicator variables for
+each of the 61 geographic markets in the Nielsen Homescan data and the four nonmetro market
+regions. Other researchers using the same data included demographic factors instead of markets
+(Chang et al., 2010; He and Bernard, 2011; Lin et al., 2008). Chang et al. (2010) treated the demo-
+graphics as willingness to pay and used the information to learn more about organic consumers.
+When we included these factors with the geographic markets, we found that much of the demo-
+graphic differences were captured in the market indicator variables; hence, we used the market vari-
+ables rather than consumer demographic variables when estimating the organic price premium.
+
+The final set of attributes in the model is unique to each product. For example, for canned soup,
+we included whether the product is sold in a microwave-ready container, a can, a carton, or pouch.
+We also controlled for whether it is sold as condensed soup. Following Ahmad and Anders (2011),
+we included an indication of brand, which could reflect unobservable quality differences. We used
+a separate binary variable for each of the nonorganic brands except the variable(s) for the major
+nonorganic brand(s), which were omitted from the estimation to prevent perfect multicolinarity. The
+appendix tables list the attributes used for each product, along with the results from the model.
+
+This model states that the price of a general product is a function of a long list of product attributes,
+one of which is organic. Since the model interacts the organic and private-label indicators, the
+organic price premium must be estimated by comparing the predicted general price under two cases:
+one where the product is nonorganic (i.e., where organic = 0) and one where the product is organic
+(i.e., where organic = 1). After estimating the parameters in equation (1), we estimated the organic
+premium by evaluating equation (1) with organic = 1 and organic = 0 and all other variables held at
+the mean, and taking the difference.
+
+                                                                  8
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Many food industry analysts identify the organic premium as a relative premium, where the
+premium is described as the organic product's price as a percentage of the nonorganic price. In our
+notation, this relative premium was defined as:
+
+                          ( ( ) ( ) )100 E p
+(2)   ( )Org premium % =        =organic 1,=all else mean  -E p  .=organic 0,=all else mean
+
+                                     ( )E p  =organic 0=, all else mean
+
+Note that both the estimate of the actual premium and the relative premium (equation 2) are func-
+tions of the estimated parameters in equation (1). In order to calculate the variance of the organic
+premium, we used the delta method, which uses a Taylor's series expansion to estimate the variance
+(Cameron and Trivedi, 2010). That is, if  is a function of all estimated parameters, , then we can
+write the variance as:
+
+( )(3)s2  =     ^   V^ (^       ^ ,
+                             '
+
+where V is the covariance matrix of the parameters.
+
+Data
+
+The Nielsen Homescan data is an annual, nationally representative panel of households' retail food
+purchases (Einav et al., 2008; Zhen et al., 2009). During the early years of our study (2004-06),
+the panel included approximately 40,000 households. For the remaining years (2007-10), the panel
+was expanded to approximately 60,000 households. Nielsen's major customers are food manufac-
+turers and vendors, but the wealth of information in the data is also useful to researchers. For each
+product-purchase observation, the data included the Universal Product Code (UPC), the price paid,
+the amount purchased, the type of retail channel (grocery store, supercenter, mass merchandiser,
+club, convenience store, drug store, natural food store, or other store), and various attributes of the
+product. Additional information was determined by reviewing the UPC description.
+
+A participating household was asked to use a handheld scanner to enter each of its food purchases
+when the food was brought into the home. Participants were also asked to enter products purchased
+at stores, but consumed away from home, as well as the store where the food was purchased. When
+available, Nielsen used the store's scanner data to enter the price of the product; for other stores,
+the consumer was asked to enter the price. For products that did not carry a UPC, such as produce
+sold loose and bagged by the consumer, only the total purchase price and broad category (fruits and
+vegetables, bakery, meat, etc.) were recorded after 2006. For this reason, we could only determine
+the price per pound for products that were sold with a UPC. While this may seem like a limiting
+factor to examine the price premium of organic produce, many commonly consumed produce items
+were sold in standard size bags with a UPC during the study period. However, we were not able to
+examine the organic price premium for meat and poultry, which is predominantly sold by the pound
+and without a UPC.
+
+                                                      9
+                Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                            Economic Research Service/USDA
+The data also included the retail market area where the consumer resides. Recorded purchases were
+assumed to be made in this market area. For consumers residing in rural areas, ERS created market
+areas for each of the nine census divisions. Household demographic data were also included in the
+sample, but not used in estimating the model.4
+
+Nielsen started coding whether the product was organic in 2004. Since the certification period began
+in 2002, this data set allowed us to examine the price premium from very close to the beginning
+of the USDA National Organic Program. Nielsen also included several codes for organic: one indi-
+cated whether the product carried the actual USDA organic seal, and another indicated whether the
+product made any organic claim on the package (including displaying the organic seal). This latter
+set included products that were made with organic ingredients, but did not qualify for the organic
+seal. Since a product cannot be sold as organic in the United States if it does not meet the standards
+of the USDA National Organic Program (Federal Code of Regulation, 2015), we include all products
+that Nielsen designated as organic or made with organic ingredients. Note that we only included
+products which made an explicit organic claim on the package. If the manufacturer only implies
+organic by brand name, including organic on the ingredient list or other mechanism of signaling to
+the consumer that the product is organic, Nielsen does not indicate that the product is organic.5
+
+The statistical properties of the Homescan data were validated by two studies: Einav et al., 2008
+and Zhen et al., 2009. Einav et al. (2008) matched Homescan purchase observations to data from
+a consumer-loyalty card program and found that quantity data is more accurately reported than
+price data. This is likely a result of the fact that Nielsen imputed prices by using store-level prices,
+averaged over a short period of time, instead of the actual price paid by the consumer. Zhen et al.
+(2009) compared the total expenditures of food purchases reported in Homescan with those in the
+Consumer Expenditure (CE) Study (a survey of U.S. consumers collected by the U.S. Bureau of
+Labor Statistics). They found that households that purchased more food (such as larger households)
+or those with a higher opportunity cost (such as higher income or more educated female heads of
+household) tended to underreport expenditures compared to the CE. While the price imputation and
+underreporting of purchases could cause biases in economic demand estimations, estimates of price
+differences are less susceptible to this bias where demographic information does not enter into the
+estimate itself. Since we compared the prices paid for organic versus nonorganic products, these
+limitations are less likely to affect results in our study.
+
+One econometric issue does arise from the fact that the data are a panel (multiple purchases of
+a product are made by the same household in a given year). Because households tend to stick to
+similar shopping patterns and have unique tastes and preferences, it is reasonable to assume that the
+purchase observations made by the same household are correlated with each other. Many of these
+
+   4Demographic variables are not typically included in a hedonic price model, though a variation of the hedonic model
+has been used to understand demographic factors that may affect the willingness to pay for organic products. In this
+study, we are interested in the premium that is currently being paid by all consumers, so it is not appropriate to include
+demographic variables. As a sensitivity check, we did include demographic variables in early estimates of the model and
+the results did not significantly differ from the results presented here.
+
+   5The National Organic Program requires that any type of organic claim made on the package must comply with the
+organic regulations. However, our data do not allow us to identify claims beyond the front of package labels.
+
+                                                                 10
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+effects are not observable in our data, so we use a random-effects model to control for them.6 This
+assumes that the households are randomly selected from a large population, and the set of unob-
+served effects associated with each household is also only one draw from a large population of unob-
+served effects. For the random-effects model, equation 1 becomes:
+
+(4) pit = 0 + 1(organic)it + 2 ( private label)it + 3 (organic * private label)it +
+ 61       k (market)ik  +  8        (retail  channel )lit  +  J           j(  product  char) jit  +  (eit  +  i ),
+    k =1                      l =1                                j =1
+
+where the i subscript indicates the observation for household i, and the subscript t indicates the date
+of purchase. The time variable, t, also allows for multiple purchases in one day. The error term
+(eit + ai) is now split into two parts: the random error, eit, and the unobserved household effects, i.
+This model allows us to control for the unobserved household effects in both the estimation of the
+price premium and the standard error of this estimate (Cameron and Trivedi, 2010; Greene, 2000).
+When estimating this equation with these data, we must adjust the standard errors to reflect potential
+heteroscedasticity in the data caused by the unobserved household effects.
+
+We selected products from three categories (fresh fruits and vegetables, eggs and dairy, and
+processed foods) to capture a broad spectrum of organic products with different sets of supply
+chains and consumer preferences. Within each category, we selected the foods that had the highest
+percentage of organic sales, purchase quantity, or purchase observations in 2010, based on the
+Homescan data--i.e., we ranked each product by percent of organic sales, percent of organic
+purchase quantity (weight or fluid ounces), and percent of organic transactions (table 1). We selected
+products that were ranked within the top 20 of at least one of these rankings. For fresh fruits and
+vegetables, we augmented our list with produce listed by the Environmental Working Group as
+having high pesticide use (Environmental Working Group, 2015) because we believed this was one
+source consumers would have consulted when making decisions about which products to purchase
+as organic.7
+
+Of the products we studied, spinach had the highest organic share in our data--about 40 percent of
+all spinach sales, 30 percent of all purchases, and 28 percent of the total pounds sold in 2010 were
+organic. Although fresh fruits and vegetables are generally touted as the leaders in organic sales,
+granola and strained baby food both had greater market penetration than the next produce item
+(carrots). After fresh produce, dairy and bread are considered gateway organic items (Hartman
+Group, 2010). We found only a small percentage of bread sales were organic, but milk and yogurt
+both had a modest penetration rate (around 5 percent of total sales).
+
+Other studies have also used these data to estimate organic price premiums (Greene et al., 2009; Lin
+et al., 2008; Smith et al., 2009; Zhang et al., 2009; Zhang et al., 2008), but those studies tended to
+cover a shorter time period and did not include as many individual product attributes.
+
+   6A fixed-effect model may appear to be more appropriate because of the possible endogenous relationship between the
+price and the error term. The benefit from a fixed-effect model comes from fully utilizing information on repeat pur-
+chases by the same household throughout a calendar year. Thus, any household characteristics that might be unobserved
+to the researcher but affect purchase behavior would be accounted for in a fixed-effect model. However, the drawback of
+a fixed-effect model would be the loss of information from households that only had a single purchase over the course of
+a year. For our study, the ignored transactions would approach 20 percent of the total transactions for a single product.
+More specifically, for the 14 of the 17 products, over 10 percent of the households that purchased the product recorded
+only 1 purchase, and 6 products had over 30 percent. For our study, we feel the drawbacks outweigh the benefits and, for
+this reason, we use a random-effects model that accommodates the single-purchase information.
+
+   7The USDA National Organic Program does not discuss the health impacts of organic versus nonorganic products.
+
+                                                                 11
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Table 1
+
+Organic sales, quantities, and purchase observations, 2004-10--continued
+
+Product                                                       2004 2005 2006 2007 2008 2009 2010
+
+Eggs and Dairy
+
+Eggs     Organic share of total sales of eggs (%)             0.75 1.35 1.81 1.97 2.16 2.65 3.42
+
+         Organic share of total number of eggs (%)            0.27 0.38 0.56 0.82 1.03 1.05 1.44
+
+         Organic share of total number of egg purchases (%)   0.41 0.62 0.80 1.14 1.33 1.37 1.67
+
+Milk Organic share of total sales of milk (%)                 1.31 1.84 2.62 3.56 4.28 5.04 5.46
+
+         Organic share of total gallons of milk (%)           0.63 0.88 1.16 1.89 2.37 2.29 2.62
+
+         Organic share of total number of milk purchases (%)  0.94 1.27 1.70 2.57 3.19 3.05 3.43
+
+Yogurt   Organic share of total sales of yogurt (%)           2.53 2.67 3.38 4.69 4.57 4.52 5.17
+
+         Organic share of total pints of yogurt (%)           1.95 1.95 2.35 3.37 3.35 3.23 3.57
+
+         Organic share of total number of yogurt purchases (%) 1.58 1.69 1.95 3.25 3.15 3.10 3.52
+
+Fresh fruits and vegetables
+
+Apple    Organic share of total sales of apples(%)            1.39 1.97 3.52 3.44 3.93 5.26 6.58
+
+         Organic share of total pounds of apples (%)          0.76 1.23 2.15 2.41 2.66 3.99 4.88
+
+         Organic share of total number of apple purchases (%) 1.10 1.55 2.71 2.83 3.24 4.34 5.00
+
+Carrot   Organic share of total sales of carrots (%)          3.55 5.22 11.39 12.03 14.42 14.67 14.69
+
+         Organic share of total pounds of carrots (%)         2.99 4.70 10.38 10.94 14.27 15.12 14.84
+
+         Organic share of total number of carrot purchases (%) 3.32 4.30 8.39 8.58 9.92 10.13 10.14
+
+Celery   Organic share of total sales of celery (%)           0.70 0.81 1.44 2.33 1.77 1.97 2.22
+
+         Organic share of total bunches of celery (%)         0.53 0.56 1.00 1.83 1.20 1.43 1.59
+
+         Organic share of total number of celery purchases (%) 0.53 0.58 1.04 1.91 1.26 1.50 1.68
+
+Potato   Organic share of total sales of potatoes (%)         0.39 0.51 0.84 1.09 1.29 1.30 1.57
+
+         Organic share of total pounds of potatoes (%)        0.19 0.27 0.45 0.60 0.78 0.71 0.72
+
+         Organic share of total number of potatoe purchases (%) 0.27 0.39 0.72 0.94 1.20 1.18 1.26
+
+Salad    Organic share of total sales of salad (%)            4.93 5.49 6.65 6.54 7.33 8.83 10.82
+
+         Organic share of total pounds of salad (%)           2.09 2.06 2.87 2.84 3.14 4.02 5.01
+
+         Organic share of total number of salad purchases (%) 3.50 3.76 4.57 4.59 4.90 5.73 7.25
+
+Spinach  Organic share of total sales of spinach (%)          5.90 5.66 19.23 25.41 31.93 31.94 40.06
+
+         Organic share of total pounds of spinach (%)         1.70 2.13 10.50 14.19 19.92 21.25 28.00
+
+         Organic share of total number of spinach purchases (%) 4.74 4.32 14.07 19.48 24.17 24.20 30.68
+
+Single-ingredient processed food
+
+Canned   Organic share of total sales of canned beans(%)      0.74 1.77 2.97 3.89 4.12 3.86 3.89
+beans
+
+         Organic share of total pounds of canned beans (%)    0.34 0.95 1.68 2.26 2.63 2.61 2.65
+
+         Organic share of total number of canned bean         0.47 1.16 1.96 2.76 3.32 3.11 3.13
+         purchases (%)
+
+Coffee   Organic share of total sales of coffee (%)           0.43 0.82 1.42 1.52 1.81 2.06 2.90
+
+         Organic share of total pounds of coffee (%)          0.20 0.39 0.71 0.74 0.82 0.72 0.80
+
+         Organic share of total number of coffee purchases (%) 0.24 0.50 0.86 1.05 1.32 1.32 1.73
+                                                                                                                                               Continued--
+
+                                                                   12
+                             Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                         Economic Research Service/USDA
+Table 1
+
+Organic sales, quantities, and purchase observations, 2004-10--continued
+
+Product                                                             2004 2005 2006 2007 2008 2009 2010
+
+Multi-ingredient processed food
+
+Bread       Organic share of total sales of bread (%)               0.49 0.57 0.95 1.18 1.25 1.07 1.29
+
+            Organic share of total pounds of bread (%)              0.27 0.34 0.58 0.78 0.83 0.67 0.80
+
+            Organic share of total number of bread purchases (%) 0.29 0.33 0.55 0.74 0.71 0.58 0.66
+
+Granola     Organic share of total sales of granola (%)             4.93 14.92 22.57 25.06 27.47 31.23 29.51
+
+            Organic share of total pounds of granola (%)            3.24 9.24 15.32 21.07 22.92 26.04 25.20
+
+            Organic share of total number of granola purchases (%) 4.47 10.90 17.62 22.96 25.19 27.55 25.23
+
+Soup        Organic share of total sales of soup (%)                0.68 1.35 2.09 3.00 3.38 3.58 4.01
+
+            Organic share of total pints of soup (%)                0.48 1.07 1.78 2.73 3.16 3.10 3.40
+
+            Organic share of total number of soup purchases (%) 0.47 0.86 1.31 1.87 2.06 2.20 2.42
+
+Spaghetti   Organic share of total sales of spaghetti sauce (%)     0.55 2.12 3.24 3.43 3.13 2.63 2.45
+sauce
+
+            Organic share of total pints of spaghetti sauce (%)     0.28 1.45 2.16 2.27 1.99 1.64 1.46
+
+            Organic share of total number of spaghetti sauce        0.35 1.74 2.54 2.60 2.17 1.78 1.67
+            purchases (%)
+
+Baby food
+
+Baby food   Organic share of total sales of jr baby food (%)        0.86 0.71 1.38 3.29 4.86 4.63 6.80
+- junior
+
+            Organic share of total ounces of jr baby food (%)       0.45 0.41 1.24 3.08 4.59 4.49 7.57
+
+            Organic share of total number of jr baby food           0.49 0.35 0.72 3.07 4.35 4.13 5.76
+            purchases (%)
+
+Baby food   Organic share of total sales of strained baby food (%)  13.16 14.24 17.00 22.38 21.63 21.27 18.80
+- strained
+
+            Organic share of total ounces of strained baby food     12.19 12.80 15.22 20.07 20.03 19.51 17.76
+            (%)
+
+            Organic share of total number of strained baby food     9.79 11.14 10.95 13.39 13.32 13.05 14.13
+            purchases (%)
+
+Note: The organic sales of the number of purchases is the number of sales transactions of the product that were organic divided by the total
+number of transactions of that product. A transaction can be one or several units of the product. For example, if a Homescan participant
+purchases two packages of 1 dozen eggs at the same time, this is one sales transaction.
+
+Source: USDA, Economic Research Service estimates using Nielsen Homescan Data, 2004-10.
+
+                                                  13
+            Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                        Economic Research Service/USDA
+Results
+
+We estimated equation 4 for each product and each year using STATA 14, xtreg with cluster robust
+standard errors. After estimating the premium, we used equation 2 to estimate the percent of the
+nonorganic price (or relative price) and equation 3 to estimate the delta method variance of both esti-
+mates, using STATA 14 nlcom command. Each year is run separately for each product to facilitate
+estimation with very large numbers of observations.
+
+Organic price premiums as a percent of the nonorganic price for 2010 are in figure 1. In 2010, all
+premiums were positive--i.e., the organic price was higher than the conventional price after control-
+ling for attributes that may affect the product's demand and supply. Dairy and eggs generally had
+the highest retail-level premiums, ranging from 52 percent of the nonorganic price for yogurt to 82
+percent for eggs. Fresh fruits and vegetables (generally considered the largest part of the organic
+market) also had the widest spread of premiums, ranging from 7 percent for spinach to 60 percent
+for salad mix. Among processed foods, relative organic premiums ranged from 22 percent for
+granola to 54 percent for canned beans.
+
+For the most part, price premiums exhibited the most volatility in the early years before 2007 (when
+the USDA National Organic Program was relatively new) (table 2). While some product price
+premiums did increase or decrease over the entire study period, most fluctuated from year to year. In
+order to check which changes were statistically significant, we regressed the premium as a percent
+of the conventional price on time, with one observation for each year. If time was significant, then
+we defined the premium as either increasing (positive coefficient on time) or decreasing (negative
+
+Figure 1
+
+Organic price premiums, 2010
+
+  Spinach, 7
+  Granola, 22
+  Carrots, 27
+  Potatoes, 28
+  Apples, 29
+  Baby food - junior, 29
+  Bread, 30
+  Baby food - strained, 31
+  Soup, 33
+  Celery, 44
+  Coffee, 47
+  Yogurt, 52
+  Spaghetti sauce, 53
+  Canned beans, 54
+  Salad, 60
+  Milk, 72
+  Eggs, 82
+
+ 0 10 20 30 40 50 60 70 80 90
+                                                     Percent above nonorganic price
+
+Notes: Bars depict the size of the relative price premium for each product in 2010.
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2010).
+
+                                                                 14
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Table 2                                                            2006     2007     2008     2009     2010  Trend
+
+Organic price premiums, 2004-10--continued                         152.37    94.91    66.16    90.20   82.02 Undetermined
+                                                        2004 2005   0.001   0.000     0.000    0.000   0.000
+                                                                      1.73
+Eggs and Dairy                                                      0.001      1.47     1.18     1.31   1.23 Decrease
+Eggs                                                                        0.000     0.000    0.000   0.000
+                                                                    68.81
+            Percent of conventional price 118.98 172.96             0.000    52.71    50.34    80.62   71.96 Undetermined
+                                       Variance 0.001 0.001                 0.000     0.000    0.000   0.000
+                                                                      2.27
+                         Premium ($/dozen) 1.53 1.83                0.002     1.96     1.98     2.60    2.43 Undetermined
+                                       Variance 0.002 0.001                  0.001    0.001    0.001   0.001
+                                                                    42.17
+Milk                                                                0.000    42.02    35.11    40.24   52.05 Increase
+            Percent of conventional price 55.09 55.57                       0.000     0.000    0.000   0.000
+                                       Variance 0.000 0.000           0.30
+                         Premium ($/gallon) 1.85 1.87               0.000     0.31     0.27     0.32    0.43 Increase
+                                       Variance 0.003 0.002                 0.000     0.000    0.000   0.000
+                                                                    43.86
+Yogurt                                                              0.000    35.66    30.27    24.60   28.70 Undetermined
+            Percent of conventional price 25.49 28.44                       0.000     0.000    0.000   0.000
+                                       Variance 0.000 0.000           0.39
+                            Premium ($/8oz) 0.18 0.20               0.000     0.35     0.33     0.24    0.29 Undetermined
+                                       Variance 0.000 0.000                 0.000     0.000    0.000   0.000
+                                                                    19.87
+Fresh fruits and vegetables                                         0.000   22.23     24.59    25.35   26.66 Undetermined
+Apples                                                                      0.000     0.000    0.000   0.000
+                                                                      0.24
+            Percent of conventional price 32.98 34.48               0.000     0.29     0.32     0.32    0.34 Increase
+                                       Variance 0.001 0.001                 0.000     0.000    0.000   0.000
+                                                                    40.34
+                         Premium ($/pound) 0.26 0.28                0.000    28.91    45.86    36.80   43.54 Undetermined
+                                       Variance 0.001 0.000                 0.000     0.001    0.000   0.000
+                                                                      0.51
+Carrots                                                             0.000     0.40     0.63     0.50    0.60 Undetermined
+            Percent of conventional price 21.12 24.86                       0.000     0.001    0.000   0.000
+                                       Variance 0.000 0.000         19.85
+                         Premium ($/pound) 0.25 0.30                0.001    10.94    15.00    19.55   27.67 Undetermined
+                                       Variance 0.000 0.000                 0.000     0.000    0.000   0.000
+                                                                      0.10
+Celery                                                              0.000     0.06     0.09      0.11    0.16 Undetermined
+            Percent of conventional price 41.44 47.57                       0.000     0.000    0.000   0.000
+                                       Variance 0.000 0.000
+                         Premium ($/bunch) 0.51 0.61                                                                  Continued--
+                                       Variance 0.001 0.001
+
+Potatoes
+            Percent of conventional price 36.19 36.75
+                                       Variance 0.001 0.002
+                         Premium ($/pound) 0.15 0.16
+                                       Variance 0.000 0.000
+
+                                      15
+Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                            Economic Research Service/USDA
+Table 2                                                            2006    2007    2008    2009     2010  Trend
+
+Organic price premiums, 2004-10--continued                          46.11   49.52   59.24   61.97   59.78 Undetermined
+                                                        2004 2005   0.000  0.000    0.000   0.000   0.000
+
+Salad                                                                1.53    1.65    2.06     2.18    2.17 Increase
+            Percent of conventional price 38.62 61.30               0.002   0.001   0.002   0.001   0.001
+                                       Variance 0.000 0.000
+                         Premium ($/pound) 1.23 1.97                17.44   11.48   13.54     6.11    7.21 Decrease
+                                       Variance 0.002 0.002         0.001   0.002   0.000   0.002   0.000
+
+Spinach                                                              0.77    0.55    0.70    0.31    0.38 Decrease
+            Percent of conventional price 57.47 37.82               0.017   0.059   0.007   0.040   0.010
+                                       Variance 0.004 0.001
+                         Premium ($/pound) 1.78 1.40                70.98   71.48   56.90   49.42   54.18 Decrease
+                                       Variance 0.036 0.020         0.000   0.001   0.000   0.000   0.000
+
+Single-ingredient processed food                                     0.49    0.50    0.44    0.43    0.49 Decrease
+Canned beans                                                        0.000  0.000    0.000   0.000   0.000
+
+            Percent of conventional price 99.12 90.22               76.00  65.58    49.47   47.65   47.07 Decrease
+                                       Variance 0.001 0.006         0.001  0.000    0.000   0.000   0.000
+
+                         Premium ($/pound) 0.62 0.58                 3.34    3.03    2.44    2.35    2.36 Decrease
+                                       Variance 0.000 0.003         0.014   0.009   0.007   0.009   0.010
+
+Coffee                                                              28.58   27.18   25.16   30.96   30.21 Undetermined
+            Percent of conventional price 105.60 75.85              0.000  0.000    0.000   0.000   0.000
+                                       Variance 0.004 0.002
+                         Premium ($/pound) 3.97 3.22                 0.43    0.43    0.43    0.53    0.52 Undetermined
+                                       Variance 0.059 0.029         0.000  0.000    0.000   0.000   0.001
+
+Multi-ingredient processed food                                     37.69   35.60   33.39   27.84   21.88 Decrease
+Bread                                                               0.002  0.000    0.000   0.000   0.000
+
+            Percent of conventional price 30.08 46.15                0.94    0.93    0.91    0.79    0.62 Undetermined
+                                       Variance 0.000 0.009         0.011   0.001   0.001   0.001   0.002
+
+                         Premium ($/pound) 0.42 0.66                16.20   16.73   19.21   24.96   32.98 Undetermined
+                                       Variance 0.001 0.017         0.000  0.000    0.000   0.000   0.000
+
+Granola                                                              0.21    0.22    0.26    0.35    0.44 Undetermined
+            Percent of conventional price 38.91 33.12               0.000  0.000    0.000   0.000   0.000
+                                       Variance 0.019 0.001
+                         Premium ($/pound) 0.91 0.80                                                               Continued--
+                                       Variance 0.102 0.006
+
+Soup
+            Percent of conventional price 21.30 18.28
+                                       Variance 0.000 0.000
+                            Premium ($/pint) 0.26 0.23
+                                       Variance 0.000 0.000
+
+                                      16
+Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                            Economic Research Service/USDA
+Table 2                                                            2006     2007     2008     2009     2010  Trend
+
+Organic price premiums, 2004-10--continued                          34.67    41.33    44.17    34.73   52.74 Undetermined
+                                                        2004 2005   0.000   0.000     0.000    0.000   0.000
+
+Spaghetti sauce                                                      0.38     0.45     0.52     0.42    0.64 Undetermined
+            Percent of conventional price 72.13 34.84               0.000   0.000     0.000    0.000   0.000
+                                       Variance 0.001 0.000
+                            Premium ($/pint) 0.77 0.37              46.50    31.84    29.38    35.74   28.79 Undetermined
+                                       Variance 0.001 0.000         0.007   0.000     0.000    0.004   0.000
+
+Baby food                                                            0.53     0.36     0.36     0.43    0.34 Undetermined
+Baby food - junior                                                  0.009   0.000     0.000    0.005   0.000
+
+            Percent of conventional price 29.32 52.98               22.08    26.19    23.72    27.78   30.51 Increase
+                                       Variance 0.044 0.012         0.000   0.000     0.000    0.000   0.000
+
+                            Premium ($/6oz) 0.32 0.59                 0.13     0.16     0.16     0.19   0.22 Increase
+                                       Variance 0.054 0.015         0.000   0.000     0.000    0.000   0.000
+
+Baby food - strained
+            Percent of conventional price 18.20 17.79
+                                       Variance 0.000 0.000
+                            Premium ($/4oz) 0.11 0.11
+                                       Variance 0.000 0.000
+
+Source: USDA, Economic Research Service.
+
+coefficient); other products had premiums which we defined as fluctuating. For example, the retail
+organic price premium for spinach dropped from 57 percent of the nonorganic price in 2004 (or
+$1.78 per pound more for organic spinach) to about 7 percent in 2010 (or 38 cents per pound more
+for organic). Both the actual price premium and the relative premium for yogurt rose during the
+study period, while the organic price premium for bread did not exhibit a clear trend.
+
+Retail food prices were susceptible to price shocks and fluctuations based on agricultural commodi-
+ties during 2004-10. From late 2007 through 2008, food prices experienced a major price spike after
+remaining steady for the previous years included in this study; prices spiked again in late 2010 and
+in 2011. Price spikes are caused by both supply factors (e.g., weather, energy prices, and changes
+in the major producers or growers) and demand (e.g., food-safety scares, media stories, and trends
+in food choices). In some cases, price fluctuations affecting organic food production may coincide
+with those affecting nonorganic food production--in these cases, the organic price premium may be
+unaffected by underlying price shocks. However, we might also expect that the organic food prices
+in a mature market may fluctuate in a way that is different than nonorganic food prices. For example,
+organic food producers tend to sign more contracts for ingredients than conventional producers
+due to difficulties obtaining organic commodities. The risk-reducing nature of these contracts will
+cause organic prices to spike about a year after the conventional spikes that are caused by things like
+weather or input prices. Thus, fluctuations in the organic price premium could be due to differences
+in supply and demand shocks for organic and nonorganic food.
+
+The detailed regressions results (appendix tables) show factors that affect demand and supply of all
+products, as well as attributes unique to each product.
+
+                                      17
+Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                            Economic Research Service/USDA
+Store Type, Season, and Geographic Market
+
+Store type. All coefficients are compared to grocery stores in figure 2--a negative number indicates
+that the product is less expensive (on average) at the store type compared to grocery stores, while
+a positive number indicates it costs more. Mass merchandisers, supercenters, and other stores are
+generally less expensive than grocery stores (these differences are for all UPCs in the product, not
+just the organic or nonorganic one). Drug stores were also generally less expensive than grocery
+stores for items other than salad mix and strained baby food (although the number of observations
+for some products--particularly produce items--is lower than in the stores where food is more
+commonly purchased). On the other hand, convenience stores are generally more expensive (except
+for bread, milk, and spinach). Convenience stores may use bread and milk as loss leaders (i.e.,
+selling commonly purchased items at less than their cost in order to bring people into the store in
+the hope that they will purchase other higher priced items). Club stores are mixed--about half of
+the products studied are more expensive and about half are less. Health food stores were not added
+to the data until 2007 (and for some products, not until 2010)--our results suggest that health food
+stores are more expensive.
+
+Month of the year. Many products have a seasonal fluctuation in prices--i.e., they are more expen-
+sive during certain months of the year. In order to appropriately study seasonality, we would need
+to run the models over several years and use a fixed effect for season. However, this approach would
+make it difficult to estimate the organic price premium in each year. The changes shown in figure
+3 are changes in the unit price from January of that year, and represent changes in both supply and
+
+Figure 2
+
+Impact of store type on unit price
+
+Change in unit price from grocery store ($)                Eggs
+ 1.0                                                       Milk
+                                                           Yogurt
+0.5                                                        Apples
+                                                           Carrots
+0                                                          Celery
+                                                           Potatoes
+-0.5                                                       Salad mix
+                                                           Spinach
+-1.0                                                       Canned beans
+                                                           Coffee
+-1.5                                                       Baby food, junior
+                Club Mass Super Health Conven- Drug Other  Baby food, strained
+                                                           Bread
+      store merchan- center food ience store store         Granola
+                                                           Soup
+      diser                         store store            Spaghetti sauce
+
+Notes: Each dot represents the average change in price for that product, compared to grocery stores. For example,
+granola costs about $0.77 per 8 ounces more at club stores than at grocery stores. This estimate is an average of 2004-10
+for every item in the product category, not just the organic items.
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+                                            18
+      Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                  Economic Research Service/USDA
+Figure 3
+
+Impact of month on unit price
+
+Change in unit price from January ($)                           Eggs
+ 0.25                                                           Milk
+                                                                Yogurt
+0.20                                                            Apples
+                                                                Carrots
+0.15                                                            Celery
+                                                                Potatoes
+0.10                                                            Salad mix
+                                                                Spinach
+0.05                                                            Canned beans
+                                                                Coffee
+0                                                               Baby food, junior
+                                                                Baby food, strained
+-0.05                                                           Bread
+                                                                Granola
+-0.10                                                           Soup
+                                                                Spaghetti sauce
+-0.15
+
+-0.20 February  April       June       August October December
+
+       March           May             July September November
+
+Notes: Each dot represents the average change in price for that product, compared to January of the same year. For
+example, celery costs about $0.05 per bunch more in February than in January. This estimate is an average of 2004-10
+for every item in the product category, not just the organic items.
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+demand. We might see prices increasing throughout the year under normal inflation; thus prices that
+are higher in November or December compared to January do not necessarily mean that these prod-
+ucts exhibited a seasonal fluctuation in these months. However, prices that are consistently higher or
+lower in April, May, June, July, August, or September than in the other months may mean there are
+seasonal effects to the price of the product. For example, eggs are consistently less expensive from
+April through November. Since chickens lay more eggs in the summer months, this may represent
+a supply-side seasonal effect. Similarly, apples increase in price until July and start to decrease in
+price as the new harvest appears in stores in late August and September. Soup is more expensive
+from May through August­the price decreases in the fall months. Chevalier et al. (2003) also found
+that soup is less expensive during colder weather, and suggest stores charge a lower price during
+peak demand times.
+
+Geographic market. The analysis included a fixed effect for each individual market, defined as
+major metropolitan areas, and an additional set for rural areas for each census division. Differences
+in prices of aggregate food groups by these same geographic markets are documented by the
+Quarterly Food at Home Prices Database (QFAHPD) (Todd et al., 2010). We estimate geographic
+differences for individual products instead of groups of products, so direct comparison to the
+QFAHPD is not possible for most of our products. However, Todd et al. (2010) demonstrate that
+geographic price differences are significant, which we also found to be true. For example, we
+compare the change in the unit price between Boston and other markets in figure 4. Each dot repre-
+sents a separate market. Not surprisingly, prices in New England are closer to prices in Boston than
+
+                                                      19
+                Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                            Economic Research Service/USDA
+Figure 4
+
+Impact of region on unit price
+
+Change in unit price from Boston ($)                                           Eggs
+0.6                                                                            Milk
+                                                                               Yogurt
+0.4                                                                            Apples
+                                                                               Carrots
+0.2                                                                            Celery
+                                                                               Potatoes
+  0                                                                            Salad mix
+                                                                               Spinach
+-0.2                                                                           Canned beans
+                                                                               Coffee
+-0.4                                                                           Baby food, junior
+                                                                               Baby food, strained
+-0.6                                                                           Bread
+               New Middle South East East West West Mountain Pacific           Granola
+                                                                               Soup
+            England Atlantic Atlantic North South North South                  Spaghetti sauce
+                                              Central Central Central Central
+
+Note: Each dot represents the average change in price for that product, compared to Boston, MA. For example, milk costs
+about $0.30 per gallon more in the South Atlantic States than in Boston. This estimate is an average of 2004-10 for every
+item in the product category, not just the organic items.
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+in other parts of the country. Yogurt has a consistent price across the entire country. Milk generally
+costs less in the Middle Atlantic and the North Central regions, where milk is commonly produced;
+however, it cost more in the Pacific, including California, which is also a large dairy production
+State. Compared to prices in Boston, eggs are typically cheaper in most other cities (except for
+those in the Pacific market). Produce prices seem to decrease in markets that are further west; most
+produce items included in this study are produced in the West, especially the Mountain and Pacific
+regions. Canned beans and baby food demonstrate consistent prices across the country, while coffee
+is more expensive in the Mountain and Pacific markets. The Central and Mountain markets had
+lower prices than Boston for bread, granola, and soup, and the Central markets also had lower prices
+for spaghetti sauce.
+
+Eggs and Dairy
+
+Yogurt, milk, and eggs had organic price premiums that were generally higher than the other prod-
+ucts (fig. 5). This difference was likely driven by supply-side cost issues since organic livestock
+farmers must provide their animals with organic feed and pasture land, cover the cost of transi-
+tioning from a conventional to an organic herd, and only use organic healthcare practices (which do
+not allow the use of antibiotics or growth hormones).
+
+                                      20
+Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                            Economic Research Service/USDA
+Figure 5
+
+Organic price premiums for dairy and eggs
+
+Percent above nonorganic price
+200
+
+150
+                                                              Eggs
+
+100
+
+                  Milk
+
+50
+          Yogurt
+
+0                 2005  2006                                        2007  2008  2009   2010
+2004
+
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+Eggs, milk, and yogurt are considered part of the organic dairy sector, which experienced a
+7.1-percent growth in 2012. From 1999 to 2009, the sector experienced a 22-percent compound
+annual growth rate, compared to 17 percent for the entire organic market.8 The limited number
+of producers kept premiums high through at least 2012 (Organic Trade Association, 2013a). The
+premiums for two of the three products--milk and eggs--were the highest in the study, so it is not
+surprising that the lower priced private label has come to be an important part of the market since
+2009, particularly in the period beyond the years of this study.
+
+Despite the higher premium for these three products, they are among the most popular organic foods
+chosen by consumers. In 2012, 89 percent of households with children who purchased organic food
+purchased organic dairy products, and 25 percent of these households reported that they always
+choose organic (Organic Trade Association, 2013b).
+
+Eggs. In 2012, the organic egg market grew by 17.5 percent from 2011 (Organic Trade Association,
+2013a). A major difference between organic and conventional eggs is that most organic eggs are
+brown, and brown-egg-laying hens tend to be less productive but get along better in a cage-free
+setting (Chang et al., 2010). Unlike other retail products, customers have a range of nonorganic
+options that have some of the attributes carried by the organic certification, including cage free, free
+range, and no hormones or antibiotics. Consumers can also choose nonorganic brown eggs, which
+
+   8The entire organic market includes all organic products including food and nonfood. Unless otherwise noted, this
+paper focuses on only the food market.
+
+                                                        21
+                  Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                              Economic Research Service/USDA
+they may perceive as being more natural9 than white eggs. Our data did not allow us to include cage
+free or free range in our model, but we did include the egg color. Other attributes included in the
+model are omega 3 content, pasteurized, size, and grade, all of which have been shown to affect the
+price of eggs on a national level (Chang et al., 2010). In recent years, producers are experiencing
+pressure to switch to cage free, nonorganic eggs (Organic Trade Association, 2013a). These eggs
+would keep the laying hens out of small cages, but farmers would not need to provide organic feed
+and could still use antibiotics.
+
+Eggs saw the most dramatic drop in the organic price premium, though they still have the highest
+premiums in the study. In 2010, the organic egg premium was about 82 percent of the total conven-
+tional price, down from 173 percent in 2005. During this time, the Consumer Price Index (CPI) for
+eggs (dominated by nonorganic eggs) rose 33 percent in 2007, dropped during 2008-09, and rose
+again in 2010 (U.S. Department of Labor, 2014). While the 38-percent increase in the wholesale
+price of nonorganic eggs was due to salmonella in California, Minnesota, and Colorado (Piller and
+Brasher, 2010), the egg CPI continued to rise through 2014. The size of the organic price premium,
+on the other hand, followed the opposite trend. These price shocks to conventional eggs may explain
+the drop in the price premium as organic eggs may face different supply-side and demand-side
+factors than nonorganic eggs. Dimitri and Oberholzer (2009) found widely varying price premiums
+between 2004 and 2006, but their analysis only compared organic and nonorganic eggs, and did not
+consider other egg attributes. Chang et al. (2010) use quarterly point-of-sale data and observed an
+average premium of 85 percent for organic eggs during 2004-08. Our results appeared to be slightly
+higher, estimated on annual bases. Chang et al. (2010) did not control for the use of hormone or
+antibiotic use or the type of store or market; they also did not include an interaction term between
+private label and organic. However, they did include more attributes on production methods, such as
+cage free, pasture raised, and type of feed used, which our data did not allow us to include.
+
+Milk. In 2012, milk and cream experienced a nearly 9-percent growth in organic sales and occu-
+pied about 57 percent of organic dairy sales (Organic Trade Association, 2013a). We observed that
+about 5.5 percent of fluid milk sales were organic in 2010, which is comparable to the Organic Trade
+Association's estimation of 5 to 6 percent. The Organic Trade Association (2013a) listed the size of
+the organic milk market in 2010 at $3.9 million. The price premium for organic milk fluctuated for a
+few reasons. The organic premium was affected by world (nonorganic) milk prices, which are typi-
+cally cyclical. Milk prices rose rapidly in 2007 after both very low prices in 2006 (Glauber, 2008)
+and the droughts in Australia and New Zealand (Organic Trade Association, 2013a). Like eggs, the
+CPI (dominated by nonorganic milk) for milk rose 7.4 percent in 2007, dropped during 2008-09,
+and rose again in 2010 (U.S. Department of Labor, 2014). Organic milk did not experience the same
+price increase, so the premium as a percent of conventional milk price followed the opposite pattern.
+However, organic milk customers are more loyal than other categories--organic milk is one of the
+first products adopted and one of the last they forgo when budgets become tight (Organic Trade
+Association, 2013b). Despite this, we observed higher market penetration rates for other products,
+including apples, spinach, salad, carrots, baby food, and granola.
+
+There were also other factors at play on the organic milk supply. First, milk yields are lower for
+organic practices than conventional practices--in 2010, an organic cow produced 13,552 pounds
+of milk while a conventional cow produced an average of 20,961 pounds (McBride, 2013). Pasture
+
+   9Unlike the word organic, natural does not have a legal definition in the United States. Consumers and food manufac-
+turers may have different definitions of the term.
+
+                                                                 22
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+requirements for organic cows were clarified in 2010; regulations now require that organic cows
+graze for a minimum of 120 days and get at least 30 percent of their nutritional needs from grazing.
+Pasture grazing also reduces production (Greene and McBride, 2015). There is no pasture require-
+ment for nonorganic cows, but a 2005 study indicated 18 percent of nonorganic dairies use some
+pasture grazing (Greene et al., 2009). The same study found that only 0.2 percent of domestic corn
+and soybean acres were certified organic; the shortages were even more severe in 2014 (Organic
+Trade Association, 2015a). Short supplies of certified organic feed may have forced organic dairies
+to make even greater use of pasture land or pay increasingly high prices for organic feed. There were
+also changes in the supply market chain as private-label milk increased from under 10 percent in
+2004 to over 25 percent in 2010, according to our analysis of the Homescan data.
+
+The milk model included package size, fat content, no lactose, calcium fortified, and kosher milk
+(we did not include flavored or shelf-stable milk in this estimate). The premium in 2010 was about 72
+percent of nonorganic milk, and we found that milk premiums neither steadily increased nor decreased
+during the study period (although, like Dimitri and Oberholtzer (2009), we observed a large price
+spike in 2006). Our estimate for the organic milk premium in 2006 ($2.27/ gallon) is lower than that
+of Smith et al. (2009) ($1.86/half gallon or $3.72/gallon) or Dimitri and Oberholtzer (2009) (roughly
+double nonorganic prices 2004-06), but we included all sizes of milk packages, as well as additional
+attributes. When Smith et al. (2009) estimated the price premiums for 2006 data, half gallons were
+often the only available package size for organic milk. While this size still remains the most common,
+some Homescan participants reported purchasing organic milk in gallon containers.
+
+Yogurt. According to market research firm Mintel, sales of yogurt and yogurt drinks grew 32
+percent from 2004-09 (Mintel Group, 2009). During most of the 2004-10 time period, new product
+introduction was a primary driver of market growth--more than 800 new refrigerated yogurt prod-
+ucts were introduced from January 2005 to October 2009 (Mintel Group, 2009). Greek yogurt
+brands, which are now widely popular, had not caught on until the end of the 2004-10 period. For
+example, the Greek yogurt brand Chobani's sales grew by almost 250 percent between 2009 and
+2010 (Mintel Group, 2010). Dannon's Activia was also becoming an important brand; the Activia
+Light brand grew 19.8 percent from 2008 to 2009, although its primary brand (Activia) had no real
+growth over those 2 years (Mintel Group, 2009). In more recent years, the growing diversity in the
+yogurt market, especially the continued popularity of Greek yogurt, led to a small decline in organic
+yogurt sales in 2012 (Organic Trade Association, 2013a).
+
+The diversity of yogurt is reflected in the number of attributes we were able to control for in our
+model. These included plain, flavored, fat, lactose level, probiotic (such as Activia), Greek or Skyr,
+added items (such as granola or fruit), nondairy, and an indicator for yogurt-based snacks. The
+organic price premium for yogurt increased over time, rising steadily from 25 percent of the conven-
+tional price in 2004 to 52 percent in 2010.
+
+Fresh Fruits and Vegetables
+
+Fresh fruits and vegetables are usually listed as the largest sector of the organic market, though this
+may partly be due to the sheer size of the produce category. In 2012, nearly all (97 percent) U.S.
+families who purchased organic foods chose organic fruits and vegetables at least some of time,
+while 28 percent chose organic produce all the time (Organic Trade Association, 2013b). Organic
+fruits and vegetables were about 35 percent of organic sales in 2012, up from 33.2 percent in 2010,
+with fresh fruits and vegetables representing about 90 percent of this category (Organic Trade
+
+                                                                 23
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Association, 2013a). The Organic Trade Association reports 2010 total sales for fruits and vegeta-
+bles, including canned and frozen, at over $8 billion.
+
+When examining the organic sales of individual products (table 1), organic spinach sales were
+the highest in the study, but other fruits and vegetables were outranked by granola and baby food.
+Spinach was the only organic produce item whose price premium and relative premium decreased
+during 2004-10. Salad mix and carrots both saw an increase in the actual price premium, but not
+the relative premium. All other produce items examined had price premiums that may be exhibiting
+price cycles or are otherwise fluctuating. Price premiums for apples and vegetables that are predomi-
+nately consumed fresh (salad mix and spinach) are in figure 6, while figure 7 shows vegetables that
+are more commonly cooked (potatoes) or are commonly used as an ingredient in cooked dishes
+(carrots and celery).
+
+We compared our results to earlier ERS research using the 2005 Homescan data conducted by Lin
+et al. (2008) and expanded in an ERS report (Greene et al., 2009). Lin et al. (2008) included demo-
+graphic and seasonal controls but did not include individual product attributes or interaction terms
+(our study included controls for markets but not demographics). While each produce item appeared
+to be fairly homogenous, there were product attributes that explained some of the variation in
+prices. In addition to ERS's work, He and Bernard (2011) compared the premiums for both organic
+and nonorganic/not genetically modified products for fresh and processed products; contrary to
+common opinion at the time, they did not find higher organic or nonorganic/not genetically modified
+premiums on fresh products over processed ones.
+
+Apples. Apples were the most common organic fruit of choice for consumers in 2012 (Organic
+Trade Association, 2013a). We observed a penetration rate of 6.6 percent of total sales in 2010. At
+most stores, consumers can choose from a variety of apples, though the general 3-pound bag of
+apples is still available. The choice of type may also determine the decision whether to purchase
+organic apples. According to the 2010 Homescan data, the most common type of nonorganic apple
+was red delicious (29 percent of all nonorganic apple-purchase observations), but for organic apples,
+it was galas (53 percent of organic purchases)--organic red delicious represented only 8 percent of
+the organic purchase observations, and gala apples were only 21 percent of the nonorganic apples.
+Similarly, Pink Lady was more common in the organic market than in the nonorganic market (6
+percent versus 1.5 percent, respectively) and Macintosh was more common in the nonorganic market
+(9 percent), while organic was very close to 0 percent. Other types of apples were about the same in
+the organic and nonorganic markets. Package size was also similar across both organic and nonor-
+ganic apples, and the 3-pound bag was the most common size.
+
+The organic apple price premium decreased since its peak in 2006 to around $0.29 per pound or 29
+percent of the conventional price in 2010. Our estimates were slightly higher than Lin et al. (2008)
+for 2005 ($0.32/pound versus $0.29/pound, respectively), but we included all types of apples (rather
+than treating apples as a uniform product). The most important price differentiating attribute was the
+type of apple.
+
+Salad Mix. Prewashed and chopped salad mix changed dramatically during the 2000s. As
+consumers continue to seek out healthy convenience products, it may continue to occupy an
+expanded shelf space in the produce section. Salad mix has grown from a bin of spring greens sold
+on a random-weight basis to a varied prepackaged product with many different lettuce varieties and
+other vegetables mixed in. Products in this category now include cabbage and iceberg-lettuce-based
+
+                                                                 24
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Figure 6
+
+The spinach organic price premium is the only fruit and vegetable premium that fell
+significantly during 2004-10
+
+Percent above nonorganic price
+70
+
+60
+50 Salad
+
+40
+
+                                                                                       Apples
+30
+
+20
+                                                            Spinach
+
+10
+
+0     2005  2006  2007                                               2008                              2009  2010
+2004
+
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+Figure 7
+
+Organic price premiums for fresh vegetables are fluctuating
+
+Percent above nonorganic price
+50
+
+40
+                                                             Celery
+
+30
+
+                                                          Carrots
+20
+
+                                                                                             Potatoes
+10
+
+0     2005  2006  2007                                               2008                              2009  2010
+2004
+
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+                                            25
+      Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                  Economic Research Service/USDA
+mixes, packages that include spring greens and other more expensive mixes, and salad kits which
+include dressing, croutons, nuts, and dried fruit. Some mixes also include canned meat or bacon bits.
+
+The data allowed us to determine the type of salad mix (though about half of the observations do not
+specify whether it was Caesar, spring, iceberg, Asian, meat, taco, arugula, cabbage, slaw, spinach,
+or herb mix). Only about 15 percent indicated how the greens were cut (chopped, cut, shredded,
+julienne, flat leaf, fine shred). Since these types were all significant and in the expected direction
+(premium mixes were higher cost while iceberg- and cabbage-based mixes were less expensive), we
+believe the remaining mixes were a general mix of different lettuces, cut in a variety of ways. The
+model also included an indicator for salad kits. Additionally, although the model includes a contin-
+uous variable for package size, preliminary analysis noted that the relationship between package
+size and price is not the same across the entire range of package sizes. There were two places where
+the linear relationship changed: one at 12 ounces (small) and one at 24 ounces (big). Finally, we
+included a set of indicator variables for minor nonorganic brands.
+
+As a result of the dramatic changes to the salad-mix product, it is not surprising that the organic
+premium fluctuated during 2004-10. The 2010 premium was estimated at $2.17/pound or 60 percent
+of the conventional price.
+
+Spinach. Organic spinach had the greatest market penetration of all products examined in this
+study (about 40 percent of total sales dollars, 28 percent of the quantity sold, and 31 percent of the
+purchase transactions in 2010) (table 1). Packaged organic salad greens (including spinach) were the
+top sellers in organic fresh vegetables in 2012 (Organic Trade Association, 2013a). Schroeter and
+Cai (2011) report that California and Arizona produce 85 percent of the U.S. spinach supply, and
+organic spinach sales increased by 250 percent from 2007 to 2010 (total organic and nonorganic
+spinach sales increased by 57 percent during the same time).
+
+Spinach was also the most homogenous product of all items studied--the only real differences were
+baby and mature spinach and the package size. Our data did not allow us to determine the type of
+package (such as a clamshell or microwave-ready bag), which may affect results. In the spinach
+model, we interacted the indicator variable for baby spinach with the organic indicator one to control
+for differences on the supply side. Organic baby spinach carries a smaller premium (indicated by the
+negative sign on the organic*baby coefficients listed in appendix table A7). This could be because
+organic spinach growers elect to harvest earlier (baby spinach) to prevent insect damage. For those
+growers who wait to harvest the mature spinach, extra measures must be taken to control insect
+damage. Since nonorganic spinach growers can use pesticides to control insects, the production
+of nonorganic baby and mature spinach is more similar. Like in the salad-mix model, preliminary
+analysis found two points where the relationship between package size and price is nonlinear: one
+just below 5.5 ounces (small) and the other just above 1 pound (large). The model also included a set
+of binary variables for the nonorganic minor brands.
+
+Spinach was the one produce item examined in this report whose organic price premium statistically
+dropped during the study period. We estimate that the 2010 premium for organic spinach was about
+$0.38 per pound or 7 percent of the nonorganic price, compared to $1.78 per pound, or 57 percent
+higher than the nonorganic price in 2004. The 2010 premium is actually up from $0.31 per pound
+or 6 percent of the nonorganic price in 2009. This overall decrease in both the premium and relative
+premium price may explain the rapid increase in organic spinach sales.
+
+                                                                 26
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Carrots. Carrots are distributed by two major California sellers: Bolthouse Farms and Grimmway
+Farms supply 96 percent of the Nation's carrots (Wright and Marsh, 2012). They are sold under a
+variety of different brands and private labels. However, at any one store, consumers generally can
+only choose between private label and a brand (or they may have just one choice). Carrots are avail-
+able in a variety of levels of convenience, including full size with limited processing, baby carrots,
+and a variety of precut carrots for salads and cooking (baby carrots are generally large carrots that
+are cut to smaller sizes). The most common package size was 1 pound.
+
+Organic carrot price premiums generally increased from about 25 cents per pound in 2004 to 34
+cents per pound in 2010, or 27 percent of the nonorganic price. However, the market fluctuated as a
+percent of the nonorganic price. Our 2005 estimate of the premium as a percent of the nonorganic
+price was 25 percent, compared to Lin et al.'s (2008) finding of 14.6 percent. Lin et al. included
+random-weight carrots, which we were not able to do. They also treated all carrots as the same
+product, while we included all packaged carrots (including baby, cut, and different bag sizes).
+
+Celery. Consumers can purchase both whole stalks (or bunches) of celery and celery hearts, as well
+as precut sticks, diced for salad and cooking, and in kits with peanut butter and other complemen-
+tary products. Celery sold as bunches or hearts is typically sold by count (or by the bunch), while the
+other products are sold by weight. Since the vast majority of the celery represented in our data was
+sold by bunch, we opted to estimate the premium over just the celery sold by count.
+
+The organic premium for celery was about 44 percent of the nonorganic price, or about $0.60 per
+bunch or heart in 2010. Celery hearts are slightly more expensive per count (5 cents) than the whole
+bunch. The organic premium fluctuated throughout the study period.
+
+Potatoes. Although potatoes are relatively inexpensive, the share of the organic market is quite
+small compared to other fresh produce items--less than 2 percent of all fresh potatoes purchased by
+Homescan participants in 2010 were organic. The main variation in the price of potatoes is the type
+of potatoes--sweet potatoes, gold, russet, red, regular white, Idaho, gourmet, and other specialty
+potatoes (e.g., new or multicolored). The major difference between the organic and nonorganic
+market was in sweet potatoes--in 2010, a higher percent of organic potatoes were sweet potatoes (10
+percent) than in the nonorganic market (2 percent). Bag size is also important; in 2010, 55 percent of
+organic potatoes were sold in less than 5-pound bags, while only 12 percent of nonorganic potatoes
+were sold in small bags.
+
+The organic price premium for potatoes appeared to vary from year to year and was not strictly
+decreasing or increasing. In 2010, it was about 16 cents per pound, or 28 percent of the conventional
+price. Our 2005 estimates were considerably lower than Lin et al.'s (2008)--$0.16/pound versus $0.47/
+pound, respectively. The major difference appears to be that our estimate controlled for the type of
+potato and the bag size. Since organic potatoes are more likely to be sold in the more expensive forms
+(sweet and small bags), not including the type and bag size would distort the price premium.
+
+Processed Foods
+
+Processed foods are the fastest growing sector of the organic market; they reached about 9 to 11
+percent of the organic market by 2012 (Greene, 2013). The Organic Trade Association (2013a) clas-
+sifies the foods we examined into several categories: canned fruits and vegetables (canned beans);
+beverages (coffee); breads and grains (bread, granola); and packaged and prepared food (baby food,
+soup, and pasta sauce). Canned organic products are an emerging category, partly due to the low
+
+                                                                 27
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+cost and high convenience of organic canned beans. All other categories have relatively low market
+penetration when compared to fruits and vegetables, but also represent the fastest growing parts of
+the organic food market (Organic Trade Association, 2013a).
+
+Products in this section were chosen because of their high levels of market penetration. In particular,
+granola and baby food had market shares comparable to the fresh produce items chosen for this study.
+Snack foods and condiments are emerging categories listed by the Organic Trade Association (2013a),
+but we did not observe high penetration rates in our data for any single product in this category.
+
+Despite the level of market share, we were not able to find any estimates of organic price premiums
+to compare our results. He and Bernard (2011) found differences in willingness to pay between
+organic and nonorganic processed food products but not genetically modified and conventional
+versions of similar products; these authors also found that consumers were more willing to substitute
+between the three categories (organic, nonorganic/not genetically modified, and nonorganic/geneti-
+cally modified) for processed foods than they were for fresh products. We discuss single-ingredient
+products (canned beans and coffee in figure 8), multi-ingredient products (fig. 9), and baby food (fig.
+10)--all of these products were more complex than both the eggs and dairy and fresh produce items.
+
+Canned Beans. The biggest differentiating factors in canned beans were the type of bean and type
+of package. Pinto beans were the most common canned bean purchased by Homescan participants,
+while the most expensive was cranberry beans (green beans were not included). The standard
+package was a can, but beans could also be purchased in glass jars, plastic containers, and (more
+recently) in envelopes or pouches. The model included a set of binary coefficients for the nonorganic
+minor brands. The organic price premium decreased slightly, though it has decreased significantly
+
+Figure 8
+
+Organic price premium for single-ingredient processed foods decreased, 2004-10
+
+Percent above nonorganic price
+ 120
+
+100
+
+80
+                                                                                Canned beans
+
+60
+                                                                         Coffee
+
+40
+
+20
+
+0     2005  2006  2007  2008                                                                  2009  2010
+2004
+
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+                                            28
+      Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                  Economic Research Service/USDA
+Figure 9
+
+Organic price premium for soup is increasing
+
+Percent above nonorganic price
+80
+
+70
+
+60
+
+50
+
+40                                                Spaghetti sauce
+                                               Bread
+30
+
+20 Soup                                                                                        Granola
+                                                                                                       2010
+10
+
+0     2005                      2006           2007                             2008     2009
+2004
+
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+Figure 10
+
+Despite rising organic baby food sales, the premium for strained baby food rose
+over 2004-10
+
+Percent above nonorganic price
+60
+
+50
+
+                                                            Baby food - junior
+40
+
+30
+
+20
+
+                         Baby food - strained
+10
+
+0     2005                      2006           2007                             2008     2009  2010
+2004
+
+Source: USDA, Economic Research Service estimates from Nielsen Homescan data (2004-10).
+
+                                            29
+      Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                  Economic Research Service/USDA
+as a share of the nonorganic price (from 99 percent in 2004 to 54 percent in 2010). The relative
+premium was higher than most of the fruits and vegetables included in this study, but the relatively
+low price of canned beans led the Organic Trade Association (2013a) to point out that paying the
+extra premium for organic beans was a small step for many consumers.
+
+Coffee. Less than 1 percent of coffee by weight is organic, but organic coffee is almost 3 percent of
+sales among 2010 Homescan participants. Coffee also represents the highest category of all imported
+organic foods, mostly due to the fact that the only State in the United States with a climate suitable
+for growing coffee is Hawaii (Organic Trade Association, 2015a). Organic coffee sales grew dramat-
+ically in 2011 and 2012, but faced competition from fair trade and shade-grown coffee (Organic
+Trade Association, 2013a), not all of which was organic. Our data did not allow us to identify fair
+trade and shade-grown coffee, which may bias our results if the percent of coffee sold as fair trade or
+shade grown was different for organic and nonorganic coffee. Coffee was sold in plastic containers,
+bags, cans, pouches, and pods (the single-serving containers used in some coffee makers). This
+model did not include instant coffee, but includes all types of roasts. Random-weight coffee was not
+available in the data. Like canned beans, the organic coffee premium dropped steadily during the
+study period--from $3.97 per pound in 2004 to $2.36 in 2010. The percent of the nonorganic price
+also dropped from 106 percent to 47 percent.
+
+Bread. While bread takes up a significant portion of at least one aisle in a typical grocery store, the
+market share for organic was less than 2 percent of Homescan participants' reported 2010 purchase
+dollars spent on bread. In 2012, bread was about 35 percent of the bread and grain organic category,
+which experienced an 8-percent growth rate in 2012 to almost 12 percent of organic food (Organic
+Trade Association, 2013a). We were not able to identify any dominant nonorganic national brands in
+the data, and thus did not include the set of binary variables for nonorganic minor brands included
+in some of the other models. Consumers choose from a wide variety of types of bread--e.g., whole
+wheat, 100-percent whole wheat, white, bran, oat, fruit, rye, pita, and potato. The organic price
+premium in 2010 was about $0.52 per pound, or 30 percent of the conventional price. Both the
+premium and the percent of conventional price fluctuated during the study period, and there is no
+clear trend.
+
+Granola. In terms of total sales, the quantity sold, and the number of purchase transactions, grano-
+la's market share was second only to spinach of all the products included in this study. About 30
+percent of granola sales reported in Homescan in 2010 were organic. It also made up 34.5 percent
+of the organic bread and grains category (Organic Trade Association, 2013a). Although there are a
+wide variety of granolas available on the market, data limitations prevented us from including more
+than three attributes: low fat (lower price), low sodium (higher price), and inclusion of flaxseeds
+(higher price). The model also included a set of binary coefficients to indicate the nonorganic minor
+brands. We found the overall trend for the price premium to be fluctuating, but the relative premium
+decreased from 39 percent in 2004 to 22 percent in 2010.
+
+Soup. The market share for organic soup appeared to increase during the study period from less
+than 1 percent of soup sales in 2004 to about 4 percent in 2010. The Organic Trade Association
+(2013a) noted that this growth continued into 2012. Although there are a wide variety of flavors of
+soups available in the average grocery store, only a few attributes made a significant difference in
+the price: the type (condensed or standard ready to heat), low sodium, diet, and microwave-ready
+packaging. Despite the fact that market share increased, the premium and percent of the conven-
+
+                                                                 30
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+tional price fluctuated during the study period--in 2010, the price premium for soup was 44 cents
+per pint or 33 percent of the nonorganic price.
+Spaghetti Sauce. The market share for organic spaghetti sauce reached a peak in 2007 (3.4
+percent), but remained above 2 percent since 2005. However, sales of organic pasta sauces grew in
+2012 (Organic Trade Association, 2013a). The data were very descriptive, particularly for health
+attributes. The model controlled for reduced fat, cholesterol, and salt, as well as chunky, Alfredo
+sauce, and imported spaghetti sauce. Consumers purchased spaghetti sauce in jars, cans, bottles,
+and pouches. The decrease in market share might be partially explained by the increase in both the
+premium and the percent of the conventional price since 2007. The premium in 2010 was $0.64 per
+pint, or 53 percent of the conventional price.
+Baby Food. Organic strained baby food ranked third in market share of the products selected for
+this study (about 20 percent of sales). Baby food had the strongest growth among packaged and
+prepared foods in 2012 (23.2 percent) (Organic Trade Association, 2013a). Parents surveyed in 2012
+chose organic baby food for a variety of reasons, but mostly because they believed it was healthier
+and safer for their babies (Organic Trade Association, 2013b). While junior baby food had a lower
+market share (6.8 percent), it was still higher than celery, potatoes, eggs, milk, and yogurt. Strained
+baby food was less complex than the junior baby food. The major attributes for strained baby food
+were vegetables, fruits, meat, dessert, and yogurt. In addition to these attributes, junior baby food
+included soup, assorted flavors (in a multipack), dinners, and breakfast. Consumers purchased
+strained baby food in jars and tubs, but junior baby food also came in bags, boxes, trays, refriger-
+ated, and frozen. In our data, private-label junior baby food was only purchased as organic after
+2007. Thus, the model did not include an interaction term for organic and private label until 2008.
+The strained baby food premium increased since 2004, from about 11 cents per 4 ounces to 22 cents
+per 4 ounces in 2010 (18 percent of conventional to 31 percent, respectively). The junior baby food
+premium peaked in 2005, but appeared to decrease after that, ending at $0.34 per 6 ounces or 29
+percent of the conventional price in 2010.
+
+                                                                 31
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+Conclusion
+
+Since the implementation of the USDA organic standards in 2002, the organic food sector has been
+one of the fastest growing parts of the food industry as organic products became available in more
+retail outlets. This study, which covers the 2004-10 period, estimates organic price premiums at the
+retail level and finds positive retail organic price premiums for all 17 products analyzed in this study.
+Additionally, most premiums did not steadily increase or decrease during this period, but fluctu-
+ated. Of the 17 products examined, only 3 (spinach, canned beans, and coffee) experienced a steady
+decrease in the premium, and only yogurt's price premium steadily increased.
+
+We also found that organic premiums in 2010 (the last year of our study period) ranged from 7
+percent above the nonorganic price for spinach to 82 percent for eggs. Ten of these products were
+above the 30-percent premium barrier reported by the Hartman Group (2010) for most consumers.
+Despite the fact that the premium remains above the perceived barrier, we found that the market
+share for organic products in our data increased for all products. Our analysis suggests that the levels
+and trends for organic premiums vary by product and cannot be adequately explained by a single set
+of factors. Product-specific supply and demand factors help explain some of the differences among
+our estimated organic price premium results for the 17 products.
+
+Our analysis of organic price premiums in 2004-10 is hampered slightly by some limitations and
+concerns associated with the Nielsen Homescan data. Nielsen imputes prices from the store-level
+prices based on average store-level prices, rather than the actual price the consumer paid. There is
+also the possibility of the underreporting of purchases, particularly in households with very high
+opportunity costs of time. Additionally, since Homescan participants are recording every food
+purchase they make, they may become more price conscious over time than nonparticipating house-
+holds. This potential behavioral change may cause some bias if participants are not purchasing the
+more expensive products at the same rate as a demographically similar nonparticipating household.
+Finally, our data do not allow us to study the organic premium in farmers' markets, roadside stands,
+Community Supported Agriculture (CSA), or other direct-sale markets. However, because of the
+extremely large number of observations and the strong link between product attributes and prices
+found in the data, we believe that these limitations are not likely to strongly bias our results.
+
+Looking beyond 2010 to more recent years, shortfalls in domestic supply of organic food, feed, and
+ingredients caused food retailers and other industry participants to turn to imported organic products.
+According to a recent study by the Organic Trade Association (2015a), U.S. organic growers exported
+over $550 million worth of products in 2014. However, the United States imported nearly $1.3 billion
+in organic products. Although the leading organic import is coffee (which cannot be grown in the
+48 contiguous States or Alaska), the second-largest import product is organic soybeans and the tenth
+largest is organic corn. The United States is also the largest grower of nonorganic soybeans and corn,
+perhaps reflecting some U.S. farmers' decisions to specialize in the nonorganic market.
+
+Another trend in the U.S. organic market is the acceptance of several international standards as
+equivalent to the USDA organic standard. Under these USDA trade agreements, the two countries
+agree to treat their respective organic standards as equivalent. The first agreement was in 2009 with
+Canada; since then, the United States has added the European Union, Japan, Korea, and Switzerland
+(Agricultural Marketing Service, 2013, Agricultural Marketing Service, 2016).
+
+                                                                 32
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
+These global supply and demand factors, including insufficient U.S. production and strong global
+demand, are likely to impact organic price premiums beyond 2010 and into the future. Research that
+investigates organic premiums beyond 2010 would help determine if organic supply shortfalls are
+causing organic premiums to increase, or if other factors (such as changing energy prices or market
+conditions) are playing a stronger role.
+
+                                                                 33
+                              Changes in Retail Organic Price Premiums from 2004 to 2010, ERR-209
+
+                                                              Economic Research Service/USDA
