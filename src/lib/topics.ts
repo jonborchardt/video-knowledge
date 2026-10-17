@@ -8,6 +8,7 @@ const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 
 // The slice of `watcher report --json` this site reads.
 interface VerdictRecord {
+  method?: string;
   verdict: Verdict;
   confidence?: number;
   note?: string;
@@ -55,12 +56,13 @@ interface Report {
 interface StoreVideo {
   id: string;
   title: string;
+  channel?: string;
   durationSec?: number;
   transcript: string;
   url?: string;
   summary?: string;
   supersededBy?: string;
-  assertions?: { claim: string; stance: 'asserts' | 'denies'; quote: string }[];
+  assertions?: { claim: string; stance: 'asserts' | 'denies'; quote: string; verdicts?: VerdictRecord[] }[];
 }
 interface SiteConfig {
   hero?: { title?: string; lede?: string }; // hand-written hook at the top of the topic page
@@ -78,6 +80,24 @@ export interface ClaimView {
   note: string;
   decidedBy: string | null; // a study's display name, or null when the AI guess decides
   studies: number; // documents with a verdict on this claim
+  sources: ClaimSourceView[]; // every source that asserts or denies it, with its quote
+  verdicts: ClaimVerdictView[]; // every recorded judgment: the AI guess and each study
+}
+export interface ClaimSourceView {
+  id: string;
+  title: string;
+  channel: string;
+  kind: 'video' | 'post';
+  href: string;
+  stance: 'asserts' | 'denies';
+  quote: string;
+}
+export interface ClaimVerdictView {
+  by: string; // 'AI guess' or the study's display name
+  verdict: Verdict;
+  confidence: number | null;
+  note: string;
+  cite: string | null; // '<topic>/sources/<file>.txt#L10-L24', a path in the repo
 }
 export interface SourceClaimView {
   id: string;
@@ -166,6 +186,36 @@ export function loadTopic(name: string): Topic {
     return cfg.docs?.[f] ?? f;
   };
 
+  const metaOf = (x: StoreVideo) => {
+    const post = x.transcript === 'article' || (!!x.url && !/^[\w-]{11}$/.test(x.id));
+    return {
+      kind: post ? ('post' as const) : ('video' as const),
+      href: post ? x.url! : `https://www.youtube.com/watch?v=${x.id}`,
+    };
+  };
+  // Per claim: who asserts or denies it, and every verdict recorded on it (verdicts sit on the first source's assertion).
+  const claimSources = new Map<string, ClaimSourceView[]>();
+  const claimVerdicts = new Map<string, ClaimVerdictView[]>();
+  for (const x of recs)
+    for (const a of x.assertions ?? []) {
+      const list = claimSources.get(a.claim) ?? [];
+      list.push({ id: x.id, title: x.title, channel: x.channel ?? '', ...metaOf(x), stance: a.stance, quote: a.quote });
+      claimSources.set(a.claim, list);
+      for (const v of a.verdicts ?? []) {
+        const vs = claimVerdicts.get(a.claim) ?? [];
+        const by = v.method === 'prior' || !v.source ? 'AI guess' : docName(v.source);
+        if (!vs.some((o) => o.by === by && o.note === (v.note ?? '')))
+          vs.push({
+            by,
+            verdict: v.verdict,
+            confidence: v.confidence ?? null,
+            note: v.note ?? '',
+            cite: v.source ?? null,
+          });
+        claimVerdicts.set(a.claim, vs);
+      }
+    }
+
   const claimOf = (c: ReportClaim): ClaimView => ({
     id: c.id,
     text: c.text,
@@ -176,6 +226,8 @@ export function loadTopic(name: string): Topic {
     note: c.note ?? '',
     decidedBy: c.source ? docName(c.source) : null,
     studies: c.documents.length,
+    sources: claimSources.get(c.id) ?? [],
+    verdicts: (claimVerdicts.get(c.id) ?? []).sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0)),
   });
   const claims = t.claims.map(claimOf).sort((a, b) => b.asserted + b.denied - (a.asserted + a.denied));
   const byId = new Map(claims.map((c) => [c.id, c]));
@@ -208,13 +260,11 @@ export function loadTopic(name: string): Topic {
     .filter((v) => v.assertions > 0)
     .map((v) => {
       const x = recOf.get(v.id)!;
-      const post = x.transcript === 'article' || (!!x.url && !/^[\w-]{11}$/.test(v.id));
       return {
         id: v.id,
         title: v.title,
         channel: v.channel,
-        kind: post ? 'post' : 'video',
-        href: post ? x.url! : `https://www.youtube.com/watch?v=${v.id}`,
+        ...metaOf(x),
         summary: x.summary ?? '',
         score: v.scaled,
         novelty: v.novelty,

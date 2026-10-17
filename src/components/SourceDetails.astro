@@ -1,0 +1,89 @@
+---
+// One source, expandable to its claims. Used by the Top 5 list and the Videos & posts table.
+// The chip filter is CSS only; the rules keyed on [data-source] live in the topic page's style block.
+import type { SourceClaimView, SourceView } from '../lib/topics';
+import SourceLink from './SourceLink.astro';
+import VerdictBadge from './VerdictBadge.astro';
+
+interface Props {
+  source: SourceView;
+  /** Shown under the title inside the summary (channel, novelty, superseded...). */
+  meta?: string;
+}
+const { source: s, meta } = Astro.props;
+const small = 'text-sm text-muted-foreground';
+const chips = [
+  { v: 'novel', label: 'Novel', has: (c: SourceClaimView) => c.novel },
+  { v: 'right', label: 'Right', has: (c: SourceClaimView) => c.verdict === 'right' },
+  { v: 'wrong', label: 'Wrong', has: (c: SourceClaimView) => c.verdict === 'wrong' },
+  { v: 'partly', label: 'Partly', has: (c: SourceClaimView) => c.verdict === 'partly' },
+  {
+    v: 'untestable',
+    label: 'Untestable',
+    has: (c: SourceClaimView) => c.verdict === 'untestable' || c.verdict === 'unknown',
+  },
+  { v: 'all', label: 'All', has: () => true },
+];
+---
+
+<details class="group" data-source>
+  <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+    <span class="mr-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">▸</span>
+    <SourceLink source={s} />
+    {
+      meta && (
+        <>
+          <br />
+          <span class:list={[small, 'ml-[1.4em]']}>{meta}</span>
+        </>
+      )
+    }
+    <slot />
+  </summary>
+  <fieldset class="mt-2 flex flex-wrap gap-1.5">
+    <legend class="sr-only">Show claims</legend>
+    {
+      chips.map((f, i) => {
+        const n = s.claims.filter(f.has).length;
+        return (
+          <label
+            class:list={[
+              'cursor-pointer rounded-full border px-2 py-0.5 font-mono text-xs has-checked:border-foreground has-checked:bg-foreground has-checked:text-background',
+              !n && 'text-muted-foreground opacity-50',
+            ]}
+          >
+            <input
+              type="radio"
+              class="sr-only"
+              id={`f-${s.id}-${f.v}`}
+              name={`f-${s.id}`}
+              value={f.v}
+              checked={i === 0}
+              disabled={!n}
+            />
+            {f.label} ({n})
+          </label>
+        );
+      })
+    }
+  </fieldset>
+  <ul class="mt-1 grid gap-2 py-1">
+    {
+      s.claims.map((c) => (
+        <li data-v={c.verdict} data-novel={c.novel || undefined} class="grid gap-0.5 border-t pt-2">
+          <div class="flex items-baseline justify-between gap-2.5">
+            <p>
+              {c.stance === 'denies' && <span class="font-mono text-xs text-muted-foreground">DENIES </span>}
+              {c.text}
+            </p>
+            <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
+          </div>
+          <p class={small}>“{c.quote}”</p>
+          <span class="font-mono text-xs text-muted-foreground tabular-nums">
+            {c.share === 1 ? 'only this source' : `1 of ${c.share} sources`}
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</details>

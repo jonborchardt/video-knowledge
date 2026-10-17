@@ -2,10 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
+import SourceDetails from '../../components/SourceDetails.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import SurpriseItem from '../../components/SurpriseItem.astro';
 import VerdictBadge from '../../components/VerdictBadge.astro';
-import { loadTopic, topicNames, type SourceClaimView, type Topic } from '../../lib/topics';
+import { loadTopic, topicNames, type Topic } from '../../lib/topics';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -26,19 +27,6 @@ const tabs = [
 const filters = (['right', 'partly', 'wrong', 'untestable', 'unknown'] as const)
   .map((v) => ({ v, n: t.claims.filter((c) => (c.verdict ?? 'unknown') === v).length }))
   .filter((f) => f.n);
-// Chips inside each expanded source; the first is selected by default. Filtering is CSS only (see the style block).
-const chips = [
-  { v: 'novel', label: 'Novel', has: (c: SourceClaimView) => c.novel },
-  { v: 'right', label: 'Right', has: (c: SourceClaimView) => c.verdict === 'right' },
-  { v: 'wrong', label: 'Wrong', has: (c: SourceClaimView) => c.verdict === 'wrong' },
-  { v: 'partly', label: 'Partly', has: (c: SourceClaimView) => c.verdict === 'partly' },
-  {
-    v: 'untestable',
-    label: 'Untestable',
-    has: (c: SourceClaimView) => c.verdict === 'untestable' || c.verdict === 'unknown',
-  },
-  { v: 'all', label: 'All', has: () => true },
-];
 // Hero: the verdict bar and the three nugget cards. Nuggets deep-link into tabs (the tab script listens for hashchange).
 const bar = filters.map((f) => ({
   ...f,
@@ -267,11 +255,9 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       {
         t.top.map((s) => (
           <li>
-            <SourceLink source={s} />{' '}
-            <span class={small}>
-              ({s.channel} · novelty {s.novelty.toFixed(2)})
-            </span>
-            . {s.summary}
+            <SourceDetails source={s} meta={`${s.channel} · novelty ${s.novelty.toFixed(2)}`}>
+              {s.summary && <p class:list={[small, 'ml-[1.4em]']}>{s.summary}</p>}
+            </SourceDetails>
           </li>
         ))
       }
@@ -416,63 +402,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
                   {s.score == null ? '–' : `${s.score > 0 ? '+' : ''}${s.score}`}
                 </td>
                 <td>
-                  <details class="group" data-source>
-                    <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                      <span class="mr-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">
-                        ▸
-                      </span>
-                      <SourceLink source={s} />
-                      <br />
-                      <span class:list={[small, 'ml-[1.4em]']}>
-                        {s.channel}
-                        {s.superseded && ' · superseded'}
-                      </span>
-                    </summary>
-                    <fieldset class="mt-2 flex flex-wrap gap-1.5">
-                      <legend class="sr-only">Show claims</legend>
-                      {chips.map((f, i) => {
-                        const n = s.claims.filter(f.has).length;
-                        return (
-                          <label
-                            class:list={[
-                              'cursor-pointer rounded-full border px-2 py-0.5 font-mono text-xs has-checked:border-foreground has-checked:bg-foreground has-checked:text-background',
-                              !n && 'text-muted-foreground opacity-50',
-                            ]}
-                          >
-                            <input
-                              type="radio"
-                              class="sr-only"
-                              id={`f-${s.id}-${f.v}`}
-                              name={`f-${s.id}`}
-                              value={f.v}
-                              checked={i === 0}
-                              disabled={!n}
-                            />
-                            {f.label} ({n})
-                          </label>
-                        );
-                      })}
-                    </fieldset>
-                    <ul class="mt-1 grid gap-2 py-1">
-                      {s.claims.map((c) => (
-                        <li data-v={c.verdict} data-novel={c.novel || undefined} class="grid gap-0.5 border-t pt-2">
-                          <div class="flex items-baseline justify-between gap-2.5">
-                            <p>
-                              {c.stance === 'denies' && (
-                                <span class="font-mono text-xs text-muted-foreground">DENIES </span>
-                              )}
-                              {c.text}
-                            </p>
-                            <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
-                          </div>
-                          <p class={small}>“{c.quote}”</p>
-                          <span class="font-mono text-xs text-muted-foreground tabular-nums">
-                            {c.share === 1 ? 'only this source' : `1 of ${c.share} sources`}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
+                  <SourceDetails source={s} meta={`${s.channel}${s.superseded ? ' · superseded' : ''}`} />
                 </td>
                 <td class="font-mono whitespace-nowrap tabular-nums">{s.novelty.toFixed(2)}</td>
                 <td class:list={[small, 'max-sm:hidden']}>{s.worthWatching}</td>
