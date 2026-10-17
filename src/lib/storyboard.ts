@@ -27,10 +27,22 @@ export const VISUALS = [
 ] as const;
 export type VisualCategory = (typeof VISUALS)[number];
 
+// What a renderer can draw without reading English: a closed set of chart types and numeric points.
+export const CHART_TYPES = ['bar', 'stacked-bar', 'dot-plot', 'waffle', 'table', 'stat-tiles', 'composite'] as const;
+export type ChartType = (typeof CHART_TYPES)[number];
+export type Unit = 'percent' | 'usd' | 'count' | 'ratio';
+export interface ChartPoint {
+  label: string;
+  value: number; // the number to draw; for 'ratio' the denominator ("1 in 238" -> 238)
+  unit: Unit;
+  display: string; // as the passage states it ("$1,000 or less", "fourteen percent"); its figures must be in the passage
+  qualifier?: 'lt' | 'lte' | 'gt' | 'gte' | 'about'; // "less than $84" -> lt
+  cite: string; // the passage in the evidence package the point comes from
+}
 export interface ChartSpec {
-  type: string; // bar, stacked-bar, waterfall, table, ...
+  type: ChartType;
   title?: string;
-  series: { label: string; value: string; cite: string }[]; // every value must be in the cited passage
+  points: ChartPoint[];
   note?: string; // what the chart must not imply (e.g. "no distribution below $1,000 is known")
 }
 export interface ScenePlan {
@@ -154,21 +166,35 @@ export function buildStoryboard(
       if (!c.cite && !c.source) issue(p.id, 'citation', 'blocking', `citation "${c.label}" names no passage or source`);
     }
     if (p.visual?.chart) {
-      if (!p.visual.chart.series?.length) issue(p.id, 'chart', 'blocking', 'a chart with no series');
-      for (const s of p.visual.chart.series ?? []) {
-        if (!known.has(s.cite))
+      const c = p.visual.chart;
+      if (!(CHART_TYPES as readonly string[]).includes(c.type))
+        issue(p.id, 'chart', 'blocking', `unknown chart type "${c.type}"; one of ${CHART_TYPES.join(', ')}`);
+      if ('series' in c) issue(p.id, 'chart', 'blocking', 'series was replaced by points (value, unit, display, cite)');
+      if (!c.points?.length) issue(p.id, 'chart', 'blocking', 'a chart with no points');
+      for (const pt of c.points ?? []) {
+        const bad = (why: string) => issue(p.id, 'chart-data', 'blocking', `chart point "${pt.label}": ${why}`);
+        if (!known.has(pt.cite)) {
           issue(
             p.id,
             'chart',
             'blocking',
-            `chart value "${s.value}" cites ${s.cite}, which is not in the evidence package`,
+            `chart point "${pt.label}" cites ${pt.cite}, which is not in the evidence package`,
           );
-        else {
-          const passage = read(s.cite);
-          for (const n of nums(s.value))
-            if (passage === null || !hasFigure(passage, n))
-              issue(p.id, 'chart-data', 'blocking', `chart value "${n}" is not in ${s.cite}`);
+          continue;
         }
+        const passage = read(pt.cite);
+        const figures = nums(pt.display ?? '');
+        if (typeof pt.value !== 'number' || !Number.isFinite(pt.value)) bad('value is not a number');
+        else if (pt.unit === 'ratio') {
+          if (figures.length < 2 || Number(figures[1]) !== pt.value)
+            bad(
+              `a ratio displays two figures ("1 in 238") and value is the second; display "${pt.display}", value ${pt.value}`,
+            );
+        } else if (!figures.some((n) => Number(n) === pt.value))
+          bad(`display "${pt.display}" does not state the value ${pt.value}`);
+        if (pt.unit === 'percent' && (pt.value < 0 || pt.value > 100)) bad(`${pt.value} is not a percentage`);
+        if (!['percent', 'usd', 'count', 'ratio'].includes(pt.unit)) bad(`unknown unit "${pt.unit}"`);
+        for (const n of figures) if (passage === null || !hasFigure(passage, n)) bad(`"${n}" is not in ${pt.cite}`);
       }
     }
     if (p.visual?.excerpt) {
@@ -192,7 +218,7 @@ export function buildStoryboard(
     // On-screen text may only carry figures the narration or a cited passage carries.
     const citedText = [
       ...(p.citations ?? []).map((c) => c.cite),
-      ...(p.visual?.chart?.series ?? []).map((s) => s.cite),
+      ...(p.visual?.chart?.points ?? []).map((s) => s.cite),
       p.visual?.excerpt?.cite,
     ]
       .filter((c): c is string => !!c && known.has(c))
@@ -288,8 +314,11 @@ export function renderStoryboardMd(sb: Storyboard, pkg: EvidencePackage, read: P
     if (s.visual.chart) {
       const c = s.visual.chart;
       out.push(`**Chart** (${c.type}${c.title ? `: ${c.title}` : ''}).`, '');
-      out.push('| Label | Value | Source |', '|---|---|---|');
-      for (const x of c.series) out.push(`| ${x.label} | ${x.value} | ${label(x.cite)} |`);
+      out.push('| Label | Display | Value | Unit | Source |', '|---|---|---|---|---|');
+      for (const x of c.points ?? [])
+        out.push(
+          `| ${x.label} | ${x.display} | ${x.qualifier ? `${x.qualifier} ` : ''}${x.value} | ${x.unit} | ${label(x.cite)} |`,
+        );
       out.push('');
       if (c.note) out.push(`Note: ${c.note}`, '');
     }

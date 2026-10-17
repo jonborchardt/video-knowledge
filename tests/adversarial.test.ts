@@ -128,18 +128,18 @@ describe('adversarial: every deliberate error is blocked', () => {
   it('10. a chart value that is not in the cited passage, in digits or in words', () => {
     const s = good();
     const v = run(s, approveAll(s));
-    const chart = (value: string) =>
+    const chart = (display: string) =>
       plan([
         scene('sc1', ['s01', 's02', 's03'], {
           visual: {
             category: 'data-chart',
             description: 'bars',
-            chart: { type: 'bar', series: [{ label: 'lost', value, cite: DOC_D }] },
+            chart: { type: 'bar', points: [{ label: 'lost', value: 62, unit: 'percent', display, cite: DOC_D }] },
           },
         }),
       ]);
-    for (const value of ['62%', 'sixty-two percent'])
-      expect(buildStoryboard(chart(value), s, v, pkg(), read).issues.map((i) => i.category)).toContain('chart-data');
+    for (const display of ['62%', 'sixty-two percent'])
+      expect(buildStoryboard(chart(display), s, v, pkg(), read).issues.map((i) => i.category)).toContain('chart-data');
   });
 
   it('11. an on-screen figure that is in neither the narration nor a cited passage', () => {

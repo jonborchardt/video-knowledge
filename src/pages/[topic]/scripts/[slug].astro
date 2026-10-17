@@ -242,10 +242,15 @@ const facts = [
             {s.visual.chart && (
               <table class="mt-1 text-xs">
                 <tbody>
-                  {s.visual.chart.series.map((x) => (
+                  {(s.visual.chart.points ?? []).map((x) => (
                     <tr>
                       <td class="pr-3">{x.label}</td>
-                      <td class="pr-3 tabular-nums">{x.value}</td>
+                      <td class="pr-3 tabular-nums">{x.display}</td>
+                      <td class="pr-3 tabular-nums">
+                        {x.qualifier ? `${x.qualifier} ` : ''}
+                        {x.value}
+                      </td>
+                      <td class="pr-3">{x.unit}</td>
                       <td class="text-muted-foreground">{label(x.cite)}</td>
                     </tr>
                   ))}

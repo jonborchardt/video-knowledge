@@ -23,7 +23,7 @@ import { TOPIC, claim, passages, sources, study, topic } from './corpus';
 export const DOC_D = `${TOPIC}/sources/survey-d.txt#L1-L2`;
 export const read: PassageReader = (cite) =>
   cite === DOC_D
-    ? 'Of the 601 participants surveyed, 47% reported losing money, 27% broke even and 25% made a profit.'
+    ? 'Of the 601 participants surveyed, 47% reported losing money, 27% broke even and 25% made a profit. Fourteen percent made less than $5,000. One in 601 made nothing.'
     : (passages[cite] ?? null);
 
 export const MLM = `${TOPIC}/mlm-income`;

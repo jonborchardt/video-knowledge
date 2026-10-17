@@ -9,7 +9,7 @@ import {
   sentences,
   validateScript,
 } from '../src/lib/script';
-import { buildStoryboard } from '../src/lib/storyboard';
+import { type ChartPoint, type ChartSpec, type ChartType, buildStoryboard } from '../src/lib/storyboard';
 import { TOPIC, claim, study } from './corpus';
 import {
   DOC_D,
@@ -354,7 +354,10 @@ describe('storyboard', () => {
           visual: {
             category: 'data-chart',
             description: 'three bars',
-            chart: { type: 'bar', series: [{ label: 'lost money', value: '47%', cite: DOC_D }] },
+            chart: {
+              type: 'bar',
+              points: [{ label: 'lost money', value: 47, unit: 'percent', display: '47%', cite: DOC_D }],
+            },
           },
           citations: [{ label: 'Survey D', cite: DOC_D }],
         }),
@@ -412,7 +415,7 @@ describe('storyboard', () => {
         visual: {
           category: 'data-chart',
           description: 'bars',
-          chart: { type: 'bar', series: [{ label: 'lost', value: '62%', cite: DOC_D }] },
+          chart: { type: 'bar', points: [{ label: 'lost', value: 62, unit: 'percent', display: '62%', cite: DOC_D }] },
         },
       }),
     ]);
@@ -432,23 +435,84 @@ describe('storyboard', () => {
     ).toContain('script-blocked');
   });
 
+  const point = (o: Partial<ChartPoint>): ChartPoint => ({
+    label: 'lost money',
+    value: 47,
+    unit: 'percent',
+    display: '47%',
+    cite: DOC_D,
+    ...o,
+  });
+  const chartPlan = (points: ChartPoint[], type: string = 'bar') =>
+    plan([
+      scene('sc1', ['s01', 's02', 's03'], {
+        visual: { category: 'data-chart', description: 'bars', chart: { type: type as ChartType, points } },
+      }),
+    ]);
+
   it('chart values written in words are checked against the passage', () => {
     const s = good();
     const v = run(s, approveAll(s));
-    const chart = (value: string) =>
-      plan([
-        scene('sc1', ['s01', 's02', 's03'], {
-          visual: {
-            category: 'data-chart',
-            description: 'bars',
-            chart: { type: 'bar', series: [{ label: 'lost', value, cite: DOC_D }] },
-          },
-        }),
-      ]);
-    expect(buildStoryboard(chart('forty-seven percent'), s, v, p(), read).status).toBe('ok');
-    expect(buildStoryboard(chart('sixty-two percent'), s, v, p(), read).issues.map((i) => i.category)).toContain(
+    const chart = (display: string, value: number) => chartPlan([point({ display, value })]);
+    expect(buildStoryboard(chart('forty-seven percent', 47), s, v, p(), read).status).toBe('ok');
+    expect(buildStoryboard(chart('sixty-two percent', 62), s, v, p(), read).issues.map((i) => i.category)).toContain(
       'chart-data',
     );
+  });
+
+  it('accepts numeric points whose display matches the value and the passage', () => {
+    const s = good();
+    const v = run(s, approveAll(s, pkg()));
+    expect(buildStoryboard(chartPlan([point({})]), s, v, pkg(), read).status).toBe('ok');
+    expect(
+      buildStoryboard(chartPlan([point({ value: 14, display: 'fourteen percent' })]), s, v, pkg(), read).status,
+    ).toBe('ok');
+    expect(
+      buildStoryboard(
+        chartPlan([point({ value: 5000, unit: 'usd', display: 'less than $5,000', qualifier: 'lt' })]),
+        s,
+        v,
+        pkg(),
+        read,
+      ).status,
+    ).toBe('ok');
+    expect(
+      buildStoryboard(
+        chartPlan([point({ value: 601, unit: 'count', display: '601' })], 'stat-tiles'),
+        s,
+        v,
+        pkg(),
+        read,
+      ).status,
+    ).toBe('ok');
+  });
+
+  it('rejects display/value mismatch, out-of-passage figures, bad units and unknown types', () => {
+    const s = good();
+    const v = run(s, approveAll(s, pkg()));
+    const cat = (pts: ChartPoint[], type?: string) =>
+      buildStoryboard(chartPlan(pts, type), s, v, pkg(), read).issues.map((i) => i.category);
+    expect(cat([point({ value: 83.33, display: '$84', unit: 'usd' })])).toContain('chart-data');
+    expect(cat([point({ value: 62, display: '62%' })])).toContain('chart-data');
+    expect(cat([point({ value: 147, display: '147%' })])).toContain('chart-data');
+    expect(cat([point({ value: 601, unit: 'ratio', display: '1 in 601' })])).toEqual([]);
+    expect(cat([point({ value: 1, unit: 'ratio', display: '1 in 601' })])).toContain('chart-data');
+    expect(cat([point({})], 'proportional-table')).toContain('chart');
+    expect(cat([])).toContain('chart');
+    const legacy = plan([
+      scene('sc1', ['s01', 's02', 's03'], {
+        visual: {
+          category: 'data-chart',
+          description: 'bars',
+          chart: { type: 'bar', series: [{ label: 'lost', value: '47%', cite: DOC_D }] } as unknown as ChartSpec,
+        },
+      }),
+    ]);
+    expect(
+      buildStoryboard(legacy, s, v, pkg(), read)
+        .issues.map((i) => i.explanation)
+        .join(' '),
+    ).toMatch(/series was replaced by points/);
   });
 });
 
