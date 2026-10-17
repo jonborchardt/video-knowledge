@@ -377,6 +377,7 @@ export interface Issue {
   suggestion?: string;
   by: 'deterministic' | 'review';
   revision?: number; // review findings: the revision they were raised against
+  fingerprint?: string; // review findings: the sentence fingerprint they were raised against
 }
 export interface ReviewFinding extends Omit<Issue, 'by'> {
   fingerprint: string; // of the sentence as reviewed; a finding whose fingerprint no longer matches is resolved
@@ -574,15 +575,41 @@ export function validateScript(
   // Review findings that still apply (same sentence fingerprint) stay open; the rest were addressed by a revision.
   const prints = new Map(all.map((s) => [s.id, sentenceFingerprint(s)]));
   const open = (review?.findings ?? []).filter((f) => prints.get(f.sentence) === f.fingerprint);
-  const prevResolved = new Map(
-    (previous?.resolved ?? []).map((r) => [`${r.sentence}|${r.fingerprint}|${r.explanation}`, r]),
-  );
-  const resolved = (review?.findings ?? [])
-    .filter((f) => prints.get(f.sentence) !== f.fingerprint)
-    .map((f) => ({
-      ...f,
-      resolvedBy: prevResolved.get(`${f.sentence}|${f.fingerprint}|${f.explanation}`)?.resolvedBy ?? script.revision,
-    }));
+  // Resolved findings are history: the previous validation's list, plus every finding (in the file, or open in the
+  // previous validation and since deleted from the file) whose sentence has changed. Deleting a finding never erases it.
+  const key = (f: { sentence: string; fingerprint?: string; explanation: string }) =>
+    `${f.sentence}|${f.fingerprint}|${f.explanation}`;
+  const resolvedNow = new Map<string, ReviewFinding & { resolvedBy: number }>();
+  for (const r of previous?.resolved ?? []) resolvedNow.set(key(r), r);
+  const stale = [
+    ...(review?.findings ?? []),
+    ...(previous?.issues ?? []).filter(
+      (i): i is Issue & { fingerprint: string } => i.by === 'review' && typeof i.fingerprint === 'string',
+    ),
+  ].filter((f) => prints.get(f.sentence) !== f.fingerprint);
+  for (const f of stale) {
+    const { by: _by, ...finding } = f as ReviewFinding & { by?: string };
+    void _by;
+    if (!resolvedNow.has(key(f))) resolvedNow.set(key(f), { ...finding, resolvedBy: script.revision });
+  }
+  const resolved = [...resolvedNow.values()];
+  // A finding's references must be reproducible from the repository: no URLs, no absolute paths, no gitignored caches.
+  const unreproducible = (ref: string) =>
+    /^https?:/i.test(ref) || /^([A-Za-z]:)?[\\/]/.test(ref) || /(^|\/)(store\/transcripts|work)\//.test(ref);
+  for (const f of open)
+    for (const ref of f.refs ?? [])
+      if (unreproducible(ref))
+        top.push(
+          issue(
+            f.sentence,
+            'unreproducible-ref',
+            'warning',
+            `the finding cites "${ref}", which is outside the repository`,
+            {
+              suggestion: 'Cite the package context or a committed source path.',
+            },
+          ),
+        );
 
   const results: SentenceResult[] = all.map((s) => {
     const issues: Issue[] = [];

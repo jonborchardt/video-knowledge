@@ -495,6 +495,64 @@ it('the package exposes the cites and sources the storyboard checks against', ()
 });
 
 describe('reproducible evidence', () => {
+  it('flags a finding whose reference is outside the repository', () => {
+    const s = good();
+    const r = approveAll(s, pkg());
+    const finding = (refs: string[]) => ({
+      sentence: 's02',
+      fingerprint: sentenceFingerprint(sentences(s)[1]),
+      category: 'omission',
+      severity: 'info' as const,
+      explanation: 'x',
+      refs,
+    });
+    for (const ref of [
+      'demo/store/transcripts/s1a.txt',
+      'demo/work/notes.md',
+      'https://example.com',
+      'C:/x/y.txt',
+      '/tmp/y',
+    ])
+      expect(
+        run(s, { ...r, findings: [finding([ref])] }).issues.map((i) => i.category),
+        ref,
+      ).toContain('unreproducible-ref');
+    expect(run(s, { ...r, findings: [finding([DOC_D])] }).issues.map((i) => i.category)).not.toContain(
+      'unreproducible-ref',
+    );
+  });
+
+  it('resolved findings survive their removal from the review file', () => {
+    const s1 = script([
+      sentence('s01', 'Of 601 people surveyed, 47 percent lost money.', 'factual', [
+        fact('s01.a', 'Of 601 participants, 47% reported losing money.'),
+      ]),
+    ]);
+    const finding = {
+      sentence: 's01',
+      fingerprint: sentenceFingerprint(sentences(s1)[0]),
+      revision: 1,
+      category: 'missing-qualification',
+      severity: 'warning' as const,
+      explanation: 'say it is self-reported',
+    };
+    const v1 = run(s1, approveAll(s1, pkg(), [finding]));
+    expect(v1.resolved).toHaveLength(0);
+    const s2 = script(
+      [
+        sentence('s01', 'Of 601 people surveyed, 47 percent said they lost money.', 'factual', [
+          fact('s01.a', 'Of 601 participants, 47% reported losing money.'),
+        ]),
+      ],
+      2,
+    );
+    const r2 = approveAll(s2, pkg()); // the reviewer dropped the finding from the file
+    const v2 = validateScript(s2, corpus(), read, r2, {}, v1, pkg(), hashOf(pkg()));
+    expect(v2.resolved.map((x) => [x.explanation, x.resolvedBy])).toEqual([['say it is self-reported', 2]]);
+    const v3 = validateScript(s2, corpus(), read, r2, {}, v2, pkg(), hashOf(pkg()));
+    expect(v3.resolved.map((x) => [x.explanation, x.resolvedBy])).toEqual([['say it is self-reported', 2]]);
+  });
+
   it('approvals lapse when the evidence package changes', () => {
     const s = good();
     const q = pkg();
