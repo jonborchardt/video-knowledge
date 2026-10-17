@@ -2,15 +2,18 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { site } from '../config/site';
-import { href } from '../lib/url';
+import { author, site } from '../config/site';
+import { absoluteUrl, href } from '../lib/url';
+import { websiteJsonLd, type PageMeta } from '../lib/seo';
 
-interface Props {
-  title: string;
-  description?: string;
-}
-const { title, description = site.description } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+type Props = PageMeta;
+const { title, description = site.description, noindex = false } = Astro.props;
+const siteUrl = Astro.site!;
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+// Every page has a social image: the one passed in, else the site card from scripts/icons.mjs.
+const imagePath = Astro.props.image ?? '/og/site.png';
+const image = imagePath.startsWith('http') ? imagePath : absoluteUrl(imagePath, siteUrl);
+const imageAlt = Astro.props.imageAlt ?? (title === site.name ? site.name : `${title} - ${site.name}`);
 ---
 
 <!doctype html>
@@ -23,7 +26,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcfcfd" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15171c" />
     <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
-    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={href('/favicon.png')} type="image/png" sizes="96x96" />
+    <link rel="apple-touch-icon" href={href('/apple-touch-icon.png')} />
+    <link rel="sitemap" href={href('/sitemap-index.xml')} />
+    {/* A noindex page makes no canonical claim: 404.html has no URL of its own to point at. */}
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:type" content="website" />
@@ -31,7 +38,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:locale" content={site.locale.replace('-', '_')} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    <meta name="author" content={author.name} />
+    {!noindex && <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd(siteUrl))} />}
 
     <!-- Theme: applied before paint to avoid a flash. Order: user override → system preference. -->
     <script is:inline>
@@ -48,6 +66,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
           stored === 'dark' || (stored !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches),
         );
         root.dataset.theme = stored === 'light' || stored === 'dark' ? stored : 'system';
+        // Print in light theme: the dark palette is unreadable on paper. Restore whatever the class was at print
+        // time (the toggle keeps it current), not the load-time preference.
+        let wasDark;
+        addEventListener('beforeprint', () => {
+          wasDark = root.classList.contains('dark');
+          root.classList.remove('dark');
+        });
+        addEventListener('afterprint', () => root.classList.toggle('dark', wasDark));
       })();
     </script>
   </head>
