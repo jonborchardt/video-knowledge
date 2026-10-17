@@ -1,36 +1,36 @@
 # How Much Money Do MLM Participants Actually Make?
 
-Story `decision:mlm-and-seminars` (get-rich-quick), revision 2. About 11.9 minutes (1790 words at 150 wpm). Validation: **blocked**, 9 blocking, 29 warnings, 46/59 assertions verified.
+Story `decision:mlm-and-seminars` (get-rich-quick), revision 2. About 11.9 minutes (1790 words at 150 wpm). Validation: **blocked**, 9 blocking, 30 warnings, 0/59 assertions verified.
 
 Markers: `[s12 ok]` every assertion verified by the deterministic checks and the reviewer; `[s12 review]` awaiting review or carrying a warning; `[s12 BLOCKED]` an open blocking issue. Sentences without a marker make no factual claim.
 
 ## Hook
 
-Somewhere in your messages there is probably a pitch like this. A friend you have not heard from in years has started a business, and she would love to have you on her team: you earn from what you sell, and from everyone you bring in after you. The recruiters have a word for that second part: one trainer promises to show you how to "finally create the leverage that you need inside of your network marketing business". [s03 ok] In a study published in 2018, AARP asked 601 Americans who had actually done this how it went, and 47 percent said they lost money. [s04 ok] Only 25 percent said they made any profit at all. [s05 ok] So where does the money go, and why does leverage that sounds so good on paper show up in almost nobody's bank account?
+Somewhere in your messages there is probably a pitch like this. [s01 review] A friend you have not heard from in years has started a business, and she would love to have you on her team: you earn from what you sell, and from everyone you bring in after you. [s02 review] The recruiters have a word for that second part: one trainer promises to show you how to "finally create the leverage that you need inside of your network marketing business". [s03 review] In a study published in 2018, AARP asked 601 Americans who had actually done this how it went, and 47 percent said they lost money. [s04 review] Only 25 percent said they made any profit at all. [s05 review] So where does the money go, and why does leverage that sounds so good on paper show up in almost nobody's bank account? [s06 review]
 
 ## Setup
 
-This video is about one question: how much money do people in multi-level marketing actually make? To answer it we have three kinds of evidence: 70 of the companies' own income disclosure statements, read closely by Federal Trade Commission staff; a nationally representative survey of 601 participants by AARP; and an analysis of 30 companies by Jon Taylor, an independent analyst who argues against the industry. [s08 BLOCKED] First, the promise, in the recruiters' own words: one coach tells his audience that once the team grows, "it starts to compound", like a snowball; another says the person you bring in "might recruit 10 people themselves and have an organization of a thousand people". [s09 ok] Another trainer puts the whole idea in one line: it would be "better to have a smaller percentage of 100 people than 100 of yourself". [s10 ok] That is the pitch: income from the efforts of other people. The critics have their own one-liner; in a clip John Oliver's show played, a former Herbalife distributor puts it this way: "You make money from signing people up." [s12 ok] Even the FTC's own consumer page says, flatly, that "Most people who join legitimate MLMs make little or no money." [s13 ok] Two confident stories, so let us see which one the numbers tell.
+This video is about one question: how much money do people in multi-level marketing actually make? [s07 review] To answer it we have three kinds of evidence: 70 of the companies' own income disclosure statements, read closely by Federal Trade Commission staff; a nationally representative survey of 601 participants by AARP; and an analysis of 30 companies by Jon Taylor, an independent analyst who argues against the industry. [s08 BLOCKED] First, the promise, in the recruiters' own words: one coach tells his audience that once the team grows, "it starts to compound", like a snowball; another says the person you bring in "might recruit 10 people themselves and have an organization of a thousand people". [s09 review] Another trainer puts the whole idea in one line: it would be "better to have a smaller percentage of 100 people than 100 of yourself". [s10 review] That is the pitch: income from the efforts of other people. [s11 review] The critics have their own one-liner; in a clip John Oliver's show played, a former Herbalife distributor puts it this way: "You make money from signing people up." [s12 review] Even the FTC's own consumer page says, flatly, that "Most people who join legitimate MLMs make little or no money." [s13 review] Two confident stories, so let us see which one the numbers tell. [s14 review]
 
 ## Investigation
 
-Start with the companies, because some of them publish an income disclosure statement, and FTC staff collected 70 of them, from household names to small firms. [s15 ok] Once FTC staff worked through the fine print, the statements with enough data to tell showed most participants received $1,000 or less in a year: under $84 a month. [s16 ok] In at least 17 of the 70 companies, most participants made nothing at all. [s17 ok] And that is the generous reading, because of three things buried in the fine print. First, who gets counted: of the 70 statements, 29 leave out participants who earned no commission, and another 24 leave out anyone the company has labelled inactive. [s19 BLOCKED] What happens to an average when you remove the zeros before you take it? Second, what gets counted: not one of the 70 statements reports income with expenses taken out in full, and 20 of them never say whether expenses were taken out at all. [s21 ok] So the dollar figures are what the company paid out, before most or all of whatever the participant spent to take part. [s22 ok] Third, how it is presented: 44 of the 70 break the numbers out only by rank, and in those tables, nearly without exception, the vast majority of participants sit in the two or three lowest ranks. [s23 ok] One table the FTC excerpted shows the shape: 92.37 percent of participants in the bottom row, with average earnings of $41.69. [s24 ok] The top row averages just over $1,018,350, and holds fewer than 0.01 percent of participants; as the FTC puts it, half the rows in that table describe half of one percent of the people. [s25 BLOCKED] Disclosures count what companies paid, not whether anyone came out ahead; for that you have to ask the people. AARP did, in a study published in 2018, using a probability-based national panel, the kind of sample that lets you generalise to the whole country. [s27 ok] Among the 601 current and former participants it reached, 47 percent said they lost money, 27 percent said they broke even, and 25 percent said they made a profit, counting their entire time in the business. [s28 ok] Profit, for most of that quarter, was small: 14 percent of all participants made under $5,000 in total, and only 3 percent made $25,000 or more. [s29 ok] Three people, half of one percent of the sample, reported profits of $100,000 or more; those three had each been in the business more than five years, and one of them had founded the company. [s30 ok] On the other side of the ledger, 41 percent lost less than $5,000, 3 percent lost $5,000 to $9,999, and 1 percent lost more than $10,000. [s31 ok] These are people's own accounts of what they put in and took out, which is a limit; they are also the only figures so far that measure profit or loss rather than payout. [s65 ok] So most people lose or break even, and the few who profit mostly profit a little. The pitch said recruiting would compound, so why doesn't it? The FTC describes how the pay plans typically work: commissions for hitting benchmarks such as buying a set amount of product, getting others to buy it, or recruiting people who then buy it; selling to an outside customer at a markup is mentioned as a source of income "in some cases". [s33 ok] Taylor went further: he read the compensation plans of the 30 companies with published earnings data, and of more than 350 in all, and concluded that each of them pays primarily for recruiting a large downline rather than for retailing product, with most of the payout going to the highest levels. [s34 ok] That is one analyst's reading of the plans; the FTC's report describes the same structure but does not measure how much income actually comes from downlines versus retail customers. [s35 ok] The recruiters reject that framing; the same trainer insists that "you don't get paid for the act of building the team you only get paid when sales happen to a customer". [s36 ok] Both can be true at once, because in the plans the FTC describes, the "customer" can be the recruit, buying a set amount of product to qualify, and the plans pay commissions on those purchases. [s37 ok] Which brings us back to leverage: if income flows up from a downline, somebody has to be the downline. In that rank table, over 90 percent of participants were in a cohort averaging under $100. [s39 ok] Taylor's own summary of the pitch says the quiet part: the appeal is "time freedom or leveraged income", a flow from the efforts of others, and under these pay plans getting it depends on recruiting a downline more than on selling the product. [s40 ok] His own estimate is blunter: across the 30 companies, after subtracting required purchases and modest expenses, he puts the share losing money at 99.6 percent, about one in 238 profiting. [s41 BLOCKED] That number depends on his assumptions about what participants had to spend, how many dropped out and how many were ever counted, which he states; it is an estimate built on the companies' tables, not a measurement of anyone's bank account. [s42 ok] Critics like to finish with arithmetic; in John Oliver's version, if each recruit brings in a handful more, "you could only do that 13 cycles and you would exceed the population of the earth." [s43 ok] None of the studies here tests that arithmetic directly; what they show is the shape it predicts. [s44 ok] Taylor writes of pyramid schemes, a class in which he places MLMs, that recruitment eventually dries up as the market saturates, leaving the vast majority at the bottom. [s66 ok] And among the former participants AARP surveyed, 29 percent said they left because the commission structure mostly benefited those at the top, and 25 percent because the market was saturated. [s67 ok]
+Start with the companies, because some of them publish an income disclosure statement, and FTC staff collected 70 of them, from household names to small firms. [s15 review] Once FTC staff worked through the fine print, the statements with enough data to tell showed most participants received $1,000 or less in a year: under $84 a month. [s16 review] In at least 17 of the 70 companies, most participants made nothing at all. [s17 review] And that is the generous reading, because of three things buried in the fine print. [s18 review] First, who gets counted: of the 70 statements, 29 leave out participants who earned no commission, and another 24 leave out anyone the company has labelled inactive. [s19 BLOCKED] What happens to an average when you remove the zeros before you take it? [s20 review] Second, what gets counted: not one of the 70 statements reports income with expenses taken out in full, and 20 of them never say whether expenses were taken out at all. [s21 review] So the dollar figures are what the company paid out, before most or all of whatever the participant spent to take part. [s22 review] Third, how it is presented: 44 of the 70 break the numbers out only by rank, and in those tables, nearly without exception, the vast majority of participants sit in the two or three lowest ranks. [s23 review] One table the FTC excerpted shows the shape: 92.37 percent of participants in the bottom row, with average earnings of $41.69. [s24 review] The top row averages just over $1,018,350, and holds fewer than 0.01 percent of participants; as the FTC puts it, half the rows in that table describe half of one percent of the people. [s25 BLOCKED] Disclosures count what companies paid, not whether anyone came out ahead; for that you have to ask the people. [s26 review] AARP did, in a study published in 2018, using a probability-based national panel, the kind of sample that lets you generalise to the whole country. [s27 review] Among the 601 current and former participants it reached, 47 percent said they lost money, 27 percent said they broke even, and 25 percent said they made a profit, counting their entire time in the business. [s28 review] Profit, for most of that quarter, was small: 14 percent of all participants made under $5,000 in total, and only 3 percent made $25,000 or more. [s29 review] Three people, half of one percent of the sample, reported profits of $100,000 or more; those three had each been in the business more than five years, and one of them had founded the company. [s30 review] On the other side of the ledger, 41 percent lost less than $5,000, 3 percent lost $5,000 to $9,999, and 1 percent lost more than $10,000. [s31 review] These are people's own accounts of what they put in and took out, which is a limit; they are also the only figures so far that measure profit or loss rather than payout. [s65 review] So most people lose or break even, and the few who profit mostly profit a little. The pitch said recruiting would compound, so why doesn't it? [s32 review] The FTC describes how the pay plans typically work: commissions for hitting benchmarks such as buying a set amount of product, getting others to buy it, or recruiting people who then buy it; selling to an outside customer at a markup is mentioned as a source of income "in some cases". [s33 review] Taylor went further: he read the compensation plans of the 30 companies with published earnings data, and of more than 350 in all, and concluded that each of them pays primarily for recruiting a large downline rather than for retailing product, with most of the payout going to the highest levels. [s34 review] That is one analyst's reading of the plans; the FTC's report describes the same structure but does not measure how much income actually comes from downlines versus retail customers. [s35 review] The recruiters reject that framing; the same trainer insists that "you don't get paid for the act of building the team you only get paid when sales happen to a customer". [s36 review] Both can be true at once, because in the plans the FTC describes, the "customer" can be the recruit, buying a set amount of product to qualify, and the plans pay commissions on those purchases. [s37 review] Which brings us back to leverage: if income flows up from a downline, somebody has to be the downline. [s38 review] In that rank table, over 90 percent of participants were in a cohort averaging under $100. [s39 review] Taylor's own summary of the pitch says the quiet part: the appeal is "time freedom or leveraged income", a flow from the efforts of others, and under these pay plans getting it depends on recruiting a downline more than on selling the product. [s40 review] His own estimate is blunter: across the 30 companies, after subtracting required purchases and modest expenses, he puts the share losing money at 99.6 percent, about one in 238 profiting. [s41 BLOCKED] That number depends on his assumptions about what participants had to spend, how many dropped out and how many were ever counted, which he states; it is an estimate built on the companies' tables, not a measurement of anyone's bank account. [s42 review] Critics like to finish with arithmetic; in John Oliver's version, if each recruit brings in a handful more, "you could only do that 13 cycles and you would exceed the population of the earth." [s43 review] None of the studies here tests that arithmetic directly; what they show is the shape it predicts. [s44 review] Taylor writes of pyramid schemes, a class in which he places MLMs, that recruitment eventually dries up as the market saturates, leaving the vast majority at the bottom. [s66 review] And among the former participants AARP surveyed, 29 percent said they left because the commission structure mostly benefited those at the top, and 25 percent because the market was saturated. [s67 review]
 
 ## Findings
 
-Put the three side by side and they agree on the shape, though they measure different things. The companies' own statements: most participants received $1,000 or less in a year, before expenses, and most of the tables leave some participants out entirely. [s46 BLOCKED] The survey: 47 percent lost, 27 percent broke even, 25 percent profited, and of that 25, 14 points made under $5,000. [s47 ok] The analyst: 99.6 percent losing, once required purchases are counted as a cost. [s48 ok] And on the central promise: the plans do route money upward from a downline, and the rank tables show where that leaves most people, because in table after table the FTC looked at, the vast majority sit in the two or three lowest ranks with the smallest amounts. [s49 ok]
+Put the three side by side and they agree on the shape, though they measure different things. [s45 review] The companies' own statements: most participants received $1,000 or less in a year, before expenses, and most of the tables leave some participants out entirely. [s46 BLOCKED] The survey: 47 percent lost, 27 percent broke even, 25 percent profited, and of that 25, 14 points made under $5,000. [s47 review] The analyst: 99.6 percent losing, once required purchases are counted as a cost. [s48 review] And on the central promise: the plans do route money upward from a downline, and the rank tables show where that leaves most people, because in table after table the FTC looked at, the vast majority sit in the two or three lowest ranks with the smallest amounts. [s49 review]
 
 ## Qualifications
 
-Now the limits, because they matter: the AARP numbers are self-reported, by current and former participants, and nothing checks them against bank statements. [s50 ok] The FTC's figures are company payouts, not profit, and they cover the 70 companies whose statements were publicly available, which is not the whole industry. [s51 ok] Taylor is an independent analyst who argues against the industry, and his 99.6 percent is a calculation under assumptions he states, not a count of real accounts. [s52 ok] The split between recruiting income and retail income has been described in these documents, and argued, but not measured. [s53 ok] And the thirteen-cycles arithmetic is a thought experiment that none of these studies tested; the rank tables show where people end up, not why. [s54 BLOCKED]
+Now the limits, because they matter: the AARP numbers are self-reported, by current and former participants, and nothing checks them against bank statements. [s50 review] The FTC's figures are company payouts, not profit, and they cover the 70 companies whose statements were publicly available, which is not the whole industry. [s51 review] Taylor is an independent analyst who argues against the industry, and his 99.6 percent is a calculation under assumptions he states, not a count of real accounts. [s52 review] The split between recruiting income and retail income has been described in these documents, and argued, but not measured. [s53 review] And the thirteen-cycles arithmetic is a thought experiment that none of these studies tested; the rank tables show where people end up, not why. [s54 BLOCKED]
 
 ## Implications
 
-So, back to that message from your friend; suppose you say yes. The survey says the most likely outcome, by a wide margin, is that you lose money or break even: 74 percent of participants did, nearly three in four. [s56 BLOCKED] If you do profit, the same survey suggests it will most likely be under $5,000 over your whole time in the business. [s57 BLOCKED] And the leverage? It exists, in the plan documents; the rank tables show who it works for. Before you answer, ask for the income disclosure statement, and then ask three questions of it: who is left out of the table, whether the figures are before expenses, and how many people are in the bottom row.
+So, back to that message from your friend; suppose you say yes. [s55 review] The survey says the most likely outcome, by a wide margin, is that you lose money or break even: 74 percent of participants did, nearly three in four. [s56 BLOCKED] If you do profit, the same survey suggests it will most likely be under $5,000 over your whole time in the business. [s57 BLOCKED] And the leverage? It exists, in the plan documents; the rank tables show who it works for. [s58 review] Before you answer, ask for the income disclosure statement, and then ask three questions of it: who is left out of the table, whether the figures are before expenses, and how many people are in the bottom row. [s59 review]
 
 ## Conclusion
 
-How much money do MLM participants actually make? For most of them, nothing, or less than nothing: in the nationally representative survey, 47 percent lost money and 27 percent broke even, and in the companies' own statements most participants received $1,000 or less in a year before expenses. [s60 ok] A quarter made some profit, mostly small, and half of one percent made a lot. [s61 BLOCKED] The leverage the pitch sells is real for the fraction at the top; in the plans Taylor read, most of the payout goes to the highest levels, and in the FTC's rank tables the vast majority sit at the bottom. [s62 ok] None of that is a verdict on your friend. It is a description of the structure she has joined, written mostly by the companies themselves, and it is worth reading before you join it too.
+How much money do MLM participants actually make? For most of them, nothing, or less than nothing: in the nationally representative survey, 47 percent lost money and 27 percent broke even, and in the companies' own statements most participants received $1,000 or less in a year before expenses. [s60 review] A quarter made some profit, mostly small, and half of one percent made a lot. [s61 BLOCKED] The leverage the pitch sells is real for the fraction at the top; in the plans Taylor read, most of the payout goes to the highest levels, and in the FTC's rank tables the vast majority sit at the bottom. [s62 review] None of that is a verdict on your friend. [s63 review] It is a description of the structure she has joined, written mostly by the companies themselves, and it is worth reading before you join it too. [s64 review]
 
 ## Open issues
 
@@ -43,7 +43,8 @@ How much money do MLM participants actually make? For most of them, nothing, or 
 - **blocking** s56 figure-without-assertion (deterministic): the figure "3" is in no assertion of this sentence Suggestion: Add an assertion that states "3" and cites the passage it comes from.
 - **blocking** s57 (s57.a) invented-number (deterministic): The figure "25" does not appear in the cited passages. Suggestion: Drop "25" or cite a passage that states it.
 - **blocking** s61 (s61.a) invented-number (deterministic): The figure "25" does not appear in the cited passages. Suggestion: Drop "25" or cite a passage that states it.
-- **warning** - stale-package (deterministic): the script was written from evidence package 4824306bfc; the current package is 238a579483
+- **warning** - stale-package (deterministic): the script was written from evidence package 4824306bfc; the current package is c189733721
+- **warning** s43 unreproducible-ref (deterministic): the finding cites "get-rich-quick/store/transcripts/s6MwGeOm8iI.txt", which is outside the repository Suggestion: Cite the package context or a committed source path.
 - **warning** s03 (s03.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke Suggestion: Set quote.speaker to the name, role or show the narration attributes the words to.
 - **warning** s08 (s08.c) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: The sentence itself says he argues against the industry; s52 repeats it.
 - **warning** s09 (s09.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke Suggestion: Set quote.speaker to the name, role or show the narration attributes the words to.
@@ -72,6 +73,7 @@ How much money do MLM participants actually make? For most of them, nothing, or 
 - **warning** s54 (s54.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: Say where the narration carries this limitation (qualifications), or narrow the sentence.
 - **warning** s62 (s62.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: The sentence itself carries the limit: real for the fraction at the top; rank tables, not a money-flow measurement.
 - **warning** s62 (s62.b) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement. Suggestion: The writer says the narration carries it: s52 says Taylor is a critic working from company tables.
+- **info** - stale-review (deterministic): the review was made against evidence package (none recorded); the package is now c189733721, so its approvals do not count
 - **info** s03 (s03.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s04 (s04.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
 - **info** s05 (s05.a) wording (deterministic): Wording differs from the canonical claim; the reviewer confirms the passages entail it.
@@ -110,11 +112,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
 
 ## Evidence by sentence
 
-### s03 (attributed, verified)
+### s03 (attributed, needs-review)
 
 > The recruiters have a word for that second part: one trainer promises to show you how to "finally create the leverage that you need inside of your network marketing business".
 
-- **s03.a** [verified] A network-marketing trainer promises to show viewers how to "finally create the leverage that you need inside of your network marketing business".
+- **s03.a** [needs-review] A network-marketing trainer promises to show viewers how to "finally create the leverage that you need inside of your network marketing business".
   - supported (approved): no direct support, 3 qualifying, 1 source statement.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - warning speaker-missing: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -128,11 +130,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
     > how you can be a recruiting machine and finally create the leverage that you need inside of your network marketing business
   - quotation: "finally create the leverage that you need inside of your network marketing business" from `m1jU_e8ogok`
 
-### s04 (factual, verified)
+### s04 (factual, needs-review)
 
 > In a study published in 2018, AARP asked 601 Americans who had actually done this how it went, and 47 percent said they lost money.
 
-- **s04.a** [verified] AARP's survey, published in 2018, covered 601 current and former MLM participants, and 47% of them reported losing money.
+- **s04.a** [needs-review] AARP's survey, published in 2018, covered 601 current and former MLM participants, and 47% of them reported losing money.
   - supported (approved): 2 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
@@ -140,11 +142,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139`
     > On the question of making a profit or loss: Nearly half (47%) of MLM participants reported that they lost money. One in four (27%) MLM participants reported that they broke even (made no money). One in four (25%) MLM participants reported making a profit.
 
-### s05 (factual, verified)
+### s05 (factual, needs-review)
 
 > Only 25 percent said they made any profit at all.
 
-- **s05.a** [verified] 25% of the surveyed MLM participants reported making a profit.
+- **s05.a** [needs-review] 25% of the surveyed MLM participants reported making a profit.
   - supported (approved): 1 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139`
@@ -177,11 +179,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - qualifies (uncited): FTC MLM income disclosure report 2024 partly 0.3, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205`
     > The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income.
 
-### s09 (attributed, verified)
+### s09 (attributed, needs-review)
 
 > First, the promise, in the recruiters' own words: one coach tells his audience that once the team grows, "it starts to compound", like a snowball; another says the person you bring in "might recruit 10 people themselves and have an organization of a thousand people".
 
-- **s09.a** [verified] A network-marketing coach tells his audience that a growing team means "it starts to compound" and likens it to a snowball.
+- **s09.a** [needs-review] A network-marketing coach tells his audience that a growing team means "it starts to compound" and likens it to a snowball.
   - supported (approved): no direct support, 3 qualifying, 1 source statement.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - warning speaker-missing: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -194,7 +196,7 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - statement: Network Marketing Recruiting: How I Recruited 10 People in 10 Days  `KL2HjMUP7gA`
     > you're going to find that it starts to compound and and it grows even faster it's like a snowball
   - quotation: "it starts to compound" from `KL2HjMUP7gA`
-- **s09.b** [verified] A network-marketing trainer says the person you bring in "might recruit 10 people themselves and have an organization of a thousand people".
+- **s09.b** [needs-review] A network-marketing trainer says the person you bring in "might recruit 10 people themselves and have an organization of a thousand people".
   - supported (approved): no direct support, 3 qualifying, 1 source statement. modality: possibility.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - warning speaker-missing: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -208,11 +210,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
     > they might recruit 10 people themselves and have an organization of a thousand people
   - quotation: "might recruit 10 people themselves and have an organization of a thousand people" from `1eWkeNDmQj4`
 
-### s10 (attributed, verified)
+### s10 (attributed, needs-review)
 
 > Another trainer puts the whole idea in one line: it would be "better to have a smaller percentage of 100 people than 100 of yourself".
 
-- **s10.a** [verified] A prominent network-marketing trainer says it is "better to have a smaller percentage of 100 people than 100 of yourself".
+- **s10.a** [needs-review] A prominent network-marketing trainer says it is "better to have a smaller percentage of 100 people than 100 of yourself".
   - supported (approved): no direct support, 3 qualifying, 1 source statement.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - warning speaker-missing: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -226,11 +228,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
     > it'd be better to have a smaller percentage of 100 people than 100 of yourself right
   - quotation: "better to have a smaller percentage of 100 people than 100 of yourself" from `ZKva-dT6g8E`
 
-### s12 (attributed, verified)
+### s12 (attributed, needs-review)
 
 > The critics have their own one-liner; in a clip John Oliver's show played, a former Herbalife distributor puts it this way: "You make money from signing people up."
 
-- **s12.a** [verified] In a clip played in John Oliver's MLM segment, a former Herbalife distributor says "You make money from signing people up."
+- **s12.a** [needs-review] In a clip played in John Oliver's MLM segment, a former Herbalife distributor says "You make money from signing people up."
   - supported (approved): no direct support, 1 qualifying, 1 source statement.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - warning speaker-missing: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -240,11 +242,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
     > You make a little, not much. Not enough to pay the bills that are wrecking up. You make money from signing people up.
   - quotation: "You make money from signing people up." from `s6MwGeOm8iI`
 
-### s13 (attributed, verified)
+### s13 (attributed, needs-review)
 
 > Even the FTC's own consumer page says, flatly, that "Most people who join legitimate MLMs make little or no money."
 
-- **s13.a** [verified] The FTC's consumer advice page states that "Most people who join legitimate MLMs make little or no money."
+- **s13.a** [needs-review] The FTC's consumer advice page states that "Most people who join legitimate MLMs make little or no money."
   - supported (approved): no direct support, 1 source statement. modality: typical.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - warning speaker-missing: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -252,11 +254,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
     > Most people who join legitimate MLMs make little or no money. Some of them lose money.
   - quotation: "Most people who join legitimate MLMs make little or no money." from `consumer-ftc-multi-level-marketing-businesses-pyramid-schemes`
 
-### s15 (factual, verified)
+### s15 (factual, needs-review)
 
 > Start with the companies, because some of them publish an income disclosure statement, and FTC staff collected 70 of them, from household names to small firms.
 
-- **s15.a** [verified] FTC staff analysed 70 publicly available income disclosure statements from a range of MLMs, from large and well-known companies to smaller ones.
+- **s15.a** [needs-review] FTC staff analysed 70 publicly available income disclosure statements from a range of MLMs, from large and well-known companies to smaller ones.
   - supported (approved): 2 supporting (2 independent, strongest 0.5).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: FTC MLM report summary right 0.4, direct `get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35`
@@ -264,11 +266,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: FTC MLM income disclosure report 2024 right 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L734-L752`
     > Expenses None of the 70 income disclosure statements reviewed provides income figures that take into None of the 70 income disclosure account all expenses. Twenty of the disclosures have statements provides income figures that no express statement about whether their figures account for expenses.28 Of the remaining 50 …
 
-### s16 (factual, verified)
+### s16 (factual, needs-review)
 
 > Once FTC staff worked through the fine print, the statements with enough data to tell showed most participants received $1,000 or less in a year: under $84 a month.
 
-- **s16.a** [verified] For the disclosures with enough data for FTC staff to calculate it, most participants had $1,000 or less in reported income for the year, which is less than $84 per month.
+- **s16.a** [needs-review] For the disclosures with enough data for FTC staff to calculate it, most participants had $1,000 or less in reported income for the year, which is less than $84 per month.
   - supported (approved): 2 supporting (2 independent, strongest 0.6). modality: typical.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: FTC MLM report summary right 0.4, direct `get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35`
@@ -276,11 +278,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: FTC MLM income disclosure report 2024 right 0.6, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L1481-L1498`
     > Considering the data from all 27 income Considering the data from all 27 income disclosures that expressly provide the figure or the disclosures that expressly provide the underlying data necessary to calculate the figure, figure or the underlying data necessary the percent of participants with no income ranges to calc…
 
-### s17 (factual, verified)
+### s17 (factual, needs-review)
 
 > In at least 17 of the 70 companies, most participants made nothing at all.
 
-- **s17.a** [verified] In at least 17 of the 70 MLMs, most participants did not make any money.
+- **s17.a** [needs-review] In at least 17 of the 70 MLMs, most participants did not make any money.
   - supported (approved): 2 supporting (2 independent, strongest 0.6). modality: typical.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: FTC MLM report summary right 0.4, direct `get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35`
@@ -298,31 +300,31 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: FTC MLM income disclosure report 2024 right 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L634-L652`
     > Excludes Some Participants Who Received Little or No Income Most of the income disclosure statements reviewed do not depict the distribution of income across all participants, but instead present a distribution that excludes certain groups of participants.22 Eleven income disclosure statements unambiguously Most of the…
 
-### s21 (factual, verified)
+### s21 (factual, needs-review)
 
 > Second, what gets counted: not one of the 70 statements reports income with expenses taken out in full, and 20 of them never say whether expenses were taken out at all.
 
-- **s21.a** [verified] None of the 70 income disclosure statements provides income figures that take expenses into account in full, and 20 of them have no express statement about whether their figures account for expenses.
+- **s21.a** [needs-review] None of the 70 income disclosure statements provides income figures that take expenses into account in full, and 20 of them have no express statement about whether their figures account for expenses.
   - supported (approved): 1 supporting (1 independent, strongest 0.5).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: FTC MLM income disclosure report 2024 right 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L734-L752`
     > Expenses None of the 70 income disclosure statements reviewed provides income figures that take into None of the 70 income disclosure account all expenses. Twenty of the disclosures have statements provides income figures that no express statement about whether their figures account for expenses.28 Of the remaining 50 …
 
-### s22 (factual, verified)
+### s22 (factual, needs-review)
 
 > So the dollar figures are what the company paid out, before most or all of whatever the participant spent to take part.
 
-- **s22.a** [verified] The disclosed income figures are payments from the MLM and do not account for the expenses participants incurred.
+- **s22.a** [needs-review] The disclosed income figures are payments from the MLM and do not account for the expenses participants incurred.
   - supported (approved): 1 supporting (1 independent, strongest 0.5).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: FTC MLM income disclosure report 2024 right 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L734-L752`
     > Expenses None of the 70 income disclosure statements reviewed provides income figures that take into None of the 70 income disclosure account all expenses. Twenty of the disclosures have statements provides income figures that no express statement about whether their figures account for expenses.28 Of the remaining 50 …
 
-### s23 (factual, verified)
+### s23 (factual, needs-review)
 
 > Third, how it is presented: 44 of the 70 break the numbers out only by rank, and in those tables, nearly without exception, the vast majority of participants sit in the two or three lowest ranks.
 
-- **s23.a** [verified] 44 of the 70 disclosures break out income only by rank, and in nearly each of them the vast majority of participants are in one of the two or three lowest ranks.
+- **s23.a** [needs-review] 44 of the 70 disclosures break out income only by rank, and in nearly each of them the vast majority of participants are in one of the two or three lowest ranks.
   - qualified (qualify): no direct support, 3 qualifying. modality: typical.
   - warning needs-qualification: FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L801-L866`
@@ -332,11 +334,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - qualifies (uncited): AARP MLM survey 2018 partly 0.3, partial `get-rich-quick/sources/aarp-2018-mlm-study.txt#L463-L467`
     > Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test.
 
-### s24 (factual, verified)
+### s24 (factual, needs-review)
 
 > One table the FTC excerpted shows the shape: 92.37 percent of participants in the bottom row, with average earnings of $41.69.
 
-- **s24.a** [verified] In one income disclosure table excerpted by the FTC, 92.37% of participants were in the lowest cohort, with average earnings of $41.69.
+- **s24.a** [needs-review] In one income disclosure table excerpted by the FTC, 92.37% of participants were in the lowest cohort, with average earnings of $41.69.
   - qualified (qualify): no direct support, 3 qualifying.
   - warning needs-qualification: FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L838-L866`
@@ -370,11 +372,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - qualifies (uncited): AARP MLM survey 2018 partly 0.4, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L270-L276`
     > 23% of participants joined specifically to earn by recruiting others, yet only a quarter of all participants ever profited and 47% lost money, so downline income rarely materialises.
 
-### s27 (factual, verified)
+### s27 (factual, needs-review)
 
 > AARP did, in a study published in 2018, using a probability-based national panel, the kind of sample that lets you generalise to the whole country.
 
-- **s27.a** [verified] AARP's survey, published in 2018, used a nationally representative probability sample of current and former MLM participants.
+- **s27.a** [needs-review] AARP's survey, published in 2018, used a nationally representative probability sample of current and former MLM participants.
   - supported (approved): 2 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139`
@@ -382,11 +384,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
 
-### s28 (factual, verified)
+### s28 (factual, needs-review)
 
 > Among the 601 current and former participants it reached, 47 percent said they lost money, 27 percent said they broke even, and 25 percent said they made a profit, counting their entire time in the business.
 
-- **s28.a** [verified] Of 601 current and former MLM participants, 47% reported losing money, 27% reported breaking even and 25% reported making a profit over the entire time they worked for the MLM.
+- **s28.a** [needs-review] Of 601 current and former MLM participants, 47% reported losing money, 27% reported breaking even and 25% reported making a profit over the entire time they worked for the MLM.
   - supported (approved): 2 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139`
@@ -394,46 +396,46 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
 
-### s29 (factual, verified)
+### s29 (factual, needs-review)
 
 > Profit, for most of that quarter, was small: 14 percent of all participants made under $5,000 in total, and only 3 percent made $25,000 or more.
 
-- **s29.a** [verified] Of the 601 participants, 14% made less than $5,000 in profit and 3% made $25,000 or more.
+- **s29.a** [needs-review] Of the 601 participants, 14% made less than $5,000 in profit and 3% made $25,000 or more.
   - supported (approved): 1 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
 
-### s30 (factual, verified)
+### s30 (factual, needs-review)
 
 > Three people, half of one percent of the sample, reported profits of $100,000 or more; those three had each been in the business more than five years, and one of them had founded the company.
 
-- **s30.a** [verified] Three individuals, half of one percent of the sample, reported profits of $100,000 or more; the three had each worked as direct sellers for more than 5 years, and one reported founding the organization.
+- **s30.a** [needs-review] Three individuals, half of one percent of the sample, reported profits of $100,000 or more; the three had each worked as direct sellers for more than 5 years, and one reported founding the organization.
   - supported (approved): 1 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
 
-### s31 (factual, verified)
+### s31 (factual, needs-review)
 
 > On the other side of the ledger, 41 percent lost less than $5,000, 3 percent lost $5,000 to $9,999, and 1 percent lost more than $10,000.
 
-- **s31.a** [verified] Of the 601 participants, 41% lost less than $5,000, 3% lost $5,000 to $9,999 and 1% lost more than $10,000.
+- **s31.a** [needs-review] Of the 601 participants, 41% lost less than $5,000, 3% lost $5,000 to $9,999 and 1% lost more than $10,000.
   - supported (approved): 1 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
 
-### s65 (factual, verified)
+### s65 (factual, needs-review)
 
 > These are people's own accounts of what they put in and took out, which is a limit; they are also the only figures so far that measure profit or loss rather than payout.
 
-- **s65.b** [verified] The AARP profit and loss figures are self-reported by participants.
+- **s65.b** [needs-review] The AARP profit and loss figures are self-reported by participants.
   - supported (approved): 1 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
-- **s65.c** [verified] The AARP figures measure profit or loss (total investment against total income), unlike the disclosures, which report payments from the MLM before expenses.
+- **s65.c** [needs-review] The AARP figures measure profit or loss (total investment against total income), unlike the disclosures, which report payments from the MLM before expenses.
   - supported (approved): 2 supporting (2 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
@@ -441,22 +443,22 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: FTC MLM income disclosure report 2024 right 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L734-L752`
     > Expenses None of the 70 income disclosure statements reviewed provides income figures that take into None of the 70 income disclosure account all expenses. Twenty of the disclosures have statements provides income figures that no express statement about whether their figures account for expenses.28 Of the remaining 50 …
 
-### s33 (factual, verified)
+### s33 (factual, needs-review)
 
 > The FTC describes how the pay plans typically work: commissions for hitting benchmarks such as buying a set amount of product, getting others to buy it, or recruiting people who then buy it; selling to an outside customer at a markup is mentioned as a source of income "in some cases".
 
-- **s33.a** [verified] The FTC report says MLMs often offer commissions for meeting benchmarks such as purchasing a set amount of product, inducing others to purchase it, or recruiting participants who make such purchases, with retail income from selling to other consumers "in some cases".
+- **s33.a** [needs-review] The FTC report says MLMs often offer commissions for meeting benchmarks such as purchasing a set amount of product, inducing others to purchase it, or recruiting participants who make such purchases, with retail income from selling to other consumers "in some cases".
   - qualified (qualify): no direct support, 1 qualifying. modality: typical.
   - warning needs-qualification: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.3, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205`
     > MLMs often offer commissions, bonuses, or other payments to participants (together "commissions") for meeting specific benchmarks, such as purchasing or inducing others to purchase a certain amount of products from the MLM within a certain time period, or recruiting a certain number of new participants who make such pu…
   - quotation: "in some cases" from `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205`
 
-### s34 (factual, verified)
+### s34 (factual, needs-review)
 
 > Taylor went further: he read the compensation plans of the 30 companies with published earnings data, and of more than 350 in all, and concluded that each of them pays primarily for recruiting a large downline rather than for retailing product, with most of the payout going to the highest levels.
 
-- **s34.a** [verified] Taylor's analysis of the compensation plans of the 30 MLMs with earnings data, and of over 350 MLMs in total, concluded that each is recruitment-driven and top-weighted: rewards are paid primarily for recruiting a large downline, not for retailing products, and most of the money goes to participants at the highest levels.
+- **s34.a** [needs-review] Taylor's analysis of the compensation plans of the 30 MLMs with earnings data, and of over 350 MLMs in total, concluded that each is recruitment-driven and top-weighted: rewards are paid primarily for recruiting a large downline, not for retailing products, and most of the money goes to participants at the highest levels.
   - qualified (qualify): 1 supporting (1 independent, strongest 0.5), 1 qualifying. modality: typical.
   - warning needs-qualification: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
   - supports: Taylor, The Case against MLM right 0.5, direct `get-rich-quick/sources/taylor-case-against-mlm.txt#L870-L877`
@@ -464,21 +466,21 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - qualifies (uncited): FTC MLM income disclosure report 2024 partly 0.3, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205`
     > The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income.
 
-### s35 (factual, verified)
+### s35 (factual, needs-review)
 
 > That is one analyst's reading of the plans; the FTC's report describes the same structure but does not measure how much income actually comes from downlines versus retail customers.
 
-- **s35.a** [verified] The FTC report describes the structure of MLM pay but does not measure the split between downline income and retail income.
+- **s35.a** [needs-review] The FTC report describes the structure of MLM pay but does not measure the split between downline income and retail income.
   - qualified (qualify): no direct support, 1 qualifying.
   - warning needs-qualification: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.3, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205`
     > MLMs often offer commissions, bonuses, or other payments to participants (together "commissions") for meeting specific benchmarks, such as purchasing or inducing others to purchase a certain amount of products from the MLM within a certain time period, or recruiting a certain number of new participants who make such pu…
 
-### s36 (attributed, verified)
+### s36 (attributed, needs-review)
 
 > The recruiters reject that framing; the same trainer insists that "you don't get paid for the act of building the team you only get paid when sales happen to a customer".
 
-- **s36.a** [verified] A prominent network-marketing trainer denies that income comes from recruiting: "you don't get paid for the act of building the team you only get paid when sales happen to a customer".
+- **s36.a** [needs-review] A prominent network-marketing trainer denies that income comes from recruiting: "you don't get paid for the act of building the team you only get paid when sales happen to a customer".
   - supported (approved): no direct support, 1 contradicting, 1 qualifying, 1 source statement.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - warning speaker-missing: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -490,21 +492,21 @@ How much money do MLM participants actually make? For most of them, nothing, or 
     > you don't get paid for the act of building the team you only get paid when sales happen to a customer
   - quotation: "you don't get paid for the act of building the team you only get paid when sales happen to a customer" from `ZKva-dT6g8E`
 
-### s37 (factual, verified)
+### s37 (factual, needs-review)
 
 > Both can be true at once, because in the plans the FTC describes, the "customer" can be the recruit, buying a set amount of product to qualify, and the plans pay commissions on those purchases.
 
-- **s37.a** [verified] In the pay plans the FTC describes, commissions can be paid for purchases by recruited participants who buy a set amount of product.
+- **s37.a** [needs-review] In the pay plans the FTC describes, commissions can be paid for purchases by recruited participants who buy a set amount of product.
   - qualified (qualify): no direct support, 1 qualifying. modality: possibility.
   - warning needs-qualification: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.3, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205`
     > MLMs often offer commissions, bonuses, or other payments to participants (together "commissions") for meeting specific benchmarks, such as purchasing or inducing others to purchase a certain amount of products from the MLM within a certain time period, or recruiting a certain number of new participants who make such pu…
 
-### s39 (factual, verified)
+### s39 (factual, needs-review)
 
 > In that rank table, over 90 percent of participants were in a cohort averaging under $100.
 
-- **s39.a** [verified] In the excerpted rank table, over 90% of participants were in a cohort with average reported income of less than $100.
+- **s39.a** [needs-review] In the excerpted rank table, over 90% of participants were in a cohort with average reported income of less than $100.
   - qualified (qualify): no direct support, 3 qualifying.
   - warning needs-qualification: FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L838-L866`
@@ -514,11 +516,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - qualifies (uncited): AARP MLM survey 2018 partly 0.4, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L270-L276`
     > 23% of participants joined specifically to earn by recruiting others, yet only a quarter of all participants ever profited and 47% lost money, so downline income rarely materialises.
 
-### s40 (factual, verified)
+### s40 (factual, needs-review)
 
 > Taylor's own summary of the pitch says the quiet part: the appeal is "time freedom or leveraged income", a flow from the efforts of others, and under these pay plans getting it depends on recruiting a downline more than on selling the product.
 
-- **s40.a** [verified] Taylor describes the MLM appeal of "time freedom or leveraged income" from the efforts of others and says that, because of MLM compensation systems, it requires success at recruiting a downline more than selling the products directly.
+- **s40.a** [needs-review] Taylor describes the MLM appeal of "time freedom or leveraged income" from the efforts of others and says that, because of MLM compensation systems, it requires success at recruiting a downline more than selling the products directly.
   - qualified (qualify): no direct support, 3 qualifying.
   - warning needs-qualification: Taylor, The Case against MLM: Taylor describes the 'leveraged income' pitch and agrees the pay plans route income from a downline, but his data show only about one in 238 participants profit at all and roughly one in 25,000 get the touted residual income. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: Taylor, The Case against MLM partly 0.45, direct `get-rich-quick/sources/taylor-case-against-mlm.txt#L2199-L2211`
@@ -539,22 +541,22 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: Taylor, The Case against MLM right 0.55, direct `get-rich-quick/sources/taylor-case-against-mlm.txt#L1785-L1790`
     > Observation from Appendix 7A: In every case, using the analytical framework described above, the loss rate for all of these MLMs ranged from 99.12% to 99.97%, with an average of 99.6% of participants losing money. On average, one in 238 actually profited after subtracting expenses, and 996 out of 1,000 lost money � to …
 
-### s42 (factual, verified)
+### s42 (factual, needs-review)
 
 > That number depends on his assumptions about what participants had to spend, how many dropped out and how many were ever counted, which he states; it is an estimate built on the companies' tables, not a measurement of anyone's bank account.
 
-- **s42.a** [verified] Taylor's loss rate is calculated from company earnings reports under assumptions he states about participants' expenses, retention and the share of participants counted.
+- **s42.a** [needs-review] Taylor's loss rate is calculated from company earnings reports under assumptions he states about participants' expenses, retention and the share of participants counted.
   - supported (approved): 1 supporting (1 independent, strongest 0.55).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: Taylor, The Case against MLM right 0.55, direct `get-rich-quick/sources/taylor-case-against-mlm.txt#L1785-L1790`
     > Observation from Appendix 7A: In every case, using the analytical framework described above, the loss rate for all of these MLMs ranged from 99.12% to 99.97%, with an average of 99.6% of participants losing money. On average, one in 238 actually profited after subtracting expenses, and 996 out of 1,000 lost money � to …
 
-### s43 (attributed, verified)
+### s43 (attributed, needs-review)
 
 > Critics like to finish with arithmetic; in John Oliver's version, if each recruit brings in a handful more, "you could only do that 13 cycles and you would exceed the population of the earth."
 
 - info needs-human (review): The attribution is accurate: Oliver himself says 'Let's say five. Then you let the five do their five ... you could only do that 13 cycles and you would exceed the population of the earth', so 'a handful' is fair. Note for the editor: with five per person the cumulative total after 13 cycles is about 1.5 billion, not the world's population; the script does not endorse the figure and s54 calls it an untested thought experiment, which covers it.
-- **s43.a** [verified] John Oliver's segment says that with each level recruiting more, "you could only do that 13 cycles and you would exceed the population of the earth."
+- **s43.a** [needs-review] John Oliver's segment says that with each level recruiting more, "you could only do that 13 cycles and you would exceed the population of the earth."
   - supported (approved): no direct support, 3 qualifying, 1 source statement. modality: possibility.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - warning speaker-missing: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -568,11 +570,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
     > you could only do that 13 cycles and you would exceed the population of the earth.
   - quotation: "you could only do that 13 cycles and you would exceed the population of the earth." from `s6MwGeOm8iI`
 
-### s44 (factual, verified)
+### s44 (factual, needs-review)
 
 > None of the studies here tests that arithmetic directly; what they show is the shape it predicts.
 
-- **s44.a** [verified] Neither the FTC report nor Taylor tests the population-exhaustion arithmetic.
+- **s44.a** [needs-review] Neither the FTC report nor Taylor tests the population-exhaustion arithmetic.
   - qualified (qualify): no direct support, 3 qualifying.
   - warning needs-qualification: FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L801-L866`
@@ -582,11 +584,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - qualifies (uncited): AARP MLM survey 2018 partly 0.3, partial `get-rich-quick/sources/aarp-2018-mlm-study.txt#L463-L467`
     > Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test.
 
-### s66 (factual, verified)
+### s66 (factual, needs-review)
 
 > Taylor writes of pyramid schemes, a class in which he places MLMs, that recruitment eventually dries up as the market saturates, leaving the vast majority at the bottom.
 
-- **s66.a** [verified] Taylor writes of pyramid schemes, a class in which he places MLMs, that recruitment eventually dries up as the market becomes saturated and that the vast majority of participants are then left in a losing position at the bottom.
+- **s66.a** [needs-review] Taylor writes of pyramid schemes, a class in which he places MLMs, that recruitment eventually dries up as the market becomes saturated and that the vast majority of participants are then left in a losing position at the bottom.
   - qualified (qualify): no direct support, 3 qualifying. modality: typical.
   - warning needs-qualification: Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: Taylor, The Case against MLM partly 0.4, direct `get-rich-quick/sources/taylor-case-against-mlm.txt#L1328-L1335`
@@ -596,11 +598,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - qualifies (uncited): AARP MLM survey 2018 partly 0.3, partial `get-rich-quick/sources/aarp-2018-mlm-study.txt#L463-L467`
     > Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test.
 
-### s67 (factual, verified)
+### s67 (factual, needs-review)
 
 > And among the former participants AARP surveyed, 29 percent said they left because the commission structure mostly benefited those at the top, and 25 percent because the market was saturated.
 
-- **s67.a** [verified] Among former participants in the AARP survey, 29% left because the commission structure mostly benefited those at the top and 25% because the market was too saturated.
+- **s67.a** [needs-review] Among former participants in the AARP survey, 29% left because the commission structure mostly benefited those at the top and 25% because the market was too saturated.
   - qualified (qualify): no direct support, 3 qualifying.
   - warning needs-qualification: AARP MLM survey 2018: Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: AARP MLM survey 2018 partly 0.3, partial `get-rich-quick/sources/aarp-2018-mlm-study.txt#L463-L467`
@@ -627,11 +629,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: FTC MLM income disclosure report 2024 right 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L634-L652`
     > Excludes Some Participants Who Received Little or No Income Most of the income disclosure statements reviewed do not depict the distribution of income across all participants, but instead present a distribution that excludes certain groups of participants.22 Eleven income disclosure statements unambiguously Most of the…
 
-### s47 (factual, verified)
+### s47 (factual, needs-review)
 
 > The survey: 47 percent lost, 27 percent broke even, 25 percent profited, and of that 25, 14 points made under $5,000.
 
-- **s47.a** [verified] In the AARP survey 47% lost money, 27% broke even and 25% made a profit; 14% of participants made less than $5,000.
+- **s47.a** [needs-review] In the AARP survey 47% lost money, 27% broke even and 25% made a profit; 14% of participants made less than $5,000.
   - supported (approved): 2 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139`
@@ -639,26 +641,26 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
 
-### s48 (factual, verified)
+### s48 (factual, needs-review)
 
 > The analyst: 99.6 percent losing, once required purchases are counted as a cost.
 
-- **s48.a** [verified] Taylor calculates an average of 99.6% of participants losing money after subtracting required purchases and expenses.
+- **s48.a** [needs-review] Taylor calculates an average of 99.6% of participants losing money after subtracting required purchases and expenses.
   - supported (approved): 1 supporting (1 independent, strongest 0.55).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: Taylor, The Case against MLM right 0.55, direct `get-rich-quick/sources/taylor-case-against-mlm.txt#L1785-L1790`
     > Observation from Appendix 7A: In every case, using the analytical framework described above, the loss rate for all of these MLMs ranged from 99.12% to 99.97%, with an average of 99.6% of participants losing money. On average, one in 238 actually profited after subtracting expenses, and 996 out of 1,000 lost money � to …
 
-### s49 (factual, verified)
+### s49 (factual, needs-review)
 
 > And on the central promise: the plans do route money upward from a downline, and the rank tables show where that leaves most people, because in table after table the FTC looked at, the vast majority sit in the two or three lowest ranks with the smallest amounts.
 
-- **s49.a** [verified] MLM pay plans route commissions to participants for the purchases of people they recruit.
+- **s49.a** [needs-review] MLM pay plans route commissions to participants for the purchases of people they recruit.
   - qualified (qualify): no direct support, 1 qualifying.
   - warning needs-qualification: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.3, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205`
     > MLMs often offer commissions, bonuses, or other payments to participants (together "commissions") for meeting specific benchmarks, such as purchasing or inducing others to purchase a certain amount of products from the MLM within a certain time period, or recruiting a certain number of new participants who make such pu…
-- **s49.b** [verified] In nearly each rank-based disclosure the FTC reviewed, the vast majority of participants are in the two or three lowest ranks with correspondingly low income amounts.
+- **s49.b** [needs-review] In nearly each rank-based disclosure the FTC reviewed, the vast majority of participants are in the two or three lowest ranks with correspondingly low income amounts.
   - qualified (qualify): no direct support, 3 qualifying. modality: typical.
   - warning needs-qualification: FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L801-L866`
@@ -668,11 +670,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - qualifies (uncited): AARP MLM survey 2018 partly 0.3, partial `get-rich-quick/sources/aarp-2018-mlm-study.txt#L463-L467`
     > Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test.
 
-### s50 (factual, verified)
+### s50 (factual, needs-review)
 
 > Now the limits, because they matter: the AARP numbers are self-reported, by current and former participants, and nothing checks them against bank statements.
 
-- **s50.a** [verified] The AARP profit and loss figures are self-reported by current and former MLM participants.
+- **s50.a** [needs-review] The AARP profit and loss figures are self-reported by current and former MLM participants.
   - supported (approved): 2 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
@@ -680,11 +682,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139`
     > On the question of making a profit or loss: Nearly half (47%) of MLM participants reported that they lost money. One in four (27%) MLM participants reported that they broke even (made no money). One in four (25%) MLM participants reported making a profit.
 
-### s51 (factual, verified)
+### s51 (factual, needs-review)
 
 > The FTC's figures are company payouts, not profit, and they cover the 70 companies whose statements were publicly available, which is not the whole industry.
 
-- **s51.a** [verified] The FTC's figures come from 70 publicly available income disclosure statements and report payments before expenses.
+- **s51.a** [needs-review] The FTC's figures come from 70 publicly available income disclosure statements and report payments before expenses.
   - supported (approved): 2 supporting (2 independent, strongest 0.5).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: FTC MLM report summary right 0.4, direct `get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35`
@@ -692,21 +694,21 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: FTC MLM income disclosure report 2024 right 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L734-L752`
     > Expenses None of the 70 income disclosure statements reviewed provides income figures that take into None of the 70 income disclosure account all expenses. Twenty of the disclosures have statements provides income figures that no express statement about whether their figures account for expenses.28 Of the remaining 50 …
 
-### s52 (factual, verified)
+### s52 (factual, needs-review)
 
 > Taylor is an independent analyst who argues against the industry, and his 99.6 percent is a calculation under assumptions he states, not a count of real accounts.
 
-- **s52.a** [verified] Taylor's 99.6% loss rate is calculated under stated assumptions from company earnings reports, not counted from participants' accounts.
+- **s52.a** [needs-review] Taylor's 99.6% loss rate is calculated under stated assumptions from company earnings reports, not counted from participants' accounts.
   - supported (approved): 1 supporting (1 independent, strongest 0.55).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: Taylor, The Case against MLM right 0.55, direct `get-rich-quick/sources/taylor-case-against-mlm.txt#L1785-L1790`
     > Observation from Appendix 7A: In every case, using the analytical framework described above, the loss rate for all of these MLMs ranged from 99.12% to 99.97%, with an average of 99.6% of participants losing money. On average, one in 238 actually profited after subtracting expenses, and 996 out of 1,000 lost money � to …
 
-### s53 (factual, verified)
+### s53 (factual, needs-review)
 
 > The split between recruiting income and retail income has been described in these documents, and argued, but not measured.
 
-- **s53.a** [verified] The FTC report describes the structure of MLM pay but does not measure the split between downline and retail income.
+- **s53.a** [needs-review] The FTC report describes the structure of MLM pay but does not measure the split between downline and retail income.
   - qualified (qualify): no direct support, 1 qualifying.
   - warning needs-qualification: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.3, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205`
@@ -749,16 +751,16 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
 
-### s60 (factual, verified)
+### s60 (factual, needs-review)
 
 > How much money do MLM participants actually make? For most of them, nothing, or less than nothing: in the nationally representative survey, 47 percent lost money and 27 percent broke even, and in the companies' own statements most participants received $1,000 or less in a year before expenses.
 
-- **s60.a** [verified] In AARP's nationally representative survey, 47% of participants lost money and 27% broke even.
+- **s60.a** [needs-review] In AARP's nationally representative survey, 47% of participants lost money and 27% broke even.
   - supported (approved): 1 supporting (1 independent, strongest 0.65).
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L135-L139`
     > On the question of making a profit or loss: Nearly half (47%) of MLM participants reported that they lost money. One in four (27%) MLM participants reported that they broke even (made no money). One in four (25%) MLM participants reported making a profit.
-- **s60.b** [verified] The companies' income disclosure statements showed most participants made $1,000 or less per year before expenses.
+- **s60.b** [needs-review] The companies' income disclosure statements showed most participants made $1,000 or less per year before expenses.
   - supported (approved): 2 supporting (2 independent, strongest 0.6). modality: typical.
   - info wording: Wording differs from the canonical claim; the reviewer confirms the passages entail it.
   - supports: FTC MLM report summary right 0.4, direct `get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35`
@@ -776,11 +778,11 @@ How much money do MLM participants actually make? For most of them, nothing, or 
   - supports: AARP MLM survey 2018 right 0.65, direct `get-rich-quick/sources/aarp-2018-mlm-study.txt#L376-L392`
     > Only a quarter of MLM participants (n=156) made any profit during the entire time they worked for the MLM. Fourteen percent of the 601 MLM participants made less than $5,000, 6% made between $5,000 and $9,999, 3% made between $10,000 and $24,999, and 3% made $25,000 or AARP STUDY OF MULTILEVEL MARKETING | August 2018 P…
 
-### s62 (factual, verified)
+### s62 (factual, needs-review)
 
 > The leverage the pitch sells is real for the fraction at the top; in the plans Taylor read, most of the payout goes to the highest levels, and in the FTC's rank tables the vast majority sit at the bottom.
 
-- **s62.a** [verified] In nearly each rank-based disclosure the FTC reviewed, the vast majority of participants are in the two or three lowest ranks.
+- **s62.a** [needs-review] In nearly each rank-based disclosure the FTC reviewed, the vast majority of participants are in the two or three lowest ranks.
   - qualified (qualify): no direct support, 3 qualifying. modality: typical.
   - warning needs-qualification: FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
   - qualifies: FTC MLM income disclosure report 2024 partly 0.5, direct `get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L801-L866`
@@ -789,7 +791,7 @@ How much money do MLM participants actually make? For most of them, nothing, or 
     > Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic.
   - qualifies (uncited): AARP MLM survey 2018 partly 0.3, partial `get-rich-quick/sources/aarp-2018-mlm-study.txt#L463-L467`
     > Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test.
-- **s62.b** [verified] In the plans Taylor analysed, most of the money paid by the company goes to participants at the highest levels.
+- **s62.b** [needs-review] In the plans Taylor analysed, most of the money paid by the company goes to participants at the highest levels.
   - qualified (qualify): 1 supporting (1 independent, strongest 0.5), 1 qualifying. modality: typical.
   - warning needs-qualification: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
   - supports: Taylor, The Case against MLM right 0.5, direct `get-rich-quick/sources/taylor-case-against-mlm.txt#L870-L877`

@@ -153,6 +153,10 @@ function show() {
   const script = readJson<Script>(p(FILES.script));
   const v = readJson<ScriptValidation>(p(FILES.validation));
   if (!script || !v) throw new Error('run validate first');
+  const pkg = readJson<EvidencePackage>(p(FILES.pkg));
+  const statements = new Map(
+    (pkg?.claims ?? []).flatMap((c) => c.statements.map((s) => [`${c.id}|${s.source}`, s] as const)),
+  );
   const by = new Map(v.sentences.map((s) => [s.id, s]));
   const only = args[0];
   for (const s of sentences(script)) {
@@ -177,7 +181,10 @@ function show() {
         console.log(
           `    calc: ${src.calc.expression} = ${src.calc.result}${src.calc.note ? ` (${src.calc.note})` : ''}`,
         );
-      if (src?.quote) console.log(`    quote: "${src.quote.text}" <- ${src.quote.cite ?? src.quote.source}`);
+      if (src?.quote)
+        console.log(
+          `    quote: "${src.quote.text}" <- ${src.quote.cite ?? src.quote.source}${src.quote.speaker ? ` (speaker: ${src.quote.speaker})` : ''}`,
+        );
       if (src?.qualifications?.length) console.log(`    qualifications: ${src.qualifications.join(' | ')}`);
       for (const x of [
         ...a.validation.supporting,
@@ -192,6 +199,11 @@ function show() {
         if (x.why && x.applicability !== 'direct') console.log(`      applicability: ${x.why}`);
         const passage = x.ref.kind === 'study' ? read(x.ref.cite) : x.note;
         if (passage) console.log(`      | ${passage.trim().split('\n').join('\n      | ')}`);
+        // The package's transcript window around a source quote: the only place a speaker can be confirmed from.
+        if (x.ref.kind === 'statement') {
+          const context = statements.get(`${x.ref.claim}|${x.ref.source}`)?.context;
+          console.log(`      context: ${context ?? '(none in the evidence package)'}`);
+        }
       }
     }
   }

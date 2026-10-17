@@ -7,11 +7,11 @@
 | Validation | **blocked** (2026-10-17) |
 | Words / runtime | 1790 words, about 11.9 min at 150 wpm |
 | Sentences | 67 (50 factual or attributed) |
-| Assertions | 59, 46 verified |
-| Issues | 9 blocking, 29 warnings |
-| Unreviewed sentences | 0 |
+| Assertions | 59, 0 verified |
+| Issues | 9 blocking, 30 warnings |
+| Unreviewed sentences | 58 |
 | Scenes | 43, 12:11 (ok) |
-| Evidence package | 238a579483 (4 documents, 4 claims) |
+| Evidence package | c189733721 (4 documents, 4 claims) |
 | Model | claude-fable-5-1 |
 
 Automated validation says whether the narration is eligible for human editorial review; it does not establish truth.
@@ -27,7 +27,8 @@ Automated validation says whether the narration is eligible for human editorial 
 - **blocking** s56 figure-without-assertion (deterministic): the figure "3" is in no assertion of this sentence
 - **blocking** s57 (s57.a) invented-number (deterministic): The figure "25" does not appear in the cited passages.
 - **blocking** s61 (s61.a) invented-number (deterministic): The figure "25" does not appear in the cited passages.
-- **warning** - stale-package (deterministic): the script was written from evidence package 4824306bfc; the current package is 238a579483
+- **warning** - stale-package (deterministic): the script was written from evidence package 4824306bfc; the current package is c189733721
+- **warning** s43 unreproducible-ref (deterministic): the finding cites "get-rich-quick/store/transcripts/s6MwGeOm8iI.txt", which is outside the repository
 - **warning** s03 (s03.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - **warning** s08 (s08.c) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s09 (s09.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -85,7 +86,8 @@ None recorded on the story.
 
 ## Outstanding editorial decisions
 
-- -: the script was written from evidence package 4824306bfc; the current package is 238a579483
+- -: the script was written from evidence package 4824306bfc; the current package is c189733721
+- s43: the finding cites "get-rich-quick/store/transcripts/s6MwGeOm8iI.txt", which is outside the repository
 - s03 s03.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - s08 s08.c: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - s09 s09.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
@@ -118,4 +120,4 @@ None recorded on the story.
 ## History
 
 - revision 1, 2026-10-17: blocked, 5 blocking, 31 warnings
-- revision 2, 2026-10-17: blocked, 9 blocking, 29 warnings
+- revision 2, 2026-10-17: blocked, 9 blocking, 30 warnings

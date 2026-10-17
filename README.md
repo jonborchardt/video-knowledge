@@ -152,6 +152,14 @@ its own; timing comes from the narration speed (`generation.wordsPerMinute`, def
 every chart value and on-screen figure must be in a cited passage. The site shows each script at
 `/<topic>/scripts/<slug>/`.
 
+Everything needed to inspect and re-validate a script is committed: the package records the sha of every cited
+document and a transcript window around every recorded source quote (`statements[].context`, the only place a
+speaker attribution can be confirmed from), so `<topic>/sources/*.txt` plus `<topic>/scripts/<slug>/` is enough.
+Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
+only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
+gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without
+them keeps the persisted contexts and the same fingerprint.
+
 ## Website
 
 An [Astro](https://astro.build) site with Tailwind. Each topic with a `report.json` becomes a page (`src/pages/[topic]/index.astro`), linked from a home page. Pages are rendered at build time; the only client script is the tab bar and the claim search.

@@ -482,6 +482,31 @@ describe('speaker attribution', () => {
     expect(cats(v(attributed('Video s1a'), pkgWith(null)))).toEqual([]); // the source title
     expect(cats(v(attributed('former distributor'), pkgWith(null)))).toContain('speaker-unverified');
   });
+  it('a source quoted on two claims is checked against the context of the claim the assertion rests on', () => {
+    const q = pkg();
+    q.claims[0].statements[0].context = 'John Oliver says: quote s1a words';
+    q.claims.push({
+      ...q.claims[0],
+      id: RENTAL,
+      statements: [{ ...q.claims[0].statements[0], context: 'a former distributor says: quote s1a words' }],
+    });
+    const onRental = (speaker: string) =>
+      script([
+        sentence('s01', 'A former distributor said "quote s1a words".', 'attributed', [
+          {
+            id: 's01.a',
+            text: 'A former distributor said "quote s1a words".',
+            kind: 'attribution',
+            claims: [{ id: RENTAL, stance: 'asserts' }],
+            evidence: [{ kind: 'statement', claim: RENTAL, source: 's1a' }],
+            quote: { text: 'quote s1a words', source: 's1a', speaker },
+          },
+        ]),
+      ]);
+    expect(cats(v(onRental('former distributor'), q))).toEqual([]);
+    expect(cats(v(onRental('John Oliver'), q))).toContain('speaker-unverified');
+  });
+
   it('warns when a source quotation names no speaker', () => {
     expect(v(attributed(), pkgWith('x quote s1a words y')).issues.map((i) => i.category)).toContain('speaker-missing');
   });

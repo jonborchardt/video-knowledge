@@ -494,8 +494,12 @@ export function validateScript(
   hashDoc: DocHasher = docHasher(),
 ): ScriptValidation {
   const packageFingerprint = pkg?.fingerprint ?? null;
-  const statementOf = (source: string) =>
-    pkg?.claims.flatMap((c) => c.statements).find((s) => s.source === source) ?? null;
+  // A source may be quoted on several claims; the statement (and its context) is the one on the claim cited.
+  const statementOf = (claims: string[], source: string) =>
+    pkg?.claims
+      .filter((c) => claims.includes(c.id))
+      .flatMap((c) => c.statements)
+      .find((s) => s.source === source) ?? null;
   const wpm = script.generation?.wordsPerMinute || WPM_DEFAULT;
   const corpus = { name: t.name, claims: t.claims };
   const byId = new Map<string, ClaimView>(t.claims.map((c) => [c.id, c]));
@@ -759,7 +763,11 @@ export function validateScript(
             add('misquote', 'blocking', `"${q.text}" is not in the recorded quote from ${q.source}: "${st.quote}"`);
           // Speaker attribution: the person the narration names must be in the transcript window the package
           // persisted around the quote, or in the source's title or channel. Never taken on trust.
-          const context = statementOf(q.source)?.context ?? null;
+          const context =
+            statementOf(
+              a.claims.filter((c) => byId.get(c.id)?.sources.some((x) => x.id === q.source)).map((c) => c.id),
+              q.source,
+            )?.context ?? null;
           const named = st ? `${norm(st.title)} ${norm(st.channel)}` : '';
           if (!st || !statementIds.has(q.source)) {
             /* already blocked above */
