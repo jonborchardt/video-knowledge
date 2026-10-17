@@ -515,4 +515,13 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
     }),
   );
   q.addEventListener('input', apply);
+
+  // Stat-line shortcuts on a claim card ("denied 6", "decided by study"): open the card on that chip.
+  document.addEventListener('click', (e) => {
+    const pick = (e.target as HTMLElement).closest<HTMLElement>('[data-pick]');
+    const card = pick?.closest<HTMLDetailsElement>('details');
+    if (!pick || !card) return;
+    card.open = true;
+    card.querySelector<HTMLInputElement>(`input[value="${pick.dataset.pick}"]`)!.checked = true;
+  });
 </script>
