@@ -386,6 +386,8 @@ export interface ScriptReviewFile {
   model?: string;
   date: string;
   revision: number;
+  /** The evidence package the review was made against; approvals count only for that exact package. */
+  packageFingerprint?: string;
   /** sentence id -> fingerprint approved: every assertion entailed by its passages, every factual claim covered. */
   approved: Record<string, string>;
   findings: ReviewFinding[];
@@ -557,6 +559,18 @@ export function validateScript(
     }
   }
 
+  // A review is bound to the package it was made against: approvals of another package (or of none, an older file)
+  // count for nothing, while its findings still apply by sentence fingerprint.
+  const reviewCurrent = !!review && (!pkg || review.packageFingerprint === pkg.fingerprint);
+  if (review && !reviewCurrent)
+    top.push(
+      issue(
+        '-',
+        'stale-review',
+        'info',
+        `the review was made against evidence package ${review.packageFingerprint ?? '(none recorded)'}; the package is now ${pkg!.fingerprint}, so its approvals do not count`,
+      ),
+    );
   // Review findings that still apply (same sentence fingerprint) stay open; the rest were addressed by a revision.
   const prints = new Map(all.map((s) => [s.id, sentenceFingerprint(s)]));
   const open = (review?.findings ?? []).filter((f) => prints.get(f.sentence) === f.fingerprint);
@@ -760,7 +774,7 @@ export function validateScript(
 
     const reviewHere = open.filter((f) => f.sentence === s.id).map<Issue>((f) => ({ ...f, by: 'review' }));
     issues.push(...reviewHere);
-    const approved = !!review && review.approved?.[s.id] === fp;
+    const approved = reviewCurrent && review!.approved?.[s.id] === fp;
     const blocking = [...issues, ...ar.flatMap((a) => a.issues)].some((x) => x.severity === 'blocking');
     for (const a of ar) if (a.status !== 'blocked') a.status = approved && !blocking ? 'verified' : 'needs-review';
     // Every sentence needs the reviewer: a hypothetical or a transition can smuggle a fact the code cannot see.

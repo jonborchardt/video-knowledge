@@ -49,6 +49,7 @@ the sheet prints; a later edit changes it and the approval lapses.
   "model": "<model id>",
   "date": "<ISO date>",
   "revision": 1,
+  "packageFingerprint": "<evidence-package.json fingerprint>",
   "approved": { "s01": "<fingerprint>", "s02": "<fingerprint>" },
   "findings": [
     {
@@ -66,6 +67,8 @@ the sheet prints; a later edit changes it and the approval lapses.
 }
 ```
 
+- Copy the package fingerprint from `evidence-package.json` into `packageFingerprint`; a review of
+  another package counts for nothing (its findings still apply, its approvals do not).
 - Severity: `blocking` (a viewer would come away believing something the evidence does not
   establish), `warning` (true but imprecise, or a limitation stated too far away), `info`.
   Use category `needs-human` with severity `warning` when only an editor can decide.

@@ -85,10 +85,15 @@ export const script = (sent: Sentence[], revision = 1): Script => ({
   generation: { model: 'test', brief: 'b', date: 'd', wordsPerMinute: 150, evidencePackage: pkg().fingerprint },
   sections: [{ name: 'hook', sentences: sent }],
 });
-export const approveAll = (s: Script, findings: ScriptReviewFile['findings'] = []): ScriptReviewFile => ({
+export const approveAll = (
+  s: Script,
+  q: EvidencePackage | null = pkg(),
+  findings: ScriptReviewFile['findings'] = [],
+): ScriptReviewFile => ({
   reviewer: 'test',
   date: 'd',
   revision: s.revision,
+  ...(q ? { packageFingerprint: q.fingerprint } : {}),
   approved: Object.fromEntries(sentences(s).map((x) => [x.id, sentenceFingerprint(x)])),
   findings,
 });

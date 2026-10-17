@@ -227,7 +227,7 @@ describe('script validation', () => {
         fact('s01.a', 'Of 601 participants, 47% reported losing money.'),
       ]),
     ]);
-    const r = approveAll(s1, [
+    const r = approveAll(s1, pkg(), [
       {
         sentence: 's01',
         assertion: 's01.a',
@@ -495,6 +495,21 @@ it('the package exposes the cites and sources the storyboard checks against', ()
 });
 
 describe('reproducible evidence', () => {
+  it('approvals lapse when the evidence package changes', () => {
+    const s = good();
+    const q = pkg();
+    const r = { ...approveAll(s), packageFingerprint: q.fingerprint };
+    const h = () => q.documents[0].sha;
+    expect(validateScript(s, corpus(), read, r, {}, null, q, h).status).toBe('passed');
+    const stale = validateScript(s, corpus(), read, { ...r, packageFingerprint: 'other' }, {}, null, q, h);
+    expect(stale.status).toBe('needs-review');
+    expect(stale.counts.unreviewed).toBe(3);
+    expect(stale.issues.map((i) => i.category)).toContain('stale-review');
+    const { packageFingerprint: _drop, ...legacy } = r; // an older review file with no packageFingerprint
+    void _drop;
+    expect(validateScript(s, corpus(), read, legacy, {}, null, q, h).status).toBe('needs-review');
+  });
+
   it('a changed source document blocks', () => {
     const s = good();
     const q = pkg();
