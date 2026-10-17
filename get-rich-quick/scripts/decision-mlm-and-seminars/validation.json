@@ -2,8 +2,8 @@
  "topic": "get-rich-quick",
  "story": "decision:mlm-and-seminars",
  "revision": 3,
- "date": "2026-10-17T22:25:35.789Z",
- "status": "needs-review",
+ "date": "2026-10-17T22:31:36.771Z",
+ "status": "passed",
  "scriptFingerprint": "bc0f3418c8",
  "packageFingerprint": "c189733721",
  "wordsPerMinute": 150,
@@ -14,11 +14,11 @@
   "sentences": 66,
   "factual": 49,
   "assertions": 56,
-  "verified": 0,
+  "verified": 56,
   "blocking": 0,
-  "warnings": 18,
-  "dispositioned": 0,
-  "unreviewed": 66
+  "warnings": 0,
+  "dispositioned": 18,
+  "unreviewed": 0
  },
  "revisionLimitReached": false,
  "sentences": [
@@ -29,8 +29,8 @@
    "type": "rhetorical",
    "fingerprint": "684e44b729",
    "words": 11,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -41,8 +41,8 @@
    "type": "hypothetical",
    "fingerprint": "761f010810",
    "words": 37,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -53,8 +53,8 @@
    "type": "attributed",
    "fingerprint": "f9a72bb1f7",
    "words": 32,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s03.a",
@@ -65,7 +65,7 @@
       "source": "m1jU_e8ogok",
       "speaker": "Frazer Brookes"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s03.a",
       "text": "Network-marketing trainer Frazer Brookes promises to show viewers how to \"finally create the leverage that you need inside of your network marketing business\".",
@@ -173,14 +173,14 @@
    "type": "factual",
    "fingerprint": "de19409b1e",
    "words": 25,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s04.a",
      "text": "AARP's survey, published in 2018, covered 601 current and former MLM participants, and 47% of them reported losing money.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s04.a",
       "text": "AARP's survey, published in 2018, covered 601 current and former MLM participants, and 47% of them reported losing money.",
@@ -257,14 +257,14 @@
    "type": "factual",
    "fingerprint": "a53fcc355a",
    "words": 10,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s05.a",
      "text": "25% of the surveyed MLM participants reported making a profit.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s05.a",
       "text": "25% of the surveyed MLM participants reported making a profit.",
@@ -325,8 +325,8 @@
    "type": "rhetorical",
    "fingerprint": "60fd3ffd26",
    "words": 23,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -337,8 +337,8 @@
    "type": "transitional",
    "fingerprint": "638d94ebb1",
    "words": 16,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -349,14 +349,14 @@
    "type": "factual",
    "fingerprint": "c0052ef64c",
    "words": 21,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s08.a",
      "text": "FTC staff analysed 70 publicly available MLM income disclosure statements.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s08.a",
       "text": "FTC staff analysed 70 publicly available MLM income disclosure statements.",
@@ -433,14 +433,14 @@
    "type": "factual",
    "fingerprint": "14c9c3c1c0",
    "words": 10,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s68.a",
      "text": "AARP surveyed a nationally representative probability sample of 601 current and former MLM participants.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s68.a",
       "text": "AARP surveyed a nationally representative probability sample of 601 current and former MLM participants.",
@@ -508,7 +508,22 @@
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s68",
+     "assertion": "s68.a",
+     "fingerprint": "14c9c3c1c0",
+     "revision": 3,
+     "category": "needs-human",
+     "severity": "info",
+     "explanation": "'Nationally representative' rests on the verdict's canonical claim; the cited passages (L135-L139, L376-L392) give the 601 and the percentages but not the sampling. The methods section at L105-L109 (GfK KnowledgePanel, probability-based, generalisable to the US population) establishes it and is in the committed source, but no verdict cites it. The same wording is in s27 and s60. Recording that passage through record-sources would close the gap; no script change.",
+     "refs": [
+      "get-rich-quick/sources/aarp-2018-mlm-study.txt#L105-L109"
+     ],
+     "suggestion": "Record the methods passage as support for the AARP sampling claim; the narration can stand.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s69",
@@ -517,14 +532,14 @@
    "type": "factual",
    "fingerprint": "5f99294acf",
    "words": 17,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s69.a",
      "text": "Jon Taylor analysed the compensation plans and earnings data of 30 MLMs.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s69.a",
       "text": "Jon Taylor analysed the compensation plans and earnings data of 30 MLMs.",
@@ -592,7 +607,8 @@
        "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s69.a",
-       "suggestion": "The writer says the narration carries it: The sentence itself says he argues against the industry; s52 repeats it."
+       "suggestion": "The writer says the narration carries it: The sentence itself says he argues against the industry; s52 repeats it.",
+       "disposition": "False positive: the qualifying FTC passage is about pay structure, not the count of companies Taylor analysed; the sentence only states the count and names him as a critic."
       }
      ]
     }
@@ -606,8 +622,8 @@
    "type": "attributed",
    "fingerprint": "4686cf0983",
    "words": 48,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s09.a",
@@ -618,7 +634,7 @@
       "source": "KL2HjMUP7gA",
       "speaker": "Darin Kidd"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s09.a",
       "text": "Network-marketing coach Darin Kidd tells his audience that a growing team means \"it starts to compound\" and likens it to a snowball.",
@@ -725,7 +741,7 @@
       "source": "1eWkeNDmQj4",
       "speaker": "Frazer Brookes"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s09.b",
       "text": "Frazer Brookes says the person you bring in \"might recruit 10 people themselves and have an organization of a thousand people\".",
@@ -833,8 +849,8 @@
    "type": "attributed",
    "fingerprint": "9bb3fc1560",
    "words": 27,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s10.a",
@@ -845,7 +861,7 @@
       "source": "ZKva-dT6g8E",
       "speaker": "Eric Worre"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s10.a",
       "text": "Network-marketing trainer Eric Worre says it is \"better to have a smaller percentage of 100 people than 100 of yourself\".",
@@ -953,8 +969,8 @@
    "type": "transitional",
    "fingerprint": "8f2d0ebbda",
    "words": 11,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -965,8 +981,8 @@
    "type": "attributed",
    "fingerprint": "3da6b7b551",
    "words": 28,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s12.a",
@@ -977,7 +993,7 @@
       "source": "s6MwGeOm8iI",
       "speaker": "distributor"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s12.a",
       "text": "In a clip played in John Oliver's MLM segment, a former Herbalife distributor says \"You make money from signing people up.\"",
@@ -1053,8 +1069,8 @@
    "type": "attributed",
    "fingerprint": "dc65a7843c",
    "words": 21,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s13.a",
@@ -1065,7 +1081,7 @@
       "source": "consumer-ftc-multi-level-marketing-businesses-pyramid-schemes",
       "speaker": "Consumer Advice"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s13.a",
       "text": "The FTC's Consumer Advice page states that \"Most people who join legitimate MLMs make little or no money.\"",
@@ -1124,8 +1140,8 @@
    "type": "transitional",
    "fingerprint": "c8c03c9ee1",
    "words": 12,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -1136,14 +1152,14 @@
    "type": "factual",
    "fingerprint": "b94eeadadf",
    "words": 26,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s15.a",
      "text": "FTC staff analysed 70 publicly available income disclosure statements from a range of MLMs, from large and well-known companies to smaller ones.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s15.a",
       "text": "FTC staff analysed 70 publicly available income disclosure statements from a range of MLMs, from large and well-known companies to smaller ones.",
@@ -1220,14 +1236,14 @@
    "type": "factual",
    "fingerprint": "bddfc7f1f1",
    "words": 29,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s16.a",
      "text": "For the disclosures with enough data for FTC staff to calculate it, most participants had $1,000 or less in reported income for the year, which is less than $84 per month.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s16.a",
       "text": "For the disclosures with enough data for FTC staff to calculate it, most participants had $1,000 or less in reported income for the year, which is less than $84 per month.",
@@ -1304,14 +1320,14 @@
    "type": "factual",
    "fingerprint": "7716fd1200",
    "words": 14,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s17.a",
      "text": "In at least 17 of the 70 MLMs, most participants did not make any money.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s17.a",
       "text": "In at least 17 of the 70 MLMs, most participants did not make any money.",
@@ -1388,8 +1404,8 @@
    "type": "transitional",
    "fingerprint": "486fd7daa9",
    "words": 15,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -1400,14 +1416,14 @@
    "type": "factual",
    "fingerprint": "3c76bd0b1a",
    "words": 27,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s19.a",
      "text": "Of the 70 disclosures, 29 exclude from their income distribution participants who earned no commissions, and another 24 exclude participants the MLM deems inactive.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s19.a",
       "text": "Of the 70 disclosures, 29 exclude from their income distribution participants who earned no commissions, and another 24 exclude participants the MLM deems inactive.",
@@ -1484,8 +1500,8 @@
    "type": "rhetorical",
    "fingerprint": "202b10a0a8",
    "words": 14,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -1496,14 +1512,14 @@
    "type": "factual",
    "fingerprint": "9bd52ca752",
    "words": 31,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s21.a",
      "text": "None of the 70 income disclosure statements provides income figures that take expenses into account in full, and 20 of them have no express statement about whether their figures account for expenses.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s21.a",
       "text": "None of the 70 income disclosure statements provides income figures that take expenses into account in full, and 20 of them have no express statement about whether their figures account for expenses.",
@@ -1564,14 +1580,14 @@
    "type": "factual",
    "fingerprint": "78c8f72d93",
    "words": 22,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s22.a",
      "text": "The disclosed income figures are payments from the MLM and do not account for the expenses participants incurred.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s22.a",
       "text": "The disclosed income figures are payments from the MLM and do not account for the expenses participants incurred.",
@@ -1632,14 +1648,14 @@
    "type": "factual",
    "fingerprint": "a33534ad93",
    "words": 36,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s23.a",
      "text": "44 of the 70 disclosures break out income only by rank, and in nearly each of them the vast majority of participants are in one of the two or three lowest ranks.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s23.a",
       "text": "44 of the 70 disclosures break out income only by rank, and in nearly each of them the vast majority of participants are in one of the two or three lowest ranks.",
@@ -1724,12 +1740,28 @@
        "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s23.a",
-       "suggestion": "The writer says the narration carries it: The sentence reports the rank tables, not the exhaustion arithmetic; s44 and s54 say the arithmetic itself was not tested."
+       "suggestion": "The writer says the narration carries it: The sentence reports the rank tables, not the exhaustion arithmetic; s44 and s54 say the arithmetic itself was not tested.",
+       "disposition": "The sentence reports what the rank tables show, which the passage states directly; the exhaustion-arithmetic limit is carried by s44 and s54."
       }
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s23",
+     "assertion": "s23.a",
+     "fingerprint": "a33534ad93",
+     "revision": 3,
+     "category": "missing-qualification",
+     "severity": "info",
+     "explanation": "The FTC sentence reads 'the vast majority of participants are in one of the two or three lowest ranks ... or are omitted from the table entirely'. The narration drops the 'or are omitted' branch, so for the tables that leave non-earners out the 'vast majority' includes people who are not in the table at all. s19 states the omissions separately, so the viewer hears both; the figure does not mislead.",
+     "refs": [
+      "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L801-L812"
+     ],
+     "suggestion": "Optional: 'the vast majority of participants sit in the two or three lowest ranks, or are left out of the table'.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s24",
@@ -1738,14 +1770,14 @@
    "type": "factual",
    "fingerprint": "f57f6b2ff8",
    "words": 21,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s24.a",
      "text": "In one income disclosure table excerpted by the FTC, 92.37% of participants were in the lowest cohort, with average earnings of $41.69.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s24.a",
       "text": "In one income disclosure table excerpted by the FTC, 92.37% of participants were in the lowest cohort, with average earnings of $41.69.",
@@ -1830,7 +1862,8 @@
        "explanation": "FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s24.a",
-       "suggestion": "The writer says the narration carries it: s40 and s64 say leverage is real only for the fraction at the top; the sentence names it as one table."
+       "suggestion": "The writer says the narration carries it: s40 and s64 say leverage is real only for the fraction at the top; the sentence names it as one table.",
+       "disposition": "The sentence reads one excerpted table and names it as one table; the limit that leverage is real only for a tiny fraction is what the figure illustrates and s62 states it."
       }
      ]
     }
@@ -1844,14 +1877,14 @@
    "type": "factual",
    "fingerprint": "105cda9f6c",
    "words": 33,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s25.a",
      "text": "In that table the top cohort, fewer than 0.01% of participants, had average earnings of $1,018,350.20.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s25.a",
       "text": "In that table the top cohort, fewer than 0.01% of participants, had average earnings of $1,018,350.20.",
@@ -1936,7 +1969,8 @@
        "explanation": "FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s25.a",
-       "suggestion": "The writer says the narration carries it: s40 and s64 say leverage is real only for the fraction at the top."
+       "suggestion": "The writer says the narration carries it: s40 and s64 say leverage is real only for the fraction at the top.",
+       "disposition": "Figures are read from the excerpted table as one table's numbers; s62 carries the limit about leverage reaching only the top fraction."
       }
      ]
     },
@@ -1944,7 +1978,7 @@
      "id": "s25.b",
      "text": "Half of the rows in that table pertain to half a percent of participants.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s25.b",
       "text": "Half of the rows in that table pertain to half a percent of participants.",
@@ -2029,7 +2063,8 @@
        "explanation": "FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s25.b",
-       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+       "disposition": "The sentence attributes the 'half the rows' arithmetic to the FTC ('as the FTC puts it'), which is the passage's own wording."
       }
      ]
     }
@@ -2043,8 +2078,8 @@
    "type": "transitional",
    "fingerprint": "d810f99f3a",
    "words": 19,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -2055,14 +2090,14 @@
    "type": "factual",
    "fingerprint": "7822d10a75",
    "words": 25,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s27.a",
      "text": "AARP's survey, published in 2018, used a nationally representative probability sample of current and former MLM participants.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s27.a",
       "text": "AARP's survey, published in 2018, used a nationally representative probability sample of current and former MLM participants.",
@@ -2139,14 +2174,14 @@
    "type": "factual",
    "fingerprint": "6b3cf2314c",
    "words": 35,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s28.a",
      "text": "Of 601 current and former MLM participants, 47% reported losing money, 27% reported breaking even and 25% reported making a profit over the entire time they worked for the MLM.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s28.a",
       "text": "Of 601 current and former MLM participants, 47% reported losing money, 27% reported breaking even and 25% reported making a profit over the entire time they worked for the MLM.",
@@ -2223,14 +2258,14 @@
    "type": "factual",
    "fingerprint": "187b44dc0d",
    "words": 27,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s29.a",
      "text": "Of the 601 participants, 14% made less than $5,000 in profit (of the 25% who profited) and 41% lost less than $5,000 (of the 47% who lost money).",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s29.a",
       "text": "Of the 601 participants, 14% made less than $5,000 in profit (of the 25% who profited) and 41% lost less than $5,000 (of the 47% who lost money).",
@@ -2307,14 +2342,14 @@
    "type": "factual",
    "fingerprint": "3946ef4f69",
    "words": 21,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s30.a",
      "text": "Only three individuals, half of one percent of the sample, reported profits of $100,000 or more; one of them reported founding the organization.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s30.a",
       "text": "Only three individuals, half of one percent of the sample, reported profits of $100,000 or more; one of them reported founding the organization.",
@@ -2375,14 +2410,14 @@
    "type": "factual",
    "fingerprint": "55b15b0c20",
    "words": 33,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s65.b",
      "text": "The AARP profit and loss figures are self-reported by participants.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s65.b",
       "text": "The AARP profit and loss figures are self-reported by participants.",
@@ -2437,7 +2472,7 @@
      "id": "s65.c",
      "text": "The AARP figures measure profit or loss (total investment against total income), unlike the disclosures, which report payments from the MLM before expenses.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s65.c",
       "text": "The AARP figures measure profit or loss (total investment against total income), unlike the disclosures, which report payments from the MLM before expenses.",
@@ -2514,8 +2549,8 @@
    "type": "transitional",
    "fingerprint": "43b704014d",
    "words": 26,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -2526,8 +2561,8 @@
    "type": "factual",
    "fingerprint": "982b52091b",
    "words": 51,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s33.a",
@@ -2537,7 +2572,7 @@
       "text": "in some cases",
       "cite": "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L201-L205"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s33.a",
       "text": "The FTC report says MLMs often offer commissions for meeting benchmarks such as purchasing a set amount of product, inducing others to purchase it, or recruiting participants who make such purchases, with retail income from selling to other consumers \"in some cases\".",
@@ -2588,7 +2623,8 @@
        "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s33.a",
-       "suggestion": "The writer says the narration carries it: s35 says the FTC describes the structure without measuring the split between downline and retail income."
+       "suggestion": "The writer says the narration carries it: s35 says the FTC describes the structure without measuring the split between downline and retail income.",
+       "disposition": "The sentence now says 'typically', 'such as' and quotes 'in some cases'; s35 states that the FTC describes the structure without measuring the downline-retail split."
       }
      ]
     }
@@ -2602,14 +2638,14 @@
    "type": "factual",
    "fingerprint": "e00d727872",
    "words": 51,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s34.a",
      "text": "Taylor's analysis of the compensation plans of the 30 MLMs with earnings data, and of over 350 MLMs in total, concluded that each is recruitment-driven and top-weighted: rewards are paid primarily for recruiting a large downline, not for retailing products, and most of the money goes to participants at the highest levels.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s34.a",
       "text": "Taylor's analysis of the compensation plans of the 30 MLMs with earnings data, and of over 350 MLMs in total, concluded that each is recruitment-driven and top-weighted: rewards are paid primarily for recruiting a large downline, not for retailing products, and most of the money goes to participants at the highest levels.",
@@ -2677,7 +2713,8 @@
        "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s34.a",
-       "suggestion": "The writer says the narration carries it: s35 and s52 say this is one analyst's reading of pay plans, by a critic of the industry."
+       "suggestion": "The writer says the narration carries it: s35 and s52 say this is one analyst's reading of pay plans, by a critic of the industry.",
+       "disposition": "The sentence attributes the conclusion to Taylor's reading of the plans; s35 says it is one analyst's reading and s52 that he argues against the industry."
       }
      ]
     }
@@ -2691,14 +2728,14 @@
    "type": "factual",
    "fingerprint": "b344d41189",
    "words": 29,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s35.a",
      "text": "The FTC report describes the structure of MLM pay but does not measure the split between downline income and retail income.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s35.a",
       "text": "The FTC report describes the structure of MLM pay but does not measure the split between downline income and retail income.",
@@ -2749,7 +2786,8 @@
        "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s35.a",
-       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+       "disposition": "The sentence is the qualification itself: it says the FTC describes the structure but does not measure the split."
       }
      ]
     }
@@ -2763,8 +2801,8 @@
    "type": "attributed",
    "fingerprint": "356b343d8a",
    "words": 31,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s36.a",
@@ -2775,7 +2813,7 @@
       "source": "ZKva-dT6g8E",
       "speaker": "Eric Worre"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s36.a",
       "text": "A prominent network-marketing trainer denies that income comes from recruiting: \"you don't get paid for the act of building the team you only get paid when sales happen to a customer\".",
@@ -2860,7 +2898,20 @@
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s36",
+     "assertion": "s36.a",
+     "fingerprint": "356b343d8a",
+     "revision": 3,
+     "category": "overgeneralization",
+     "severity": "info",
+     "explanation": "'The recruiters reject that framing' presents one trainer's line as the position of recruiters in general; the evidence is a single Eric Worre video. The sentence immediately narrows to 'the same trainer', so the viewer hears the source, but the opening clause is broader than it.",
+     "refs": [],
+     "suggestion": "Optional: 'The trainers push back; Eric Worre insists ...'.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s37",
@@ -2869,14 +2920,14 @@
    "type": "factual",
    "fingerprint": "92d737bbaa",
    "words": 35,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s37.a",
      "text": "In the pay plans the FTC describes, commissions can be paid for purchases by recruited participants who buy a set amount of product.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s37.a",
       "text": "In the pay plans the FTC describes, commissions can be paid for purchases by recruited participants who buy a set amount of product.",
@@ -2927,7 +2978,8 @@
        "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s37.a",
-       "suggestion": "The writer says the narration carries it: s35 and s53 say the split between downline and retail income is not measured; the sentence says 'can be', not how often."
+       "suggestion": "The writer says the narration carries it: s35 and s53 say the split between downline and retail income is not measured; the sentence says 'can be', not how often.",
+       "disposition": "The sentence says 'can be', not how often, and s35 and s53 say the split between recruiting and retail income is not measured."
       }
      ]
     }
@@ -2941,8 +2993,8 @@
    "type": "transitional",
    "fingerprint": "ed37df205f",
    "words": 19,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -2953,14 +3005,14 @@
    "type": "factual",
    "fingerprint": "666baf2ed0",
    "words": 16,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s39.a",
      "text": "In the excerpted rank table, over 90% of participants were in a cohort with average reported income of less than $100.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s39.a",
       "text": "In the excerpted rank table, over 90% of participants were in a cohort with average reported income of less than $100.",
@@ -3045,7 +3097,8 @@
        "explanation": "FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s39.a",
-       "suggestion": "The writer says the narration carries it: s40 and s64 state the limit: leverage is real only for the fraction at the top."
+       "suggestion": "The writer says the narration carries it: s40 and s64 state the limit: leverage is real only for the fraction at the top.",
+       "disposition": "The sentence restates the passage's own summary of one table; s62 states that leverage is real only for the fraction at the top."
       }
      ]
     }
@@ -3059,8 +3112,8 @@
    "type": "factual",
    "fingerprint": "1ca8bc1b69",
    "words": 43,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s40.a",
@@ -3070,7 +3123,7 @@
       "text": "time freedom or leveraged income",
       "cite": "get-rich-quick/sources/taylor-case-against-mlm.txt#L2199-L2211"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s40.a",
       "text": "Taylor describes the MLM appeal of \"time freedom or leveraged income\" from the efforts of others and says that, because of MLM compensation systems, it requires success at recruiting a downline more than selling the products directly.",
@@ -3155,7 +3208,8 @@
        "explanation": "Taylor, The Case against MLM: Taylor describes the 'leveraged income' pitch and agrees the pay plans route income from a downline, but his data show only about one in 238 participants profit at all and roughly one in 25,000 get the touted residual income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s40.a",
-       "suggestion": "The writer says the narration carries it: s41 and s52 say Taylor's loss rate is an estimate under stated assumptions."
+       "suggestion": "The writer says the narration carries it: s41 and s52 say Taylor's loss rate is an estimate under stated assumptions.",
+       "disposition": "The sentence reports Taylor's description of the pitch and the plans, not that the leverage pays; s41, s42 and s52 give his loss estimate and its assumptions."
       }
      ]
     }
@@ -3169,14 +3223,14 @@
    "type": "factual",
    "fingerprint": "b3c685e871",
    "words": 29,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s41.a",
      "text": "Across the MLMs he analysed, after subtracting required purchases and modest expenses, Taylor calculates that an average of 99.6% of participants lost money and about one in 238 profited.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s41.a",
       "text": "Across the MLMs he analysed, after subtracting required purchases and modest expenses, Taylor calculates that an average of 99.6% of participants lost money and about one in 238 profited.",
@@ -3228,7 +3282,23 @@
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s41",
+     "assertion": "s41.a",
+     "fingerprint": "b3c685e871",
+     "revision": 3,
+     "category": "missing-qualification",
+     "severity": "info",
+     "explanation": "'After subtracting required purchases and modest expenses' paraphrases Taylor's footnote 44, which assumes 'all expenses (including incentivized purchases and minimum operating expenses)'. The cited passage itself says only 'after subtracting expenses'. 'Required' slightly hardens 'incentivized'; the 99.6% and one in 238 are exact. s47's 'once required purchases are counted as a cost' has the same wording.",
+     "refs": [
+      "get-rich-quick/sources/taylor-case-against-mlm.txt#L1596-L1597",
+      "get-rich-quick/sources/taylor-case-against-mlm.txt#L1785-L1790"
+     ],
+     "suggestion": "Optional: 'after subtracting the purchases the plans push and minimum operating costs'.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s42",
@@ -3237,14 +3307,14 @@
    "type": "factual",
    "fingerprint": "b8b1e42acb",
    "words": 41,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s42.a",
      "text": "Taylor's loss rate is calculated from company earnings reports under assumptions he states about participants' expenses, retention and the share of participants counted.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s42.a",
       "text": "Taylor's loss rate is calculated from company earnings reports under assumptions he states about participants' expenses, retention and the share of participants counted.",
@@ -3305,8 +3375,8 @@
    "type": "attributed",
    "fingerprint": "c05ef26ca7",
    "words": 34,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s43.a",
@@ -3317,7 +3387,7 @@
       "source": "s6MwGeOm8iI",
       "speaker": "John Oliver"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s43.a",
       "text": "John Oliver's segment says that with each level recruiting more, \"you could only do that 13 cycles and you would exceed the population of the earth.\"",
@@ -3425,14 +3495,14 @@
    "type": "factual",
    "fingerprint": "c8aff2ddbc",
    "words": 17,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s44.a",
      "text": "Neither the FTC report nor Taylor tests the population-exhaustion arithmetic.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s44.a",
       "text": "Neither the FTC report nor Taylor tests the population-exhaustion arithmetic.",
@@ -3517,7 +3587,8 @@
        "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s44.a",
-       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+       "disposition": "The sentence is the qualification: it says none of the studies tests the population arithmetic."
       }
      ]
     }
@@ -3531,14 +3602,14 @@
    "type": "factual",
    "fingerprint": "b8d7ad765b",
    "words": 28,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s66.a",
      "text": "Taylor writes of pyramid schemes, a class in which he places MLMs, that recruitment eventually dries up as the market becomes saturated and that the vast majority of participants are then left in a losing position at the bottom.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s66.a",
       "text": "Taylor writes of pyramid schemes, a class in which he places MLMs, that recruitment eventually dries up as the market becomes saturated and that the vast majority of participants are then left in a losing position at the bottom.",
@@ -3623,7 +3694,8 @@
        "explanation": "Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s66.a",
-       "suggestion": "The writer says the narration carries it: The sentence attributes it to Taylor as his argument; s54 says the arithmetic is untested."
+       "suggestion": "The writer says the narration carries it: The sentence attributes it to Taylor as his argument; s54 says the arithmetic is untested.",
+       "disposition": "The sentence attributes the saturation claim to Taylor and names the class he puts MLMs in; s54 says the arithmetic itself is untested."
       }
      ]
     }
@@ -3637,14 +3709,14 @@
    "type": "factual",
    "fingerprint": "fd4cba8a7e",
    "words": 30,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s67.a",
      "text": "Among former participants in the AARP survey, 29% left because the commission structure mostly benefited those at the top and 25% because the market was too saturated.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s67.a",
       "text": "Among former participants in the AARP survey, 29% left because the commission structure mostly benefited those at the top and 25% because the market was too saturated.",
@@ -3729,7 +3801,8 @@
        "explanation": "AARP MLM survey 2018: Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s67.a",
-       "suggestion": "The writer says the narration carries it: The sentence says these are reasons people gave for leaving, which s50 notes are self-reported."
+       "suggestion": "The writer says the narration carries it: The sentence says these are reasons people gave for leaving, which s50 notes are self-reported.",
+       "disposition": "The sentence says these are reasons former participants 'said' they left, which carries the self-report limit; s50 repeats it."
       }
      ]
     }
@@ -3743,8 +3816,8 @@
    "type": "transitional",
    "fingerprint": "e9be521e2f",
    "words": 17,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -3755,14 +3828,14 @@
    "type": "factual",
    "fingerprint": "a81fc39b12",
    "words": 25,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s46.a",
      "text": "The disclosures show most participants made $1,000 or less per year, and that may not account for expenses.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s46.a",
       "text": "The disclosures show most participants made $1,000 or less per year, and that may not account for expenses.",
@@ -3833,7 +3906,7 @@
      "id": "s46.b",
      "text": "Most of the 70 disclosures do not depict the full income distribution: 29 exclude those with no commissions and another 24 exclude participants deemed inactive.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s46.b",
       "text": "Most of the 70 disclosures do not depict the full income distribution: 29 exclude those with no commissions and another 24 exclude participants deemed inactive.",
@@ -3901,7 +3974,23 @@
      ]
     }
    ],
-   "issues": []
+   "issues": [
+    {
+     "sentence": "s46",
+     "assertion": "s46.a",
+     "fingerprint": "a81fc39b12",
+     "revision": 3,
+     "category": "missing-qualification",
+     "severity": "info",
+     "explanation": "The recap 'most participants received $1,000 or less in a year' drops the scope the FTC gives it: the 33 disclosures with enough data to calculate the share. s16 carries that limit; s46 and s60.b repeat the figure without it, as the FTC's own blog summary does. True and sourced; the limit is stated once, far from the recap.",
+     "refs": [
+      "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L1481-L1498",
+      "get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35"
+     ],
+     "suggestion": "Optional: 'in the statements with enough data to tell, most participants received $1,000 or less'.",
+     "by": "review"
+    }
+   ]
   },
   {
    "id": "s47",
@@ -3910,14 +3999,14 @@
    "type": "factual",
    "fingerprint": "321be85bf4",
    "words": 28,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s47.a",
      "text": "In the AARP survey 47% lost money, 27% broke even and 25% made a profit; 14% of participants made less than $5,000.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s47.a",
       "text": "In the AARP survey 47% lost money, 27% broke even and 25% made a profit; 14% of participants made less than $5,000.",
@@ -3988,7 +4077,7 @@
      "id": "s47.b",
      "text": "Taylor calculates an average of 99.6% of participants losing money after subtracting required purchases and expenses.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s47.b",
       "text": "Taylor calculates an average of 99.6% of participants losing money after subtracting required purchases and expenses.",
@@ -4049,14 +4138,14 @@
    "type": "factual",
    "fingerprint": "d9ec6797ac",
    "words": 23,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s50.a",
      "text": "The AARP profit and loss figures are self-reported by current and former MLM participants.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s50.a",
       "text": "The AARP profit and loss figures are self-reported by current and former MLM participants.",
@@ -4133,14 +4222,14 @@
    "type": "factual",
    "fingerprint": "e5a9810cb9",
    "words": 25,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s51.a",
      "text": "The FTC's figures come from 70 publicly available income disclosure statements and report payments before expenses.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s51.a",
       "text": "The FTC's figures come from 70 publicly available income disclosure statements and report payments before expenses.",
@@ -4217,14 +4306,14 @@
    "type": "factual",
    "fingerprint": "bc7c88f8ad",
    "words": 27,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s52.a",
      "text": "Taylor's 99.6% loss rate is calculated under stated assumptions from company earnings reports, not counted from participants' accounts.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s52.a",
       "text": "Taylor's 99.6% loss rate is calculated under stated assumptions from company earnings reports, not counted from participants' accounts.",
@@ -4285,14 +4374,14 @@
    "type": "factual",
    "fingerprint": "2dc3109942",
    "words": 19,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s53.a",
      "text": "The FTC report describes the structure of MLM pay but does not measure the split between downline and retail income.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s53.a",
       "text": "The FTC report describes the structure of MLM pay but does not measure the split between downline and retail income.",
@@ -4343,7 +4432,8 @@
        "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s53.a",
-       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+       "disposition": "The sentence is the qualification itself: described and argued, not measured."
       }
      ]
     }
@@ -4357,14 +4447,14 @@
    "type": "factual",
    "fingerprint": "943964d06f",
    "words": 24,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s54.a",
      "text": "Neither the FTC report nor Taylor tests the population-exhaustion arithmetic; the rank tables show that most participants are at the bottom.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s54.a",
       "text": "Neither the FTC report nor Taylor tests the population-exhaustion arithmetic; the rank tables show that most participants are at the bottom.",
@@ -4449,7 +4539,8 @@
        "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s54.a",
-       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+       "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+       "disposition": "The sentence is the qualification itself: the arithmetic is an untested thought experiment and the rank tables show where people end up, not why."
       }
      ]
     }
@@ -4463,8 +4554,8 @@
    "type": "hypothetical",
    "fingerprint": "6b183c1f3b",
    "words": 12,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -4475,8 +4566,8 @@
    "type": "factual",
    "fingerprint": "30757deb28",
    "words": 24,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s56.a",
@@ -4497,7 +4588,7 @@
       "result": "74",
       "note": "share who lost money plus share who broke even"
      },
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s56.a",
       "text": "74% of the surveyed participants lost money (47%) or broke even (27%).",
@@ -4558,14 +4649,14 @@
    "type": "factual",
    "fingerprint": "42744d41df",
    "words": 22,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s57.a",
      "text": "Of the 25% of surveyed participants who made a profit, the largest group, 14% of participants, made less than $5,000 over their entire time in the MLM.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s57.a",
       "text": "Of the 25% of surveyed participants who made a profit, the largest group, 14% of participants, made less than $5,000 over their entire time in the MLM.",
@@ -4642,8 +4733,8 @@
    "type": "transitional",
    "fingerprint": "694e0d2af4",
    "words": 17,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -4654,8 +4745,8 @@
    "type": "rhetorical",
    "fingerprint": "45846757df",
    "words": 38,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -4666,14 +4757,14 @@
    "type": "factual",
    "fingerprint": "6d7074bc82",
    "words": 48,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s60.a",
      "text": "In AARP's nationally representative survey, 47% of participants lost money and 27% broke even.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s60.a",
       "text": "In AARP's nationally representative survey, 47% of participants lost money and 27% broke even.",
@@ -4728,7 +4819,7 @@
      "id": "s60.b",
      "text": "The companies' income disclosure statements showed most participants made $1,000 or less per year before expenses.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s60.b",
       "text": "The companies' income disclosure statements showed most participants made $1,000 or less per year before expenses.",
@@ -4805,14 +4896,14 @@
    "type": "factual",
    "fingerprint": "536974eb33",
    "words": 15,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s61.a",
      "text": "25% of surveyed participants made a profit, 14% of participants making less than $5,000, and half of one percent reported profits of $100,000 or more.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s61.a",
       "text": "25% of surveyed participants made a profit, 14% of participants making less than $5,000, and half of one percent reported profits of $100,000 or more.",
@@ -4889,14 +4980,14 @@
    "type": "factual",
    "fingerprint": "4eef3251f9",
    "words": 40,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [
     {
      "id": "s62.a",
      "text": "In nearly each rank-based disclosure the FTC reviewed, the vast majority of participants are in the two or three lowest ranks.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s62.a",
       "text": "In nearly each rank-based disclosure the FTC reviewed, the vast majority of participants are in the two or three lowest ranks.",
@@ -4981,7 +5072,8 @@
        "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s62.a",
-       "suggestion": "The writer says the narration carries it: The sentence itself carries the limit: real for the fraction at the top; rank tables, not a money-flow measurement."
+       "suggestion": "The writer says the narration carries it: The sentence itself carries the limit: real for the fraction at the top; rank tables, not a money-flow measurement.",
+       "disposition": "The sentence says 'in the FTC's rank tables the vast majority sit at the bottom', which is the passage's finding about nearly every rank-based disclosure, and limits leverage to 'the fraction at the top'."
       }
      ]
     },
@@ -4989,7 +5081,7 @@
      "id": "s62.b",
      "text": "In the plans Taylor analysed, most of the money paid by the company goes to participants at the highest levels.",
      "kind": "fact",
-     "status": "needs-review",
+     "status": "verified",
      "validation": {
       "id": "s62.b",
       "text": "In the plans Taylor analysed, most of the money paid by the company goes to participants at the highest levels.",
@@ -5057,7 +5149,8 @@
        "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s62.b",
-       "suggestion": "The writer says the narration carries it: s52 says Taylor is a critic working from company tables."
+       "suggestion": "The writer says the narration carries it: s52 says Taylor is a critic working from company tables.",
+       "disposition": "Attributed to 'the plans Taylor read', which is the passage's own scope; the FTC limit about measuring the split is carried by s53."
       }
      ]
     }
@@ -5071,8 +5164,8 @@
    "type": "transitional",
    "fingerprint": "014077ae0c",
    "words": 9,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   },
@@ -5083,8 +5176,8 @@
    "type": "transitional",
    "fingerprint": "936a37069b",
    "words": 26,
-   "status": "needs-review",
-   "approved": false,
+   "status": "verified",
+   "approved": true,
    "assertions": [],
    "issues": []
   }
@@ -5097,7 +5190,8 @@
    "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s69.a",
-   "suggestion": "The writer says the narration carries it: The sentence itself says he argues against the industry; s52 repeats it."
+   "suggestion": "The writer says the narration carries it: The sentence itself says he argues against the industry; s52 repeats it.",
+   "disposition": "False positive: the qualifying FTC passage is about pay structure, not the count of companies Taylor analysed; the sentence only states the count and names him as a critic."
   },
   {
    "sentence": "s23",
@@ -5106,7 +5200,8 @@
    "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s23.a",
-   "suggestion": "The writer says the narration carries it: The sentence reports the rank tables, not the exhaustion arithmetic; s44 and s54 say the arithmetic itself was not tested."
+   "suggestion": "The writer says the narration carries it: The sentence reports the rank tables, not the exhaustion arithmetic; s44 and s54 say the arithmetic itself was not tested.",
+   "disposition": "The sentence reports what the rank tables show, which the passage states directly; the exhaustion-arithmetic limit is carried by s44 and s54."
   },
   {
    "sentence": "s24",
@@ -5115,7 +5210,8 @@
    "explanation": "FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s24.a",
-   "suggestion": "The writer says the narration carries it: s40 and s64 say leverage is real only for the fraction at the top; the sentence names it as one table."
+   "suggestion": "The writer says the narration carries it: s40 and s64 say leverage is real only for the fraction at the top; the sentence names it as one table.",
+   "disposition": "The sentence reads one excerpted table and names it as one table; the limit that leverage is real only for a tiny fraction is what the figure illustrates and s62 states it."
   },
   {
    "sentence": "s25",
@@ -5124,7 +5220,8 @@
    "explanation": "FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s25.a",
-   "suggestion": "The writer says the narration carries it: s40 and s64 say leverage is real only for the fraction at the top."
+   "suggestion": "The writer says the narration carries it: s40 and s64 say leverage is real only for the fraction at the top.",
+   "disposition": "Figures are read from the excerpted table as one table's numbers; s62 carries the limit about leverage reaching only the top fraction."
   },
   {
    "sentence": "s25",
@@ -5133,7 +5230,8 @@
    "explanation": "FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s25.b",
-   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+   "disposition": "The sentence attributes the 'half the rows' arithmetic to the FTC ('as the FTC puts it'), which is the passage's own wording."
   },
   {
    "sentence": "s33",
@@ -5142,7 +5240,8 @@
    "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s33.a",
-   "suggestion": "The writer says the narration carries it: s35 says the FTC describes the structure without measuring the split between downline and retail income."
+   "suggestion": "The writer says the narration carries it: s35 says the FTC describes the structure without measuring the split between downline and retail income.",
+   "disposition": "The sentence now says 'typically', 'such as' and quotes 'in some cases'; s35 states that the FTC describes the structure without measuring the downline-retail split."
   },
   {
    "sentence": "s34",
@@ -5151,7 +5250,8 @@
    "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s34.a",
-   "suggestion": "The writer says the narration carries it: s35 and s52 say this is one analyst's reading of pay plans, by a critic of the industry."
+   "suggestion": "The writer says the narration carries it: s35 and s52 say this is one analyst's reading of pay plans, by a critic of the industry.",
+   "disposition": "The sentence attributes the conclusion to Taylor's reading of the plans; s35 says it is one analyst's reading and s52 that he argues against the industry."
   },
   {
    "sentence": "s35",
@@ -5160,7 +5260,8 @@
    "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s35.a",
-   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+   "disposition": "The sentence is the qualification itself: it says the FTC describes the structure but does not measure the split."
   },
   {
    "sentence": "s37",
@@ -5169,7 +5270,8 @@
    "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s37.a",
-   "suggestion": "The writer says the narration carries it: s35 and s53 say the split between downline and retail income is not measured; the sentence says 'can be', not how often."
+   "suggestion": "The writer says the narration carries it: s35 and s53 say the split between downline and retail income is not measured; the sentence says 'can be', not how often.",
+   "disposition": "The sentence says 'can be', not how often, and s35 and s53 say the split between recruiting and retail income is not measured."
   },
   {
    "sentence": "s39",
@@ -5178,7 +5280,8 @@
    "explanation": "FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s39.a",
-   "suggestion": "The writer says the narration carries it: s40 and s64 state the limit: leverage is real only for the fraction at the top."
+   "suggestion": "The writer says the narration carries it: s40 and s64 state the limit: leverage is real only for the fraction at the top.",
+   "disposition": "The sentence restates the passage's own summary of one table; s62 states that leverage is real only for the fraction at the top."
   },
   {
    "sentence": "s40",
@@ -5187,7 +5290,8 @@
    "explanation": "Taylor, The Case against MLM: Taylor describes the 'leveraged income' pitch and agrees the pay plans route income from a downline, but his data show only about one in 238 participants profit at all and roughly one in 25,000 get the touted residual income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s40.a",
-   "suggestion": "The writer says the narration carries it: s41 and s52 say Taylor's loss rate is an estimate under stated assumptions."
+   "suggestion": "The writer says the narration carries it: s41 and s52 say Taylor's loss rate is an estimate under stated assumptions.",
+   "disposition": "The sentence reports Taylor's description of the pitch and the plans, not that the leverage pays; s41, s42 and s52 give his loss estimate and its assumptions."
   },
   {
    "sentence": "s44",
@@ -5196,7 +5300,8 @@
    "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s44.a",
-   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+   "disposition": "The sentence is the qualification: it says none of the studies tests the population arithmetic."
   },
   {
    "sentence": "s66",
@@ -5205,7 +5310,8 @@
    "explanation": "Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s66.a",
-   "suggestion": "The writer says the narration carries it: The sentence attributes it to Taylor as his argument; s54 says the arithmetic is untested."
+   "suggestion": "The writer says the narration carries it: The sentence attributes it to Taylor as his argument; s54 says the arithmetic is untested.",
+   "disposition": "The sentence attributes the saturation claim to Taylor and names the class he puts MLMs in; s54 says the arithmetic itself is untested."
   },
   {
    "sentence": "s67",
@@ -5214,7 +5320,8 @@
    "explanation": "AARP MLM survey 2018: Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s67.a",
-   "suggestion": "The writer says the narration carries it: The sentence says these are reasons people gave for leaving, which s50 notes are self-reported."
+   "suggestion": "The writer says the narration carries it: The sentence says these are reasons people gave for leaving, which s50 notes are self-reported.",
+   "disposition": "The sentence says these are reasons former participants 'said' they left, which carries the self-report limit; s50 repeats it."
   },
   {
    "sentence": "s53",
@@ -5223,7 +5330,8 @@
    "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s53.a",
-   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+   "disposition": "The sentence is the qualification itself: described and argued, not measured."
   },
   {
    "sentence": "s54",
@@ -5232,7 +5340,8 @@
    "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s54.a",
-   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence."
+   "suggestion": "Say where the narration carries this limitation (qualifications), or narrow the sentence.",
+   "disposition": "The sentence is the qualification itself: the arithmetic is an untested thought experiment and the rank tables show where people end up, not why."
   },
   {
    "sentence": "s62",
@@ -5241,7 +5350,8 @@
    "explanation": "FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s62.a",
-   "suggestion": "The writer says the narration carries it: The sentence itself carries the limit: real for the fraction at the top; rank tables, not a money-flow measurement."
+   "suggestion": "The writer says the narration carries it: The sentence itself carries the limit: real for the fraction at the top; rank tables, not a money-flow measurement.",
+   "disposition": "The sentence says 'in the FTC's rank tables the vast majority sit at the bottom', which is the passage's finding about nearly every rank-based disclosure, and limits leverage to 'the fraction at the top'."
   },
   {
    "sentence": "s62",
@@ -5250,14 +5360,8 @@
    "explanation": "FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s62.b",
-   "suggestion": "The writer says the narration carries it: s52 says Taylor is a critic working from company tables."
-  },
-  {
-   "sentence": "-",
-   "category": "stale-review",
-   "severity": "info",
-   "explanation": "the review was made against evidence package (none recorded); the package is now c189733721, so its approvals do not count",
-   "by": "deterministic"
+   "suggestion": "The writer says the narration carries it: s52 says Taylor is a critic working from company tables.",
+   "disposition": "Attributed to 'the plans Taylor read', which is the passage's own scope; the FTC limit about measuring the split is carried by s53."
   },
   {
    "sentence": "s03",
@@ -5290,6 +5394,20 @@
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
    "assertion": "s08.a"
+  },
+  {
+   "sentence": "s68",
+   "assertion": "s68.a",
+   "fingerprint": "14c9c3c1c0",
+   "revision": 3,
+   "category": "needs-human",
+   "severity": "info",
+   "explanation": "'Nationally representative' rests on the verdict's canonical claim; the cited passages (L135-L139, L376-L392) give the 601 and the percentages but not the sampling. The methods section at L105-L109 (GfK KnowledgePanel, probability-based, generalisable to the US population) establishes it and is in the committed source, but no verdict cites it. The same wording is in s27 and s60. Recording that passage through record-sources would close the gap; no script change.",
+   "refs": [
+    "get-rich-quick/sources/aarp-2018-mlm-study.txt#L105-L109"
+   ],
+   "suggestion": "Record the methods passage as support for the AARP sampling claim; the narration can stand.",
+   "by": "review"
   },
   {
    "sentence": "s68",
@@ -5388,6 +5506,20 @@
    "assertion": "s22.a"
   },
   {
+   "sentence": "s23",
+   "assertion": "s23.a",
+   "fingerprint": "a33534ad93",
+   "revision": 3,
+   "category": "missing-qualification",
+   "severity": "info",
+   "explanation": "The FTC sentence reads 'the vast majority of participants are in one of the two or three lowest ranks ... or are omitted from the table entirely'. The narration drops the 'or are omitted' branch, so for the tables that leave non-earners out the 'vast majority' includes people who are not in the table at all. s19 states the omissions separately, so the viewer hears both; the figure does not mislead.",
+   "refs": [
+    "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L801-L812"
+   ],
+   "suggestion": "Optional: 'the vast majority of participants sit in the two or three lowest ranks, or are left out of the table'.",
+   "by": "review"
+  },
+  {
    "sentence": "s27",
    "category": "wording",
    "severity": "info",
@@ -5437,11 +5569,38 @@
   },
   {
    "sentence": "s36",
+   "assertion": "s36.a",
+   "fingerprint": "356b343d8a",
+   "revision": 3,
+   "category": "overgeneralization",
+   "severity": "info",
+   "explanation": "'The recruiters reject that framing' presents one trainer's line as the position of recruiters in general; the evidence is a single Eric Worre video. The sentence immediately narrows to 'the same trainer', so the viewer hears the source, but the opening clause is broader than it.",
+   "refs": [],
+   "suggestion": "Optional: 'The trainers push back; Eric Worre insists ...'.",
+   "by": "review"
+  },
+  {
+   "sentence": "s36",
    "category": "wording",
    "severity": "info",
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
    "assertion": "s36.a"
+  },
+  {
+   "sentence": "s41",
+   "assertion": "s41.a",
+   "fingerprint": "b3c685e871",
+   "revision": 3,
+   "category": "missing-qualification",
+   "severity": "info",
+   "explanation": "'After subtracting required purchases and modest expenses' paraphrases Taylor's footnote 44, which assumes 'all expenses (including incentivized purchases and minimum operating expenses)'. The cited passage itself says only 'after subtracting expenses'. 'Required' slightly hardens 'incentivized'; the 99.6% and one in 238 are exact. s47's 'once required purchases are counted as a cost' has the same wording.",
+   "refs": [
+    "get-rich-quick/sources/taylor-case-against-mlm.txt#L1596-L1597",
+    "get-rich-quick/sources/taylor-case-against-mlm.txt#L1785-L1790"
+   ],
+   "suggestion": "Optional: 'after subtracting the purchases the plans push and minimum operating costs'.",
+   "by": "review"
   },
   {
    "sentence": "s41",
@@ -5466,6 +5625,21 @@
    "explanation": "Wording differs from the canonical claim; the reviewer confirms the passages entail it.",
    "by": "deterministic",
    "assertion": "s43.a"
+  },
+  {
+   "sentence": "s46",
+   "assertion": "s46.a",
+   "fingerprint": "a81fc39b12",
+   "revision": 3,
+   "category": "missing-qualification",
+   "severity": "info",
+   "explanation": "The recap 'most participants received $1,000 or less in a year' drops the scope the FTC gives it: the 33 disclosures with enough data to calculate the share. s16 carries that limit; s46 and s60.b repeat the figure without it, as the FTC's own blog summary does. True and sourced; the limit is stated once, far from the recap.",
+   "refs": [
+    "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L1481-L1498",
+    "get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35"
+   ],
+   "suggestion": "Optional: 'in the statements with enough data to tell, most participants received $1,000 or less'.",
+   "by": "review"
   },
   {
    "sentence": "s46",
@@ -5874,10 +6048,10 @@
   },
   {
    "revision": 3,
-   "date": "2026-10-17T22:25:35.789Z",
-   "status": "needs-review",
+   "date": "2026-10-17T22:31:36.771Z",
+   "status": "passed",
    "blocking": 0,
-   "warnings": 18
+   "warnings": 0
   }
  ]
 }

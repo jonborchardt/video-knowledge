@@ -2,75 +2,74 @@
   "reviewer": "scripts/briefs/script-review.md",
   "model": "claude-fable-5-1",
   "date": "2026-10-17",
-  "revision": 2,
+  "revision": 3,
   "approved": {
     "s01": "684e44b729",
     "s02": "761f010810",
-    "s03": "70b057d3eb",
+    "s03": "f9a72bb1f7",
     "s04": "de19409b1e",
     "s05": "a53fcc355a",
     "s06": "60fd3ffd26",
     "s07": "638d94ebb1",
-    "s08": "27cfec392b",
-    "s09": "517dbc6867",
+    "s08": "c0052ef64c",
+    "s68": "14c9c3c1c0",
+    "s69": "5f99294acf",
+    "s09": "4686cf0983",
+    "s10": "9bb3fc1560",
     "s11": "8f2d0ebbda",
-    "s13": "e259266104",
+    "s12": "3da6b7b551",
+    "s13": "dc65a7843c",
     "s14": "c8c03c9ee1",
     "s15": "b94eeadadf",
     "s16": "bddfc7f1f1",
     "s17": "7716fd1200",
     "s18": "486fd7daa9",
-    "s19": "42ec80afb0",
+    "s19": "3c76bd0b1a",
     "s20": "202b10a0a8",
     "s21": "9bd52ca752",
     "s22": "78c8f72d93",
     "s23": "a33534ad93",
     "s24": "f57f6b2ff8",
-    "s25": "1ef21460c1",
+    "s25": "105cda9f6c",
     "s26": "d810f99f3a",
     "s27": "7822d10a75",
-    "s28": "5078ca61b5",
-    "s29": "2f397d7968",
-    "s30": "c5d6dc45e2",
-    "s31": "a27ce99d5b",
+    "s28": "6b3cf2314c",
+    "s29": "187b44dc0d",
+    "s30": "3946ef4f69",
+    "s65": "55b15b0c20",
     "s32": "43b704014d",
     "s33": "982b52091b",
     "s34": "e00d727872",
     "s35": "b344d41189",
-    "s36": "7db2e95a0e",
+    "s36": "356b343d8a",
+    "s37": "92d737bbaa",
     "s38": "ed37df205f",
     "s39": "666baf2ed0",
     "s40": "1ca8bc1b69",
-    "s41": "ac8361e981",
+    "s41": "b3c685e871",
     "s42": "b8b1e42acb",
-    "s43": "83dae697cc",
+    "s43": "c05ef26ca7",
     "s44": "c8aff2ddbc",
+    "s66": "b8d7ad765b",
+    "s67": "fd4cba8a7e",
     "s45": "e9be521e2f",
-    "s46": "0214523532",
-    "s47": "04c40b620a",
-    "s48": "0d872814ed",
+    "s46": "a81fc39b12",
+    "s47": "321be85bf4",
     "s50": "d9ec6797ac",
     "s51": "e5a9810cb9",
     "s52": "bc7c88f8ad",
     "s53": "2dc3109942",
-    "s54": "0130e43450",
+    "s54": "943964d06f",
     "s55": "6b183c1f3b",
-    "s56": "c17e08aa88",
-    "s57": "3cdf067781",
+    "s56": "30757deb28",
+    "s57": "42744d41df",
     "s58": "694e0d2af4",
     "s59": "45846757df",
     "s60": "6d7074bc82",
-    "s61": "208a80126b",
+    "s61": "536974eb33",
+    "s62": "4eef3251f9",
     "s63": "014077ae0c",
-    "s64": "936a37069b",
-    "s10": "f58da1f3b7",
-    "s12": "6701ba4e90",
-    "s65": "55b15b0c20",
-    "s37": "92d737bbaa",
-    "s66": "b8d7ad765b",
-    "s67": "fd4cba8a7e",
-    "s49": "3ed55f56e5",
-    "s62": "4eef3251f9"
+    "s64": "936a37069b"
   },
   "findings": [
     {
@@ -343,6 +342,146 @@
         "get-rich-quick/sources/aarp-2018-mlm-study.txt#L105-L109"
       ],
       "suggestion": "Say 'in the nationally representative survey' or 'in the one nationally representative survey we have here'."
+    },
+    {
+      "sentence": "s23",
+      "assertion": "s23.a",
+      "fingerprint": "a33534ad93",
+      "revision": 3,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The FTC sentence reads 'the vast majority of participants are in one of the two or three lowest ranks ... or are omitted from the table entirely'. The narration drops the 'or are omitted' branch, so for the tables that leave non-earners out the 'vast majority' includes people who are not in the table at all. s19 states the omissions separately, so the viewer hears both; the figure does not mislead.",
+      "refs": [
+        "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L801-L812"
+      ],
+      "suggestion": "Optional: 'the vast majority of participants sit in the two or three lowest ranks, or are left out of the table'."
+    },
+    {
+      "sentence": "s41",
+      "assertion": "s41.a",
+      "fingerprint": "b3c685e871",
+      "revision": 3,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "'After subtracting required purchases and modest expenses' paraphrases Taylor's footnote 44, which assumes 'all expenses (including incentivized purchases and minimum operating expenses)'. The cited passage itself says only 'after subtracting expenses'. 'Required' slightly hardens 'incentivized'; the 99.6% and one in 238 are exact. s47's 'once required purchases are counted as a cost' has the same wording.",
+      "refs": [
+        "get-rich-quick/sources/taylor-case-against-mlm.txt#L1596-L1597",
+        "get-rich-quick/sources/taylor-case-against-mlm.txt#L1785-L1790"
+      ],
+      "suggestion": "Optional: 'after subtracting the purchases the plans push and minimum operating costs'."
+    },
+    {
+      "sentence": "s46",
+      "assertion": "s46.a",
+      "fingerprint": "a81fc39b12",
+      "revision": 3,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The recap 'most participants received $1,000 or less in a year' drops the scope the FTC gives it: the 33 disclosures with enough data to calculate the share. s16 carries that limit; s46 and s60.b repeat the figure without it, as the FTC's own blog summary does. True and sourced; the limit is stated once, far from the recap.",
+      "refs": [
+        "get-rich-quick/sources/ftc-2024-mlm-income-disclosures.txt#L1481-L1498",
+        "get-rich-quick/sources/ftc-mlm-report-blog.txt#L35-L35"
+      ],
+      "suggestion": "Optional: 'in the statements with enough data to tell, most participants received $1,000 or less'."
+    },
+    {
+      "sentence": "s68",
+      "assertion": "s68.a",
+      "fingerprint": "14c9c3c1c0",
+      "revision": 3,
+      "category": "needs-human",
+      "severity": "info",
+      "explanation": "'Nationally representative' rests on the verdict's canonical claim; the cited passages (L135-L139, L376-L392) give the 601 and the percentages but not the sampling. The methods section at L105-L109 (GfK KnowledgePanel, probability-based, generalisable to the US population) establishes it and is in the committed source, but no verdict cites it. The same wording is in s27 and s60. Recording that passage through record-sources would close the gap; no script change.",
+      "refs": [
+        "get-rich-quick/sources/aarp-2018-mlm-study.txt#L105-L109"
+      ],
+      "suggestion": "Record the methods passage as support for the AARP sampling claim; the narration can stand."
+    },
+    {
+      "sentence": "s36",
+      "assertion": "s36.a",
+      "fingerprint": "356b343d8a",
+      "revision": 3,
+      "category": "overgeneralization",
+      "severity": "info",
+      "explanation": "'The recruiters reject that framing' presents one trainer's line as the position of recruiters in general; the evidence is a single Eric Worre video. The sentence immediately narrows to 'the same trainer', so the viewer hears the source, but the opening clause is broader than it.",
+      "refs": [],
+      "suggestion": "Optional: 'The trainers push back; Eric Worre insists ...'."
     }
-  ]
+  ],
+  "packageFingerprint": "c189733721",
+  "dispositions": {
+    "s69.a": {
+      "fingerprint": "5f99294acf",
+      "reason": "False positive: the qualifying FTC passage is about pay structure, not the count of companies Taylor analysed; the sentence only states the count and names him as a critic."
+    },
+    "s23.a": {
+      "fingerprint": "a33534ad93",
+      "reason": "The sentence reports what the rank tables show, which the passage states directly; the exhaustion-arithmetic limit is carried by s44 and s54."
+    },
+    "s24.a": {
+      "fingerprint": "f57f6b2ff8",
+      "reason": "The sentence reads one excerpted table and names it as one table; the limit that leverage is real only for a tiny fraction is what the figure illustrates and s62 states it."
+    },
+    "s25.a": {
+      "fingerprint": "105cda9f6c",
+      "reason": "Figures are read from the excerpted table as one table's numbers; s62 carries the limit about leverage reaching only the top fraction."
+    },
+    "s25.b": {
+      "fingerprint": "105cda9f6c",
+      "reason": "The sentence attributes the 'half the rows' arithmetic to the FTC ('as the FTC puts it'), which is the passage's own wording."
+    },
+    "s33.a": {
+      "fingerprint": "982b52091b",
+      "reason": "The sentence now says 'typically', 'such as' and quotes 'in some cases'; s35 states that the FTC describes the structure without measuring the downline-retail split."
+    },
+    "s34.a": {
+      "fingerprint": "e00d727872",
+      "reason": "The sentence attributes the conclusion to Taylor's reading of the plans; s35 says it is one analyst's reading and s52 that he argues against the industry."
+    },
+    "s35.a": {
+      "fingerprint": "b344d41189",
+      "reason": "The sentence is the qualification itself: it says the FTC describes the structure but does not measure the split."
+    },
+    "s37.a": {
+      "fingerprint": "92d737bbaa",
+      "reason": "The sentence says 'can be', not how often, and s35 and s53 say the split between recruiting and retail income is not measured."
+    },
+    "s39.a": {
+      "fingerprint": "666baf2ed0",
+      "reason": "The sentence restates the passage's own summary of one table; s62 states that leverage is real only for the fraction at the top."
+    },
+    "s40.a": {
+      "fingerprint": "1ca8bc1b69",
+      "reason": "The sentence reports Taylor's description of the pitch and the plans, not that the leverage pays; s41, s42 and s52 give his loss estimate and its assumptions."
+    },
+    "s44.a": {
+      "fingerprint": "c8aff2ddbc",
+      "reason": "The sentence is the qualification: it says none of the studies tests the population arithmetic."
+    },
+    "s66.a": {
+      "fingerprint": "b8d7ad765b",
+      "reason": "The sentence attributes the saturation claim to Taylor and names the class he puts MLMs in; s54 says the arithmetic itself is untested."
+    },
+    "s67.a": {
+      "fingerprint": "fd4cba8a7e",
+      "reason": "The sentence says these are reasons former participants 'said' they left, which carries the self-report limit; s50 repeats it."
+    },
+    "s53.a": {
+      "fingerprint": "2dc3109942",
+      "reason": "The sentence is the qualification itself: described and argued, not measured."
+    },
+    "s54.a": {
+      "fingerprint": "943964d06f",
+      "reason": "The sentence is the qualification itself: the arithmetic is an untested thought experiment and the rank tables show where people end up, not why."
+    },
+    "s62.a": {
+      "fingerprint": "4eef3251f9",
+      "reason": "The sentence says 'in the FTC's rank tables the vast majority sit at the bottom', which is the passage's finding about nearly every rank-based disclosure, and limits leverage to 'the fraction at the top'."
+    },
+    "s62.b": {
+      "fingerprint": "4eef3251f9",
+      "reason": "Attributed to 'the plans Taylor read', which is the passage's own scope; the FTC limit about measuring the split is carried by s53."
+    }
+  }
 }
