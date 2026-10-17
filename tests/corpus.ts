@@ -11,7 +11,8 @@ export const DOC_C = `${TOPIC}/sources/field-c.txt#L20-L21`;
 export const passages: Record<string, string> = {
   [DOC_A]: 'In the trial, developers using the tool finished tasks 26 percent faster on average.',
   [DOC_B]: 'Survey respondents reported mixed results; experienced staff saw smaller gains.',
-  [DOC_C]: 'In the field study experienced developers were slower with the tool.',
+  [DOC_C]:
+    'In the field study experienced developers were slower with the tool; the gain was 18 percent, not ten times.',
 };
 export const reader: PassageReader = (cite) => passages[cite] ?? null;
 

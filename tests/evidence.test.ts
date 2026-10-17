@@ -321,4 +321,31 @@ describe('evidence validator', () => {
     expect(read('ai-coding/sources/missing.txt#L1')).toBeNull();
     expect(read('not a cite')).toBeNull();
   });
+
+  it('a figure present only in the verdict note does not count', () => {
+    const c = claim('faster', FASTER, {
+      verdicts: [study('RCT A', 'right', 0.8, DOC_A, 'The trial reported a 26 percent gain among 601 developers.')],
+    });
+    const v = validate(fact(`${FASTER} among 601 developers`, [studyRef(DOC_A)]), corpus(c), reader);
+    expect(v.decision).toBe('blocked');
+    expect(v.limitations.join(' ')).toMatch(/"601"/);
+  });
+
+  it('a figure the passage states in words is accepted when the sentence uses digits, and vice versa', () => {
+    const c = claim('faster', FASTER, { verdicts: [study('RCT A', 'right', 0.8, DOC_A)] });
+    expect(validate(fact(`${FASTER}, by 26 percent`, [studyRef(DOC_A)]), corpus(c), reader).decision).toBe('approved');
+    expect(validate(fact(`${FASTER}, by twenty-six percent`, [studyRef(DOC_A)]), corpus(c), reader).decision).toBe(
+      'approved',
+    );
+    expect(validate(fact(`${FASTER}, by twenty-five percent`, [studyRef(DOC_A)]), corpus(c), reader).decision).toBe(
+      'blocked',
+    );
+  });
+
+  it('rejects a figure that rounds a passage figure', () => {
+    const c = claim('faster', FASTER, { verdicts: [study('RCT A', 'right', 0.8, DOC_A)] });
+    expect(validate(fact(`${FASTER}, by about 25 percent`, [studyRef(DOC_A)]), corpus(c), reader).decision).toBe(
+      'blocked',
+    );
+  });
 });

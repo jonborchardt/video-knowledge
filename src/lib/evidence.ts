@@ -2,7 +2,8 @@
 //
 // Three layers, kept apart:
 // 1. Deterministic: do the referenced claims, sources, study verdicts and passages exist; which way does each verdict
-//    point; is every figure in the sentence present in the cited evidence. Any failure blocks.
+//    point; is every figure in the sentence present in a cited passage (digits or words; a verdict note never counts,
+//    it is an AI's reading of the passage). Any failure blocks.
 // 2. Applicability: does a verdict on the canonical claim decide THIS sentence? A base rate ("most lose") cannot decide
 //    a possibility claim ("an expert can"); a verdict whose own note limits its scope ("though the setting is futures,
 //    not stocks") is partial. Defaults come from conservative wording heuristics; a reviewer's judgment (see
@@ -14,6 +15,7 @@
 // contradictions and qualifications are pulled from every study verdict on the claim, so none can be hidden.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { hasFigure, nums } from './numbers';
 import type { ClaimVerdictView, ClaimView, Topic, Verdict } from './topics';
 
 export type Corpus = Pick<Topic, 'name' | 'claims'>;
@@ -169,9 +171,6 @@ export function applicabilityOf(modality: Modality, verdict: Verdict | null, not
 
 const applyLevel = (direction: Role, level: Applicability): Role =>
   level === 'contextual' ? 'context' : level === 'partial' && direction !== 'inconclusive' ? 'qualifies' : direction;
-
-// ponytail: digits only; "twenty percent" or "2x" written as "twice" slip past. Add number words if writers use them.
-const numbers = (s: string) => [...s.matchAll(/\d[\d,]*(?:\.\d+)?/g)].map((m) => m[0].replaceAll(',', ''));
 
 export function validate(
   a: Assertion,
@@ -366,14 +365,11 @@ export function validate(
       if (decision === 'approved') decision = 'qualify';
       if (status === 'supported') status = 'qualified';
     }
-    // Figures must come from the cited evidence, not from the writer.
-    const evidenceText = [...supporting, ...qualifying]
-      .map((x) => `${x.passage ?? ''}\n${x.note}`)
-      .join('\n')
-      .replaceAll(',', ''); // "$1,000" in a passage matches "1000" from numbers()
-    for (const n of numbers(a.text))
-      if (!evidenceText.includes(n) && !a.derived?.includes(n)) {
-        limitations.push(`The figure "${n}" does not appear in the cited evidence.`);
+    // Figures must come from a cited passage, not from the writer and not from a verdict note.
+    const evidenceText = [...supporting, ...qualifying].map((x) => x.passage ?? '').join('\n');
+    for (const n of nums(a.text))
+      if (!hasFigure(evidenceText, n) && !a.derived?.includes(n)) {
+        limitations.push(`The figure "${n}" does not appear in the cited passages.`);
         suggestions.push(`Drop "${n}" or cite a passage that states it.`);
         status = 'unverified';
         decision = 'blocked';
