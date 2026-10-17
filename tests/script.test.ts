@@ -110,6 +110,21 @@ describe('evidence package', () => {
     expect(c.guess).toBeNull();
   });
 
+  it('persists a transcript window around each recorded quote, and keeps it when the transcript is gone', () => {
+    const transcript = (id: string) =>
+      id === 's1a'
+        ? 'intro words here. to hear another former distributor tell it, quote s1a and so on. more words.'
+        : null;
+    const a = buildPackage(story(), asTopic(t()), read, review, {}, process.cwd(), transcript);
+    const st = a.claims[0].statements.find((s) => s.source === 's1a')!;
+    expect(st.context).toMatch(/former distributor tell it, quote s1a/);
+    const b = buildPackage(story(), asTopic(t()), read, review, {}, process.cwd(), () => null, a);
+    expect(b.claims[0].statements.find((s) => s.source === 's1a')!.context).toBe(st.context);
+    expect(b.fingerprint).toBe(a.fingerprint);
+    const c = buildPackage(story(), asTopic(t()), read, review, {}, process.cwd(), () => null, null);
+    expect(c.claims[0].statements.find((s) => s.source === 's1a')!.context).toBeNull();
+  });
+
   it('is reproducible and leaves its inputs untouched', () => {
     const s = story();
     const before = JSON.stringify(s);

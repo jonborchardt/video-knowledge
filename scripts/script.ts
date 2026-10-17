@@ -24,6 +24,7 @@ import {
   sentences,
   sha,
   toJson,
+  transcriptReader,
   validateScript,
   writeArtifact,
 } from '../src/lib/script';
@@ -65,12 +66,21 @@ function stagePackage(): EvidencePackage {
   if (!story) throw new Error(`no story ${storyId} in ${storiesPath(topic)} (rejected stories cannot be scripted)`);
   if (story.readiness !== 'ready') console.error(`warning: story is ${story.readiness}: ${story.readinessWhy}`);
   const t = loadTopic(topic);
-  const pkg = buildPackage(story, t, read, loadReview(topic), {
-    stories: fileSha(storiesPath(topic)),
-    review: fileSha(reviewPath(topic)),
-    report: fileSha(join(process.cwd(), topic, 'report.json')),
-  });
   const old = readJson<EvidencePackage>(p(FILES.pkg));
+  const pkg = buildPackage(
+    story,
+    t,
+    read,
+    loadReview(topic),
+    {
+      stories: fileSha(storiesPath(topic)),
+      review: fileSha(reviewPath(topic)),
+      report: fileSha(join(process.cwd(), topic, 'report.json')),
+    },
+    process.cwd(),
+    transcriptReader(topic),
+    old,
+  );
   if (old?.fingerprint === pkg.fingerprint) console.log(`${rel(p(FILES.pkg))} unchanged (${pkg.fingerprint})`);
   else {
     writeArtifact(dir, FILES.pkg, toJson(pkg));

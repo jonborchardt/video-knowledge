@@ -73,6 +73,9 @@ export interface PackageStatement {
   href: string;
   stance: Stance;
   quote: string;
+  /** The transcript around the recorded quote (about 300 characters each side), persisted so that speaker attribution
+   *  can be checked without the gitignored transcript; null when neither a transcript nor a previous package had it. */
+  context: string | null;
 }
 export interface PackageClaim {
   id: string;
@@ -125,6 +128,24 @@ const docOf = (cite: string) => cite.split('#')[0];
 const fileOf = (cite: string) => docOf(cite).split('/').pop()!;
 const isStudyRef = (r: EvidenceRef): r is { kind: 'study'; claim: string; cite: string } => r.kind === 'study';
 
+export type TranscriptReader = (sourceId: string) => string | null;
+/** Reads `<root>/<topic>/store/transcripts/<source id>.txt` (a gitignored cache); null when it is not there. */
+export function transcriptReader(topic: string, root = process.cwd()): TranscriptReader {
+  return (id) => {
+    const p = join(root, topic, 'store', 'transcripts', `${id}.txt`);
+    return existsSync(p) ? readFileSync(p, 'utf8') : null;
+  };
+}
+const CONTEXT = 300;
+/** The transcript window around the quote, located case- and whitespace-insensitively; a prefix when not located. */
+export function quoteContext(transcript: string, quote: string): string {
+  const text = norm(transcript);
+  const q = norm(quote);
+  const at = q ? text.indexOf(q) : -1;
+  if (at < 0) return `(quote not located) ${text.slice(0, CONTEXT)}`;
+  return text.slice(Math.max(0, at - CONTEXT), at + q.length + CONTEXT);
+}
+
 export function buildPackage(
   story: Story,
   t: Topic,
@@ -132,7 +153,17 @@ export function buildPackage(
   review: ReviewFile = {},
   inputs: Record<string, string> = {},
   root = process.cwd(),
+  readTranscript: TranscriptReader = () => null,
+  previous: EvidencePackage | null = null,
 ): EvidencePackage {
+  // Without a transcript (a clean checkout), the window persisted by the previous package stands.
+  const kept = new Map(
+    (previous?.claims ?? []).flatMap((c) => c.statements.map((s) => [`${s.source}\n${s.quote}`, s.context])),
+  );
+  const context = (source: string, quote: string) => {
+    const transcript = readTranscript(source);
+    return transcript !== null ? quoteContext(transcript, quote) : (kept.get(`${source}\n${quote}`) ?? null);
+  };
   const byId = new Map(t.claims.map((c) => [c.id, c]));
   const docs = new Map<string, PackageDoc>();
   const doc = (cite: string) => {
@@ -235,6 +266,7 @@ export function buildPackage(
         href: s.href,
         stance: s.stance,
         quote: s.quote,
+        context: context(s.id, s.quote),
       })),
       evidence,
       audit: {
