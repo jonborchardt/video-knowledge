@@ -166,6 +166,9 @@ them keeps the persisted contexts and the same fingerprint. The reviewer may ret
 approved script, package, validation and storyboard fingerprints in `release.json` (refused unless validation is
 `passed` and the storyboard `ok`); a later `validate` or `storyboard` run that drifts from them warns `release-stale`.
 
+Baseline: `mlm-script-v1` is the first locked package (`get-rich-quick/scripts/decision-mlm-and-seminars/release.json`);
+rendering work starts from it.
+
 ## Website
 
 An [Astro](https://astro.build) site with Tailwind. Each topic with a `report.json` becomes a page (`src/pages/[topic]/index.astro`), linked from a home page. Pages are rendered at build time; the only client script is the tab bar and the claim search.
