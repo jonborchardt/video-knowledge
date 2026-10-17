@@ -183,9 +183,10 @@ export function loadTopic(name: string): Topic {
   const t = r.topics[0];
   const cfg = readJson<SiteConfig>(join(dir, 'site.json')) ?? {};
   const lean = readJson<Record<string, string>>(join(dir, 'lean.json')) ?? {};
-  const recs = readdirSync(join(dir, 'store', 'videos')).map(
-    (f) => JSON.parse(readFileSync(join(dir, 'store', 'videos', f), 'utf8')) as StoreVideo,
-  );
+  // Sorted: readdirSync order differs by file system, and the order reaches every claim's sources and the packages.
+  const recs = readdirSync(join(dir, 'store', 'videos'))
+    .sort()
+    .map((f) => JSON.parse(readFileSync(join(dir, 'store', 'videos', f), 'utf8')) as StoreVideo);
   const recOf = new Map(recs.map((v) => [v.id, v]));
   const docName = (src?: string | null) => {
     const f = (src ?? '').split('#')[0].split('/').pop() ?? '';
