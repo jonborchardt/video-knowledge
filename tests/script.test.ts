@@ -8,7 +8,9 @@ import {
   sentenceFingerprint,
   sentences,
   validateScript,
+  words,
 } from '../src/lib/script';
+import { spokenWords } from '../src/lib/numbers';
 import { type ChartPoint, type ChartSpec, type ChartType, buildStoryboard } from '../src/lib/storyboard';
 import { TOPIC, claim, study } from './corpus';
 import {
@@ -374,7 +376,7 @@ describe('storyboard', () => {
     for (let i = 1; i < sb.scenes.length; i++) expect(sb.scenes[i].start).toBe(sb.scenes[i - 1].end);
     for (const x of sb.scenes) expect(x.end).toBeCloseTo(x.start + x.duration, 5);
     expect(sb.runtime).toBe(sb.scenes.at(-1)!.end);
-    expect(sb.scenes[1].duration).toBeCloseTo((8 / 150) * 60 + 2, 1);
+    expect(sb.scenes[1].duration).toBeCloseTo((spokenWords(sentences(s)[1].text) / 150) * 60 + 2, 1);
   });
 
   it('rejects reworded narration, missing or repeated sentences, stale plans, and chart data outside the passage', () => {
@@ -458,6 +460,27 @@ describe('storyboard', () => {
     expect(buildStoryboard(chart('sixty-two percent', 62), s, v, p(), read).issues.map((i) => i.category)).toContain(
       'chart-data',
     );
+  });
+
+  it('per-sentence timing tiles the scene and numerals lengthen it', () => {
+    const s = good();
+    const v = run(s, approveAll(s, pkg()));
+    expect(v.spokenWords).toBeGreaterThan(v.words);
+    const sb = buildStoryboard(
+      plan([scene('sc1', ['s01', 's02']), scene('sc2', ['s03'], { pauseSeconds: 1 })]),
+      s,
+      v,
+      pkg(),
+      read,
+    );
+    const t = sb.scenes[0].timing;
+    expect(t.map((x) => x.id)).toEqual(['s01', 's02']);
+    expect(t[0].start).toBe(0);
+    expect(t[1].start).toBeCloseTo(t[0].end, 5);
+    expect(sb.scenes[0].duration).toBeCloseTo(t[1].end, 5);
+    expect(sb.scenes[1].duration).toBeCloseTo(sb.scenes[1].timing[0].duration + 1, 5);
+    expect(t[1].duration).toBeGreaterThan((words(sentences(s)[1].text) / 150) * 60); // "601" and "47" lengthen it
+    expect(sb.scenes[1].timing[0].start).toBeCloseTo(sb.scenes[1].start, 5); // absolute, not scene-relative
   });
 
   it('accepts numeric points whose display matches the value and the passage', () => {

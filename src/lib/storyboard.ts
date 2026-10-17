@@ -3,7 +3,7 @@
 // in the narration from script.json (so the storyboard cannot reword it), computes timing from the narration speed,
 // and checks that every chart figure and on-screen citation comes from a passage in the evidence package.
 import { type PassageReader } from './evidence';
-import { hasFigure, nums } from './numbers';
+import { hasFigure, nums, spokenWords } from './numbers';
 import {
   type EvidencePackage,
   type Issue,
@@ -69,12 +69,21 @@ export interface StoryboardPlan {
   generation: { model: string; brief: string; date: string; notes?: string };
   scenes: ScenePlan[];
 }
+/** One narration sentence on the timeline, in absolute seconds from the start of the video. */
+export interface SentenceTiming {
+  id: string;
+  start: number;
+  duration: number;
+  end: number;
+}
 export interface Scene extends Omit<ScenePlan, 'narration'> {
   order: number;
   narration: string;
   words: number;
+  spokenWords: number; // numeral-aware (src/lib/numbers.ts spokenWords); what the timing is computed from
+  timing: SentenceTiming[]; // one entry per sentence in scene order; the scene's pause follows the last
   start: number; // seconds
-  duration: number;
+  duration: number; // sum of the sentence durations plus pauseSeconds
   end: number;
 }
 export interface Storyboard {
@@ -233,18 +242,31 @@ export function buildStoryboard(
             'blocking',
             `on-screen text figure "${n}" is in neither the narration nor a cited passage of this scene`,
           );
-    const w = words(narration);
-    const duration = Math.round(((w / wpm) * 60 + (p.pauseSeconds ?? 0)) * 10) / 10;
+    // Timing: each sentence by its spoken length at the narration speed, tiled from the scene start; the pause follows.
+    const r2 = (x: number) => Math.round(x * 100) / 100;
+    const start = r2(t);
+    let cursorT = t;
+    const timing: SentenceTiming[] = ids
+      .filter((id) => text.has(id))
+      .map((id) => {
+        const d = r2((spokenWords(text.get(id)!) / wpm) * 60);
+        const entry = { id, start: r2(cursorT), duration: d, end: r2(cursorT + d) };
+        cursorT += d;
+        return entry;
+      });
+    const duration = r2(timing.reduce((n, x) => n + x.duration, 0) + (p.pauseSeconds ?? 0));
     const { narration: _drop, ...rest } = p;
     void _drop;
     const scene: Scene = {
       ...rest,
       order: i + 1,
       narration,
-      words: w,
-      start: Math.round(t * 10) / 10,
+      words: words(narration),
+      spokenWords: spokenWords(narration),
+      timing,
+      start,
       duration,
-      end: Math.round((t + duration) * 10) / 10,
+      end: r2(t + duration),
     };
     t += duration;
     return scene;

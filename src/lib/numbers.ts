@@ -110,6 +110,22 @@ export function wordsToDigits(text: string): string {
 export const nums = (text: string) =>
   [...wordsToDigits(text).matchAll(/\d[\d,]*(?:\.\d+)?/g)].map((m) => m[0].replaceAll(',', ''));
 
+/** Words as spoken: a numeral takes longer than one word ("1,018,350" is six), a currency sign and a percent sign
+ *  are a word each. ponytail: digits * 0.7 is a flat rate; a real TTS reports its own timing. */
+export function spokenWords(text: string): number {
+  let n = 0;
+  for (const token of text.split(/\s+/).filter(Boolean)) {
+    const m = token.match(/(\$?)(\d[\d,]*(?:\.\d+)?)(%?)/);
+    if (!m) n += 1;
+    else
+      n +=
+        Math.max(1, Math.ceil(m[2].replaceAll(',', '').replace('.', '').length * 0.7)) +
+        (m[1] ? 1 : 0) +
+        (m[3] ? 1 : 0);
+  }
+  return n;
+}
+
 /** True when `figure` occurs as a whole number in the text: not inside a longer figure ("140") or after a decimal
  *  point ("0.14"). "1018350" does refer to "1018350.20": a narration may truncate the cents. */
 export function hasFigure(haystack: string, figure: string): boolean {

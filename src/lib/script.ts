@@ -25,7 +25,7 @@ import {
   judgmentKey,
   validate,
 } from './evidence';
-import { hasFigure, nums, wordsToDigits } from './numbers';
+import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
 import type { ReviewFile } from './review';
 import type { Story } from './stories';
 import { type ClaimView, type Topic, topicNames } from './topics';
@@ -426,6 +426,7 @@ export interface ScriptValidation {
   packageFingerprint: string | null;
   wordsPerMinute: number;
   words: number;
+  spokenWords: number; // numeral-aware count (src/lib/numbers.ts); the runtime estimate uses it
   minutes: number;
   counts: {
     sentences: number;
@@ -829,14 +830,15 @@ export function validateScript(
   });
 
   const w = results.reduce((n, s) => n + s.words, 0);
-  const mins = minutes(w, wpm);
+  const sw = results.reduce((n, s) => n + spokenWords(s.text), 0);
+  const mins = minutes(sw, wpm);
   if (mins < RUNTIME.min || mins > RUNTIME.max)
     top.push(
       issue(
         '-',
         'runtime',
         'warning',
-        `${w} words is about ${mins} minutes at ${wpm} wpm; the target is ${RUNTIME.min} to ${RUNTIME.max}`,
+        `${w} words (${sw} as spoken) is about ${mins} minutes at ${wpm} wpm; the target is ${RUNTIME.min} to ${RUNTIME.max}`,
       ),
     );
   const issues = [...top, ...results.flatMap((s) => [...s.issues, ...s.assertions.flatMap((a) => a.issues)])].sort(
@@ -866,6 +868,7 @@ export function validateScript(
     packageFingerprint,
     wordsPerMinute: wpm,
     words: w,
+    spokenWords: sw,
     minutes: mins,
     counts: {
       sentences: results.length,

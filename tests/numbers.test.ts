@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hasFigure, nums, wordsToDigits } from '../src/lib/numbers';
+import { hasFigure, nums, spokenWords, wordsToDigits } from '../src/lib/numbers';
 
 describe('number words', () => {
   it.each([
@@ -19,6 +19,12 @@ describe('number words', () => {
   ])('%s', (input, out) => expect(wordsToDigits(input)).toBe(out));
   it('extracts digit figures after normalisation', () => {
     expect(nums('Fourteen percent made $5,000; 3% made $25,000')).toEqual(['14', '5000', '3', '25000']);
+  });
+  it('counts numerals by spoken length', () => {
+    expect(spokenWords('they lost money')).toBe(3);
+    expect(spokenWords('47% lost money')).toBe(5);
+    expect(spokenWords('averages $1,018,350')).toBe(7);
+    expect(spokenWords('92.37 and 2018')).toBe(7);
   });
   it('matches figures on boundaries only', () => {
     expect(hasFigure('about 140 people', '14')).toBe(false);
