@@ -5,9 +5,6 @@ import { absoluteUrl } from './url';
 export interface PageMeta {
   title: string;
   description?: string;
-  /** Root-relative or absolute image URL; defaults to the site card. */
-  image?: string;
-  imageAlt?: string;
   /** Error and dev-only pages: emit noindex, no canonical, no structured data. */
   noindex?: boolean;
 }
