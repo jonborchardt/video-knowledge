@@ -1148,10 +1148,11 @@ export interface Release {
     storyboard: string; // storyboardFingerprint of storyboard.json as locked (content, not issues)
   };
 }
-/** The validation minus its timestamps and release warnings, so a re-run on the same inputs has the same print. */
+/** The validation minus its timestamps, its carried history (resolved findings, revisions) and release warnings, so a
+ *  re-run on the same script, package, review and sources has the same print with or without a previous run. */
 export const validationFingerprint = (v: ScriptValidation) => {
-  const { date: _d, history: _h, issues, ...rest } = v;
-  void [_d, _h];
+  const { date: _d, history: _h, resolved: _r, issues, ...rest } = v;
+  void [_d, _h, _r];
   return sha(toJson({ ...rest, issues: issues.filter((i) => i.category !== 'release-stale') }));
 };
 /** The filled storyboard minus its issue list (release warnings are written into it). */
