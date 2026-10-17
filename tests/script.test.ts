@@ -337,6 +337,41 @@ describe('script validation', () => {
     expect(limit.revisionLimitReached).toBe(true);
   });
 
+  it('a figure written in words is checked like a digit', () => {
+    const v = run(
+      script([
+        sentence('s01', 'In the survey sixty-two percent lost money.', 'factual', [
+          fact('s01.a', 'sixty-two percent lost money.'),
+        ]),
+      ]),
+    );
+    expect(cats(v)).toContain('invented-number');
+    const ok = run(
+      script([
+        sentence('s01', 'In the survey forty-seven percent lost money.', 'factual', [
+          fact('s01.a', 'forty-seven percent of participants reported losing money.'),
+        ]),
+      ]),
+    );
+    expect(cats(ok)).toEqual([]);
+  });
+
+  it('an attributed figure must be in the recorded quote, words or digits', () => {
+    const quoteWords = (text: string) =>
+      script([
+        sentence('s01', text, 'attributed', [
+          {
+            id: 's01.a',
+            text,
+            kind: 'attribution',
+            claims: [{ id: MLM, stance: 'asserts' }],
+            evidence: [{ kind: 'statement', claim: MLM, source: 's1a' }],
+          },
+        ]),
+      ]);
+    expect(cats(run(quoteWords('One source says ten people joined.')))).toContain('figure-not-in-quote');
+  });
+
   it('flags a figure in a hypothetical for the reviewer without blocking', () => {
     const v = run(script([sentence('s01', 'Say you recruit five friends and each pays $100.', 'hypothetical')]));
     expect(v.issues.map((i) => `${i.severity}:${i.category}`)).toContain('warning:figure-in-non-factual');
@@ -460,6 +495,25 @@ describe('storyboard', () => {
         ),
       ),
     ).toContain('script-blocked');
+  });
+
+  it('chart values written in words are checked against the passage', () => {
+    const s = good();
+    const v = run(s, approveAll(s));
+    const chart = (value: string) =>
+      plan([
+        scene('sc1', ['s01', 's02', 's03'], {
+          visual: {
+            category: 'data-chart',
+            description: 'bars',
+            chart: { type: 'bar', series: [{ label: 'lost', value, cite: DOC_D }] },
+          },
+        }),
+      ]);
+    expect(buildStoryboard(chart('forty-seven percent'), s, v, p(), read).status).toBe('ok');
+    expect(buildStoryboard(chart('sixty-two percent'), s, v, p(), read).issues.map((i) => i.category)).toContain(
+      'chart-data',
+    );
   });
 });
 

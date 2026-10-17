@@ -25,6 +25,7 @@ import {
   judgmentKey,
   validate,
 } from './evidence';
+import { hasFigure, nums, wordsToDigits } from './numbers';
 import type { ReviewFile } from './review';
 import type { Story } from './stories';
 import { type ClaimView, type Topic, topicNames } from './topics';
@@ -421,8 +422,6 @@ export const norm = (s: string) =>
     .replace(/�/g, '')
     .replace(/\s+/g, ' ')
     .trim();
-const nums = (s: string) => [...s.matchAll(/\d[\d,]*(?:\.\d+)?/g)].map((m) => m[0].replaceAll(',', ''));
-const has = (hay: string, n: string) => hay.replaceAll(',', '').includes(n);
 const NUMBERISH = /\d|\$|\bper ?cent\b|\bpercent\b/i;
 // ponytail: arithmetic only, no functions; a Function over a digits-and-operators whitelist is the whole evaluator.
 export function evalExpr(e: string): number | null {
@@ -523,7 +522,7 @@ export function validateScript(
     const covered = assertions.map((a) => a.text).join(' ');
     if (assertions.length)
       for (const n of nums(s.text))
-        if (!has(covered, n))
+        if (!hasFigure(covered, n))
           issues.push(
             issue(
               s.id,
@@ -557,7 +556,7 @@ export function validateScript(
           else {
             const p = read(inp.cite);
             if (p === null) bad.push(`passage not found: ${inp.cite}`);
-            else if (!has(p, inp.value.replaceAll(',', ''))) bad.push(`input ${inp.value} is not in ${inp.cite}`);
+            else if (!hasFigure(p, inp.value)) bad.push(`input ${inp.value} is not in ${inp.cite}`);
           }
         }
         for (const n of nums(c.expression))
@@ -568,7 +567,7 @@ export function validateScript(
         if (v === null) bad.push(`cannot evaluate "${c.expression}"`);
         else if (!Number.isFinite(r) || Math.abs(v - r) > 0.5 * 10 ** -decimals(c.result) + 1e-9)
           bad.push(`${c.expression} = ${v}, not ${c.result}`);
-        if (!has(a.text, c.result.replaceAll(',', ''))) bad.push(`the result ${c.result} is not in the assertion text`);
+        if (!hasFigure(a.text, c.result)) bad.push(`the result ${c.result} is not in the assertion text`);
         if (bad.length)
           add('bad-arithmetic', 'blocking', bad.join('; '), { suggestion: 'Fix the inputs or drop the figure.' });
         else derived.push(c.result.replaceAll(',', ''));
@@ -615,9 +614,9 @@ export function validateScript(
           .filter((x) => x.role === 'statement')
           .map((x) => x.note)
           .join('\n');
-        const stated = a.text.match(/^(\d+) sources?\b/)?.[1];
+        const stated = wordsToDigits(a.text).match(/^(\d+) sources?\b/)?.[1];
         for (const n of nums(a.text))
-          if (n !== stated && !has(quotes, n))
+          if (n !== stated && !hasFigure(quotes, n))
             add('figure-not-in-quote', 'blocking', `the figure "${n}" is not in the cited source statements`);
       }
       // Quotation: the exact words, inside the cited passage or statement.

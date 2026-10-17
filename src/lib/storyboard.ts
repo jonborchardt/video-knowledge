@@ -3,6 +3,7 @@
 // in the narration from script.json (so the storyboard cannot reword it), computes timing from the narration speed,
 // and checks that every chart figure and on-screen citation comes from a passage in the evidence package.
 import { type PassageReader } from './evidence';
+import { hasFigure, nums } from './numbers';
 import {
   type EvidencePackage,
   type Issue,
@@ -77,9 +78,6 @@ export interface Storyboard {
   issues: Issue[];
   scenes: Scene[];
 }
-
-const nums = (s: string) => [...s.matchAll(/\d[\d,]*(?:\.\d+)?/g)].map((m) => m[0].replaceAll(',', ''));
-const has = (hay: string, n: string) => hay.replaceAll(',', '').includes(n);
 
 export function buildStoryboard(
   plan: StoryboardPlan,
@@ -161,7 +159,7 @@ export function buildStoryboard(
         else {
           const passage = read(s.cite);
           for (const n of nums(s.value))
-            if (passage === null || !has(passage, n))
+            if (passage === null || !hasFigure(passage, n))
               issue(p.id, 'chart-data', 'blocking', `chart value "${n}" is not in ${s.cite}`);
         }
       }
@@ -195,7 +193,7 @@ export function buildStoryboard(
       .join('\n');
     for (const line of p.visual?.onScreenText ?? [])
       for (const n of nums(line))
-        if (!has(narration, n) && !has(citedText, n))
+        if (!hasFigure(narration, n) && !hasFigure(citedText, n))
           issue(
             p.id,
             'on-screen-figure',
