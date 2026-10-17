@@ -2,10 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
+import SourceDetails from '../../components/SourceDetails.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import SurpriseItem from '../../components/SurpriseItem.astro';
 import VerdictBadge from '../../components/VerdictBadge.astro';
-import { loadTopic, topicNames, type SourceClaimView, type Topic } from '../../lib/topics';
+import { loadTopic, topicNames, type Topic } from '../../lib/topics';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -16,29 +17,16 @@ const { t } = Astro.props as { t: Topic };
 const tabs = [
   { id: 'recap', label: 'Recap' },
   { id: 'top', label: 'Top 5' },
-  ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'What the studies changed' }] : []),
   ...(t.superseded.length ? [{ id: 'minds', label: 'Changed minds' }] : []),
   { id: 'wrong-claims', label: `Wrong (${t.wrong.length})` },
   { id: 'contested-claims', label: `Contested (${t.contested.length})` },
   { id: 'claims', label: `All claims (${t.claims.length})` },
   { id: 'sources', label: `Videos & posts (${t.counted})` },
+  ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'What the studies changed' }] : []),
 ];
 const filters = (['right', 'partly', 'wrong', 'untestable', 'unknown'] as const)
   .map((v) => ({ v, n: t.claims.filter((c) => (c.verdict ?? 'unknown') === v).length }))
   .filter((f) => f.n);
-// Chips inside each expanded source; the first is selected by default. Filtering is CSS only (see the style block).
-const chips = [
-  { v: 'novel', label: 'Novel', has: (c: SourceClaimView) => c.novel },
-  { v: 'right', label: 'Right', has: (c: SourceClaimView) => c.verdict === 'right' },
-  { v: 'wrong', label: 'Wrong', has: (c: SourceClaimView) => c.verdict === 'wrong' },
-  { v: 'partly', label: 'Partly', has: (c: SourceClaimView) => c.verdict === 'partly' },
-  {
-    v: 'untestable',
-    label: 'Untestable',
-    has: (c: SourceClaimView) => c.verdict === 'untestable' || c.verdict === 'unknown',
-  },
-  { v: 'all', label: 'All', has: () => true },
-];
 // Hero: the verdict bar and the three nugget cards. Nuggets deep-link into tabs (the tab script listens for hashchange).
 const bar = filters.map((f) => ({
   ...f,
@@ -220,7 +208,8 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
         t.studies
           ? `Studies decide ${t.decided} claims; the rest use an AI guess, which counts for at most 50% confidence.`
           : 'No studies have been checked yet, so every verdict is an AI guess.'
-      }{t.noCaptions ? ` ${t.noCaptions} more videos had no captions and are not counted.` : ''}
+      }{t.noCaptions ? ` ${t.noCaptions} more videos had no captions and are not counted.` : ''}{' '}
+      <a href={href('/about/#verdicts')}>How to read the verdict labels.</a>
     </p>
     {
       t.bottomLine && (
@@ -266,11 +255,9 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       {
         t.top.map((s) => (
           <li>
-            <SourceLink source={s} />{' '}
-            <span class={small}>
-              ({s.channel} · novelty {s.novelty.toFixed(2)})
-            </span>
-            . {s.summary}
+            <SourceDetails source={s} group="top" meta={`${s.channel} · novelty ${s.novelty.toFixed(2)}`}>
+              {s.summary && <p class:list={[small, 'ml-[1.4em]']}>{s.summary}</p>}
+            </SourceDetails>
           </li>
         ))
       }
@@ -289,6 +276,115 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
         </p>
       )
     }
+  </section>
+
+  {
+    t.superseded.length > 0 && (
+      <section id="minds">
+        <h2 class={h2}>Changed minds</h2>
+        <p class:list={[small, 'mb-3']}>
+          When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts
+          toward claims or novelty. Evidence recorded on it still counts.
+        </p>
+        <ul class={list}>
+          {t.superseded.map((s) => (
+            <li>
+              {s.title} → superseded by {s.by}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section id="wrong-claims">
+    <h2 class={h2}>Judged wrong</h2>
+    <p class:list={[small, 'mb-3']}>
+      The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.
+    </p>
+    {t.wrong.map((c) => <ClaimCard claim={c} group="wrong" />)}
+    {t.wrong.length === 0 && <p class={small}>None.</p>}
+  </section>
+
+  <section id="contested-claims">
+    <h2 class={h2}>Contested</h2>
+    <p class:list={[small, 'mb-3']}>Claims some sources assert and others deny.</p>
+    {t.contested.map((c) => <ClaimCard claim={c} group="contested" />)}
+    {t.contested.length === 0 && <p class={small}>None.</p>}
+  </section>
+
+  <section id="claims">
+    <h2 class={h2}>All claims</h2>
+    <div class="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter by verdict" data-filters>
+      <input
+        id="q"
+        type="search"
+        placeholder="Search claims"
+        aria-label="Search claims"
+        class="min-w-0 flex-[1_1_200px] rounded-md border border-input bg-card px-2.5 py-1.5 text-sm"
+      />
+      {
+        [{ v: 'all', n: t.claims.length }, ...filters].map((f) => (
+          <button
+            type="button"
+            data-filter={f.v}
+            aria-pressed={f.v === 'all' ? 'true' : 'false'}
+            class="cursor-pointer rounded-md border border-input bg-card px-2.5 py-1.5 text-sm aria-pressed:border-primary aria-pressed:font-medium aria-pressed:text-primary"
+          >
+            {f.v} ({f.n})
+          </button>
+        ))
+      }
+    </div>
+    <p class:list={[small, 'mb-3']} role="status" data-status>
+      Showing {t.claims.length} of {t.claims.length} claims.
+    </p>
+    <div data-claims>
+      {t.claims.map((c) => <ClaimCard claim={c} group="all" />)}
+    </div>
+  </section>
+
+  <section id="sources">
+    <h2 class={h2}>Videos and posts</h2>
+    <p class:list={[small, 'mb-3']}>
+      Score: −1 mostly wrong, 0 mixed, 1 mostly right, 2 right, from the verdicts on the claims each source makes.
+      Novelty adds up, for each claim a source gets right or correctly refutes, the verdict's confidence divided by how
+      many sources take the same stance; 1 is about one unique, well-supported point.
+    </p>
+    <div class="overflow-x-auto">
+      <table
+        class="w-full border-collapse text-sm [&_td]:border-t [&_td]:px-1.5 [&_td]:py-2 [&_td]:align-top [&_th]:px-1.5 [&_th]:py-2 [&_th]:text-left [&_th]:font-mono [&_th]:text-xs [&_th]:font-normal [&_th]:tracking-[.04em] [&_th]:text-muted-foreground [&_th]:uppercase"
+      >
+        <thead>
+          <tr>
+            <th scope="col">Score</th>
+            <th scope="col">Source</th>
+            <th scope="col">Novelty</th>
+            <th scope="col" class="max-sm:hidden">Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            t.sources.map((s) => (
+              <tr class:list={[s.superseded && 'text-muted-foreground [&_a]:text-muted-foreground']}>
+                <td class:list={['font-mono font-semibold whitespace-nowrap tabular-nums', scoreColour(s.score)]}>
+                  {s.score == null ? '–' : `${s.score > 0 ? '+' : ''}${s.score}`}
+                </td>
+                <td>
+                  <SourceDetails
+                    source={s}
+                    group="sources"
+                    meta={`${s.channel}${s.superseded ? ' · superseded' : ''}`}
+                  />
+                </td>
+                <td class="font-mono whitespace-nowrap tabular-nums">{s.novelty.toFixed(2)}</td>
+                <td class:list={[small, 'max-sm:hidden']}>{s.worthWatching}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
   </section>
 
   {
@@ -321,167 +417,6 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       </section>
     )
   }
-
-  {
-    t.superseded.length > 0 && (
-      <section id="minds">
-        <h2 class={h2}>Changed minds</h2>
-        <p class:list={[small, 'mb-3']}>
-          When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts
-          toward claims or novelty. Evidence recorded on it still counts.
-        </p>
-        <ul class={list}>
-          {t.superseded.map((s) => (
-            <li>
-              {s.title} → superseded by {s.by}
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
-
-  <section id="wrong-claims">
-    <h2 class={h2}>Judged wrong</h2>
-    <p class:list={[small, 'mb-3']}>
-      The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.
-    </p>
-    {t.wrong.map((c) => <ClaimCard claim={c} />)}
-    {t.wrong.length === 0 && <p class={small}>None.</p>}
-  </section>
-
-  <section id="contested-claims">
-    <h2 class={h2}>Contested</h2>
-    <p class:list={[small, 'mb-3']}>Claims some sources assert and others deny.</p>
-    {t.contested.map((c) => <ClaimCard claim={c} />)}
-    {t.contested.length === 0 && <p class={small}>None.</p>}
-  </section>
-
-  <section id="claims">
-    <h2 class={h2}>All claims</h2>
-    <div class="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter by verdict" data-filters>
-      <input
-        id="q"
-        type="search"
-        placeholder="Search claims"
-        aria-label="Search claims"
-        class="min-w-0 flex-[1_1_200px] rounded-md border border-input bg-card px-2.5 py-1.5 text-sm"
-      />
-      {
-        [{ v: 'all', n: t.claims.length }, ...filters].map((f) => (
-          <button
-            type="button"
-            data-filter={f.v}
-            aria-pressed={f.v === 'all' ? 'true' : 'false'}
-            class="cursor-pointer rounded-md border border-input bg-card px-2.5 py-1.5 text-sm aria-pressed:border-primary aria-pressed:font-medium aria-pressed:text-primary"
-          >
-            {f.v} ({f.n})
-          </button>
-        ))
-      }
-    </div>
-    <p class:list={[small, 'mb-3']} role="status" data-status>
-      Showing {t.claims.length} of {t.claims.length} claims.
-    </p>
-    <div data-claims>
-      {t.claims.map((c) => <ClaimCard claim={c} />)}
-    </div>
-  </section>
-
-  <section id="sources">
-    <h2 class={h2}>Videos and posts</h2>
-    <p class:list={[small, 'mb-3']}>
-      Score: −1 mostly wrong, 0 mixed, 1 mostly right, 2 right, from the verdicts on the claims each source makes.
-      Novelty adds up, for each claim a source gets right or correctly refutes, the verdict's confidence divided by how
-      many sources take the same stance; 1 is about one unique, well-supported point.
-    </p>
-    <div class="overflow-x-auto">
-      <table
-        class="w-full border-collapse text-sm [&_td]:border-t [&_td]:px-1.5 [&_td]:py-2 [&_td]:align-top [&_th]:px-1.5 [&_th]:py-2 [&_th]:text-left [&_th]:font-mono [&_th]:text-xs [&_th]:font-normal [&_th]:tracking-[.04em] [&_th]:text-muted-foreground [&_th]:uppercase"
-      >
-        <thead>
-          <tr>
-            <th scope="col">Score</th>
-            <th scope="col">Source</th>
-            <th scope="col">Novelty</th>
-            <th scope="col" class="max-sm:hidden">Verdict</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            t.sources.map((s) => (
-              <tr class:list={[s.superseded && 'text-muted-foreground [&_a]:text-muted-foreground']}>
-                <td class:list={['font-mono font-semibold whitespace-nowrap tabular-nums', scoreColour(s.score)]}>
-                  {s.score == null ? '–' : `${s.score > 0 ? '+' : ''}${s.score}`}
-                </td>
-                <td>
-                  <details class="group" data-source>
-                    <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                      <span class="mr-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">
-                        ▸
-                      </span>
-                      <SourceLink source={s} />
-                      <br />
-                      <span class:list={[small, 'ml-[1.4em]']}>
-                        {s.channel}
-                        {s.superseded && ' · superseded'}
-                      </span>
-                    </summary>
-                    <fieldset class="mt-2 flex flex-wrap gap-1.5">
-                      <legend class="sr-only">Show claims</legend>
-                      {chips.map((f, i) => {
-                        const n = s.claims.filter(f.has).length;
-                        return (
-                          <label
-                            class:list={[
-                              'cursor-pointer rounded-full border px-2 py-0.5 font-mono text-xs has-checked:border-foreground has-checked:bg-foreground has-checked:text-background',
-                              !n && 'text-muted-foreground opacity-50',
-                            ]}
-                          >
-                            <input
-                              type="radio"
-                              class="sr-only"
-                              id={`f-${s.id}-${f.v}`}
-                              name={`f-${s.id}`}
-                              value={f.v}
-                              checked={i === 0}
-                              disabled={!n}
-                            />
-                            {f.label} ({n})
-                          </label>
-                        );
-                      })}
-                    </fieldset>
-                    <ul class="mt-1 grid gap-2 py-1">
-                      {s.claims.map((c) => (
-                        <li data-v={c.verdict} data-novel={c.novel || undefined} class="grid gap-0.5 border-t pt-2">
-                          <div class="flex items-baseline justify-between gap-2.5">
-                            <p>
-                              {c.stance === 'denies' && (
-                                <span class="font-mono text-xs text-muted-foreground">DENIES </span>
-                              )}
-                              {c.text}
-                            </p>
-                            <VerdictBadge verdict={c.verdict} />
-                          </div>
-                          <p class={small}>“{c.quote}”</p>
-                          <span class="font-mono text-xs text-muted-foreground tabular-nums">
-                            {c.share === 1 ? 'only this source' : `1 of ${c.share} sources`}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                </td>
-                <td class="font-mono whitespace-nowrap tabular-nums">{s.novelty.toFixed(2)}</td>
-                <td class:list={[small, 'max-sm:hidden']}>{s.worthWatching}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-    </div>
-  </section>
 </Base>
 
 <style is:global>
@@ -495,6 +430,12 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
   [data-source]:has([value='wrong']:checked) li:not([data-v='wrong']),
   [data-source]:has([value='partly']:checked) li:not([data-v='partly']),
   [data-source]:has([value='untestable']:checked) li:not([data-v='untestable'], [data-v='unknown']) {
+    display: none;
+  }
+  /* Claim chips, same idea: asserting sources, denying sources, or the verdicts. */
+  [data-claim]:has([value='asserts']:checked) li:not([data-k='asserts']),
+  [data-claim]:has([value='denies']:checked) li:not([data-k='denies']),
+  [data-claim]:has([value='verdict']:checked) li:not([data-k='verdict']) {
     display: none;
   }
 </style>
@@ -574,4 +515,13 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
     }),
   );
   q.addEventListener('input', apply);
+
+  // Stat-line shortcuts on a claim card ("denied 6", "decided by study"): open the card on that chip.
+  document.addEventListener('click', (e) => {
+    const pick = (e.target as HTMLElement).closest<HTMLElement>('[data-pick]');
+    const card = pick?.closest<HTMLDetailsElement>('details');
+    if (!pick || !card) return;
+    card.open = true;
+    card.querySelector<HTMLInputElement>(`input[value="${pick.dataset.pick}"]`)!.checked = true;
+  });
 </script>

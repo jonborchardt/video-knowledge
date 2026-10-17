@@ -3,7 +3,7 @@
 import type { SourceView } from '../lib/topics';
 
 interface Props {
-  source: SourceView;
+  source: Pick<SourceView, 'kind' | 'href' | 'title'>;
 }
 const { source: s } = Astro.props;
 const icon = 'mr-1.5 inline size-[1em] align-[-0.15em] text-muted-foreground';

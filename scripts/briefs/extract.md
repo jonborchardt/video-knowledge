@@ -72,6 +72,9 @@ Write `<topic>/work/hN.json`:
 ```
 
 - Every `c` slug must exist in claims.txt exactly (copy it; don't guess).
+- The watcher rejects a new claim whose wording is close to an existing one. If the meaning really
+  differs (same proposition in another period, a different object), add `"f": true` to that `n`
+  entry to force it through; otherwise reuse the existing slug.
 - Don't use the same claim twice in one source.
 - If two of your sources make the same NEW claim, create it once with `n`, then use `n2`
   with the identical text.

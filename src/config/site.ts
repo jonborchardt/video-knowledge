@@ -6,7 +6,7 @@ export const site = {
   blog: { name: 'Always Shippable', url: 'https://jonborchardt.github.io/blog/' },
   nav: [
     { label: 'Blog', href: 'https://jonborchardt.github.io/blog/' },
-    { label: 'About', href: 'https://jonborchardt.github.io/blog/about/' },
+    { label: 'About', href: '/about/' },
   ],
   repo: 'https://github.com/jonborchardt/video-knowledge',
 };

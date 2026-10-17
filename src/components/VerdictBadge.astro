@@ -1,25 +1,22 @@
 ---
 import type { Verdict } from '../lib/topics';
+import { verdictLabel } from '../lib/verdict-label';
 
 interface Props {
   verdict: Verdict | null;
   confidence?: number | null;
 }
 const { verdict, confidence } = Astro.props;
-const colour = {
-  right: 'text-success',
-  partly: 'text-warning',
-  wrong: 'text-destructive',
-  untestable: 'text-muted-foreground',
-  unknown: 'text-muted-foreground',
-};
+const { text, colour } = verdictLabel(verdict, confidence);
+const title = confidence != null ? `${verdict}, ${Math.round(confidence * 100)}% confidence` : undefined;
 ---
 
 <span
   class:list={[
     'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase',
-    colour[verdict ?? 'unknown'],
+    colour,
   ]}
+  title={title}
 >
-  {verdict ?? 'unjudged'}{confidence != null && ` ${Math.round(confidence * 100)}%`}
+  {text}
 </span>
