@@ -105,6 +105,24 @@ describe('story discovery', () => {
     expect(reviewed.reviewed).toBe(true);
   });
 
+  it('1b. two documents of one study count once in the audit', () => {
+    const review: ReviewFile = {
+      stories: {
+        'decision:mlm-and-seminars': { coherence: { score: 0.9, reason: 'one question' }, claims: ['demo/mlm-income'] },
+      },
+    };
+    const build = (sameStudy?: Record<string, string>) =>
+      discover(
+        topic([mlm(), rental()], [{ title: 'MLM and seminars', claims: [mlm(), rental()] }], sameStudy),
+        reader,
+        review,
+      ).stories.find((s) => s.kind === 'decision')!;
+    expect(build().audit.central.independent).toBe(2);
+    const deduped = build({ 'survey-b.txt': 'rct-a.txt' });
+    expect(deduped.audit.central.independent).toBe(1);
+    expect(deduped.scores.explanation).toMatch(/1 independent document/);
+  });
+
   it('2. a day-trading story does not absorb sports betting, and a reviewer can reject the mixed cluster', () => {
     const t = () =>
       topic([dayTrading(), betting()], [{ title: 'Trading and betting', claims: [dayTrading(), betting()] }]);

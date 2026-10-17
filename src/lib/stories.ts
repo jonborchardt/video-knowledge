@@ -17,6 +17,7 @@ import {
   type PassageReader,
   PRIOR_CAP,
   type Validation,
+  docKey,
   studyVerdicts,
   validate,
 } from './evidence';
@@ -26,7 +27,7 @@ import { type ClaimView, type Topic, topicNames, VAL } from './topics';
 export type { Format } from './review';
 export type StoryKind = 'contradicted' | 'conflict' | 'surprise' | 'gap' | 'decision';
 export type Readiness = 'ready' | 'needs-review' | 'needs-research' | 'rejected';
-export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'>;
+export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'> & { sameStudy?: Record<string, string> };
 export type Arc = Record<'hook' | 'conflict' | 'evidence' | 'resolution' | 'takeaway', string>;
 
 export interface Finding {
@@ -96,7 +97,8 @@ const studyRefs = (c: ClaimView): EvidenceRef[] =>
 const statementRefs = (c: ClaimView, stance = 'asserts'): EvidenceRef[] =>
   c.sources.filter((s) => s.stance === stance).map((s) => ({ kind: 'statement', claim: c.id, source: s.id }));
 const uniq = <T>(xs: T[]) => [...new Set(xs)];
-const docOf = (x: EvidenceItem) => (x.ref.kind === 'study' ? x.ref.cite.split('#')[0] : null);
+const docOf = (x: EvidenceItem, sameStudy: Record<string, string> = {}) =>
+  x.ref.kind === 'study' ? docKey(x.ref.cite, sameStudy) : null;
 const STOP = new Set(
   'that than then with from this what when which more most into over about their there they them some only also very much like just'.split(
     ' ',
@@ -371,7 +373,8 @@ function evaluate(
   const reviewed = d.id in (review.stories ?? {});
   if (r.reject) return { rejected: r.reject };
   const byId = new Map(t.claims.map((c) => [c.id, c]));
-  const corpus = { name: t.name, claims: t.claims };
+  const same = t.sameStudy ?? {};
+  const corpus = { name: t.name, claims: t.claims, sameStudy: same };
   const claims = uniq(r.claims ?? d.claims).filter((id) => byId.has(id));
   if (!claims.length) return { rejected: 'no known claims left after review' };
   if (d.kind !== 'decision' && !claims.includes(d.claims[0]))
@@ -403,7 +406,7 @@ function evaluate(
   const decisive = [central, ...findings.filter((f) => f.role === 'evidence').map((f) => f.validation)].flatMap((v) =>
     [...v.supporting, ...v.contradicting, ...v.qualifying].filter((x) => x.applicability !== 'contextual'),
   );
-  const docs = new Set(decisive.map(docOf).filter(Boolean)).size;
+  const docs = new Set(decisive.map((x) => docOf(x, same)).filter(Boolean)).size;
   const sources = new Set(core.flatMap((c) => c.sources.map((s) => s.id)));
   const channels = new Set(core.flatMap((c) => c.sources.map((s) => s.channel)));
   const flipped = core.some((c) => c.decidedBy && prior(c) && prior(c)!.verdict !== c.verdict);
@@ -442,7 +445,7 @@ function evaluate(
   const weight = (x: EvidenceItem) => (x.confidence ?? 0) * (x.applicability === 'partial' ? 0.6 : 1);
   const strength = Math.max(0, ...sides.map(weight));
   const strongest = [...sides].sort((a, b) => weight(b) - weight(a))[0];
-  const independent = new Set(sides.map(docOf).filter(Boolean)).size;
+  const independent = new Set(sides.map((x) => docOf(x, same)).filter(Boolean)).size;
   const evidence =
     central.decision === 'blocked' || central.kind === 'attribution'
       ? 0

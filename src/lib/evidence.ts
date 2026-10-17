@@ -18,7 +18,8 @@ import { join } from 'node:path';
 import { hasFigure, nums } from './numbers';
 import type { ClaimVerdictView, ClaimView, Topic, Verdict } from './topics';
 
-export type Corpus = Pick<Topic, 'name' | 'claims'>;
+/** sameStudy: '<summary file>.txt' -> '<primary file>.txt' when two documents report one study (site.json). */
+export type Corpus = Pick<Topic, 'name' | 'claims'> & { sameStudy?: Record<string, string> };
 export type Stance = 'asserts' | 'denies';
 
 export type EvidenceRef =
@@ -120,6 +121,14 @@ const BASE_RATE =
 const SCOPE_HEDGE =
   /\b(though|although|however|rather than|narrow(er|ly)?|only in|limited to|not .{0,40} as such|different (setting|population|instrument|market|era|period)|in a (lab|different)|self-report(ed|s)?|proxy|indirect(ly)?|not directly|does not directly|doesn't directly|tangential|older models|earlier models|not the same)\b/i;
 const docOf = (cite: string) => cite.split('#')[0];
+/** The document a citation counts as: its file, mapped one hop through sameStudy by basename, so that a summary and
+ *  the report it summarises are one study wherever independence is counted. A self-mapping or a cycle stays put. */
+export function docKey(cite: string, sameStudy: Record<string, string> = {}): string {
+  const file = docOf(cite);
+  const base = file.split('/').pop()!;
+  const primary = sameStudy[base];
+  return primary && primary !== base ? `${file.slice(0, file.length - base.length)}${primary}` : file;
+}
 const isStudy = (x: EvidenceItem): x is EvidenceItem & { ref: { kind: 'study'; claim: string; cite: string } } =>
   x.ref.kind === 'study';
 const isJudgment = (v: Verdict | null) => v === 'right' || v === 'wrong' || v === 'partly';
@@ -136,12 +145,15 @@ export function modalityOf(text: string): Modality {
 const newest = (a: ClaimVerdictView, b: ClaimVerdictView) =>
   (b.date ?? '').localeCompare(a.date ?? '') || (b.confidence ?? 0) - (a.confidence ?? 0);
 
-/** The study verdicts on a claim, one per document: the newest record. */
-export function studyVerdicts(c: ClaimView): ClaimVerdictView[] {
+/** The study verdicts on a claim, one per study: the newest record on the primary document; a summary document
+ *  (sameStudy) only stands in when the primary has no verdict. */
+export function studyVerdicts(c: ClaimView, sameStudy: Record<string, string> = {}): ClaimVerdictView[] {
   const latest = new Map<string, ClaimVerdictView>();
-  for (const v of [...c.verdicts].sort(newest)) {
-    if (v.by === 'AI guess' || !v.cite) continue;
-    const doc = docOf(v.cite);
+  const primaryFirst = (a: ClaimVerdictView, b: ClaimVerdictView) =>
+    Number(docKey(b.cite!, sameStudy) === docOf(b.cite!)) - Number(docKey(a.cite!, sameStudy) === docOf(a.cite!)) ||
+    newest(a, b);
+  for (const v of c.verdicts.filter((x) => x.by !== 'AI guess' && x.cite).sort(primaryFirst)) {
+    const doc = docKey(v.cite!, sameStudy);
     if (!latest.has(doc)) latest.set(doc, v);
   }
   return [...latest.values()];
@@ -181,6 +193,8 @@ export function validate(
   const byId = new Map(corpus.claims.map((c) => [c.id, c]));
   const stanceOf = new Map(a.claims.map((c) => [c.id, c.stance]));
   const modality = modalityOf(a.text);
+  const same = corpus.sameStudy ?? {};
+  const keyOf = (cite: string) => docKey(cite, same);
   const problems: string[] = [];
   if (!a.claims.length) problems.push('no canonical claim referenced');
   for (const c of a.claims) if (!byId.has(c.id)) problems.push(`unknown claim ${c.id}`);
@@ -239,10 +253,10 @@ export function validate(
   });
 
   // 2. Every other study verdict on the claims stays visible, whether or not the author cited it.
-  const citedDocs = new Set(cited.filter(isStudy).map((x) => `${x.ref.claim}|${docOf(x.ref.cite)}`));
+  const citedDocs = new Set(cited.filter(isStudy).map((x) => `${x.ref.claim}|${keyOf(x.ref.cite)}`));
   const uncited: EvidenceItem[] = a.claims.flatMap(({ id, stance }) =>
-    studyVerdicts(byId.get(id) ?? ({ verdicts: [] } as unknown as ClaimView))
-      .filter((v) => !citedDocs.has(`${id}|${docOf(v.cite!)}`))
+    studyVerdicts(byId.get(id) ?? ({ verdicts: [] } as unknown as ClaimView), same)
+      .filter((v) => !citedDocs.has(`${id}|${keyOf(v.cite!)}`))
       .map((v) => studyItem(id, stance, v, false)),
   );
   const all = [...cited, ...uncited];
@@ -254,7 +268,7 @@ export function validate(
   const uncitedSupport = uncited.filter((x) => x.role === 'supports');
   const statements = cited.filter((x) => x.role === 'statement');
   const strength = Math.max(0, ...supporting.map((x) => x.confidence ?? 0));
-  const independent = new Set(supporting.filter(isStudy).map((x) => docOf(x.ref.cite))).size;
+  const independent = new Set(supporting.filter(isStudy).map((x) => keyOf(x.ref.cite))).size;
   const verbatim =
     a.claims.length > 0 &&
     a.claims.every((c) => a.text.toLowerCase().includes((byId.get(c.id)?.text ?? '\0').toLowerCase()));
@@ -292,7 +306,7 @@ export function validate(
       (x) => isStudy(x) && x.cited && isJudgment(x.verdict) && x.applicability !== 'contextual',
     );
     const sides = new Set(decisive.map((x) => x.verdict));
-    const docs = new Set(decisive.filter(isStudy).map((x) => docOf(x.ref.cite)));
+    const docs = new Set(decisive.filter(isStudy).map((x) => keyOf(x.ref.cite)));
     if (docs.size >= 2 && sides.has('right') && sides.has('wrong')) {
       status = 'supported';
       decision = 'approved';
@@ -365,10 +379,12 @@ export function validate(
       if (decision === 'approved') decision = 'qualify';
       if (status === 'supported') status = 'qualified';
     }
-    // Figures must come from a cited passage, not from the writer and not from a verdict note.
+    // Figures must come from a cited passage, not from the writer and not from a verdict note. A figure that is part
+    // of a referenced claim's own wording ("ten times as productive") is what the verdict judged, not the writer's.
     const evidenceText = [...supporting, ...qualifying].map((x) => x.passage ?? '').join('\n');
+    const claimText = a.claims.map((c) => byId.get(c.id)?.text ?? '').join('\n');
     for (const n of nums(a.text))
-      if (!hasFigure(evidenceText, n) && !a.derived?.includes(n)) {
+      if (!hasFigure(evidenceText, n) && !hasFigure(claimText, n) && !a.derived?.includes(n)) {
         limitations.push(`The figure "${n}" does not appear in the cited passages.`);
         suggestions.push(`Drop "${n}" or cite a passage that states it.`);
         status = 'unverified';

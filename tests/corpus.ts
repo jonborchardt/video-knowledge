@@ -81,9 +81,14 @@ export function claim(
 }
 
 export const corpus = (...claims: ClaimView[]): Corpus => ({ name: TOPIC, claims });
-export const topic = (claims: ClaimView[], recap: StoryInput['recap'] = []): StoryInput => ({
+export const topic = (
+  claims: ClaimView[],
+  recap: StoryInput['recap'] = [],
+  sameStudy?: Record<string, string>,
+): StoryInput => ({
   name: TOPIC,
   label: 'Demo',
   claims,
   recap,
+  ...(sameStudy ? { sameStudy } : {}),
 });

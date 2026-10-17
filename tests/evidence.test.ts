@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { type Assertion, passageReader, validate } from '../src/lib/evidence';
+import { type Assertion, docKey, passageReader, studyVerdicts, validate } from '../src/lib/evidence';
 import { DOC_A, DOC_B, DOC_C, claim, corpus, guess, reader, sources, study } from './corpus';
 
 const FASTER = 'AI tools make experienced developers faster';
@@ -340,6 +340,58 @@ describe('evidence validator', () => {
     expect(validate(fact(`${FASTER}, by twenty-five percent`, [studyRef(DOC_A)]), corpus(c), reader).decision).toBe(
       'blocked',
     );
+  });
+
+  it('two documents marked sameStudy count as one independent source', () => {
+    const same = { 'survey-b.txt': 'rct-a.txt' };
+    const c = claim('faster', FASTER, {
+      verdicts: [study('RCT A', 'right', 0.7, DOC_A), study('Summary B', 'right', 0.5, DOC_B)],
+    });
+    const v = validate(fact(FASTER, [studyRef(DOC_A), studyRef(DOC_B)]), { ...corpus(c), sameStudy: same }, reader);
+    expect(v.supporting).toHaveLength(2);
+    expect(v.independent).toBe(1);
+    expect(validate(fact(FASTER, [studyRef(DOC_A), studyRef(DOC_B)]), corpus(c), reader).independent).toBe(2);
+  });
+
+  it('docKey follows one hop and ignores cycles', () => {
+    expect(docKey('demo/sources/b.txt#L1', { 'b.txt': 'a.txt', 'a.txt': 'b.txt' })).toBe('demo/sources/a.txt');
+    expect(docKey('demo/sources/a.txt#L1', { 'a.txt': 'a.txt' })).toBe('demo/sources/a.txt');
+    expect(docKey('demo/sources/a.txt#L1')).toBe('demo/sources/a.txt');
+  });
+
+  it('the primary report, not its summary, is the one verdict per study', () => {
+    const same = { 'survey-b.txt': 'rct-a.txt' };
+    const c = claim('faster', FASTER, {
+      verdicts: [
+        study('RCT A', 'right', 0.7, DOC_A),
+        { ...study('Summary B', 'partly', 0.5, DOC_B), date: '2026-05-01' }, // newer, but a summary
+      ],
+    });
+    expect(studyVerdicts(c, same).map((v) => v.by)).toEqual(['RCT A']);
+    expect(
+      studyVerdicts(c)
+        .map((v) => v.by)
+        .sort(),
+    ).toEqual(['RCT A', 'Summary B']);
+  });
+
+  it('a figure that is part of the referenced claim wording is not an invented figure', () => {
+    const TENX = 'Engineers using AI agents are ten times as productive';
+    const c = claim('tenx', TENX, { verdicts: [study('Field C', 'wrong', 0.7, DOC_C, 'measured 18%, not 10x')] });
+    const passageWithoutTen = (cite: string) => (cite === DOC_C ? 'experienced developers were slower' : null);
+    const d = validate(
+      fact(`The evidence does not support "${TENX}"`, [studyRef(DOC_C, c.id)], 'denies', c.id),
+      corpus(c),
+      passageWithoutTen,
+    );
+    expect(d.decision).toBe('approved');
+    const extra = validate(
+      fact(`The evidence does not support "${TENX}" in 2024`, [studyRef(DOC_C, c.id)], 'denies', c.id),
+      corpus(c),
+      passageWithoutTen,
+    );
+    expect(extra.decision).toBe('blocked');
+    expect(extra.limitations.join(' ')).toMatch(/"2024"/);
   });
 
   it('rejects a figure that rounds a passage figure', () => {
