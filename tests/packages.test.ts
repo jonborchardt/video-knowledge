@@ -18,6 +18,7 @@ import {
   releaseCheck,
   scriptDirs,
   sentences,
+  toJson,
   validateScript,
 } from '../src/lib/script';
 import { loadStories } from '../src/lib/stories';
@@ -41,6 +42,18 @@ describe.skipIf(!dirs.length)('committed script packages', () => {
     it('the package rebuilds byte-for-byte without transcripts', () => {
       const story = loadStories(topic)!.stories.find((s) => s.id === script.story)!;
       const again = buildPackage(story, t, read, loadReview(topic), pkg.inputs, process.cwd(), () => null, pkg);
+      // Compare the persisted body first so a mismatch names the field, then the fingerprint (which also covers passages).
+      const persisted = (p: EvidencePackage) => {
+        const { fingerprint: _f, generatedAt: _g, ...body } = JSON.parse(toJson(p)) as EvidencePackage;
+        void [_f, _g];
+        return body;
+      };
+      expect(persisted(again)).toEqual(persisted(pkg));
+      const passages = again.claims.flatMap((c) => c.evidence.map((e) => [e.cite, e.passage]));
+      expect(
+        passages.every(([, p]) => p !== null),
+        'every passage read',
+      ).toBe(true);
       expect(again.fingerprint, slug).toBe(pkg.fingerprint);
     });
 
