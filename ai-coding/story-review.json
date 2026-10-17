@@ -1,0 +1,283 @@
+{
+ "applicability": {
+  "ai-coding/developers-overestimate-how-much-tools-speed|asserts|ai-coding/sources/2302.06590.txt#L184-L188": {
+   "level": "direct",
+   "reason": "the trial compared participants' estimated gain with the measured gain, which is exactly the claim"
+  },
+  "ai-coding/coding-tools-amplify-experienced-engineers-far|denies|ai-coding/sources/2507.09089v2.txt#L135-L141": {
+   "level": "partial",
+   "reason": "METR's own trial had only experienced developers; the comparison with novices comes from prior work it cites"
+  },
+  "ai-coding/engineers-who-adopt-agentic-coding-about|denies|ai-coding/sources/4859137.txt#L489-L493": {
+   "level": "partial",
+   "reason": "measures 2023-24 assistants, not agentic coding; it bounds the plausible gain rather than testing the 10x claim"
+  },
+  "ai-coding/real-enterprise-codebases-yields-modest-average|asserts|ai-coding/sources/2501.06972.txt#L245-L251": {
+   "level": "contextual",
+   "reason": "bespoke migration pipelines with fine-tuned models and engineers' estimates; not average developer work in an enterprise codebase"
+  },
+  "ai-coding/measured-slowdown-mainly-artifact-older-models|asserts|ai-coding/sources/metr-2026-experiment-design.txt#L61-L62": {
+   "level": "partial",
+   "reason": "METR's own belief with selection effects it calls very weak evidence; models are not separated from other changes"
+  },
+  "ai-coding/assisted-code-harder-later-developers-maintain|asserts|ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892": {
+   "level": "contextual",
+   "reason": "a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers"
+  },
+  "ai-coding/generated-code-frequently-contains-security-vulnerabilities|asserts|ai-coding/sources/2603.28592v3.txt#L918-L933": {
+   "level": "partial",
+   "reason": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
+  },
+  "ai-coding/vibe-coded-apps-work-prototypes-but|asserts|ai-coding/sources/2607.21652v1.txt#L18-L28": {
+   "level": "partial",
+   "reason": "supports the prototype half; the production break-down half is mostly unstudied, not shown"
+  },
+  "ai-coding/generated-code-drifts-codebase-established-conventions|asserts|ai-coding/sources/2507.09089v2.txt#L1015-L1021": {
+   "level": "partial",
+   "reason": "qualitative reports from 16 developers, not a measured drift rate against a human baseline"
+  },
+  "ai-coding/goal-loop-commands-prompt-agent-until|asserts|ai-coding/sources/airbnb-test-migration.txt#L19-L22": {
+   "level": "partial",
+   "reason": "a bespoke retry pipeline for one migration, not a generic agent loop command on a backlog"
+  },
+  "ai-coding/getting-good-results-coding-tools-takes|asserts|ai-coding/sources/2607.21652v1.txt#L1518-L1526": {
+   "level": "partial",
+   "reason": "mention counts across sources, not a measurement of outcome variance by expertise"
+  }
+ },
+ "stories": {
+  "conflict:developers-overestimate-how-much-tools-speed": {
+   "coherence": { "score": 0.9, "reason": "One question: can developers tell whether AI is speeding them up? Two trials measured perception against the clock and disagree." },
+   "question": "Do developers know whether AI is actually making them faster?",
+   "title": "Do Programmers Know If AI Is Actually Making Them Faster?",
+   "alternates": [
+    "Why Developers Misjudge How Much AI Speeds Them Up",
+    "The Study Where Developers Felt 20% Faster and Were 19% Slower"
+   ],
+   "whyWatch": "Every developer has a feeling about this. Two randomized trials checked the feeling against the stopwatch and got opposite answers, which is the most useful thing a viewer can learn about their own estimate.",
+   "tension": "METR: developers forecast 24% faster, felt 20% faster, were 19% slower. Peng's Copilot trial: both groups guessed about 35% and the measured gain was 55.8%. Overestimate in one, underestimate in the other.",
+   "evidenceNeeded": "Trials that record developers' predicted or perceived speedup alongside a measured one, on comparable tasks.",
+   "premise": "The disagreement is the story and it is well measured on both sides. METR 2025 (16 experienced open-source developers, 246 tasks in their own mature repos, early-2025 tools) found a 19% slowdown against a forecast of 24% faster and an after-the-fact estimate of 20% faster; experts predicted 38-39%. Peng's 2023 Copilot trial (freelancers, a greenfield HTTP server task) found a 55.8% speedup that participants underestimated at about 35%. METR's 2026 update adds that self-reports can be very unreliable and that its new data are too selection-biased to measure. The likely explanation, task familiarity and codebase maturity, is the resolution the video should offer as a hypothesis, not a finding.",
+   "arc": {
+    "hook": "Ask the viewer to guess how much faster AI makes them, then show what happened when two trials asked the same of their participants.",
+    "conflict": "Two randomized trials, opposite errors: experienced maintainers overestimated and got slower; freelancers on a fresh task underestimated and got much faster.",
+    "evidence": "METR's forecast-versus-measured numbers and acceptance rates; Peng's estimate-versus-measured numbers; METR 2026's warning about self-reports and selection.",
+    "resolution": "Perception tracks effort saved on the parts AI does, not time spent on the parts it creates; which dominates depends on task familiarity and codebase maturity (a hypothesis both papers gesture at).",
+    "takeaway": "Measure, don't ask: time a week of comparable tasks with and without the tool."
+   },
+   "qualificationsAccepted": true,
+   "format": "long-form",
+   "formatWhy": "Two trials with contrasting designs, a third document on why self-reports fail, and twenty-one sources repeating the belief."
+  },
+  "decision:who-benefits": {
+   "coherence": {
+    "score": 0.9,
+    "reason": "One question, who gains more from AI coding tools, answered by the senior-versus-junior results across six trials, the concentration of gains on unfamiliar or routine work, and the role of skill in using the tools."
+   },
+   "claims": [
+    "ai-coding/coding-tools-amplify-experienced-engineers-far",
+    "ai-coding/productivity-gains-concentrate-among-developers-new",
+    "ai-coding/getting-good-results-coding-tools-takes"
+   ],
+   "question": "Does AI help junior or senior developers more?",
+   "title": "Does AI Help Junior or Senior Developers More?",
+   "alternates": [
+    "Who Really Gets the AI Productivity Boost?",
+    "The Experience Paradox in AI Coding Studies"
+   ],
+   "whyWatch": "Influencers say AI is a multiplier for experts. Most trials found the opposite, one found a hint the other way, and the reason they differ says something about when the tools help anyone.",
+   "tension": "'Amplifies experts far more' against trials where juniors and short-tenure developers gained most and experienced maintainers were slowed.",
+   "evidenceNeeded": "Trials that split the measured gain by experience or codebase familiarity, on the same tasks.",
+   "premise": "The 'far more for experts' claim is not supported: Microsoft's field experiment (short-tenure 27-39% versus long-tenure 8-13%, mostly not significant), Shan's RCT, Peng's Copilot trial and the code-ownership experiment all found gains concentrated among less experienced developers, and METR found experienced maintainers slowed, more so on tasks they knew well. The Google trial is the exception: on code unfamiliar to everyone, seniors gained if anything more, not significantly. That pattern is the resolution: gains concentrate where the developer lacks context, which juniors usually do and seniors do on unfamiliar code. Skill in using the tools matters (habitual AI users' code scored better downstream in the Echoes trial) but the evidence for a steep skill curve is thin and partly self-reported, and METR saw no improvement over the first 50 hours.",
+   "arc": {
+    "hook": "Two engineers, one senior, one junior, both switch on the same tool. The influencers say the senior pulls ahead. The trials say otherwise.",
+    "conflict": "Five trials point one way, Google's points the other, and 'far more' for experts has no support anywhere.",
+    "evidence": "Microsoft/Accenture by tenure, Shan's moderation analysis, Peng's heterogeneity, the code-ownership experiment, METR's slowdown by task familiarity, and Google's unfamiliar-code design.",
+    "resolution": "The tools help most where the developer has the least context. Juniors have less of it everywhere; seniors have less of it on unfamiliar code. Using the tools well is a skill, but not yet a measured steep one.",
+    "takeaway": "Point the tools at unfamiliar work, expect less on code you know by heart, and treat '10x for experts' as marketing."
+   },
+   "qualificationsAccepted": true,
+   "format": "long-form",
+   "formatWhy": "Six trials with a consistent split and one exception to explain, nine sources voicing the belief and two denying it."
+  },
+  "conflict:productivity-gains-concentrate-among-developers-new": {
+   "reject": "folded into decision:who-benefits: the same question from the other side"
+  },
+  "conflict:coding-tools-amplify-experienced-engineers-far": {
+   "reject": "folded into decision:who-benefits"
+  },
+  "decision:quality-and-understanding": {
+   "coherence": {
+    "score": 0.85,
+    "reason": "One question, whether AI-written code is harder to live with, answered by the maintainability trial, the issue rates in AI commits, and what AI assistance does to the author's own understanding. The technical-debt claim is carried in the premise as the belief the trial contradicts, not as a finding."
+   },
+   "claims": [
+    "ai-coding/assisted-code-harder-later-developers-maintain",
+    "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+    "ai-coding/developers-should-able-explain-generated-code"
+   ],
+   "question": "Is AI-written code harder to maintain?",
+   "title": "Is AI-Written Code Harder to Maintain?",
+   "alternates": [
+    "The Technical-Debt Fear, Tested in a Randomized Trial",
+    "More Code, Less Understanding: What AI Does to Code Ownership"
+   ],
+   "whyWatch": "Eight sources warn that fast AI code piles up debt. The one preregistered trial that handed AI-written code to new developers found no difference, and a 302k-commit study found persisting issues with no human baseline. The viewer gets to see what a null result does and does not prove.",
+   "tension": "Widespread fear of debt against a null trial, with self-reports and an uncontrolled commit study in between.",
+   "evidenceNeeded": "Later developers' time and code health when evolving AI-written versus human-written code, and issue rates in AI commits against a human baseline.",
+   "premise": "The Echoes trial (75 mostly professional developers manually evolving a small Java app written with or without AI, preregistered) found no reliable difference in completion time, CodeHealth or coverage, and was powered only to rule out large effects; that is the central finding and its limit. Against it: Shan's follow-up survey linked AI use to lower self-rated maintainability (self-reports), 11 of 47 review sources raise concerns (reports, not comparisons), and the 302k-commit study found 22.7% of AI-introduced issues persisting with no human-written baseline, most of them smells rather than vulnerabilities. The code-ownership experiment adds the mechanism that worries people: after AI-assisted tasks, authors answered fewer questions about their own code correctly (median 87.5% versus 100%). The claim that AI code 'accumulates more debt than hand-built' is therefore the belief the trial contradicts, not a finding the video can assert.",
+   "arc": {
+    "hook": "The warning everyone repeats: AI code is a debt bomb. One team ran the experiment.",
+    "conflict": "The null trial against the commit study, the survey and the review's concerns.",
+    "evidence": "Echoes design and result with its power limit; the 302k-commit persistence figures and the missing baseline; the security issue rates and what counts as an issue; the code-ownership understanding gap.",
+    "resolution": "No measured maintainability penalty yet, within the limits of one small trial; a measured understanding penalty for the author; and issue counts that need a baseline before they mean 'more'.",
+    "takeaway": "Review for understanding, not just correctness: the one measured harm is that authors know their AI-assisted code less well."
+   },
+   "qualificationsAccepted": true,
+   "format": "long-form",
+   "formatWhy": "A preregistered trial, a large commit study, a survey, a review and an experiment on understanding, with eight sources voicing the fear."
+  },
+  "conflict:assisted-code-harder-later-developers-maintain": {
+   "reject": "folded into decision:quality-and-understanding"
+  },
+  "conflict:software-built-quickly-accumulates-more-technical": {
+   "reject": "folded into decision:quality-and-understanding; as a standalone fact it is contradicted by the trial and has no measured human baseline"
+  },
+  "decision:how-much-faster": {
+   "coherence": {
+    "score": 0.9,
+    "reason": "One question, the size of the productivity gain, answered by the field trials' estimate, the slowdown trial, the 10x claim it bounds, and the argument that newer models change the answer. The perception claim is its own story and is dropped."
+   },
+   "claims": [
+    "ai-coding/tools-slowed-experienced-open-source-developers",
+    "ai-coding/real-enterprise-codebases-yields-modest-average",
+    "ai-coding/engineers-who-adopt-agentic-coding-about",
+    "ai-coding/measured-slowdown-mainly-artifact-older-models"
+   ],
+   "question": "How much faster does AI actually make programmers?",
+   "title": "How Much Faster Does AI Actually Make Programmers?",
+   "alternates": [
+    "2x, 10x, or Slower? What the Trials Found",
+    "The METR Study Everyone Cites, Explained"
+   ],
+   "whyWatch": "The claims run from 10x to 'it slows you down', and both extremes cite studies. The trials fit together once you look at who was measured doing what.",
+   "tension": "Ten-times claims against field trials in the twenties of percent and one trial that found experienced maintainers 19% slower.",
+   "evidenceNeeded": "Randomized or quasi-experimental measurements of task time or output with and without AI tools, on real work, by setting.",
+   "premise": "Field trials put the average gain in the twenties: Microsoft/Accenture (4,867 developers, 26% more weekly PRs), Google (96 engineers, about 21% less time on an enterprise task, confidence interval crossing zero) and Shan's field study (18% more user stories, self-selected usage). METR 2025 found the opposite sign for 16 experienced open-source maintainers in their own mature repos: 19% slower with early-2025 tools. The 10x claim has no supporting measurement; the field gain and Anthropic's self-reported 50% bound it, and neither measured agentic coding. METR's 2026 update says the slowdown was probably specific to early 2025 but calls its new data very weak evidence because of selection effects. Google's migration figures (50% to 89% savings) are bespoke pipelines and engineers' estimates, context only.",
+   "arc": {
+    "hook": "Three numbers on screen: 10x, 26%, minus 19%. All of them come with a study attached.",
+    "conflict": "The hype and the slowdown both cite trials; the question is what each trial measured.",
+    "evidence": "Microsoft/Accenture, Google and Shan on real work; METR 2025 on mature repos with experts; METR 2026 on what changed and why it cannot tell; the absence of any 10x measurement.",
+    "resolution": "Twenties of percent on average work, less or negative for experts in familiar code, unknown for today's agentic tools; 10x is unmeasured.",
+    "takeaway": "Expect a quarter, not a multiple, and expect less on the code you know best."
+   },
+   "qualificationsAccepted": true,
+   "format": "long-form",
+   "formatWhy": "Five trials and reports with a coherent spread of results, a claim to bound, a time dimension, and thirty-plus sources voicing the beliefs."
+  },
+  "surprise:assistance-must-reliable-save-experts-time": {
+   "coherence": {
+    "score": 0.85,
+    "reason": "One question, why AI help can cost experts time, answered by the acceptance and review-time finding, the shift of the bottleneck to review, and the skill needed to verify."
+   },
+   "claims": [
+    "ai-coding/assistance-must-reliable-save-experts-time",
+    "ai-coding/speeds-generation-human-attention-review-understanding",
+    "ai-coding/developers-need-solid-programming-knowledge-validate"
+   ],
+   "question": "Why can AI assistance cost expert programmers more time than it saves?",
+   "title": "Why Checking AI Code Can Eat the Time It Saves",
+   "alternates": [
+    "The Verification Tax on AI-Assisted Coding",
+    "Why Experts Reject Most AI Code Suggestions"
+   ],
+   "whyWatch": "The slowdown result is famous; the mechanism is less known and more useful: experts accepted under half of the suggestions and paid for the rest in review.",
+   "tension": "Generation got cheap; checking did not, and for people who could have written it themselves the check costs more than the typing saved.",
+   "evidenceNeeded": "Acceptance rates and time spent reviewing or fixing AI output for experienced developers, and where the bottleneck sits in AI-heavy workflows.",
+   "premise": "METR's developers accepted under 44% of Cursor generations and lost significant time reviewing, testing and modifying output before rejecting it; low reliability is one of the listed causes of the 19% slowdown. Google's migration report describes throttling change generation so that reviewers could keep up, and the vibe-coding review names the 'verification gap' as its central synthesis. Anthropic's engineers skip the tool for short or context-heavy tasks and describe a paradox of supervision: checking needs the skills overuse may erode. Limits: the acceptance figure is from 16 developers with early-2025 tools; the bottleneck evidence is a company report and a review of reports; the skill claims are qualitative.",
+   "arc": {
+    "hook": "A suggestion appears in the editor. For an expert, the cheapest move is often to delete it. Why?",
+    "conflict": "The tool saved typing; it created checking, and checking is the expensive part for someone who already knows the answer.",
+    "evidence": "METR's acceptance rate and review time; Google throttling generation to review capacity; the verification gap; Anthropic's supervision paradox.",
+    "resolution": "AI help pays when the check is cheaper than the work it replaces; for experts on familiar code it often is not, and the skill to check cannot be outsourced.",
+    "takeaway": "Measure your acceptance rate; if you delete most of what the tool writes, use it for the work you cannot already do."
+   },
+   "qualificationsAccepted": true,
+   "format": "long-form",
+   "formatWhy": "A trial result with a mechanism, a company report, a review and an internal study, across three claims."
+  },
+  "decision:where-the-bottleneck-moves": {
+   "reject": "folded into surprise:assistance-must-reliable-save-experts-time (review as the bottleneck); the production claim is its own story"
+  },
+  "conflict:writing-code-never-main-bottleneck-software": {
+   "coherence": { "score": 0.8, "reason": "One question: if coding was never the bottleneck, how much can faster coding help end to end?" },
+   "question": "If writing code was never the bottleneck, how much can faster code generation help?",
+   "title": "Was Writing Code Ever the Bottleneck?",
+   "alternates": [
+    "Why a Faster Keyboard Doesn't Ship Software Faster",
+    "The Part of Software Delivery AI Doesn't Touch"
+   ],
+   "whyWatch": "Eighteen sources say it and three deny it; the two reports that touch it both found review and rollout, not typing, set the pace.",
+   "tension": "A plausible systems argument with only indirect measurements.",
+   "evidenceNeeded": "End-to-end delivery time with and without AI tools, decomposed by phase.",
+   "research": "Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement.",
+   "format": "short"
+  },
+  "conflict:specs-code-workflows-ignore-generated-not": {
+   "coherence": { "score": 0.8, "reason": "One question about one workflow." },
+   "question": "Can you ignore the generated code if the specification is good enough?",
+   "title": "Can You Ignore the Code If the Spec Is Good?",
+   "alternates": [
+    "Spec-Driven Development: Where the Evidence Stops",
+    "Why 'Never Read the Code' Keeps Failing in Practice"
+   ],
+   "whyWatch": "Eight sources say spec-to-code without reading the output fails, two say it works; the corpus has the understanding-loss experiment and little else.",
+   "tension": "A workflow argument with one adjacent experiment.",
+   "evidenceNeeded": "Outcomes of teams that ship generated code unread versus teams that review it, on defects and later change cost.",
+   "research": "The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one.",
+   "format": "short"
+  },
+  "conflict:generated-code-drifts-codebase-established-conventions": {
+   "coherence": { "score": 0.8, "reason": "One question about one failure mode." },
+   "question": "Does AI-generated code follow your codebase's conventions?",
+   "title": "Does AI Code Follow Your Team's Conventions?",
+   "alternates": [
+    "Why AI Code Looks Right and Fits Wrong",
+    "The Cleanup Cost Nobody Measures"
+   ],
+   "whyWatch": "Every team that adopts the tools reports the cleanup; nobody has measured it.",
+   "tension": "A universal complaint and no number.",
+   "evidenceNeeded": "A measured rate of convention violations in AI commits against a human baseline.",
+   "research": "Only qualitative reports from 16 METR developers and a note on context consistency in the commit study; no measured drift rate against a human baseline.",
+   "format": "short"
+  },
+  "surprise:vibe-coded-apps-work-prototypes-but": {
+   "coherence": { "score": 0.8, "reason": "One claim with two halves, only one of them studied." },
+   "question": "Do vibe-coded apps survive contact with production?",
+   "title": "Do Vibe-Coded Apps Survive Production?",
+   "alternates": [
+    "Prototype in a Day, Rewrite in a Month?",
+    "Where the Evidence on Vibe Coding Runs Out"
+   ],
+   "whyWatch": "Sixteen sources say vibe-coded apps break in production. The review says the prototype half is well supported and the break-down half is mostly unstudied.",
+   "tension": "A widely shared belief whose interesting half has no evidence.",
+   "evidenceNeeded": "Case series or longitudinal data on vibe-coded apps taken to production.",
+   "research": "The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data.",
+   "format": "needs-research"
+  },
+  "conflict:goal-loop-commands-prompt-agent-until": {
+   "coherence": { "score": 0.8, "reason": "One question about one practice." },
+   "question": "Can you leave an AI agent running on your backlog unattended?",
+   "title": "Can You Leave an AI Agent Running on Your Backlog?",
+   "alternates": [
+    "What Airbnb's Migration Loop Proves and What It Doesn't",
+    "Unattended Agents: One Case, Many Claims"
+   ],
+   "whyWatch": "Six sources sell the loop; the one documented case is a bespoke pipeline with a retry cap and a 75% first-pass rate.",
+   "tension": "A generic promise and one specific case.",
+   "evidenceNeeded": "Outcomes of generic agent loop commands on real backlogs: completion rate, review burden, regressions.",
+   "research": "Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands.",
+   "format": "short"
+  }
+ }
+}

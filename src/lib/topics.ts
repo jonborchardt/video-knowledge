@@ -9,6 +9,7 @@ const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 // The slice of `watcher report --json` this site reads.
 interface VerdictRecord {
   method?: string;
+  date?: string;
   verdict: Verdict;
   confidence?: number;
   note?: string;
@@ -80,6 +81,7 @@ export interface ClaimView {
   note: string;
   decidedBy: string | null; // a study's display name, or null when the AI guess decides
   studies: number; // documents with a verdict on this claim
+  lean: string | null; // from <topic>/lean.json: pro | pro-hype | calibrating | skeptic | neutral
   sources: ClaimSourceView[]; // every source that asserts or denies it, with its quote
   verdicts: ClaimVerdictView[]; // every recorded judgment: the AI guess and each study
 }
@@ -98,6 +100,7 @@ export interface ClaimVerdictView {
   confidence: number | null;
   note: string;
   cite: string | null; // '<topic>/sources/<file>.txt#L10-L24', a path in the repo
+  date: string | null; // YYYY-MM-DD the verdict was recorded; a later record on the same document supersedes
 }
 export interface SourceClaimView {
   id: string;
@@ -161,7 +164,7 @@ export interface Topic {
 
 const ROOT = process.cwd();
 const readJson = <T>(p: string): T | null => (existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as T) : null);
-const VAL: Record<string, number> = { right: 1, partly: 0.5, wrong: -1 };
+export const VAL: Record<string, number> = { right: 1, partly: 0.5, wrong: -1 };
 
 /** Topic folders that have a report with claims. */
 export function topicNames(): string[] {
@@ -211,6 +214,7 @@ export function loadTopic(name: string): Topic {
             confidence: v.confidence ?? null,
             note: v.note ?? '',
             cite: v.source ?? null,
+            date: v.date ?? null,
           });
         claimVerdicts.set(a.claim, vs);
       }
@@ -226,6 +230,7 @@ export function loadTopic(name: string): Topic {
     note: c.note ?? '',
     decidedBy: c.source ? docName(c.source) : null,
     studies: c.documents.length,
+    lean: lean[c.id] ?? null,
     sources: claimSources.get(c.id) ?? [],
     verdicts: (claimVerdicts.get(c.id) ?? []).sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0)),
   });

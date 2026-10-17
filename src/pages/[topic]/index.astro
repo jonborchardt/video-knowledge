@@ -6,6 +6,7 @@ import SourceDetails from '../../components/SourceDetails.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import SurpriseItem from '../../components/SurpriseItem.astro';
 import VerdictBadge from '../../components/VerdictBadge.astro';
+import { loadStories } from '../../lib/stories';
 import { loadTopic, topicNames, type Topic } from '../../lib/topics';
 import { href } from '../../lib/url';
 
@@ -13,6 +14,7 @@ export function getStaticPaths() {
   return topicNames().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
 }
 const { t } = Astro.props as { t: Topic };
+const stories = loadStories(t.name);
 
 const tabs = [
   { id: 'recap', label: 'Recap' },
@@ -113,6 +115,16 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
             `Every claim gets an AI guess with a one-line reason${t.studies ? `, and the ${t.studies} studies in the sources folder override it where they speak` : ''}. The tabs below say what holds up and which sources are worth your time.`
         }
       </p>
+      {
+        stories && (
+          <p class="mt-2 text-sm">
+            <a href={href(`/${t.name}/stories/`)}>
+              {stories.stories.length} story ideas for videos,{' '}
+              {stories.stories.filter((s) => s.readiness === 'ready').length} ready
+            </a>
+          </p>
+        )
+      }
     </div>
     <ul
       class="grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 lg:[grid-template-columns:var(--cols)]"

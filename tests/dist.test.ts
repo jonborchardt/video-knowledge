@@ -2,12 +2,18 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { storyTopicNames } from '../src/lib/stories';
 import { topicNames } from '../src/lib/topics';
 
 const DIST = join(process.cwd(), 'dist');
 const SITE = 'https://jonborchardt.github.io';
 const BASE = '/video-knowledge/';
-const pages = ['index.html', 'about/index.html', ...topicNames().map((n) => `${n}/index.html`)];
+const pages = [
+  'index.html',
+  'about/index.html',
+  ...topicNames().map((n) => `${n}/index.html`),
+  ...storyTopicNames().map((n) => `${n}/stories/index.html`),
+];
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
   it.each(pages)('%s exists without template leaks', (p) => {
@@ -38,6 +44,16 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       (d) => d.isDirectory() && !['_astro', 'og'].includes(d.name),
     );
     expect(dirs.map((d) => d.name).sort()).toEqual(['about', ...topicNames()].sort());
+  });
+
+  it('story pages list every candidate with its readiness, and the topic page links to them', () => {
+    for (const n of storyTopicNames()) {
+      const html = readFileSync(join(DIST, n, 'stories', 'index.html'), 'utf8');
+      expect(html.match(/<details/g)?.length).toBeGreaterThanOrEqual(1);
+      expect(html).toMatch(/<span[^>]*>(Ready|Needs review|Needs research)<\/span>/);
+      expect(html).toContain('Evidence audit');
+      expect(readFileSync(join(DIST, n, 'index.html'), 'utf8')).toContain(`href="${BASE}${n}/stories/"`);
+    }
   });
 
   it('serves a 404 page', () => {

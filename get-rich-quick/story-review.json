@@ -1,0 +1,335 @@
+{
+ "applicability": {
+  "get-rich-quick/experienced-day-trader-can-multiply-small|denies|get-rich-quick/sources/chague-day-trading-for-a-living.txt#L219-L229": {
+   "level": "contextual",
+   "reason": "a base rate for Brazilian index-futures day traders cannot rule out one momentum-stock trader multiplying an account in a month; it shows how rare large gains were in that population"
+  },
+  "get-rich-quick/most-retail-day-traders-lose-money|asserts|get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62": {
+   "level": "partial",
+   "reason": "retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading"
+  },
+  "get-rich-quick/retail-day-traders-have-edge-trading|asserts|get-rich-quick/sources/chague-day-trading-for-a-living.txt#L384-L393": {
+   "level": "partial",
+   "reason": "measured in index futures, not large-cap stocks; the HFT mechanism is the same but the venue differs"
+  },
+  "get-rich-quick/network-marketing-success-learnable-skill-rather|denies|get-rich-quick/sources/pluchino-talent-vs-luck.txt#L409-L416": {
+   "level": "contextual",
+   "reason": "a generic agent-based simulation of talent versus luck, not a study of network marketing"
+  },
+  "get-rich-quick/advice-people-who-got-rich-quickly|asserts|get-rich-quick/sources/pluchino-talent-vs-luck.txt#L137-L142": {
+   "level": "contextual",
+   "reason": "models why the luckiest look the most talented; it says nothing about advice from people who got rich quickly"
+  },
+  "get-rich-quick/outsized-financial-success-depends-heavily-luck|asserts|get-rich-quick/sources/pluchino-talent-vs-luck.txt#L421-L435": {
+   "level": "partial",
+   "reason": "a toy agent-based model, not data on real fortunes; it supports the mechanism, not the measured share of luck"
+  },
+  "get-rich-quick/commission-free-brokers-sell-order-flow|asserts|get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136": {
+   "level": "direct",
+   "reason": "the passage documents payment for order flow and measures the spread cost retail pays; 'indirect' describes the cost, not a limit on the study"
+  },
+  "get-rich-quick/retail-trading-bots-not-beat-market|asserts|get-rich-quick/sources/ftc-dk-automation-press-release.txt#L37-L37": {
+   "level": "contextual",
+   "reason": "an enforcement allegation that few customers of one firm made money from its bot; no performance measurement against the market"
+  },
+  "get-rich-quick/sports-betting-bankroll-management-small-units|denies|get-rich-quick/sources/nber-w33108-sports-betting.txt#L73-L80": {
+   "level": "contextual",
+   "reason": "the paper documents negative expected returns for the typical bettor and does not test the bankroll strategy the claim describes"
+  },
+  "get-rich-quick/most-new-businesses-including-online-stores|asserts|get-rich-quick/sources/taylor-case-against-mlm.txt#L1010-L1022": {
+   "level": "partial",
+   "reason": "second-hand SBA and NFIB figures for small businesses generally; nothing on online stores"
+  },
+  "get-rich-quick/most-new-businesses-including-online-stores|asserts|get-rich-quick/sources/bls-establishment-survival.txt#L555-L568": {
+   "level": "direct",
+   "reason": "the official survival table decides the claim as worded: it measures exactly how many close within a few years, and the answer is about half within five"
+  },
+  "get-rich-quick/people-selling-courses-about-money-making|asserts|get-rich-quick/sources/ftc-automators-complaint.txt#L289-L293": {
+   "level": "partial",
+   "reason": "one firm's founders, per an FTC complaint, earned from selling the opportunity; it is an instance of the pattern, not a measure of course sellers generally"
+  },
+  "get-rich-quick/beginners-experience-can-make-real-money|denies|get-rich-quick/sources/ftc-automators-complaint.txt#L121-L131": {
+   "level": "contextual",
+   "reason": "allegations about buyers of one firm's 'AI' stores; it cannot rule out beginners earning from other AI side hustles"
+  }
+ },
+ "stories": {
+  "decision:mlm-and-seminars": {
+   "coherence": {
+    "score": 0.9,
+    "reason": "One question, how much MLM participants earn, answered in three acts: the income distribution, where the money comes from (recruiting, not retail), and why the structure keeps most people at the bottom. Wholesaling and rental-property debt were a different subject and are dropped."
+   },
+   "claims": [
+    "get-rich-quick/most-mlm-participants-earn-little-nothing",
+    "get-rich-quick/mlm-income-comes-mainly-recruiting-leading",
+    "get-rich-quick/recruiting-downline-gives-mlm-participants-leverage",
+    "get-rich-quick/exponential-recruiting-exhausts-population-within-dozen"
+   ],
+   "question": "How much money do MLM participants actually make?",
+   "title": "How Much Money Do MLM Participants Actually Make?",
+   "alternates": [
+    "Can You Really Get Rich Recruiting People Into an MLM?",
+    "What MLM Income Disclosures Admit in the Fine Print"
+   ],
+   "whyWatch": "Everyone has been pitched by a friend. The companies' own income disclosures, a nationally representative survey and a 30-company analysis all say the same thing, and the pitch's central promise, leveraged income from a downline, is where the numbers are most revealing.",
+   "tension": "The pitch sells leverage: recruit and earn from everyone below you. The disclosures show the leverage is real for a fraction of a percent and the structure guarantees most people sit at the bottom.",
+   "evidenceNeeded": "Income distributions for participants net of expenses, and evidence on whether income comes from recruiting or retail sales.",
+   "premise": "Four independent documents answer the question the same way, each with a limit the video must state. AARP's 2018 probability sample of 601 participants found 47% lost money and 25% made any profit, self-reported. The FTC's 2024 review of 70 income disclosures found most participants made $1,000 or less a year, before expenses. Taylor's analysis of 30 companies gets to 99.6% losing money only after subtracting required purchases, so that figure depends on his method. The downline promise is structurally true (the pay plans do route income from recruits) and practically false for almost everyone: in rank tables over 90% sit in the lowest cohort averaging under $100. The exhaustion arithmetic is illustrated by Taylor, not tested by any study.",
+   "arc": {
+    "hook": "A friend's message: join under me, build a team, earn while you sleep. How much do people in that position actually make?",
+    "conflict": "The companies publish income disclosures. Read one aloud: median earnings, share with zero income, and what the fine print says is not deducted.",
+    "evidence": "AARP's survey (47% lost money), the FTC's 70-disclosure review (most under $1,000 a year before expenses), Taylor's 30-company analysis (99.6% lose after required purchases, by his method), and the rank tables showing where the downline income goes.",
+    "resolution": "The leverage exists, for the top fraction of a percent, because the plans pay for recruiting rather than retail; most participants are structurally at the bottom.",
+    "takeaway": "Ask for the income disclosure before joining, read the expense fine print, and treat 'leveraged income' as the company's revenue model rather than yours."
+   },
+   "qualificationsAccepted": true,
+   "format": "long-form",
+   "formatWhy": "Four documents from three kinds of source (survey, regulator, independent analyst), five to six sources repeating the pitch, and a structural argument to explain; enough for three acts."
+  },
+  "surprise:recruiting-downline-gives-mlm-participants-leverage": {
+   "reject": "folded into decision:mlm-and-seminars: the downline question is the second act of the MLM income story"
+  },
+  "contradicted:network-marketing-success-learnable-skill-rather": {
+   "coherence": { "score": 0.8, "reason": "One question: is MLM success skill or position in the chain?" },
+   "question": "Is MLM success a skill you can learn, or a matter of when you joined?",
+   "title": "Is MLM Success a Skill, or Just Being Early?",
+   "alternates": [
+    "Why the Top of an MLM Is Full of People Who Joined First",
+    "Can Training Really Make You an MLM Winner?"
+   ],
+   "whyWatch": "Every MLM sells training on the premise that success is learnable. If position in the chain decides outcomes, the training is a fee for a lottery ticket.",
+   "tension": "The industry says skill; the one court finding in the corpus says seniority.",
+   "evidenceNeeded": "Earnings related to join date and to training received, within the same company.",
+   "research": "Only the UK Amway judgment quoted by Taylor bears on skill versus position, and it is one company; the talent-versus-luck simulation is generic. A study relating MLM earnings to join date or training would settle it.",
+   "format": "short",
+   "formatWhy": "One court finding and one generic simulation: a segment inside the MLM video, not a film of its own."
+  },
+  "decision:trading-and-betting": {
+   "coherence": {
+    "score": 0.9,
+    "reason": "One question, whether most people who day trade lose and whether anyone beats the odds, answered by the base rate, the size of the profitable minority, the HFT explanation and the effect of trading frequency. Options strategies and sports betting are different markets with their own evidence and are dropped."
+   },
+   "claims": [
+    "get-rich-quick/most-retail-day-traders-lose-money",
+    "get-rich-quick/disciplined-proven-strategy-lets-retail-day",
+    "get-rich-quick/retail-day-traders-have-edge-trading",
+    "get-rich-quick/trading-fewer-higher-quality-setups-beats"
+   ],
+   "question": "Do most people who day trade lose money, and can anyone beat the odds?",
+   "title": "Do 97% of Day Traders Really Lose Money?",
+   "alternates": [
+    "Can Anyone Make a Living Day Trading?",
+    "What Happens to People Who Day Trade for a Year"
+   ],
+   "whyWatch": "Sixteen sources in the corpus say most day traders lose, and the pitch videos say a disciplined strategy beats that. Two complete-market datasets, Brazil and Taiwan, let the viewer see the whole distribution, including the winners.",
+   "tension": "The pitch: discipline and a proven strategy make you consistently profitable. The data: a small minority is predictably profitable, and the longer people trade the smaller their chance of being in it.",
+   "evidenceNeeded": "Complete trading records for a population of day traders over at least a year, net of fees, with the share who profit and whether it rises with experience.",
+   "premise": "The Brazilian study followed 1,551 people who day traded index futures for more than 300 days: 97% lost money net of fees, and the share with a positive result fell with every extra day traded. The Taiwan study covers every day trader on the exchange from 1992 to 2006 and finds reliably negative returns before and after costs. Both find a small, predictably profitable minority (under 3%), which is the honest form of the 'disciplined strategy' claim. Limits the video must carry: Brazil is index futures and Taiwan is stocks in an earlier era; the HFT finding is from futures; the EU CFD figures are a different product; and nothing here measures momentum-stock traders, so the claim that an expert can multiply an account in a month is unchecked rather than refuted.",
+   "arc": {
+    "hook": "A screenshot of a small account turned into a large one in a month. How often does that happen to people who try?",
+    "conflict": "The sources promise consistency with discipline; the regulators and academics who can see every account say most lose.",
+    "evidence": "Brazil: 1,551 persistent traders, 97% lost, the best averaged US$310 a day with a standard deviation of US$2,560. Taiwan: every trader on the exchange, losses before and after costs in every year but one. Both: a predictably profitable minority under 3%, and no learning curve.",
+    "resolution": "Day trading is possible to win at and overwhelmingly lost at; frequency and fees erode results, and retail traders face algorithms with a structural edge. The evidence does not touch the exceptional-month story, so say so.",
+    "takeaway": "Treat day trading as an expensive hobby with a small chance of being in the 3%, and treat any strategy sold as consistent as a claim its seller must prove with audited records."
+   },
+   "qualificationsAccepted": true,
+   "format": "long-form",
+   "formatWhy": "Two complete-population datasets, a regulator's intervention, a mechanism (HFT) and a dose-response finding (days traded), with sixteen sources voicing the belief."
+  },
+  "contradicted:experienced-day-trader-can-multiply-small": {
+   "coherence": { "score": 0.8, "reason": "One question about one promise." },
+   "question": "Can an experienced day trader really multiply a small account in a month?",
+   "title": "Can a Skilled Day Trader Really Multiply a Small Account in a Month?",
+   "alternates": [
+    "The Momentum-Trading Promise, Checked Against the Data",
+    "What the Best Day Traders in a 1,551-Person Study Actually Made"
+   ],
+   "whyWatch": "This is the specific promise in the pitch videos, and it is the one the base-rate studies cannot answer directly.",
+   "tension": "A possibility claim against population data: the data show how rare large gains were, not that they are impossible.",
+   "evidenceNeeded": "Audited account histories of momentum-stock day traders, or the distribution of monthly account growth across a population of them.",
+   "research": "The corpus has base-rate studies of futures and stock day traders, which cannot rule out an individual momentum trader's month. It needs audited records of momentum traders or a study of account-growth distributions.",
+   "format": "needs-research"
+  },
+  "contradicted:beginners-experience-can-make-real-money": {
+   "coherence": { "score": 0.8, "reason": "One question about one promise." },
+   "question": "Can beginners really make money with AI side hustles?",
+   "title": "Can Beginners Really Make Money With AI Side Hustles?",
+   "alternates": [
+    "The 'AI Does the Hard Part' Pitch, Examined",
+    "What Happened to the People Who Bought an AI Store"
+   ],
+   "whyWatch": "Six sources make the promise; the only evidence is what happened to the buyers of one company's AI-run stores.",
+   "tension": "A possibility claim against one enforcement case.",
+   "evidenceNeeded": "Outcomes for a sample of beginners across AI side hustles, not one firm's customers.",
+   "research": "The only evidence is an FTC complaint about one firm's 'AI' store buyers; nothing measures beginners' results across AI side hustles.",
+   "format": "needs-research"
+  },
+  "conflict:commission-free-brokerage-increased-retail-trading": {
+   "reject": "folded into surprise:commission-free-brokers-sell-order-flow: the trading boom is the second act of the commission-free story"
+  },
+  "surprise:commission-free-brokers-sell-order-flow": {
+   "coherence": {
+    "score": 0.85,
+    "reason": "One question, whether zero-commission trading is free, answered by who pays the broker (order flow), where the cost reappears (spreads, especially on options) and what free trading did to trading volume."
+   },
+   "claims": [
+    "get-rich-quick/commission-free-brokers-sell-order-flow",
+    "get-rich-quick/options-have-wider-spreads-higher-trading",
+    "get-rich-quick/commission-free-brokerage-increased-retail-trading"
+   ],
+   "question": "Is commission-free trading actually free?",
+   "title": "Is 'Commission-Free' Trading Actually Free?",
+   "alternates": [
+    "Who Pays When Your Broker Charges Nothing?",
+    "The Hidden Cost Inside Zero-Commission Trades"
+   ],
+   "whyWatch": "Most retail traders use a zero-commission app. The paper on retail options trading puts a number on what they pay instead, and it is larger than the commissions were.",
+   "tension": "'Free' on the screen; a 12.3% average quoted spread on the weekly options retail prefers, paid for by order flow.",
+   "evidenceNeeded": "Measured payment for order flow and effective spreads paid by retail, and evidence on whether removing commissions changed how much people trade.",
+   "premise": "Bryzgalova and colleagues document that zero-commission brokers are paid for order flow by wholesalers and that the true cost sits in spreads: 17.2% average quoted spread on S&P 500 stock options against 3.55 basis points on the stocks, 12.3% on the sub-week options retail favours, with indirect spread costs of $4.13bn dwarfing $0.8bn of commissions. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one measure of trading intensity after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
+   "arc": {
+    "hook": "Your trade cost nothing. Someone paid your broker for it. What did you pay?",
+    "conflict": "Free trading was sold as democratising markets; the paper says the cost moved rather than vanished, and moved most for the products retail likes best.",
+    "evidence": "Payment for order flow, quoted spreads on options versus stocks, the dollar totals, and the post-2019 surge in retail and options volume, with the eToro null result as the caveat.",
+    "resolution": "Free is a pricing model: commissions became spreads and order-flow payments, heaviest on short-dated options.",
+    "takeaway": "Count the spread, not the commission, and be most careful with the products the app makes easiest to trade."
+   },
+   "qualificationsAccepted": true
+  },
+  "decision:who-makes-the-money": {
+   "coherence": {
+    "score": 0.85,
+    "reason": "One question, whether buyers or sellers make the money from money-making courses, answered by what the sellers earned, what buyers ended up with, how the earnings figures are presented, and how the funnel and financing work. The rented-lifestyle claim is a side point with no evidence and is dropped."
+   },
+   "claims": [
+    "get-rich-quick/people-selling-courses-about-money-making",
+    "get-rich-quick/typical-buyer-passive-income-course-ends",
+    "get-rich-quick/guru-income-figures-revenue-before-product",
+    "get-rich-quick/guru-documented-profits-not-predict-results",
+    "get-rich-quick/guru-pitches-push-buyers-take-credit",
+    "get-rich-quick/free-seminars-exist-upsell-attendees-far"
+   ],
+   "question": "Who actually makes money from get-rich-quick courses: the buyers or the sellers?",
+   "title": "Who Really Gets Rich From Get-Rich-Quick Courses?",
+   "alternates": [
+    "The Business Model Behind 'Passive Income' Courses",
+    "What FTC Complaints Say About Guru Courses"
+   ],
+   "whyWatch": "Twenty-five sources in the corpus say the seller earns more from the course than from the method. Three FTC cases open the books on how that works, from the free seminar to the credit-card application.",
+   "tension": "The pitch shows the method's income; the complaints show the sellers' income came from the pitch.",
+   "evidenceNeeded": "Sellers' revenue by source, buyers' net outcomes, and how advertised figures relate to net earnings.",
+   "premise": "The evidence is three FTC enforcement actions (Automators/Empire, DK Automation, Nudge), which are allegations and settlements about three firms, not a survey of courses in general; the video must say so in those words. Within that limit the pattern is consistent: over $7 million of buyer payments flowed to Empire's founders, whose documented income came from selling the opportunity; most buyers did not recoup their fees and virtually none earned the advertised amounts; advertised figures were gross sales while clients lost money net of fees, inventory and interest; the founder's results were conceded in fine print to be atypical; buyers were steered into $15,000 to $80,000 of business credit; and Nudge's free seminar was a pitch for a $1,100 workshop that pitched $40,000 training.",
+   "arc": {
+    "hook": "The free seminar, the $1,100 workshop, the $40,000 'advanced training': walk through one funnel the FTC documented.",
+    "conflict": "Buyers were shown the method's income; the complaints trace where the money actually went.",
+    "evidence": "The Automators complaint (founders' income, buyers' outcomes, gross-versus-net figures, fine print, financing), the DK Automation case and the Nudge funnel.",
+    "resolution": "In the documented cases the course was the business and the buyers were the revenue; whether that generalises is the open question.",
+    "takeaway": "Ask what the seller's income is from, insist on net figures for typical buyers, and never finance a course on credit."
+   },
+   "qualificationsAccepted": true,
+   "format": "long-form",
+   "formatWhy": "Three enforcement cases with distinct acts (funnel, figures, financing, outcomes) and twenty-five sources repeating the belief."
+  },
+  "surprise:most-new-businesses-including-online-stores": {
+   "coherence": { "score": 0.8, "reason": "One number with a caveat." },
+   "question": "Do most new businesses really fail within a few years?",
+   "title": "Do Most New Businesses Really Fail in a Few Years?",
+   "alternates": [
+    "How Long Does the Average New Business Actually Last?",
+    "The Survival Curve Behind 'Most Businesses Fail'"
+   ],
+   "whyWatch": "The failure statistic is quoted both to discourage and to sell; the official survival table says something more precise.",
+   "tension": "'Most fail within a few years' against a curve where half are still open after five.",
+   "evidenceNeeded": "Survival rates by age for new establishments, with a breakdown for online stores.",
+   "premise": "The BLS survival table says 79.6% of establishments opened in 2015 survived one year, 61.4% three, 50.2% five and 34.7% ten, so about half close within five years and two-thirds within ten. 'Most fail within a few years' overstates it; exits include sales and relocations, not only failures; and there is no breakdown for online stores. Taylor's second-hand SBA and NFIB figures agree on the shape.",
+   "arc": {
+    "hook": "Nine in ten businesses fail: where does that number come from?",
+    "conflict": "The statistic versus the table.",
+    "evidence": "The BLS cohort survival curve, what an 'exit' includes, and the absence of online-store data.",
+    "resolution": "About half within five years, two-thirds within ten; 'most within a few years' is wrong, 'most eventually' is right.",
+    "takeaway": "Quote the curve, not the slogan."
+   },
+   "qualificationsAccepted": true,
+   "format": "short",
+   "formatWhy": "One table and one correction; a segment, not a film."
+  },
+  "surprise:leverage-lets-small-account-take-large": {
+   "coherence": { "score": 0.8, "reason": "One mechanism, one regulator's finding." },
+   "question": "Does leverage really let you take a big position while keeping your risk fixed?",
+   "title": "Does Leverage Really Keep Your Risk Fixed?",
+   "alternates": [
+    "What Leverage Does to a Small Trading Account",
+    "Why 'Only Risk What You Put In' Isn't How Margin Works"
+   ],
+   "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped; the EU regulator's finding is the opposite.",
+   "tension": "Fixed risk in the pitch; margin calls and losses beyond the deposit in the regulator's data.",
+   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients."
+  },
+  "decision:what-the-evidence-favours": {
+   "reject": "a list of consolation morals, not a question: compounding, passive income, luck, survivorship and equity each need their own evidence"
+  },
+  "conflict:advice-people-who-got-rich-quickly": {
+   "coherence": {
+    "score": 0.8,
+    "reason": "One question, why success stories mislead, with survivorship and the role of luck as its two halves."
+   },
+   "claims": [
+    "get-rich-quick/advice-people-who-got-rich-quickly",
+    "get-rich-quick/outsized-financial-success-depends-heavily-luck"
+   ],
+   "question": "Why do get-rich-quick success stories sound so convincing?",
+   "title": "Why Do So Many Get-Rich-Quick Stories Sound Convincing?",
+   "alternates": [
+    "Survivorship Bias: The Trick Behind Every Success Story",
+    "How Much of Getting Rich Is Luck?"
+   ],
+   "whyWatch": "Thirteen sources make the survivorship argument and it is persuasive; the honest version is that the corpus has a model of the mechanism and no data on the advice.",
+   "tension": "A compelling argument with a simulation behind it and no measurement.",
+   "evidenceNeeded": "Outcomes for people who followed advice from the quickly rich, or a base-rate study of how fortunes are made.",
+   "research": "The only study is an agent-based toy model of talent versus luck; it supplies the mechanism, not evidence about advice from people who got rich quickly.",
+   "format": "needs-research"
+  },
+  "conflict:demeaning-salaried-jobs-college-sales-tactic": {
+   "coherence": { "score": 0.8, "reason": "One question about one rhetorical move." },
+   "question": "Is trashing the day job and college a sales tactic, and do they actually pay?",
+   "title": "Is Trashing Your Day Job a Sales Tactic?",
+   "alternates": [
+    "Why Every Guru Pitch Starts by Insulting Your Job",
+    "Do Salaried Jobs and Degrees Pay Off? What the Pitch Leaves Out"
+   ],
+   "whyWatch": "The move opens half the pitches in the corpus; the counter-evidence on what jobs and degrees pay is a separate literature the corpus barely touches.",
+   "tension": "A rhetorical pattern everyone recognises, with thin evidence either way in this corpus.",
+   "evidenceNeeded": "Earnings data by employment type and education, and evidence that the framing precedes an upsell.",
+   "research": "The corpus has one weak study on business owners' earnings versus salaried workers and nothing on degrees; both halves of the claim need their own evidence.",
+   "format": "short"
+  },
+  "decision:selling-online": {
+   "coherence": { "score": 0.7, "reason": "One question, whether dropshipping and faceless channels still pay, but nothing in the group has been checked against a study." },
+   "question": "Can you still make money dropshipping or running a faceless channel?",
+   "title": "Can You Still Make Money Dropshipping?",
+   "alternates": [
+    "Why Online Side Hustles Stop Paying Once They Are Taught",
+    "Dropshipping and Faceless Channels: What Is Left for Latecomers?"
+   ],
+   "whyWatch": "The most-pitched schemes in the corpus, with a plausible mechanism (crowding) and no measurement of outcomes for people who try.",
+   "tension": "A crowding argument everyone makes and no outcome data.",
+   "evidenceNeeded": "Outcome data for a cohort of new dropshipping stores or faceless channels: survival, revenue, net of ad spend.",
+   "research": "No study in the corpus bears on any claim in this group; the crowding mechanism and the failure rates are AI guesses and source assertions only.",
+   "format": "needs-research"
+  },
+  "conflict:retail-trading-bots-not-beat-market": {
+   "coherence": { "score": 0.8, "reason": "One question about one product category." },
+   "question": "Do retail AI trading bots beat the market?",
+   "title": "Do AI Trading Bots Actually Beat the Market?",
+   "alternates": [
+    "Can a Bot Trade Better Than You?",
+    "What Happened to the People Who Bought Trading Bots"
+   ],
+   "whyWatch": "Bots are the current form of the automatic-income promise and nobody in the corpus has measured one.",
+   "tension": "Sold as systematic; the only record is an enforcement allegation.",
+   "evidenceNeeded": "Audited performance of retail bots against a benchmark over a market cycle.",
+   "research": "One FTC allegation about one firm's customers; no performance measurement of retail bots against a benchmark exists in the corpus.",
+   "format": "needs-research"
+  }
+ }
+}
