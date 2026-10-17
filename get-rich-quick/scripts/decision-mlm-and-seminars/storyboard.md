@@ -1,10 +1,6 @@
 # Storyboard: How Much Money Do MLM Participants Actually Make?
 
-43 scenes, 12:57 at 150 wpm including pauses. Script e798a4fd2c (blocked). Storyboard status: **blocked**.
-
-## Issues
-
-- **blocking** - script-blocked: the script has open blocking issues; storyboard it after revision
+42 scenes, 12:10 at 150 wpm including pauses. Script bc0f3418c8 (passed). Storyboard status: **ok**.
 
 ## Assets
 
@@ -42,11 +38,11 @@
 
 **Direction.** Arrows animate upward, 300 ms each.
 
-## 3. sc03 (0:20 to 0:33, 13s incl. 1s pause)
+## 3. sc03 (0:20 to 0:34, 13.8s incl. 1s pause)
 
 **Purpose.** The pitch's own word for the promise, in a recruiter's words.
 
-**Narration** (s03). The recruiters have a word for that second part: one trainer promises to show you how to "finally create the leverage that you need inside of your network marketing business".
+**Narration** (s03). The recruiters have a word for that second part: one trainer, Frazer Brookes, promises to show you how to "finally create the leverage that you need inside of your network marketing business".
 
 **Visual** (typography). Quote card: the quoted words type on in large serif over the dark field; the word 'leverage' holds and turns amber as the sentence ends. Beneath, small: 'recruiting training video'. No channel name or face.
 
@@ -56,7 +52,7 @@
 
 **Direction.** Hold one beat on 'leverage'.
 
-## 4. sc04 (0:33 to 0:50, 17.4s incl. 1s pause)
+## 4. sc04 (0:34 to 0:51, 17.4s incl. 1s pause)
 
 **Purpose.** The first hard number lands against the pitch.
 
@@ -80,7 +76,7 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **Direction.** Cut on the beat; let the 47% sit for a second before 27% and 25% fill.
 
-## 5. sc05 (0:50 to 1:00, 10.2s incl. 1s pause)
+## 5. sc05 (0:51 to 1:01, 10.2s incl. 1s pause)
 
 **Purpose.** Pose the question the video answers.
 
@@ -92,7 +88,7 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **Direction.** Hold the question through a one-second pause, then title card.
 
-## 6. sc06 (1:00 to 1:07, 6.4s)
+## 6. sc06 (1:01 to 1:08, 6.4s)
 
 **Purpose.** Title card.
 
@@ -104,11 +100,11 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **Direction.** Simple fade; 2 s hold is covered by the narration.
 
-## 7. sc07 (1:07 to 1:28, 21.6s)
+## 7. sc07 (1:08 to 1:28, 20.8s)
 
 **Purpose.** Introduce the three kinds of evidence as three objects the viewer will see again.
 
-**Narration** (s08). To answer it we have three kinds of evidence: 70 of the companies' own income disclosure statements, read closely by Federal Trade Commission staff; a nationally representative survey of 601 participants by AARP; and an analysis of 30 companies by Jon Taylor, an independent analyst who argues against the industry.
+**Narration** (s08, s68, s69). To answer it we have the companies' own numbers first: 70 income disclosure statements, read closely by Federal Trade Commission staff. Then a nationally representative survey of 601 participants by AARP. And an analysis of 30 companies by Jon Taylor, an independent analyst who argues against the industry.
 
 **Visual** (diagram). Three cards slide in left to right as each is named: a stack of documents labelled 'income disclosures, 70 statements, read by FTC staff'; a grid of people icons labelled 'survey, 601 participants, AARP'; a spreadsheet icon labelled '30 companies, Jon Taylor (critic)'. The cards persist as a small legend in later scenes.
 
@@ -118,11 +114,11 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **On-screen citations.** FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35); AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139); J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 870-L877)
 
-## 8. sc08 (1:28 to 1:58, 30s)
+## 8. sc08 (1:28 to 2:00, 32s)
 
 **Purpose.** The pitch in three voices, each a card, none a face.
 
-**Narration** (s09, s10). First, the promise, in the recruiters' own words: one coach tells his audience that once the team grows, "it starts to compound", like a snowball; another says the person you bring in "might recruit 10 people themselves and have an organization of a thousand people". Another trainer puts the whole idea in one line: it would be "better to have a smaller percentage of 100 people than 100 of yourself".
+**Narration** (s09, s10). First, the promise, in the recruiters' own words: one coach, Darin Kidd, tells his audience that once the team grows, "it starts to compound", like a snowball; Frazer Brookes says the person you bring in "might recruit 10 people themselves and have an organization of a thousand people". Another trainer, Eric Worre, puts the whole idea in one line: it would be "better to have a smaller percentage of 100 people than 100 of yourself".
 
 **Visual** (typography). Three quote cards in sequence, each sliding up and settling: 'it starts to compound' with a small snowball glyph rolling; 'might recruit 10 people themselves and have an organization of a thousand people' with the node tree growing one tier behind the text; 'better to have a smaller percentage of 100 people than 100 of yourself'. Attribution lines read 'recruiting coach', 'recruiting trainer', 'network-marketing trainer' in small type.
 
@@ -132,7 +128,7 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **Direction.** Quotes are the only amber elements on screen; keep the tree animation subdued behind the second card.
 
-## 9. sc09 (1:58 to 2:03, 4.4s)
+## 9. sc09 (2:00 to 2:05, 4.4s)
 
 **Purpose.** Name the promise in one picture: money flowing up a tree.
 
@@ -144,11 +140,11 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **Direction.** Coins loop; 2 s.
 
-## 10. sc10 (2:03 to 2:22, 19.2s)
+## 10. sc10 (2:05 to 2:24, 19.6s)
 
 **Purpose.** The critics' version and the regulator's consumer page, as plain cards.
 
-**Narration** (s12, s13). The critics have their own one-liner; in a clip John Oliver's show played, a former Herbalife distributor puts it this way: "You make money from signing people up." Even the FTC's own consumer page says, flatly, that "Most people who join legitimate MLMs make little or no money."
+**Narration** (s12, s13). The critics have their own one-liner; in a clip John Oliver's show played, a former Herbalife distributor puts it this way: "You make money from signing people up." Even the FTC's own Consumer Advice page says, flatly, that "Most people who join legitimate MLMs make little or no money."
 
 **Visual** (typography). Two cards in the slate accent: 'You make money from signing people up.' attributed 'Last Week Tonight'; then a browser-window frame with the FTC consumer page's sentence set in its own plain type: 'Most people who join legitimate MLMs make little or no money.' with the URL path shown small.
 
@@ -156,7 +152,7 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **On-screen citations.** Last Week Tonight, MLM segment (HBO); FTC consumer advice: Multi-Level Marketing Businesses and Pyramid Schemes
 
-## 11. sc11 (2:22 to 2:27, 5.3s incl. 0.5s pause)
+## 11. sc11 (2:24 to 2:30, 5.3s incl. 0.5s pause)
 
 **Purpose.** A beat before the investigation.
 
@@ -166,7 +162,7 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **Direction.** Wipe over the last two words.
 
-## 12. sc12 (2:27 to 2:38, 10.8s)
+## 12. sc12 (2:30 to 2:40, 10.8s)
 
 **Purpose.** Make the disclosures a physical thing: seventy documents.
 
@@ -182,7 +178,7 @@ Note: Self-reported. One bar, three segments; no distribution within segments is
 
 **On-screen citations.** FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35)
 
-## 13. sc13 (2:38 to 2:59, 20.5s incl. 0.5s pause)
+## 13. sc13 (2:40 to 3:01, 20.5s incl. 0.5s pause)
 
 **Purpose.** The headline figures as published.
 
@@ -204,7 +200,7 @@ Note: Before expenses; do not show a distribution, the report gives thresholds a
 
 **On-screen citations.** FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35); FTC staff report, section X (27 disclosures giving the no-income share) (FTC MLM income disclosure report 2024, lines 1481-L1498)
 
-## 14. sc14 (2:59 to 3:05, 6s)
+## 14. sc14 (3:01 to 3:07, 6s)
 
 **Purpose.** Signal the turn: now the fine print.
 
@@ -216,7 +212,7 @@ Note: Before expenses; do not show a distribution, the report gives thresholds a
 
 **Direction.** Slow push, 2 s.
 
-## 15. sc15 (3:05 to 3:23, 18.6s incl. 1s pause)
+## 15. sc15 (3:07 to 3:26, 18.6s incl. 1s pause)
 
 **Purpose.** Show the denominator trick: zero-earners leave the table before the average is taken.
 
@@ -232,7 +228,7 @@ Note: Before expenses; do not show a distribution, the report gives thresholds a
 
 **Direction.** The average bar rises without a value: the point is direction, not magnitude.
 
-## 16. sc16 (3:23 to 3:46, 22.5s incl. 0.5s pause)
+## 16. sc16 (3:26 to 3:48, 22.5s incl. 0.5s pause)
 
 **Purpose.** Payout is not profit: show the missing expense block without inventing its size.
 
@@ -246,7 +242,7 @@ Note: Before expenses; do not show a distribution, the report gives thresholds a
 
 **Direction.** The hatched block must read as unknown height; never give it a number.
 
-## 17. sc17 (3:46 to 4:01, 15.2s)
+## 17. sc17 (3:48 to 4:03, 15.2s)
 
 **Purpose.** The presentation trick, in the FTC's own words.
 
@@ -325,11 +321,11 @@ Note: Before expenses; do not show a distribution, the report gives thresholds a
 
 **On-screen citations.** FTC staff report, section VIII (rank tables) (FTC MLM income disclosure report 2024, lines 801-L866)
 
-## 18. sc18 (4:01 to 4:29, 28.3s incl. 1.5s pause)
+## 18. sc18 (4:03 to 4:31, 27.9s incl. 1.5s pause)
 
 **Purpose.** The single most revealing visual: one rank table drawn two ways.
 
-**Narration** (s24, s25). One table the FTC excerpted shows the shape: 92.37 percent of participants in the bottom row, with average earnings of $41.69. The top row averages just over $1,018,350, and holds fewer than 0.01 percent of participants; as the FTC puts it, half the rows in that table describe half of one percent of the people.
+**Narration** (s24, s25). One table the FTC excerpted shows the shape: 92.37 percent of participants in the bottom row, with average earnings of $41.69. The top row averages just over $1,018,350, and holds fewer than 0.01 percent of participants; as the FTC puts it, half the rows in that table describe half a percent of the people.
 
 **Visual** (data-chart). Left: the table 'as the company shows it', ten equal rows, average earnings in the right column. Right: 'as the people are distributed', the same ten rows but each row's height proportional to its share of participants, so the $41.69 row fills 92% of the height and the top five rows are hairlines. The right panel builds row by row from the bottom; the $1,018,350.20 row is marked with a magnifier callout because it is too thin to see. Final overlay: 'half the rows describe half of one percent of participants'.
 
@@ -356,7 +352,7 @@ Note: One company's table as excerpted by the FTC; the period of the averages is
 
 **Direction.** Hold the proportional view 1.5 s after the last word.
 
-## 19. sc19 (4:29 to 4:37, 7.6s)
+## 19. sc19 (4:31 to 4:39, 7.6s)
 
 **Purpose.** Pivot from payouts to profit.
 
@@ -366,11 +362,11 @@ Note: One company's table as excerpted by the FTC; the period of the averages is
 
 **On screen.** "paid out" / "came out ahead?"
 
-## 20. sc20 (4:37 to 5:04, 27.7s incl. 0.5s pause)
+## 20. sc20 (4:39 to 5:06, 26.9s incl. 0.5s pause)
 
 **Purpose.** The survey's headline split, as people.
 
-**Narration** (s27, s28). AARP did, in a study published in 2018, using a probability-based national panel, the kind of sample that lets you generalise to the whole country. Among the 601 current and former participants it reached, 47 percent said they lost money, 27 percent said they broke even, and 25 percent said they made a profit, counting their entire time in the business.
+**Narration** (s27, s28). AARP did, in a study published in 2018, using a probability-based national panel, the kind of sample that lets you generalise to the whole country. Among the 601 people it reached, 47 percent said they lost money, 27 percent said they broke even, and the rest, a quarter, said they made a profit, counting their entire time in the business.
 
 **Visual** (data-chart). A field of 601 small dots arranges into a rectangle labelled 'nationally representative sample, 2018'. The dots recolour by group with the narration: 47% red (lost money), 27% slate (broke even), 25% muted green (made a profit); a legend with the three percentages appears at the right.
 
@@ -390,11 +386,11 @@ Note: Dot counts are proportional (601 dots); do not label individual dots with 
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139)
 
-## 21. sc21 (5:04 to 5:35, 30.6s incl. 1s pause)
+## 21. sc21 (5:06 to 5:29, 23.4s incl. 1s pause)
 
 **Purpose.** What profit meant: the bands, with the top as three people.
 
-**Narration** (s29, s30). Profit, for most of that quarter, was small: 14 percent of all participants made under $5,000 in total, and only 3 percent made $25,000 or more. Three people, half of one percent of the sample, reported profits of $100,000 or more; those three had each been in the business more than five years, and one of them had founded the company.
+**Narration** (s29, s30). Profit, for most of that quarter, was small, and so were most of the losses: on both sides of the ledger the commonest outcome was under $5,000. Only three people in the whole sample reported profits of $100,000 or more, and one of them had founded the company.
 
 **Visual** (data-chart). Zoom into the green 25%: a horizontal bar chart of profit bands as a share of all 601 participants: under $5,000 (14%), $5,000 to $9,999 (6%), $10,000 to $24,999 (3%), $25,000 or more (3%). Then three single dots lift out of the last band with the caption '3 people (half of one percent): $100,000 or more; each more than five years in; one founded the company'.
 
@@ -416,11 +412,11 @@ Note: Shares are of all participants, not of profit-makers; the $100,000 group i
 
 **Direction.** The three dots are the emotional beat; give them a second.
 
-## 22. sc22 (5:35 to 6:04, 29.2s)
+## 22. sc22 (5:29 to 5:42, 13.2s)
 
-**Purpose.** The loss side, mirrored, then the self-report caveat stamped on it.
+**Purpose.** The loss side, mirrored in the chart the narration no longer reads aloud, then the self-report caveat stamped on it.
 
-**Narration** (s31, s65). On the other side of the ledger, 41 percent lost less than $5,000, 3 percent lost $5,000 to $9,999, and 1 percent lost more than $10,000. These are people's own accounts of what they put in and took out, which is a limit; they are also the only figures so far that measure profit or loss rather than payout.
+**Narration** (s65). These are people's own accounts of what they put in and took out, which is a limit; they are also the only figures so far that measure profit or loss rather than payout.
 
 **Visual** (data-chart). The same bar layout mirrored to the left in red: lost under $5,000 (41%), $5,000 to $9,999 (3%), more than $10,000 (1%). As s65 begins, a stamp reads 'self-reported' across both charts, and a small tag 'profit or loss, not payout' appears beneath.
 
@@ -438,7 +434,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 376-L392)
 
-## 23. sc23 (6:04 to 6:15, 10.4s)
+## 23. sc23 (5:42 to 5:53, 10.4s)
 
 **Purpose.** Turn to mechanism.
 
@@ -448,7 +444,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On screen.** "why doesn't it compound?"
 
-## 24. sc24 (6:15 to 6:35, 20.4s)
+## 24. sc24 (5:53 to 6:13, 20.4s)
 
 **Purpose.** How the pay plans pay, as three icons and one dashed one.
 
@@ -462,7 +458,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** FTC staff report, section I (how MLMs pay) (FTC MLM income disclosure report 2024, lines 201-L205)
 
-## 25. sc25 (6:35 to 7:08, 33.2s)
+## 25. sc25 (6:13 to 6:46, 33.2s)
 
 **Purpose.** Taylor's conclusion in his words, then the FTC's limit.
 
@@ -485,7 +481,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 870-L877); FTC staff report, section I (FTC MLM income disclosure report 2024, lines 201-L205)
 
-## 26. sc26 (7:08 to 7:35, 26.4s)
+## 26. sc26 (6:46 to 7:13, 26.4s)
 
 **Purpose.** The recruiters' rebuttal, and why both can be true.
 
@@ -497,7 +493,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** Network-marketing trainer video (YouTube); FTC staff report, section I (FTC MLM income disclosure report 2024, lines 201-L205)
 
-## 27. sc27 (7:35 to 7:51, 16.1s incl. 0.5s pause)
+## 27. sc27 (7:13 to 7:29, 16.1s incl. 0.5s pause)
 
 **Purpose.** Who the downline is: the bottom of the tree lights up.
 
@@ -509,7 +505,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** FTC staff report, Figure 6 (one disclosure's rank table) (FTC MLM income disclosure report 2024, lines 838-L866)
 
-## 28. sc28 (7:51 to 8:08, 17.2s)
+## 28. sc28 (7:29 to 7:46, 17.2s)
 
 **Purpose.** The pitch's own phrase, from a critic's summary of it.
 
@@ -535,11 +531,11 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 2199-L2211)
 
-## 29. sc29 (8:08 to 8:39, 31.4s incl. 1s pause)
+## 29. sc29 (7:46 to 8:17, 30.6s incl. 1s pause)
 
 **Purpose.** Taylor's estimate as a thousand people, with its assumption printed on it.
 
-**Narration** (s41, s42). His own estimate is blunter: across the 30 companies, after subtracting required purchases and modest expenses, he puts the share losing money at 99.6 percent, about one in 238 profiting. That number depends on his assumptions about what participants had to spend, how many dropped out and how many were ever counted, which he states; it is an estimate built on the companies' tables, not a measurement of anyone's bank account.
+**Narration** (s41, s42). His own estimate is blunter: across those companies, after subtracting required purchases and modest expenses, he puts the share losing money at 99.6 percent, about one in 238 profiting. That number depends on his assumptions about what participants had to spend, how many dropped out and how many were ever counted, which he states; it is an estimate built on the companies' tables, not a measurement of anyone's bank account.
 
 **Visual** (data-chart). A grid of 1,000 small squares fills the frame; 996 turn red one row at a time, 4 stay green. Labels: '99.6% lose money', '1 in 238 profit'. On s42 a slate caption prints across the top: 'estimate from company tables, under stated assumptions about required purchases and expenses'.
 
@@ -557,7 +553,7 @@ Note: A calculation under Taylor's assumptions, not a measurement; the caption i
 
 **On-screen citations.** J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7, Appendix 7A (Taylor, The Case against MLM, lines 1785-L1790)
 
-## 30. sc30 (8:39 to 8:53, 14s)
+## 30. sc30 (8:17 to 8:31, 14s)
 
 **Purpose.** The critics' arithmetic, labelled as theirs.
 
@@ -571,7 +567,7 @@ Note: A calculation under Taylor's assumptions, not a measurement; the caption i
 
 **Direction.** Keep it playful; this is a thought experiment and the next scene says so.
 
-## 31. sc31 (8:53 to 9:24, 30.8s)
+## 31. sc31 (8:31 to 9:01, 30.8s)
 
 **Purpose.** What is tested and what is not: saturation as people's reasons for leaving.
 
@@ -592,7 +588,7 @@ Note: Self-reported reasons among former participants; not a structural test.
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 463-L467); J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 1328-L1335)
 
-## 32. sc32 (9:24 to 9:31, 6.8s)
+## 32. sc32 (9:01 to 9:08, 6.8s)
 
 **Purpose.** Section break into findings.
 
@@ -602,11 +598,11 @@ Note: Self-reported reasons among former participants; not a structural test.
 
 **On screen.** "three measures, one shape"
 
-## 33. sc33 (9:31 to 10:00, 29.3s incl. 0.5s pause)
+## 33. sc33 (9:08 to 9:34, 25.7s incl. 0.5s pause)
 
 **Purpose.** The three answers side by side, each labelled with what it measures.
 
-**Narration** (s46, s47, s48). The companies' own statements: most participants received $1,000 or less in a year, before expenses, and most of the tables leave some participants out entirely. The survey: 47 percent lost, 27 percent broke even, 25 percent profited, and of that 25, 14 points made under $5,000. The analyst: 99.6 percent losing, once required purchases are counted as a cost.
+**Narration** (s46, s47). The companies' own statements: most participants received $1,000 or less in a year, before expenses, and most of the tables leave some participants out entirely. The survey: 47 percent lost, 27 percent broke even, a quarter profited, mostly under $5,000; the analyst: 99.6 percent losing, once required purchases are counted as a cost.
 
 **Visual** (data-chart). Three panels. Left, 'company payouts': '$1,000 or less a year' with 'before expenses; non-earners often excluded' beneath. Middle, 'survey, profit or loss': the 47 / 27 / 25 stacked bar with '14% of participants made under $5,000'. Right, 'analyst's estimate': '99.6% lose' with 'required purchases counted as cost' beneath.
 
@@ -627,17 +623,7 @@ Note: Each panel is labelled with its measure; they are not the same quantity an
 
 **On-screen citations.** FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35); AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139); J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 1785-L1790)
 
-## 34. sc34 (10:00 to 10:19, 19.2s)
-
-**Purpose.** Structure and outcome in one frame.
-
-**Narration** (s49). And on the central promise: the plans do route money upward from a downline, and the rank tables show where that leaves most people, because in table after table the FTC looked at, the vast majority sit in the two or three lowest ranks with the smallest amounts.
-
-**Visual** (diagram). The node tree with coin arrows rising (left) beside a stylised rank table whose bottom rows are wide and red (right); a bracket links the bottom tier of the tree to the bottom rows of the table.
-
-**On-screen citations.** FTC staff report, section I (FTC MLM income disclosure report 2024, lines 201-L205); FTC staff report, section VIII (rank tables) (FTC MLM income disclosure report 2024, lines 801-L866)
-
-## 35. sc35 (10:19 to 10:39, 19.6s)
+## 34. sc35 (9:34 to 9:53, 19.6s)
 
 **Purpose.** Limits, stated plainly, as a list that builds.
 
@@ -649,19 +635,19 @@ Note: Each panel is labelled with its measure; they are not the same quantity an
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 376-L392); FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35)
 
-## 36. sc36 (10:39 to 11:08, 29.3s incl. 0.5s pause)
+## 35. sc36 (9:53 to 10:23, 29.3s incl. 0.5s pause)
 
 **Purpose.** Limits, continued.
 
-**Narration** (s52, s53, s54). Taylor is an independent analyst who argues against the industry, and his 99.6 percent is a calculation under assumptions he states, not a count of real accounts. The split between recruiting income and retail income has been described in these documents, and argued, but not measured. And the thirteen-cycles arithmetic is a thought experiment that none of these studies tested; the rank tables show where people end up, not why.
+**Narration** (s52, s53, s54). Taylor is an independent analyst who argues against the industry, and his 99.6 percent is a calculation under assumptions he states, not a count of real accounts. The split between recruiting income and retail income has been described in these documents, and argued, but not measured. And the population arithmetic is a thought experiment that none of these studies tested; the rank tables show where people end up, not why.
 
 **Visual** (typography). The list continues: 'a critic's calculation under stated assumptions'; 'recruiting vs retail income: described, not measured'; 'the thirteen-cycles arithmetic: untested'. The last line gets a small pyramid glyph with a question mark.
 
-**On screen.** "99.6%: a calculation under stated assumptions" / "recruiting vs retail income: described, not measured" / "thirteen cycles: untested"
+**On screen.** "99.6%: a calculation under stated assumptions" / "recruiting vs retail income: described, not measured" / "the population arithmetic: untested"
 
 **On-screen citations.** J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 1785-L1790); FTC staff report, section I (FTC MLM income disclosure report 2024, lines 201-L205)
 
-## 37. sc37 (11:08 to 11:13, 4.8s)
+## 36. sc37 (10:23 to 10:28, 4.8s)
 
 **Purpose.** Return to the opening moment.
 
@@ -671,11 +657,11 @@ Note: Each panel is labelled with its measure; they are not the same quantity an
 
 **Direction.** Match the framing of sc01.
 
-## 38. sc38 (11:13 to 11:35, 22.1s incl. 0.5s pause)
+## 37. sc38 (10:28 to 10:48, 20.5s incl. 0.5s pause)
 
 **Purpose.** The base rates a viewer can carry away.
 
-**Narration** (s56, s57). The survey says the most likely outcome, by a wide margin, is that you lose money or break even: 74 percent of participants did, nearly three in four. If you do profit, the same survey suggests it will most likely be under $5,000 over your whole time in the business.
+**Narration** (s56, s57). The survey says the most likely outcome, by a wide margin, is that you lose money or break even: 74 percent of participants did. If you do profit, the same survey suggests it will most likely be under $5,000 over your whole time in the business.
 
 **Visual** (data-chart). The 47 and 27 segments from sc04 merge into one bar labelled '74%: lost money or broke even'; the remaining 25% segment opens to show 'most profits under $5,000'. The figure 74% is drawn as the sum of the two segments, with '47 + 27' faintly beneath.
 
@@ -693,7 +679,7 @@ Note: 74% is the sum of the first two segments (shown as 47 + 27); it is a base 
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139); AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 376-L392)
 
-## 39. sc39 (11:35 to 11:42, 6.8s)
+## 38. sc39 (10:48 to 10:55, 6.8s)
 
 **Purpose.** Leverage, located.
 
@@ -703,7 +689,7 @@ Note: 74% is the sum of the first two segments (shown as 47 + 27); it is a base 
 
 **On screen.** "it exists; here is who it works for"
 
-## 40. sc40 (11:42 to 11:58, 16.2s incl. 1s pause)
+## 39. sc40 (10:55 to 11:11, 16.2s incl. 1s pause)
 
 **Purpose.** A checklist the viewer can use.
 
@@ -715,7 +701,7 @@ Note: 74% is the sum of the first two segments (shown as 47 + 27); it is a base 
 
 **Direction.** Each callout lands with its clause.
 
-## 41. sc41 (11:58 to 12:25, 27.2s)
+## 40. sc41 (11:11 to 11:38, 27.2s)
 
 **Purpose.** Answer the title question with the numbers already shown.
 
@@ -739,7 +725,7 @@ Note: Repeat of earlier figures only; nothing new is introduced here.
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139); FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35); AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 376-L392)
 
-## 42. sc42 (12:25 to 12:41, 16s)
+## 41. sc42 (11:38 to 11:54, 16s)
 
 **Purpose.** The promise, resolved.
 
@@ -751,7 +737,7 @@ Note: Repeat of earlier figures only; nothing new is introduced here.
 
 **On-screen citations.** FTC staff report, Figure 6 (one disclosure's rank table) (FTC MLM income disclosure report 2024, lines 838-L866); J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 870-L877)
 
-## 43. sc43 (12:41 to 12:57, 16s incl. 2s pause)
+## 42. sc43 (11:54 to 12:10, 16s incl. 2s pause)
 
 **Purpose.** End on the person, not the data.
 
