@@ -11,7 +11,7 @@
 | Issues | 0 blocking, 0 warnings, 18 dispositioned |
 | Unreviewed sentences | 0 |
 | Scenes | 42, 12:10 (ok) |
-| Evidence package | c7f88b862b (4 documents, 4 claims) |
+| Evidence package | f7638b7154 (4 documents, 4 claims) |
 | Model | claude-fable-5-1 |
 
 Automated validation says whether the narration is eligible for human editorial review; it does not establish truth.
