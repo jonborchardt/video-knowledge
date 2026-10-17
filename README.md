@@ -148,8 +148,10 @@ semantic layer is the reviewer's file: approvals and findings keyed by sentence 
 and its assertions, so an edit lapses the approval and a revision never inherits one. Status is `blocked` (an open
 blocking issue), `needs-review` (sentences without a current approval) or `passed`; at most three revisions, after
 which the output stays with its blockers listed. The storyboard references sentence ids and never carries words of
-its own; timing comes from the narration speed (`generation.wordsPerMinute`, default 150) plus declared pauses, and
-every chart value and on-screen figure must be in a cited passage. The site shows each script at
+its own; it is machine-readable: per-sentence timing (absolute seconds from a numeral-aware spoken-word estimate at
+`generation.wordsPerMinute`, default 150, plus declared pauses), a closed set of chart types with numeric points
+(`value`, `unit`, `display`, `cite`), and an asset registry scenes reference by id, while `visual.description` stays
+guidance for a designer. Every chart point and on-screen figure must be in a cited passage. The site shows each script at
 `/<topic>/scripts/<slug>/`.
 
 Everything needed to inspect and re-validate a script is committed: the package records the sha of every cited
