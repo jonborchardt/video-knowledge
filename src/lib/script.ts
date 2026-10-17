@@ -128,6 +128,14 @@ const docOf = (cite: string) => cite.split('#')[0];
 const fileOf = (cite: string) => docOf(cite).split('/').pop()!;
 const isStudyRef = (r: EvidenceRef): r is { kind: 'study'; claim: string; cite: string } => r.kind === 'study';
 
+export type DocHasher = (file: string) => string | null;
+/** The sha the package records for `<topic>/sources/<file>.txt`, from the working tree; null when the file is gone. */
+export function docHasher(root = process.cwd()): DocHasher {
+  return (file) => {
+    const p = join(root, file);
+    return existsSync(p) ? sha(readFileSync(p, 'utf8')) : null;
+  };
+}
 export type TranscriptReader = (sourceId: string) => string | null;
 /** Reads `<root>/<topic>/store/transcripts/<source id>.txt` (a gitignored cache); null when it is not there. */
 export function transcriptReader(topic: string, root = process.cwd()): TranscriptReader {
@@ -480,6 +488,7 @@ export function validateScript(
   judgments: ReviewFile['applicability'] = {},
   previous: ScriptValidation | null = null,
   pkg: EvidencePackage | null = null,
+  hashDoc: DocHasher = docHasher(),
 ): ScriptValidation {
   const packageFingerprint = pkg?.fingerprint ?? null;
   const statementOf = (source: string) =>
@@ -519,6 +528,34 @@ export function validateScript(
       ),
     );
   if (!script.generation?.model) top.push(issue('-', 'provenance', 'warning', 'generation.model is missing'));
+  // Every cited document must still be the bytes the package recorded: a changed source invalidates every approval
+  // that rested on it, so the package is rebuilt and the script re-reviewed.
+  if (pkg) {
+    const citedFiles = new Set(
+      all
+        .flatMap((s) => s.assertions ?? [])
+        .flatMap((a) => [
+          ...a.evidence.filter(isStudyRef).map((r) => r.cite),
+          ...(a.quote?.cite ? [a.quote.cite] : []),
+          ...(a.calc?.inputs.map((i) => i.cite) ?? []),
+        ])
+        .map(docOf),
+    );
+    for (const d of pkg.documents.filter((d) => citedFiles.has(d.file))) {
+      const now = hashDoc(d.file);
+      if (now === null)
+        top.push(issue('-', 'missing-source', 'blocking', `${d.file} is not in the working tree; restore it`));
+      else if (now !== d.sha)
+        top.push(
+          issue(
+            '-',
+            'stale-source',
+            'blocking',
+            `${d.file} changed since the evidence package was built (${d.sha} -> ${now}); regenerate the package and re-review`,
+          ),
+        );
+    }
+  }
 
   // Review findings that still apply (same sentence fingerprint) stay open; the rest were addressed by a revision.
   const prints = new Map(all.map((s) => [s.id, sentenceFingerprint(s)]));

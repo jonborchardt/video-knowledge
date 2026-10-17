@@ -3,6 +3,7 @@
 import type { PassageReader } from '../src/lib/evidence';
 import type { ReviewFile } from '../src/lib/review';
 import {
+  type EvidencePackage,
   type Script,
   type ScriptAssertion,
   type ScriptReviewFile,
@@ -81,7 +82,7 @@ export const script = (sent: Sentence[], revision = 1): Script => ({
   story: 'decision:mlm-and-seminars',
   title: 'T',
   revision,
-  generation: { model: 'test', brief: 'b', date: 'd', wordsPerMinute: 150, evidencePackage: 'x' },
+  generation: { model: 'test', brief: 'b', date: 'd', wordsPerMinute: 150, evidencePackage: pkg().fingerprint },
   sections: [{ name: 'hook', sentences: sent }],
 });
 export const approveAll = (s: Script, findings: ScriptReviewFile['findings'] = []): ScriptReviewFile => ({
@@ -92,7 +93,10 @@ export const approveAll = (s: Script, findings: ScriptReviewFile['findings'] = [
   findings,
 });
 export const corpus = () => ({ name: TOPIC, claims: [mlm(), rental()] });
-export const run = (s: Script, r: ScriptReviewFile | null = null) => validateScript(s, corpus(), read, r);
+/** Validation as the CLI runs it: against the package and a hasher that vouches for the fixture documents. */
+export const run = (s: Script, r: ScriptReviewFile | null = null, q: EvidencePackage | null = pkg()) =>
+  validateScript(s, corpus(), read, r, {}, null, q, hashOf(q));
+export const hashOf = (q: EvidencePackage | null) => () => q?.documents[0].sha ?? null;
 export const cats = (v: ReturnType<typeof run>) =>
   v.issues.filter((i) => i.severity === 'blocking').map((i) => i.category);
 

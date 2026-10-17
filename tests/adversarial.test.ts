@@ -12,6 +12,7 @@ import {
   corpus,
   fact,
   good,
+  hashOf,
   pkg,
   plan,
   read,
@@ -97,7 +98,7 @@ describe('adversarial: every deliberate error is blocked', () => {
       source: 's1a',
       speaker: 'John Oliver',
     });
-    expect(cats(validateScript(s, corpus(), read, null, {}, null, q))).toContain('speaker-unverified');
+    expect(cats(validateScript(s, corpus(), read, null, {}, null, q, hashOf(q)))).toContain('speaker-unverified');
   });
 
   it('8. an attributed figure that is not in the recorded quote', () => {

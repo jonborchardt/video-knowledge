@@ -103,6 +103,13 @@ export function buildStoryboard(
     );
   if (v.status === 'blocked')
     issue('-', 'script-blocked', 'blocking', 'the script has open blocking issues; storyboard it after revision');
+  if (v.packageFingerprint !== pkg.fingerprint)
+    issue(
+      '-',
+      'stale-validation',
+      'blocking',
+      `the validation was run against evidence package ${v.packageFingerprint ?? '(none)'}; the package is now ${pkg.fingerprint}; re-run validate`,
+    );
   const known = new Set(pkg.documents.flatMap((d) => d.cites));
   const sourceIds = new Set(pkg.claims.flatMap((c) => c.statements.map((s) => s.source)));
 

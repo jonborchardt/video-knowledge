@@ -21,6 +21,7 @@ import {
   corpus,
   fact,
   good,
+  hashOf,
   pkg,
   plan,
   read,
@@ -470,7 +471,7 @@ describe('speaker attribution', () => {
         },
       ]),
     ]);
-  const v = (s: Script, q: EvidencePackage | null) => validateScript(s, corpus(), read, null, {}, null, q);
+  const v = (s: Script, q: EvidencePackage | null) => validateScript(s, corpus(), read, null, {}, null, q, hashOf(q));
   it('a named speaker must appear in the quote context or the source title', () => {
     expect(
       cats(v(attributed('former distributor'), pkgWith('to hear another former distributor tell it: quote s1a words'))),
@@ -491,4 +492,26 @@ it('the package exposes the cites and sources the storyboard checks against', ()
   const p: EvidencePackage = pkg();
   expect(p.documents.flatMap((d) => d.cites)).toContain(DOC_D);
   expect(p.claims.flatMap((c) => c.statements.map((s) => s.source))).toContain('s1a');
+});
+
+describe('reproducible evidence', () => {
+  it('a changed source document blocks', () => {
+    const s = good();
+    const q = pkg();
+    const ok = validateScript(s, corpus(), read, approveAll(s), {}, null, q, () => q.documents[0].sha);
+    expect(ok.status).toBe('passed');
+    const changed = validateScript(s, corpus(), read, approveAll(s), {}, null, q, () => 'deadbeef00');
+    expect(changed.status).toBe('blocked');
+    expect(changed.issues.map((i) => i.category)).toContain('stale-source');
+    const missing = validateScript(s, corpus(), read, approveAll(s), {}, null, q, () => null);
+    expect(missing.issues.map((i) => i.category)).toContain('missing-source');
+  });
+
+  it('a storyboard built against a validation from another package is blocked', () => {
+    const s = good();
+    const v = { ...run(s, approveAll(s)), packageFingerprint: 'old' };
+    expect(
+      buildStoryboard(plan([scene('sc1', ['s01', 's02', 's03'])]), s, v, pkg(), read).issues.map((i) => i.category),
+    ).toContain('stale-validation');
+  });
 });
