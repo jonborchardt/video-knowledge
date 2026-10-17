@@ -144,3 +144,18 @@
     }
   }
 }
+
+/* Print: content only. Chrome is hidden per element with print:hidden; these are the global rules. */
+@media print {
+  /* Every tab section prints, not just the active one. */
+  main > section[hidden] {
+    display: block;
+  }
+  figure,
+  table,
+  img,
+  blockquote,
+  [data-verdict] {
+    break-inside: avoid;
+  }
+}

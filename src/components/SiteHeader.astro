@@ -4,6 +4,9 @@ import { href } from '../lib/url';
 import ThemeToggle from './ThemeToggle.astro';
 // The blog's logo, inlined (no extra request; theme-independent colours).
 import logo from '../assets/logo.svg?raw';
+
+const current = Astro.url.pathname;
+const isActive = (path: string) => path.startsWith('/') && current.startsWith(href(path));
 ---
 
 <header class="border-b print:hidden">
@@ -19,7 +22,8 @@ import logo from '../assets/logo.svg?raw';
             <li>
               <a
                 href={item.href.startsWith('/') ? href(item.href) : item.href}
-                class="rounded-sm px-2 py-1 text-muted-foreground no-underline hover:text-foreground"
+                aria-current={isActive(item.href) ? 'page' : undefined}
+                class="rounded-sm px-2 py-1 text-muted-foreground no-underline hover:text-foreground aria-[current=page]:font-medium aria-[current=page]:text-foreground"
               >
                 {item.label}
               </a>
