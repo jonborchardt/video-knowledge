@@ -160,7 +160,7 @@ interface Draft {
   evidenceNeeded: string;
   premise: string;
   arc: Arc;
-  unresolved: string[];
+  unresolved: (core: ClaimView[]) => string[]; // from the final claim list, so a reviewer's pruning removes stale gaps
   claims: string[];
   central: (core: ClaimView[]) => Assertion;
 }
@@ -204,7 +204,7 @@ function drafts(t: StoryInput): Draft[] {
           resolution: `Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.`,
           takeaway: `What a viewer should do differently now that the claim is not what it seemed.`,
         },
-        unresolved: sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by} only partly agrees: ${v.note}`),
+        unresolved: () => sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by} only partly agrees: ${v.note}`),
         claims: [c.id],
         central: () => ({
           id: 'central',
@@ -242,7 +242,7 @@ function drafts(t: StoryInput): Draft[] {
           resolution: `Where the disagreement comes from, and which answer applies to which situation.`,
           takeaway: `The conditions under which the claim holds, instead of a yes or no.`,
         },
-        unresolved: [
+        unresolved: () => [
           `What explains the split between ${names(c)}?`,
           ...sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by}: ${v.note}`),
         ],
@@ -282,7 +282,7 @@ function drafts(t: StoryInput): Draft[] {
           resolution: `Why the expectation was wrong, or what the sources were missing.`,
           takeaway: `The corrected belief, with its limits.`,
         },
-        unresolved: sv.filter((v) => v.verdict !== c.verdict).map((v) => `${v.by} differs: ${v.note}`),
+        unresolved: () => sv.filter((v) => v.verdict !== c.verdict).map((v) => `${v.by} differs: ${v.note}`),
         claims: [c.id],
         central: () => factAbout(c, 'central'),
       });
@@ -308,7 +308,7 @@ function drafts(t: StoryInput): Draft[] {
           resolution: `Absence of evidence is not evidence of absence: what would change the picture.`,
           takeaway: `How to treat the claim until it is checked.`,
         },
-        unresolved: [`Has anyone measured whether ${ask(c)}?`, 'Which study or dataset would settle it?'],
+        unresolved: () => [`Has anyone measured whether ${ask(c)}?`, 'Which study or dataset would settle it?'],
         claims: [c.id],
         central: () => attributionAbout(c, 'central'),
       });
@@ -346,9 +346,10 @@ function drafts(t: StoryInput): Draft[] {
         resolution: `What the evidence settles and what it leaves open.`,
         takeaway: `A decision rule the viewer can apply.`,
       },
-      unresolved: core
-        .filter((c) => !c.decidedBy)
-        .map((c) => `${c.studies ? 'No study strong enough to decide' : 'Unchecked'}: ${q(c)}`),
+      unresolved: (cs) =>
+        cs
+          .filter((c) => !c.decidedBy)
+          .map((c) => `${c.studies ? 'No study strong enough to decide' : 'Unchecked'}: ${q(c)}`),
       claims: core.map((c) => c.id),
       central: (cs) => {
         const l = lead(cs.length ? cs : core);
@@ -514,7 +515,7 @@ function evaluate(
       .flatMap((v) => v.context.filter((x) => x.role === 'context'))
       .map((x) => `${x.by} is context only: ${x.why}`),
   );
-  const gaps = uniq([...blocking, ...contextOnly, ...d.unresolved]);
+  const gaps = uniq([...blocking, ...contextOnly, ...d.unresolved(core)]);
   return {
     id: d.id,
     kind: d.kind,

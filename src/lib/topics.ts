@@ -69,6 +69,7 @@ interface SiteConfig {
   hero?: { title?: string; lede?: string }; // hand-written hook at the top of the topic page
   recap?: { bottomLine?: string; groups?: { title: string; claims: string[] }[] };
   docs?: Record<string, string>;
+  sameStudy?: Record<string, string>; // '<summary file>.txt' -> '<primary file>.txt' when two documents report one study
 }
 
 export interface ClaimView {
@@ -160,6 +161,8 @@ export interface Topic {
   superseded: { title: string; by: string }[];
   wrong: ClaimView[];
   contested: ClaimView[];
+  docNames: Record<string, string>; // '<file>.txt' -> display name
+  sameStudy: Record<string, string>; // '<file>.txt' -> the file of the primary report of the same study
 }
 
 const ROOT = process.cwd();
@@ -346,5 +349,7 @@ export function loadTopic(name: string): Topic {
       .map((v) => ({ title: v.title, by: recOf.get(v.supersededBy!)?.title ?? v.supersededBy! })),
     wrong: t.commonlyWrong.map((c) => byId.get(c.id)!),
     contested: t.contested.map((c) => byId.get(c.id)!),
+    docNames: cfg.docs ?? {},
+    sameStudy: cfg.sameStudy ?? {},
   };
 }

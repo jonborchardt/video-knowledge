@@ -2,6 +2,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { scriptDirs } from '../src/lib/script';
 import { storyTopicNames } from '../src/lib/stories';
 import { topicNames } from '../src/lib/topics';
 
@@ -13,6 +14,7 @@ const pages = [
   'about/index.html',
   ...topicNames().map((n) => `${n}/index.html`),
   ...storyTopicNames().map((n) => `${n}/stories/index.html`),
+  ...scriptDirs().map((d) => `${d.topic}/scripts/${d.slug}/index.html`),
 ];
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
@@ -44,6 +46,17 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       (d) => d.isDirectory() && !['_astro', 'og'].includes(d.name),
     );
     expect(dirs.map((d) => d.name).sort()).toEqual(['about', ...topicNames()].sort());
+  });
+
+  it('script pages carry the narration with sentence markers, and the story page links to them', () => {
+    for (const d of scriptDirs()) {
+      const html = readFileSync(join(DIST, d.topic, 'scripts', d.slug, 'index.html'), 'utf8');
+      expect(html).toContain('<section id="script"');
+      expect(html).toMatch(/s\d\d (verified|needs-review|blocked)/); // a sentence badge
+      expect(readFileSync(join(DIST, d.topic, 'stories', 'index.html'), 'utf8')).toContain(
+        `href="${BASE}${d.topic}/scripts/${d.slug}/"`,
+      );
+    }
   });
 
   it('story pages list every candidate with its readiness, and the topic page links to them', () => {

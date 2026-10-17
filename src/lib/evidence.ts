@@ -32,6 +32,8 @@ export interface Assertion {
   /** The canonical claims the sentence rests on, and whether it affirms or negates each. */
   claims: { id: string; stance: Stance }[];
   evidence: EvidenceRef[];
+  /** Figures the caller has established by a recorded calculation from cited inputs (see src/lib/script.ts). */
+  derived?: string[];
 }
 
 export type Status = 'supported' | 'qualified' | 'disputed' | 'unsupported' | 'unverified';
@@ -269,7 +271,7 @@ export function validate(
         (x) => byId.get(x.ref.claim)?.sources.find((s) => s.id === (x.ref as { source: string }).source)?.channel,
       ),
     );
-    const need = PLURAL.test(a.text) ? 2 : 1;
+    const need = PLURAL.test(a.text.replace(/"[^"]*"/g, '')) ? 2 : 1; // the frame, not the quoted words
     const stated = Number(a.text.match(/^(\d+) sources?\b/)?.[1] ?? 0); // "12 sources claim": all twelve must be cited
     if (statements.length < stated) {
       status = 'unverified';
@@ -365,9 +367,12 @@ export function validate(
       if (status === 'supported') status = 'qualified';
     }
     // Figures must come from the cited evidence, not from the writer.
-    const evidenceText = [...supporting, ...qualifying].map((x) => `${x.passage ?? ''}\n${x.note}`).join('\n');
+    const evidenceText = [...supporting, ...qualifying]
+      .map((x) => `${x.passage ?? ''}\n${x.note}`)
+      .join('\n')
+      .replaceAll(',', ''); // "$1,000" in a passage matches "1000" from numbers()
     for (const n of numbers(a.text))
-      if (!evidenceText.includes(n)) {
+      if (!evidenceText.includes(n) && !a.derived?.includes(n)) {
         limitations.push(`The figure "${n}" does not appear in the cited evidence.`);
         suggestions.push(`Drop "${n}" or cite a passage that states it.`);
         status = 'unverified';
