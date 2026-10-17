@@ -1,91 +1,37 @@
 import { describe, expect, it } from 'vitest';
-import type { PassageReader } from '../src/lib/evidence';
-import type { ReviewFile } from '../src/lib/review';
 import {
   type EvidencePackage,
   type Script,
-  type ScriptAssertion,
-  type ScriptReviewFile,
-  type Sentence,
   buildPackage,
   evalExpr,
   scriptDir,
-  scriptFingerprint,
   sentenceFingerprint,
   sentences,
   validateScript,
 } from '../src/lib/script';
-import { discover } from '../src/lib/stories';
-import { type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
-import type { Topic } from '../src/lib/topics';
-import { TOPIC, claim, passages, sources, study, topic } from './corpus';
-
-// A passage with figures, in the shape of a survey result.
-const DOC_D = `${TOPIC}/sources/survey-d.txt#L1-L2`;
-const read: PassageReader = (cite) =>
-  cite === DOC_D
-    ? 'Of the 601 participants surveyed, 47% reported losing money, 27% broke even and 25% made a profit.'
-    : (passages[cite] ?? null);
-
-const MLM = `${TOPIC}/mlm-income`;
-const RENTAL = `${TOPIC}/rental-leverage`;
-const mlm = () =>
-  claim('mlm-income', 'Most MLM participants earn nothing or lose money', {
-    verdicts: [study('Survey D', 'right', 0.7, DOC_D, 'A probability sample of 601 participants: 47% lost money.')],
-    sources: sources(3),
-    lean: 'skeptic',
-  });
-const rental = () =>
-  claim('rental-leverage', 'Rental property lets investors borrow against appreciation', {
-    verdicts: [study('Field C', 'partly', 0.5, `${TOPIC}/sources/field-c.txt#L20-L21`)],
-    sources: sources(2),
-  });
-const review: ReviewFile = {
-  stories: {
-    'decision:mlm-and-seminars': {
-      coherence: { score: 0.9, reason: 'one question' },
-      claims: [MLM],
-      title: 'How Much Money Do MLM Participants Actually Make?',
-    },
-  },
-};
-const t = () => topic([mlm(), rental()], [{ title: 'MLM and seminars', claims: [mlm(), rental()] }]);
-const asTopic = (x: ReturnType<typeof t>): Topic => ({ ...x, docNames: {}, sameStudy: {} }) as unknown as Topic;
-const story = () => discover(t(), read, review).stories.find((s) => s.id === 'decision:mlm-and-seminars')!;
-const pkg = () => buildPackage(story(), asTopic(t()), read, review);
-
-const fact = (id: string, text: string, cites = [DOC_D], extra: Partial<ScriptAssertion> = {}): ScriptAssertion => ({
-  id,
-  text,
-  kind: 'fact',
-  claims: [{ id: MLM, stance: 'asserts' }],
-  evidence: cites.map((cite) => ({ kind: 'study' as const, claim: MLM, cite })),
-  ...extra,
-});
-const sentence = (id: string, text: string, type: Sentence['type'], assertions?: ScriptAssertion[]): Sentence => ({
-  id,
-  text,
-  type,
-  ...(assertions ? { assertions } : {}),
-});
-const script = (sent: Sentence[], revision = 1): Script => ({
-  topic: TOPIC,
-  story: 'decision:mlm-and-seminars',
-  title: 'T',
-  revision,
-  generation: { model: 'test', brief: 'b', date: 'd', wordsPerMinute: 150, evidencePackage: 'x' },
-  sections: [{ name: 'hook', sentences: sent }],
-});
-const approveAll = (s: Script, findings: ScriptReviewFile['findings'] = []): ScriptReviewFile => ({
-  reviewer: 'test',
-  date: 'd',
-  revision: s.revision,
-  approved: Object.fromEntries(sentences(s).map((x) => [x.id, sentenceFingerprint(x)])),
-  findings,
-});
-const corpus = () => ({ name: TOPIC, claims: [mlm(), rental()] });
-const run = (s: Script, r: ScriptReviewFile | null = null) => validateScript(s, corpus(), read, r);
-const cats = (v: ReturnType<typeof run>) => v.issues.filter((i) => i.severity === 'blocking').map((i) => i.category);
+import { buildStoryboard } from '../src/lib/storyboard';
+import { TOPIC, claim, study } from './corpus';
+import {
+  DOC_D,
+  MLM,
+  RENTAL,
+  approveAll,
+  asTopic,
+  cats,
+  corpus,
+  fact,
+  good,
+  pkg,
+  plan,
+  read,
+  review,
+  run,
+  scene,
+  script,
+  sentence,
+  story,
+  t,
+} from './script-helpers';
 
 describe('evidence package', () => {
   it('carries the reviewed claim list, not the recap group, and no stale gaps', () => {
@@ -395,34 +341,7 @@ describe('script validation', () => {
 });
 
 describe('storyboard', () => {
-  const good = () =>
-    script([
-      sentence('s01', 'Say you join under a friend.', 'hypothetical'),
-      sentence('s02', 'Of 601 people surveyed, 47 percent lost money.', 'factual', [
-        fact('s02.a', 'Of 601 participants, 47% reported losing money.'),
-      ]),
-      sentence('s03', 'So what does that leave?', 'rhetorical'),
-    ]);
   const p = () => pkg();
-  const plan = (scenes: StoryboardPlan['scenes'], s = good()): StoryboardPlan => ({
-    topic: TOPIC,
-    story: s.story,
-    scriptFingerprint: scriptFingerprint(s),
-    generation: { model: 'test', brief: 'b', date: 'd' },
-    scenes,
-  });
-  const scene = (
-    id: string,
-    ss: string[],
-    extra: Partial<StoryboardPlan['scenes'][0]> = {},
-  ): StoryboardPlan['scenes'][0] => ({
-    id,
-    sentences: ss,
-    purpose: 'p',
-    visual: { category: 'typography', description: 'words on screen' },
-    ...extra,
-  });
-
   it('takes its narration from the script and keeps timing consistent', () => {
     const s = good();
     const v = run(s, approveAll(s));
