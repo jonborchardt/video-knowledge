@@ -23,6 +23,8 @@ Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checko
   site.json    optional: hero title and lede, recap groups, bottom line ({hypeWrong}/{hypeTotal} are filled in), study display names
   glyph.svg    optional: line-art icon (44x44 viewBox, stroke currentColor) shown on the home card
   changed-minds.json  optional notes from the changed-minds pass (step 6); nothing reads it
+  stories.json  written by `npm run stories -- discover`; commit it (the story-ideas page is built from it)
+  story-review.json  optional, written by the review agent (scripts/briefs/stories.md); discover merges it
   work/        scratch for agent batches (gitignored)
 ```
 
@@ -50,12 +52,79 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3â
 - Evidence belongs to the **claim**: a verdict counts for every source that makes the claim, including ones added later. Adding a source never needs re-judging old claims.
 - A source's **score** comes from the verdicts on the claims it makes. Its **novelty** adds up the confidence of the claims it gets right, divided by how many other sources say the same.
 
+## Story ideas and the evidence gate
+
+`npm run stories -- discover <topic>` reads the topic's report and store (no watcher checkout needed), drafts
+candidate videos, audits each against the recorded evidence, evaluates and ranks them and writes
+`<topic>/stories.json` (at most 12 kept; the rest are listed as rejected with a reason). The site shows them at
+`/<topic>/stories/`.
+
+```
+npm run stories -- discover <topic>              # draft, audit, evaluate, rank; writes <topic>/stories.json
+npm run stories -- show <topic> [story-id]       # the ranked list, or one story with its audit and cited passages
+npm run stories -- validate <topic> <file.json>  # run the evidence gate on your own assertions (exit 2 if any is blocked)
+```
+
+Three layers, kept apart:
+
+- **Deterministic** (`src/lib/stories.ts` drafting, `src/lib/evidence.ts` checks): five kinds of candidate are drafted
+  (a popular claim a study contradicts, studies or sources that disagree, a study that overturned the AI guess, a widely
+  repeated claim nobody checked, and the recap groups in `site.json` as decision stories), and every reference is
+  verified. Ids are `<kind>:<claim slug>`, so a rerun is byte-identical and ids survive corpus changes.
+- **Semantic judgment** (`<topic>/story-review.json`, written by an agent following `scripts/briefs/stories.md`): does a
+  study verdict decide _this_ sentence (`direct`, `partial`, `contextual`), do a candidate's claims answer one question
+  (coherence score, pruned claim list, or rejection), and are the audit's qualifications carried into the narrative.
+  Without a review, the validator falls back to conservative wording heuristics (a base rate is only context for a
+  "can" claim; a verdict note that hedges its own scope is partial), and a multi-claim story cannot be `ready`.
+- **Editorial** (the review's framing, else plain-question templates): the viewer-facing question, title and two
+  alternates, why watch, the tension, the evidence needed and available, the gaps, and the arc. Kind names never
+  appear in titles.
+
+Each story carries a coherence score, a format (`long-form` for 8 to 12 minutes, `short`, or `needs-research`), and
+separate scores: _editorial_ (mean of coherence, relevance, curiosity, stakes, depth, all corpus heuristics, never
+audience data) and _evidence_ (strength of the studies behind the central conclusion, discounted when they only partly
+apply). Overall is 0.6 editorial + 0.4 evidence, scaled by originality against higher-ranked stories. Readiness is
+decided from the central conclusion and the essential findings, never from the scores: `ready` (coherent, verified,
+nothing pending), `needs-review` (usable once a person settles the listed points), `needs-research` (essential evidence
+missing), or rejected (incoherent, a variation of another story, a single-claim chapter of a reviewed multi-claim
+story, or contradicted). A disagreement story is ready when the disagreement itself is verified; a story whose
+strongest applicable study is below 0.5 confidence is never ready. Every non-ready story lists what blocks it.
+
+The validator (`src/lib/evidence.ts`) takes an assertion (`fact`, `attribution` or `disagreement`), the canonical
+claims it rests on and its evidence references, and returns a status (`supported`, `qualified`, `disputed`,
+`unsupported`, `unverified`), a publication decision (`approved`, `qualify`, `blocked`), whether a human must review
+it, and the supporting, contradicting and qualifying evidence with passages. It is deterministic and fails closed: a
+missing claim, verdict or passage blocks; an AI guess never counts as verification; a figure that is not in the cited
+passage blocks; a study verdict is pulled in as a contradiction whether or not it was cited; and any wording that is
+not the canonical claim's is flagged for review because only a human (or a semantic check) can confirm a passage
+supports an exact sentence. An attribution ("several sources claim X") passes on the sources' own statements without
+endorsing X.
+
+```json
+[
+  {
+    "id": "a1",
+    "text": "Most retail day traders lose money",
+    "kind": "fact",
+    "claims": [{ "id": "get-rich-quick/most-retail-day-traders-lose-money", "stance": "asserts" }],
+    "evidence": [
+      {
+        "kind": "study",
+        "claim": "get-rich-quick/most-retail-day-traders-lose-money",
+        "cite": "get-rich-quick/sources/chague-day-trading-for-a-living.txt#L219-L229"
+      }
+    ]
+  }
+]
+```
+
 ## Website
 
 An [Astro](https://astro.build) site with Tailwind. Each topic with a `report.json` becomes a page (`src/pages/[topic]/index.astro`), linked from a home page. Pages are rendered at build time; the only client script is the tab bar and the claim search.
 
 ```
 npm run report     # refresh <topic>/report.json from the stores (needs the watcher checkout, so run locally)
+npm run stories -- discover <topic>   # refresh <topic>/stories.json from the report and store
 npm run dev        # live preview at http://localhost:4321/video-knowledge/
 npm run build      # build dist/
 npm run validate   # typecheck + lint + format check + build + tests (what CI runs)

@@ -1,0 +1,3688 @@
+{
+ "topic": "ai-coding",
+ "basis": {
+  "claims": 385,
+  "sources": 216,
+  "studies": 13,
+  "candidates": 69
+ },
+ "stories": [
+  {
+   "id": "conflict:developers-overestimate-how-much-tools-speed",
+   "kind": "conflict",
+   "title": "Do Programmers Know If AI Is Actually Making Them Faster?",
+   "alternates": [
+    "Why Developers Misjudge How Much AI Speeds Them Up",
+    "The Study Where Developers Felt 20% Faster and Were 19% Slower"
+   ],
+   "question": "Do developers know whether AI is actually making them faster?",
+   "whyWatch": "Every developer has a feeling about this. Two randomized trials checked the feeling against the stopwatch and got opposite answers, which is the most useful thing a viewer can learn about their own estimate.",
+   "tension": "METR: developers forecast 24% faster, felt 20% faster, were 19% slower. Peng's Copilot trial: both groups guessed about 35% and the measured gain was 55.8%. Overestimate in one, underestimate in the other.",
+   "evidenceNeeded": "Trials that record developers' predicted or perceived speedup alongside a measured one, on comparable tasks.",
+   "evidenceAvailable": [
+    "METR 2025 RCT: right (0.8, direct)",
+    "Copilot RCT (Peng): wrong (0.45, direct)",
+    "METR 2026 update: partly (0.35, partial)"
+   ],
+   "gaps": [
+    "What explains the split between METR 2025 RCT, Copilot RCT (Peng), METR 2026 update?",
+    "METR 2026 update: METR Feb 2026: some developers self-report very high speedups, which METR notes can be 'quite unreliable' per its earlier study; it also says the true speedup may be higher among those who selected out, so no new measured overestimate."
+   ],
+   "premise": "The disagreement is the story and it is well measured on both sides. METR 2025 (16 experienced open-source developers, 246 tasks in their own mature repos, early-2025 tools) found a 19% slowdown against a forecast of 24% faster and an after-the-fact estimate of 20% faster; experts predicted 38-39%. Peng's 2023 Copilot trial (freelancers, a greenfield HTTP server task) found a 55.8% speedup that participants underestimated at about 35%. METR's 2026 update adds that self-reports can be very unreliable and that its new data are too selection-biased to measure. The likely explanation, task familiarity and codebase maturity, is the resolution the video should offer as a hypothesis, not a finding.",
+   "claims": [
+    "ai-coding/developers-overestimate-how-much-tools-speed"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Ask the viewer to guess how much faster AI makes them, then show what happened when two trials asked the same of their participants.",
+    "conflict": "Two randomized trials, opposite errors: experienced maintainers overestimated and got slower; freelancers on a fresh task underestimated and got much faster.",
+    "evidence": "METR's forecast-versus-measured numbers and acceptance rates; Peng's estimate-versus-measured numbers; METR 2026's warning about self-reports and selection.",
+    "resolution": "Perception tracks effort saved on the parts AI does, not time spent on the parts it creates; which dominates depends on task familiarity and codebase maturity (a hypothesis both papers gesture at).",
+    "takeaway": "Measure, don't ask: time a week of comparable tasks with and without the tool."
+   },
+   "coherence": {
+    "score": 0.9,
+    "basis": "review",
+    "explanation": "One question: can developers tell whether AI is speeding them up? Two trials measured perception against the clock and disagree."
+   },
+   "format": "long-form",
+   "formatWhy": "Two trials with contrasting designs, a third document on why self-reports fail, and twenty-one sources repeating the belief.",
+   "scores": {
+    "coherence": 0.9,
+    "relevance": 1,
+    "curiosity": 1,
+    "stakes": 0.4,
+    "depth": 0.9,
+    "originality": 1,
+    "evidence": 1,
+    "editorial": 0.84,
+    "overall": 0.9,
+    "explanation": "editorial 0.84 = mean of coherence 0.9 (review), relevance 1 (22 sources, 18 channels), curiosity 1 (conflict), stakes 0.4 (lean: calibrating), depth 0.9 (3 studies, 1 claim, tension); evidence 1 = strongest METR 2025 RCT at 0.8 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.9), central conclusion supported, 1 essential finding verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Studies disagree on whether developers overestimate how much AI tools speed them up",
+     "kind": "disagreement",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.8,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+        "cite": "ai-coding/sources/2507.09089v2.txt#L17-L24"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "METR 2025 RCT",
+       "verdict": "right",
+       "confidence": 0.8,
+       "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+        "cite": "ai-coding/sources/2302.06590.txt#L184-L188"
+       },
+       "cited": true,
+       "role": "contradicts",
+       "by": "Copilot RCT (Peng)",
+       "verdict": "wrong",
+       "confidence": 0.45,
+       "note": "In the Copilot RCT both groups estimated a ~35% productivity gain, an underestimate of the measured 55.8% speedup.",
+       "applicability": "direct",
+       "basis": "review",
+       "why": "the trial compared participants' estimated gain with the measured gain, which is exactly the claim"
+      }
+     ],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+        "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L63-L63"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "METR 2026 update",
+       "verdict": "partly",
+       "confidence": 0.35,
+       "note": "METR Feb 2026: some developers self-report very high speedups, which METR notes can be 'quite unreliable' per its earlier study; it also says the true speedup may be higher among those who selected out, so no new measured overestimate.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"self-report\")"
+      }
+     ],
+     "context": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+        "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L36"
+       },
+       "cited": true,
+       "role": "inconclusive",
+       "by": "Anthropic internal study",
+       "verdict": "unknown",
+       "confidence": null,
+       "note": "Anthropic's +50% figures are self-reported; the post cites METR's overestimation finding and admits perception, social-desirability and recall biases, so it cannot settle the question.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"self-reported\")"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Contradicted by Copilot RCT (Peng): In the Copilot RCT both groups estimated a ~35% productivity gain, an underestimate of the measured 55.8% speedup."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.8), 1 contradicting, 1 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Developers overestimate how much AI tools speed them up",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "disputed",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.8,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L17-L24"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "METR 2025 RCT",
+         "verdict": "right",
+         "confidence": 0.8,
+         "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+          "cite": "ai-coding/sources/2302.06590.txt#L184-L188"
+         },
+         "cited": true,
+         "role": "contradicts",
+         "by": "Copilot RCT (Peng)",
+         "verdict": "wrong",
+         "confidence": 0.45,
+         "note": "In the Copilot RCT both groups estimated a ~35% productivity gain, an underestimate of the measured 55.8% speedup.",
+         "applicability": "direct",
+         "basis": "review",
+         "why": "the trial compared participants' estimated gain with the measured gain, which is exactly the claim"
+        }
+       ],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+          "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L63-L63"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "METR 2026 update",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "METR Feb 2026: some developers self-report very high speedups, which METR notes can be 'quite unreliable' per its earlier study; it also says the true speedup may be higher among those who selected out, so no new measured overestimate.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-report\")"
+        }
+       ],
+       "context": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-overestimate-how-much-tools-speed",
+          "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L36"
+         },
+         "cited": true,
+         "role": "inconclusive",
+         "by": "Anthropic internal study",
+         "verdict": "unknown",
+         "confidence": null,
+         "note": "Anthropic's +50% figures are self-reported; the post cites METR's overestimation finding and admits perception, social-desirability and recall biases, so it cannot settle the question.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-reported\")"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Contradicted by Copilot RCT (Peng): In the Copilot RCT both groups estimated a ~35% productivity gain, an underestimate of the measured 55.8% speedup."
+       ],
+       "suggestions": [
+        "Present the disagreement: name the studies on each side instead of stating one side as fact."
+       ],
+       "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.8), 1 contradicting, 1 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "decision:how-much-faster",
+   "kind": "decision",
+   "title": "How Much Faster Does AI Actually Make Programmers?",
+   "alternates": [
+    "2x, 10x, or Slower? What the Trials Found",
+    "The METR Study Everyone Cites, Explained"
+   ],
+   "question": "How much faster does AI actually make programmers?",
+   "whyWatch": "The claims run from 10x to 'it slows you down', and both extremes cite studies. The trials fit together once you look at who was measured doing what.",
+   "tension": "Ten-times claims against field trials in the twenties of percent and one trial that found experienced maintainers 19% slower.",
+   "evidenceNeeded": "Randomized or quasi-experimental measurements of task time or output with and without AI tools, on real work, by setting.",
+   "evidenceAvailable": [
+    "METR 2025 RCT: right (0.85, direct)",
+    "METR 2026 update: right (0.7, direct)",
+    "Google RCT: right (0.7, direct)",
+    "Microsoft/Accenture field RCTs: right (0.7, direct)",
+    "METR 2025 RCT: partly (0.5, partial)",
+    "Shan et al. field study + RCT: partly (0.5, partial)",
+    "Anthropic internal study: wrong (0.4, partial)",
+    "Shan et al. field study + RCT: wrong (0.3, partial)",
+    "METR 2026 update: partly (0.4, partial)"
+   ],
+   "gaps": [
+    "Google migrations report is context only: bespoke migration pipelines with fine-tuned models and engineers' estimates; not average developer work in an enterprise codebase",
+    "No study strong enough to decide: \"Engineers who adopt agentic coding are about ten times as productive as peers who don't\""
+   ],
+   "premise": "Field trials put the average gain in the twenties: Microsoft/Accenture (4,867 developers, 26% more weekly PRs), Google (96 engineers, about 21% less time on an enterprise task, confidence interval crossing zero) and Shan's field study (18% more user stories, self-selected usage). METR 2025 found the opposite sign for 16 experienced open-source maintainers in their own mature repos: 19% slower with early-2025 tools. The 10x claim has no supporting measurement; the field gain and Anthropic's self-reported 50% bound it, and neither measured agentic coding. METR's 2026 update says the slowdown was probably specific to early 2025 but calls its new data very weak evidence because of selection effects. Google's migration figures (50% to 89% savings) are bespoke pipelines and engineers' estimates, context only.",
+   "claims": [
+    "ai-coding/tools-slowed-experienced-open-source-developers",
+    "ai-coding/real-enterprise-codebases-yields-modest-average",
+    "ai-coding/engineers-who-adopt-agentic-coding-about",
+    "ai-coding/measured-slowdown-mainly-artifact-older-models"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Three numbers on screen: 10x, 26%, minus 19%. All of them come with a study attached.",
+    "conflict": "The hype and the slowdown both cite trials; the question is what each trial measured.",
+    "evidence": "Microsoft/Accenture, Google and Shan on real work; METR 2025 on mature repos with experts; METR 2026 on what changed and why it cannot tell; the absence of any 10x measurement.",
+    "resolution": "Twenties of percent on average work, less or negative for experts in familiar code, unknown for today's agentic tools; 10x is unmeasured.",
+    "takeaway": "Expect a quarter, not a multiple, and expect less on the code you know best."
+   },
+   "coherence": {
+    "score": 0.9,
+    "basis": "review",
+    "explanation": "One question, the size of the productivity gain, answered by the field trials' estimate, the slowdown trial, the 10x claim it bounds, and the argument that newer models change the answer. The perception claim is its own story and is dropped."
+   },
+   "format": "long-form",
+   "formatWhy": "Five trials and reports with a coherent spread of results, a claim to bound, a time dimension, and thirty-plus sources voicing the beliefs.",
+   "scores": {
+    "coherence": 0.9,
+    "relevance": 1,
+    "curiosity": 0.5,
+    "stakes": 1,
+    "depth": 0.85,
+    "originality": 1,
+    "evidence": 0.98,
+    "editorial": 0.85,
+    "overall": 0.9,
+    "explanation": "editorial 0.85 = mean of coherence 0.9 (review), relevance 1 (31 sources, 27 channels), curiosity 0.5 (decision), stakes 1 (lean: pro-hype), depth 0.85 (6 studies, 4 claims); evidence 0.98 = strongest METR 2025 RCT at 0.85 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.9), central conclusion supported, 4 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "AI tools slowed experienced open-source developers working on their own familiar codebases (METR 2025 RCT)",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.85,
+     "independent": 2,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+        "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "METR 2025 RCT",
+       "verdict": "right",
+       "confidence": 0.85,
+       "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+        "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L58-L62"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "METR 2026 update",
+       "verdict": "right",
+       "confidence": 0.7,
+       "note": "METR Feb 2026 restates the early-2025 result (tasks took 19% longer with AI, CI +2% to +39%) but adds that the 10 returning developers are now estimated ~18% faster with AI (CI -38% to +9%), so the slowdown was specific to early 2025.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [],
+     "problems": [],
+     "limitations": [],
+     "suggestions": [],
+     "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.85)."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "AI tools slowed experienced open-source developers working on their own familiar codebases (METR 2025 RCT)",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.85,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "METR 2025 RCT",
+         "verdict": "right",
+         "confidence": 0.85,
+         "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/tools-slowed-experienced-open-source-developers",
+          "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L58-L62"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "METR 2026 update",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "METR Feb 2026 restates the early-2025 result (tasks took 19% longer with AI, CI +2% to +39%) but adds that the 10 returning developers are now estimated ~18% faster with AI (CI -38% to +9%), so the slowdown was specific to early 2025.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.85)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "In real enterprise codebases AI yields modest average productivity gains, far below headline claims",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.7,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+          "cite": "ai-coding/sources/2410.12944.txt#L519-L528"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Google RCT",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "Google RCT, 96 full-time engineers on an enterprise-grade C++ task in the monorepo: AI cut time on task by ~21% in the best-fit model (95% CI crosses zero, p=0.086), well below Peng et al.'s 56% and in line with Cui et al.'s 26%.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Microsoft/Accenture field RCTs",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "Field RCTs with 4,867 developers at Microsoft, Accenture and a Fortune-100 firm: Copilot raised weekly completed PRs by 26% (SE 10.3%), substantially smaller than the lab's 56% speedup, which the authors attribute to real work being less assistable.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L995-L1001"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "METR 2025 RCT",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "METR 2025: in large, mature repos (~10 years old, >1.1M LOC) AI helped less than in greenfield RCTs, and on average slowed developers by 19%; this goes beyond 'modest gains', and the repos are open-source rather than enterprise.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+          "cite": "ai-coding/sources/4859137.txt#L489-L493"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Shan et al. field study + RCT",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "Field DID at a 5,000-person IT services firm (201 devs, 27 weeks, 2023-24 Copilot/ChatGPT/Gemini): AI users completed 1.08 more user stories per week (+18%), a real gain but modest next to 55% or 10x headlines; usage was self-reported and partly self-selected.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-reported\")"
+        }
+       ],
+       "context": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/real-enterprise-codebases-yields-modest-average",
+          "cite": "ai-coding/sources/2501.06972.txt#L245-L251"
+         },
+         "cited": true,
+         "role": "context",
+         "by": "Google migrations report",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Google reports large end-to-end savings (about 50% on int64, about 89% on small Joda clusters) in a 500M+ LOC codebase, but only for bespoke migration pipelines with fine-tuned models, not average developer work, and the figures are engineers' estimates.",
+         "applicability": "contextual",
+         "basis": "review",
+         "why": "bespoke migration pipelines with fine-tuned models and engineers' estimates; not average developer work in an enterprise codebase"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "METR 2025 RCT: METR 2025: in large, mature repos (~10 years old, >1.1M LOC) AI helped less than in greenfield RCTs, and on average slowed developers by 19%; this goes beyond 'modest gains', and the repos are open-source rather than enterprise. [partial: the verdict note limits its own scope (\"rather than\")]",
+        "Shan et al. field study + RCT: Field DID at a 5,000-person IT services firm (201 devs, 27 weeks, 2023-24 Copilot/ChatGPT/Gemini): AI users completed 1.08 more user stories per week (+18%), a real gain but modest next to 55% or 10x headlines; usage was self-reported and partly self-selected. [partial: the verdict note limits its own scope (\"self-reported\")]",
+        "Context only, Google migrations report (partly): bespoke migration pipelines with fine-tuned models and engineers' estimates; not average developer work in an enterprise codebase."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 2 qualifying, 1 context only."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "The evidence does not support \"Engineers who adopt agentic coding are about ten times as productive as peers who don't\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+          "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Anthropic internal study",
+         "verdict": "wrong",
+         "confidence": 0.4,
+         "note": "Anthropic: users self-report an average +50% gain at 59% usage, plus about 67% more merged PRs per engineer after Claude Code adoption, an order of magnitude below 10x.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-report\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/engineers-who-adopt-agentic-coding-about",
+          "cite": "ai-coding/sources/4859137.txt#L489-L493"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Shan et al. field study + RCT",
+         "verdict": "wrong",
+         "confidence": 0.3,
+         "note": "The field gain from AI assistants was about 18% more user stories (24-31% under alternative estimators), far from 10x. The tools were 2023-24 assistants, not agentic coding.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "measures 2023-24 assistants, not agentic coding; it bounds the plausible gain rather than testing the 10x claim"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Anthropic internal study: Anthropic: users self-report an average +50% gain at 59% usage, plus about 67% more merged PRs per engineer after Claude Code adoption, an order of magnitude below 10x. [partial: the verdict note limits its own scope (\"self-report\")]",
+        "Shan et al. field study + RCT: The field gain from AI assistants was about 18% more user stories (24-31% under alternative estimators), far from 10x. The tools were 2023-24 assistants, not agentic coding. [partial: measures 2023-24 assistants, not agentic coding; it bounds the plausible gain rather than testing the 10x claim]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f3",
+       "text": "The measured AI slowdown is mainly an artifact of older models and would disappear with newer ones",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+          "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "METR 2026 update",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "METR Feb 2026: METR believes developers are likely more sped up in early 2026. Returning developers show an 18% time reduction (CI -38% to +9%) and new recruits a 4% reduction (CI -15% to +9%), but selection effects make this 'very weak evidence', and models are not separated from other changes.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "METR's own belief with selection effects it calls very weak evidence; models are not separated from other changes"
+        }
+       ],
+       "context": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L587-L599"
+         },
+         "cited": true,
+         "role": "inconclusive",
+         "by": "METR 2025 RCT",
+         "verdict": "unknown",
+         "confidence": null,
+         "note": "The paper tests only Feb-June 2025 tools. It says more reliable or better-elicited systems could speed up developers, and that early agents already make progress, but it doesn't test newer models.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "METR 2026 update: METR Feb 2026: METR believes developers are likely more sped up in early 2026. Returning developers show an 18% time reduction (CI -38% to +9%) and new recruits a 4% reduction (CI -15% to +9%), but selection effects make this 'very weak evidence', and models are not separated from other changes. [partial: METR's own belief with selection effects it calls very weak evidence; models are not separated from other changes]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "decision:quality-and-understanding",
+   "kind": "decision",
+   "title": "Is AI-Written Code Harder to Maintain?",
+   "alternates": [
+    "The Technical-Debt Fear, Tested in a Randomized Trial",
+    "More Code, Less Understanding: What AI Does to Code Ownership"
+   ],
+   "question": "Is AI-written code harder to maintain?",
+   "whyWatch": "Eight sources warn that fast AI code piles up debt. The one preregistered trial that handed AI-written code to new developers found no difference, and a 302k-commit study found persisting issues with no human baseline. The viewer gets to see what a null result does and does not prove.",
+   "tension": "Widespread fear of debt against a null trial, with self-reports and an uncontrolled commit study in between.",
+   "evidenceNeeded": "Later developers' time and code health when evolving AI-written versus human-written code, and issue rates in AI commits against a human baseline.",
+   "evidenceAvailable": [
+    "Echoes of AI maintainability RCT: right (0.7, direct)",
+    "Shan et al. field study + RCT: wrong (0.3, partial)",
+    "Vibe-coding literature review: wrong (0.2, partial)",
+    "Debt study (302k AI commits): partly (0.5, partial)",
+    "Vibe-coding literature review: partly (0.35, direct)",
+    "Code-ownership experiment (Martin-Lopez): partly (0.45, direct)"
+   ],
+   "gaps": [
+    "Code-ownership experiment (Martin-Lopez) is context only: a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers",
+    "No study strong enough to decide: \"Developers should be able to explain AI-generated code without the AI's help before it is merged\""
+   ],
+   "premise": "The Echoes trial (75 mostly professional developers manually evolving a small Java app written with or without AI, preregistered) found no reliable difference in completion time, CodeHealth or coverage, and was powered only to rule out large effects; that is the central finding and its limit. Against it: Shan's follow-up survey linked AI use to lower self-rated maintainability (self-reports), 11 of 47 review sources raise concerns (reports, not comparisons), and the 302k-commit study found 22.7% of AI-introduced issues persisting with no human-written baseline, most of them smells rather than vulnerabilities. The code-ownership experiment adds the mechanism that worries people: after AI-assisted tasks, authors answered fewer questions about their own code correctly (median 87.5% versus 100%). The claim that AI code 'accumulates more debt than hand-built' is therefore the belief the trial contradicts, not a finding the video can assert.",
+   "claims": [
+    "ai-coding/assisted-code-harder-later-developers-maintain",
+    "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+    "ai-coding/developers-should-able-explain-generated-code"
+   ],
+   "related": [
+    "ai-coding/generated-code-contains-more-defects-human",
+    "ai-coding/developers-often-ship-generated-code-without"
+   ],
+   "arc": {
+    "hook": "The warning everyone repeats: AI code is a debt bomb. One team ran the experiment.",
+    "conflict": "The null trial against the commit study, the survey and the review's concerns.",
+    "evidence": "Echoes design and result with its power limit; the 302k-commit persistence figures and the missing baseline; the security issue rates and what counts as an issue; the code-ownership understanding gap.",
+    "resolution": "No measured maintainability penalty yet, within the limits of one small trial; a measured understanding penalty for the author; and issue counts that need a baseline before they mean 'more'.",
+    "takeaway": "Review for understanding, not just correctness: the one measured harm is that authors know their AI-assisted code less well."
+   },
+   "coherence": {
+    "score": 0.85,
+    "basis": "review",
+    "explanation": "One question, whether AI-written code is harder to live with, answered by the maintainability trial, the issue rates in AI commits, and what AI assistance does to the author's own understanding. The technical-debt claim is carried in the premise as the belief the trial contradicts, not as a finding."
+   },
+   "format": "long-form",
+   "formatWhy": "A preregistered trial, a large commit study, a survey, a review and an experiment on understanding, with eight sources voicing the fear.",
+   "scores": {
+    "coherence": 0.85,
+    "relevance": 0.91,
+    "curiosity": 0.7,
+    "stakes": 0.7,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.91,
+    "editorial": 0.83,
+    "overall": 0.86,
+    "explanation": "editorial 0.83 = mean of coherence 0.85 (review), relevance 0.91 (15 sources, 14 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (5 studies, 3 claims, tension); evidence 0.91 = strongest Echoes of AI maintainability RCT at 0.7 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0.7,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Echoes of AI maintainability RCT",
+       "verdict": "right",
+       "confidence": 0.7,
+       "note": "Preregistered RCT, 75 mostly professional developers manually evolving Java code written with or without AI: no reliable difference in completion time or perceived productivity, and the study is only powered to rule out large effects.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/4859137.txt#L1219-L1229"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Shan et al. field study + RCT",
+       "verdict": "wrong",
+       "confidence": 0.3,
+       "note": "The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"self-reports\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coding literature review",
+       "verdict": "wrong",
+       "confidence": 0.2,
+       "note": "11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"rather than\")"
+      }
+     ],
+     "context": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892"
+       },
+       "cited": true,
+       "role": "context",
+       "by": "Code-ownership experiment (Martin-Lopez)",
+       "verdict": "right",
+       "confidence": 0.3,
+       "note": "The related work cites Borg et al.'s 151-participant controlled experiment, which found no consistent sign that AI-assisted code was harder for later developers to maintain, while warning of cognitive debt. This is secondary evidence; the study's own data cover only the original author.",
+       "applicability": "contextual",
+       "basis": "review",
+       "why": "a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/2603.28592v3.txt#L1031-L1035"
+       },
+       "cited": true,
+       "role": "inconclusive",
+       "by": "Debt study (302k AI commits)",
+       "verdict": "unknown",
+       "confidence": null,
+       "note": "The mining study of 302k AI-authored commits explicitly has no human-written baseline, so its counts of surviving debt cannot show that AI code is harder to maintain than human code.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Shan et al. field study + RCT: The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers. [partial: the verdict note limits its own scope (\"self-reports\")]",
+      "Vibe-coding literature review: 11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code. [partial: the verdict note limits its own scope (\"rather than\")]",
+      "Context only, Code-ownership experiment (Martin-Lopez) (right): a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying, 1 context only."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.7,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Echoes of AI maintainability RCT",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "Preregistered RCT, 75 mostly professional developers manually evolving Java code written with or without AI: no reliable difference in completion time or perceived productivity, and the study is only powered to rule out large effects.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/4859137.txt#L1219-L1229"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Shan et al. field study + RCT",
+         "verdict": "wrong",
+         "confidence": 0.3,
+         "note": "The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-reports\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "wrong",
+         "confidence": 0.2,
+         "note": "11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        }
+       ],
+       "context": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892"
+         },
+         "cited": true,
+         "role": "context",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "right",
+         "confidence": 0.3,
+         "note": "The related work cites Borg et al.'s 151-participant controlled experiment, which found no consistent sign that AI-assisted code was harder for later developers to maintain, while warning of cognitive debt. This is secondary evidence; the study's own data cover only the original author.",
+         "applicability": "contextual",
+         "basis": "review",
+         "why": "a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/2603.28592v3.txt#L1031-L1035"
+         },
+         "cited": true,
+         "role": "inconclusive",
+         "by": "Debt study (302k AI commits)",
+         "verdict": "unknown",
+         "confidence": null,
+         "note": "The mining study of 302k AI-authored commits explicitly has no human-written baseline, so its counts of surviving debt cannot show that AI code is harder to maintain than human code.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Shan et al. field study + RCT: The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers. [partial: the verdict note limits its own scope (\"self-reports\")]",
+        "Vibe-coding literature review: 11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code. [partial: the verdict note limits its own scope (\"rather than\")]",
+        "Context only, Code-ownership experiment (Martin-Lopez) (right): a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying, 1 context only."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "AI-generated code frequently contains security vulnerabilities",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Debt study (302k AI commits)",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Developers should be able to explain AI-generated code without the AI's help before it is merged",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-should-able-explain-generated-code",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Code-ownership experiment (Martin-Lopez): Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "decision:who-benefits",
+   "kind": "decision",
+   "title": "Does AI Help Junior or Senior Developers More?",
+   "alternates": [
+    "Who Really Gets the AI Productivity Boost?",
+    "The Experience Paradox in AI Coding Studies"
+   ],
+   "question": "Does AI help junior or senior developers more?",
+   "whyWatch": "Influencers say AI is a multiplier for experts. Most trials found the opposite, one found a hint the other way, and the reason they differ says something about when the tools help anyone.",
+   "tension": "'Amplifies experts far more' against trials where juniors and short-tenure developers gained most and experienced maintainers were slowed.",
+   "evidenceNeeded": "Trials that split the measured gain by experience or codebase familiarity, on the same tasks.",
+   "evidenceAvailable": [
+    "Microsoft/Accenture field RCTs: wrong (0.5, direct)",
+    "Shan et al. field study + RCT: wrong (0.45, direct)",
+    "Copilot RCT (Peng): wrong (0.4, direct)",
+    "Code-ownership experiment (Martin-Lopez): wrong (0.25, direct)",
+    "METR 2025 RCT: wrong (0.6, partial)",
+    "Google RCT: partly (0.3, direct)",
+    "Anthropic internal study: partly (0.3, direct)",
+    "METR 2025 RCT: right (0.6, direct)",
+    "Google RCT: wrong (0.25, direct)",
+    "Microsoft/Accenture field RCTs: partly (0.45, direct)",
+    "Copilot RCT (Peng): partly (0.4, direct)",
+    "Anthropic internal study: partly (0.4, partial)",
+    "Shan et al. field study + RCT: partly (0.35, direct)",
+    "Code-ownership experiment (Martin-Lopez): partly (0.3, direct)",
+    "Echoes of AI maintainability RCT: right (0.5, partial)",
+    "Google RCT: partly (0.4, direct)",
+    "Anthropic internal study: partly (0.4, direct)",
+    "Shan et al. field study + RCT: partly (0.4, direct)",
+    "METR 2025 RCT: partly (0.35, direct)",
+    "Microsoft/Accenture field RCTs: partly (0.35, direct)",
+    "Vibe-coding literature review: right (0.3, partial)"
+   ],
+   "gaps": [],
+   "premise": "The 'far more for experts' claim is not supported: Microsoft's field experiment (short-tenure 27-39% versus long-tenure 8-13%, mostly not significant), Shan's RCT, Peng's Copilot trial and the code-ownership experiment all found gains concentrated among less experienced developers, and METR found experienced maintainers slowed, more so on tasks they knew well. The Google trial is the exception: on code unfamiliar to everyone, seniors gained if anything more, not significantly. That pattern is the resolution: gains concentrate where the developer lacks context, which juniors usually do and seniors do on unfamiliar code. Skill in using the tools matters (habitual AI users' code scored better downstream in the Echoes trial) but the evidence for a steep skill curve is thin and partly self-reported, and METR saw no improvement over the first 50 hours.",
+   "claims": [
+    "ai-coding/coding-tools-amplify-experienced-engineers-far",
+    "ai-coding/productivity-gains-concentrate-among-developers-new",
+    "ai-coding/getting-good-results-coding-tools-takes"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Two engineers, one senior, one junior, both switch on the same tool. The influencers say the senior pulls ahead. The trials say otherwise.",
+    "conflict": "Five trials point one way, Google's points the other, and 'far more' for experts has no support anywhere.",
+    "evidence": "Microsoft/Accenture by tenure, Shan's moderation analysis, Peng's heterogeneity, the code-ownership experiment, METR's slowdown by task familiarity, and Google's unfamiliar-code design.",
+    "resolution": "The tools help most where the developer has the least context. Juniors have less of it everywhere; seniors have less of it on unfamiliar code. Using the tools well is a skill, but not yet a measured steep one.",
+    "takeaway": "Point the tools at unfamiliar work, expect less on code you know by heart, and treat '10x for experts' as marketing."
+   },
+   "coherence": {
+    "score": 0.9,
+    "basis": "review",
+    "explanation": "One question, who gains more from AI coding tools, answered by the senior-versus-junior results across six trials, the concentration of gains on unfamiliar or routine work, and the role of skill in using the tools."
+   },
+   "format": "long-form",
+   "formatWhy": "Six trials with a consistent split and one exception to explain, nine sources voicing the belief and two denying it.",
+   "scores": {
+    "coherence": 0.9,
+    "relevance": 1,
+    "curiosity": 0.7,
+    "stakes": 0.4,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.95,
+    "editorial": 0.8,
+    "overall": 0.86,
+    "explanation": "editorial 0.8 = mean of coherence 0.9 (review), relevance 1 (24 sources, 22 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.4 (lean: calibrating), depth 1 (9 studies, 3 claims, tension); evidence 0.95 = strongest Microsoft/Accenture field RCTs at 0.5 (direct) across 7 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.9), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "The evidence does not support \"AI coding tools amplify experienced engineers far more than novices\"",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0.5,
+     "independent": 4,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Microsoft/Accenture field RCTs",
+       "verdict": "wrong",
+       "confidence": 0.5,
+       "note": "Microsoft experiment: short-tenure developers raised output 27-39% and juniors 21-40%, versus 8-13% for long-tenure and 7-16% for seniors (directionally consistent, mostly not significant), the opposite of AI amplifying experienced engineers more.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/4859137.txt#L872-L878"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Shan et al. field study + RCT",
+       "verdict": "wrong",
+       "confidence": 0.45,
+       "note": "Moderation analysis in the 253-developer RCT: developers with fewer years of experience got the speed benefit and quality was unaffected, so gains concentrated among less-skilled coders, not experienced ones (easy tasks, ChatGPT-3.5 chat, appendix result).",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/2302.06590.txt#L221-L225"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Copilot RCT (Peng)",
+       "verdict": "wrong",
+       "confidence": 0.4,
+       "note": "Copilot RCT heterogeneity analysis: developers with less programming experience benefited more, which the authors highlight as promise for novices (small sample, noisy estimates).",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L556-L569"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Code-ownership experiment (Martin-Lopez)",
+       "verdict": "wrong",
+       "confidence": 0.25,
+       "note": "Every group, BSc students included, gained significantly in completeness, and the authors say differences between groups were not related to experience. Professionals gained the most, but they had different tasks, and position is confounded with task and language.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/2507.09089v2.txt#L135-L141"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "METR 2025 RCT",
+       "verdict": "wrong",
+       "confidence": 0.6,
+       "note": "METR 2025 cites prior work finding that AI benefits less-experienced workers more; in its own RCT, highly experienced developers were slowed down, and more so on tasks where they had high prior exposure.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "METR's own trial had only experienced developers; the comparison with novices comes from prior work it cites"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/2410.12944.txt#L490-L505"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Google RCT",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "Google RCT: more senior engineers and those coding 5+ hours/day were faster with AI, but the AI x seniority (p=0.706) and AI x hours interactions were not significant, so 'far more' is unsupported.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+        "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L75-L75"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Anthropic internal study",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "Anthropic: experience is needed to spot subtly dangerous Claude proposals, yet a senior engineer says the tools make juniors 'more productive and more bold', so the gain isn't clearly skewed to seniors.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "METR 2025 RCT: METR 2025 cites prior work finding that AI benefits less-experienced workers more; in its own RCT, highly experienced developers were slowed down, and more so on tasks where they had high prior exposure. [partial: METR's own trial had only experienced developers; the comparison with novices comes from prior work it cites]",
+      "Google RCT: Google RCT: more senior engineers and those coding 5+ hours/day were faster with AI, but the AI x seniority (p=0.706) and AI x hours interactions were not significant, so 'far more' is unsupported.",
+      "Anthropic internal study: Anthropic: experience is needed to spot subtly dangerous Claude proposals, yet a senior engineer says the tools make juniors 'more productive and more bold', so the gain isn't clearly skewed to seniors."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 4 supporting (4 independent, strongest 0.5), 3 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The evidence does not support \"AI coding tools amplify experienced engineers far more than novices\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.5,
+       "independent": 4,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Microsoft/Accenture field RCTs",
+         "verdict": "wrong",
+         "confidence": 0.5,
+         "note": "Microsoft experiment: short-tenure developers raised output 27-39% and juniors 21-40%, versus 8-13% for long-tenure and 7-16% for seniors (directionally consistent, mostly not significant), the opposite of AI amplifying experienced engineers more.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+          "cite": "ai-coding/sources/4859137.txt#L872-L878"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Shan et al. field study + RCT",
+         "verdict": "wrong",
+         "confidence": 0.45,
+         "note": "Moderation analysis in the 253-developer RCT: developers with fewer years of experience got the speed benefit and quality was unaffected, so gains concentrated among less-skilled coders, not experienced ones (easy tasks, ChatGPT-3.5 chat, appendix result).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+          "cite": "ai-coding/sources/2302.06590.txt#L221-L225"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Copilot RCT (Peng)",
+         "verdict": "wrong",
+         "confidence": 0.4,
+         "note": "Copilot RCT heterogeneity analysis: developers with less programming experience benefited more, which the authors highlight as promise for novices (small sample, noisy estimates).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L556-L569"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "wrong",
+         "confidence": 0.25,
+         "note": "Every group, BSc students included, gained significantly in completeness, and the authors say differences between groups were not related to experience. Professionals gained the most, but they had different tasks, and position is confounded with task and language.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L135-L141"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "METR 2025 RCT",
+         "verdict": "wrong",
+         "confidence": 0.6,
+         "note": "METR 2025 cites prior work finding that AI benefits less-experienced workers more; in its own RCT, highly experienced developers were slowed down, and more so on tasks where they had high prior exposure.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "METR's own trial had only experienced developers; the comparison with novices comes from prior work it cites"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+          "cite": "ai-coding/sources/2410.12944.txt#L490-L505"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Google RCT",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Google RCT: more senior engineers and those coding 5+ hours/day were faster with AI, but the AI x seniority (p=0.706) and AI x hours interactions were not significant, so 'far more' is unsupported.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+          "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L75-L75"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Anthropic internal study",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Anthropic: experience is needed to spot subtly dangerous Claude proposals, yet a senior engineer says the tools make juniors 'more productive and more bold', so the gain isn't clearly skewed to seniors.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "METR 2025 RCT: METR 2025 cites prior work finding that AI benefits less-experienced workers more; in its own RCT, highly experienced developers were slowed down, and more so on tasks where they had high prior exposure. [partial: METR's own trial had only experienced developers; the comparison with novices comes from prior work it cites]",
+        "Google RCT: Google RCT: more senior engineers and those coding 5+ hours/day were faster with AI, but the AI x seniority (p=0.706) and AI x hours interactions were not significant, so 'far more' is unsupported.",
+        "Anthropic internal study: Anthropic: experience is needed to spot subtly dangerous Claude proposals, yet a senior engineer says the tools make juniors 'more productive and more bold', so the gain isn't clearly skewed to seniors."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 4 supporting (4 independent, strongest 0.5), 3 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "AI productivity gains concentrate among developers new to a codebase and on routine, well-trodden code",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "disputed",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.6,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L960-L984"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "METR 2025 RCT",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Slowdown is larger when developers have high prior task exposure. Developers report AI helps on unfamiliar issues and not where they're experts, and the paper expects speedups in unfamiliar or greenfield settings.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+          "cite": "ai-coding/sources/2410.12944.txt#L490-L505"
+         },
+         "cited": true,
+         "role": "contradicts",
+         "by": "Google RCT",
+         "verdict": "wrong",
+         "confidence": 0.25,
+         "note": "Google RCT on code unfamiliar to all participants found, if anything, more senior engineers gained more from AI (non-significant interaction), contrary to gains concentrating among less experienced developers.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Microsoft/Accenture field RCTs",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "Microsoft experiment: gains were larger for short-tenure (newer to the company and its code) and junior developers (27-39% vs 8-13%), but differences were not significant and the routine-code half of the claim was not tested.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+          "cite": "ai-coding/sources/2302.06590.txt#L174-L177"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Copilot RCT (Peng)",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Copilot RCT: less experienced developers benefited more on a routine, well-trodden task (a basic HTTP server), consistent with the claim but from a small freelancer sample and without a codebase-familiarity test.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+          "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L70-L70"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Anthropic internal study",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Anthropic: staff delegate where they have low context and complexity is low, and avoid tasks needing tacit codebase knowledge, which mirrors METR's slowdown factors; this concerns task choice rather than measured gains.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+          "cite": "ai-coding/sources/4859137.txt#L872-L878"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Shan et al. field study + RCT",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Less-experienced developers gained more speed in the RCT, consistent with the claim, but a follow-up on harder APPS tasks suggested quantity gains were larger on complex tasks (0.283 vs 0.245), which does not fit 'routine code only'.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/productivity-gains-concentrate-among-developers-new",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L240-L247"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Large completeness gains (+43 points) came on small, popular-domain tasks chosen so that LLMs could help, many of them greenfield. This fits gains on routine code, but the study had no mature codebases to compare against.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Contradicted by Google RCT: Google RCT on code unfamiliar to all participants found, if anything, more senior engineers gained more from AI (non-significant interaction), contrary to gains concentrating among less experienced developers."
+       ],
+       "suggestions": [
+        "Present the disagreement: name the studies on each side instead of stating one side as fact."
+       ],
+       "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.6), 1 contradicting, 5 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Getting good results from AI coding tools takes significant skill, so outcomes vary widely with user expertise",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/getting-good-results-coding-tools-takes",
+          "cite": "ai-coding/sources/2507.00788.txt#L2541-L2551"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Echoes of AI maintainability RCT",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "Bayesian analysis: the more AI-skilled the original developer, the larger the downstream CodeHealth benefit (+0.10, about half an SD, for habitual users). The authors conclude developers vary in their ability to use AI well, though Java proficiency mattered even more.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"though\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/getting-good-results-coding-tools-takes",
+          "cite": "ai-coding/sources/2410.12944.txt#L522-L543"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Google RCT",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Google RCT, 96 engineers: senior and heavy-coding developers were tentatively faster with AI and natural-language-to-code needs prompting skill, but how often people already used AI tools had no significant effect on their AI speed-up, so the authors point to a 'low usability floor'.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/getting-good-results-coding-tools-takes",
+          "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L40"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Anthropic internal study",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Anthropic survey (n=132): time-savings responses cluster at opposite ends, with some spending more time debugging AI code; authors attribute gains to learned 'strategic delegation skills' and task choice, supporting wide variation by user practice.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/getting-good-results-coding-tools-takes",
+          "cite": "ai-coding/sources/4859137.txt#L1037-L1064"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Shan et al. field study + RCT",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Results depended on how developers used ChatGPT: direct acceptance raised output but not accuracy, while ideation, improvement and debugging raised accuracy, and debugging lowered output. Outcomes vary with usage style, but usage was self-chosen, so the evidence is correlational.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/getting-good-results-coding-tools-takes",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L1217-L1234"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "METR 2025 RCT",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "METR RCT: speedup did not improve over the first 50 hours of Cursor use, and the lone >50h developer's speedup (~25%) fell to ~0% once a second developer's misreported experience was corrected. The 'high skill ceiling' idea is plausible but underpowered.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/getting-good-results-coding-tools-takes",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Microsoft/Accenture field RCTs",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Field RCTs, ~4,900 developers: Copilot gains varied with experience, but in the opposite direction from 'skill needed'. Short-tenure and junior developers gained 21-40% while senior and long-tenure developers gained 7-16% (noisy, not significant).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/getting-good-results-coding-tools-takes",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1518-L1526"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "right",
+         "confidence": 0.3,
+         "note": "Vibe-coding MLR (47 sources, mention counts): quality, maintainability and productivity outcomes are described as conditional on developer expertise, task complexity and verification practice, and outcome claims vary substantially by user expertise.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "mention counts across sources, not a measurement of outcome variance by expertise"
+        }
+       ],
+       "context": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/getting-good-results-coding-tools-takes",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L828-L835"
+         },
+         "cited": true,
+         "role": "inconclusive",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "unknown",
+         "confidence": null,
+         "note": "Gains appeared in every experience group, but the authors state they cannot separate experience effects from task and language effects, so the study cannot say whether outcomes depend on user expertise.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Echoes of AI maintainability RCT: Bayesian analysis: the more AI-skilled the original developer, the larger the downstream CodeHealth benefit (+0.10, about half an SD, for habitual users). The authors conclude developers vary in their ability to use AI well, though Java proficiency mattered even more. [partial: the verdict note limits its own scope (\"though\")]",
+        "Google RCT: Google RCT, 96 engineers: senior and heavy-coding developers were tentatively faster with AI and natural-language-to-code needs prompting skill, but how often people already used AI tools had no significant effect on their AI speed-up, so the authors point to a 'low usability floor'.",
+        "Anthropic internal study: Anthropic survey (n=132): time-savings responses cluster at opposite ends, with some spending more time debugging AI code; authors attribute gains to learned 'strategic delegation skills' and task choice, supporting wide variation by user practice.",
+        "Shan et al. field study + RCT: Results depended on how developers used ChatGPT: direct acceptance raised output but not accuracy, while ideation, improvement and debugging raised accuracy, and debugging lowered output. Outcomes vary with usage style, but usage was self-chosen, so the evidence is correlational.",
+        "METR 2025 RCT: METR RCT: speedup did not improve over the first 50 hours of Cursor use, and the lone >50h developer's speedup (~25%) fell to ~0% once a second developer's misreported experience was corrected. The 'high skill ceiling' idea is plausible but underpowered.",
+        "Microsoft/Accenture field RCTs: Field RCTs, ~4,900 developers: Copilot gains varied with experience, but in the opposite direction from 'skill needed'. Short-tenure and junior developers gained 21-40% while senior and long-tenure developers gained 7-16% (noisy, not significant).",
+        "Vibe-coding literature review: Vibe-coding MLR (47 sources, mention counts): quality, maintainability and productivity outcomes are described as conditional on developer expertise, task complexity and verification practice, and outcome claims vary substantially by user expertise. [partial: mention counts across sources, not a measurement of outcome variance by expertise]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 7 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "surprise:assistance-must-reliable-save-experts-time",
+   "kind": "surprise",
+   "title": "Why Checking AI Code Can Eat the Time It Saves",
+   "alternates": [
+    "The Verification Tax on AI-Assisted Coding",
+    "Why Experts Reject Most AI Code Suggestions"
+   ],
+   "question": "Why can AI assistance cost expert programmers more time than it saves?",
+   "whyWatch": "The slowdown result is famous; the mechanism is less known and more useful: experts accepted under half of the suggestions and paid for the rest in review.",
+   "tension": "Generation got cheap; checking did not, and for people who could have written it themselves the check costs more than the typing saved.",
+   "evidenceNeeded": "Acceptance rates and time spent reviewing or fixing AI output for experienced developers, and where the bottleneck sits in AI-heavy workflows.",
+   "evidenceAvailable": [
+    "METR 2025 RCT: right (0.6, direct)",
+    "Anthropic internal study: partly (0.35, direct)",
+    "Vibe-coding literature review: partly (0.25, direct)",
+    "Google migrations report: right (0.55, direct)",
+    "Vibe-coding literature review: right (0.4, direct)",
+    "Code-ownership experiment (Martin-Lopez): partly (0.4, partial)",
+    "Anthropic internal study: right (0.5, direct)",
+    "Vibe-coding literature review: right (0.5, direct)",
+    "Google RCT: right (0.4, direct)",
+    "Echoes of AI maintainability RCT: right (0.4, direct)",
+    "METR 2025 RCT: partly (0.45, direct)"
+   ],
+   "gaps": [
+    "Anthropic internal study differs: Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+    "Vibe-coding literature review differs: Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting."
+   ],
+   "premise": "METR's developers accepted under 44% of Cursor generations and lost significant time reviewing, testing and modifying output before rejecting it; low reliability is one of the listed causes of the 19% slowdown. Google's migration report describes throttling change generation so that reviewers could keep up, and the vibe-coding review names the 'verification gap' as its central synthesis. Anthropic's engineers skip the tool for short or context-heavy tasks and describe a paradox of supervision: checking needs the skills overuse may erode. Limits: the acceptance figure is from 16 developers with early-2025 tools; the bottleneck evidence is a company report and a review of reports; the skill claims are qualitative.",
+   "claims": [
+    "ai-coding/assistance-must-reliable-save-experts-time",
+    "ai-coding/speeds-generation-human-attention-review-understanding",
+    "ai-coding/developers-need-solid-programming-knowledge-validate"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "A suggestion appears in the editor. For an expert, the cheapest move is often to delete it. Why?",
+    "conflict": "The tool saved typing; it created checking, and checking is the expensive part for someone who already knows the answer.",
+    "evidence": "METR's acceptance rate and review time; Google throttling generation to review capacity; the verification gap; Anthropic's supervision paradox.",
+    "resolution": "AI help pays when the check is cheaper than the work it replaces; for experts on familiar code it often is not, and the skill to check cannot be outsourced.",
+    "takeaway": "Measure your acceptance rate; if you delete most of what the tool writes, use it for the work you cannot already do."
+   },
+   "coherence": {
+    "score": 0.85,
+    "basis": "review",
+    "explanation": "One question, why AI help can cost experts time, answered by the acceptance and review-time finding, the shift of the bottleneck to review, and the skill needed to verify."
+   },
+   "format": "long-form",
+   "formatWhy": "A trial result with a mechanism, a company report, a review and an internal study, across three claims.",
+   "scores": {
+    "coherence": 0.85,
+    "relevance": 1,
+    "curiosity": 0.8,
+    "stakes": 0.4,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.78,
+    "editorial": 0.81,
+    "overall": 0.8,
+    "explanation": "editorial 0.81 = mean of coherence 0.85 (review), relevance 1 (34 sources, 31 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.4 (lean: calibrating), depth 1 (7 studies, 3 claims, tension); evidence 0.78 = strongest METR 2025 RCT at 0.6 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "AI assistance must be very reliable to save experts time, because checking and fixing its output is costly",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0.6,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+        "cite": "ai-coding/sources/2507.09089v2.txt#L1004-L1012"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "METR 2025 RCT",
+       "verdict": "right",
+       "confidence": 0.6,
+       "note": "Developers accepted under 44% of Cursor generations and lost significant time reviewing, testing and modifying output before rejecting it. Low reliability is listed as a cause of the slowdown.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+        "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Anthropic internal study",
+       "verdict": "partly",
+       "confidence": 0.35,
+       "note": "Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L1454-L1458"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coding literature review",
+       "verdict": "partly",
+       "confidence": 0.25,
+       "note": "Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Anthropic internal study: Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+      "Vibe-coding literature review: Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.6), 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "AI assistance must be very reliable to save experts time, because checking and fixing its output is costly",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.6,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L1004-L1012"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "METR 2025 RCT",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Developers accepted under 44% of Cursor generations and lost significant time reviewing, testing and modifying output before rejecting it. Low reliability is listed as a cause of the slowdown.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+          "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Anthropic internal study",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assistance-must-reliable-save-experts-time",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1454-L1458"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "partly",
+         "confidence": 0.25,
+         "note": "Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Anthropic internal study: Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+        "Vibe-coding literature review: Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.6), 2 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "As AI speeds up generation, human attention for review and understanding becomes the bottleneck",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.55,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/speeds-generation-human-attention-review-understanding",
+          "cite": "ai-coding/sources/2501.06972.txt#L417-L423"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Google migrations report",
+         "verdict": "right",
+         "confidence": 0.55,
+         "note": "Google JUnit3->4 migration (5,359 files in 3 months): the bottleneck was how fast engineers could review, and change generation was deliberately throttled so reviewers were not overwhelmed.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/speeds-generation-human-attention-review-understanding",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1906-L1914"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Vibe-coding literature review",
+         "verdict": "right",
+         "confidence": 0.4,
+         "note": "The review's central synthesis is a 'verification gap': a mismatch between how fast AI workflows generate code and developers' capacity to verify it. This is an interpretive synthesis of mention-level evidence.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/speeds-generation-human-attention-review-understanding",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L736-L767"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "AI users produced more, larger code but understood it less. Their median answering time was 3 min longer (+27%) and they switched back to the code more than twice as often, though the time effect was not robust. The authors suggest time saved may be offset later in the lifecycle.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"though\")"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Code-ownership experiment (Martin-Lopez): AI users produced more, larger code but understood it less. Their median answering time was 3 min longer (+27%) and they switched back to the code more than twice as often, though the time effect was not robust. The authors suggest time saved may be offset later in the lifecycle. [partial: the verdict note limits its own scope (\"though\")]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.55), 1 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Developers need solid programming knowledge to validate and correct AI-generated code",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.5,
+       "independent": 4,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+          "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L93-L94"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Anthropic internal study",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "Anthropic: the 'paradox of supervision' (supervising Claude needs the coding skills overuse may erode), and a security engineer saw a 'dangerously smart' proposal that only experienced judgment could catch.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1929-L1932"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Vibe-coding literature review",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "The review concludes that skill in verification, constraint specification and review may matter as much as authoring skill, and that the central risk is a verification gap.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+          "cite": "ai-coding/sources/2410.12944.txt#L484-L493"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Google RCT",
+         "verdict": "right",
+         "confidence": 0.4,
+         "note": "Google RCT authors suggest heavier coders gain more from AI because current tools require spending much time verifying and editing generated code (interaction beta=-0.29, not significant), so coding skill conditions the benefit.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+          "cite": "ai-coding/sources/2507.00788.txt#L2549-L2556"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Echoes of AI maintainability RCT",
+         "verdict": "right",
+         "confidence": 0.4,
+         "note": "The Task 1 developer's Java proficiency influenced downstream outcomes more than AI use, and authors conclude human expertise still matters; qualitative quotes describe using experience to catch hacky AI suggestions.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-need-solid-programming-knowledge-validate",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L1015-L1021"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "METR 2025 RCT",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "METR 2025: 75% of experienced developers read every line of AI code, 56% often make major cleanups, and 100% report needing to modify it; this shows correction is routinely needed, but the study does not test less-skilled users.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "METR 2025 RCT: METR 2025: 75% of experienced developers read every line of AI code, 56% often make major cleanups, and 100% report needing to modify it; this shows correction is routinely needed, but the study does not test less-skilled users."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 4 supporting (4 independent, strongest 0.5), 1 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "conflict:generated-code-drifts-codebase-established-conventions",
+   "kind": "conflict",
+   "title": "Does AI Code Follow Your Team's Conventions?",
+   "alternates": [
+    "Why AI Code Looks Right and Fits Wrong",
+    "The Cleanup Cost Nobody Measures"
+   ],
+   "question": "Does AI-generated code follow your codebase's conventions?",
+   "whyWatch": "Every team that adopts the tools reports the cleanup; nobody has measured it.",
+   "tension": "A universal complaint and no number.",
+   "evidenceNeeded": "A measured rate of convention violations in AI commits against a human baseline.",
+   "evidenceAvailable": [
+    "METR 2025 RCT: right (0.45, partial)",
+    "Debt study (302k AI commits): partly (0.3, direct)",
+    "Vibe-coding literature review: partly (0.3, direct)"
+   ],
+   "gaps": [
+    "Reviewer: Only qualitative reports from 16 METR developers and a note on context consistency in the commit study; no measured drift rate against a human baseline.",
+    "What explains the split between METR 2025 RCT, Debt study (302k AI commits), Vibe-coding literature review?",
+    "Debt study (302k AI commits): Correctness issues dominated by undefined variables (23,856) lead authors to say AI code 'may look locally correct, but still fail to stay consistent with the surrounding context'; this is consistency with surrounding code, not style conventions specifically.",
+    "Vibe-coding literature review: WL27 is quoted saying conversationally generated code 'often lacks cohesive structure, consistent patterns, and proper documentation'; this is a single peer-reviewed source, not a measured drift rate."
+   ],
+   "premise": "The sources split on \"AI-generated code drifts from a codebase's established conventions\": METR 2025 RCT says right, Debt study (302k AI commits) says partly, Vibe-coding literature review says partly. The reasons they differ are the useful part.",
+   "claims": [
+    "ai-coding/generated-code-drifts-codebase-established-conventions"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Two confident, opposite answers to the same question: \"AI-generated code drifts from a codebase's established conventions\".",
+    "conflict": "The sources do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (METR 2025 RCT, Debt study (302k AI commits), Vibe-coding literature review): design, sample, what was measured.",
+    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question about one failure mode."
+   },
+   "format": "short",
+   "formatWhy": "3 studies bear directly or partly on the question, 5 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.59,
+    "curiosity": 1,
+    "stakes": 0.5,
+    "depth": 0.85,
+    "originality": 1,
+    "evidence": 0.39,
+    "editorial": 0.75,
+    "overall": 0.61,
+    "explanation": "editorial 0.75 = mean of coherence 0.8 (review), relevance 0.59 (5 sources, 5 channels), curiosity 1 (conflict), stakes 0.5 (lean: skeptic), depth 0.85 (3 studies, 1 claim, tension); evidence 0.39 = strongest Debt study (302k AI commits) at 0.3 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: Only qualitative reports from 16 METR developers and a note on context consistency in the commit study; no measured drift rate against a human baseline.",
+   "blocking": [
+    "Reviewer: Only qualitative reports from 16 METR developers and a note on context consistency in the commit study; no measured drift rate against a human baseline."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "AI-generated code drifts from a codebase's established conventions",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+        "cite": "ai-coding/sources/2507.09089v2.txt#L1015-L1021"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "METR 2025 RCT",
+       "verdict": "right",
+       "confidence": 0.45,
+       "note": "METR 2025: developers report AI code leaves 'more to fix up, in terms of code conventions, code style' and needs major cleanup to meet repo standards (qualitative, 16 developers).",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "qualitative reports from 16 developers, not a measured drift rate against a human baseline"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+        "cite": "ai-coding/sources/2603.28592v3.txt#L672-L674"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Debt study (302k AI commits)",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "Correctness issues dominated by undefined variables (23,856) lead authors to say AI code 'may look locally correct, but still fail to stay consistent with the surrounding context'; this is consistency with surrounding code, not style conventions specifically.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1438"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coding literature review",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "WL27 is quoted saying conversationally generated code 'often lacks cohesive structure, consistent patterns, and proper documentation'; this is a single peer-reviewed source, not a measured drift rate.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "METR 2025 RCT: METR 2025: developers report AI code leaves 'more to fix up, in terms of code conventions, code style' and needs major cleanup to meet repo standards (qualitative, 16 developers). [partial: qualitative reports from 16 developers, not a measured drift rate against a human baseline]",
+      "Debt study (302k AI commits): Correctness issues dominated by undefined variables (23,856) lead authors to say AI code 'may look locally correct, but still fail to stay consistent with the surrounding context'; this is consistency with surrounding code, not style conventions specifically.",
+      "Vibe-coding literature review: WL27 is quoted saying conversationally generated code 'often lacks cohesive structure, consistent patterns, and proper documentation'; this is a single peer-reviewed source, not a measured drift rate."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 3 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "AI-generated code drifts from a codebase's established conventions",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+          "cite": "ai-coding/sources/2507.09089v2.txt#L1015-L1021"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "METR 2025 RCT",
+         "verdict": "right",
+         "confidence": 0.45,
+         "note": "METR 2025: developers report AI code leaves 'more to fix up, in terms of code conventions, code style' and needs major cleanup to meet repo standards (qualitative, 16 developers).",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "qualitative reports from 16 developers, not a measured drift rate against a human baseline"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+          "cite": "ai-coding/sources/2603.28592v3.txt#L672-L674"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Debt study (302k AI commits)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Correctness issues dominated by undefined variables (23,856) lead authors to say AI code 'may look locally correct, but still fail to stay consistent with the surrounding context'; this is consistency with surrounding code, not style conventions specifically.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-drifts-codebase-established-conventions",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1438"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "WL27 is quoted saying conversationally generated code 'often lacks cohesive structure, consistent patterns, and proper documentation'; this is a single peer-reviewed source, not a measured drift rate.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "METR 2025 RCT: METR 2025: developers report AI code leaves 'more to fix up, in terms of code conventions, code style' and needs major cleanup to meet repo standards (qualitative, 16 developers). [partial: qualitative reports from 16 developers, not a measured drift rate against a human baseline]",
+        "Debt study (302k AI commits): Correctness issues dominated by undefined variables (23,856) lead authors to say AI code 'may look locally correct, but still fail to stay consistent with the surrounding context'; this is consistency with surrounding code, not style conventions specifically.",
+        "Vibe-coding literature review: WL27 is quoted saying conversationally generated code 'often lacks cohesive structure, consistent patterns, and proper documentation'; this is a single peer-reviewed source, not a measured drift rate."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 3 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "conflict:writing-code-never-main-bottleneck-software",
+   "kind": "conflict",
+   "title": "Was Writing Code Ever the Bottleneck?",
+   "alternates": [
+    "Why a Faster Keyboard Doesn't Ship Software Faster",
+    "The Part of Software Delivery AI Doesn't Touch"
+   ],
+   "question": "If writing code was never the bottleneck, how much can faster code generation help?",
+   "whyWatch": "Eighteen sources say it and three deny it; the two reports that touch it both found review and rollout, not typing, set the pace.",
+   "tension": "A plausible systems argument with only indirect measurements.",
+   "evidenceNeeded": "End-to-end delivery time with and without AI tools, decomposed by phase.",
+   "evidenceAvailable": [
+    "Google migrations report: partly (0.45, partial)",
+    "Microsoft/Accenture field RCTs: partly (0.4, partial)"
+   ],
+   "gaps": [
+    "Reviewer: Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement.",
+    "What explains the split between Google migrations report, Microsoft/Accenture field RCTs?",
+    "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
+    "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured)."
+   ],
+   "premise": "The sources split on \"Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains\": Google migrations report says partly, Microsoft/Accenture field RCTs says partly. The reasons they differ are the useful part.",
+   "claims": [
+    "ai-coding/writing-code-never-main-bottleneck-software"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Two confident, opposite answers to the same question: \"Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains\".",
+    "conflict": "The sources do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (Google migrations report, Microsoft/Accenture field RCTs): design, sample, what was measured.",
+    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: if coding was never the bottleneck, how much can faster coding help end to end?"
+   },
+   "format": "short",
+   "formatWhy": "2 studies bear directly or partly on the question, 21 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 1,
+    "curiosity": 1,
+    "stakes": 0.4,
+    "depth": 0.77,
+    "originality": 1,
+    "evidence": 0.31,
+    "editorial": 0.79,
+    "overall": 0.6,
+    "explanation": "editorial 0.79 = mean of coherence 0.8 (review), relevance 1 (21 sources, 20 channels), curiosity 1 (conflict), stakes 0.4 (lean: calibrating), depth 0.77 (2 studies, 1 claim, tension); evidence 0.31 = strongest Google migrations report at 0.45 (partial) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement.",
+   "blocking": [
+    "Reviewer: Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains",
+     "kind": "fact",
+     "modality": "universal",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+        "cite": "ai-coding/sources/2501.06972.txt#L605-L617"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Google migrations report",
+       "verdict": "partly",
+       "confidence": 0.45,
+       "note": "Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"though\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+        "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L778-L782"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Microsoft/Accenture field RCTs",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured).",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"not directly\")"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped. [partial: the verdict note limits its own scope (\"though\")]",
+      "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured). [partial: the verdict note limits its own scope (\"not directly\")]",
+      "\"never\" is stronger than the evidence (strongest support 0)."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains",
+       "kind": "fact",
+       "modality": "universal",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+          "cite": "ai-coding/sources/2501.06972.txt#L605-L617"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Google migrations report",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"though\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L778-L782"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Microsoft/Accenture field RCTs",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured).",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"not directly\")"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped. [partial: the verdict note limits its own scope (\"though\")]",
+        "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured). [partial: the verdict note limits its own scope (\"not directly\")]",
+        "\"never\" is stronger than the evidence (strongest support 0)."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "conflict:specs-code-workflows-ignore-generated-not",
+   "kind": "conflict",
+   "title": "Can You Ignore the Code If the Spec Is Good?",
+   "alternates": [
+    "Spec-Driven Development: Where the Evidence Stops",
+    "Why 'Never Read the Code' Keeps Failing in Practice"
+   ],
+   "question": "Can you ignore the generated code if the specification is good enough?",
+   "whyWatch": "Eight sources say spec-to-code without reading the output fails, two say it works; the corpus has the understanding-loss experiment and little else.",
+   "tension": "A workflow argument with one adjacent experiment.",
+   "evidenceNeeded": "Outcomes of teams that ship generated code unread versus teams that review it, on defects and later change cost.",
+   "evidenceAvailable": [
+    "Vibe-coding literature review: partly (0.3, partial)",
+    "Code-ownership experiment (Martin-Lopez): partly (0.3, direct)"
+   ],
+   "gaps": [
+    "Reviewer: The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one.",
+    "What explains the split between Vibe-coding literature review, Code-ownership experiment (Martin-Lopez)?",
+    "Vibe-coding literature review: The review recommends reviewing generated code before committing rather than integrating unread output, and warns that deferred understanding (cognitive debt) raises later maintenance costs; this is recommendation-level evidence.",
+    "Code-ownership experiment (Martin-Lopez): The authors warn that a loss of understanding may hurt review, debugging and maintenance. They also concede that future workflows handing those jobs to agents might make low-level comprehension matter less. So the paper backs the concern only speculatively."
+   ],
+   "premise": "The sources split on \"Specs-to-code workflows that ignore the generated code do not work; developers must keep understanding and shaping the code\": Vibe-coding literature review says partly, Code-ownership experiment (Martin-Lopez) says partly. The reasons they differ are the useful part.",
+   "claims": [
+    "ai-coding/specs-code-workflows-ignore-generated-not"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Two confident, opposite answers to the same question: \"Specs-to-code workflows that ignore the generated code do not work; developers must keep understanding and shaping the code\".",
+    "conflict": "The sources do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (Vibe-coding literature review, Code-ownership experiment (Martin-Lopez)): design, sample, what was measured.",
+    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question about one workflow."
+   },
+   "format": "short",
+   "formatWhy": "2 studies bear directly or partly on the question, 10 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.79,
+    "curiosity": 1,
+    "stakes": 0.3,
+    "depth": 0.77,
+    "originality": 1,
+    "evidence": 0.35,
+    "editorial": 0.73,
+    "overall": 0.58,
+    "explanation": "editorial 0.73 = mean of coherence 0.8 (review), relevance 0.79 (10 sources, 10 channels), curiosity 1 (conflict), stakes 0.3 (lean: neutral), depth 0.77 (2 studies, 1 claim, tension); evidence 0.35 = strongest Code-ownership experiment (Martin-Lopez) at 0.3 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one.",
+   "blocking": [
+    "Reviewer: The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Specs-to-code workflows that ignore the generated code do not work; developers must keep understanding and shaping the code",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L2076-L2093"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coding literature review",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "The review recommends reviewing generated code before committing rather than integrating unread output, and warns that deferred understanding (cognitive debt) raises later maintenance costs; this is recommendation-level evidence.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"rather than\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+        "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L917-L940"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Code-ownership experiment (Martin-Lopez)",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "The authors warn that a loss of understanding may hurt review, debugging and maintenance. They also concede that future workflows handing those jobs to agents might make low-level comprehension matter less. So the paper backs the concern only speculatively.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Vibe-coding literature review: The review recommends reviewing generated code before committing rather than integrating unread output, and warns that deferred understanding (cognitive debt) raises later maintenance costs; this is recommendation-level evidence. [partial: the verdict note limits its own scope (\"rather than\")]",
+      "Code-ownership experiment (Martin-Lopez): The authors warn that a loss of understanding may hurt review, debugging and maintenance. They also concede that future workflows handing those jobs to agents might make low-level comprehension matter less. So the paper backs the concern only speculatively."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Specs-to-code workflows that ignore the generated code do not work; developers must keep understanding and shaping the code",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L2076-L2093"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "The review recommends reviewing generated code before committing rather than integrating unread output, and warns that deferred understanding (cognitive debt) raises later maintenance costs; this is recommendation-level evidence.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/specs-code-workflows-ignore-generated-not",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L917-L940"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "The authors warn that a loss of understanding may hurt review, debugging and maintenance. They also concede that future workflows handing those jobs to agents might make low-level comprehension matter less. So the paper backs the concern only speculatively.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Vibe-coding literature review: The review recommends reviewing generated code before committing rather than integrating unread output, and warns that deferred understanding (cognitive debt) raises later maintenance costs; this is recommendation-level evidence. [partial: the verdict note limits its own scope (\"rather than\")]",
+        "Code-ownership experiment (Martin-Lopez): The authors warn that a loss of understanding may hurt review, debugging and maintenance. They also concede that future workflows handing those jobs to agents might make low-level comprehension matter less. So the paper backs the concern only speculatively."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "surprise:vibe-coded-apps-work-prototypes-but",
+   "kind": "surprise",
+   "title": "Do Vibe-Coded Apps Survive Production?",
+   "alternates": [
+    "Prototype in a Day, Rewrite in a Month?",
+    "Where the Evidence on Vibe Coding Runs Out"
+   ],
+   "question": "Do vibe-coded apps survive contact with production?",
+   "whyWatch": "Sixteen sources say vibe-coded apps break in production. The review says the prototype half is well supported and the break-down half is mostly unstudied.",
+   "tension": "A widely shared belief whose interesting half has no evidence.",
+   "evidenceNeeded": "Case series or longitudinal data on vibe-coded apps taken to production.",
+   "evidenceAvailable": [
+    "Vibe-coding literature review: partly (0.6, partial)"
+   ],
+   "gaps": [
+    "Reviewer: The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data."
+   ],
+   "premise": "Before checking, the best guess was \"right\": Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot. Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown. 16 sources take a position on it.",
+   "claims": [
+    "ai-coding/vibe-coded-apps-work-prototypes-but"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "State the expectation everyone shares, with the sources that voice it.",
+    "conflict": "A study checked it and found something else.",
+    "evidence": "Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+    "resolution": "Why the expectation was wrong, or what the sources were missing.",
+    "takeaway": "The corrected belief, with its limits."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One claim with two halves, only one of them studied."
+   },
+   "format": "needs-research",
+   "formatWhy": "1 study bear directly or partly on the question, 16 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.93,
+    "curiosity": 0.8,
+    "stakes": 0.5,
+    "depth": 0.63,
+    "originality": 1,
+    "evidence": 0.36,
+    "editorial": 0.73,
+    "overall": 0.58,
+    "explanation": "editorial 0.73 = mean of coherence 0.8 (review), relevance 0.93 (16 sources, 15 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 0.63 (1 study, 1 claim, tension); evidence 0.36 = strongest Vibe-coding literature review at 0.6 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data.",
+   "blocking": [
+    "Reviewer: The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Vibe-coded apps work for prototypes but break down when productionized and scaled",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L18-L28"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coding literature review",
+       "verdict": "partly",
+       "confidence": 0.6,
+       "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "supports the prototype half; the production break-down half is mostly unstudied, not shown"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown. [partial: supports the prototype half; the production break-down half is mostly unstudied, not shown]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 1 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Vibe-coded apps work for prototypes but break down when productionized and scaled",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L18-L28"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "partly",
+         "confidence": 0.6,
+         "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "supports the prototype half; the production break-down half is mostly unstudied, not shown"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown. [partial: supports the prototype half; the production break-down half is mostly unstudied, not shown]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "conflict:goal-loop-commands-prompt-agent-until",
+   "kind": "conflict",
+   "title": "Can You Leave an AI Agent Running on Your Backlog?",
+   "alternates": [
+    "What Airbnb's Migration Loop Proves and What It Doesn't",
+    "Unattended Agents: One Case, Many Claims"
+   ],
+   "question": "Can you leave an AI agent running on your backlog unattended?",
+   "whyWatch": "Six sources sell the loop; the one documented case is a bespoke pipeline with a retry cap and a 75% first-pass rate.",
+   "tension": "A generic promise and one specific case.",
+   "evidenceNeeded": "Outcomes of generic agent loop commands on real backlogs: completion rate, review burden, regressions.",
+   "evidenceAvailable": [
+    "Airbnb migration: partly (0.45, partial)"
+   ],
+   "gaps": [
+    "Reviewer: Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands.",
+    "What explains the split between Airbnb migration?",
+    "Airbnb migration: Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command."
+   ],
+   "premise": "The sources split on \"Goal or loop commands that re-prompt an agent until a goal is met let it work through a backlog unattended\": Airbnb migration says partly. The reasons they differ are the useful part.",
+   "claims": [
+    "ai-coding/goal-loop-commands-prompt-agent-until"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Two confident, opposite answers to the same question: \"Goal or loop commands that re-prompt an agent until a goal is met let it work through a backlog unattended\".",
+    "conflict": "The sources do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (Airbnb migration): design, sample, what was measured.",
+    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question about one practice."
+   },
+   "format": "short",
+   "formatWhy": "1 study bear directly or partly on the question, 8 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.72,
+    "curiosity": 1,
+    "stakes": 0.7,
+    "depth": 0.63,
+    "originality": 1,
+    "evidence": 0.27,
+    "editorial": 0.77,
+    "overall": 0.57,
+    "explanation": "editorial 0.77 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 1 (conflict), stakes 0.7 (lean: pro), depth 0.63 (1 study, 1 claim, tension); evidence 0.27 = strongest Airbnb migration at 0.45 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands.",
+   "blocking": [
+    "Reviewer: Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Goal or loop commands that re-prompt an agent until a goal is met let it work through a backlog unattended",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+        "cite": "ai-coding/sources/airbnb-test-migration.txt#L19-L22"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Airbnb migration",
+       "verdict": "partly",
+       "confidence": 0.45,
+       "note": "Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "a bespoke retry pipeline for one migration, not a generic agent loop command on a backlog"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Airbnb migration: Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command. [partial: a bespoke retry pipeline for one migration, not a generic agent loop command on a backlog]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 1 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Goal or loop commands that re-prompt an agent until a goal is met let it work through a backlog unattended",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+          "cite": "ai-coding/sources/airbnb-test-migration.txt#L19-L22"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Airbnb migration",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "a bespoke retry pipeline for one migration, not a generic agent loop command on a backlog"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Airbnb migration: Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command. [partial: a bespoke retry pipeline for one migration, not a generic agent loop command on a backlog]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "conflict:assisted-development-specification-not-code-should",
+   "kind": "conflict",
+   "title": "Is it true that in AI-assisted development the specification, not the code, should be the authoritative source of truth?",
+   "alternates": [
+    "Sources disagree: In AI-assisted development the specification, not the code, should be…",
+    "Is it true that in AI-assisted development the specification, not the code, should be the authoritative source of truth?"
+   ],
+   "question": "Is it true that in AI-assisted development the specification, not the code, should be the authoritative source of truth?",
+   "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
+   "tension": "The sources split: Vibe-coding literature review says partly.",
+   "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
+   "evidenceAvailable": [
+    "Vibe-coding literature review: partly (0.25, direct)"
+   ],
+   "gaps": [
+    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.25 after applicability); it cannot carry a narrative.",
+    "What explains the split between Vibe-coding literature review?",
+    "Vibe-coding literature review: The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth."
+   ],
+   "premise": "The sources split on \"In AI-assisted development the specification, not the code, should be the authoritative source of truth\": Vibe-coding literature review says partly. The reasons they differ are the useful part.",
+   "claims": [
+    "ai-coding/assisted-development-specification-not-code-should"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Two confident, opposite answers to the same question: \"In AI-assisted development the specification, not the code, should be the authoritative source of truth\".",
+    "conflict": "The sources do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (Vibe-coding literature review): design, sample, what was measured.",
+    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "heuristic",
+    "explanation": "One claim, one question. Unreviewed."
+   },
+   "format": "short",
+   "formatWhy": "1 study bear directly or partly on the question, 7 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.68,
+    "curiosity": 1,
+    "stakes": 0.3,
+    "depth": 0.63,
+    "originality": 1,
+    "evidence": 0.25,
+    "editorial": 0.68,
+    "overall": 0.51,
+    "explanation": "editorial 0.68 = mean of coherence 0.8 (heuristic), relevance 0.68 (7 sources, 7 channels), curiosity 1 (conflict), stakes 0.3 (lean: neutral), depth 0.63 (1 study, 1 claim, tension); evidence 0.25 = strongest Vibe-coding literature review at 0.25 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: The strongest study that bears on the central conclusion is weaker than 0.5 (0.25 after applicability); it cannot carry a narrative.",
+   "blocking": [
+    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.25 after applicability); it cannot carry a narrative."
+   ],
+   "reviewed": false,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "In AI-assisted development the specification, not the code, should be the authoritative source of truth",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-development-specification-not-code-should",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L1924-L1928"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coding literature review",
+       "verdict": "partly",
+       "confidence": 0.25,
+       "note": "The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Vibe-coding literature review: The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 1 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "In AI-assisted development the specification, not the code, should be the authoritative source of truth",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-development-specification-not-code-should",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1924-L1928"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "partly",
+         "confidence": 0.25,
+         "note": "The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Vibe-coding literature review: The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "gap:code-review-tools-catch-real-bugs",
+   "kind": "gap",
+   "title": "What is the evidence that AI code review tools catch real bugs that human reviewers miss?",
+   "alternates": [
+    "12 sources say AI code review tools catch real bugs that human reviewers miss. Where is the proof?",
+    "An unchecked claim: AI code review tools catch real bugs that human reviewers miss"
+   ],
+   "question": "What is the evidence that AI code review tools catch real bugs that human reviewers miss?",
+   "whyWatch": "12 sources across 13 channels assert it and nobody shows a measurement. Asking for the evidence on camera is the story, and the claim sells something.",
+   "tension": "Confidence without a check. The AI guess leans \"right\" (AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.), which is a guess, not a finding.",
+   "evidenceNeeded": "Any study or dataset that tests whether AI code review tools catch real bugs that human reviewers miss.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether AI code review tools catch real bugs that human reviewers miss?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "12 sources assert \"AI code review tools catch real bugs that human reviewers miss\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "ai-coding/code-review-tools-catch-real-bugs"
+   ],
+   "related": [
+    "ai-coding/current-code-review-tools-trade-precision"
+   ],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "heuristic",
+    "explanation": "One claim, one question. Unreviewed."
+   },
+   "format": "needs-research",
+   "formatWhy": "0 studies bear directly or partly on the question, 14 sources voice the belief, without a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.89,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.35,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.65,
+    "overall": 0.39,
+    "explanation": "editorial 0.65 = mean of coherence 0.8 (heuristic), relevance 0.89 (14 sources, 13 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": false,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "12 sources claim \"AI code review tools catch real bugs that human reviewers miss\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "3KAI__5dUn0"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Context Engineering & Coding Agents with Cursor",
+       "verdict": null,
+       "confidence": null,
+       "note": "it actually caught a lot of bugs that we missed on code reviews"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "6wYSwZ20NJU"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Open Source security in spite of AI - Daniel Stenberg",
+       "verdict": null,
+       "confidence": null,
+       "note": "I have fixed more than 100 bugs found by these tools when I started to use them"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "86UczUYjVQ0"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "AI-Accelerated Development: Practical Applications for Embedded Systems Engineers (Christophe Conil)",
+       "verdict": null,
+       "confidence": null,
+       "note": "he found two bugs, critical bug line 223 where I put uh humidity instead of outside air quality"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "antirez-news-154"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Coding with LLMs in the summer of 2025 (an update) - <antirez>",
+       "verdict": null,
+       "confidence": null,
+       "note": "many were just removed immediately by Gemini / Claude code reviews."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "antirez-news-169"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Control the ideas, not the code - <antirez>",
+       "verdict": null,
+       "confidence": null,
+       "note": "Fable and GPT 5.6 reviews to the sorted sets memory saving are going to spot ways more errors and subtle race conditions"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "KpbMfb_6EGs"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Claude Code Alternatives in 2026: Cursor, Qodo & GitHub Copilot Compared",
+       "verdict": null,
+       "confidence": null,
+       "note": "It says that there are open AI key exposed"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "nolanlawson-using-ai-to-write-better-code-more-slowly"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Using AI to write better code more slowly",
+       "verdict": null,
+       "confidence": null,
+       "note": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "NYFGCESmikA"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux | Lex Fridman Podcast #501",
+       "verdict": null,
+       "confidence": null,
+       "note": "the PRs that have been reviewed by agents caused far fewer issues in production"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "PlyzvM--xbQ"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Open-source, complexity & AI coding 🔧 — with Salvatore \"Antirez\" Sanfilippo",
+       "verdict": null,
+       "confidence": null,
+       "note": "I am 100% sure that AI can routinely find bugs before of users in complex C projects."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "qcYHD3KruPI"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Comparing all AI Pull Request Review tools to find the best one",
+       "verdict": null,
+       "confidence": null,
+       "note": "they are definitely here to stay. They were all useful to some extent"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "rCIZflYEpEk"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Coding with AI episode 3: fixing a real world bug in Redis vector sets with LLMs",
+       "verdict": null,
+       "confidence": null,
+       "note": "it immediately found my bug, which was awesome."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "T14uF2J89eU"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Codex CLI: Everything You Need in 12 mins",
+       "verdict": null,
+       "confidence": null,
+       "note": "Codex came back with actionable items, and also sorted by priorities"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "wcRR5P0S2Us"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "My AI Coding Workflow That Actually Works",
+       "verdict": null,
+       "confidence": null,
+       "note": "you forgot about what happens if there's no audio"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "XyQ4ZTS5dGw"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Agentic Engineering in Action with Mitchell Hashimoto",
+       "verdict": null,
+       "confidence": null,
+       "note": "oh, I actually forgot to update the code. Um, so it's found bugs that way."
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 14 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "12 sources claim \"AI code review tools catch real bugs that human reviewers miss\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "3KAI__5dUn0"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Context Engineering & Coding Agents with Cursor",
+         "verdict": null,
+         "confidence": null,
+         "note": "it actually caught a lot of bugs that we missed on code reviews"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "6wYSwZ20NJU"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Open Source security in spite of AI - Daniel Stenberg",
+         "verdict": null,
+         "confidence": null,
+         "note": "I have fixed more than 100 bugs found by these tools when I started to use them"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "86UczUYjVQ0"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "AI-Accelerated Development: Practical Applications for Embedded Systems Engineers (Christophe Conil)",
+         "verdict": null,
+         "confidence": null,
+         "note": "he found two bugs, critical bug line 223 where I put uh humidity instead of outside air quality"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "antirez-news-154"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Coding with LLMs in the summer of 2025 (an update) - <antirez>",
+         "verdict": null,
+         "confidence": null,
+         "note": "many were just removed immediately by Gemini / Claude code reviews."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "antirez-news-169"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Control the ideas, not the code - <antirez>",
+         "verdict": null,
+         "confidence": null,
+         "note": "Fable and GPT 5.6 reviews to the sorted sets memory saving are going to spot ways more errors and subtle race conditions"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "KpbMfb_6EGs"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Claude Code Alternatives in 2026: Cursor, Qodo & GitHub Copilot Compared",
+         "verdict": null,
+         "confidence": null,
+         "note": "It says that there are open AI key exposed"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "nolanlawson-using-ai-to-write-better-code-more-slowly"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Using AI to write better code more slowly",
+         "verdict": null,
+         "confidence": null,
+         "note": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "NYFGCESmikA"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux | Lex Fridman Podcast #501",
+         "verdict": null,
+         "confidence": null,
+         "note": "the PRs that have been reviewed by agents caused far fewer issues in production"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "PlyzvM--xbQ"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Open-source, complexity & AI coding 🔧 — with Salvatore \"Antirez\" Sanfilippo",
+         "verdict": null,
+         "confidence": null,
+         "note": "I am 100% sure that AI can routinely find bugs before of users in complex C projects."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "qcYHD3KruPI"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Comparing all AI Pull Request Review tools to find the best one",
+         "verdict": null,
+         "confidence": null,
+         "note": "they are definitely here to stay. They were all useful to some extent"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "rCIZflYEpEk"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Coding with AI episode 3: fixing a real world bug in Redis vector sets with LLMs",
+         "verdict": null,
+         "confidence": null,
+         "note": "it immediately found my bug, which was awesome."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "T14uF2J89eU"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Codex CLI: Everything You Need in 12 mins",
+         "verdict": null,
+         "confidence": null,
+         "note": "Codex came back with actionable items, and also sorted by priorities"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "wcRR5P0S2Us"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "My AI Coding Workflow That Actually Works",
+         "verdict": null,
+         "confidence": null,
+         "note": "you forgot about what happens if there's no audio"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "XyQ4ZTS5dGw"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Agentic Engineering in Action with Mitchell Hashimoto",
+         "verdict": null,
+         "confidence": null,
+         "note": "oh, I actually forgot to update the code. Um, so it's found bugs that way."
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 14 source statements."
+      }
+     }
+    ]
+   }
+  }
+ ],
+ "rejected": [
+  {
+   "id": "conflict:assisted-code-harder-later-developers-maintain",
+   "title": "Why do studies disagree about whether AI-assisted code is no harder for later developers to maintain than unassisted code?",
+   "reason": "folded into decision:quality-and-understanding"
+  },
+  {
+   "id": "conflict:coding-productivity-gains-appear-only-after",
+   "title": "Is it true that AI coding productivity gains appear only after a learning period of sustained use?",
+   "reason": "the central conclusion is contradicted by the evidence: Contradicted by Shan et al. field study + RCT: Gains appeared on first use: in the follow-up, after removing participants with prior GenAI coding experience, the main quantity and quality effects still held (brief, simple tasks)."
+  },
+  {
+   "id": "conflict:coding-tools-amplify-experienced-engineers-far",
+   "title": "Is it true that AI coding tools amplify experienced engineers far more than novices?",
+   "reason": "folded into decision:who-benefits"
+  },
+  {
+   "id": "conflict:engineers-who-adopt-agentic-coding-about",
+   "title": "Is it true that engineers who adopt agentic coding are about ten times as productive as peers who don't?",
+   "reason": "subsumed by decision:how-much-faster"
+  },
+  {
+   "id": "conflict:productivity-gains-concentrate-among-developers-new",
+   "title": "Why do studies disagree about whether AI productivity gains concentrate among developers new to a codebase and on routine, well-trodden code?",
+   "reason": "folded into decision:who-benefits: the same question from the other side"
+  },
+  {
+   "id": "conflict:software-built-quickly-accumulates-more-technical",
+   "title": "Why do studies disagree about whether software built quickly with AI accumulates more technical debt than carefully hand-built software?",
+   "reason": "folded into decision:quality-and-understanding; as a standalone fact it is contradicted by the trial and has no measured human baseline"
+  },
+  {
+   "id": "contradicted:coding-tools-amplify-experienced-engineers-far",
+   "title": "Is it true that AI coding tools amplify experienced engineers far more than novices?",
+   "reason": "subsumed by decision:who-benefits"
+  },
+  {
+   "id": "decision:where-the-bottleneck-moves",
+   "title": "Where the bottleneck moves: what should you do?",
+   "reason": "folded into surprise:assistance-must-reliable-save-experts-time (review as the bottleneck); the production claim is its own story"
+  },
+  {
+   "id": "surprise:coding-tools-amplify-experienced-engineers-far",
+   "title": "Is it really true that AI coding tools amplify experienced engineers far more than novices?",
+   "reason": "subsumed by decision:who-benefits"
+  }
+ ]
+}
