@@ -19,10 +19,11 @@ const decided = c.decidedBy
     : 'AI guess only';
 const asserts = c.sources.filter((s) => s.stance === 'asserts');
 const denies = c.sources.filter((s) => s.stance === 'denies');
+// One row per chip: `label` on the chip, `text` on the stat line in the summary.
 const chips = [
-  { v: 'asserts', label: 'Asserts', n: asserts.length },
-  { v: 'denies', label: 'Denies', n: denies.length },
-  { v: 'verdict', label: 'Verdicts', n: c.verdicts.length },
+  { v: 'asserts', label: 'Asserts', text: `asserted ${c.asserted}`, n: asserts.length },
+  { v: 'denies', label: 'Denies', text: `denied ${c.denied}`, n: denies.length },
+  { v: 'verdict', label: 'Verdicts', text: decided, n: c.verdicts.length },
 ];
 const first = chips.findIndex((f) => f.n);
 const slug = c.id.split('/').pop();
@@ -44,11 +45,7 @@ const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
     {c.note && <p class:list={[small, 'ml-[1.4em]']}>{c.note}</p>}
     <span class="ml-[1.4em] font-mono text-xs text-muted-foreground tabular-nums">
       {
-        [
-          { v: 'asserts', text: `asserted ${c.asserted}`, n: asserts.length },
-          { v: 'denies', text: `denied ${c.denied}`, n: denies.length },
-          { v: 'verdict', text: decided, n: c.verdicts.length },
-        ].map((x, i) => (
+        chips.map((x, i) => (
           <>
             {i > 0 && ' · '}
             {x.n ? (

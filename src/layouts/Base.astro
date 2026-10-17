@@ -10,10 +10,9 @@ type Props = PageMeta;
 const { title, description = site.description, noindex = false } = Astro.props;
 const siteUrl = Astro.site!;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
-// Every page has a social image: the one passed in, else the site card from scripts/icons.mjs.
-const imagePath = Astro.props.image ?? '/og/site.png';
-const image = imagePath.startsWith('http') ? imagePath : absoluteUrl(imagePath, siteUrl);
-const imageAlt = Astro.props.imageAlt ?? (title === site.name ? site.name : `${title} - ${site.name}`);
+// Social image: the site card from scripts/icons.mjs, on every page.
+const image = absoluteUrl('/og/site.png', siteUrl);
+const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
 ---
 
 <!doctype html>

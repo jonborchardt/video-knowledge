@@ -173,7 +173,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
     role="tablist"
     aria-label="Report sections"
     hidden
-    class="sticky top-0 z-10 -mb-4 flex [scrollbar-width:none] gap-1 overflow-x-auto border-b bg-background pt-2 print:hidden [&::-webkit-scrollbar]:hidden"
+    class="top-0 z-10 -mb-4 flex flex-wrap gap-1 border-b bg-background pt-2 sm:sticky print:hidden"
   >
     {
       tabs.map((tab) => (
@@ -182,7 +182,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
           role="tab"
           id={`tab-${tab.id}`}
           aria-controls={tab.id}
-          class="flex-none cursor-pointer rounded-t-md border border-b-0 border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap text-muted-foreground hover:text-foreground aria-selected:-mb-px aria-selected:border-border aria-selected:bg-card aria-selected:text-primary"
+          class="cursor-pointer rounded-t-md border border-b-0 border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap text-muted-foreground hover:text-foreground aria-selected:-mb-px aria-selected:border-border aria-selected:bg-card aria-selected:text-primary"
         >
           {tab.label}
         </button>
@@ -460,13 +460,6 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       tabs[i].setAttribute('aria-selected', String(on));
       tabs[i].tabIndex = on ? 0 : -1;
     });
-    // Keep the selected tab visible inside the bar. Only the bar scrolls: scrollIntoView would also scroll the page
-    // down to the bar when it sits below the hero on load.
-    const sel = tabs.find((b) => b.getAttribute('aria-selected') === 'true')!;
-    bar.scrollLeft = Math.min(
-      Math.max(bar.scrollLeft, sel.offsetLeft + sel.offsetWidth - bar.clientWidth),
-      sel.offsetLeft,
-    );
   }
   tabs.forEach((b, i) => {
     b.addEventListener('click', () => {
