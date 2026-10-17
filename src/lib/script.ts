@@ -17,6 +17,7 @@ import { join } from 'node:path';
 import {
   type Applicability,
   type Assertion,
+  type Corpus,
   type EvidenceRef,
   type PassageReader,
   type Stance,
@@ -397,7 +398,7 @@ export interface ScriptReviewFile {
   findings: ReviewFinding[];
   /** assertion id (or sentence id) -> why a deterministic warning there is a false positive or already carried by the
    *  narration, valid at that sentence fingerprint only. Blocking issues cannot be dispositioned. */
-  dispositions?: Record<string, { fingerprint: string; reason: string }>;
+  dispositions?: Record<string, { fingerprint: string; category: string; reason: string }>;
 }
 
 export interface AssertionResult {
@@ -477,6 +478,15 @@ export const norm = (s: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 const NUMBERISH = /\d|\$|\bper ?cent\b|\bpercent\b/i;
+/** Quoted spans in a sentence: straight or curly double quotes, the words inside. */
+const quotedSpans = (text: string) => [...text.matchAll(/["“]([^"”]+)["”]/g)].map((m) => m[1]);
+/** A name or role appears as whole words (never a bare substring: "a" is not a speaker), at least three characters. */
+export function mentions(haystack: string, who: string): boolean {
+  const w = norm(who);
+  if (w.length < 3) return false;
+  const re = new RegExp(`(^|[^a-z0-9])${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^a-z0-9])`);
+  return re.test(norm(haystack));
+}
 // ponytail: arithmetic only, no functions; a Function over a digits-and-operators whitelist is the whole evaluator.
 export function evalExpr(e: string): number | null {
   if (!/^[\d.\s+\-*/()]+$/.test(e)) return null;
@@ -493,7 +503,7 @@ const CONSTANTS = new Set(['1', '10', '100', '1000', '12', '52', '365']);
 
 export function validateScript(
   script: Script,
-  t: Pick<Topic, 'name' | 'claims'>,
+  t: Corpus,
   read: PassageReader,
   review: ScriptReviewFile | null = null,
   judgments: ReviewFile['applicability'] = {},
@@ -509,7 +519,7 @@ export function validateScript(
       .flatMap((c) => c.statements)
       .find((s) => s.source === source) ?? null;
   const wpm = script.generation?.wordsPerMinute || WPM_DEFAULT;
-  const corpus = { name: t.name, claims: t.claims };
+  const corpus: Corpus = { name: t.name, claims: t.claims, sameStudy: t.sameStudy ?? {} };
   const byId = new Map<string, ClaimView>(t.claims.map((c) => [c.id, c]));
   const all = sentences(script);
   const top: Issue[] = [];
@@ -638,7 +648,7 @@ export function validateScript(
           suggestion: 'Add an assertion per factual claim with its claim and evidence, or retype the sentence.',
         }),
       );
-    if (!factualType && !assertions.length && NUMBERISH.test(s.text))
+    if (!factualType && !assertions.length && NUMBERISH.test(wordsToDigits(s.text)))
       issues.push(
         issue(
           s.id,
@@ -647,6 +657,22 @@ export function validateScript(
           `a ${s.type} sentence carries a figure; the reviewer must confirm it is not a representative outcome`,
         ),
       );
+    // Every quotation in the narration must be declared on an assertion (quote.text), or it is never checked.
+    const declared = assertions.map((a) => norm(a.quote?.text ?? '')).filter(Boolean);
+    for (const span of quotedSpans(s.text))
+      if (norm(span).split(' ').length >= 3 && !declared.some((d) => d.includes(norm(span))))
+        issues.push(
+          issue(
+            s.id,
+            'quote-unchecked',
+            factualType ? 'blocking' : 'warning',
+            `the quoted words "${span}" are on no assertion's quote, so nothing checked them against a passage or a source`,
+            {
+              suggestion:
+                'Declare the quotation on an assertion with quote.text and its cite or source, or unquote it.',
+            },
+          ),
+        );
     // Every figure in the sentence must belong to some assertion, so no part of a sentence rides on another's evidence.
     const covered = assertions.map((a) => a.text).join(' ');
     if (assertions.length)
@@ -759,6 +785,21 @@ export function validateScript(
             const p = read(q.cite);
             if (p === null) add('quote', 'blocking', `passage not found: ${q.cite}`);
             else if (!norm(p).includes(norm(q.text))) add('misquote', 'blocking', `"${q.text}" is not in ${q.cite}`);
+            // A named speaker on a study quotation must be the passage, the study or the document, and in the sentence.
+            if (q.speaker) {
+              const study = a.claims
+                .flatMap((c) => byId.get(c.id)?.verdicts ?? [])
+                .filter((x) => x.cite === q.cite)
+                .map((x) => x.by);
+              const docName = pkg?.documents.find((d) => d.file === docOf(q.cite!))?.name ?? '';
+              const where = [p ?? '', ...study, docName].join('\n');
+              if (!mentions(s.text, q.speaker) || !mentions(where, q.speaker))
+                add(
+                  'speaker-unverified',
+                  'blocking',
+                  `speaker "${q.speaker}" must be named in the sentence and be the study, the document or words in the passage`,
+                );
+            }
           }
         } else if (q.source) {
           const st = a.claims.map((c) => byId.get(c.id)?.sources.find((x) => x.id === q.source)).find(Boolean);
@@ -772,12 +813,13 @@ export function validateScript(
             add('misquote', 'blocking', `"${q.text}" is not in the recorded quote from ${q.source}: "${st.quote}"`);
           // Speaker attribution: the person the narration names must be in the transcript window the package
           // persisted around the quote, or in the source's title or channel. Never taken on trust.
-          const context =
+          const packaged =
             statementOf(
               a.claims.filter((c) => byId.get(c.id)?.sources.some((x) => x.id === q.source)).map((c) => c.id),
               q.source,
             )?.context ?? null;
-          const named = st ? `${norm(st.title)} ${norm(st.channel)}` : '';
+          const context = packaged && !packaged.startsWith('(quote not located)') ? packaged : null; // an unlocated window is not evidence
+          const named = st ? `${st.title}\n${st.channel}` : '';
           if (!st || !statementIds.has(q.source)) {
             /* already blocked above */
           } else if (!q.speaker)
@@ -789,14 +831,18 @@ export function validateScript(
                 suggestion: 'Set quote.speaker to the name, role or show the narration attributes the words to.',
               },
             );
-          else if (named.includes(norm(q.speaker)) || (context !== null && norm(context).includes(norm(q.speaker)))) {
+          else if (!mentions(s.text, q.speaker))
+            add('speaker-unverified', 'blocking', `speaker "${q.speaker}" is not named in the sentence`, {
+              suggestion: 'quote.speaker is who the narration says spoke; use those words.',
+            });
+          else if (mentions(named, q.speaker) || (context !== null && mentions(context, q.speaker))) {
             /* verified */
           } else
             add(
               'speaker-unverified',
               'blocking',
               context === null
-                ? `speaker "${q.speaker}" is not the source title or channel and there is no transcript context in the evidence package`
+                ? `speaker "${q.speaker}" is not the source title or channel and there is no located transcript context in the evidence package`
                 : `speaker "${q.speaker}" is not in the transcript context around the quote, the source title or the channel`,
               { suggestion: 'Name the speaker as the transcript does, or attribute the words to the source itself.' },
             );
@@ -821,7 +867,15 @@ export function validateScript(
     // A reviewer may retire a deterministic warning (never a blocking issue) at this exact fingerprint.
     for (const i of [...issues, ...ar.flatMap((a) => a.issues)]) {
       const d = review?.dispositions?.[i.assertion ?? s.id];
-      if (i.by === 'deterministic' && i.severity === 'warning' && d && d.fingerprint === fp) i.disposition = d.reason;
+      if (
+        reviewCurrent &&
+        i.by === 'deterministic' &&
+        i.severity === 'warning' &&
+        d &&
+        d.fingerprint === fp &&
+        d.category === i.category
+      )
+        i.disposition = d.reason;
     }
     const approved = reviewCurrent && review!.approved?.[s.id] === fp;
     const blocking = [...issues, ...ar.flatMap((a) => a.issues)].some((x) => x.severity === 'blocking');
@@ -1090,11 +1144,23 @@ export interface Release {
   fingerprints: {
     script: string; // scriptFingerprint
     package: string; // evidence package fingerprint
-    validation: string; // sha of validation.json as locked
-    storyboard: string; // sha of storyboard.json as locked
+    validation: string; // validationFingerprint of validation.json as locked (content, not timestamps)
+    storyboard: string; // storyboardFingerprint of storyboard.json as locked (content, not issues)
   };
 }
-/** One warning per locked fingerprint the current script, package or storyboard no longer matches. */
+/** The validation minus its timestamps and release warnings, so a re-run on the same inputs has the same print. */
+export const validationFingerprint = (v: ScriptValidation) => {
+  const { date: _d, history: _h, issues, ...rest } = v;
+  void [_d, _h];
+  return sha(toJson({ ...rest, issues: issues.filter((i) => i.category !== 'release-stale') }));
+};
+/** The filled storyboard minus its issue list (release warnings are written into it). */
+export const storyboardFingerprint = (sb: Storyboard) => {
+  const { issues: _i, status: _s, ...rest } = sb;
+  void [_i, _s];
+  return sha(toJson(rest));
+};
+/** One warning per locked fingerprint the current script, package, validation or storyboard no longer matches. */
 export function releaseCheck(release: Release | null, v: ScriptValidation, sb: Storyboard | null): Issue[] {
   if (!release) return [];
   const stale = (what: string, locked: string, now: string | null) => ({
@@ -1109,8 +1175,10 @@ export function releaseCheck(release: Release | null, v: ScriptValidation, sb: S
     out.push(stale('script', release.fingerprints.script, v.scriptFingerprint));
   if (release.fingerprints.package !== v.packageFingerprint)
     out.push(stale('package', release.fingerprints.package, v.packageFingerprint));
-  if (sb && sb.scriptFingerprint !== release.fingerprints.script)
-    out.push(stale('the storyboard script', release.fingerprints.script, sb.scriptFingerprint));
+  if (release.fingerprints.validation !== validationFingerprint(v))
+    out.push(stale('validation', release.fingerprints.validation, validationFingerprint(v)));
+  if (sb && release.fingerprints.storyboard !== storyboardFingerprint(sb))
+    out.push(stale('storyboard', release.fingerprints.storyboard, storyboardFingerprint(sb)));
   return out;
 }
 

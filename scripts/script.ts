@@ -26,9 +26,11 @@ import {
   sentenceFingerprint,
   sentences,
   sha,
+  storyboardFingerprint,
   toJson,
   transcriptReader,
   validateScript,
+  validationFingerprint,
   writeArtifact,
 } from '../src/lib/script';
 import { loadStories, storiesPath } from '../src/lib/stories';
@@ -123,8 +125,7 @@ function stageValidate(): { script: Script; v: ScriptValidation; pkg: EvidencePa
 /** After a lock, any drift from the approved fingerprints is a warning on the validation. */
 function withRelease(v: ScriptValidation, sb: Storyboard | null) {
   const extra = releaseCheck(readJson<Release>(p(FILES.release)), v, sb);
-  v.issues.unshift(...extra);
-  v.counts.warnings += extra.length;
+  v.issues.unshift(...extra); // listed, not counted: the counts describe the script, and lock re-validates in memory
 }
 
 function stageLock() {
@@ -143,6 +144,30 @@ function stageLock() {
     return refuse(
       `the storyboard was built against script ${sb.scriptFingerprint}; validation is ${v.scriptFingerprint}: re-run storyboard`,
     );
+  // The files on disk must be what the current script, package, review and sources produce: re-run both in memory.
+  const script = readJson<Script>(p(FILES.script));
+  const pkg = readJson<EvidencePackage>(p(FILES.pkg));
+  const plan = readJson<StoryboardPlan>(p(FILES.storyboard));
+  if (!script || !pkg || !plan)
+    return refuse('script.json, evidence-package.json and storyboard.json are all required');
+  const live = validateScript(
+    script,
+    loadTopic(topic),
+    read,
+    readJson<ScriptReviewFile>(p(FILES.review)),
+    loadReview(topic).applicability,
+    v,
+    pkg,
+  );
+  if (live.status !== 'passed' || validationFingerprint(live) !== validationFingerprint(v))
+    return refuse(
+      `validation.json does not match the current script, package, review and sources (${live.status}): re-run validate`,
+    );
+  const liveSb = buildStoryboard(plan, script, live, pkg, read);
+  if (liveSb.status !== 'ok' || storyboardFingerprint(liveSb) !== storyboardFingerprint(sb))
+    return refuse(
+      `storyboard.json does not match the current script and package (${liveSb.status}): re-run storyboard`,
+    );
   const release: Release = {
     topic,
     story: storyId,
@@ -152,8 +177,8 @@ function stageLock() {
     fingerprints: {
       script: v.scriptFingerprint,
       package: v.packageFingerprint ?? '',
-      validation: fileSha(p(FILES.validation)),
-      storyboard: fileSha(p(FILES.storyboard)),
+      validation: validationFingerprint(v),
+      storyboard: storyboardFingerprint(sb),
     },
   };
   writeArtifact(dir, FILES.release, toJson(release));

@@ -1,6 +1,6 @@
 # Storyboard: How Much Money Do MLM Participants Actually Make?
 
-42 scenes, 12:10 at 150 wpm including pauses. Script bc0f3418c8 (passed). Storyboard status: **ok**.
+42 scenes, 12:11 at 150 wpm including pauses. Script 51e7788c5c (passed). Storyboard status: **ok**.
 
 ## Assets
 
@@ -70,7 +70,7 @@
 | broke even | 27% | 27 | percent | AARP MLM survey 2018, lines 135-L139 |
 | made a profit | 25% | 25 | percent | AARP MLM survey 2018, lines 135-L139 |
 
-Note: Self-reported. One bar, three segments; no distribution within segments is shown here (sc21 and sc22 carry the bands).
+Note: Self-reported. One bar, segmented by outcome; no distribution within a segment is shown here (the later survey scenes carry the bands).
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139)
 
@@ -380,7 +380,7 @@ Note: One company's table as excerpted by the FTC; the period of the averages is
 | broke even | 27% | 27 | percent | AARP MLM survey 2018, lines 135-L139 |
 | made a profit | 25% | 25 | percent | AARP MLM survey 2018, lines 135-L139 |
 
-Note: Dot counts are proportional (601 dots); do not label individual dots with dollar values.
+Note: Dot counts are proportional to the survey sample; do not label individual dots with dollar values.
 
 **Assets.** `dot-plot-601`
 
@@ -481,11 +481,11 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 870-L877); FTC staff report, section I (FTC MLM income disclosure report 2024, lines 201-L205)
 
-## 26. sc26 (6:46 to 7:13, 26.4s)
+## 26. sc26 (6:46 to 7:13, 27.2s)
 
 **Purpose.** The recruiters' rebuttal, and why both can be true.
 
-**Narration** (s36, s37). The recruiters reject that framing; the same trainer insists that "you don't get paid for the act of building the team you only get paid when sales happen to a customer". Both can be true at once, because in the plans the FTC describes, the "customer" can be the recruit, buying a set amount of product to qualify, and the plans pay commissions on those purchases.
+**Narration** (s36, s37). The recruiters reject that framing; the same trainer, Eric Worre, insists that "you don't get paid for the act of building the team you only get paid when sales happen to a customer". Both can be true at once, because in the plans the FTC describes, the "customer" can be the recruit, buying a set amount of product to qualify, and the plans pay commissions on those purchases.
 
 **Visual** (diagram). Quote card in amber: the trainer's sentence. Then the node tree returns; a label 'customer' slides onto one of the recruit nodes, which is also holding a product box, and a coin arrow rises from it to the node above.
 
@@ -493,7 +493,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** Network-marketing trainer video (YouTube); FTC staff report, section I (FTC MLM income disclosure report 2024, lines 201-L205)
 
-## 27. sc27 (7:13 to 7:29, 16.1s incl. 0.5s pause)
+## 27. sc27 (7:13 to 7:30, 16.1s incl. 0.5s pause)
 
 **Purpose.** Who the downline is: the bottom of the tree lights up.
 
@@ -505,7 +505,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** FTC staff report, Figure 6 (one disclosure's rank table) (FTC MLM income disclosure report 2024, lines 838-L866)
 
-## 28. sc28 (7:29 to 7:46, 17.2s)
+## 28. sc28 (7:30 to 7:47, 17.2s)
 
 **Purpose.** The pitch's own phrase, from a critic's summary of it.
 
@@ -531,7 +531,7 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On-screen citations.** J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 2199-L2211)
 
-## 29. sc29 (7:46 to 8:17, 30.6s incl. 1s pause)
+## 29. sc29 (7:47 to 8:17, 30.6s incl. 1s pause)
 
 **Purpose.** Taylor's estimate as a thousand people, with its assumption printed on it.
 
@@ -541,11 +541,11 @@ Note: Self-reported totals over the whole time in the MLM.
 
 **On screen.** "99.6% lose money" / "1 in 238 profit" / "estimate, under stated assumptions"
 
-**Chart** (waffle: Taylor's calculated loss rate across 30 MLMs).
+**Chart** (waffle: Taylor's calculated loss rate across the MLMs he analysed).
 
 | Label | Display | Value | Unit | Source |
 |---|---|---|---|---|
-| lost money (average across 30 MLMs) | 99.6% | 99.6 | percent | Taylor, The Case against MLM, lines 1785-L1790 |
+| lost money (average across the MLMs analysed) | 99.6% | 99.6 | percent | Taylor, The Case against MLM, lines 1785-L1790 |
 | profited | 1 in 238 | 238 | ratio | Taylor, The Case against MLM, lines 1785-L1790 |
 | lost money, per thousand | 996 out of 1,000 | 996 | count | Taylor, The Case against MLM, lines 1785-L1790 |
 
@@ -567,7 +567,7 @@ Note: A calculation under Taylor's assumptions, not a measurement; the caption i
 
 **Direction.** Keep it playful; this is a thought experiment and the next scene says so.
 
-## 31. sc31 (8:31 to 9:01, 30.8s)
+## 31. sc31 (8:31 to 9:02, 30.8s)
 
 **Purpose.** What is tested and what is not: saturation as people's reasons for leaving.
 
@@ -588,7 +588,7 @@ Note: Self-reported reasons among former participants; not a structural test.
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 463-L467); J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 1328-L1335)
 
-## 32. sc32 (9:01 to 9:08, 6.8s)
+## 32. sc32 (9:02 to 9:09, 6.8s)
 
 **Purpose.** Section break into findings.
 
@@ -598,7 +598,7 @@ Note: Self-reported reasons among former participants; not a structural test.
 
 **On screen.** "three measures, one shape"
 
-## 33. sc33 (9:08 to 9:34, 25.7s incl. 0.5s pause)
+## 33. sc33 (9:09 to 9:35, 25.7s incl. 0.5s pause)
 
 **Purpose.** The three answers side by side, each labelled with what it measures.
 
@@ -623,7 +623,7 @@ Note: Each panel is labelled with its measure; they are not the same quantity an
 
 **On-screen citations.** FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35); AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139); J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 1785-L1790)
 
-## 34. sc35 (9:34 to 9:53, 19.6s)
+## 34. sc35 (9:35 to 9:54, 19.6s)
 
 **Purpose.** Limits, stated plainly, as a list that builds.
 
@@ -635,7 +635,7 @@ Note: Each panel is labelled with its measure; they are not the same quantity an
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 376-L392); FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35)
 
-## 35. sc36 (9:53 to 10:23, 29.3s incl. 0.5s pause)
+## 35. sc36 (9:54 to 10:24, 29.3s incl. 0.5s pause)
 
 **Purpose.** Limits, continued.
 
@@ -647,7 +647,7 @@ Note: Each panel is labelled with its measure; they are not the same quantity an
 
 **On-screen citations.** J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 1785-L1790); FTC staff report, section I (FTC MLM income disclosure report 2024, lines 201-L205)
 
-## 36. sc37 (10:23 to 10:28, 4.8s)
+## 36. sc37 (10:24 to 10:28, 4.8s)
 
 **Purpose.** Return to the opening moment.
 
@@ -657,7 +657,7 @@ Note: Each panel is labelled with its measure; they are not the same quantity an
 
 **Direction.** Match the framing of sc01.
 
-## 37. sc38 (10:28 to 10:48, 20.5s incl. 0.5s pause)
+## 37. sc38 (10:28 to 10:49, 20.5s incl. 0.5s pause)
 
 **Purpose.** The base rates a viewer can carry away.
 
@@ -675,11 +675,11 @@ Note: Each panel is labelled with its measure; they are not the same quantity an
 | broke even | 27% | 27 | percent | AARP MLM survey 2018, lines 135-L139 |
 | made less than $5,000 | fourteen percent | 14 | percent | AARP MLM survey 2018, lines 376-L392 |
 
-Note: 74% is the sum of the first two segments (shown as 47 + 27); it is a base rate, not a prediction for one person.
+Note: The headline share is the sum of the lost-money and broke-even segments, shown side by side; it is a base rate, not a prediction for one person.
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139); AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 376-L392)
 
-## 38. sc39 (10:48 to 10:55, 6.8s)
+## 38. sc39 (10:49 to 10:56, 6.8s)
 
 **Purpose.** Leverage, located.
 
@@ -689,7 +689,7 @@ Note: 74% is the sum of the first two segments (shown as 47 + 27); it is a base 
 
 **On screen.** "it exists; here is who it works for"
 
-## 39. sc40 (10:55 to 11:11, 16.2s incl. 1s pause)
+## 39. sc40 (10:56 to 11:12, 16.2s incl. 1s pause)
 
 **Purpose.** A checklist the viewer can use.
 
@@ -701,7 +701,7 @@ Note: 74% is the sum of the first two segments (shown as 47 + 27); it is a base 
 
 **Direction.** Each callout lands with its clause.
 
-## 40. sc41 (11:11 to 11:38, 27.2s)
+## 40. sc41 (11:12 to 11:39, 27.2s)
 
 **Purpose.** Answer the title question with the numbers already shown.
 
@@ -725,7 +725,7 @@ Note: Repeat of earlier figures only; nothing new is introduced here.
 
 **On-screen citations.** AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 135-L139); FTC staff report on MLM income disclosure statements (70 statements) (FTC MLM report summary, lines 35-L35); AARP, 2018 survey of 601 current and former MLM participants (AARP MLM survey 2018, lines 376-L392)
 
-## 41. sc42 (11:38 to 11:54, 16s)
+## 41. sc42 (11:39 to 11:55, 16s)
 
 **Purpose.** The promise, resolved.
 
@@ -737,7 +737,7 @@ Note: Repeat of earlier figures only; nothing new is introduced here.
 
 **On-screen citations.** FTC staff report, Figure 6 (one disclosure's rank table) (FTC MLM income disclosure report 2024, lines 838-L866); J. M. Taylor, The Case (for and) against Multi-level Marketing, ch. 7 (Taylor, The Case against MLM, lines 870-L877)
 
-## 42. sc43 (11:54 to 12:10, 16s incl. 2s pause)
+## 42. sc43 (11:55 to 12:11, 16s incl. 2s pause)
 
 **Purpose.** End on the person, not the data.
 

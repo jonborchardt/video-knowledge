@@ -225,7 +225,26 @@ export function buildStoryboard(
         if (pt.unit === 'percent' && (pt.value < 0 || pt.value > 100)) bad(`${pt.value} is not a percentage`);
         if (!['percent', 'usd', 'count', 'ratio'].includes(pt.unit)) bad(`unknown unit "${pt.unit}"`);
         for (const n of figures) if (passage === null || !hasFigure(passage, n)) bad(`"${n}" is not in ${pt.cite}`);
+        for (const n of nums(pt.label ?? ''))
+          if (passage === null || !hasFigure(passage, n)) bad(`label figure "${n}" is not in ${pt.cite}`);
       }
+      // The title and note are drawn too: their figures must be in one of the points' passages.
+      const chartText = (c.points ?? [])
+        .filter((pt) => known.has(pt.cite))
+        .map((pt) => read(pt.cite) ?? '')
+        .join('\n');
+      for (const [what, text] of [
+        ['title', c.title],
+        ['note', c.note],
+      ] as const)
+        for (const n of nums(text ?? ''))
+          if (!hasFigure(chartText, n))
+            issue(
+              p.id,
+              'chart-data',
+              'blocking',
+              `chart ${what} figure "${n}" is not in a cited passage of this chart`,
+            );
     }
     if (p.visual?.excerpt) {
       const passage = known.has(p.visual.excerpt.cite) ? read(p.visual.excerpt.cite) : null;

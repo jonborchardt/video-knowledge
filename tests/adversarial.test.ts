@@ -1,8 +1,15 @@
 // The exit criterion of docs/superpowers/specs/2026-10-17-hardening-spec.md section 1, one deliberate error per test:
 // invented numbers, unsupported quotations and unverifiable speaker attributions fail validation.
 import { describe, expect, it } from 'vitest';
-import { validateScript } from '../src/lib/script';
-import { buildStoryboard } from '../src/lib/storyboard';
+import {
+  type EvidencePackage,
+  type Script,
+  type ScriptReviewFile,
+  sentenceFingerprint,
+  sentences,
+  validateScript,
+} from '../src/lib/script';
+import { type ChartSpec, type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
 import { TOPIC, claim, study } from './corpus';
 import {
   DOC_D,
@@ -13,6 +20,7 @@ import {
   fact,
   good,
   hashOf,
+  partlySentence,
   pkg,
   plan,
   read,
@@ -162,5 +170,123 @@ describe('adversarial: every deliberate error is blocked', () => {
   it('12. a blanket reviewer approval over a blocked assertion', () => {
     const s = factual('In the survey 62 percent lost money.', '62% lost money.');
     expect(run(s, approveAll(s)).status).toBe('blocked');
+  });
+});
+
+describe('adversarial: review findings', () => {
+  const pkgWith = (context: string | null) => {
+    const q = pkg();
+    q.claims[0].statements[0].context = context;
+    return q;
+  };
+  const quoted = (text: string, quote?: { text: string; source: string; speaker?: string }) =>
+    script([
+      sentence('s01', text, 'attributed', [
+        {
+          id: 's01.a',
+          text,
+          kind: 'attribution',
+          claims: [{ id: MLM, stance: 'asserts' }],
+          evidence: [{ kind: 'statement', claim: MLM, source: 's1a' }],
+          ...(quote ? { quote } : {}),
+        },
+      ]),
+    ]);
+  const v = (s: Script, q: EvidencePackage) => validateScript(s, corpus(), read, null, {}, null, q, hashOf(q));
+  const Q = 'quote s1a words';
+
+  it('13. an invented number word at the end of a sentence', () => {
+    const s = script([
+      sentence('s01', 'Of 601 people surveyed, the number who quit was fifteen.', 'factual', [
+        fact('s01.a', 'Of 601 participants, 47% reported losing money.'),
+      ]),
+    ]);
+    expect(cats(run(s))).toContain('figure-without-assertion');
+  });
+
+  it('14. a quoted span in the narration that no assertion declares as a quote', () => {
+    const s = script([
+      sentence('s01', 'A study says "ninety percent lose everything they own" in MLMs.', 'factual', [
+        fact('s01.a', 'Of 601 participants, 47% reported losing money.'),
+      ]),
+    ]);
+    expect(cats(run(s))).toContain('quote-unchecked');
+    const r = run(script([sentence('s01', 'Say "take the deal now" and leave.', 'hypothetical')]));
+    expect(r.issues.map((i) => i.category)).toContain('quote-unchecked');
+  });
+
+  it('15. a speaker that is only a substring, or that the narration does not name', () => {
+    const ctx = 'to hear another former distributor tell it: quote s1a words';
+    const laureate = 'A Nobel laureate said "quote s1a words".';
+    expect(cats(v(quoted(laureate, { text: Q, source: 's1a', speaker: 'a' }), pkgWith(ctx)))).toContain(
+      'speaker-unverified',
+    );
+    expect(cats(v(quoted(laureate, { text: Q, source: 's1a', speaker: 'distributor' }), pkgWith(ctx)))).toContain(
+      'speaker-unverified',
+    );
+    const former = 'A former distributor said "quote s1a words".';
+    expect(cats(v(quoted(former, { text: Q, source: 's1a', speaker: 'distributor' }), pkgWith(ctx)))).toEqual([]);
+    // a quote the package could not locate has no usable context
+    const unlocated = pkgWith('(quote not located) a distributor spoke');
+    expect(cats(v(quoted(former, { text: Q, source: 's1a', speaker: 'distributor' }), unlocated))).toContain(
+      'speaker-unverified',
+    );
+  });
+
+  it('16. a speaker on a study-passage quotation must be in the passage or the document name', () => {
+    const withSpeaker = (text: string, speaker: string) =>
+      script([
+        sentence('s01', text, 'factual', [
+          fact('s01.a', text, [DOC_D], { quote: { text: '47% reported losing money', cite: DOC_D, speaker } }),
+        ]),
+      ]);
+    expect(cats(run(withSpeaker('Survey D reports "47% reported losing money".', 'Survey D')))).toEqual([]);
+    expect(cats(run(withSpeaker('John Oliver reports "47% reported losing money".', 'John Oliver')))).toContain(
+      'speaker-unverified',
+    );
+  });
+
+  it('17. a disposition retires only the warning category it names, and only for the bound package', () => {
+    const s = script([partlySentence()]);
+    const q = pkg();
+    const fp = sentenceFingerprint(sentences(s)[0]);
+    const dispo = (category: string, bound = true) => ({
+      ...approveAll(s, bound ? q : null),
+      dispositions: { 's01.a': { fingerprint: fp, category, reason: 'carried by s01' } },
+    });
+    const count = (r: ScriptReviewFile) =>
+      validateScript(s, corpus(), read, r, {}, null, q, hashOf(q)).counts.dispositioned;
+    expect(count(dispo('needs-qualification'))).toBe(1);
+    expect(count(dispo('speaker-missing'))).toBe(0);
+    expect(count(dispo('needs-qualification', false))).toBe(0);
+  });
+
+  it('18. number words in a non-factual sentence are flagged for the reviewer', () => {
+    const r = run(script([sentence('s01', 'Picture fifteen thousand people quitting each month.', 'hypothetical')]));
+    expect(r.issues.map((i) => i.category)).toContain('figure-in-non-factual');
+  });
+
+  it('19. a chart label, title or note with a figure not in the passage', () => {
+    const s = good();
+    const vv = run(s, approveAll(s));
+    const chart = (extra: Partial<ChartSpec>, label = 'lost money') =>
+      plan([
+        scene('sc1', ['s01', 's02', 's03'], {
+          visual: {
+            category: 'data-chart',
+            description: 'bars',
+            chart: {
+              type: 'bar',
+              points: [{ label, value: 47, unit: 'percent', display: '47%', cite: DOC_D }],
+              ...extra,
+            },
+          },
+        }),
+      ]);
+    const cat = (p: StoryboardPlan) => buildStoryboard(p, s, vv, pkg(), read).issues.map((i) => i.category);
+    expect(cat(chart({}, 'lost money (average across 30 MLMs)'))).toContain('chart-data');
+    expect(cat(chart({ title: 'Outcomes for 999 people' }))).toContain('chart-data');
+    expect(cat(chart({ note: 'no data below $100' }))).toContain('chart-data');
+    expect(cat(chart({ title: 'Outcomes for 601 people' }, '47% lost money'))).toEqual([]);
   });
 });

@@ -10,6 +10,8 @@ import {
   docHasher,
   evalExpr,
   releaseCheck,
+  storyboardFingerprint,
+  validationFingerprint,
   scriptDir,
   sentenceFingerprint,
   sentences,
@@ -631,7 +633,20 @@ describe('speaker attribution', () => {
     expect(
       cats(v(attributed('John Oliver'), pkgWith('to hear another former distributor tell it: quote s1a words'))),
     ).toContain('speaker-unverified');
-    expect(cats(v(attributed('Video s1a'), pkgWith(null)))).toEqual([]); // the source title
+    expect(cats(v(attributed('Video s1a'), pkgWith(null)))).toContain('speaker-unverified'); // not in the sentence
+    const titled = script([
+      sentence('s01', 'Video s1a says "quote s1a words".', 'attributed', [
+        {
+          id: 's01.a',
+          text: 'Video s1a says "quote s1a words".',
+          kind: 'attribution',
+          claims: [{ id: MLM, stance: 'asserts' }],
+          evidence: [{ kind: 'statement', claim: MLM, source: 's1a' }],
+          quote: { text: 'quote s1a words', source: 's1a', speaker: 'Video s1a' },
+        },
+      ]),
+    ]);
+    expect(cats(v(titled, pkgWith(null)))).toEqual([]); // the source title, named in the sentence
     expect(cats(v(attributed('former distributor'), pkgWith(null)))).toContain('speaker-unverified');
   });
   it('a source quoted on two claims is checked against the context of the claim the assertion rests on', () => {
@@ -778,6 +793,7 @@ describe('reviewer dispositions', () => {
       dispositions: {
         's01.a': {
           fingerprint: sentenceFingerprint(sentences(s1)[0]),
+          category: 'needs-qualification',
           reason: 'the narration says "in a narrower setting"',
         },
       },
@@ -799,19 +815,24 @@ describe('release lock', () => {
     const s = good();
     const q = pkg();
     const v = validateScript(s, corpus(), read, approveAll(s, q), {}, null, q, hashOf(q));
+    const sb = buildStoryboard(plan([scene('sc1', ['s01', 's02', 's03'])]), s, v, q, read);
     const rel: Release = {
       topic: TOPIC,
       story: s.story,
       approvedBy: 'test',
       date: 'd',
       revision: 1,
-      fingerprints: { script: v.scriptFingerprint, package: q.fingerprint, validation: 'x', storyboard: 'y' },
+      fingerprints: {
+        script: v.scriptFingerprint,
+        package: q.fingerprint,
+        validation: validationFingerprint(v),
+        storyboard: storyboardFingerprint(sb),
+      },
     };
     expect(releaseCheck(rel, v, null).map((i) => i.category)).toEqual([]);
     expect(releaseCheck({ ...rel, fingerprints: { ...rel.fingerprints, script: 'other' } }, v, null)[0].category).toBe(
       'release-stale',
     );
-    const sb = buildStoryboard(plan([scene('sc1', ['s01', 's02', 's03'])]), s, v, q, read);
     expect(releaseCheck(rel, v, sb)).toEqual([]);
     expect(releaseCheck(rel, v, { ...sb, scriptFingerprint: 'other' })[0].category).toBe('release-stale');
     expect(releaseCheck(null, v, sb)).toEqual([]);
@@ -826,5 +847,58 @@ describe('document hashing', () => {
     writeFileSync(join(dir, 'demo', 'sources', 'crlf.txt'), ['one', 'two', ''].join('\r\n'));
     expect(docHasher(dir)('demo/sources/crlf.txt')).toBe(docHasher(dir)('demo/sources/lf.txt'));
     expect(docHasher(dir)('demo/sources/missing.txt')).toBeNull();
+  });
+});
+
+describe('review fixes: sameStudy and release', () => {
+  it('script validation counts documents of one study once', () => {
+    const DOC_E = TOPIC + '/sources/survey-e.txt#L1-L2';
+    const readE = (cite: string) => (cite === DOC_E ? 'A summary: 47% of the 601 reported losing money.' : read(cite));
+    const both = claim('mlm-income', 'Most MLM participants earn nothing or lose money', {
+      verdicts: [study('Survey D', 'right', 0.7, DOC_D), study('Summary E', 'right', 0.5, DOC_E)],
+    });
+    const s = script([
+      sentence('s01', 'Of 601 people surveyed, 47 percent lost money.', 'factual', [
+        fact('s01.a', 'Of 601 participants, 47% reported losing money.', [DOC_D, DOC_E]),
+      ]),
+    ]);
+    const independent = (sameStudy?: Record<string, string>) =>
+      validateScript(s, { name: TOPIC, claims: [both], ...(sameStudy ? { sameStudy } : {}) }, readE).sentences[0]
+        .assertions[0].validation.independent;
+    expect(independent()).toBe(2);
+    expect(independent({ 'survey-e.txt': 'survey-d.txt' })).toBe(1);
+  });
+
+  it('the release records content fingerprints of the validation and storyboard, not timestamps', () => {
+    const s = good();
+    const q = pkg();
+    const vv = validateScript(s, corpus(), read, approveAll(s, q), {}, null, q, hashOf(q));
+    const sb = buildStoryboard(plan([scene('sc1', ['s01', 's02', 's03'])]), s, vv, q, read);
+    expect(validationFingerprint({ ...vv, date: 'other' })).toBe(validationFingerprint(vv));
+    const noisy = {
+      ...sb,
+      issues: [
+        { sentence: '-', category: 'x', severity: 'warning' as const, explanation: 'x', by: 'deterministic' as const },
+      ],
+    };
+    expect(storyboardFingerprint(noisy)).toBe(storyboardFingerprint(sb));
+    const rel: Release = {
+      topic: TOPIC,
+      story: s.story,
+      approvedBy: 'test',
+      date: 'd',
+      revision: 1,
+      fingerprints: {
+        script: vv.scriptFingerprint,
+        package: q.fingerprint,
+        validation: validationFingerprint(vv),
+        storyboard: storyboardFingerprint(sb),
+      },
+    };
+    expect(releaseCheck(rel, vv, sb)).toEqual([]);
+    const edited = { ...sb, scenes: [{ ...sb.scenes[0], visual: { ...sb.scenes[0].visual, onScreenText: ['47%'] } }] };
+    expect(releaseCheck(rel, vv, edited).map((i) => i.category)).toEqual(['release-stale']);
+    const other = { ...rel, fingerprints: { ...rel.fingerprints, validation: 'x' } };
+    expect(releaseCheck(other, vv, sb).map((i) => i.category)).toEqual(['release-stale']);
   });
 });
