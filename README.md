@@ -136,6 +136,7 @@ npm run script -- show <topic> <story-id> [s12]   # the reviewer's sheet: senten
 # an agent writes storyboard.json from scripts/briefs/storyboard.md
 npm run script -- storyboard <topic> <story-id>   # fills narration and timing, checks charts and citations; storyboard.md
 npm run script -- run <topic> <story-id>          # every stage whose inputs exist, then the next agent step
+npm run script -- lock <topic> <story-id> --approved-by "<name>"   # release.json: the approved fingerprints (passed + ok only)
 ```
 
 The script is sentences with stable ids, each typed `factual`, `attributed`, `hypothetical`, `rhetorical` or
@@ -160,7 +161,10 @@ speaker attribution can be confirmed from), so `<topic>/sources/*.txt` plus `<to
 Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
 only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
 gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without
-them keeps the persisted contexts and the same fingerprint.
+them keeps the persisted contexts and the same fingerprint. The reviewer may retire a deterministic warning with a
+`dispositions` entry (reason plus sentence fingerprint); it lapses when the sentence changes. `lock` records the
+approved script, package, validation and storyboard fingerprints in `release.json` (refused unless validation is
+`passed` and the storyboard `ok`); a later `validate` or `storyboard` run that drifts from them warns `release-stale`.
 
 ## Website
 

@@ -4,6 +4,7 @@
 //   show <topic> <story-id> [sentence-id]   the reviewer's sheet: each sentence, its assertions, fingerprints and passages
 //   storyboard <topic> <story-id>           fill and check storyboard.json against the script; writes storyboard.md, review.md
 //   run <topic> <story-id> [--wpm N]        every stage whose inputs exist, then the next agent step (see scripts/briefs/)
+//   lock <topic> <story-id> --approved-by "<name>"   write release.json (the approved fingerprints) when validation passed and the storyboard is ok
 // Stages are independent and persisted; a rejected script never touches research or story discovery.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -12,6 +13,8 @@ import { loadReview, reviewPath } from '../src/lib/review';
 import {
   type EvidencePackage,
   FILES,
+  type Release,
+  releaseCheck,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
@@ -29,7 +32,7 @@ import {
   writeArtifact,
 } from '../src/lib/script';
 import { loadStories, storiesPath } from '../src/lib/stories';
-import { type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
+import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
@@ -37,12 +40,12 @@ const flag = (name: string) => {
   const i = rest.indexOf(name);
   return i >= 0 ? rest[i + 1] : undefined;
 };
-const args = rest.filter((a, i) => !a.startsWith('--') && rest[i - 1] !== '--wpm');
+const args = rest.filter((a, i) => !a.startsWith('--') && !['--wpm', '--approved-by'].includes(rest[i - 1]));
 const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 7)
+      .slice(0, 8)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -100,6 +103,7 @@ function stageValidate(): { script: Script; v: ScriptValidation; pkg: EvidencePa
   const review = readJson<ScriptReviewFile>(p(FILES.review));
   const previous = readJson<ScriptValidation>(p(FILES.validation));
   const v = validateScript(script, loadTopic(topic), read, review, loadReview(topic).applicability, previous, pkg);
+  withRelease(v, null);
   writeArtifact(dir, FILES.validation, toJson(v));
   writeArtifact(dir, FILES.scriptMd, renderScriptMd(script, v, read));
   writeArtifact(dir, FILES.reviewMd, renderReviewMd(script, v, pkg, summary()));
@@ -114,6 +118,48 @@ function stageValidate(): { script: Script; v: ScriptValidation; pkg: EvidencePa
     console.log(`  revision limit reached; outstanding blockers persist in ${rel(p(FILES.validation))}`);
   console.log(`wrote ${rel(p(FILES.validation))}, ${rel(p(FILES.scriptMd))}, ${rel(p(FILES.reviewMd))}`);
   return { script, v, pkg };
+}
+
+/** After a lock, any drift from the approved fingerprints is a warning on the validation. */
+function withRelease(v: ScriptValidation, sb: Storyboard | null) {
+  const extra = releaseCheck(readJson<Release>(p(FILES.release)), v, sb);
+  v.issues.unshift(...extra);
+  v.counts.warnings += extra.length;
+}
+
+function stageLock() {
+  const approvedBy = flag('--approved-by');
+  const v = readJson<ScriptValidation>(p(FILES.validation));
+  const sb = readJson<Storyboard>(p(FILES.storyboard));
+  const refuse = (why: string) => {
+    console.error(`not locked: ${why}`);
+    process.exitCode = 2;
+  };
+  if (!approvedBy) return refuse('--approved-by "<name>" is required (a person, or "automated: ..." )');
+  if (!v || !sb) return refuse('run validate and storyboard first');
+  if (v.status !== 'passed') return refuse(`validation is ${v.status}, not passed`);
+  if (sb.status !== 'ok') return refuse(`storyboard is ${sb.status}, not ok`);
+  if (sb.scriptFingerprint !== v.scriptFingerprint)
+    return refuse(
+      `the storyboard was built against script ${sb.scriptFingerprint}; validation is ${v.scriptFingerprint}: re-run storyboard`,
+    );
+  const release: Release = {
+    topic,
+    story: storyId,
+    approvedBy,
+    date: new Date().toISOString(),
+    revision: v.revision,
+    fingerprints: {
+      script: v.scriptFingerprint,
+      package: v.packageFingerprint ?? '',
+      validation: fileSha(p(FILES.validation)),
+      storyboard: fileSha(p(FILES.storyboard)),
+    },
+  };
+  writeArtifact(dir, FILES.release, toJson(release));
+  console.log(
+    `locked ${rel(p(FILES.release))}: revision ${release.revision}, script ${release.fingerprints.script}, package ${release.fingerprints.package}, approved by ${approvedBy}`,
+  );
 }
 
 function summary() {
@@ -131,6 +177,7 @@ function stageStoryboard() {
   if (!script || !v || !pkg) throw new Error('run package and validate first');
   if (!plan) throw new Error(`no ${rel(p(FILES.storyboard))}; give an agent scripts/briefs/storyboard.md`);
   const sb = buildStoryboard(plan, script, v, pkg, read);
+  sb.issues.unshift(...releaseCheck(readJson<Release>(p(FILES.release)), v, sb));
   writeArtifact(dir, FILES.storyboard, toJson(sb)); // the plan, filled in: narration, timing, status (idempotent)
   writeArtifact(dir, FILES.storyboardMd, renderStoryboardMd(sb, pkg, read));
   writeArtifact(
@@ -220,6 +267,9 @@ switch (cmd) {
   }
   case 'show':
     show();
+    break;
+  case 'lock':
+    stageLock();
     break;
   case 'storyboard': {
     const sb = stageStoryboard();

@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   type EvidencePackage,
+  type Release,
   type Script,
   buildPackage,
   evalExpr,
+  releaseCheck,
   scriptDir,
   sentenceFingerprint,
   sentences,
@@ -782,5 +784,29 @@ describe('reviewer dispositions', () => {
     expect(v2.counts.dispositioned).toBe(0);
     expect(v2.counts.warnings).toBe(v1.counts.warnings + 1);
     expect(v2.issues.find((i) => i.category === 'needs-qualification')?.disposition).toBeUndefined();
+  });
+});
+
+describe('release lock', () => {
+  it('releaseCheck warns when the locked fingerprints no longer match', () => {
+    const s = good();
+    const q = pkg();
+    const v = validateScript(s, corpus(), read, approveAll(s, q), {}, null, q, hashOf(q));
+    const rel: Release = {
+      topic: TOPIC,
+      story: s.story,
+      approvedBy: 'test',
+      date: 'd',
+      revision: 1,
+      fingerprints: { script: v.scriptFingerprint, package: q.fingerprint, validation: 'x', storyboard: 'y' },
+    };
+    expect(releaseCheck(rel, v, null).map((i) => i.category)).toEqual([]);
+    expect(releaseCheck({ ...rel, fingerprints: { ...rel.fingerprints, script: 'other' } }, v, null)[0].category).toBe(
+      'release-stale',
+    );
+    const sb = buildStoryboard(plan([scene('sc1', ['s01', 's02', 's03'])]), s, v, q, read);
+    expect(releaseCheck(rel, v, sb)).toEqual([]);
+    expect(releaseCheck(rel, v, { ...sb, scriptFingerprint: 'other' })[0].category).toBe('release-stale');
+    expect(releaseCheck(null, v, sb)).toEqual([]);
   });
 });

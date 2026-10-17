@@ -28,6 +28,7 @@ import {
 import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
 import type { ReviewFile } from './review';
 import type { Story } from './stories';
+import type { Storyboard } from './storyboard';
 import { type ClaimView, type Topic, topicNames } from './topics';
 
 export const WPM_DEFAULT = 150; // narration words per minute; the runtime estimate scales with it
@@ -1075,6 +1076,42 @@ export function renderReviewMd(
   ].join('\n');
 }
 
+// ---- release -----------------------------------------------------------------------------------------------------
+
+/** Written by `npm run script -- lock` once validation passed and the storyboard is ok: the fingerprints approved. */
+export interface Release {
+  topic: string;
+  story: string;
+  approvedBy: string; // a person, or "automated: ..." so a reader knows nobody signed off
+  date: string;
+  revision: number;
+  fingerprints: {
+    script: string; // scriptFingerprint
+    package: string; // evidence package fingerprint
+    validation: string; // sha of validation.json as locked
+    storyboard: string; // sha of storyboard.json as locked
+  };
+}
+/** One warning per locked fingerprint the current script, package or storyboard no longer matches. */
+export function releaseCheck(release: Release | null, v: ScriptValidation, sb: Storyboard | null): Issue[] {
+  if (!release) return [];
+  const stale = (what: string, locked: string, now: string | null) => ({
+    sentence: '-',
+    category: 'release-stale',
+    severity: 'warning' as const,
+    explanation: `release.json locked ${what} ${locked}; it is now ${now ?? '(none)'}: the approved package has changed, lock it again after review`,
+    by: 'deterministic' as const,
+  });
+  const out: Issue[] = [];
+  if (release.fingerprints.script !== v.scriptFingerprint)
+    out.push(stale('script', release.fingerprints.script, v.scriptFingerprint));
+  if (release.fingerprints.package !== v.packageFingerprint)
+    out.push(stale('package', release.fingerprints.package, v.packageFingerprint));
+  if (sb && sb.scriptFingerprint !== release.fingerprints.script)
+    out.push(stale('the storyboard script', release.fingerprints.script, sb.scriptFingerprint));
+  return out;
+}
+
 // ---- files -------------------------------------------------------------------------------------------------------
 
 export const storySlug = (storyId: string) => storyId.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
@@ -1089,6 +1126,7 @@ export const FILES = {
   storyboard: 'storyboard.json',
   storyboardMd: 'storyboard.md',
   reviewMd: 'review.md',
+  release: 'release.json',
 } as const;
 export const readJson = <T>(p: string): T | null => (existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as T) : null);
 /** Serialises without passages: provenance stays with the citation, and the CLI re-reads them on demand. */
