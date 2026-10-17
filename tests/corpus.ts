@@ -37,7 +37,7 @@ export function source(id: string, channel: string, stance: 'asserts' | 'denies'
     kind: 'video',
     href: `https://youtu.be/${id}`,
     stance,
-    quote: `quote ${id}`,
+    quote: `quote ${id} words`,
   };
 }
 /** Sources from distinct channels: s1 on channel c1, s2 on c2, ... */

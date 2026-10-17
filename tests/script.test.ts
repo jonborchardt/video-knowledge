@@ -113,11 +113,11 @@ describe('evidence package', () => {
   it('persists a transcript window around each recorded quote, and keeps it when the transcript is gone', () => {
     const transcript = (id: string) =>
       id === 's1a'
-        ? 'intro words here. to hear another former distributor tell it, quote s1a and so on. more words.'
+        ? 'intro words here. to hear another former distributor tell it, quote s1a words and so on. more words.'
         : null;
     const a = buildPackage(story(), asTopic(t()), read, review, {}, process.cwd(), transcript);
     const st = a.claims[0].statements.find((s) => s.source === 's1a')!;
-    expect(st.context).toMatch(/former distributor tell it, quote s1a/);
+    expect(st.context).toMatch(/former distributor tell it, quote s1a words/);
     const b = buildPackage(story(), asTopic(t()), read, review, {}, process.cwd(), () => null, a);
     expect(b.claims[0].statements.find((s) => s.source === 's1a')!.context).toBe(st.context);
     expect(b.fingerprint).toBe(a.fingerprint);
@@ -529,6 +529,41 @@ describe('storyboard', () => {
     expect(buildStoryboard(chart('sixty-two percent'), s, v, p(), read).issues.map((i) => i.category)).toContain(
       'chart-data',
     );
+  });
+});
+
+describe('speaker attribution', () => {
+  const pkgWith = (context: string | null) => {
+    const q = pkg();
+    q.claims[0].statements[0].context = context;
+    return q;
+  };
+  const attributed = (speaker?: string) =>
+    script([
+      sentence('s01', 'A former distributor said "quote s1a words".', 'attributed', [
+        {
+          id: 's01.a',
+          text: 'A former distributor said "quote s1a words".',
+          kind: 'attribution',
+          claims: [{ id: MLM, stance: 'asserts' }],
+          evidence: [{ kind: 'statement', claim: MLM, source: 's1a' }],
+          quote: { text: 'quote s1a words', source: 's1a', ...(speaker ? { speaker } : {}) },
+        },
+      ]),
+    ]);
+  const v = (s: Script, q: EvidencePackage | null) => validateScript(s, corpus(), read, null, {}, null, q);
+  it('a named speaker must appear in the quote context or the source title', () => {
+    expect(
+      cats(v(attributed('former distributor'), pkgWith('to hear another former distributor tell it: quote s1a words'))),
+    ).toEqual([]);
+    expect(
+      cats(v(attributed('John Oliver'), pkgWith('to hear another former distributor tell it: quote s1a words'))),
+    ).toContain('speaker-unverified');
+    expect(cats(v(attributed('Video s1a'), pkgWith(null)))).toEqual([]); // the source title
+    expect(cats(v(attributed('former distributor'), pkgWith(null)))).toContain('speaker-unverified');
+  });
+  it('warns when a source quotation names no speaker', () => {
+    expect(v(attributed(), pkgWith('x quote s1a words y')).issues.map((i) => i.category)).toContain('speaker-missing');
   });
 });
 

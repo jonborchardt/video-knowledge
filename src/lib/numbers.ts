@@ -34,6 +34,9 @@ const UNITS: Record<string, number> = {
   ninety: 90,
 };
 const SCALES: Record<string, number> = { hundred: 100, thousand: 1000, million: 1_000_000 };
+// A bare "one" is usually a pronoun or an article ("one trainer", "no one", "one-liner"); it is a figure only in a
+// numeric phrase: "one in 238", "one percent", "one hundred", or joined to another number word ("twenty-one").
+const ONE_NEXT = new Set(['in', 'percent', 'per', 'hundred', 'thousand', 'million']);
 
 /** Replaces English cardinal number words with digits ("two hundred and eighty-five" -> "285"); everything else stays. */
 export function wordsToDigits(text: string): string {
@@ -65,7 +68,10 @@ export function wordsToDigits(text: string): string {
       else out.push(p);
       continue;
     }
-    if (w in UNITS) {
+    if (w === 'one' && !value && !(next && ONE_NEXT.has(next))) {
+      flush();
+      out.push(p);
+    } else if (w in UNITS) {
       // "twenty nine" joins; "three seven" (two unit words, no tens before) is two numbers, like spelled digits.
       if (value && lastUnit !== null && !(lastUnit >= 20 && UNITS[w] < 10)) flush();
       current += UNITS[w];
@@ -104,9 +110,10 @@ export function wordsToDigits(text: string): string {
 export const nums = (text: string) =>
   [...wordsToDigits(text).matchAll(/\d[\d,]*(?:\.\d+)?/g)].map((m) => m[0].replaceAll(',', ''));
 
-/** True when `figure` occurs as a whole number in the text: not inside a longer figure, a decimal or a fraction. */
+/** True when `figure` occurs as a whole number in the text: not inside a longer figure ("140") or after a decimal
+ *  point ("0.14"). "1018350" does refer to "1018350.20": a narration may truncate the cents. */
 export function hasFigure(haystack: string, figure: string): boolean {
   const hay = wordsToDigits(haystack).replaceAll(',', '');
   const f = figure.replaceAll(',', '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return new RegExp(`(^|[^\\d.])${f}(?!\\.?\\d)`).test(hay);
+  return new RegExp(`(^|[^\\d.])${f}(?!\\d)`).test(hay);
 }

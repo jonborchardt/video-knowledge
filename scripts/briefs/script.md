@@ -96,7 +96,9 @@ no figure the evidence does not; an invented typical income is not.
   Inputs must be in the cited passages; the expression must evaluate to the result as written.
 - A quotation needs `quote`: `{"text": "<the exact words>", "cite": "<passage>"}` or
   `{"text": "...", "source": "<source id>"}`. The words must be in the passage (or the recorded source
-  quote) and in the sentence.
+  quote) and in the sentence. `speaker`: required whenever the narration says who spoke (a name, a
+  role, a show); it must appear in the package's `statements[].context` for that source, or in the
+  source title or channel. A quotation from a source with no `speaker` is a warning for the reviewer.
 - `qualifications`: where the narration carries the limitation the package lists for that claim
   (self-reported, before expenses, one analyst's assumptions, one company). An assertion the audit
   marks `qualify` needs this or a narrower sentence.

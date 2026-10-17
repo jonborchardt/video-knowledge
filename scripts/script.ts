@@ -99,15 +99,7 @@ function stageValidate(): { script: Script; v: ScriptValidation; pkg: EvidencePa
   const pkg = readJson<EvidencePackage>(p(FILES.pkg));
   const review = readJson<ScriptReviewFile>(p(FILES.review));
   const previous = readJson<ScriptValidation>(p(FILES.validation));
-  const v = validateScript(
-    script,
-    loadTopic(topic),
-    read,
-    review,
-    loadReview(topic).applicability,
-    previous,
-    pkg?.fingerprint ?? null,
-  );
+  const v = validateScript(script, loadTopic(topic), read, review, loadReview(topic).applicability, previous, pkg);
   writeArtifact(dir, FILES.validation, toJson(v));
   writeArtifact(dir, FILES.scriptMd, renderScriptMd(script, v, read));
   writeArtifact(dir, FILES.reviewMd, renderReviewMd(script, v, pkg, summary()));

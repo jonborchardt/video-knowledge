@@ -4,21 +4,37 @@
 |---|---|
 | Story | `decision:mlm-and-seminars` (get-rich-quick) |
 | Revision | 2 of at most 3 |
-| Validation | **passed** (2026-10-17) |
+| Validation | **blocked** (2026-10-17) |
 | Words / runtime | 1790 words, about 11.9 min at 150 wpm |
 | Sentences | 67 (50 factual or attributed) |
-| Assertions | 59, 59 verified |
-| Issues | 0 blocking, 21 warnings |
+| Assertions | 59, 46 verified |
+| Issues | 9 blocking, 29 warnings |
 | Unreviewed sentences | 0 |
 | Scenes | 43, 12:11 (ok) |
-| Evidence package | 4824306bfc (4 documents, 4 claims) |
+| Evidence package | 238a579483 (4 documents, 4 claims) |
 | Model | claude-fable-5-1 |
 
 Automated validation says whether the narration is eligible for human editorial review; it does not establish truth.
 
 ## Open issues
 
+- **blocking** s08 figure-without-assertion (deterministic): the figure "3" is in no assertion of this sentence
+- **blocking** s19 (s19.a) invented-number (deterministic): The figure "70" does not appear in the cited passages.
+- **blocking** s25 figure-without-assertion (deterministic): the figure "1" is in no assertion of this sentence
+- **blocking** s41 (s41.a) invented-number (deterministic): The figure "30" does not appear in the cited passages.
+- **blocking** s46 (s46.b) invented-number (deterministic): "all" is stronger than the evidence (strongest support 0.5). The figure "70" does not appear in the cited passages.
+- **blocking** s54 figure-without-assertion (deterministic): the figure "13" is in no assertion of this sentence
+- **blocking** s56 figure-without-assertion (deterministic): the figure "3" is in no assertion of this sentence
+- **blocking** s57 (s57.a) invented-number (deterministic): The figure "25" does not appear in the cited passages.
+- **blocking** s61 (s61.a) invented-number (deterministic): The figure "25" does not appear in the cited passages.
+- **warning** - stale-package (deterministic): the script was written from evidence package 4824306bfc; the current package is 238a579483
+- **warning** s03 (s03.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - **warning** s08 (s08.c) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
+- **warning** s09 (s09.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
+- **warning** s09 (s09.b) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
+- **warning** s10 (s10.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
+- **warning** s12 (s12.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
+- **warning** s13 (s13.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - **warning** s23 (s23.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s24 (s24.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s25 (s25.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.
@@ -26,13 +42,14 @@ Automated validation says whether the narration is eligible for human editorial 
 - **warning** s33 (s33.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s34 (s34.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s35 (s35.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
+- **warning** s36 (s36.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - **warning** s37 (s37.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s39 (s39.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s40 (s40.a) needs-qualification (deterministic): Taylor, The Case against MLM: Taylor describes the 'leveraged income' pitch and agrees the pay plans route income from a downline, but his data show only about one in 238 participants profit at all and roughly one in 25,000 get the touted residual income. Add the qualification: the evidence supports a narrower or weaker statement.
+- **warning** s43 (s43.a) speaker-missing (deterministic): the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - **warning** s44 (s44.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s66 (s66.a) needs-qualification (deterministic): Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s67 (s67.a) needs-qualification (deterministic): AARP MLM survey 2018: Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test. Add the qualification: the evidence supports a narrower or weaker statement.
-- **warning** s46 (s46.b) needs-qualification (deterministic): "all" is stronger than the evidence (strongest support 0.5).
 - **warning** s49 (s49.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s49 (s49.b) needs-qualification (deterministic): FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s53 (s53.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
@@ -68,7 +85,14 @@ None recorded on the story.
 
 ## Outstanding editorial decisions
 
+- -: the script was written from evidence package 4824306bfc; the current package is 238a579483
+- s03 s03.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - s08 s08.c: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
+- s09 s09.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
+- s09 s09.b: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
+- s10 s10.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
+- s12 s12.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
+- s13 s13.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - s23 s23.a: FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - s24 s24.a: FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.
 - s25 s25.a: FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.
@@ -76,13 +100,14 @@ None recorded on the story.
 - s33 s33.a: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - s34 s34.a: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - s35 s35.a: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
+- s36 s36.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - s37 s37.a: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - s39 s39.a: FTC MLM income disclosure report 2024: Downline-based commissions and rank bonuses exist, but the rank tables show over 90% of participants in the lowest cohort averaging under $100 while six-figure incomes belong to hundredths of a percent; the leverage is real only for a tiny fraction. Add the qualification: the evidence supports a narrower or weaker statement.
 - s40 s40.a: Taylor, The Case against MLM: Taylor describes the 'leveraged income' pitch and agrees the pay plans route income from a downline, but his data show only about one in 238 participants profit at all and roughly one in 25,000 get the touted residual income. Add the qualification: the evidence supports a narrower or weaker statement.
+- s43 s43.a: the quotation names no speaker; the reviewer confirms the narration does not say who spoke
 - s44 s44.a: FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - s66 s66.a: Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - s67 s67.a: AARP MLM survey 2018: Among former participants, 29% left because the commission structure mostly benefited those at the top and 25% because the market was saturated with other sellers; self-reported reasons, not a structural test. Add the qualification: the evidence supports a narrower or weaker statement.
-- s46 s46.b: "all" is stronger than the evidence (strongest support 0.5).
 - s49 s49.a: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
 - s49 s49.b: FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - s53 s53.a: FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
@@ -93,4 +118,4 @@ None recorded on the story.
 ## History
 
 - revision 1, 2026-10-17: blocked, 5 blocking, 31 warnings
-- revision 2, 2026-10-17: passed, 0 blocking, 21 warnings
+- revision 2, 2026-10-17: blocked, 9 blocking, 29 warnings

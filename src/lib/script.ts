@@ -318,6 +318,9 @@ export interface Quote {
   text: string; // the words inside the quotation marks
   cite?: string; // a study passage among the assertion's evidence
   source?: string; // or a source id among the assertion's statement evidence
+  /** Who the narration says spoke the words (a name, a role, a show); must be in the package's quote context, the
+   *  source title or the channel. Required whenever the narration names the speaker. */
+  speaker?: string;
 }
 export interface ScriptAssertion {
   id: string; // '<sentence id>.<letter>'
@@ -476,8 +479,11 @@ export function validateScript(
   review: ScriptReviewFile | null = null,
   judgments: ReviewFile['applicability'] = {},
   previous: ScriptValidation | null = null,
-  packageFingerprint: string | null = null,
+  pkg: EvidencePackage | null = null,
 ): ScriptValidation {
+  const packageFingerprint = pkg?.fingerprint ?? null;
+  const statementOf = (source: string) =>
+    pkg?.claims.flatMap((c) => c.statements).find((s) => s.source === source) ?? null;
   const wpm = script.generation?.wordsPerMinute || WPM_DEFAULT;
   const corpus = { name: t.name, claims: t.claims };
   const byId = new Map<string, ClaimView>(t.claims.map((c) => [c.id, c]));
@@ -673,6 +679,32 @@ export function validateScript(
             );
           else if (!norm(st.quote).includes(norm(q.text)))
             add('misquote', 'blocking', `"${q.text}" is not in the recorded quote from ${q.source}: "${st.quote}"`);
+          // Speaker attribution: the person the narration names must be in the transcript window the package
+          // persisted around the quote, or in the source's title or channel. Never taken on trust.
+          const context = statementOf(q.source)?.context ?? null;
+          const named = st ? `${norm(st.title)} ${norm(st.channel)}` : '';
+          if (!st || !statementIds.has(q.source)) {
+            /* already blocked above */
+          } else if (!q.speaker)
+            add(
+              'speaker-missing',
+              'warning',
+              'the quotation names no speaker; the reviewer confirms the narration does not say who spoke',
+              {
+                suggestion: 'Set quote.speaker to the name, role or show the narration attributes the words to.',
+              },
+            );
+          else if (named.includes(norm(q.speaker)) || (context !== null && norm(context).includes(norm(q.speaker)))) {
+            /* verified */
+          } else
+            add(
+              'speaker-unverified',
+              'blocking',
+              context === null
+                ? `speaker "${q.speaker}" is not the source title or channel and there is no transcript context in the evidence package`
+                : `speaker "${q.speaker}" is not in the transcript context around the quote, the source title or the channel`,
+              { suggestion: 'Name the speaker as the transcript does, or attribute the words to the source itself.' },
+            );
         } else add('quote', 'blocking', 'a quotation needs a cite or a source');
         if (!norm(s.text).includes(norm(q.text))) add('quote', 'blocking', 'the quoted words are not in the sentence');
       }

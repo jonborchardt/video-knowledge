@@ -20,7 +20,10 @@ sentence the passages do not establish is a finding, however likely it sounds.
    of expenses, self-reported), its denominator (all participants, active ones, those with income),
    its modality (most, some, can, always) and its causal force? Read the passage, not the verdict
    note. A passage that establishes a narrower or different thing is `overgeneralization`,
-   `incompatible-comparison`, `causation` or `missing-qualification`, as fits.
+   `incompatible-comparison`, `causation` or `missing-qualification`, as fits. For an attributed
+   sentence, confirm the speaker from the package's `context` (the transcript window around the
+   quote), never from a file outside the repository; a `speaker-missing` warning is yours to clear
+   only when the narration truly names nobody.
 3. **Qualification.** Does the narration carry the limitation the package lists for that claim
    (self-report, before expenses, one analyst's assumptions, one company's table) close enough to
    the figure that a viewer hears both? A missing one is `missing-qualification`; blocking when the
