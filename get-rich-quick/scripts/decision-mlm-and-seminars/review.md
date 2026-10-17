@@ -10,7 +10,7 @@
 | Assertions | 59, 0 verified |
 | Issues | 9 blocking, 30 warnings |
 | Unreviewed sentences | 58 |
-| Scenes | 43, 12:11 (ok) |
+| Scenes | 43, 12:57 (blocked) |
 | Evidence package | c189733721 (4 documents, 4 claims) |
 | Model | claude-fable-5-1 |
 
@@ -57,6 +57,10 @@ Automated validation says whether the narration is eligible for human editorial 
 - **warning** s54 (s54.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Taylor, The Case against MLM: Taylor says recruitment inevitably dries up as the market saturates and the vast majority of participants are then guaranteed to be at the bottom; he illustrates with an 8-ball pyramid reaching 8,191 people in 10 cycles but does not do the population-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s62 (s62.a) needs-qualification (deterministic): FTC MLM income disclosure report 2024: In nearly every rank-based disclosure the vast majority of participants sit in the two or three lowest ranks (one example: 92.37% in the bottom rank averaging $41.69, top ranks fractions of a percent), confirming most are structurally at the bottom; the report does not test the exponential-exhaustion arithmetic. Add the qualification: the evidence supports a narrower or weaker statement.
 - **warning** s62 (s62.b) needs-qualification (deterministic): FTC MLM income disclosure report 2024: The report describes MLM pay as commissions for purchasing, inducing others to purchase, or recruiting participants who purchase, with retail resale income only 'in some cases'; it describes the structure but does not measure the split between downline and retail income. Add the qualification: the evidence supports a narrower or weaker statement.
+
+### Storyboard
+
+- **blocking** - script-blocked: the script has open blocking issues; storyboard it after revision
 
 ## Resolved review findings
 

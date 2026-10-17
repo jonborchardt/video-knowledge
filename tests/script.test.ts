@@ -489,6 +489,14 @@ describe('storyboard', () => {
     expect(sb.scenes[1].timing[0].start).toBeCloseTo(sb.scenes[1].start, 5); // absolute, not scene-relative
   });
 
+  it('building a storyboard from its own output is byte-for-byte idempotent', () => {
+    const s = good();
+    const v = run(s, approveAll(s, pkg()));
+    const once = buildStoryboard(plan([scene('sc1', ['s01', 's02']), scene('sc2', ['s03'])]), s, v, pkg(), read);
+    const twice = buildStoryboard(JSON.parse(JSON.stringify(once)) as StoryboardPlan, s, v, pkg(), read);
+    expect(JSON.stringify(twice)).toBe(JSON.stringify(once));
+  });
+
   it('scenes reference registered assets by id', () => {
     const s = good();
     const v = run(s, approveAll(s, pkg()));

@@ -276,8 +276,19 @@ export function buildStoryboard(
         return entry;
       });
     const duration = r2(timing.reduce((n, x) => n + x.duration, 0) + (p.pauseSeconds ?? 0));
-    const { narration: _drop, ...rest } = p;
-    void _drop;
+    // A filled storyboard is a valid plan: strip every derived field so rebuilding it is byte-for-byte idempotent.
+    const {
+      narration: _n,
+      order: _o,
+      words: _w,
+      spokenWords: _s,
+      timing: _t,
+      start: _st,
+      duration: _d,
+      end: _e,
+      ...rest
+    } = p as ScenePlan & Partial<Scene>;
+    void [_n, _o, _w, _s, _t, _st, _d, _e];
     const scene: Scene = {
       ...rest,
       order: i + 1,
