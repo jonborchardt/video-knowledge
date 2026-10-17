@@ -3,6 +3,7 @@
 //   [{ "video": "<id>", "sum": "one line", "as": [
 //       { "c": "<existing slug>", "s": "d"?, "q": "quote" },                  reuse a claim (s:"d" = the source denies it)
 //       { "n": "New claim text", "q": "...", "v": [verdict, conf, note], "l": "pro" },   create a claim + its AI guess
+//         (add "f": true to force past the near-duplicate check when the meaning really differs)
 //       { "n2": "Exact text of a claim created earlier", "q": "..." } ] }]   reuse a claim created by an earlier "n"
 // For each source: records its assertions, then the AI-guess verdicts of the claims it created. Evidence belongs to the
 // claim, so a reused claim needs no new verdict. New claims' "l" tags go into <topic>/lean.json.
@@ -62,7 +63,9 @@ for (const b of batches) {
       if (!id) throw new Error(`${b.video}: n2 claim not created yet: ${x.n2}`);
       return { claim: id, stance, quote };
     }
-    return x.n ? { newClaim: { topic, text: x.n }, stance, quote } : { claim: full(x.c), stance, quote };
+    return x.n
+      ? { newClaim: { topic, text: x.n }, stance, quote, ...(x.f ? { force: true } : {}) }
+      : { claim: full(x.c), stance, quote };
   });
   const topics = {
     primary: topic,
