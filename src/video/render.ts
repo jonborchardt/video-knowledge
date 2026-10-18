@@ -10,7 +10,7 @@ import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
 import { sha } from '../lib/io';
 import { narrationTrack, concatVideo, mux } from './ffmpeg';
-import { COMPONENT_FILE } from './kinds';
+import { ALL_KINDS } from './kinds';
 import { type MixReport, type MusicConfig, type ResolvedCue, mixSoundtrack } from './music';
 import { COMPOSITION, CONTACT } from './remotion/Root';
 import type { NarrationManifest, Timeline, TimelineScene } from './types';
@@ -25,7 +25,7 @@ const SHARED_LIB = ['types.ts', 'words.ts'];
  *  file imports from src/video (one level: chart.ts, cues.ts, excerpt.ts and the like), so editing a chart helper
  *  re-renders the chart scenes and nothing else. */
 export function rendererVersion(kind: TimelineScene['kind']): string {
-  const component = join(REMOTION_DIR, 'scenes', COMPONENT_FILE[kind]);
+  const component = join(REMOTION_DIR, 'scenes', `${ALL_KINDS[kind].component}.tsx`);
   const source = readFileSync(component, 'utf8');
   const imports = [...source.matchAll(/from '(\.\.?\/[^']+)'/g)]
     .map((m) => join(REMOTION_DIR, 'scenes', m[1]))

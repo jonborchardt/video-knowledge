@@ -1,7 +1,7 @@
-// Scene kind -> component. Closed: the kinds come from src/video/kinds.ts (which also names each kind's file for the
-// render cache), so an unsupported scene never reaches here.
+// Component name -> component; each is drawn by ./<name>.tsx (the render cache hashes that file). A kind's record in
+// src/video/kinds.ts or src/video/bespoke/ names its component, so an unsupported scene never reaches here.
 import type { FC } from 'react';
-import type { SceneKind } from '../../kinds';
+import { ALL_KINDS, type SceneKind } from '../../kinds';
 import type { TimelineScene } from '../../types';
 import { Bar } from './Bar';
 import { CommissionIcons } from './CommissionIcons';
@@ -23,35 +23,29 @@ import { Tree } from './Tree';
 import { Waffle } from './Waffle';
 import { Waterfall } from './Waterfall';
 
-export const SCENES: Record<SceneKind, FC<{ scene: TimelineScene }>> = {
-  phone: Phone,
-  'phone-reply': Phone,
-  'phone-end': Phone,
-  tree: Tree,
-  'tree-coins': Tree,
-  'tree-customer': Tree,
-  'tree-base': Tree,
-  quote: Quote,
-  title: Text,
-  question: Text,
-  list: Text,
-  pair: Text,
-  'evidence-cards': EvidenceCards,
-  transition: Transition,
-  disclosures: Excerpt,
-  excerpt: Excerpt,
-  'stat-tiles': StatTiles,
-  'fine-print': FinePrint,
-  'person-grid': PersonGrid,
-  waterfall: Waterfall,
-  'rank-table': RankTable,
-  'dot-plot': DotPlot,
-  bar: Bar,
-  'commission-icons': CommissionIcons,
-  waffle: Waffle,
-  pyramid: Pyramid,
-  'three-measures': Composite,
-  'base-rate': StackedBar,
-  closing: Composite,
-  'stacked-bar': StackedBar,
-};
+export const COMPONENTS = {
+  Bar,
+  CommissionIcons,
+  Composite,
+  DotPlot,
+  EvidenceCards,
+  Excerpt,
+  FinePrint,
+  PersonGrid,
+  Phone,
+  Pyramid,
+  Quote,
+  RankTable,
+  StackedBar,
+  StatTiles,
+  Text,
+  Transition,
+  Tree,
+  Waffle,
+  Waterfall,
+} satisfies Record<string, FC<{ scene: TimelineScene }>>;
+
+/** Scene kind -> component, derived from the kind records. */
+export const SCENES = Object.fromEntries(
+  Object.entries(ALL_KINDS).map(([kind, spec]) => [kind, COMPONENTS[spec.component]]),
+) as Record<SceneKind, FC<{ scene: TimelineScene }>>;

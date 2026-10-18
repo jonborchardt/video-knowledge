@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { sentences } from '../lib/script';
 import { excerptWindow } from './excerpt';
 import { type AudioStats, type Probe, audioStats, extractFrame, lumaSamples, probe } from './ffmpeg';
-import { SUPPORTED_ASSETS } from './kinds';
+import { ALL_KINDS, SUPPORTED_ASSETS } from './kinds';
 import { type MixReport, type MusicConfig, musicFingerprint, resolveCues } from './music';
 import type { Segment } from './select';
 import { buildTimeline } from './timeline';
@@ -351,7 +351,7 @@ export function blankChecks(samples: Luma, tl: Timeline): Check[] {
     run = s.sd < TOLERANCE.flatSd ? run + 1 : 0;
     if (run > worst) [worst, where] = [run, i];
   });
-  const endFade = last.kind === 'phone-end'; // the storyboard's dim to black at the end is intentional
+  const endFade = !!ALL_KINDS[last.kind]?.fadesOut; // a dim to black at the end is intentional
   const worstAt = where / TOLERANCE.samplesPerSecond;
   const notRendered = tl.scenes.filter((s) => {
     const i = Math.min(samples.length - 1, Math.floor(((s.start + s.duration / 2) / fps) * TOLERANCE.samplesPerSecond));

@@ -14,10 +14,19 @@ import {
   scriptFingerprint,
   sentenceFingerprint,
   sentences,
+  storySlug,
 } from '../lib/script';
 import { readJson } from '../lib/io';
 import type { Scene, Storyboard } from '../lib/storyboard';
-import { ACCEPTS, REQUIRED_CUES, SUPPORTED_ASSETS, type SceneKind, kindOf, unsupportedWhy } from './kinds';
+import {
+  GENERIC,
+  type KindRegistry,
+  SUPPORTED_ASSETS,
+  type SceneKind,
+  bespokeFor,
+  kindOf,
+  unsupportedWhy,
+} from './kinds';
 import type { Citation, RenderConfig } from './types';
 
 export const VIDEO_DIR = 'video';
@@ -77,10 +86,13 @@ export function citationDetail(c: NonNullable<Scene['citations']>[number], pkg: 
   return null;
 }
 
-const PERCENT_KINDS = new Set<SceneKind>(['stacked-bar', 'base-rate', 'dot-plot']);
-
-export function checkSegment(inp: SegmentInputs): Segment {
+/** `bespoke` is the video's own kinds; by default the registry entry for <topic>/<story slug>. */
+export function checkSegment(
+  inp: SegmentInputs,
+  bespoke: KindRegistry = bespokeFor(`${inp.script.topic}/${storySlug(inp.script.story)}`),
+): Segment {
   const { script, storyboard, validation, release, config, pkg } = inp;
+  const specs: KindRegistry = { ...GENERIC, ...bespoke };
   const problems: string[] = [];
   const bad = (p: string) => problems.push(p);
   const fp = { script: scriptFingerprint(script), storyboard: storyboardFingerprint(storyboard) };
@@ -131,15 +143,12 @@ export function checkSegment(inp: SegmentInputs): Segment {
       out.push({ id, text: s.text, fingerprint: sentenceFingerprint(s), scene: scene.id });
     }
     const override = config.kinds?.[scene.id];
-    if (override && !(override in ACCEPTS)) {
-      bad(unsupportedWhy(scene, override));
-      continue;
-    }
-    const kind = kindOf(scene, override);
+    const kind = kindOf(scene, override, bespoke);
     if (!kind) {
       bad(unsupportedWhy(scene, override));
       continue;
     }
+    const spec = specs[kind];
     for (const a of scene.visual.assetIds ?? [])
       if (!SUPPORTED_ASSETS.has(a)) bad(`${scene.id}: asset "${a}" has no renderer`);
     if (scene.visual.category === 'data-chart') {
@@ -150,10 +159,10 @@ export function checkSegment(inp: SegmentInputs): Segment {
           bad(`${scene.id}: chart point "${p.label}" has no numeric value`);
         if (!p.display) bad(`${scene.id}: chart point "${p.label}" has no display text`);
         if (!known.has(p.cite)) bad(`${scene.id}: chart point "${p.label}" cites ${p.cite}, not in the package`);
-        if (PERCENT_KINDS.has(kind) && p.unit !== 'percent')
+        if (spec.percent && p.unit !== 'percent')
           bad(`${scene.id}: ${kind} draws percentages; "${p.label}" is ${p.unit}`);
       }
-      if (PERCENT_KINDS.has(kind)) {
+      if (spec.percent) {
         const total = pts.reduce((n, p) => n + (Number.isFinite(p.value) ? p.value : 0), 0);
         if (total > 100) bad(`${scene.id}: ${kind} segments total ${total}%`);
       }
@@ -161,8 +170,7 @@ export function checkSegment(inp: SegmentInputs): Segment {
     if (scene.visual.excerpt && !known.has(scene.visual.excerpt.cite))
       bad(`${scene.id}: excerpt ${scene.visual.excerpt.cite} is not in the package`);
     const cues = config.cues?.[scene.id] ?? {};
-    for (const name of REQUIRED_CUES[kind] ?? [])
-      if (!cues[name]) bad(`${scene.id}: ${kind} needs cue "${name}" in render.json`);
+    for (const name of spec.cues ?? []) if (!cues[name]) bad(`${scene.id}: ${kind} needs cue "${name}" in render.json`);
     for (const [name, c] of Object.entries(cues)) {
       if (!scene.sentences.includes(c.sentence))
         bad(`${scene.id}: cue "${name}" names sentence ${c.sentence}, which is not in the scene`);

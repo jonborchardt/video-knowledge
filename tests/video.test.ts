@@ -12,7 +12,9 @@ import { pointFrames } from '../src/video/chart';
 import { cue, lineFrames, spokenAt } from '../src/video/cues';
 import { excerptWindow, flowPassage } from '../src/video/excerpt';
 import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
-import { ACCEPTS, COMPONENT_FILE, KINDS, kindOf, unsupportedWhy } from '../src/video/kinds';
+import { BESPOKE } from '../src/video/bespoke';
+import { ALL_KINDS, GENERIC, bespokeFor, kindOf, unsupportedWhy } from '../src/video/kinds';
+import { COMPONENTS } from '../src/video/remotion/scenes';
 import { narrate } from '../src/video/narration';
 import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
 import { assemble, relativeScene, sceneKey } from '../src/video/render';
@@ -67,15 +69,25 @@ describe('segment selection', () => {
   it('takes a bespoke kind from render.json only when it draws the category', () => {
     const p = scenes();
     p[0] = scene('sc01', ['s01'], { visual: { category: 'animation', description: 'push in' } });
-    const ok = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }));
+    const mine = bespokeFor('get-rich-quick/decision-mlm-and-seminars');
+    const ok = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }), mine);
     expect(ok.problems).toEqual([]);
     expect(ok.scenes[0].kind).toBe('fine-print');
-    const wrong = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'waffle' } } }));
+    // Another video's bespoke kind is unknown here: the fixture's video registers none.
+    const elsewhere = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }));
+    expect(elsewhere.problems.join()).toMatch(/unknown to this video/);
+    const wrong = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'waffle' } } }), mine);
     expect(wrong.problems.join()).toMatch(/does not draw animation/);
     const unknown = checkSegment(inputs({ config: { kinds: { sc01: 'hologram' as never } } }));
     expect(unknown.problems.join()).toMatch(/unknown/);
-    for (const k of KINDS) expect(ACCEPTS[k].length, k).toBeGreaterThan(0);
-    for (const k of KINDS) expect(COMPONENT_FILE[k], k).toMatch(/\.tsx$/);
+  });
+  it('one record per kind: a known component, a category, and names unique across videos', () => {
+    const names = [GENERIC, ...Object.values(BESPOKE)].flatMap((r) => Object.keys(r));
+    expect(new Set(names).size).toBe(names.length);
+    for (const [k, spec] of Object.entries(ALL_KINDS)) {
+      expect(spec.accepts.length, k).toBeGreaterThan(0);
+      expect(COMPONENTS[spec.component], k).toBeTypeOf('function');
+    }
   });
   it('rejects a chart the kind cannot draw', () => {
     const p = scenes();
