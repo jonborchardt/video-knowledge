@@ -558,14 +558,12 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
     if (res.live) c.live = res.live;
     if (res.sb) c.sb = res.sb;
     if (res.blocker) blockers.push(res.blocker);
-    // The first halt sets the stage; halting at the stage already reached adds no blocker.
+    // The first halt sets the stage, its command and its reason; later halts are consequences of it.
     if (res.halt && !s.stopped) {
       s.stopped = true;
-      if (s.stage !== res.halt.stage) {
-        s.stage = res.halt.stage;
-        s.next = res.halt.cmd;
-        blockers.push(res.halt.why);
-      }
+      s.stage = res.halt.stage;
+      s.next = res.halt.cmd;
+      blockers.push(res.halt.why);
     }
     if (res.advance) {
       s.stage = res.advance.stage;

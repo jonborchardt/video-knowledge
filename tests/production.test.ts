@@ -1,8 +1,11 @@
 // The production board derives every stage from the committed artifacts; the locked MLM package must read as locked
 // with no blockers, and every topic must derive without throwing.
+import { mkdirSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { board, productionOf } from '../src/lib/production';
-import { scriptDirs } from '../src/lib/script';
+import { scriptDir, scriptDirs } from '../src/lib/script';
 
 describe('production board', () => {
   const topics = board();
@@ -34,5 +37,18 @@ describe('production board', () => {
 
   it('a story without a scripts directory has no production', () => {
     expect(productionOf('get-rich-quick', 'decision:no-such-story')).toBeNull();
+  });
+
+  it('a halt at the first stage says why and what to run', () => {
+    const root = mkdtempSync(join(tmpdir(), 'vk-board-'));
+    try {
+      mkdirSync(scriptDir('get-rich-quick', 'decision:empty', root), { recursive: true });
+      const prod = productionOf('get-rich-quick', 'decision:empty', root)!;
+      expect(prod.stage).toBe('package');
+      expect(prod.blockers).toEqual(['no evidence package']);
+      expect(prod.next).toBe('npm run script -- package get-rich-quick decision:empty');
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
