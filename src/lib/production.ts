@@ -76,7 +76,7 @@ interface BuildReport {
   generatedAt: string;
   segment: { scenes: string[] };
   output: { file: string; seconds: number } | null;
-  narration: { provider: string; voice: string };
+  narration: { provider: string; voice: string; publishable?: boolean };
   fingerprints: { script: string; storyboard: string };
   qa: { ok: boolean; checks: { name: string; ok: boolean; detail: string }[] };
 }
@@ -372,11 +372,12 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
       vr.fingerprints.storyboard === release.fingerprints.storyboard;
     const failed = vr.qa.checks.filter((c) => !c.ok);
     const full = total > 0 && vr.segment.scenes.length >= total;
-    const health: Health = !bound ? 'stale' : !vr.qa.ok ? 'blocked' : full ? 'done' : 'pending';
+    const draft = vr.narration.publishable === false; // the voice's terms do not cover a published video
+    const health: Health = !bound ? 'stale' : !vr.qa.ok ? 'blocked' : full && !draft ? 'done' : 'pending';
     checks.push({
       name: 'video',
       health,
-      detail: `${vr.output ? `${Math.round(vr.output.seconds)}s, ` : ''}${vr.segment.scenes.length} of ${total} scenes (${vr.segment.scenes[0]} to ${vr.segment.scenes.at(-1)}), ${vr.narration.provider} ${vr.narration.voice}, QA ${vr.qa.checks.length - failed.length}/${vr.qa.checks.length}${failed.length ? `: ${failed.map((c) => c.name).join(', ')}` : ''}${bound ? '' : `; rendered from script ${vr.fingerprints.script} / storyboard ${vr.fingerprints.storyboard}, the lock is ${release.fingerprints.script} / ${release.fingerprints.storyboard}`}`,
+      detail: `${vr.output ? `${Math.round(vr.output.seconds)}s, ` : ''}${vr.segment.scenes.length} of ${total} scenes (${vr.segment.scenes[0]} to ${vr.segment.scenes.at(-1)}), ${vr.narration.provider} ${vr.narration.voice}${draft ? ' (draft voice, not for publication)' : ''}, QA ${vr.qa.checks.length - failed.length}/${vr.qa.checks.length}${failed.length ? `: ${failed.map((c) => c.name).join(', ')}` : ''}${bound ? '' : `; rendered from script ${vr.fingerprints.script} / storyboard ${vr.fingerprints.storyboard}, the lock is ${release.fingerprints.script} / ${release.fingerprints.storyboard}`}`,
       file: r(VIDEO_REPORT),
       date: vr.generatedAt,
     });
@@ -389,7 +390,9 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
         next = `extend video/render.json past ${vr.segment.scenes.at(-1)} (${total - vr.segment.scenes.length} scenes left), then ${cmd}`;
       } else {
         stage = 'rendered';
-        next = 'publish, then record it in production.json';
+        next = draft
+          ? `review the video, then re-narrate with a commercial voice (VK_TTS_PROVIDER=openai) and ${cmd}`
+          : 'review the video, publish, then record it in production.json';
       }
     }
   }

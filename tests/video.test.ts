@@ -1,6 +1,7 @@
 // The video stage: segment selection against the validated script, narration caching, the timeline from measured
-// audio, cue resolution, chart timing, and the ffmpeg wrapper. The synthetic fixture needs no TTS; the one test on the
-// real MLM storyboard reads the committed artifacts.
+// audio, cue resolution, chart timing, excerpt extraction, the render cache key, assembly contiguity, the ffmpeg
+// wrapper and the providers. The synthetic fixture needs no TTS; the tests on the real MLM storyboard read the
+// committed artifacts (the opening four scenes are the spike's regression fixture).
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -8,12 +9,16 @@ import { afterAll, describe, expect, it } from 'vitest';
 import { type Release, scriptFingerprint, storyboardFingerprint, validationFingerprint } from '../src/lib/script';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
 import { pointFrames } from '../src/video/chart';
+import { cue, lineFrames, spokenAt } from '../src/video/cues';
+import { excerptWindow, flowPassage } from '../src/video/excerpt';
 import { audioStats, probe } from '../src/video/ffmpeg';
-import { kindOf, unsupportedWhy } from '../src/video/kinds';
+import { ACCEPTS, COMPONENT_FILE, KINDS, kindOf, unsupportedWhy } from '../src/video/kinds';
 import { narrate } from '../src/video/narration';
+import { assemble, relativeScene, sceneKey } from '../src/video/render';
 import { type SegmentInputs, checkSegment, citationDetail, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
-import type { TtsProvider } from '../src/video/tts';
+import { type TtsProvider, provider } from '../src/video/tts';
+import { openaiProvider, speedOf } from '../src/video/tts/openai';
 import type { NarrationManifest, RenderConfig, TimelineScene } from '../src/video/types';
 import { alignLine, findWord, tokens } from '../src/video/words';
 import { DOC_D, approveAll, good, pkg, plan, read, run, scene } from './script-helpers';
@@ -89,6 +94,8 @@ function manifest(inp: SegmentInputs, over: Partial<Record<string, string>> = {}
     voice: 'v',
     rate: '+0%',
     format: 'wav',
+    licence: 'test',
+    cost: 0,
     generatedAt: 'd',
     sentences: seg.sentences.map((s) => {
       const text = over[s.id] ?? s.text;
@@ -105,23 +112,25 @@ function manifest(inp: SegmentInputs, over: Partial<Record<string, string>> = {}
     }),
   };
 }
+const MLM = ['get-rich-quick', 'decision:mlm-and-seminars'] as const;
 
 describe('segment selection', () => {
   it('accepts the fixture: kinds, sentences, citations', () => {
     const seg = checkSegment(inputs({ release: true }));
     expect(seg.problems).toEqual([]);
-    expect(seg.scenes.map((s) => s.kind)).toEqual(['phone', 'stacked-bar', 'quote']);
+    expect(seg.scenes.map((s) => s.kind)).toEqual(['phone', 'stacked-bar', 'question']);
     expect(seg.sentences.map((s) => s.id)).toEqual(['s01', 's02', 's03']);
     expect(seg.scenes[1].citations[0]).toMatchObject({ label: 'Survey D' });
     expect(seg.scenes[1].citations[0].detail).toMatch(/survey-d\.txt, lines 1-2/);
   });
-  it('loads the real MLM segment', () => {
-    const seg = loadSegment('get-rich-quick', 'decision:mlm-and-seminars');
-    expect(seg.scenes.map((s) => s.scene.id)).toEqual(['sc01', 'sc02', 'sc03', 'sc04']);
-    expect(seg.scenes.map((s) => s.kind)).toEqual(['phone', 'tree', 'quote', 'stacked-bar']);
-    expect(seg.sentences.map((s) => s.id)).toEqual(['s01', 's02', 's03', 's04', 's05']);
+  it('loads the whole MLM storyboard with a kind for every scene', () => {
+    const seg = loadSegment(...MLM);
+    expect(seg.scenes.length).toBe(seg.storyboard.scenes.length);
+    expect(seg.scenes.slice(0, 4).map((s) => s.kind)).toEqual(['phone', 'tree', 'quote', 'stacked-bar']); // the spike
+    expect(seg.sentences.slice(0, 5).map((s) => s.id)).toEqual(['s01', 's02', 's03', 's04', 's05']);
     expect(seg.scenes[3].scene.visual.chart?.points.map((p) => p.value)).toEqual([47, 27, 25]);
     expect(seg.scenes[3].citations[0].detail).toContain('lines 135-139');
+    expect(new Set(seg.scenes.map((s) => s.kind)).size).toBeGreaterThan(20);
   });
   it('rejects unknown, non-contiguous and reordered scenes', () => {
     expect(checkSegment(inputs({ config: { scenes: ['sc01', 'sc03'] } })).problems.join()).toMatch(/contiguous/);
@@ -135,9 +144,27 @@ describe('segment selection', () => {
     p[0] = scene('sc01', ['s01'], { visual: { category: 'footage', description: 'b-roll' } });
     expect(checkSegment(inputs({ plan: p })).problems).toContain(unsupportedWhy(p[0] as Storyboard['scenes'][0]));
     expect(kindOf({ visual: { category: 'animation', description: 'x', assetIds: ['phone-ui'] } })).toBe('phone');
-    expect(kindOf({ visual: { category: 'animation', description: 'x', assetIds: ['person-grid'] } })).toBeNull();
+    expect(kindOf({ visual: { category: 'animation', description: 'x' } })).toBeNull();
+    expect(kindOf({ visual: { category: 'diagram', description: 'x', assetIds: ['person-grid'] } })).toBe(
+      'person-grid',
+    );
+    expect(kindOf({ visual: { category: 'typography', description: 'x', onScreenText: ['"a quote"'] } })).toBe('quote');
+    expect(kindOf({ visual: { category: 'typography', description: 'x', onScreenText: ['a', 'b'] } })).toBe('list');
   });
-  it('rejects a chart the stacked bar cannot draw', () => {
+  it('takes a bespoke kind from render.json only when it draws the category', () => {
+    const p = scenes();
+    p[0] = scene('sc01', ['s01'], { visual: { category: 'animation', description: 'push in' } });
+    const ok = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }));
+    expect(ok.problems).toEqual([]);
+    expect(ok.scenes[0].kind).toBe('fine-print');
+    const wrong = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'waffle' } } }));
+    expect(wrong.problems.join()).toMatch(/does not draw animation/);
+    const unknown = checkSegment(inputs({ config: { kinds: { sc01: 'hologram' as never } } }));
+    expect(unknown.problems.join()).toMatch(/unknown/);
+    for (const k of KINDS) expect(ACCEPTS[k].length, k).toBeGreaterThan(0);
+    for (const k of KINDS) expect(COMPONENT_FILE[k], k).toMatch(/\.tsx$/);
+  });
+  it('rejects a chart the kind cannot draw', () => {
     const p = scenes();
     const chart = p[1].visual.chart!;
     p[1].visual.chart = { ...chart, points: [{ ...chart.points[0], unit: 'usd' }, ...chart.points.slice(1)] };
@@ -184,12 +211,27 @@ describe('timeline', () => {
     const last = tl.scenes.at(-1)!;
     expect(tl.durationInFrames).toBe(last.start + last.duration);
     const s2 = tl.scenes[1].sentences[0];
-    const cue = tl.scenes[1].cues['point:lost money'];
-    expect(cue).toBeGreaterThanOrEqual(s2.start);
-    expect(cue).toBeLessThan(s2.start + s2.duration);
-    expect(s2.words.find((w) => w.text === '47')?.frame).toBe(cue);
+    const c = tl.scenes[1].cues['point:lost money'];
+    expect(c).toBeGreaterThanOrEqual(s2.start);
+    expect(c).toBeLessThan(s2.start + s2.duration);
+    expect(s2.words.find((w) => w.text === '47')?.frame).toBe(c);
     expect(tl.fingerprints.script).toBe(scriptFingerprint(inp.script));
+    expect(tl.scenes[1].options).toEqual({});
     expect(buildTimeline(seg, m)).toEqual(tl); // deterministic
+  });
+  it('carries options and reads excerpts from the corpus, refusing a missing passage', () => {
+    const p = scenes();
+    p[2] = scene('sc03', ['s03'], {
+      visual: { category: 'document-excerpt', description: 'page', excerpt: { cite: DOC_D, highlight: '47%' } },
+    });
+    const inp = inputs({ plan: p, config: { options: { sc03: { accent: 'slate' } } } });
+    const seg = checkSegment(inp);
+    expect(seg.scenes[2].kind).toBe('excerpt');
+    const tl = buildTimeline(seg, manifest(inp), 30, read);
+    expect(tl.scenes[2].excerpt).toMatchObject({ cite: DOC_D, lines: '1-2', highlight: '47%' });
+    expect(tl.scenes[2].excerpt?.text).toMatch(/601 participants/);
+    expect(tl.scenes[2].options).toEqual({ accent: 'slate' });
+    expect(() => buildTimeline(seg, manifest(inp), 30, () => null)).toThrow(/cannot be read/);
   });
   it('refuses altered narration, missing audio and cues on unspoken words', () => {
     const inp = inputs();
@@ -215,6 +257,8 @@ describe('timeline', () => {
       onScreenText: [],
       citations: [],
       assets: [],
+      excerpt: null,
+      options: {},
     };
     const sc: TimelineScene = {
       ...base,
@@ -228,19 +272,34 @@ describe('timeline', () => {
     ]);
     expect(pointFrames({ ...sc, cues: {} })).toEqual([130, 160, 190]);
   });
+  it('times on-screen lines by cue, by speech, then by sentence', () => {
+    const inp = inputs();
+    const tl = buildTimeline(checkSegment(inp), manifest(inp));
+    const sc = { ...tl.scenes[1], onScreenText: ['601 people', 'lost money', 'third line'] };
+    const s = sc.sentences[0];
+    expect(spokenAt(sc, '601 people')?.frame).toBe(s.words.find((w) => w.text === '601')!.frame);
+    expect(spokenAt(sc, 'nothing here')).toBeNull();
+    const [a, b, c] = lineFrames(sc);
+    expect(a).toBe(s.words.find((w) => w.text === '601')!.frame);
+    expect(b).toBe(s.words.find((w) => w.text === 'lost')!.frame);
+    expect(c).toBe(b + 30);
+    expect(lineFrames({ ...sc, cues: { 'line:3': 999 } })[2]).toBe(999);
+    expect(cue(sc, 'missing', 7)).toBe(7);
+  });
 });
 
-describe('words', () => {
+describe('words and excerpts', () => {
   const words = [
     { text: 'In', start: 0, end: 0.1 },
     { text: 'a', start: 0.1, end: 0.2 },
     { text: 'study', start: 0.2, end: 0.5 },
-    { text: 'asked 601', start: 0.5, end: 1.2 },
-    { text: '47 percent', start: 1.2, end: 1.9 },
+    { text: 'asked 601', start: 0.5, end: 1.3 },
+    { text: '47 percent', start: 1.3, end: 1.9 },
   ];
-  it('splits grouped boundaries and finds the nth word', () => {
+  it('splits grouped boundaries by letters and finds the nth word', () => {
     expect(tokens(words).map((w) => w.text)).toEqual(['In', 'a', 'study', 'asked', '601', '47', 'percent']);
-    expect(findWord(words, '601')?.start).toBe(0.5);
+    expect(findWord(words, '601')?.start).toBeCloseTo(0.5 + 0.8 * (5 / 8), 5);
+    expect(findWord(words, 'asked')?.end).toBeCloseTo(0.5 + 0.8 * (5 / 8), 5);
     expect(findWord(words, 'A')?.start).toBe(0.1);
     expect(findWord(words, 'a', 2)).toBeNull();
   });
@@ -248,12 +307,64 @@ describe('words', () => {
     expect(alignLine('"asked 601, 47"', words)?.map((w) => w.text)).toEqual(['asked', '601', '47']);
     expect(alignLine('study percent', words)).toBeNull();
   });
+  it('keeps the column of a two-column page that holds the highlight and windows around it', () => {
+    const page = [
+      'Left column text that runs on and                 The motivation of most MLM is the',
+      'on about something else entirely                  opportunity to make large amounts of income',
+      'for several lines in a row here.                  for a minimal investment of time and money.',
+      '12 A footnote that should be dropped from the flow of the page.',
+      'FEDERAL TRADE COMMISSION - FTC.GOV             13',
+      'And the left column continues to                  with the concept of time freedom or leveraged',
+      'the end of the passage.                           income, which allows a person to gain.',
+    ].join('\n');
+    const flow = flowPassage(page, 'time freedom or leveraged income');
+    expect(flow).toMatch(/^The motivation of most MLM/);
+    expect(flow).not.toMatch(/Left column|footnote|FTC\.GOV/);
+    const w = excerptWindow(page, 'time freedom or leveraged income', 6);
+    expect(w.match).toBe('time freedom or leveraged income');
+    expect(w.before.split(' ').length).toBeLessThanOrEqual(7);
+    expect(w.before).toMatch(/^…/);
+    expect(excerptWindow('a plain passage with no highlight', 'absent').match).toBeNull();
+    expect(excerptWindow('Of the 601 participants, 47% lost.', null).before).toBe('Of the 601 participants, 47% lost.');
+  });
+});
+
+describe('render cache and assembly', () => {
+  it('keys a chunk by the scene made relative and the code that draws it', () => {
+    const inp = inputs();
+    const tl = buildTimeline(checkSegment(inp), manifest(inp));
+    const s = tl.scenes[1];
+    const r = relativeScene(s);
+    expect(r.start).toBe(0);
+    expect(r.sentences[0].start).toBe(s.sentences[0].start - s.start);
+    expect(r.cues['point:lost money']).toBe(s.cues['point:lost money'] - s.start);
+    const moved = {
+      ...s,
+      start: s.start + 90,
+      sentences: s.sentences.map((x) => ({
+        ...x,
+        start: x.start + 90,
+        words: x.words.map((w) => ({ ...w, frame: w.frame + 90, end: w.end + 90 })),
+      })),
+      cues: Object.fromEntries(Object.entries(s.cues).map(([k, v]) => [k, v + 90])),
+    };
+    expect(sceneKey(moved, tl)).toBe(sceneKey(s, tl));
+    expect(sceneKey({ ...s, onScreenText: ['other'] }, tl)).not.toBe(sceneKey(s, tl));
+    expect(sceneKey(s, { ...tl, fps: 24 })).not.toBe(sceneKey(s, tl));
+  });
+  it('refuses to assemble chunks that are not contiguous', () => {
+    const inp = inputs();
+    const tl = buildTimeline(checkSegment(inp), manifest(inp));
+    const chunks = [tl.scenes[0], tl.scenes[2]].map((scene) => ({ scene, file: 'x.mp4', cached: true }));
+    expect(() => assemble(tl, manifest(inp), chunks, '.', 'out.mp4')).toThrow(/not contiguous/);
+    expect(() => assemble(tl, manifest(inp), [], '.', 'out.mp4')).toThrow(/nothing/);
+  });
 });
 
 describe('narration and ffmpeg', () => {
   const dir = mkdtempSync(join(tmpdir(), 'vk-video-'));
   afterAll(() => rmSync(dir, { recursive: true, force: true }));
-  /** A one-second 8 kHz silent WAV with a single full-scale click, so peak and silence are both measurable. */
+  /** A silent 8 kHz WAV with a single full-scale click, so peak and silence are both measurable. */
   const wav = (seconds = 1, rate = 8000) => {
     const n = seconds * rate;
     const b = Buffer.alloc(44 + n * 2);
@@ -275,25 +386,32 @@ describe('narration and ffmpeg', () => {
   let calls = 0;
   const fake: TtsProvider = {
     id: 'fake',
-    synthesize(text, _voice, _rate, out) {
+    licence: 'test',
+    async synthesize(text, _voice, _rate, out) {
       calls++;
       writeFileSync(out + '.wav', wav(2));
-      return { format: 'wav', words: [{ text: text.split(' ')[0], start: 0.1, end: 0.4 }] };
+      return { format: 'wav', words: [{ text: text.split(' ')[0], start: 0.1, end: 0.4 }], cost: 0.01 };
     },
   };
-  it('measures the audio and reuses it when nothing changed', () => {
+  it('measures the audio, reuses it when nothing changed, and sums the cost', async () => {
     const seg = checkSegment(inputs());
-    const m = narrate(seg, dir, { tts: fake });
+    const m = await narrate(seg, dir, { tts: fake });
     expect(m.sentences.map((s) => s.id)).toEqual(['s01', 's02', 's03']);
     expect(m.sentences[0].duration).toBeCloseTo(2, 2);
     expect(existsSync(join(dir, m.sentences[0].file))).toBe(true);
+    expect(m.licence).toBe('test');
+    expect(m.cost).toBeCloseTo(0.03, 5);
     expect(calls).toBe(3);
-    const again = narrate(seg, dir, { tts: fake });
+    const again = await narrate(seg, dir, { tts: fake });
     expect(calls).toBe(3);
     expect(again.sentences.map((s) => s.sha)).toEqual(m.sentences.map((s) => s.sha));
     expect(JSON.parse(readFileSync(join(dir, 'narration.json'), 'utf8')).sentences).toHaveLength(3);
-    narrate(seg, dir, { tts: fake, force: true });
+    await narrate(seg, dir, { tts: fake, force: true });
     expect(calls).toBe(6);
+    // a different voice never reuses another voice's files
+    const other = checkSegment(inputs({ config: { voice: { provider: 'fake', voice: 'w', rate: '+0%' } } }));
+    await narrate(other, dir, { tts: fake });
+    expect(calls).toBe(9);
   });
   it('probes media and fails loudly on a missing or broken file', () => {
     const f = join(dir, 'probe.wav');
@@ -313,5 +431,43 @@ describe('narration and ffmpeg', () => {
     expect(a.maxVolumeDb).toBeCloseTo(20 * Math.log10(16000 / 32768), 0);
     expect(a.silences.length).toBe(1);
     expect(a.silences[0].end - a.silences[0].start).toBeGreaterThan(2);
+  });
+  it('knows its providers and their licences', () => {
+    expect(provider('edge').licence).toMatch(/draft only/);
+    expect(provider('openai').licence).toMatch(/^commercial/);
+    expect(() => provider('nope')).toThrow(/unknown TTS provider/);
+    expect(speedOf('-20%')).toBeCloseTo(0.8);
+    expect(speedOf('+0%')).toBe(1);
+    expect(speedOf('junk')).toBe(1);
+  });
+  it('drives the OpenAI speech and transcription endpoints without a live call', async () => {
+    const seen: string[] = [];
+    const fetchMock = (async (url: string | URL | Request, init?: RequestInit) => {
+      seen.push(String(url));
+      if (String(url).endsWith('/audio/speech')) {
+        const body = JSON.parse(String(init?.body));
+        expect(body).toMatchObject({ voice: 'ash', response_format: 'wav', speed: 0.9 });
+        return new Response(wav(1), { status: 200 });
+      }
+      expect(init?.body).toBeInstanceOf(FormData);
+      return Response.json({ duration: 60, words: [{ word: 'Hello', start: 0.1, end: 0.4 }] });
+    }) as typeof fetch;
+    const prev = process.env.OPENAI_API_KEY;
+    process.env.OPENAI_API_KEY = 'test-key';
+    try {
+      const r = await openaiProvider(fetchMock).synthesize('Hello there.', 'ash', '-10%', join(dir, 'oa'));
+      expect(r.format).toBe('wav');
+      expect(r.words).toEqual([{ text: 'Hello', start: 0.1, end: 0.4 }]);
+      expect(r.cost).toBeCloseTo(0.021, 4);
+      expect(existsSync(join(dir, 'oa.wav'))).toBe(true);
+      expect(seen).toHaveLength(2);
+      delete process.env.OPENAI_API_KEY;
+      delete process.env.OPEN_API_KEY;
+      await expect(openaiProvider(fetchMock).synthesize('x', 'ash', '+0%', join(dir, 'oa2'))).rejects.toThrow(
+        /OPENAI_API_KEY/,
+      );
+    } finally {
+      if (prev) process.env.OPENAI_API_KEY = prev;
+    }
   });
 });

@@ -18,7 +18,7 @@ import {
   validationFingerprint,
 } from '../lib/script';
 import type { Scene, Storyboard } from '../lib/storyboard';
-import { REQUIRED_CUES, SUPPORTED_ASSETS, type SceneKind, kindOf, unsupportedWhy } from './kinds';
+import { ACCEPTS, REQUIRED_CUES, SUPPORTED_ASSETS, type SceneKind, kindOf, unsupportedWhy } from './kinds';
 import type { Citation, RenderConfig } from './types';
 
 export const VIDEO_DIR = 'video';
@@ -30,6 +30,8 @@ export const VIDEO_FILES = {
   report: 'build-report.json',
   reportMd: 'build-report.md',
   frames: 'frames',
+  scenes: 'scenes', // rendered scene chunks, cached by key
+  contact: 'contact-sheet.png',
 } as const;
 export const videoDir = (topic: string, storyId: string, root = process.cwd()) =>
   join(scriptDir(topic, storyId, root), VIDEO_DIR);
@@ -76,6 +78,8 @@ export function citationDetail(c: NonNullable<Scene['citations']>[number], pkg: 
   return null;
 }
 
+const PERCENT_KINDS = new Set<SceneKind>(['stacked-bar', 'base-rate', 'dot-plot']);
+
 export function checkSegment(inp: SegmentInputs): Segment {
   const { script, storyboard, validation, release, config, pkg } = inp;
   const problems: string[] = [];
@@ -106,6 +110,8 @@ export function checkSegment(inp: SegmentInputs): Segment {
       bad(`scenes must be contiguous in storyboard order: ${config.scenes[k - 1]} then ${config.scenes[k]}`);
   });
   const selected = idx.filter((i): i is number => i !== undefined).map((i) => storyboard.scenes[i]);
+  for (const id of Object.keys(config.kinds ?? {}))
+    if (!index.has(id)) bad(`render.json kinds names scene ${id}, which is not in the storyboard`);
 
   // Sentences: approved by the validation, text unchanged.
   const byId = new Map(sentences(script).map((s) => [s.id, s]));
@@ -125,27 +131,38 @@ export function checkSegment(inp: SegmentInputs): Segment {
       else if (v.fingerprint !== sentenceFingerprint(s)) bad(`${scene.id}: sentence ${id} changed since validation`);
       out.push({ id, text: s.text, fingerprint: sentenceFingerprint(s), scene: scene.id });
     }
-    const kind = kindOf(scene);
+    const override = config.kinds?.[scene.id];
+    if (override && !(override in ACCEPTS)) {
+      bad(unsupportedWhy(scene, override));
+      continue;
+    }
+    const kind = kindOf(scene, override);
     if (!kind) {
-      bad(unsupportedWhy(scene));
+      bad(unsupportedWhy(scene, override));
       continue;
     }
     for (const a of scene.visual.assetIds ?? [])
       if (!SUPPORTED_ASSETS.has(a)) bad(`${scene.id}: asset "${a}" has no renderer`);
-    if (kind === 'stacked-bar') {
+    if (scene.visual.category === 'data-chart') {
       const pts = scene.visual.chart?.points ?? [];
+      if (!pts.length) bad(`${scene.id}: a chart with no points`);
       for (const p of pts) {
         if (typeof p.value !== 'number' || !Number.isFinite(p.value))
           bad(`${scene.id}: chart point "${p.label}" has no numeric value`);
-        if (p.unit !== 'percent') bad(`${scene.id}: a stacked bar draws percentages; "${p.label}" is ${p.unit}`);
         if (!p.display) bad(`${scene.id}: chart point "${p.label}" has no display text`);
         if (!known.has(p.cite)) bad(`${scene.id}: chart point "${p.label}" cites ${p.cite}, not in the package`);
+        if (PERCENT_KINDS.has(kind) && p.unit !== 'percent')
+          bad(`${scene.id}: ${kind} draws percentages; "${p.label}" is ${p.unit}`);
       }
-      const total = pts.reduce((n, p) => n + (Number.isFinite(p.value) ? p.value : 0), 0);
-      if (total > 100) bad(`${scene.id}: stacked-bar segments total ${total}%`);
+      if (PERCENT_KINDS.has(kind)) {
+        const total = pts.reduce((n, p) => n + (Number.isFinite(p.value) ? p.value : 0), 0);
+        if (total > 100) bad(`${scene.id}: ${kind} segments total ${total}%`);
+      }
     }
+    if (scene.visual.excerpt && !known.has(scene.visual.excerpt.cite))
+      bad(`${scene.id}: excerpt ${scene.visual.excerpt.cite} is not in the package`);
     const cues = config.cues?.[scene.id] ?? {};
-    for (const name of REQUIRED_CUES[kind])
+    for (const name of REQUIRED_CUES[kind] ?? [])
       if (!cues[name]) bad(`${scene.id}: ${kind} needs cue "${name}" in render.json`);
     for (const [name, c] of Object.entries(cues)) {
       if (!scene.sentences.includes(c.sentence))

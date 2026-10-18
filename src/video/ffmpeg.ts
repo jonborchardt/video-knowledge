@@ -1,7 +1,7 @@
 // ffmpeg/ffprobe for measuring and checking media. Remotion ships both binaries in its platform compositor package,
 // so nothing has to be on PATH; FFMPEG_DIR overrides the location.
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -32,7 +32,7 @@ export function run(name: 'ffmpeg' | 'ffprobe', args: string[]): Run {
 
 export interface Probe {
   duration: number; // seconds
-  video: { codec: string; width: number; height: number; fps: number; duration: number } | null;
+  video: { codec: string; width: number; height: number; fps: number; duration: number; frames: number } | null;
   audio: { codec: string; sampleRate: number; channels: number; duration: number } | null;
 }
 export function probe(file: string): Probe {
@@ -57,6 +57,7 @@ export function probe(file: string): Probe {
           height: Number(v.height),
           fps: fps(v.r_frame_rate),
           duration: Number(v.duration ?? duration),
+          frames: Number(v.nb_frames ?? 0),
         }
       : null,
     audio: a
@@ -171,4 +172,76 @@ export function lumaSamples(file: string, perSecond = 2, fps = 30, w = 48, h = 2
 
 export function extractFrame(file: string, seconds: number, out: string) {
   run('ffmpeg', ['-hide_banner', '-v', 'error', '-y', '-ss', seconds.toFixed(3), '-i', file, '-frames:v', '1', out]);
+}
+
+// ---- assembly ---------------------------------------------------------------------------------------------------
+
+const Q = ['-hide_banner', '-v', 'error', '-y'];
+
+/** Concatenate video-only chunks with identical encoding into one file, no re-encode (concat demuxer, stream copy). */
+export function concatVideo(chunks: string[], out: string) {
+  const list = out + '.txt';
+  writeFileSync(list, chunks.map((c) => `file '${c.replaceAll('\\', '/').replaceAll("'", "'\\''")}'`).join('\n'));
+  try {
+    run('ffmpeg', [...Q, '-f', 'concat', '-safe', '0', '-i', list, '-c', 'copy', '-an', out]);
+  } finally {
+    unlinkSync(list);
+  }
+}
+
+/** A sentence placed on the track: its audio starts `delay` seconds into a slot `seconds` long; slots are contiguous. */
+export interface Slot {
+  file: string;
+  delay: number;
+  seconds: number;
+}
+/** One continuous narration track from the sentence files: each in its slot, padded with silence, then (optionally)
+ *  loudness-normalised to -16 LUFS / -1.5 dBTP for YouTube, encoded AAC in an mp4 container. */
+export function narrationTrack(slots: Slot[], out: string, loudnorm = true) {
+  const chain = slots.map(
+    (s, i) =>
+      `[${i}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,adelay=${Math.round(s.delay * 1000)}:all=1,apad=whole_dur=${s.seconds.toFixed(3)}[a${i}]`,
+  );
+  const tail = `${slots.map((_, i) => `[a${i}]`).join('')}concat=n=${slots.length}:v=0:a=1${loudnorm ? ',loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000' : ''}[out]`;
+  const script = out + '.filter';
+  writeFileSync(script, [...chain, tail].join(';\n'));
+  try {
+    run('ffmpeg', [
+      ...Q,
+      ...slots.flatMap((s) => ['-i', s.file]),
+      '-filter_complex_script',
+      script,
+      '-map',
+      '[out]',
+      '-c:a',
+      'aac',
+      '-b:a',
+      '192k',
+      '-f',
+      'mp4',
+      out,
+    ]);
+  } finally {
+    unlinkSync(script);
+  }
+}
+
+/** The video stream of one file with the audio stream of another, both copied. */
+export function mux(video: string, audio: string, out: string) {
+  run('ffmpeg', [
+    ...Q,
+    '-i',
+    video,
+    '-i',
+    audio,
+    '-map',
+    '0:v:0',
+    '-map',
+    '1:a:0',
+    '-c',
+    'copy',
+    '-movflags',
+    '+faststart',
+    out,
+  ]);
 }

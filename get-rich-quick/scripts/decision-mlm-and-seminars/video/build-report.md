@@ -1,88 +1,127 @@
 # Build report: How Much Money Do MLM Participants Actually Make?
 
-get-rich-quick / decision:mlm-and-seminars, 2026-10-18T02:00:26.314Z. `npm run video -- spike get-rich-quick decision:mlm-and-seminars`
+get-rich-quick / decision:mlm-and-seminars, 2026-10-18T03:45:40.304Z. `npm run video -- qa get-rich-quick decision:mlm-and-seminars`
 
-**Segment.** Scenes sc01, sc02, sc03, sc04 (sc01: phone, sc02: tree, sc03: quote, sc04: stacked-bar); sentences s01, s02, s03, s04, s05.
+**Segment.** 42 of 42 storyboard scenes (sc01 to sc43), 66 sentences. Kinds: sc01 phone, sc02 tree, sc03 quote, sc04 stacked-bar, sc05 question, sc06 title, sc07 evidence-cards, sc08 quote, sc09 tree-coins, sc10 quote, sc11 transition, sc12 disclosures, sc13 stat-tiles, sc14 fine-print, sc15 person-grid, sc16 waterfall, sc17 excerpt, sc18 rank-table, sc19 pair, sc20 dot-plot, sc21 bar, sc22 bar, sc23 question, sc24 commission-icons, sc25 excerpt, sc26 tree-customer, sc27 tree-base, sc28 excerpt, sc29 waffle, sc30 pyramid, sc31 bar, sc32 title, sc33 three-measures, sc35 list, sc36 list, sc37 phone-reply, sc38 base-rate, sc39 tree-base, sc40 list, sc41 closing, sc42 tree-base, sc43 phone-end.
 
-**Output.** get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4: 40.70s, 1920x1080 @ 30 fps, h264 + aac, 1221 frames rendered in 53.4s ($0 (local CPU)).
+**Output.** get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4: 723.40s, 1920x1080 @ 30 fps, h264 + aac, 21702 frames, rendered in 0s ($0 (local CPU)).
 
-**Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 37.2s of speech, $0 (edge-tts, no key).
+**Narration.** edge / en-US-AndrewMultilingualNeural (rate -10%), mp3, 699.43s of speech at about 146 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
 | Sentence | Seconds | Boundaries | Audio sha |
 |---|---|---|---|
-| s01 | 3.48 | 11 | b7725068b4 |
-| s02 | 9.144 | 37 | c135cf6ca7 |
-| s03 | 10.608 | 32 | 1309465b54 |
-| s04 | 9.792 | 22 | 29178f32dd |
-| s05 | 4.176 | 9 | 78d584530e |
+| s01 | 3.864 | 11 | d28a346ce3 |
+| s02 | 10.416 | 37 | d102bd5c36 |
+| s03 | 11.664 | 32 | 68d75dd0e3 |
+| s04 | 10.656 | 22 | 015191d07c |
+| s05 | 4.176 | 9 | ec6baa4b58 |
+| s06 | 7.968 | 23 | ce3a6df3f3 |
+| s07 | 6.984 | 16 | dee84a1b82 |
+| s08 | 9.744 | 21 | c9ba07c45a |
+| s68 | 6.552 | 10 | 1c9f0636f3 |
+| s69 | 7.224 | 17 | 499a0b8036 |
+| s09 | 19.824 | 48 | 8f2c0827a0 |
+| s10 | 11.184 | 27 | 6046d65a75 |
+| s11 | 3.84 | 11 | d9a7343523 |
+| s12 | 10.752 | 28 | cec79b6be3 |
+| s13 | 9.384 | 21 | d00dbad88e |
+| s14 | 4.8 | 12 | 1a7852a6f2 |
+| s15 | 11.112 | 26 | e90a215f1c |
+| s16 | 13.536 | 29 | d3da8d34f0 |
+| s17 | 5.784 | 14 | d14c5c5ee9 |
+| s18 | 5.496 | 15 | 4c266dd96c |
+| s19 | 11.928 | 27 | 00d5b28d84 |
+| s20 | 4.536 | 14 | 1ddc191a76 |
+| s21 | 12.24 | 31 | f793424d21 |
+| s22 | 7.272 | 22 | 1067b88c6c |
+| s23 | 16.152 | 36 | 85e57ec416 |
+| s24 | 13.128 | 20 | ce0c50cac6 |
+| s25 | 16.968 | 32 | ee604e1528 |
+| s26 | 7.104 | 19 | 807f131d7a |
+| s27 | 12.072 | 24 | c058ff1f32 |
+| s28 | 14.952 | 33 | 19e49d74b0 |
+| s29 | 10.224 | 27 | 2ef08e88a5 |
+| s30 | 8.976 | 21 | 31b32f667e |
+| s65 | 10.68 | 33 | 120577173e |
+| s32 | 10.368 | 26 | 4dd1fb3ac9 |
+| s33 | 19.104 | 51 | a405195978 |
+| s34 | 19.632 | 51 | eb81bacc07 |
+| s35 | 12.648 | 29 | e5cec4be37 |
+| s36 | 12.12 | 33 | 443f7a8627 |
+| s37 | 12.432 | 35 | 0ec1271ee4 |
+| s38 | 7.008 | 19 | 60d914b5fc |
+| s39 | 7.104 | 15 | 76325f2094 |
+| s40 | 16.008 | 43 | e3fa86a545 |
+| s41 | 15.216 | 28 | 44b9bf4a26 |
+| s42 | 14.952 | 41 | 200d886552 |
+| s43 | 13.08 | 34 | 6808806834 |
+| s44 | 6.984 | 17 | 85834a6dae |
+| s66 | 13.032 | 28 | 60686b8690 |
+| s67 | 13.368 | 28 | 08983c1ff9 |
+| s45 | 6.12 | 17 | 6d20cc631f |
+| s46 | 12.168 | 25 | 1098ed1261 |
+| s47 | 16.704 | 25 | ff97b065ee |
+| s50 | 11.064 | 23 | 614d7212ff |
+| s51 | 10.68 | 25 | 733563fceb |
+| s52 | 12.168 | 26 | 8643cfb561 |
+| s53 | 8.64 | 19 | d60b3839af |
+| s54 | 10.152 | 24 | a76f7d1e11 |
+| s55 | 4.68 | 12 | 12c6419dc1 |
+| s56 | 10.632 | 23 | 5719ea8d19 |
+| s57 | 8.664 | 21 | 1593ba1a3c |
+| s58 | 6.384 | 17 | 280cffdccc |
+| s59 | 13.584 | 38 | da00c52272 |
+| s60 | 22.872 | 46 | 8405056f3b |
+| s61 | 5.712 | 15 | bb52ee4adb |
+| s62 | 13.296 | 40 | ed724da684 |
+| s63 | 2.712 | 9 | 9ae81d5104 |
+| s64 | 8.952 | 26 | 3b7569b0c4 |
 
-**Architecture.** Remotion (React, frame-based) rendered through @remotion/renderer; ffmpeg from the Remotion compositor for QA.
+**Architecture.** Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS).
 
-**Fingerprints.** script 51e7788c5c, storyboard 0c12e8fcc7, narration 41ed225fd0, config a33704e01a.
+**Fingerprints.** script 51e7788c5c, storyboard 0c12e8fcc7, narration 0c390593af, config 70618c4192.
 
-## QA: passed (52 of 52)
+## QA: passed (30 of 30)
 
 | Check | Result | Detail |
 |---|---|---|
-| mp4 decodable | ok | 40.704s |
+| mp4 decodable | ok | 723.400s |
 | video stream | ok | h264 1920x1080 @ 30 |
 | resolution | ok | 1920x1080 |
 | frame rate | ok | 30 |
 | h264 | ok | h264 |
-| duration in range | ok | 40.70s in [30,60] |
-| duration matches timeline | ok | 40.704s vs 40.700s (1221 frames) |
+| frame count | ok | 21702 frames, timeline 21702 |
+| duration in range | ok | 723.40s in [722.4,724.4] |
+| duration matches timeline | ok | 723.400s vs 723.400s (21702 frames) |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
-| audio length matches video | ok | 0.004s apart |
-| no clipping | ok | peak -7.6 dB, mean -25.2 dB |
-| no long silence | ok | none >= 2s |
-| narration s01 not truncated | ok | audio 3.48s, last word 3.1125s, slot 105 frames |
-| narration s02 not truncated | ok | audio 9.144s, last word 8.7625s, slot 275 frames |
-| narration s03 not truncated | ok | audio 10.608s, last word 10.15s, slot 319 frames |
-| narration s04 not truncated | ok | audio 9.792s, last word 9.4125s, slot 294 frames |
-| narration s05 not truncated | ok | audio 4.176s, last word 3.8125s, slot 126 frames |
-| scene order | ok | sc01 sc02 sc03 sc04 |
+| audio length matches video | ok | 0.000s apart |
+| no clipping | ok | peak -1.4 dB, mean -19.5 dB |
+| no long silence | ok | none >= 3s |
+| narration not truncated | ok | 66 sentences fit their slots |
+| scene order | ok | sc01 to sc43 (42) |
 | scenes contiguous in storyboard | ok | from sc01 |
-| narration s01 matches script | ok | Somewhere in your messages there is probably a pitch like th |
-| narration s02 matches script | ok | A friend you have not heard from in years has started a busi |
-| narration s03 matches script | ok | The recruiters have a word for that second part: one trainer |
-| narration s04 matches script | ok | In a study published in 2018, AARP asked 601 Americans who h |
-| narration s05 matches script | ok | Only 25 percent said they made any profit at all. |
-| fingerprints | ok | script 51e7788c5c, storyboard 0c12e8fcc7 |
-| sc01 citations | ok | none |
-| sc01 assets | ok | phone-ui |
-| sc01 rendered as | ok | phone |
-| sc02 citations | ok | none |
-| sc02 assets | ok | node-tree |
-| sc02 rendered as | ok | tree |
-| sc03 citations | ok | Network-marketing recruiting video (YouTube) |
-| sc03 assets | ok | none |
-| sc03 rendered as | ok | quote |
-| sc04 citations | ok | AARP, 2018 survey of 601 current and former MLM participants |
-| sc04 chart data | ok | lost money=47%, broke even=27%, made a profit=25% |
-| sc04 assets | ok | none |
-| sc04 rendered as | ok | stacked-bar |
-| scene boundaries follow measured audio | ok | sc01 0.00-4.60s, sc02 4.60-13.77s, sc03 13.77-25.40s, sc04 25.40-40.70s |
-| sc01 cue notify inside s01 | ok | "messages" at 1.20s, sentence 0.60-4.10s |
-| sc02 cue sell inside s02 | ok | "sell" at 10.77s, sentence 4.60-13.77s |
-| sc02 cue tier2 inside s02 | ok | "everyone" at 12.07s, sentence 4.60-13.77s |
-| sc03 cue emphasis inside s03 | ok | "leverage" at 20.50s, sentence 13.77-24.40s |
-| sc04 cue count inside s04 | ok | "601" at 28.47s, sentence 25.40-35.20s |
-| sc04 cue point:lost money inside s04 | ok | "47" at 32.10s, sentence 25.40-35.20s |
-| sc04 cue point:made a profit inside s05 | ok | "25" at 35.80s, sentence 35.50-39.70s |
-| final scene complete | ok | ends 40.70s |
-| no blank sections | ok | longest flat run 0.5s ending at 0.0s |
-| sc01 rendered | ok | mid-scene luma sd 10.4 |
-| sc02 rendered | ok | mid-scene luma sd 5.5 |
-| sc03 rendered | ok | mid-scene luma sd 4.7 |
-| sc04 rendered | ok | mid-scene luma sd 24.9 |
+| every storyboard scene rendered | ok | 42 scenes |
+| every script sentence narrated | ok | 66 sentences in script order |
+| sentences in script order | ok | 66 sentences |
+| narration matches script | ok | every sentence verbatim |
+| fingerprints | ok | script 51e7788c5c, storyboard 0c12e8fcc7 (locked) |
+| citations present | ok | 45 on-screen citations resolved |
+| chart data matches storyboard | ok | 11 charts |
+| excerpts resolve | ok | 4 excerpts with their highlights |
+| assets and kinds supported | ok | 30 kinds |
+| scene boundaries follow measured audio | ok | 42 scenes, 66 sentences |
+| cues inside their sentences | ok | 86 cues |
+| final scene complete | ok | ends 723.40s |
+| no blank sections | ok | longest flat run 1s ending at 145.0s |
+| every scene has content | ok | mid-scene luma varies in every scene |
 
-Inspection frames: 16 in video/frames/.
+Inspection frames: 171 in video/frames/; contact sheet get-rich-quick/scripts/decision-mlm-and-seminars/video/contact-sheet.png.
 
 ## Known limitations
 
-- edge-tts is an unofficial API with no stated licence for published media; confirm before release or switch provider
-- word boundaries group a numeral with the word before it ("asked 601"), so a numeral cue lands at the start of that pair
+- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; re-narrate with a commercial provider (VK_TTS_PROVIDER=openai, OPENAI_API_KEY) before release
+- word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
-- no loudness normalisation; one voice at one rate is consistent enough for the spike
 - scene transitions are a short fade over the field; no cross-dissolve between scenes
+- automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision

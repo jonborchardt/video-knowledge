@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion';
+import { cue, lastWord } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { ramp, theme } from '../theme';
 
@@ -16,15 +17,22 @@ const Blur: FC<{ w: number; h: number; o?: number; mt?: number }> = ({ w, h, o =
   />
 );
 
-/** sc01: a phone on a dark table lights with one message; sender and preview are blurred; slow push-in; no text. */
+/** The phone on the dark table. `phone` (sc01): screen off, it lights with one blurred message on the `notify` cue,
+ *  slow push-in, no text. `phone-reply` (sc37): the same framing, the reply box open with a blinking cursor, nothing
+ *  typed. `phone-end` (sc43): the reply box still empty; the screen and the room dim to black on the `dim` cue (the
+ *  last word), then the on-screen line, small. */
 export const Phone: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const t = scene.start + frame;
-  const notify = scene.cues.notify ?? scene.sentences[0].start + 12;
-  const lit = ramp(t, notify, 12);
+  const reply = scene.kind !== 'phone';
+  const notify = reply ? scene.start : cue(scene, 'notify', scene.sentences[0].start + 12);
+  const lit = reply ? 1 : ramp(t, notify, 12);
   const card = spring({ frame: t - notify - 4, fps, config: { damping: 16, stiffness: 140 } });
   const push = interpolate(frame, [0, scene.duration], [1, 1.08]);
+  const dimAt = scene.kind === 'phone-end' ? cue(scene, 'dim', lastWord(scene)) : Infinity;
+  const dim = ramp(t, dimAt, 20);
+  const blink = Math.floor(t / 16) % 2 === 0;
   return (
     <AbsoluteFill style={{ background: 'radial-gradient(ellipse at 50% 40%, #2a2e38 0%, #16181e 45%, #0c0d11 100%)' }}>
       <div
@@ -69,12 +77,12 @@ export const Phone: FC<{ scene: TimelineScene }> = ({ scene }) => {
               position: 'absolute',
               left: 22,
               right: 22,
-              top: 150,
+              top: reply ? 110 : 150,
               padding: 20,
               borderRadius: 26,
               background: 'rgba(236,233,226,0.13)',
-              opacity: card,
-              transform: `translateY(${(1 - card) * -50}px)`,
+              opacity: reply ? 1 : card,
+              transform: reply ? undefined : `translateY(${(1 - card) * -50}px)`,
               display: 'flex',
               gap: 16,
             }}
@@ -86,8 +94,49 @@ export const Phone: FC<{ scene: TimelineScene }> = ({ scene }) => {
               <Blur w={210} h={13} mt={10} />
             </div>
           </div>
+          {reply ? (
+            <div
+              style={{
+                position: 'absolute',
+                left: 22,
+                right: 22,
+                bottom: 40,
+                height: 64,
+                borderRadius: 32,
+                border: '2px solid rgba(236,233,226,.35)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0 24px',
+                fontFamily: theme.sans,
+                fontSize: 30,
+                color: theme.amber,
+                opacity: ramp(t, scene.start + 10, 12),
+              }}
+            >
+              <span style={{ opacity: blink ? 1 : 0.1 }}>|</span>
+            </div>
+          ) : null}
         </div>
       </div>
+      <AbsoluteFill style={{ background: '#000', opacity: dim }} />
+      {scene.kind === 'phone-end' ? (
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 90,
+            textAlign: 'center',
+            fontFamily: theme.sans,
+            fontSize: 30,
+            color: theme.muted,
+            letterSpacing: 3,
+            opacity: ramp(t, dimAt + 30, 16),
+          }}
+        >
+          {scene.onScreenText[0]}
+        </div>
+      ) : null}
     </AbsoluteFill>
   );
 };

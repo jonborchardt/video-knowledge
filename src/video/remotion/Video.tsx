@@ -7,7 +7,8 @@ import { theme } from './theme';
 
 const FADE = 8;
 
-/** One scene in its own time: a short fade in and out over the background, the citation overlay on top. */
+/** One scene in its own time: a short fade in and out over the background, the citation overlay on top (a quote
+ *  scene with one citation per line places its own). */
 const SceneView: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const Component = SCENES[scene.kind];
@@ -15,15 +16,18 @@ const SceneView: FC<{ scene: TimelineScene }> = ({ scene }) => {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
+  const ownCitations =
+    scene.kind === 'quote' && scene.citations.length === scene.onScreenText.length && scene.onScreenText.length > 1;
   return (
     <AbsoluteFill style={{ opacity }}>
       <Component scene={scene} />
-      <Citation scene={scene} frame={scene.start + frame} />
+      {ownCitations ? null : <Citation scene={scene} frame={scene.start + frame} />}
     </AbsoluteFill>
   );
 };
 
-/** The whole segment: scenes and their narration placed by the timeline's measured frames. */
+/** The whole segment: scenes and their narration placed by the timeline's measured frames. The studio plays the
+ *  narration from here; the renderer mutes it and lays one continuous track at assembly. */
 export const Video: FC<Timeline> = (tl) => (
   <AbsoluteFill style={{ background: theme.bg }}>
     {tl.scenes.map((s) => (
