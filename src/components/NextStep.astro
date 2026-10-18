@@ -1,16 +1,28 @@
 ---
 // A board item's next move: a button that opens a native popover (no client script) listing each step as a
 // command to run, a prompt to hand an agent, or a manual step. One click selects a block for copying.
-import { type Step, stepsOf } from '../lib/production';
+import { type Step, stepsOf, type Upload } from '../lib/production';
 
 interface Props {
   id: string;
   next: string;
   topic: string;
   story?: string;
+  upload?: Upload | null; // fills in the YouTube form when a step is the upload
 }
-const { id, next, topic, story } = Astro.props;
+const { id, next, topic, story, upload } = Astro.props;
 const steps = stepsOf(next, topic, story);
+const isUpload = (s: Step) => !!upload && s.kind === 'do' && s.text.startsWith('upload ');
+const fields = upload
+  ? [
+      ['File', upload.file],
+      ['Title', upload.title],
+      ['Description', upload.description],
+      ...(upload.thumbnail ? [['Thumbnail', upload.thumbnail]] : []),
+      ['Visibility', 'Private'],
+      ['Audience', 'No, it is not made for kids'],
+    ]
+  : [];
 const LABEL: Record<Step['kind'], string> = {
   run: 'Run in the repo root',
   prompt: 'Give an agent this prompt',
@@ -49,7 +61,23 @@ const LABEL: Record<Step['kind'], string> = {
             {steps.length > 1 ? `${i + 1}. ` : ''}
             {LABEL[s.kind]}
           </span>
-          {s.kind === 'do' ? (
+          {isUpload(s) ? (
+            <>
+              <p class="text-sm">{s.text}</p>
+              <dl class="grid gap-2">
+                {fields.map(([k, v]) => (
+                  <div class="grid gap-0.5">
+                    <dt class="text-xs text-muted-foreground">{k}</dt>
+                    <dd>
+                      <pre class="max-h-48 overflow-auto rounded-md bg-muted p-2 font-mono text-xs whitespace-pre-wrap select-all">
+                        {v}
+                      </pre>
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </>
+          ) : s.kind === 'do' ? (
             <p class="text-sm">{s.text}</p>
           ) : (
             <pre class="overflow-x-auto rounded-md bg-muted p-2 font-mono text-xs whitespace-pre-wrap select-all">

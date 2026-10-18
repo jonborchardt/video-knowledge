@@ -78,3 +78,13 @@ describe('next steps', () => {
     }
   });
 });
+
+describe('upload values', () => {
+  it('gives the packaged MLM video the YouTube form values from its review package', () => {
+    const p = productionOf('get-rich-quick', 'decision:mlm-and-seminars');
+    if (p?.stage !== 'packaged') return; // only once the review package is current
+    expect(p.upload?.file).toMatch(/video\/review\/.+\.mp4$/);
+    expect(p.upload?.title).toContain('MLM');
+    expect(p.upload?.description).toContain('Chapters');
+  });
+});

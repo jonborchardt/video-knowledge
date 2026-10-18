@@ -101,6 +101,14 @@ export interface Production {
   fingerprints: { script: string | null; package: string | null; validation: string | null; storyboard: string | null };
   model: string | null;
   clearance: Clearance | null; // from the build report, once there is one
+  upload: Upload | null; // what the YouTube upload form takes, once the stage is packaged
+}
+/** The private review upload, read from the review package (video/review/). Paths are repo-relative. */
+export interface Upload {
+  file: string;
+  title: string;
+  description: string;
+  thumbnail: string | null;
 }
 
 export interface StoryRow {
@@ -510,6 +518,18 @@ const clearanceStage: BoardStage = ({ release, vr }, s) =>
     ? { advance: { stage: s.stage, next: `${s.next}; public release is blocked: ${vr.clearance.why.join('; ')}` } }
     : {};
 
+const uploadOf = (p: (f: string) => string, r: (f: string) => string): Upload | null => {
+  const rp = readJson<{ title: string; mp4: string }>(p(REVIEW_PACKAGE));
+  const description = p('video/review/description.txt');
+  if (!rp || !existsSync(description)) return null;
+  return {
+    file: r(`video/review/${rp.mp4}`),
+    title: rp.title,
+    description: readFileSync(description, 'utf8').trim(),
+    thumbnail: existsSync(p('video/review/thumbnail.png')) ? r('video/review/thumbnail.png') : null,
+  };
+};
+
 /** The board's stages in pipeline order; productionOf folds over them. A new stage is a new function here. */
 const BOARD_STAGES: BoardStage[] = [
   packageStage,
@@ -596,6 +616,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     checks,
     versions,
     clearance: vr && release ? vr.clearance : null,
+    upload: stage === 'packaged' ? uploadOf(p, c.r) : null,
     fingerprints: {
       script: v?.scriptFingerprint ?? null,
       package: pkg?.fingerprint ?? null,
