@@ -4,7 +4,7 @@ Upload `decision-mlm-and-seminars-review-private.mp4` to YouTube as a **private*
 
 - Working title: [PRIVATE REVIEW] How Much Money Do MLM Participants Actually Make?
 - Duration: 12:03 (723.4s), 1920x1080 @ 30 fps
-- MP4 sha: 03c1e5ad75; build report e4b85528d3; QA 36/36
+- MP4 sha: 03c1e5ad75; build report b68a5385df; QA 36/36
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card)
 

@@ -1,10 +1,10 @@
 # Build report: How Much Money Do MLM Participants Actually Make?
 
-get-rich-quick / decision:mlm-and-seminars, 2026-10-18T06:42:19.851Z. `npm run video -- spike get-rich-quick decision:mlm-and-seminars`
+get-rich-quick / decision:mlm-and-seminars, 2026-10-18T07:13:46.249Z. `npm run video -- qa get-rich-quick decision:mlm-and-seminars`
 
 **Segment.** 42 of 42 storyboard scenes (sc01 to sc43), 66 sentences. Kinds: sc01 phone, sc02 tree, sc03 quote, sc04 stacked-bar, sc05 question, sc06 title, sc07 evidence-cards, sc08 quote, sc09 tree-coins, sc10 quote, sc11 transition, sc12 disclosures, sc13 stat-tiles, sc14 fine-print, sc15 person-grid, sc16 waterfall, sc17 excerpt, sc18 rank-table, sc19 pair, sc20 dot-plot, sc21 bar, sc22 bar, sc23 question, sc24 commission-icons, sc25 excerpt, sc26 tree-customer, sc27 tree-base, sc28 excerpt, sc29 waffle, sc30 pyramid, sc31 bar, sc32 title, sc33 three-measures, sc35 list, sc36 list, sc37 phone-reply, sc38 base-rate, sc39 tree-base, sc40 list, sc41 closing, sc42 tree-base, sc43 phone-end.
 
-**Output.** get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4: 723.41s, 1920x1080 @ 30 fps, h264 + aac, 21702 frames, rendered in 999.6s ($0 (local CPU)).
+**Output.** get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4: 723.41s, 1920x1080 @ 30 fps, h264 + aac, 21702 frames, rendered in 0s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate -10%), mp3, 699.43s of speech at about 146 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -125,7 +125,7 @@ get-rich-quick / decision:mlm-and-seminars, 2026-10-18T06:42:19.851Z. `npm run v
 | excerpts resolve | ok | 4 excerpts with their highlights |
 | assets and kinds supported | ok | 30 kinds |
 | music cues resolve | ok | 7 cues over 1 compositions |
-| soundtrack mixed | ok | 7 cues, 2026-10-18T06:40:30.712Z |
+| soundtrack mixed | ok | 7 cues, 2026-10-18T07:11:53.574Z |
 | mix is of this cue sheet | ok | mix f427211ed6, cue sheet f427211ed6 |
 | every cue sounded | ok | 7 cues audible where placed |
 | music under the voice | ok | -20.1 dB relative to speech (want -40 to -10) |
