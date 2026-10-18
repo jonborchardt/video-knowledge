@@ -168,208 +168,237 @@ interface Draft {
   central: (core: ClaimView[]) => Assertion;
 }
 
-// Stage 1: candidates. Titles are plain questions; the kind is metadata and never appears in them.
-function drafts(t: StoryInput): Draft[] {
-  const out: Draft[] = [];
-  const byId = new Map(t.claims.map((c) => [c.id, c]));
-  const studied = (c: ClaimView) => studyVerdicts(c).filter((v) => ['right', 'wrong', 'partly'].includes(v.verdict));
-  const names = (c: ClaimView) => uniq(studied(c).map((v) => v.by)).join(', ');
-  const deciding = (c: ClaimView) => `${c.decidedBy}: ${c.note}`;
+// Stage 1: candidates, one drafter per story kind. Titles are plain questions; the kind is metadata and never appears
+// in them. A sixth kind is a new drafter in CLAIM_DRAFTERS (or beside decisionDrafts), not a branch in a shared body.
+const studied = (c: ClaimView) => studyVerdicts(c).filter((v) => ['right', 'wrong', 'partly'].includes(v.verdict));
+const names = (c: ClaimView) => uniq(studied(c).map((v) => v.by)).join(', ');
+const deciding = (c: ClaimView) => `${c.decidedBy}: ${c.note}`;
+const channelCount = (c: ClaimView) => new Set(c.sources.map((s) => s.channel)).size;
+type ClaimDrafter = (c: ClaimView) => Draft | null;
 
-  for (const c of t.claims) {
-    const sv = studied(c);
-    const channels = new Set(c.sources.map((s) => s.channel)).size;
-    const popular = c.asserted >= c.denied ? 'asserts' : 'denies';
-    const repeated = Math.max(c.asserted, c.denied);
-    // A. Popular claim contradicted: many independent sources on one side, a study decides for the other.
-    if (
-      c.decidedBy &&
-      repeated >= MIN_REPEATED &&
-      channels >= 2 &&
-      c.verdict === (popular === 'asserts' ? 'wrong' : 'right')
-    ) {
-      out.push({
-        id: `contradicted:${slug(c.id)}`,
-        kind: 'contradicted',
-        question: `Is it true that ${ask(c)}?`,
-        alternates: [
-          `${n(repeated, 'source')} say ${lc(short(plain(c)))}. Does it hold up?`,
-          `What the research says about ${lc(short(plain(c)))}`,
-        ],
-        whyWatch: `${n(repeated, 'source')} across ${n(channels, 'channel')} ${popular === 'asserts' ? 'repeat' : 'deny'} it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.`,
-        tension: `What gets repeated against what was measured. ${deciding(c)}`,
-        evidenceNeeded: `A measurement of whether ${ask(c)}, on the population and under the conditions the claim describes.`,
-        premise: `${n(repeated, 'source')} ${popular === 'asserts' ? 'assert' : 'deny'} ${q(c)}. ${deciding(c)} The gap between what gets repeated and what the data shows is the story.`,
-        arc: {
-          hook: `Open on the claim in the sources' own words.`,
-          conflict: `Then the study that checked it: ${deciding(c)}`,
-          evidence: `Walk through ${names(c)}: what was measured, on whom, and the caveats.`,
-          resolution: `Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.`,
-          takeaway: `What a viewer should do differently now that the claim is not what it seemed.`,
-        },
-        unresolved: () => sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by} only partly agrees: ${v.note}`),
-        claims: [c.id],
-        central: () => ({
-          id: 'central',
-          text: `Contrary to the sources that repeat it, the evidence ${c.verdict === 'wrong' ? 'does not support' : 'supports'} ${q(c)}`,
-          kind: 'fact',
-          claims: [{ id: c.id, stance: c.verdict === 'wrong' ? 'denies' : 'asserts' }],
-          evidence: studyRefs(c),
-        }),
-      });
-    }
-    // B. Disagreement: studies on both sides, or sources split with a study in play.
-    const verdicts = new Set(sv.map((v) => v.verdict));
-    const studiesConflict = verdicts.has('right') && verdicts.has('wrong');
-    const sourcesConflict = c.asserted >= 2 && c.denied >= 2 && sv.length > 0; // a lone dissenter is not a conflict
-    if (studiesConflict || sourcesConflict) {
-      const who = studiesConflict ? 'The studies' : 'The sources';
-      out.push({
-        id: `conflict:${slug(c.id)}`,
-        kind: 'conflict',
-        question: studiesConflict ? `Why do studies disagree about whether ${ask(c)}?` : `Is it true that ${ask(c)}?`,
-        alternates: studiesConflict
-          ? [
-              `${cap(short(plain(c)))}: the case for and against`,
-              `What we actually know about whether ${lc(short(plain(c)))}`,
-            ]
-          : [`Sources disagree: ${short(plain(c))}`, `Is it true that ${ask(c)}?`],
-        whyWatch: `Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.`,
-        tension: `${who} split: ${sv.map((v) => `${v.by} says ${v.verdict}`).join(', ')}.`,
-        evidenceNeeded: `The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.`,
-        premise: `${who} split on ${q(c)}: ${sv.map((v) => `${v.by} says ${v.verdict}`).join(', ')}. The reasons they differ are the useful part.`,
-        arc: {
-          hook: `Two confident, opposite answers to the same question: ${q(c)}.`,
-          conflict: `${who} do not agree, and both sides have a case.`,
-          evidence: `Lay the studies side by side (${names(c)}): design, sample, what was measured.`,
-          resolution: `Where the disagreement comes from, and which answer applies to which situation.`,
-          takeaway: `The conditions under which the claim holds, instead of a yes or no.`,
-        },
-        unresolved: () => [
-          `What explains the split between ${names(c)}?`,
-          ...sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by}: ${v.note}`),
-        ],
-        claims: [c.id],
-        central: () =>
-          studiesConflict
-            ? {
-                id: 'central',
-                text: `Studies disagree on whether ${ask(c)}`,
-                kind: 'disagreement',
-                claims: [{ id: c.id, stance: 'asserts' }],
-                evidence: studyRefs(c),
-              }
-            : factAbout(c, 'central'),
-      });
-    }
-    // C. Surprise: a study overturned the AI guess, which stands in for the informed expectation.
-    const p = prior(c);
-    const move = p && c.verdict && c.verdict in VAL && p.verdict in VAL ? Math.abs(VAL[c.verdict] - VAL[p.verdict]) : 0;
-    if (c.decidedBy && p && move > 0 && (move >= 1 || (c.confidence ?? 0) >= 0.6)) {
-      out.push({
-        id: `surprise:${slug(c.id)}`,
-        kind: 'surprise',
-        question: `Is it really true that ${ask(c)}?`,
-        alternates: [
-          `What one study found about whether ${lc(short(plain(c)))}`,
-          `The evidence on ${lc(short(plain(c)))} is not what you expect`,
-        ],
-        whyWatch: `An informed guess said "${p.verdict}"; the study that checked it said "${c.verdict}". The viewer gets to be wrong along with the experts, then corrected.`,
-        tension: `Expectation: ${p.note} Finding: ${deciding(c)}`,
-        evidenceNeeded: `An independent study that confirms or limits the finding, on the same question.`,
-        premise: `Before checking, the best guess was "${p.verdict}": ${p.note} ${deciding(c)} ${n(c.asserted + c.denied, 'source')} take a position on it.`,
-        arc: {
-          hook: `State the expectation everyone shares, with the sources that voice it.`,
-          conflict: `A study checked it and found something else.`,
-          evidence: `${deciding(c)}`,
-          resolution: `Why the expectation was wrong, or what the sources were missing.`,
-          takeaway: `The corrected belief, with its limits.`,
-        },
-        unresolved: () => sv.filter((v) => v.verdict !== c.verdict).map((v) => `${v.by} differs: ${v.note}`),
-        claims: [c.id],
-        central: () => factAbout(c, 'central'),
-      });
-    }
-    // D. Gap: widely repeated, never checked. The absence of evidence is the question, not a verdict.
-    if (c.studies === 0 && c.asserted >= MIN_GAP) {
-      out.push({
-        id: `gap:${slug(c.id)}`,
-        kind: 'gap',
-        question: `What is the evidence that ${ask(c)}?`,
-        alternates: [
-          `${n(c.asserted, 'source')} say ${lc(short(plain(c)))}. Where is the proof?`,
-          `An unchecked claim: ${short(plain(c))}`,
-        ],
-        whyWatch: `${n(c.asserted, 'source')} across ${n(channels, 'channel')} assert it and nobody shows a measurement. Asking for the evidence on camera is the story${c.lean === 'pro-hype' || c.lean === 'pro' ? ', and the claim sells something' : ''}.`,
-        tension: `Confidence without a check. The AI guess leans "${p?.verdict ?? 'unknown'}" (${p?.note ?? 'no note'}), which is a guess, not a finding.`,
-        evidenceNeeded: `Any study or dataset that tests whether ${ask(c)}.`,
-        premise: `${n(c.asserted, 'source')} assert ${q(c)}, and no study in the corpus bears on it. The story is the search for evidence, not a verdict.`,
-        arc: {
-          hook: `How often this gets said, and how confidently.`,
-          conflict: `Ask for the evidence and find none in the corpus.`,
-          evidence: `What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.`,
-          resolution: `Absence of evidence is not evidence of absence: what would change the picture.`,
-          takeaway: `How to treat the claim until it is checked.`,
-        },
-        unresolved: () => [`Has anyone measured whether ${ask(c)}?`, 'Which study or dataset would settle it?'],
-        claims: [c.id],
-        central: () => attributionAbout(c, 'central'),
-      });
-    }
-  }
-  // E. Decision groups from site.json. A group is a subject, not yet a question: the reviewer prunes it to the claims
-  // that answer one, or rejects it. Unreviewed, it cannot be ready.
-  for (const g of t.recap) {
+/** A. Popular claim contradicted: many independent sources on one side, a study decides for the other. */
+const contradictedDraft: ClaimDrafter = (c) => {
+  const sv = studied(c);
+  const channels = channelCount(c);
+  const popular = c.asserted >= c.denied ? 'asserts' : 'denies';
+  const repeated = Math.max(c.asserted, c.denied);
+  if (!(
+    c.decidedBy &&
+    repeated >= MIN_REPEATED &&
+    channels >= 2 &&
+    c.verdict === (popular === 'asserts' ? 'wrong' : 'right')
+  ))
+    return null;
+  return {
+    id: `contradicted:${slug(c.id)}`,
+    kind: 'contradicted',
+    question: `Is it true that ${ask(c)}?`,
+    alternates: [
+      `${n(repeated, 'source')} say ${lc(short(plain(c)))}. Does it hold up?`,
+      `What the research says about ${lc(short(plain(c)))}`,
+    ],
+    whyWatch: `${n(repeated, 'source')} across ${n(channels, 'channel')} ${popular === 'asserts' ? 'repeat' : 'deny'} it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.`,
+    tension: `What gets repeated against what was measured. ${deciding(c)}`,
+    evidenceNeeded: `A measurement of whether ${ask(c)}, on the population and under the conditions the claim describes.`,
+    premise: `${n(repeated, 'source')} ${popular === 'asserts' ? 'assert' : 'deny'} ${q(c)}. ${deciding(c)} The gap between what gets repeated and what the data shows is the story.`,
+    arc: {
+      hook: `Open on the claim in the sources' own words.`,
+      conflict: `Then the study that checked it: ${deciding(c)}`,
+      evidence: `Walk through ${names(c)}: what was measured, on whom, and the caveats.`,
+      resolution: `Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.`,
+      takeaway: `What a viewer should do differently now that the claim is not what it seemed.`,
+    },
+    unresolved: () => sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by} only partly agrees: ${v.note}`),
+    claims: [c.id],
+    central: () => ({
+      id: 'central',
+      text: `Contrary to the sources that repeat it, the evidence ${c.verdict === 'wrong' ? 'does not support' : 'supports'} ${q(c)}`,
+      kind: 'fact',
+      claims: [{ id: c.id, stance: c.verdict === 'wrong' ? 'denies' : 'asserts' }],
+      evidence: studyRefs(c),
+    }),
+  };
+};
+
+/** B. Disagreement: studies on both sides, or sources split with a study in play. */
+const conflictDraft: ClaimDrafter = (c) => {
+  const sv = studied(c);
+  const verdicts = new Set(sv.map((v) => v.verdict));
+  const studiesConflict = verdicts.has('right') && verdicts.has('wrong');
+  const sourcesConflict = c.asserted >= 2 && c.denied >= 2 && sv.length > 0; // a lone dissenter is not a conflict
+  if (!studiesConflict && !sourcesConflict) return null;
+  const who = studiesConflict ? 'The studies' : 'The sources';
+  return {
+    id: `conflict:${slug(c.id)}`,
+    kind: 'conflict',
+    question: studiesConflict ? `Why do studies disagree about whether ${ask(c)}?` : `Is it true that ${ask(c)}?`,
+    alternates: studiesConflict
+      ? [
+          `${cap(short(plain(c)))}: the case for and against`,
+          `What we actually know about whether ${lc(short(plain(c)))}`,
+        ]
+      : [`Sources disagree: ${short(plain(c))}`, `Is it true that ${ask(c)}?`],
+    whyWatch: `Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.`,
+    tension: `${who} split: ${sv.map((v) => `${v.by} says ${v.verdict}`).join(', ')}.`,
+    evidenceNeeded: `The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.`,
+    premise: `${who} split on ${q(c)}: ${sv.map((v) => `${v.by} says ${v.verdict}`).join(', ')}. The reasons they differ are the useful part.`,
+    arc: {
+      hook: `Two confident, opposite answers to the same question: ${q(c)}.`,
+      conflict: `${who} do not agree, and both sides have a case.`,
+      evidence: `Lay the studies side by side (${names(c)}): design, sample, what was measured.`,
+      resolution: `Where the disagreement comes from, and which answer applies to which situation.`,
+      takeaway: `The conditions under which the claim holds, instead of a yes or no.`,
+    },
+    unresolved: () => [
+      `What explains the split between ${names(c)}?`,
+      ...sv.filter((v) => v.verdict === 'partly').map((v) => `${v.by}: ${v.note}`),
+    ],
+    claims: [c.id],
+    central: () =>
+      studiesConflict
+        ? {
+            id: 'central',
+            text: `Studies disagree on whether ${ask(c)}`,
+            kind: 'disagreement',
+            claims: [{ id: c.id, stance: 'asserts' }],
+            evidence: studyRefs(c),
+          }
+        : factAbout(c, 'central'),
+  };
+};
+
+/** C. Surprise: a study overturned the AI guess, which stands in for the informed expectation. */
+const surpriseDraft: ClaimDrafter = (c) => {
+  const sv = studied(c);
+  const p = prior(c);
+  const move = p && c.verdict && c.verdict in VAL && p.verdict in VAL ? Math.abs(VAL[c.verdict] - VAL[p.verdict]) : 0;
+  if (!(c.decidedBy && p && move > 0 && (move >= 1 || (c.confidence ?? 0) >= 0.6))) return null;
+  return {
+    id: `surprise:${slug(c.id)}`,
+    kind: 'surprise',
+    question: `Is it really true that ${ask(c)}?`,
+    alternates: [
+      `What one study found about whether ${lc(short(plain(c)))}`,
+      `The evidence on ${lc(short(plain(c)))} is not what you expect`,
+    ],
+    whyWatch: `An informed guess said "${p.verdict}"; the study that checked it said "${c.verdict}". The viewer gets to be wrong along with the experts, then corrected.`,
+    tension: `Expectation: ${p.note} Finding: ${deciding(c)}`,
+    evidenceNeeded: `An independent study that confirms or limits the finding, on the same question.`,
+    premise: `Before checking, the best guess was "${p.verdict}": ${p.note} ${deciding(c)} ${n(c.asserted + c.denied, 'source')} take a position on it.`,
+    arc: {
+      hook: `State the expectation everyone shares, with the sources that voice it.`,
+      conflict: `A study checked it and found something else.`,
+      evidence: `${deciding(c)}`,
+      resolution: `Why the expectation was wrong, or what the sources were missing.`,
+      takeaway: `The corrected belief, with its limits.`,
+    },
+    unresolved: () => sv.filter((v) => v.verdict !== c.verdict).map((v) => `${v.by} differs: ${v.note}`),
+    claims: [c.id],
+    central: () => factAbout(c, 'central'),
+  };
+};
+
+/** D. Gap: widely repeated, never checked. The absence of evidence is the question, not a verdict. */
+const gapDraft: ClaimDrafter = (c) => {
+  if (!(c.studies === 0 && c.asserted >= MIN_GAP)) return null;
+  const p = prior(c);
+  return {
+    id: `gap:${slug(c.id)}`,
+    kind: 'gap',
+    question: `What is the evidence that ${ask(c)}?`,
+    alternates: [
+      `${n(c.asserted, 'source')} say ${lc(short(plain(c)))}. Where is the proof?`,
+      `An unchecked claim: ${short(plain(c))}`,
+    ],
+    whyWatch: `${n(c.asserted, 'source')} across ${n(channelCount(c), 'channel')} assert it and nobody shows a measurement. Asking for the evidence on camera is the story${c.lean === 'pro-hype' || c.lean === 'pro' ? ', and the claim sells something' : ''}.`,
+    tension: `Confidence without a check. The AI guess leans "${p?.verdict ?? 'unknown'}" (${p?.note ?? 'no note'}), which is a guess, not a finding.`,
+    evidenceNeeded: `Any study or dataset that tests whether ${ask(c)}.`,
+    premise: `${n(c.asserted, 'source')} assert ${q(c)}, and no study in the corpus bears on it. The story is the search for evidence, not a verdict.`,
+    arc: {
+      hook: `How often this gets said, and how confidently.`,
+      conflict: `Ask for the evidence and find none in the corpus.`,
+      evidence: `What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.`,
+      resolution: `Absence of evidence is not evidence of absence: what would change the picture.`,
+      takeaway: `How to treat the claim until it is checked.`,
+    },
+    unresolved: () => [`Has anyone measured whether ${ask(c)}?`, 'Which study or dataset would settle it?'],
+    claims: [c.id],
+    central: () => attributionAbout(c, 'central'),
+  };
+};
+
+const CLAIM_DRAFTERS: ClaimDrafter[] = [contradictedDraft, conflictDraft, surpriseDraft, gapDraft];
+
+/** E. Decision groups from site.json. A group is a subject, not yet a question: the reviewer prunes it to the claims
+ *  that answer one, or rejects it. Unreviewed, it cannot be ready. */
+function decisionDrafts(t: StoryInput): Draft[] {
+  const byId = new Map(t.claims.map((c) => [c.id, c]));
+  const lead = (cs: ClaimView[]) =>
+    [...cs].sort(
+      (a, b) =>
+        Number(!!b.decidedBy) - Number(!!a.decidedBy) ||
+        Number(b.studies > 0) - Number(a.studies > 0) ||
+        (b.confidence ?? 0) - (a.confidence ?? 0),
+    )[0];
+  return t.recap.flatMap((g): Draft[] => {
     const core = g.claims.filter((c) => byId.has(c.id));
-    if (core.length < 2) continue;
+    if (core.length < 2) return [];
     const title = g.title.replace(/\?$/, '');
-    const lead = (cs: ClaimView[]) =>
-      [...cs].sort(
-        (a, b) =>
-          Number(!!b.decidedBy) - Number(!!a.decidedBy) ||
-          Number(b.studies > 0) - Number(a.studies > 0) ||
-          (b.confidence ?? 0) - (a.confidence ?? 0),
-      )[0];
-    out.push({
-      id: `decision:${title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')}`,
-      kind: 'decision',
-      question: g.title.endsWith('?') ? g.title : `${title}: what should you do?`,
-      alternates: [`What the research says about ${lc(title)}`, `${title}: a decision guide`],
-      whyWatch: `The viewer faces a choice and has heard the claims on every side. This walks them from those claims to what the evidence settles.`,
-      tension: `The claims pull in different directions and not all of them survive a check.`,
-      evidenceNeeded: `A verdict, with its scope, on each claim the decision rests on.`,
-      premise: `${n(core.length, 'claim')} bear on this choice; studies decide ${core.filter((c) => c.decidedBy).length} of them. Walk the viewer from the claims they have heard to the decision the evidence supports.`,
-      arc: {
-        hook: `The decision a viewer faces, in their terms.`,
-        conflict: `The claims pulling in different directions: ${core.map((c) => q(c)).join('; ')}.`,
-        evidence: `Each claim's verdict, strongest study first.`,
-        resolution: `What the evidence settles and what it leaves open.`,
-        takeaway: `A decision rule the viewer can apply.`,
+    return [
+      {
+        id: `decision:${title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '')}`,
+        kind: 'decision',
+        question: g.title.endsWith('?') ? g.title : `${title}: what should you do?`,
+        alternates: [`What the research says about ${lc(title)}`, `${title}: a decision guide`],
+        whyWatch: `The viewer faces a choice and has heard the claims on every side. This walks them from those claims to what the evidence settles.`,
+        tension: `The claims pull in different directions and not all of them survive a check.`,
+        evidenceNeeded: `A verdict, with its scope, on each claim the decision rests on.`,
+        premise: `${n(core.length, 'claim')} bear on this choice; studies decide ${core.filter((c) => c.decidedBy).length} of them. Walk the viewer from the claims they have heard to the decision the evidence supports.`,
+        arc: {
+          hook: `The decision a viewer faces, in their terms.`,
+          conflict: `The claims pulling in different directions: ${core.map((c) => q(c)).join('; ')}.`,
+          evidence: `Each claim's verdict, strongest study first.`,
+          resolution: `What the evidence settles and what it leaves open.`,
+          takeaway: `A decision rule the viewer can apply.`,
+        },
+        unresolved: (cs) =>
+          cs
+            .filter((c) => !c.decidedBy)
+            .map((c) => `${c.studies ? 'No study strong enough to decide' : 'Unchecked'}: ${q(c)}`),
+        claims: core.map((c) => c.id),
+        central: (cs) => {
+          const l = lead(cs.length ? cs : core);
+          return l.studies ? factAbout(l, 'central') : attributionAbout(l, 'central');
+        },
       },
-      unresolved: (cs) =>
-        cs
-          .filter((c) => !c.decidedBy)
-          .map((c) => `${c.studies ? 'No study strong enough to decide' : 'Unchecked'}: ${q(c)}`),
-      claims: core.map((c) => c.id),
-      central: (cs) => {
-        const l = lead(cs.length ? cs : core);
-        return l.studies ? factAbout(l, 'central') : attributionAbout(l, 'central');
-      },
-    });
-  }
-  return out;
+    ];
+  });
 }
 
-// Stage 2: evaluate one candidate.
-function evaluate(
-  d: Draft,
-  t: StoryInput,
-  review: ReviewFile,
-  readPassage: PassageReader,
-): Story | { rejected: string } {
+function drafts(t: StoryInput): Draft[] {
+  return [
+    ...t.claims.flatMap((c) => CLAIM_DRAFTERS.map((draft) => draft(c)).filter((d): d is Draft => d !== null)),
+    ...decisionDrafts(t),
+  ];
+}
+
+// Stage 2: evaluate one candidate: audit its evidence, score it, decide its readiness, frame it for the viewer.
+type Rejection = { rejected: string };
+
+/** The candidate's claims after review, its central conclusion and each essential finding through the gate. */
+interface Audit {
+  r: StoryReview;
+  reviewed: boolean;
+  claims: string[];
+  core: ClaimView[];
+  central: Validation;
+  findings: Finding[];
+  same: Record<string, string>;
+}
+function audit(d: Draft, t: StoryInput, review: ReviewFile, readPassage: PassageReader): Audit | Rejection {
   const r: StoryReview = review.stories?.[d.id] ?? {};
   const reviewed = d.id in (review.stories ?? {});
   if (r.reject) return { rejected: r.reject };
@@ -388,7 +417,32 @@ function evaluate(
   const findings: Finding[] = core
     .map(finding)
     .map((f) => ({ role: f.role, validation: validate(f.assertion, corpus, readPassage, judgments) }));
+  return { r, reviewed, claims, core, central, findings, same };
+}
 
+/** Coherence, depth, format, evidence strength and the editorial dimensions, each from corpus counts and the audit. */
+interface Scoring {
+  coherence: Story['coherence'];
+  decisive: EvidenceItem[];
+  docs: number;
+  sources: Set<string>;
+  channels: Set<string>;
+  flipped: boolean;
+  tension: boolean;
+  depth: number;
+  format: Format;
+  formatWhy: string;
+  strength: number;
+  strongest: EvidenceItem | undefined;
+  independent: number;
+  evidence: number;
+  relevance: number;
+  curiosity: number;
+  lean: string;
+  stakes: number;
+  editorial: number;
+}
+function score(d: Draft, { r, claims, core, central, findings, same }: Audit): Scoring {
   // Coherence: a reviewer's score, else a structural guess. One claim is one question; a cluster is unproven.
   const drift = core.filter((c) => core.every((o) => o === c || jaccard(tokens(c.text), tokens(o.text)) === 0));
   const coherence = r.coherence
@@ -458,8 +512,35 @@ function evaluate(
   const lean = core.map((c) => c.lean ?? '').sort((a, b) => (STAKES[b] ?? 0.3) - (STAKES[a] ?? 0.3))[0];
   const stakes = STAKES[lean] ?? 0.3;
   const editorial = round((coherence.score + relevance + curiosity + stakes + depth) / 5);
+  return {
+    coherence,
+    decisive,
+    docs,
+    sources,
+    channels,
+    flipped,
+    tension,
+    depth,
+    format,
+    formatWhy,
+    strength,
+    strongest,
+    independent,
+    evidence,
+    relevance,
+    curiosity,
+    lean,
+    stakes,
+    editorial,
+  };
+}
 
-  // Readiness: from the central narrative and its essential findings, with the reasons spelled out.
+/** Readiness from the central narrative and its essential findings, with the reasons spelled out; or a rejection. */
+function readinessOf(
+  d: Draft,
+  { r, claims, central, findings }: Audit,
+  { coherence, strength }: Scoring,
+): { readiness: Readiness; readinessWhy: string; blocking: string[] } | Rejection {
   const blocking: string[] = [];
   let readiness: Readiness;
   const first = (v: Validation) => v.limitations[0] ?? v.explanation;
@@ -508,7 +589,19 @@ function evaluate(
       : readiness === 'needs-review'
         ? `Usable if a reviewer resolves: ${blocking.join(' ')}`
         : `Essential evidence is missing: ${blocking.join(' ')}`;
+  return { readiness, readinessWhy, blocking };
+}
 
+/** The viewer-facing story: the draft's framing with the reviewer's overrides, the evidence and gaps, the scores. */
+function frame(
+  d: Draft,
+  t: StoryInput,
+  a: Audit,
+  s: Scoring,
+  { readiness, readinessWhy, blocking }: { readiness: Readiness; readinessWhy: string; blocking: string[] },
+): Story {
+  const { r, reviewed, claims, core, central, findings } = a;
+  const { coherence, decisive, docs, sources, channels, flipped, tension, depth, strongest, independent, evidence } = s;
   const evidenceAvailable = uniq(
     decisive.map(
       (x) => `${x.by}: ${x.verdict} (${x.confidence ?? '?'}, ${x.applicability}${x.cited ? '' : ', uncited'})`,
@@ -536,21 +629,21 @@ function evaluate(
     related: uniq(core.flatMap((c) => related(c, t.claims, new Set(claims)))).slice(0, 5),
     arc: { ...d.arc, ...(r.arc ?? {}) },
     coherence,
-    format,
-    formatWhy,
+    format: s.format,
+    formatWhy: s.formatWhy,
     scores: {
       coherence: coherence.score,
-      relevance,
-      curiosity,
-      stakes,
+      relevance: s.relevance,
+      curiosity: s.curiosity,
+      stakes: s.stakes,
       depth,
       originality: 1,
       evidence,
-      editorial,
-      overall: round(0.6 * editorial + 0.4 * evidence),
+      editorial: s.editorial,
+      overall: round(0.6 * s.editorial + 0.4 * evidence),
       explanation:
-        `editorial ${editorial} = mean of coherence ${coherence.score} (${coherence.basis}), relevance ${relevance} (${n(sources.size, 'source')}, ${n(channels.size, 'channel')}), ` +
-        `curiosity ${curiosity} (${d.kind}${flipped ? ', a study overturned the guess' : ''}), stakes ${stakes} (lean: ${lean || 'none'}), depth ${depth} (${n(docs, 'study')}, ${n(claims.length, 'claim')}${tension ? ', tension' : ''}); ` +
+        `editorial ${s.editorial} = mean of coherence ${coherence.score} (${coherence.basis}), relevance ${s.relevance} (${n(sources.size, 'source')}, ${n(channels.size, 'channel')}), ` +
+        `curiosity ${s.curiosity} (${d.kind}${flipped ? ', a study overturned the guess' : ''}), stakes ${s.stakes} (lean: ${s.lean || 'none'}), depth ${depth} (${n(docs, 'study')}, ${n(claims.length, 'claim')}${tension ? ', tension' : ''}); ` +
         `evidence ${evidence} = ${strongest ? `strongest ${strongest.by} at ${strongest.confidence} (${strongest.applicability}) across ${n(independent, 'independent document')}` : 'no decisive evidence'}; ` +
         `overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data.`,
     },
@@ -560,6 +653,15 @@ function evaluate(
     reviewed,
     audit: { central, findings },
   };
+}
+
+function evaluate(d: Draft, t: StoryInput, review: ReviewFile, readPassage: PassageReader): Story | Rejection {
+  const a = audit(d, t, review, readPassage);
+  if ('rejected' in a) return a;
+  const s = score(d, a);
+  const ready = readinessOf(d, a, s);
+  if ('rejected' in ready) return ready;
+  return frame(d, t, a, s, ready);
 }
 
 /** Discover, audit, evaluate, deduplicate and rank. Deterministic for a given corpus and review file. */
