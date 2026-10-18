@@ -4,7 +4,7 @@ import { mkdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { board, productionOf } from '../src/lib/production';
+import { board, productionOf, stepsOf } from '../src/lib/production';
 import { scriptDir, scriptDirs } from '../src/lib/script';
 
 describe('production board', () => {
@@ -49,6 +49,32 @@ describe('production board', () => {
       expect(prod.next).toBe('npm run script -- package get-rich-quick decision:empty');
     } finally {
       rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('next steps', () => {
+  it('splits a next line into commands, agent prompts and manual steps', () => {
+    const steps = stepsOf(
+      'agent: scripts/briefs/script-review.md (re-review), then npm run script -- validate t s; public release is blocked: draft voice',
+      't',
+      's',
+    );
+    expect(steps.map((x) => x.kind)).toEqual(['prompt', 'run', 'do']);
+    expect(steps[0].text).toContain('Read scripts/briefs/script-review.md');
+    expect(steps[0].text).toContain('Story: s');
+    expect(steps[0].text).toContain('re-review');
+    expect(steps[1].text).toBe('npm run script -- validate t s');
+    expect(stepsOf('1 listed; 1 not fetched (npm run report)', 't')).toEqual([
+      { kind: 'do', text: '1 listed; 1 not fetched' },
+      { kind: 'run', text: 'npm run report' },
+    ]);
+  });
+
+  it('gives every board item at least one step', () => {
+    for (const t of board()) {
+      expect(stepsOf(t.next, t.topic.name).length).toBeGreaterThan(0);
+      for (const r of t.stories) expect(stepsOf(r.next, t.topic.name, r.story.id).length).toBeGreaterThan(0);
     }
   });
 });

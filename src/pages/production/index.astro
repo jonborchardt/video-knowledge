@@ -3,6 +3,7 @@
 // stage its committed artifacts derive to (src/lib/production.ts). Above it, each topic's research pipeline; below,
 // artifact-by-artifact inspection of every script directory. Static, no client script.
 import Base from '../../layouts/Base.astro';
+import NextStep from '../../components/NextStep.astro';
 import { site } from '../../config/site';
 import {
   board,
@@ -133,6 +134,7 @@ const stripOf = (r: StoryRow & { topic: { name: string } }) => {
             <p class="text-sm">
               <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{next}</code>
             </p>
+            <NextStep id={`next-${t.name}`} next={next} topic={t.name} />
           </div>
         </div>
       ))
@@ -222,6 +224,12 @@ const stripOf = (r: StoryRow & { topic: { name: string } }) => {
                     <p class:list={[mono, 'text-muted-foreground']}>
                       {r.next.length > 110 ? r.next.slice(0, 110) + '…' : r.next}
                     </p>
+                    <NextStep
+                      id={`next-${r.topic.name}-${r.story.id.replace(/\W+/g, '-')}`}
+                      next={r.next}
+                      topic={r.topic.name}
+                      story={r.story.id}
+                    />
                   </article>
                 );
               })}
@@ -281,6 +289,7 @@ const stripOf = (r: StoryRow & { topic: { name: string } }) => {
             <p class="text-sm">
               <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{p!.next}</code>
             </p>
+            <NextStep id={`next-script-${p!.topic}-${p!.slug}`} next={p!.next} topic={p!.topic} story={p!.story} />
             {p!.blockers.length > 0 && (
               <ul class="list-disc pl-5 text-sm text-warning">
                 {p!.blockers.map((b) => (
