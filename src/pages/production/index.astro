@@ -21,7 +21,7 @@ const rows = topics.flatMap((t) => t.stories.map((s) => ({ ...s, topic: t.topic 
 const productions = rows.filter((s) => s.production);
 const columns = COLUMNS.map((c) => ({ c, cards: rows.filter((r) => columnOf(r) === c) }));
 const HEALTH: Record<Health, { label: string; colour: string }> = {
-  done: { label: 'locked', colour: 'text-success' },
+  done: { label: 'done', colour: 'text-success' },
   current: { label: 'current', colour: 'text-success' },
   pending: { label: 'pending', colour: 'text-warning' },
   stale: { label: 'stale', colour: 'text-warning' },
@@ -38,7 +38,9 @@ const COLUMN: Record<Column, { label: string; help: string; colour: string }> = 
   'script-review': { label: 'Review', help: 'independent reviewer agent', colour: '' },
   storyboard: { label: 'Storyboard', help: 'storyboard agent, then fill and check', colour: '' },
   lock: { label: 'Lock', help: 'passed and ok; sign off', colour: '' },
-  locked: { label: 'Locked', help: 'release.json; render from it', colour: 'text-success' },
+  locked: { label: 'Locked', help: 'release.json; nothing rendered yet', colour: 'text-success' },
+  video: { label: 'Video', help: 'a segment rendered; more scenes to go', colour: '' },
+  rendered: { label: 'Rendered', help: 'every scene rendered, QA passed', colour: 'text-success' },
   published: { label: 'Published', help: 'production.json', colour: 'text-success' },
   parked: { label: 'Parked', help: 'production.json', colour: 'text-muted-foreground' },
 };

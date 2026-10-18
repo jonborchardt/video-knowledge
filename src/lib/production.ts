@@ -50,7 +50,16 @@ export function loadDecisions(root = process.cwd()): Record<string, Decision> {
   return readJson<Record<string, Decision>>(join(root, DECISIONS_FILE)) ?? {};
 }
 
-export type ProductionStage = 'package' | 'script' | 'validate' | 'review' | 'storyboard' | 'lock' | 'locked';
+export type ProductionStage =
+  | 'package'
+  | 'script'
+  | 'validate'
+  | 'review'
+  | 'storyboard'
+  | 'lock'
+  | 'locked' // release.json, no render yet
+  | 'video' // a segment rendered (partial, stale or failing QA)
+  | 'rendered'; // every storyboard scene rendered against the locked fingerprints and QA passed
 export const PRODUCTION_STAGES: ProductionStage[] = [
   'package',
   'script',
@@ -59,7 +68,19 @@ export const PRODUCTION_STAGES: ProductionStage[] = [
   'storyboard',
   'lock',
   'locked',
+  'video',
+  'rendered',
 ];
+/** The slice of video/build-report.json the board reads (written by npm run video; names in src/video/select.ts). */
+interface BuildReport {
+  generatedAt: string;
+  segment: { scenes: string[] };
+  output: { file: string; seconds: number } | null;
+  narration: { provider: string; voice: string };
+  fingerprints: { script: string; storyboard: string };
+  qa: { ok: boolean; checks: { name: string; ok: boolean; detail: string }[] };
+}
+const VIDEO_REPORT = 'video/build-report.json';
 export interface Version {
   revision: number;
   date: string;
@@ -338,7 +359,38 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
       );
     else if (!stopped) {
       stage = 'locked';
-      next = 'render from the locked package (nothing left in this pipeline)';
+      next = `npm run video -- spike ${topic} ${storyId}`;
+    }
+  }
+
+  // 7. Video: the committed build report must come from the locked script and storyboard and pass its QA.
+  const vr = readJson<BuildReport>(p(VIDEO_REPORT));
+  if (vr && release) {
+    const total = sb?.scenes.length ?? 0;
+    const bound =
+      vr.fingerprints.script === release.fingerprints.script &&
+      vr.fingerprints.storyboard === release.fingerprints.storyboard;
+    const failed = vr.qa.checks.filter((c) => !c.ok);
+    const full = total > 0 && vr.segment.scenes.length >= total;
+    const health: Health = !bound ? 'stale' : !vr.qa.ok ? 'blocked' : full ? 'done' : 'pending';
+    checks.push({
+      name: 'video',
+      health,
+      detail: `${vr.output ? `${Math.round(vr.output.seconds)}s, ` : ''}${vr.segment.scenes.length} of ${total} scenes (${vr.segment.scenes[0]} to ${vr.segment.scenes.at(-1)}), ${vr.narration.provider} ${vr.narration.voice}, QA ${vr.qa.checks.length - failed.length}/${vr.qa.checks.length}${failed.length ? `: ${failed.map((c) => c.name).join(', ')}` : ''}${bound ? '' : `; rendered from script ${vr.fingerprints.script} / storyboard ${vr.fingerprints.storyboard}, the lock is ${release.fingerprints.script} / ${release.fingerprints.storyboard}`}`,
+      file: r(VIDEO_REPORT),
+      date: vr.generatedAt,
+    });
+    if (stage === 'locked') {
+      const cmd = `npm run video -- spike ${topic} ${storyId}`;
+      if (!bound) halt('video', 'the video was rendered from fingerprints the lock no longer names', cmd);
+      else if (!vr.qa.ok) halt('video', `video QA failed: ${failed.map((c) => c.name).join(', ')}`, cmd);
+      else if (!full) {
+        stage = 'video';
+        next = `extend video/render.json past ${vr.segment.scenes.at(-1)} (${total - vr.segment.scenes.length} scenes left), then ${cmd}`;
+      } else {
+        stage = 'rendered';
+        next = 'publish, then record it in production.json';
+      }
     }
   }
 
@@ -348,7 +400,7 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
     locked: release?.revision === h.revision,
   }));
   const health: Health =
-    stage === 'locked'
+    stage === 'rendered' || stage === 'locked'
       ? 'done'
       : worst(checks.filter((c) => c.health !== 'missing')) === 'current' && blockers.length === 0
         ? 'current'
@@ -466,7 +518,7 @@ export function topicBoard(name: string, root = process.cwd(), decisions = loadD
     }
     const queued = stories.find((s) => s.decision?.decision === 'queued');
     const active = stories.find(
-      (s) => s.production && s.production.stage !== 'locked' && s.decision?.decision !== 'parked',
+      (s) => s.production && !['locked', 'rendered'].includes(s.production.stage) && s.decision?.decision !== 'parked',
     );
     const ready = stories.find((s) => !s.production && s.story.readiness === 'ready' && !s.decision);
     next =
@@ -492,6 +544,8 @@ export const COLUMNS = [
   'storyboard',
   'lock',
   'locked',
+  'video',
+  'rendered',
   'published',
   'parked',
 ] as const;
