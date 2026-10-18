@@ -7,8 +7,8 @@ import {
   type ScriptReviewFile,
   sentenceFingerprint,
   sentences,
-  validateScript,
 } from '../src/lib/script';
+import { validateScript } from '../src/lib/script-validation';
 import { type ChartSpec, type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
 import { TOPIC, claim, study } from './corpus';
 import {
@@ -106,7 +106,7 @@ describe('adversarial: every deliberate error is blocked', () => {
       source: 's1a',
       speaker: 'John Oliver',
     });
-    expect(cats(validateScript(s, corpus(), read, null, {}, null, q, hashOf(q)))).toContain('speaker-unverified');
+    expect(cats(validateScript(s, corpus(), read, { pkg: q, hashDoc: hashOf(q) }))).toContain('speaker-unverified');
   });
 
   it('8. an attributed figure that is not in the recorded quote', () => {
@@ -192,7 +192,7 @@ describe('adversarial: review findings', () => {
         },
       ]),
     ]);
-  const v = (s: Script, q: EvidencePackage) => validateScript(s, corpus(), read, null, {}, null, q, hashOf(q));
+  const v = (s: Script, q: EvidencePackage) => validateScript(s, corpus(), read, { pkg: q, hashDoc: hashOf(q) });
   const Q = 'quote s1a words';
 
   it('13. an invented number word at the end of a sentence', () => {
@@ -255,7 +255,7 @@ describe('adversarial: review findings', () => {
       dispositions: { 's01.a': { fingerprint: fp, category, reason: 'carried by s01' } },
     });
     const count = (r: ScriptReviewFile) =>
-      validateScript(s, corpus(), read, r, {}, null, q, hashOf(q)).counts.dispositioned;
+      validateScript(s, corpus(), read, { review: r, pkg: q, hashDoc: hashOf(q) }).counts.dispositioned;
     expect(count(dispo('needs-qualification'))).toBe(1);
     expect(count(dispo('speaker-missing'))).toBe(0);
     expect(count(dispo('needs-qualification', false))).toBe(0);

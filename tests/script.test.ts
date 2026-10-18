@@ -2,22 +2,19 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { buildPackage, docHasher } from '../src/lib/evidence-package';
+import { releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import {
   type EvidencePackage,
   type Release,
   type Script,
-  buildPackage,
-  docHasher,
-  evalExpr,
-  releaseCheck,
-  storyboardFingerprint,
-  validationFingerprint,
   scriptDir,
   sentenceFingerprint,
   sentences,
-  validateScript,
   words,
 } from '../src/lib/script';
+import { evalExpr, validateScript } from '../src/lib/script-validation';
+import { sha } from '../src/lib/io';
 import { spokenWords } from '../src/lib/numbers';
 import {
   type ChartPoint,
@@ -79,26 +76,35 @@ describe('evidence package', () => {
       id === 's1a'
         ? 'intro words here. to hear another former distributor tell it, quote s1a words and so on. more words.'
         : null;
-    const a = buildPackage(story(), asTopic(t()), read, review, {}, process.cwd(), transcript);
+    const a = buildPackage(story(), asTopic(t()), read, { review, readTranscript: transcript });
     const st = a.claims[0].statements.find((s) => s.source === 's1a')!;
     expect(st.context).toMatch(/former distributor tell it, quote s1a words/);
-    const b = buildPackage(story(), asTopic(t()), read, review, {}, process.cwd(), () => null, a);
+    const b = buildPackage(story(), asTopic(t()), read, { review, previous: a });
     expect(b.claims[0].statements.find((s) => s.source === 's1a')!.context).toBe(st.context);
     expect(b.fingerprint).toBe(a.fingerprint);
-    const c = buildPackage(story(), asTopic(t()), read, review, {}, process.cwd(), () => null, null);
+    const c = buildPackage(story(), asTopic(t()), read, { review });
     expect(c.claims[0].statements.find((s) => s.source === 's1a')!.context).toBeNull();
   });
 
   it('is reproducible and leaves its inputs untouched', () => {
     const s = story();
     const before = JSON.stringify(s);
-    const a = buildPackage(s, asTopic(t()), read, review);
-    const b = buildPackage(s, asTopic(t()), read, review);
+    const a = buildPackage(s, asTopic(t()), read, { review });
+    const b = buildPackage(s, asTopic(t()), read, { review });
     expect(a.fingerprint).toBe(b.fingerprint);
     expect(JSON.stringify(s)).toBe(before);
     expect(scriptDir('demo', 'decision:mlm-and-seminars')).toMatch(
       /[\\/]demo[\\/]scripts[\\/]decision-mlm-and-seminars$/,
     );
+  });
+
+  it('hashes cited documents through the injected reader, never the disk', () => {
+    const a = buildPackage(story(), asTopic(t()), read, { review, readDoc: () => 'one\ntwo' });
+    expect(a.documents.length).toBeGreaterThan(0);
+    expect(a.documents.every((d) => d.sha === sha('one\ntwo') && d.lines === 2)).toBe(true);
+    const gone = buildPackage(story(), asTopic(t()), read, { review, readDoc: () => null });
+    expect(gone.documents.every((d) => d.lines === 0)).toBe(true);
+    expect(docHasher(() => 'one\ntwo')('any')).toBe(sha('one\ntwo'));
   });
 });
 
@@ -267,7 +273,7 @@ describe('script validation', () => {
       ],
       2,
     );
-    const v2 = validateScript(s2, corpus(), read, r, {}, v1);
+    const v2 = validateScript(s2, corpus(), read, { review: r, previous: v1 });
     expect(v2.status).toBe('needs-review');
     expect(v2.sentences[0].approved).toBe(false);
     expect(v2.sentences[0].assertions[0].status).toBe('needs-review');
@@ -625,7 +631,7 @@ describe('speaker attribution', () => {
         },
       ]),
     ]);
-  const v = (s: Script, q: EvidencePackage | null) => validateScript(s, corpus(), read, null, {}, null, q, hashOf(q));
+  const v = (s: Script, q: EvidencePackage | null) => validateScript(s, corpus(), read, { pkg: q, hashDoc: hashOf(q) });
   it('a named speaker must appear in the quote context or the source title', () => {
     expect(
       cats(v(attributed('former distributor'), pkgWith('to hear another former distributor tell it: quote s1a words'))),
@@ -742,9 +748,9 @@ describe('reproducible evidence', () => {
       2,
     );
     const r2 = approveAll(s2, pkg()); // the reviewer dropped the finding from the file
-    const v2 = validateScript(s2, corpus(), read, r2, {}, v1, pkg(), hashOf(pkg()));
+    const v2 = validateScript(s2, corpus(), read, { review: r2, previous: v1, pkg: pkg(), hashDoc: hashOf(pkg()) });
     expect(v2.resolved.map((x) => [x.explanation, x.resolvedBy])).toEqual([['say it is self-reported', 2]]);
-    const v3 = validateScript(s2, corpus(), read, r2, {}, v2, pkg(), hashOf(pkg()));
+    const v3 = validateScript(s2, corpus(), read, { review: r2, previous: v2, pkg: pkg(), hashDoc: hashOf(pkg()) });
     expect(v3.resolved.map((x) => [x.explanation, x.resolvedBy])).toEqual([['say it is self-reported', 2]]);
   });
 
@@ -753,25 +759,29 @@ describe('reproducible evidence', () => {
     const q = pkg();
     const r = { ...approveAll(s), packageFingerprint: q.fingerprint };
     const h = () => q.documents[0].sha;
-    expect(validateScript(s, corpus(), read, r, {}, null, q, h).status).toBe('passed');
-    const stale = validateScript(s, corpus(), read, { ...r, packageFingerprint: 'other' }, {}, null, q, h);
+    expect(validateScript(s, corpus(), read, { review: r, pkg: q, hashDoc: h }).status).toBe('passed');
+    const stale = validateScript(s, corpus(), read, {
+      review: { ...r, packageFingerprint: 'other' },
+      pkg: q,
+      hashDoc: h,
+    });
     expect(stale.status).toBe('needs-review');
     expect(stale.counts.unreviewed).toBe(3);
     expect(stale.issues.map((i) => i.category)).toContain('stale-review');
     const { packageFingerprint: _drop, ...legacy } = r; // an older review file with no packageFingerprint
     void _drop;
-    expect(validateScript(s, corpus(), read, legacy, {}, null, q, h).status).toBe('needs-review');
+    expect(validateScript(s, corpus(), read, { review: legacy, pkg: q, hashDoc: h }).status).toBe('needs-review');
   });
 
   it('a changed source document blocks', () => {
     const s = good();
     const q = pkg();
-    const ok = validateScript(s, corpus(), read, approveAll(s), {}, null, q, () => q.documents[0].sha);
+    const ok = validateScript(s, corpus(), read, { review: approveAll(s), pkg: q, hashDoc: () => q.documents[0].sha });
     expect(ok.status).toBe('passed');
-    const changed = validateScript(s, corpus(), read, approveAll(s), {}, null, q, () => 'deadbeef00');
+    const changed = validateScript(s, corpus(), read, { review: approveAll(s), pkg: q, hashDoc: () => 'deadbeef00' });
     expect(changed.status).toBe('blocked');
     expect(changed.issues.map((i) => i.category)).toContain('stale-source');
-    const missing = validateScript(s, corpus(), read, approveAll(s), {}, null, q, () => null);
+    const missing = validateScript(s, corpus(), read, { review: approveAll(s), pkg: q, hashDoc: () => null });
     expect(missing.issues.map((i) => i.category)).toContain('missing-source');
   });
 
@@ -798,12 +808,12 @@ describe('reviewer dispositions', () => {
         },
       },
     };
-    const v1 = validateScript(s1, corpus(), read, r, {}, null, q, hashOf(q));
+    const v1 = validateScript(s1, corpus(), read, { review: r, pkg: q, hashDoc: hashOf(q) });
     expect(v1.counts.dispositioned).toBe(1);
     expect(v1.issues.find((i) => i.category === 'needs-qualification')?.disposition).toMatch(/narrower/);
     expect(v1.status).toBe('passed');
     const s2 = script([{ ...partlySentence(), text: partlySentence().text + ' Really.' }], 2);
-    const v2 = validateScript(s2, corpus(), read, r, {}, null, q, hashOf(q));
+    const v2 = validateScript(s2, corpus(), read, { review: r, pkg: q, hashDoc: hashOf(q) });
     expect(v2.counts.dispositioned).toBe(0);
     expect(v2.counts.warnings).toBe(v1.counts.warnings + 1);
     expect(v2.issues.find((i) => i.category === 'needs-qualification')?.disposition).toBeUndefined();
@@ -814,7 +824,7 @@ describe('release lock', () => {
   it('releaseCheck warns when the locked fingerprints no longer match', () => {
     const s = good();
     const q = pkg();
-    const v = validateScript(s, corpus(), read, approveAll(s, q), {}, null, q, hashOf(q));
+    const v = validateScript(s, corpus(), read, { review: approveAll(s, q), pkg: q, hashDoc: hashOf(q) });
     const sb = buildStoryboard(plan([scene('sc1', ['s01', 's02', 's03'])]), s, v, q, read);
     const rel: Release = {
       topic: TOPIC,
@@ -872,7 +882,7 @@ describe('review fixes: sameStudy and release', () => {
   it('the release records content fingerprints of the validation and storyboard, not timestamps', () => {
     const s = good();
     const q = pkg();
-    const vv = validateScript(s, corpus(), read, approveAll(s, q), {}, null, q, hashOf(q));
+    const vv = validateScript(s, corpus(), read, { review: approveAll(s, q), pkg: q, hashDoc: hashOf(q) });
     const sb = buildStoryboard(plan([scene('sc1', ['s01', 's02', 's03'])]), s, vv, q, read);
     expect(validationFingerprint({ ...vv, date: 'other' })).toBe(validationFingerprint(vv));
     const noisy = {

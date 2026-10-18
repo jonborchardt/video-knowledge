@@ -11,25 +11,21 @@ import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
 import { fileSha, readJson, toJson, writeArtifact } from '../src/lib/io';
 import { loadReview, reviewPath } from '../src/lib/review';
+import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
+import { releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import {
   type EvidencePackage,
   FILES,
   type Release,
-  releaseCheck,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
-  buildPackage,
-  renderReviewMd,
-  renderScriptMd,
   scriptDir,
   sentenceFingerprint,
   sentences,
-  storyboardFingerprint,
-  transcriptReader,
-  validateScript,
-  validationFingerprint,
 } from '../src/lib/script';
+import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
+import { validateScript } from '../src/lib/script-validation';
 import { loadStories, storiesPath } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';
@@ -68,20 +64,16 @@ function stagePackage(): EvidencePackage {
   if (story.readiness !== 'ready') console.error(`warning: story is ${story.readiness}: ${story.readinessWhy}`);
   const t = loadTopic(topic);
   const old = readJson<EvidencePackage>(p(FILES.pkg));
-  const pkg = buildPackage(
-    story,
-    t,
-    read,
-    loadReview(topic),
-    {
+  const pkg = buildPackage(story, t, read, {
+    review: loadReview(topic),
+    inputs: {
       stories: fileSha(storiesPath(topic)),
       review: fileSha(reviewPath(topic)),
       report: fileSha(join(process.cwd(), topic, 'report.json')),
     },
-    process.cwd(),
-    transcriptReader(topic),
-    old,
-  );
+    readTranscript: transcriptReader(topic),
+    previous: old,
+  });
   if (old?.fingerprint === pkg.fingerprint) console.log(`${rel(p(FILES.pkg))} unchanged (${pkg.fingerprint})`);
   else {
     writeArtifact(dir, FILES.pkg, toJson(pkg));
@@ -100,7 +92,12 @@ function stageValidate(): { script: Script; v: ScriptValidation; pkg: EvidencePa
   const pkg = readJson<EvidencePackage>(p(FILES.pkg));
   const review = readJson<ScriptReviewFile>(p(FILES.review));
   const previous = readJson<ScriptValidation>(p(FILES.validation));
-  const v = validateScript(script, loadTopic(topic), read, review, loadReview(topic).applicability, previous, pkg);
+  const v = validateScript(script, loadTopic(topic), read, {
+    review,
+    judgments: loadReview(topic).applicability,
+    previous,
+    pkg,
+  });
   withRelease(v, null);
   writeArtifact(dir, FILES.validation, toJson(v));
   writeArtifact(dir, FILES.scriptMd, renderScriptMd(script, v, read));
@@ -146,15 +143,12 @@ function stageLock() {
   const plan = readJson<StoryboardPlan>(p(FILES.storyboard));
   if (!script || !pkg || !plan)
     return refuse('script.json, evidence-package.json and storyboard.json are all required');
-  const live = validateScript(
-    script,
-    loadTopic(topic),
-    read,
-    readJson<ScriptReviewFile>(p(FILES.review)),
-    loadReview(topic).applicability,
-    v,
+  const live = validateScript(script, loadTopic(topic), read, {
+    review: readJson<ScriptReviewFile>(p(FILES.review)),
+    judgments: loadReview(topic).applicability,
+    previous: v,
     pkg,
-  );
+  });
   if (live.status !== 'passed' || validationFingerprint(live) !== validationFingerprint(v))
     return refuse(
       `validation.json does not match the current script, package, review and sources (${live.status}): re-run validate`,

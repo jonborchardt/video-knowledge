@@ -8,6 +8,8 @@ import { join } from 'node:path';
 import { passageReader } from './evidence';
 import { fileSha, lf, readJson, toJson } from './io';
 import { loadReview, reviewPath } from './review';
+import { buildPackage, docHasher, docReader } from './evidence-package';
+import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
 import {
   type EvidencePackage,
   FILES,
@@ -15,15 +17,10 @@ import {
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
-  buildPackage,
-  docHasher,
-  releaseCheck,
   scriptDir,
-  storyboardFingerprint,
   storySlug,
-  validateScript,
-  validationFingerprint,
 } from './script';
+import { validateScript } from './script-validation';
 import { discover, loadStories, storiesPath, type Story } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
@@ -183,7 +180,7 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
     });
     halt('package', 'the story left stories.json', `npm run stories -- show ${topic}`);
   } else {
-    const again = buildPackage(story, t, read, review, pkg.inputs, root, () => null, pkg);
+    const again = buildPackage(story, t, read, { review, inputs: pkg.inputs, readDoc: docReader(root), previous: pkg });
     const inputsNow = {
       stories: fileSha(storiesPath(topic)),
       review: fileSha(reviewPath(topic, root)),
@@ -232,7 +229,13 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
   // 3. Validation: re-run in memory; the file must be what the current script, package, review and sources produce.
   let live: ScriptValidation | null = null;
   if (script && pkg) {
-    live = validateScript(script, t, read, sreview, review.applicability, v, pkg, docHasher(root));
+    live = validateScript(script, t, read, {
+      review: sreview,
+      judgments: review.applicability,
+      previous: v,
+      pkg,
+      hashDoc: docHasher(root),
+    });
     const same = !!v && validationFingerprint(live) === validationFingerprint(v);
     const open = live.issues.filter((i) => i.severity === 'blocking' && !i.disposition);
     const health: Health = !v
