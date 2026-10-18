@@ -2,23 +2,29 @@
 //   narrate <topic> <story-id> [--regenerate]        synthesise the narration (cached by voice, rate and text); writes video/narration.json
 //   timeline <topic> <story-id>                      tile the scenes by the measured audio; writes video/timeline.json
 //   render <topic> <story-id> [--scene <id> | --from <id> --to <id>] [--force]
-//                                                    render the scenes (cached chunks in video/scenes/) and assemble them with the narration:
+//                                                    render the scenes (cached chunks in video/scenes/) and assemble them with the narration and,
+//                                                    when video/music.json exists, the soundtrack (video/mix.json records the mix):
 //                                                    every scene of render.json into video/segment.mp4, or the given range into video/scenes/<range>.mp4
 //   qa <topic> <story-id> [--no-frames]              check the mp4, extract inspection frames, write video/build-report.json, .md and the contact sheet
 //   spike <topic> <story-id> [--regenerate] [--force] narrate, timeline, render, qa
+//   package <topic> <story-id> [--no-copy]           the private review package in video/review/: the mp4 (copied unless --no-copy),
+//                                                    working title, description with measured chapters and sources, provenance, checklist
 //   preview <topic> <story-id>                       open the Remotion studio on the same composition and timeline
 // Inputs: the validated script, storyboard and evidence package in <topic>/scripts/<slug>/ and video/render.json
-// (scenes, voice, cues, kinds, options). Media is written to <topic>/scripts/<slug>/video/ and is not committed.
+// (scenes, voice, cues, kinds, options), plus video/music.json (cues over music/<composition>/ assets) when there is a
+// soundtrack. Media is written to <topic>/scripts/<slug>/video/ and is not committed.
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, toJson } from '../src/lib/script';
 import { probe } from '../src/video/ffmpeg';
+import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
+import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
 import { qaSegment } from '../src/video/qa';
 import { ENTRY, assemble, renderContactSheet, renderScenes } from '../src/video/render';
-import { buildReport, renderReportMd } from '../src/video/report';
+import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
 import { VIDEO_FILES, loadSegment, videoDir } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import type { NarrationManifest, Timeline } from '../src/video/types';
@@ -32,7 +38,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 11)
+      .slice(0, 14)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -116,12 +122,19 @@ async function stageRender(
     },
   });
   const rendered = chunks.filter((c) => !c.cached).length;
-  assemble(tl, m, chunks, dir, out);
+  const config = loadMusicConfig(dir);
+  const music = config ? { config, cues: resolveCues(config, tl) } : null;
+  const mix = assemble(tl, m, chunks, dir, out, true, music);
   const seconds = (Date.now() - t0) / 1000;
   const frames = chunks.reduce((n, c) => n + c.scene.duration, 0);
   console.log(
     `wrote ${rel(out)}: ${chunks.length} scenes (${rendered} rendered, ${chunks.length - rendered} cached), ${frames} frames, ${sec(frames, tl.fps)}s, in ${seconds.toFixed(1)}s`,
   );
+  if (mix)
+    console.log(
+      `  soundtrack: ${mix.cues.length} cues, music ${mix.musicUnderSpeechDb} dB under the voice while it speaks, peak ${mix.peakDb} dB${mix.musicScale < 1 ? ` (music scaled x${mix.musicScale} to stay under ${mix.ceilingDb} dB)` : ''}; wrote ${rel(p(MIX_FILE))}`,
+    );
+  else if (!only) console.log('  no video/music.json: narration only');
   return { out, seconds, full: !only };
 }
 
@@ -133,7 +146,12 @@ async function stageQa(
 ) {
   if (!m || !tl) throw new Error('run narrate and timeline first');
   const out = p(VIDEO_FILES.mp4);
-  const qa = qaSegment(out, dir, tl, seg, m, { frames: !rest.includes('--no-frames') });
+  const mix = readJson<MixReport>(p(MIX_FILE));
+  const qa = qaSegment(out, dir, tl, seg, m, {
+    frames: !rest.includes('--no-frames'),
+    mix,
+    music: loadMusicConfig(dir),
+  });
   let contact: string | null = null;
   if (qa.frames.length) {
     contact = p(VIDEO_FILES.contact);
@@ -156,6 +174,7 @@ async function stageQa(
     qa,
     command,
     contact ? rel(contact) : null,
+    mix,
   );
   writeFileSync(p(VIDEO_FILES.report), toJson(r));
   writeFileSync(p(VIDEO_FILES.reportMd), renderReportMd(r));
@@ -164,6 +183,25 @@ async function stageQa(
     `${qa.ok ? 'passed' : 'FAILED'}: ${qa.checks.filter((c) => c.ok).length} of ${qa.checks.length} checks, ${qa.frames.length} frames in ${rel(join(dir, VIDEO_FILES.frames))}${contact ? `, ${rel(contact)}` : ''}; wrote ${rel(p(VIDEO_FILES.reportMd))}`,
   );
   if (!qa.ok) process.exitCode = 2;
+}
+
+function stagePackage() {
+  const seg = loadSegment(topic, storyId);
+  const tl = readJson<Timeline>(p(VIDEO_FILES.timeline));
+  const report = readJson<BuildReport>(p(VIDEO_FILES.report));
+  if (!tl || !report) throw new Error('run render and qa first');
+  if (
+    report.fingerprints.script !== seg.fingerprints.script ||
+    report.fingerprints.storyboard !== seg.fingerprints.storyboard
+  )
+    throw new Error('the build report is from another script or storyboard; run qa again');
+  const r = buildReviewPackage(seg, tl, report, dir, {
+    copy: !rest.includes('--no-copy'),
+    log: (l) => console.log(`  ${l}`),
+  });
+  console.log(
+    `wrote ${rel(p(REVIEW_DIR))}: ${r.title}, ${r.chapters.length} chapters, ${r.sources.studies.length} studies, ${r.sources.sources.length} sources; ${r.provenance.clearance.publishable ? 'cleared' : 'public release BLOCKED: ' + r.provenance.clearance.why.join('; ')}`,
+  );
 }
 
 function preview() {
@@ -197,6 +235,9 @@ try {
       if (full) await stageQa(seg, m, tl, seconds);
       break;
     }
+    case 'package':
+      stagePackage();
+      break;
     case 'preview':
       preview();
       break;
