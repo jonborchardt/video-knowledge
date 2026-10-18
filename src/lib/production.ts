@@ -78,7 +78,6 @@ const VIDEO_REPORT = 'video/build-report.json';
 const REVIEW_PACKAGE = 'video/review/review.json';
 /** Technical readiness, editorial approval and licensing clearance are three different things; the board keeps the
  *  third here, read from the build report, so a card can be fully rendered and still say "release blocked". */
-export type { Clearance };
 export interface Version {
   revision: number;
   date: string;
@@ -261,7 +260,7 @@ const validationStage: BoardStage = ({ topic, storyId, root, r, read, t, review,
     judgments: review.applicability,
     previous: v,
     pkg,
-    hashDoc: docHasher(root),
+    hashDoc: docHasher(docReader(root)),
   });
   const same = !!v && validationFingerprint(live) === validationFingerprint(v);
   const open = live.issues.filter((i) => i.severity === 'blocking' && !i.disposition);

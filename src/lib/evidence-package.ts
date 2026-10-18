@@ -31,8 +31,7 @@ export function docReader(root = ROOT): DocReader {
 }
 export type DocHasher = (file: string) => string | null;
 /** The sha the package records for a document; null when the reader has no such file. */
-export function docHasher(readDoc: DocReader | string = ROOT): DocHasher {
-  const r = typeof readDoc === 'string' ? docReader(readDoc) : readDoc;
+export function docHasher(r: DocReader = docReader()): DocHasher {
   return (file) => {
     const text = r(file);
     return text === null ? null : sha(text);

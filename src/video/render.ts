@@ -18,8 +18,7 @@ const SRC_DIR = fileURLToPath(new URL('./', import.meta.url));
 const SHARED = ['Root.tsx', 'Video.tsx', 'Citation.tsx', 'theme.ts', 'glyphs.tsx', 'index.ts'];
 const SHARED_LIB = ['types.ts', 'words.ts'];
 
-const resolve = (f: string) =>
-  [f + '.ts', f + '.tsx', join(f, 'index.ts'), f].find((x) => /\.tsx?$/.test(x) && existsSync(x)) ?? null;
+const resolve = (f: string) => [f + '.ts', f + '.tsx'].find((x) => existsSync(x)) ?? null;
 /** Relative imports of a module, resolved to files; `values` skips `import type` (types never change pixels). */
 const importsOf = (file: string, values = false): string[] =>
   [...readFileSync(file, 'utf8').matchAll(/^import ([^;]*?)from '(\.\.?\/[^']+)'/gms)]

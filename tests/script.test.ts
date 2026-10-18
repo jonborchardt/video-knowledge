@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { buildPackage, docHasher } from '../src/lib/evidence-package';
+import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import {
   type EvidencePackage,
@@ -855,8 +855,8 @@ describe('document hashing', () => {
     mkdirSync(join(dir, 'demo', 'sources'), { recursive: true });
     writeFileSync(join(dir, 'demo', 'sources', 'lf.txt'), ['one', 'two', ''].join('\n'));
     writeFileSync(join(dir, 'demo', 'sources', 'crlf.txt'), ['one', 'two', ''].join('\r\n'));
-    expect(docHasher(dir)('demo/sources/crlf.txt')).toBe(docHasher(dir)('demo/sources/lf.txt'));
-    expect(docHasher(dir)('demo/sources/missing.txt')).toBeNull();
+    expect(docHasher(docReader(dir))('demo/sources/crlf.txt')).toBe(docHasher(docReader(dir))('demo/sources/lf.txt'));
+    expect(docHasher(docReader(dir))('demo/sources/missing.txt')).toBeNull();
   });
 });
 

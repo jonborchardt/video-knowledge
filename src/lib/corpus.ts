@@ -37,34 +37,6 @@ export interface Corpus {
   docNames?: Record<string, string>; // '<file>.txt' -> display name
 }
 
-/** The research fields of a topic, copied: nothing the site adds later reaches the gate. */
-export const corpusOf = (t: Topic): Corpus => ({
-  name: t.name,
-  claims: t.claims.map((c) => ({
-    id: c.id,
-    text: c.text,
-    verdict: c.verdict,
-    confidence: c.confidence,
-    decidedBy: c.decidedBy,
-    lean: c.lean,
-    sources: c.sources.map((s) => ({
-      id: s.id,
-      title: s.title,
-      channel: s.channel,
-      kind: s.kind,
-      href: s.href,
-      stance: s.stance,
-      quote: s.quote,
-    })),
-    verdicts: c.verdicts.map((v) => ({
-      by: v.by,
-      verdict: v.verdict,
-      confidence: v.confidence,
-      note: v.note,
-      cite: v.cite,
-      date: v.date,
-    })),
-  })),
-  sameStudy: t.sameStudy,
-  docNames: t.docNames,
-});
+/** The one place a site Topic becomes a research Corpus: the types make the cut, so nothing the site adds later
+ *  reaches the gate, and a research field the site drops fails to compile here. */
+export const corpusOf = (t: Topic): Corpus => t;

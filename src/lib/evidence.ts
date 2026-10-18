@@ -20,7 +20,6 @@ import { hasFigure, nums } from './numbers';
 import type { Corpus, CorpusClaim, CorpusVerdict, Verdict } from './corpus';
 
 /** sameStudy: '<summary file>.txt' -> '<primary file>.txt' when two documents report one study (site.json). */
-export type { Corpus };
 export type Stance = 'asserts' | 'denies';
 
 export type EvidenceRef =
