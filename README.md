@@ -158,6 +158,28 @@ guidance for a designer. Every chart point and on-screen figure must be in a cit
 Everything needed to inspect and re-validate a script is committed: the package records the sha of every cited
 document and a transcript window around every recorded source quote (`statements[].context`, the only place a
 speaker attribution can be confirmed from), so `<topic>/sources/*.txt` plus `<topic>/scripts/<slug>/` is enough.
+
+## Video
+
+A validated storyboard becomes an MP4 in `<topic>/scripts/<slug>/video/`. `render.json` (committed, written by
+hand) names the contiguous scenes to render, the voice, and the cues: which narration word each animation waits
+for. Narration is one file per sentence from the provider in `VK_TTS_PROVIDER` (default `edge`: Microsoft neural
+voices through `pip install edge-tts`, free, word boundaries included), cached by voice, rate and text, with the
+measured duration in `narration.json`. The timeline tiles the scenes by that measured audio, never by the word-count
+estimate, and resolves every cue to the frame its word is spoken on. The composition is Remotion (React, one component
+per scene kind in `src/video/remotion/scenes/`); ffmpeg comes with Remotion, nothing else is installed. Rendering
+needs Chrome (downloaded on first run). Scene kinds the renderer does not have are reported, never substituted.
+
+```
+npm run video -- spike <topic> <story-id>      # narrate, timeline, render video/segment.mp4, qa, build-report.md
+npm run video -- narrate <topic> <story-id>    # only the audio (add --regenerate to ignore the cache)
+npm run video -- timeline <topic> <story-id>   # only video/timeline.json
+npm run video -- render <topic> <story-id>     # only the mp4
+npm run video -- qa <topic> <story-id>         # checks, inspection frames in video/frames/, the report (exit 2 on failure)
+npm run video -- preview <topic> <story-id>    # Remotion studio on the same composition and timeline
+```
+
+Commit `render.json`, `narration.json`, `timeline.json` and the build report; the audio, frames and mp4 are ignored.
 Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
 only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
 gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without
