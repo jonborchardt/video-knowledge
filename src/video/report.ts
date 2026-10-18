@@ -4,7 +4,9 @@ import type { BuildSummary, Clearance } from '../lib/build-report';
 import type { Probe } from './ffmpeg';
 import type { MixReport } from './music';
 import type { QaResult } from './qa';
+import { RENDERER_LIMITATIONS } from './remotion/limitations';
 import type { Segment } from './select';
+import { providerLimitations } from './tts';
 import type { NarrationManifest, Timeline } from './types';
 
 export interface BuildReport extends BuildSummary {
@@ -145,9 +147,8 @@ export function buildReport(
       publishable
         ? `narration licence: ${manifest.licence}`
         : `NOT FOR PUBLICATION: narration is ${manifest.licence}; re-narrate with a commercial provider (VK_TTS_PROVIDER=openai, OPENAI_API_KEY) before release`,
-      'word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early',
-      'system fonts (Georgia, Segoe UI): renders on another machine may set type differently',
-      'scene transitions are a short fade over the field; no cross-dissolve between scenes',
+      ...providerLimitations(manifest.provider),
+      ...RENDERER_LIMITATIONS,
       'automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision',
       mix
         ? 'music levels are measured, not heard: a person judges the balance and the continuity in the review pass'

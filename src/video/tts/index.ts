@@ -14,11 +14,15 @@ export interface TtsResult {
 export interface TtsProvider {
   id: string;
   licence: string; // what the terms allow for the rendered video
+  limitations?: string[]; // caveats the build report repeats for a video narrated by this provider
   /** Writes `outFile` (no extension; the provider appends its format) and returns the boundaries. */
   synthesize(text: string, voice: string, rate: string, outFile: string): Promise<TtsResult>;
 }
 
 const PROVIDERS: Record<string, TtsProvider> = { edge, openai };
+
+/** The caveats of the provider a manifest was narrated with; none for an unknown or fake provider. */
+export const providerLimitations = (id: string): string[] => PROVIDERS[id]?.limitations ?? [];
 
 export function provider(id = process.env.VK_TTS_PROVIDER ?? 'edge'): TtsProvider {
   const p = PROVIDERS[id];

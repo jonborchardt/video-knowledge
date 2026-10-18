@@ -26,6 +26,9 @@ export function openaiProvider(doFetch: Fetch = fetch): TtsProvider {
   return {
     id: 'openai',
     licence: 'commercial: OpenAI terms assign output rights to the customer',
+    limitations: [
+      'word timestamps come from a transcription of the synthesized audio, not from the synthesis, so a cue can land on a misheard word',
+    ],
     async synthesize(text, voice, rate, outFile): Promise<TtsResult> {
       const key = process.env.OPENAI_API_KEY ?? process.env.OPEN_API_KEY;
       if (!key) throw new Error('openai TTS needs OPENAI_API_KEY');

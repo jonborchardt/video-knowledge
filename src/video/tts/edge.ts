@@ -10,6 +10,9 @@ const script = fileURLToPath(new URL('./edge_tts.py', import.meta.url));
 export const edge: TtsProvider = {
   id: 'edge',
   licence: 'draft only: unofficial Microsoft Edge read-aloud API, no terms for published media',
+  limitations: [
+    'word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early',
+  ],
   async synthesize(text, voice, rate, outFile): Promise<TtsResult> {
     const r = spawnSync(process.env.VK_PYTHON ?? 'python', ['-I', script], {
       input: JSON.stringify({ text, voice, rate, out: outFile + '.mp3' }),

@@ -21,7 +21,8 @@ import { assemble } from '../src/video/assemble';
 import { relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
-import { type TtsProvider, provider } from '../src/video/tts';
+import { type TtsProvider, provider, providerLimitations } from '../src/video/tts';
+import { RENDERER_LIMITATIONS } from '../src/video/remotion/limitations';
 import { openaiProvider, speedOf } from '../src/video/tts/openai';
 import type { TimelineScene } from '../src/video/types';
 import { alignLine, findWord, tokens } from '../src/video/words';
@@ -424,5 +425,22 @@ describe('narration and ffmpeg', () => {
     } finally {
       if (prev) process.env.OPENAI_API_KEY = prev;
     }
+  });
+});
+
+describe('build report limitations', () => {
+  it('come from the provider and the renderer in use', () => {
+    const committed = JSON.parse(
+      readFileSync(
+        join(...MLM.slice(0, 1), 'scripts', 'decision-mlm-and-seminars', 'video', 'build-report.json'),
+        'utf8',
+      ),
+    ) as { narration: { provider: string }; limitations: string[] };
+    expect(committed.limitations.slice(1, 4)).toEqual([
+      ...providerLimitations(committed.narration.provider),
+      ...RENDERER_LIMITATIONS,
+    ]);
+    expect(providerLimitations('openai').join()).not.toMatch(/edge-tts/);
+    expect(providerLimitations('fake')).toEqual([]);
   });
 });
