@@ -480,6 +480,29 @@ export function topicBoard(name: string, root = process.cwd(), decisions = loadD
   return { topic, checks, stories, rejected: file?.rejected.length ?? 0, next };
 }
 
+/** The kanban columns, in lifecycle order: story readiness, then the script stages, then the decisions. */
+export const COLUMNS = [
+  'needs-research',
+  'needs-review',
+  'ready',
+  'package',
+  'script',
+  'validate',
+  'script-review',
+  'storyboard',
+  'lock',
+  'locked',
+  'published',
+  'parked',
+] as const;
+export type Column = (typeof COLUMNS)[number];
+export function columnOf(r: StoryRow): Column {
+  if (r.decision?.decision === 'published') return 'published';
+  if (r.decision?.decision === 'parked') return 'parked';
+  if (r.production) return r.production.stage === 'review' ? 'script-review' : r.production.stage;
+  return r.story.readiness === 'rejected' ? 'parked' : r.story.readiness;
+}
+
 export function board(root = process.cwd()): TopicBoard[] {
   const decisions = loadDecisions(root);
   for (const [k, d] of Object.entries(decisions)) {
