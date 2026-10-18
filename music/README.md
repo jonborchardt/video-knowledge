@@ -36,7 +36,8 @@ music/<composition>/
 ## Licence and clearance
 
 `composition.json` records every sample pack the song declares with the licence its `pack.json` states, any
-attribution line the video description must carry, and `cleared`: whether a person has judged every sound source
+attribution line the video description must carry (GM soundfonts are listed as sound sources too), and `cleared`:
+whether a person has judged every sound source
 licensed for a published, monetised video. The build report and the production board keep music clearance separate
 from the narration voice's: both must hold before a public release, and a passing render is never clearance.
 

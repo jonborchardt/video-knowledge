@@ -191,6 +191,16 @@ chunks, frames, contact sheet and mp4 are ignored. The production board (`/produ
 render of every storyboard scene that passes QA against the locked fingerprints is `rendered`, with a soundtrack
 mixed in it is `scored`, with a current review package `packaged`; anything less is `video`. QA is integrity and
 consistency only; a person reviews the contact sheet and the video before any publication decision.
+Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
+only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
+gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without
+them keeps the persisted contexts and the same fingerprint. The reviewer may retire a deterministic warning with a
+`dispositions` entry (reason plus sentence fingerprint); it lapses when the sentence changes. `lock` records the
+approved script, package, validation and storyboard fingerprints in `release.json` (refused unless validation is
+`passed` and the storyboard `ok`); a later `validate` or `storyboard` run that drifts from them warns `release-stale`.
+
+Baseline: `mlm-script-v1` is the first locked package (`get-rich-quick/scripts/decision-mlm-and-seminars/release.json`);
+rendering work starts from it.
 
 ### Soundtrack
 
@@ -222,11 +232,14 @@ scenes between cues are silent on purpose. `render` resolves the cues against th
 loops them on the bar boundary with the variation's crossfade, fades, ducks under speech, sums them under the
 loudness-normalised narration, turns the music down (never the voice) if the sum would pass -1 dBFS, and writes
 `video/mix.json`. Nothing in the chunk cache knows about music, so a cue change re-mixes the audio in a couple of
-minutes and re-renders no scene. QA fails when the mix on disk is not the mix of the committed cue sheet, a cue did
-not sound, or the music is closer than 10 dB to the voice or further than 40 dB from it. The build report records
+minutes and re-renders no scene. Only a full render mixes: `--scene` and `--from/--to` renders are narration only and
+leave `mix.json` alone. Levels in `mix.json` are as mixed, after any turning down. QA fails when the mix on disk is
+not the mix of the committed cue sheet, a cue did not sound, or the music is closer than 10 dB to the voice or
+further than 40 dB from it. The build report records
 each composition's generator commit, source sha, tempo, key, sample packs with their licences, attribution lines
 and whether it is cleared, separately from the narration voice's licence: `clearance.publishable` is true only when
-both hold, and a passing build never sets it.
+both hold, and a passing build never sets it. A re-import keeps a composition's clearance only while its sample
+packs and soundfonts are the same; a new sound source lapses it until a person imports with `--cleared` again.
 
 ```
 npm run music -- import <id> --source <strudel-bench>/songs/<name>.strudel --repo <strudel-bench> <strudel-bench>/renders/<name>.*.wav
@@ -237,7 +250,7 @@ npm run music -- show <id>
 ### Private review package
 
 ```
-npm run video -- package <topic> <story-id> [--no-copy]
+npm run video -- package <topic> <story-id>
 ```
 
 writes `video/review/`: the mp4 copied as `<slug>-review-private.mp4` (gitignored), `README.md`, `description.txt`
@@ -245,20 +258,12 @@ writes `video/review/`: the mp4 copied as `<slug>-review-private.mp4` (gitignore
 `chapters` or the script's sections, the studies and sources, the voice and music provenance, the clearance line),
 `checklist.md` (opening, intelligibility, music balance and continuity, citations, charts, pacing, transitions,
 glitches, conclusion, local vs YouTube playback), the build report, a `thumbnail.png` from the title card, and
-`review.json` (which build report it was made from; the board calls it stale when that changes). Upload the mp4
+`review.json` (which build report it was made from; the board calls it stale when that changes). It refuses an mp4
+other than the one QA checked (the build report records its sha), and chapters YouTube would ignore: fewer than
+three, one under 10 s, or a scene not in the timeline. Upload the mp4
 to YouTube as a **private** video by hand; there is no API call. Record the outcome in `production.json` with
 `decision: "reviewing"` and the URL. The package says in every file that it is a review build and whether public
 release is blocked; the Edge voice keeps it blocked until the video is re-narrated under commercial terms.
-Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
-only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
-gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without
-them keeps the persisted contexts and the same fingerprint. The reviewer may retire a deterministic warning with a
-`dispositions` entry (reason plus sentence fingerprint); it lapses when the sentence changes. `lock` records the
-approved script, package, validation and storyboard fingerprints in `release.json` (refused unless validation is
-`passed` and the storyboard `ok`); a later `validate` or `storyboard` run that drifts from them warns `release-stale`.
-
-Baseline: `mlm-script-v1` is the first locked package (`get-rich-quick/scripts/decision-mlm-and-seminars/release.json`);
-rendering work starts from it.
 
 ## Production board
 
