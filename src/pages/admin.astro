@@ -1,0 +1,35 @@
+---
+// Links to the working pages the public nav leaves out: the production board, each topic's story ideas, each script.
+import Base from '../layouts/Base.astro';
+import { scriptDirs } from '../lib/script';
+import { storyTopicNames } from '../lib/stories';
+import { href } from '../lib/url';
+
+const scripts = scriptDirs();
+---
+
+<Base title="Admin" noindex>
+  <header>
+    <div class="eyebrow text-muted-foreground">Admin</div>
+    <h1 class="mt-1 text-display font-semibold">Working pages</h1>
+  </header>
+  <ul class="mt-6 list-disc space-y-2 pl-5">
+    <li><a href={href('/production/')}>Production board</a></li>
+    {
+      storyTopicNames().map((name) => (
+        <li>
+          <a href={href(`/${name}/stories/`)}>{name}: story ideas</a>
+          <ul class="mt-1 list-disc pl-5">
+            {scripts
+              .filter((d) => d.topic === name)
+              .map((d) => (
+                <li>
+                  <a href={href(`/${name}/scripts/${d.slug}/`)}>{d.slug}</a>
+                </li>
+              ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</Base>

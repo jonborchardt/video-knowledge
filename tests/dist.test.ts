@@ -46,7 +46,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     const dirs = readdirSync(DIST, { withFileTypes: true }).filter(
       (d) => d.isDirectory() && !['_astro', 'og'].includes(d.name),
     );
-    expect(dirs.map((d) => d.name).sort()).toEqual(['about', 'production', ...topicNames()].sort());
+    expect(dirs.map((d) => d.name).sort()).toEqual(['about', 'admin', 'production', ...topicNames()].sort());
   });
 
   it('script pages carry the narration with sentence markers, and the story page links to them', () => {
