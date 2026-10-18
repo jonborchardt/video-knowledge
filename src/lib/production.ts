@@ -455,7 +455,7 @@ const videoStage: BoardStage = ({ topic, storyId, r, release, vr, sb }, s) => {
         }
       : {
           stage: 'rendered',
-          next: `write video/music.json (cues over music/<composition>/ assets), then npm run video -- render ${topic} ${storyId} and qa`,
+          next: `write video/music.json (cues over music/<composition>/ assets), then npm run video -- render ${topic} ${storyId}, then npm run video -- qa ${topic} ${storyId}`,
         },
   };
 };
@@ -626,7 +626,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
   checks.push({
     name: 'sources',
     health: unfetched ? 'pending' : 'current',
-    detail: `${listed} listed, ${recs.length} in the store${unfetched ? `; ${unfetched} not fetched (npm run watcher -- fetch)` : ''}`,
+    detail: `${listed} listed, ${recs.length} in the store${unfetched ? `; ${unfetched} not fetched (npm run watcher -- fetch ${name}/videos.txt --store ${name}/store)` : ''}`,
     file: `${name}/videos.txt`,
   });
   const raw = recs.filter((v) => !v.assertions && v.transcript !== 'none');
@@ -672,7 +672,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
     checks.push({
       name: 'stories',
       health: current ? 'current' : 'stale',
-      detail: `${file.stories.length} candidates, ${file.rejected.length} rejected, from ${file.basis.claims} claims${current ? '' : '; a re-run differs (npm run stories -- discover)'}`,
+      detail: `${file.stories.length} candidates, ${file.rejected.length} rejected, from ${file.basis.claims} claims${current ? '' : `; a re-run differs (npm run stories -- discover ${name})`}`,
       file: `${name}/stories.json`,
     });
     const reviewed = file.stories.filter((s) => s.reviewed).length;
@@ -757,4 +757,72 @@ export function board(root = ROOT): TopicBoard[] {
       throw new Error(`${DECISIONS_FILE}: ${k} needs decision (${DECISIONS.join('|')}), note and date`);
   }
   return topicNames().map((n) => topicBoard(n, root, decisions));
+}
+
+/** One thing to do next, as the board's dialog shows it: a command to run, a prompt for an agent, or a manual step. */
+export interface Step {
+  kind: 'run' | 'prompt' | 'do';
+  text: string;
+}
+
+const MODES: Record<string, string> = {
+  revise:
+    'This is a revision: the file exists. Fix what validation.json, script-review.json or the storyboard check flag and keep what passed.',
+  're-review':
+    'This is a re-review: script-review.json exists. Judge every sentence without a current approval (the show sheet lists them).',
+};
+
+const promptOf = (brief: string, topic: string, story?: string, mode?: string, out?: string, point?: string) =>
+  [
+    `Read scripts/briefs/${brief} and follow it.`,
+    `Topic: ${topic}`,
+    story && `Story: ${story}`,
+    out && `Write: ${out}`,
+    brief === 'script-review.md' && 'You did not write this script; review it independently.',
+    mode && (MODES[mode] ?? `Mode: ${mode}`),
+    point && `Settle: ${point}`,
+    'Finish by running the command the brief names, and stop when it passes.',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+/** Splits a board `next` line into steps. It reads the conventions the stages above write: `npm run ...`,
+ *  `agent: scripts/briefs/<brief> (<mode>) -> <file>`, `settle in story-review.json: ...`, a check detail with its
+ *  fix in parentheses, steps joined by "then", and the clearance suffix. Anything else is a manual step. */
+export function stepsOf(next: string, topic: string, story?: string): Step[] {
+  const [main, blocked] = next.split('; public release is blocked: ');
+  const steps = main.split(/,? then /).flatMap((part): Step[] => {
+    if (part.startsWith('npm run ')) return [{ kind: 'run', text: part }];
+    const agent = /^agent: scripts\/briefs\/(\S+?\.md)(?: \(([\w-]+)\))?(?: -> (\S+))?$/.exec(part);
+    if (agent) return [{ kind: 'prompt', text: promptOf(agent[1], topic, story, agent[2], agent[3]) }];
+    const settle = /^settle in story-review\.json: (.*)$/s.exec(part);
+    if (settle)
+      return [
+        {
+          kind: 'prompt',
+          text: promptOf('stories.md', topic, undefined, undefined, `${topic}/story-review.json`, settle[1]),
+        },
+      ];
+    const research = /^research: (.*)$/s.exec(part);
+    if (research)
+      return [
+        {
+          kind: 'prompt',
+          text: [
+            `Find studies or public data that would decide this gap in topic ${topic}${story ? `, story ${story}` : ''}:`,
+            research[1],
+            `Save each document to ${topic}/sources/ as text (pdftotext -layout for PDFs), then follow scripts/briefs/sources.md for the new documents against every claim and record with npm run record-sources -- ${topic} ${topic}/work/sv_*.json.`,
+            `Then run npm run report and npm run stories -- discover ${topic}. If nothing decides it, say so and stop.`,
+          ].join('\n'),
+        },
+      ];
+    const hint = /\((npm run [^)]+|scripts\/briefs\/([\w-]+\.md))\)/.exec(part);
+    if (!hint) return [{ kind: 'do', text: part }];
+    const rest = part.replace(hint[0], '').trim();
+    return [
+      ...(rest ? [{ kind: 'do' as const, text: rest }] : []),
+      hint[2] ? { kind: 'prompt', text: promptOf(hint[2], topic) } : { kind: 'run', text: hint[1] },
+    ];
+  });
+  return blocked ? [...steps, { kind: 'do', text: `Public release is blocked: ${blocked}` }] : steps;
 }
