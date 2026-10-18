@@ -229,6 +229,7 @@ const stripOf = (r: StoryRow & { topic: { name: string } }) => {
                       next={r.next}
                       topic={r.topic.name}
                       story={r.story.id}
+                      upload={r.production?.upload}
                     />
                   </article>
                 );
@@ -289,7 +290,13 @@ const stripOf = (r: StoryRow & { topic: { name: string } }) => {
             <p class="text-sm">
               <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{p!.next}</code>
             </p>
-            <NextStep id={`next-script-${p!.topic}-${p!.slug}`} next={p!.next} topic={p!.topic} story={p!.story} />
+            <NextStep
+              id={`next-script-${p!.topic}-${p!.slug}`}
+              next={p!.next}
+              topic={p!.topic}
+              story={p!.story}
+              upload={p!.upload}
+            />
             {p!.blockers.length > 0 && (
               <ul class="list-disc pl-5 text-sm text-warning">
                 {p!.blockers.map((b) => (
