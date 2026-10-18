@@ -17,15 +17,17 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
-import { readJson, sha, toJson } from '../src/lib/script';
+import { readJson, sha, toJson, ROOT } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
 import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
-import { qaSegment } from '../src/video/qa';
-import { ENTRY, assemble, renderContactSheet, renderScenes } from '../src/video/render';
+import { DECODABLE, type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
+import { assemble } from '../src/video/assemble';
+import { ENTRY, renderContactSheet, renderScenes } from '../src/video/render';
 import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
-import { VIDEO_FILES, loadSegment, videoDir } from '../src/video/select';
+import { VIDEO_FILES, videoDir } from '../src/video/files';
+import { loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import type { NarrationManifest, Timeline } from '../src/video/types';
 
@@ -49,7 +51,7 @@ const dir = videoDir(topic, storyId);
 const p = (name: string) => join(dir, name);
 const rel = (f: string) =>
   f
-    .replace(process.cwd(), '')
+    .replace(ROOT, '')
     .replace(/^[\\/]/, '')
     .replaceAll('\\', '/');
 const command = `npm run video -- ${cmd} ${topic} ${storyId}${rest.length ? ' ' + rest.join(' ') : ''}`;
@@ -149,11 +151,12 @@ async function stageQa(
   if (!m || !tl) throw new Error('run narrate and timeline first');
   const out = p(VIDEO_FILES.mp4);
   const mix = readJson<MixReport>(p(MIX_FILE));
-  const qa = qaSegment(out, dir, tl, seg, m, {
-    frames: !rest.includes('--no-frames'),
-    mix,
-    music: loadMusicConfig(dir),
-  });
+  const verdict = qaSegment(out, tl, seg, m, { mix, music: loadMusicConfig(dir) });
+  const decodable = verdict.checks.some((c) => c.name === DECODABLE && c.ok);
+  const qa: QaResult = {
+    ...verdict,
+    frames: decodable && !rest.includes('--no-frames') ? extractInspectionFrames(out, dir, tl) : [],
+  };
   let contact: string | null = null;
   if (qa.frames.length) {
     contact = p(VIDEO_FILES.contact);

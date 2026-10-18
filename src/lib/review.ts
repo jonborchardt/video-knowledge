@@ -4,6 +4,7 @@
 // answers one question, and how to frame the question for a viewer. The file is committed and keeps runs reproducible.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { ROOT } from './io';
 import type { Judgments } from './evidence';
 
 export type Format = 'long-form' | 'short' | 'needs-research';
@@ -39,8 +40,8 @@ export interface ReviewFile {
   stories?: Record<string, StoryReview>;
 }
 
-export const reviewPath = (topic: string, root = process.cwd()) => join(root, topic, 'story-review.json');
-export function loadReview(topic: string, root = process.cwd()): ReviewFile {
+export const reviewPath = (topic: string, root = ROOT) => join(root, topic, 'story-review.json');
+export function loadReview(topic: string, root = ROOT): ReviewFile {
   const p = reviewPath(topic, root);
   return existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as ReviewFile) : {};
 }

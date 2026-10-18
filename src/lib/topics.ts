@@ -2,8 +2,10 @@
 // The report already decides each claim's verdict; nothing here re-judges.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { readJson, ROOT } from './io';
 
-export type Verdict = 'right' | 'wrong' | 'partly' | 'untestable' | 'unknown';
+import type { Verdict } from './corpus';
+export type { Verdict };
 const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 
 // The slice of `watcher report --json` this site reads.
@@ -165,8 +167,6 @@ export interface Topic {
   sameStudy: Record<string, string>; // '<file>.txt' -> the file of the primary report of the same study
 }
 
-const ROOT = process.cwd();
-const readJson = <T>(p: string): T | null => (existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as T) : null);
 export const VAL: Record<string, number> = { right: 1, partly: 0.5, wrong: -1 };
 
 /** Topic folders that have a report with claims. */

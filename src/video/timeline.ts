@@ -2,8 +2,8 @@
 // Deterministic given the segment, the manifest, render.json and the cited passages. Every cue resolves to the frame
 // its word is spoken on, and every excerpt to its passage, or the build fails.
 import type { PassageReader } from '../lib/evidence';
-import { sha } from '../lib/script';
-import { narrationFingerprint } from './narration';
+import { sha } from '../lib/io';
+import { narrationFingerprint } from './files';
 import type { Segment } from './select';
 import {
   FPS,

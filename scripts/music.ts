@@ -10,7 +10,7 @@
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { readJson, sha, toJson } from '../src/lib/script';
+import { readJson, sha, toJson, ROOT } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
 import { COMPOSITION_FILE, type Composition, MUSIC_DIR, type Variation, loadComposition } from '../src/video/music';
 
@@ -31,7 +31,7 @@ const usage = () => {
   process.exit(1);
 };
 if (!cmd || !id) usage();
-const dir = join(process.cwd(), MUSIC_DIR, id);
+const dir = join(ROOT, MUSIC_DIR, id);
 
 /** What the song header declares: tempo, key, packs. The header is JavaScript; these are read by pattern, not run. */
 function readHeader(source: string) {

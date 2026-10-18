@@ -1,19 +1,16 @@
 // Rendering: the Remotion composition in src/video/remotion, bundled once, rendered scene by scene into cached
-// video-only chunks, then assembled: chunks concatenated without re-encoding, the narration laid on one continuous
-// track from the sentence files, the two muxed. A chunk's cache key is the scene with its absolute frames removed plus
+// video-only chunks (assembled with the narration and soundtrack by src/video/assemble.ts). A chunk's cache key is the scene with its absolute frames removed plus
 // the version of the code that draws it, so a change to one scene or one component re-renders only what it touches.
 // The studio preview (npm run video -- preview) uses the same entry point and timeline.json.
 import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
-import { sha } from '../lib/script';
-import { narrationTrack, concatVideo, mux } from './ffmpeg';
-import { COMPONENT_FILE } from './kinds';
-import { type MixReport, type MusicConfig, type ResolvedCue, mixSoundtrack } from './music';
+import { sha } from '../lib/io';
+import { ALL_KINDS } from './kinds';
 import { COMPOSITION, CONTACT } from './remotion/Root';
-import type { NarrationManifest, Timeline, TimelineScene } from './types';
+import type { Timeline, TimelineScene } from './types';
 
 export const ENTRY = fileURLToPath(new URL('./remotion/index.ts', import.meta.url));
 const REMOTION_DIR = fileURLToPath(new URL('./remotion/', import.meta.url));
@@ -21,21 +18,38 @@ const SRC_DIR = fileURLToPath(new URL('./', import.meta.url));
 const SHARED = ['Root.tsx', 'Video.tsx', 'Citation.tsx', 'theme.ts', 'glyphs.tsx', 'index.ts'];
 const SHARED_LIB = ['types.ts', 'words.ts'];
 
-/** The code that draws a kind: the files every scene goes through, the kind's component file, and the modules that
- *  file imports from src/video (one level: chart.ts, cues.ts, excerpt.ts and the like), so editing a chart helper
- *  re-renders the chart scenes and nothing else. */
+const resolve = (f: string) => [f + '.ts', f + '.tsx'].find((x) => existsSync(x)) ?? null;
+/** Relative imports of a module, resolved to files; `values` skips `import type` (types never change pixels). */
+const importsOf = (file: string, values = false): string[] =>
+  [...readFileSync(file, 'utf8').matchAll(/^(?:import|export) ([^;]*?)from '(\.\.?\/[^']+)'/gms)]
+    .filter((m) => !values || !m[1].startsWith('type '))
+    .map((m) => resolve(join(dirname(file), m[2])))
+    .filter((f): f is string => f !== null);
+/** Every module reachable from `entries` by value imports, the entries included. */
+export function deepImports(entries: string[]): Set<string> {
+  const seen = new Set<string>();
+  for (const stack = [...entries]; stack.length;) {
+    const f = stack.pop()!;
+    if (seen.has(f)) continue;
+    seen.add(f);
+    stack.push(...importsOf(f, true));
+  }
+  return seen;
+}
+
+/** The code that draws a kind: the files every scene goes through, the kind's component file, every module it
+ *  imports, and the modules those import in turn (value imports, followed to the end), so editing a chart helper
+ *  re-renders the chart scenes and nothing else, however deep the helper sits. */
 export function rendererVersion(kind: TimelineScene['kind']): string {
-  const component = join(REMOTION_DIR, 'scenes', COMPONENT_FILE[kind]);
-  const source = readFileSync(component, 'utf8');
-  const imports = [...source.matchAll(/from '(\.\.?\/[^']+)'/g)]
-    .map((m) => join(REMOTION_DIR, 'scenes', m[1]))
-    .map((f) => (existsSync(f + '.ts') ? f + '.ts' : existsSync(f + '.tsx') ? f + '.tsx' : f))
-    .filter((f) => existsSync(f));
+  const component = join(REMOTION_DIR, 'scenes', `${ALL_KINDS[kind].component}.tsx`);
+  const direct = importsOf(component);
+  const deep = deepImports(direct);
   const files = [
     ...SHARED.map((f) => join(REMOTION_DIR, f)),
     ...SHARED_LIB.map((f) => join(SRC_DIR, f)),
     component,
-    ...imports,
+    ...direct,
+    ...[...deep].sort(), // after the direct imports, so a key only moves when a deeper file is new or edited
   ];
   return sha([...new Set(files)].map((f) => readFileSync(f, 'utf8').replace(/\r\n?/g, '\n')).join('\n---\n'));
 }
@@ -116,61 +130,6 @@ export async function renderScenes(
     await browser.close({ silent: true });
   }
   return out;
-}
-
-/** The soundtrack to mix under the narration: the cue sheet and its cues resolved against the timeline. */
-export interface Soundtrack {
-  config: MusicConfig;
-  cues: ResolvedCue[];
-}
-
-/** Concatenate the chunks of a contiguous run of scenes and lay the narration under them, with the soundtrack mixed
- *  in when one is given (the caller passes it for a full render only); writes `out` and, with music, video/mix.json.
- *  Returns the mix report (null without music). */
-export function assemble(
-  tl: Timeline,
-  manifest: NarrationManifest,
-  chunks: Chunk[],
-  publicDir: string,
-  out: string,
-  loudnorm = true,
-  music: Soundtrack | null = null,
-): MixReport | null {
-  if (!chunks.length) throw new Error('nothing to assemble');
-  for (let i = 1; i < chunks.length; i++)
-    if (chunks[i].scene.start !== chunks[i - 1].scene.start + chunks[i - 1].scene.duration)
-      throw new Error(`chunks are not contiguous: ${chunks[i - 1].scene.id} then ${chunks[i].scene.id}`);
-  const first = chunks[0].scene.start;
-  const end = chunks.at(-1)!.scene.start + chunks.at(-1)!.scene.duration;
-  const sentences = chunks.flatMap((c) => c.scene.sentences);
-  const file = (id: string) => {
-    const a = manifest.sentences.find((s) => s.id === id);
-    if (!a) throw new Error(`no narration for ${id}`);
-    return join(publicDir, a.file);
-  };
-  const slots = sentences.map((s, i) => {
-    const slotStart = i === 0 ? first : s.start;
-    const slotEnd = i < sentences.length - 1 ? sentences[i + 1].start : end;
-    return { file: file(s.id), delay: (s.start - slotStart) / tl.fps, seconds: (slotEnd - slotStart) / tl.fps };
-  });
-  const video = out + '.video.mp4';
-  const audio = out + '.audio.m4a';
-  const mixed = out + '.mix.m4a';
-  let report: MixReport | null = null;
-  try {
-    concatVideo(
-      chunks.map((c) => c.file),
-      video,
-    );
-    narrationTrack(slots, audio, loudnorm);
-    if (music) {
-      report = mixSoundtrack(audio, music.config, music.cues, tl, [first / tl.fps, end / tl.fps], mixed, publicDir);
-      mux(video, mixed, out);
-    } else mux(video, audio, out);
-  } finally {
-    for (const f of [video, audio, mixed]) if (existsSync(f)) unlinkSync(f);
-  }
-  return report;
 }
 
 /** A contact sheet of inspection frames (paths relative to publicDir), one PNG. */

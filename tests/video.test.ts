@@ -4,20 +4,25 @@
 // committed artifacts (the opening four scenes are the spike's regression fixture).
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { scriptFingerprint } from '../src/lib/script';
 import type { Storyboard } from '../src/lib/storyboard';
 import { pointFrames } from '../src/video/chart';
 import { cue, lineFrames, spokenAt } from '../src/video/cues';
 import { excerptWindow, flowPassage } from '../src/video/excerpt';
-import { audioStats, probe } from '../src/video/ffmpeg';
-import { ACCEPTS, COMPONENT_FILE, KINDS, kindOf, unsupportedWhy } from '../src/video/kinds';
+import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
+import { BESPOKE } from '../src/video/bespoke';
+import { ALL_KINDS, GENERIC, bespokeFor, kindOf, unsupportedWhy } from '../src/video/kinds';
+import { COMPONENTS } from '../src/video/remotion/scenes';
 import { narrate } from '../src/video/narration';
-import { assemble, relativeScene, sceneKey } from '../src/video/render';
+import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
+import { assemble } from '../src/video/assemble';
+import { deepImports, relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
-import { type TtsProvider, provider } from '../src/video/tts';
+import { type TtsProvider, provider, providerLimitations } from '../src/video/tts';
+import { RENDERER_LIMITATIONS } from '../src/video/remotion/limitations';
 import { openaiProvider, speedOf } from '../src/video/tts/openai';
 import type { TimelineScene } from '../src/video/types';
 import { alignLine, findWord, tokens } from '../src/video/words';
@@ -62,19 +67,31 @@ describe('segment selection', () => {
     );
     expect(kindOf({ visual: { category: 'typography', description: 'x', onScreenText: ['"a quote"'] } })).toBe('quote');
     expect(kindOf({ visual: { category: 'typography', description: 'x', onScreenText: ['a', 'b'] } })).toBe('list');
+    expect(kindOf({ visual: { category: 'data-chart', description: 'x' } })).toBeNull(); // no chart type, no kind
+    expect(kindOf({ visual: { category: 'animation', description: 'x' } }, 'constructor')).toBeNull(); // own keys only
   });
   it('takes a bespoke kind from render.json only when it draws the category', () => {
     const p = scenes();
     p[0] = scene('sc01', ['s01'], { visual: { category: 'animation', description: 'push in' } });
-    const ok = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }));
+    const mine = bespokeFor('get-rich-quick/decision-mlm-and-seminars');
+    const ok = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }), mine);
     expect(ok.problems).toEqual([]);
     expect(ok.scenes[0].kind).toBe('fine-print');
-    const wrong = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'waffle' } } }));
+    // Another video's bespoke kind is unknown here: the fixture's video registers none.
+    const elsewhere = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }));
+    expect(elsewhere.problems.join()).toMatch(/unknown to this video/);
+    const wrong = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'waffle' } } }), mine);
     expect(wrong.problems.join()).toMatch(/does not draw animation/);
     const unknown = checkSegment(inputs({ config: { kinds: { sc01: 'hologram' as never } } }));
     expect(unknown.problems.join()).toMatch(/unknown/);
-    for (const k of KINDS) expect(ACCEPTS[k].length, k).toBeGreaterThan(0);
-    for (const k of KINDS) expect(COMPONENT_FILE[k], k).toMatch(/\.tsx$/);
+  });
+  it('one record per kind: a known component, a category, and names unique across videos', () => {
+    const names = [GENERIC, ...Object.values(BESPOKE)].flatMap((r) => Object.keys(r));
+    expect(new Set(names).size).toBe(names.length);
+    for (const [k, spec] of Object.entries(ALL_KINDS)) {
+      expect(spec.accepts.length, k).toBeGreaterThan(0);
+      expect(COMPONENTS[spec.component], k).toBeTypeOf('function');
+    }
   });
   it('rejects a chart the kind cannot draw', () => {
     const p = scenes();
@@ -197,6 +214,35 @@ describe('timeline', () => {
     expect(c).toBe(b + 30);
     expect(lineFrames({ ...sc, cues: { 'line:3': 999 } })[2]).toBe(999);
     expect(cue(sc, 'missing', 7)).toBe(7);
+  });
+});
+
+describe('qa check groups (no ffmpeg)', () => {
+  const inp = inputs();
+  const seg = checkSegment(inp);
+  const m = manifest(inp);
+  const tl = buildTimeline(seg, m);
+  const seconds = tl.durationInFrames / tl.fps;
+  const failed = (checks: { name: string; ok: boolean }[]) => checks.filter((c) => !c.ok).map((c) => c.name);
+
+  it('content and sync pass on the fixture, and a reordered timeline fails', () => {
+    expect(failed(contentChecks(tl, seg))).toEqual([]);
+    const p = { duration: seconds, video: null, audio: null } as unknown as Probe;
+    expect(failed(syncChecks(p, tl, seg, m))).toEqual([]);
+    const swapped = { ...tl, scenes: [...tl.scenes].reverse() };
+    expect(failed(contentChecks(swapped, seg))).toContain('scene order');
+  });
+
+  it('blank checks read luma samples: a flat stretch fails, varied content passes', () => {
+    const n = Math.ceil(seconds * TOLERANCE.samplesPerSecond);
+    const varied = Array.from({ length: n }, () => ({ mean: 100, sd: 20 }));
+    expect(failed(blankChecks(varied, tl))).toEqual([]);
+    const flat = varied.map(() => ({ mean: 0, sd: 0 }));
+    expect(failed(blankChecks(flat, tl))).toEqual(['no blank sections', 'every scene has content']);
+  });
+
+  it('no music config is a passing soundtrack check', () => {
+    expect(soundtrackChecks(tl, {})).toEqual([{ name: 'soundtrack', ok: true, detail: 'none: no video/music.json' }]);
   });
 });
 
@@ -380,6 +426,42 @@ describe('narration and ffmpeg', () => {
       );
     } finally {
       if (prev) process.env.OPENAI_API_KEY = prev;
+    }
+  });
+});
+
+describe('build report limitations', () => {
+  it('come from the provider and the renderer in use', () => {
+    const committed = JSON.parse(
+      readFileSync(
+        join(...MLM.slice(0, 1), 'scripts', 'decision-mlm-and-seminars', 'video', 'build-report.json'),
+        'utf8',
+      ),
+    ) as { narration: { provider: string }; limitations: string[] };
+    expect(committed.limitations.slice(1, 4)).toEqual([
+      ...providerLimitations(committed.narration.provider),
+      ...RENDERER_LIMITATIONS,
+    ]);
+    expect(providerLimitations('openai').join()).not.toMatch(/edge-tts/);
+    expect(providerLimitations('fake')).toEqual([]);
+  });
+});
+
+describe('render cache key', () => {
+  it('follows value imports to the end and skips type-only ones', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'vk-imports-'));
+    try {
+      writeFileSync(
+        join(dir, 'a.tsx'),
+        "import { b } from './b';\nimport type { T } from './t';\nexport const a = b;\n",
+      );
+      writeFileSync(join(dir, 'b.ts'), "import { c } from './c';\nexport const b = c;\n");
+      writeFileSync(join(dir, 'c.ts'), 'export const c = 1;\n');
+      writeFileSync(join(dir, 't.ts'), 'export type T = number;\n');
+      const names = [...deepImports([join(dir, 'a.tsx')])].map((f) => basename(f)).sort();
+      expect(names).toEqual(['a.tsx', 'b.ts', 'c.ts']);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
     }
   });
 });

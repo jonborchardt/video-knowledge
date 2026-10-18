@@ -2,18 +2,18 @@
 // figures, and builders for scripts, assertions, reviews and storyboard plans.
 import type { PassageReader } from '../src/lib/evidence';
 import type { ReviewFile } from '../src/lib/review';
+import { buildPackage } from '../src/lib/evidence-package';
 import {
   type EvidencePackage,
   type Script,
   type ScriptAssertion,
   type ScriptReviewFile,
   type Sentence,
-  buildPackage,
   scriptFingerprint,
   sentenceFingerprint,
   sentences,
-  validateScript,
 } from '../src/lib/script';
+import { validateScript } from '../src/lib/script-validation';
 import { discover } from '../src/lib/stories';
 import type { StoryboardPlan } from '../src/lib/storyboard';
 import type { Topic } from '../src/lib/topics';
@@ -51,7 +51,7 @@ export const review: ReviewFile = {
 export const t = () => topic([mlm(), rental()], [{ title: 'MLM and seminars', claims: [mlm(), rental()] }]);
 export const asTopic = (x: ReturnType<typeof t>): Topic => ({ ...x, docNames: {}, sameStudy: {} }) as unknown as Topic;
 export const story = () => discover(t(), read, review).stories.find((s) => s.id === 'decision:mlm-and-seminars')!;
-export const pkg = () => buildPackage(story(), asTopic(t()), read, review);
+export const pkg = () => buildPackage(story(), asTopic(t()), read, { review });
 
 export const fact = (
   id: string,
@@ -100,7 +100,7 @@ export const approveAll = (
 export const corpus = () => ({ name: TOPIC, claims: [mlm(), rental()] });
 /** Validation as the CLI runs it: against the package and a hasher that vouches for the fixture documents. */
 export const run = (s: Script, r: ScriptReviewFile | null = null, q: EvidencePackage | null = pkg()) =>
-  validateScript(s, corpus(), read, r, {}, null, q, hashOf(q));
+  validateScript(s, corpus(), read, { review: r, pkg: q, hashDoc: hashOf(q) });
 export const hashOf = (q: EvidencePackage | null) => () => q?.documents[0].sha ?? null;
 export const cats = (v: ReturnType<typeof run>) =>
   v.issues.filter((i) => i.severity === 'blocking').map((i) => i.category);

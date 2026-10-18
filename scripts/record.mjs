@@ -1,5 +1,6 @@
 // node scripts/record.mjs <topic> <batches.json> [--label "<Topic label>"] [--from <video-id>]
-// Record extraction batches in the compact format the agents write (see scripts/briefs/extract.md):
+// Record extraction batches in the compact format the agents write (see scripts/briefs/extract.md; typed and checked
+// in src/lib/batches.ts, so a malformed file stops the run before anything is written):
 //   [{ "video": "<id>", "sum": "one line", "as": [
 //       { "c": "<existing slug>", "s": "d"?, "q": "quote" },                  reuse a claim (s:"d" = the source denies it)
 //       { "n": "New claim text", "q": "...", "v": [verdict, conf, note], "l": "pro" },   create a claim + its AI guess
@@ -10,6 +11,7 @@
 // --label creates the topic on the first batch of an empty store. --from skips batches before that video (resume).
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { checkBatches } from '../src/lib/batches.ts';
 import { ROOT, watcher } from './watcher.mjs';
 
 const [topic, file, ...rest] = process.argv.slice(2);
@@ -34,17 +36,7 @@ mkdirSync(work, { recursive: true });
 const batches = JSON.parse(readFileSync(file, 'utf8'));
 // Check everything up front so a bad reference stops the run before anything is written.
 const known = new Set(claimsNow().map((c) => c.id));
-const bad = batches.flatMap((b) =>
-  b.as.flatMap((x) =>
-    x.c && !known.has(full(x.c))
-      ? [`${b.video}: unknown slug ${x.c}`]
-      : x.n && !Array.isArray(x.v)
-        ? [`${b.video}: new claim without "v": ${x.n}`]
-        : x.n && !['pro', 'pro-hype', 'calibrating', 'skeptic', 'neutral', undefined].includes(x.l)
-          ? [`${b.video}: bad lean "${x.l}"`]
-          : [],
-  ),
-);
+const bad = checkBatches(batches, topic, claimsNow());
 if (bad.length) {
   console.error(bad.join('\n'));
   process.exit(1);

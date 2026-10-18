@@ -6,21 +6,19 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { passageReader } from '../src/lib/evidence';
 import { loadReview } from '../src/lib/review';
+import { buildPackage, docHasher } from '../src/lib/evidence-package';
+import { releaseCheck } from '../src/lib/release';
 import {
   type EvidencePackage,
   FILES,
   type Release,
   type Script,
   type ScriptReviewFile,
-  buildPackage,
-  docHasher,
-  readJson,
-  releaseCheck,
   scriptDirs,
   sentences,
-  toJson,
-  validateScript,
 } from '../src/lib/script';
+import { validateScript } from '../src/lib/script-validation';
+import { readJson, toJson } from '../src/lib/io';
 import { loadStories } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';
@@ -37,11 +35,16 @@ describe.skipIf(!dirs.length)('committed script packages', () => {
     const t = loadTopic(topic);
     const read = passageReader();
     const validation = () =>
-      validateScript(script, t, read, review, loadReview(topic).applicability, null, pkg, docHasher());
+      validateScript(script, t, read, {
+        review,
+        judgments: loadReview(topic).applicability,
+        pkg,
+        hashDoc: docHasher(),
+      });
 
     it('the package rebuilds byte-for-byte without transcripts', () => {
       const story = loadStories(topic)!.stories.find((s) => s.id === script.story)!;
-      const again = buildPackage(story, t, read, loadReview(topic), pkg.inputs, process.cwd(), () => null, pkg);
+      const again = buildPackage(story, t, read, { review: loadReview(topic), inputs: pkg.inputs, previous: pkg });
       // Compare the persisted body first so a mismatch names the field, then the fingerprint (which also covers passages).
       const persisted = (p: EvidencePackage) => {
         const { fingerprint: _f, generatedAt: _g, ...body } = JSON.parse(toJson(p)) as EvidencePackage;

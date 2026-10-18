@@ -5,11 +5,11 @@ import { join } from 'node:path';
 import Base from '../../../layouts/Base.astro';
 import { site } from '../../../config/site';
 import { passageReader } from '../../../lib/evidence';
+import { readJson } from '../../../lib/io';
 import {
   type EvidencePackage,
   FILES,
   type Issue,
-  readJson,
   type Script,
   type ScriptValidation,
   scriptDirs,

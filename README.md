@@ -36,7 +36,7 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3â
 
 1. **Lists.** Create `<topic>/videos.txt` (and `blogs.txt` if any). Mark later additions with a `# --- Batch N, <how they were found>` line so it's clear which sources came from where.
 2. **Fetch.** `npm run watcher -- fetch <topic>/videos.txt --store <topic>/store`, then the same for `blogs.txt`. Videos without captions are reported and skipped. An article that comes out as junk can be attached by hand: `npm run watcher -- fetch --text <file> <id> --title "<t>" --url <u> --store <topic>/store`.
-3. **Extract.** Write the claims list (`npm run watcher -- claims list --topic <topic> --store <topic>/store > <topic>/work/claims.txt`), split the `extract` entries from `npm run watcher -- next --json --store <topic>/store` into `<topic>/work/grpN.txt` files (about 400k characters each), and give each group to an agent with `scripts/briefs/extract.md`. Each writes `<topic>/work/hN.json` with its claims, AI guesses and lean tags.
+3. **Extract.** Write the claims list (`npm run watcher -- claims list --topic <topic> --store <topic>/store > <topic>/work/claims.txt`), split the `extract` entries from `npm run watcher -- next --json --store <topic>/store` into `<topic>/work/grpN.txt` files (about 400k characters each), and give each group to an agent with `scripts/briefs/extract.md`. Each writes `<topic>/work/hN.json` with its claims, AI guesses and lean tags (the format is typed and checked in `src/lib/batches.ts`; `record` refuses a malformed file before writing anything).
 4. **Merge and record.** Agents working in parallel can each create the same new claim. List those in a merges file (`{"<duplicate text>": "<existing-slug>" | "=<canonical new text>"}`), then:
    ```
    npm run merge-claims -- <topic>/work/merges.json <topic>/work/h*.json
@@ -170,9 +170,10 @@ voice, rate and text, with the measured duration and word boundaries in `narrati
 `openai` (commercial terms; `OPENAI_API_KEY`, word timestamps from its transcription of the output, cost estimated
 in the manifest). The timeline tiles the scenes by the measured audio, never by the word-count estimate, resolves
 every cue to the frame its word is spoken on, and reads each cited excerpt from the corpus. The composition is
-Remotion (React, one component per scene kind in `src/video/remotion/scenes/`, the closed kind list in
-`src/video/kinds.ts`). Scenes render one at a time into cached chunks (`video/scenes/`, keyed by the scene and the
-code that draws it), the chunks are concatenated without re-encoding, and the narration is laid down as one
+Remotion (React components in `src/video/remotion/scenes/`; the closed kind records in `src/video/kinds.ts`, with
+each video's bespoke kinds registered in `src/video/bespoke/`). Scenes render one at a time into cached chunks
+(`video/scenes/`, keyed by the scene and the code that draws it: the component and every helper it imports, however
+deep), the chunks are concatenated without re-encoding (`src/video/assemble.ts`), and the narration is laid down as one
 loudness-normalised track; ffmpeg comes with Remotion, nothing else is installed. Rendering needs Chrome (downloaded
 on first run). A scene without a renderer is reported, never substituted.
 

@@ -15,11 +15,10 @@
 // contradictions and qualifications are pulled from every study verdict on the claim, so none can be hidden.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { lf, ROOT } from './io';
 import { hasFigure, nums } from './numbers';
-import type { ClaimVerdictView, ClaimView, Topic, Verdict } from './topics';
+import type { Corpus, CorpusClaim, CorpusVerdict, Verdict } from './corpus';
 
-/** sameStudy: '<summary file>.txt' -> '<primary file>.txt' when two documents report one study (site.json). */
-export type Corpus = Pick<Topic, 'name' | 'claims'> & { sameStudy?: Record<string, string> };
 export type Stance = 'asserts' | 'denies';
 
 export type EvidenceRef =
@@ -93,11 +92,8 @@ export interface Validation {
 
 export type PassageReader = (cite: string) => string | null;
 
-/** Line endings as checked out (CRLF on Windows, LF elsewhere) must not change a passage, a sha or a fingerprint. */
-export const lf = (s: string) => s.replace(/\r\n?/g, '\n');
-
 /** Reads `<topic>/sources/<file>.txt#L10-L24` from the repo; null when the file or the lines do not exist. */
-export function passageReader(root = process.cwd()): PassageReader {
+export function passageReader(root = ROOT): PassageReader {
   return (cite) => {
     const m = cite.match(/^([^#]+\.txt)#L(\d+)(?:-L(\d+))?$/);
     if (!m) return null;
@@ -145,14 +141,14 @@ export function modalityOf(text: string): Modality {
 }
 
 /** Sort order for records on one document: the latest first, higher confidence on a date tie. */
-const newest = (a: ClaimVerdictView, b: ClaimVerdictView) =>
+const newest = (a: CorpusVerdict, b: CorpusVerdict) =>
   (b.date ?? '').localeCompare(a.date ?? '') || (b.confidence ?? 0) - (a.confidence ?? 0);
 
 /** The study verdicts on a claim, one per study: the newest record on the primary document; a summary document
  *  (sameStudy) only stands in when the primary has no verdict. */
-export function studyVerdicts(c: ClaimView, sameStudy: Record<string, string> = {}): ClaimVerdictView[] {
-  const latest = new Map<string, ClaimVerdictView>();
-  const primaryFirst = (a: ClaimVerdictView, b: ClaimVerdictView) =>
+export function studyVerdicts(c: CorpusClaim, sameStudy: Record<string, string> = {}): CorpusVerdict[] {
+  const latest = new Map<string, CorpusVerdict>();
+  const primaryFirst = (a: CorpusVerdict, b: CorpusVerdict) =>
     Number(docKey(b.cite!, sameStudy) === docOf(b.cite!)) - Number(docKey(a.cite!, sameStudy) === docOf(a.cite!)) ||
     newest(a, b);
   for (const v of c.verdicts.filter((x) => x.by !== 'AI guess' && x.cite).sort(primaryFirst)) {
@@ -202,7 +198,7 @@ export function validate(
   if (!a.claims.length) problems.push('no canonical claim referenced');
   for (const c of a.claims) if (!byId.has(c.id)) problems.push(`unknown claim ${c.id}`);
 
-  const item = (ref: EvidenceRef, cited: boolean, v?: ClaimVerdictView | null): EvidenceItem => ({
+  const item = (ref: EvidenceRef, cited: boolean, v?: CorpusVerdict | null): EvidenceItem => ({
     ref,
     cited,
     role: 'broken',
@@ -216,7 +212,7 @@ export function validate(
     return { ...item(ref, true), problem };
   };
   // A study verdict, placed by direction then by how far it reaches this sentence.
-  const studyItem = (claim: string, stance: Stance, v: ClaimVerdictView, cited: boolean, passage?: string) => {
+  const studyItem = (claim: string, stance: Stance, v: CorpusVerdict, cited: boolean, passage?: string) => {
     const direction = directionOf(v.verdict, stance);
     const reviewed = judgments[judgmentKey(claim, stance, v.cite!)];
     const j = reviewed ?? applicabilityOf(modality, v.verdict, v.note);
@@ -258,7 +254,7 @@ export function validate(
   // 2. Every other study verdict on the claims stays visible, whether or not the author cited it.
   const citedDocs = new Set(cited.filter(isStudy).map((x) => `${x.ref.claim}|${keyOf(x.ref.cite)}`));
   const uncited: EvidenceItem[] = a.claims.flatMap(({ id, stance }) =>
-    studyVerdicts(byId.get(id) ?? ({ verdicts: [] } as unknown as ClaimView), same)
+    studyVerdicts(byId.get(id) ?? ({ verdicts: [] } as unknown as CorpusClaim), same)
       .filter((v) => !citedDocs.has(`${id}|${keyOf(v.cite!)}`))
       .map((v) => studyItem(id, stance, v, false)),
   );
