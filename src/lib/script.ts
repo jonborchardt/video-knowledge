@@ -14,7 +14,6 @@ import { join } from 'node:path';
 import type { Applicability, Assertion, EvidenceRef, Stance, Validation } from './evidence';
 import { sha, ROOT } from './io';
 import type { Story } from './stories';
-import { topicNames } from './topics';
 
 export const WPM_DEFAULT = 150; // narration words per minute; the runtime estimate scales with it
 export const RUNTIME = { min: 8, max: 12 }; // minutes, the long-form target
@@ -304,7 +303,8 @@ export const FILES = {
 } as const;
 /** Every <topic>/scripts/<slug> with a script.json, for the site and the tests. */
 export function scriptDirs(root = ROOT): { topic: string; slug: string; dir: string }[] {
-  return topicNames().flatMap((topic) => {
+  const topics = readdirSync(root, { withFileTypes: true }).filter((d) => d.isDirectory() && !d.name.startsWith('.'));
+  return topics.flatMap(({ name: topic }) => {
     const base = join(root, topic, 'scripts');
     if (!existsSync(base)) return [];
     return readdirSync(base, { withFileTypes: true })

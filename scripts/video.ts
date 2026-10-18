@@ -22,7 +22,7 @@ import { probe } from '../src/video/ffmpeg';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
 import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
-import { type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
+import { DECODABLE, type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
 import { ENTRY, renderContactSheet, renderScenes } from '../src/video/render';
 import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
@@ -152,7 +152,7 @@ async function stageQa(
   const out = p(VIDEO_FILES.mp4);
   const mix = readJson<MixReport>(p(MIX_FILE));
   const verdict = qaSegment(out, tl, seg, m, { mix, music: loadMusicConfig(dir) });
-  const decodable = verdict.checks.some((c) => c.name === 'mp4 decodable' && c.ok);
+  const decodable = verdict.checks.some((c) => c.name === DECODABLE && c.ok);
   const qa: QaResult = {
     ...verdict,
     frames: decodable && !rest.includes('--no-frames') ? extractInspectionFrames(out, dir, tl) : [],

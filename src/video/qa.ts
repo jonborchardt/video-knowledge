@@ -53,6 +53,8 @@ export const MUSIC_TOLERANCE = {
   maxUnderSpeechDb: 40, // and no further: beyond that it is inaudible, so the cue is wrong or the asset silent
   cueSilenceDb: -60, // a cue whose own rms is below this did not sound
 };
+/** The check that says the mp4 opened at all; inspection frames are extracted only after it passed. */
+export const DECODABLE = 'mp4 decodable';
 type Luma = { mean: number; sd: number }[];
 const check = (name: string, ok: boolean, detail: string): Check => ({ name, ok, detail });
 const expectedSeconds = (tl: Timeline) => tl.durationInFrames / tl.fps;
@@ -69,11 +71,11 @@ export function qaSegment(
   try {
     p = probe(mp4);
   } catch (e) {
-    return verdict([check('mp4 decodable', false, String(e))]);
+    return verdict([check(DECODABLE, false, String(e))]);
   }
   const audio = p.audio ? audioStats(mp4, TOLERANCE.silenceNoiseDb, TOLERANCE.silenceSeconds) : null;
   return verdict([
-    check('mp4 decodable', true, `${p.duration.toFixed(3)}s`),
+    check(DECODABLE, true, `${p.duration.toFixed(3)}s`),
     ...videoChecks(p, tl, opts.duration),
     ...audioChecks(p, audio, tl, manifest),
     ...contentChecks(tl, seg),

@@ -194,7 +194,7 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
     };
   const again = buildPackage(story, t, read, { review, inputs: pkg.inputs, readDoc: docReader(root), previous: pkg });
   const inputsNow = {
-    stories: fileSha(storiesPath(topic)),
+    stories: fileSha(storiesPath(topic, root)),
     review: fileSha(reviewPath(topic, root)),
     report: fileSha(join(root, topic, 'report.json')),
   };
@@ -538,7 +538,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     read: passageReader(root),
     t: corpusOf(loadTopic(topic)),
     review: loadReview(topic, root),
-    story: loadStories(topic)?.stories.find((s) => s.id === storyId),
+    story: loadStories(topic, root)?.stories.find((s) => s.id === storyId),
     pkg: readJson<EvidencePackage>(p(FILES.pkg)),
     script: readJson<Script>(p(FILES.script)),
     sreview: readJson<ScriptReviewFile>(p(FILES.review)),
@@ -660,7 +660,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
     file: `${name}/report.json`,
   });
   const review = loadReview(name, root);
-  const file = loadStories(name);
+  const file = loadStories(name, root);
   const stories: StoryRow[] = [];
   let next: string;
   if (!file) {
@@ -668,7 +668,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
     next = `npm run stories -- discover ${name}`;
   } else {
     const again = toJson(discover(topic, passageReader(root), review));
-    const current = lf(again) === lf(readFileSync(storiesPath(name), 'utf8'));
+    const current = lf(again) === lf(readFileSync(storiesPath(name, root), 'utf8'));
     checks.push({
       name: 'stories',
       health: current ? 'current' : 'stale',

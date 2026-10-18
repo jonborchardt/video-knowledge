@@ -19,7 +19,6 @@ import { lf, ROOT } from './io';
 import { hasFigure, nums } from './numbers';
 import type { Corpus, CorpusClaim, CorpusVerdict, Verdict } from './corpus';
 
-/** sameStudy: '<summary file>.txt' -> '<primary file>.txt' when two documents report one study (site.json). */
 export type Stance = 'asserts' | 'denies';
 
 export type EvidenceRef =
@@ -92,8 +91,6 @@ export interface Validation {
 }
 
 export type PassageReader = (cite: string) => string | null;
-
-/** Line endings as checked out (CRLF on Windows, LF elsewhere) must not change a passage, a sha or a fingerprint. */
 
 /** Reads `<topic>/sources/<file>.txt#L10-L24` from the repo; null when the file or the lines do not exist. */
 export function passageReader(root = ROOT): PassageReader {

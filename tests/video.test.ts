@@ -67,6 +67,8 @@ describe('segment selection', () => {
     );
     expect(kindOf({ visual: { category: 'typography', description: 'x', onScreenText: ['"a quote"'] } })).toBe('quote');
     expect(kindOf({ visual: { category: 'typography', description: 'x', onScreenText: ['a', 'b'] } })).toBe('list');
+    expect(kindOf({ visual: { category: 'data-chart', description: 'x' } })).toBeNull(); // no chart type, no kind
+    expect(kindOf({ visual: { category: 'animation', description: 'x' } }, 'constructor')).toBeNull(); // own keys only
   });
   it('takes a bespoke kind from render.json only when it draws the category', () => {
     const p = scenes();

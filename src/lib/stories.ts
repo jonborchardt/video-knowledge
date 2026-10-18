@@ -717,9 +717,9 @@ export function discover(t: StoryInput, readPassage: PassageReader, review: Revi
   };
 }
 
-export const storiesPath = (topic: string) => join(ROOT, topic, 'stories.json');
-export function loadStories(topic: string): StoriesFile | null {
-  return readJson<StoriesFile>(storiesPath(topic));
+export const storiesPath = (topic: string, root = ROOT) => join(root, topic, 'stories.json');
+export function loadStories(topic: string, root = ROOT): StoriesFile | null {
+  return readJson<StoriesFile>(storiesPath(topic, root));
 }
 /** Topics with a stories.json. */
 /** Topics with a report and a stories.json (loadTopic needs the report). */

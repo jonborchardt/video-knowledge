@@ -65,14 +65,16 @@ export const SUPPORTED_ASSETS = new Set(GENERIC_SPECS.flatMap(([, k]) => k.asset
 export function kindOf(s: Pick<Scene, 'visual'>, override?: string, bespoke: KindRegistry = {}): SceneKind | null {
   const v = s.visual;
   if (override) {
-    const spec = (GENERIC as KindRegistry)[override] ?? bespoke[override];
+    const own = (r: KindRegistry) => (Object.hasOwn(r, override) ? r[override] : undefined);
+    const spec = own(GENERIC) ?? own(bespoke);
     return spec?.accepts.includes(v.category) ? (override as SceneKind) : null;
   }
   for (const a of v.assetIds ?? []) {
     const hit = GENERIC_SPECS.find(([, k]) => k.assets?.includes(a) && k.accepts.includes(v.category));
     if (hit) return hit[0];
   }
-  if (v.category === 'data-chart') return GENERIC_SPECS.find(([, k]) => k.chart === v.chart?.type)?.[0] ?? null;
+  if (v.category === 'data-chart')
+    return (v.chart?.type && GENERIC_SPECS.find(([, k]) => k.chart === v.chart!.type)?.[0]) || null;
   if (v.category === 'document-excerpt') return v.excerpt ? 'excerpt' : null;
   if (v.category === 'transition') return 'transition';
   if (v.category === 'typography') {

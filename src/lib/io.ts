@@ -3,14 +3,19 @@
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-/** The repo root: the nearest folder at or above the working directory that holds a package.json. Every module that
- *  reads the repo takes its root from here, or from a `root` argument that defaults to it, so a script run from a
- *  subfolder agrees with itself. */
+/** The repo root: the nearest folder at or above the working directory whose package.json is this repo's, else
+ *  (launched from outside the repo) the folder this file lives in. Every module that reads the repo takes its root
+ *  from here, or from a `root` argument that defaults to it, so a script run from anywhere agrees with itself. The
+ *  working directory comes first because the site build bundles this file away from src/lib. */
+const isRepo = (d: string) =>
+  existsSync(join(d, 'package.json')) &&
+  (JSON.parse(readFileSync(join(d, 'package.json'), 'utf8')) as { name?: string }).name === 'video-knowledge';
 export const ROOT = (() => {
   for (let d = resolve(process.cwd()); ; d = dirname(d)) {
-    if (existsSync(join(d, 'package.json'))) return d;
-    if (dirname(d) === d) return process.cwd();
+    if (isRepo(d)) return d;
+    if (dirname(d) === d) return resolve(fileURLToPath(new URL('../..', import.meta.url)));
   }
 })();
 
