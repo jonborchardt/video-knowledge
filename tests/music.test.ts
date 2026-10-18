@@ -20,6 +20,7 @@ import {
   placeCue,
   rmsDb,
 } from '../src/video/mix';
+import { mixSoundtrack } from '../src/video/assemble';
 import {
   type Composition,
   MIX_FILE,
@@ -27,7 +28,6 @@ import {
   type MusicConfig,
   anchorSeconds,
   loadComposition,
-  mixSoundtrack,
   musicFingerprint,
   parseAnchor,
   resolveCues,

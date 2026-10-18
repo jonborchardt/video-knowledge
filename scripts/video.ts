@@ -23,7 +23,8 @@ import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/v
 import { narrate } from '../src/video/narration';
 import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
 import { type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
-import { ENTRY, assemble, renderContactSheet, renderScenes } from '../src/video/render';
+import { assemble } from '../src/video/assemble';
+import { ENTRY, renderContactSheet, renderScenes } from '../src/video/render';
 import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
 import { VIDEO_FILES, loadSegment, videoDir } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';

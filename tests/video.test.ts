@@ -17,7 +17,8 @@ import { ALL_KINDS, GENERIC, bespokeFor, kindOf, unsupportedWhy } from '../src/v
 import { COMPONENTS } from '../src/video/remotion/scenes';
 import { narrate } from '../src/video/narration';
 import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
-import { assemble, relativeScene, sceneKey } from '../src/video/render';
+import { assemble } from '../src/video/assemble';
+import { relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import { type TtsProvider, provider } from '../src/video/tts';

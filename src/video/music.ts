@@ -1,13 +1,14 @@
 // The soundtrack contract: compositions (reusable rendered music assets, in music/<composition>/) and cues
 // (<topic>/scripts/<slug>/video/music.json: which asset plays from which scene to which scene, how loud, how it fades
 // and ducks). Cues are anchored to scene ids, never to seconds, so a re-narrated or re-timed scene moves the music
-// with it. The composition is produced elsewhere (strudel-bench); this file only validates, places and fingerprints.
+// with it. The composition is produced elsewhere (strudel-bench); this file only validates, places and fingerprints,
+// and src/video/assemble.ts does the mixing.
 //
 //   video section -> music cue -> composition/variation -> rendered audio asset (music/<composition>/<variation>.wav)
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, sha, toJson } from '../lib/io';
-import { CHANNELS, type Duck, RATE, type Span, decodePcm, encodeAac, mixDown, placeCue, rmsDb } from './mix';
+import { readJson, sha } from '../lib/io';
+import type { Duck, Span } from './mix';
 import type { Timeline } from './types';
 
 export const MUSIC_DIR = 'music'; // repo root: compositions shared by every video
@@ -210,94 +211,4 @@ export interface MixReport {
     duck: Duck | null;
   }[];
   compositions: Pick<Composition, 'id' | 'title' | 'generator' | 'source' | 'licence'>[];
-}
-
-/** Mix the resolved cues under the narration track (`narrationFile`, already loudness-normalised, covering
- *  `window` seconds of the timeline) into `out` (AAC in mp4) and write the mix report next to the cue sheet. */
-export function mixSoundtrack(
-  narrationFile: string,
-  cfg: MusicConfig,
-  cues: ResolvedCue[],
-  tl: Timeline,
-  window: [number, number],
-  out: string,
-  videoDir: string,
-  ceilingDb = -1,
-): MixReport {
-  const narration = decodePcm(narrationFile);
-  const bus = new Float32Array(narration.length);
-  const speech = speechSpans(tl).map((s): Span => [s[0] - window[0], s[1] - window[0]]);
-  const pcm = new Map<string, Float32Array>();
-  const placed: MixReport['cues'] = [];
-  const frames = bus.length / CHANNELS;
-  for (const c of cues) {
-    if (!pcm.has(c.file)) pcm.set(c.file, decodePcm(c.file));
-    // the cue on a buffer as long as its span (not the whole track), then added into the bus at its start
-    const a = Math.max(0, c.start - window[0]);
-    const b = Math.min(frames / RATE, c.end - window[0]);
-    const solo = new Float32Array(Math.max(0, Math.round((b - a) * RATE)) * CHANNELS);
-    const p = { ...c, pcm: pcm.get(c.file)!, start: 0, end: b - a };
-    const sounded = solo.length
-      ? placeCue(
-          solo,
-          p,
-          speech.map((s): Span => [s[0] - a, s[1] - a]),
-        )
-      : [0, 0];
-    const at = Math.round(a * RATE) * CHANNELS;
-    for (let i = 0; i < solo.length && at + i < bus.length; i++) bus[at + i] += solo[i];
-    placed.push({
-      id: c.id,
-      asset: c.asset,
-      start: c.start,
-      end: c.end,
-      sounded: [sounded[0] + a + window[0], sounded[1] + a + window[0]],
-      rmsDb: rmsDb(solo, sounded[0], sounded[1]),
-      gain: c.gain,
-      loop: c.loop,
-      duck: c.duck,
-    });
-  }
-  const m = mixDown(narration, bus, ceilingDb);
-  const scaleDb = 20 * Math.log10(m.musicScale || 1e-12); // levels are reported as mixed, after the ceiling's scaling
-  for (const c of placed) c.rmsDb = Math.round((c.rmsDb + scaleDb) * 10) / 10;
-  encodeAac(m.pcm, out);
-  const over = (x: Float32Array, spans: Span[]) => {
-    // rms over a set of spans: power-weighted by length
-    let sq = 0;
-    let n = 0;
-    for (const [a, b] of spans) {
-      const d = Math.max(0, b - a);
-      if (!d) continue;
-      const r = rmsDb(x, a, b);
-      if (r === -Infinity) continue;
-      sq += Math.pow(10, r / 10) * d;
-      n += d;
-    }
-    return n ? Math.round(10 * Math.log10(sq / n) * 10) / 10 : -Infinity;
-  };
-  const speechRmsDb = over(narration, speech);
-  const musicDuring = over(bus, speech);
-  const report: MixReport = {
-    generatedAt: new Date().toISOString(),
-    fingerprint: musicFingerprint(cfg, cues),
-    window,
-    ceilingDb,
-    narrationPeakDb: m.narrationPeakDb,
-    musicPeakDb: m.musicPeakDb,
-    peakDb: m.peakDb,
-    musicScale: m.musicScale,
-    speechRmsDb,
-    musicUnderSpeechDb: Math.round((musicDuring + scaleDb - speechRmsDb) * 10) / 10,
-    cues: placed,
-    compositions: [...new Map(cues.map((c) => [c.composition.id, c.composition])).values()].map((c) => ({
-      id: c.id,
-      title: c.title,
-      generator: c.generator,
-      source: c.source,
-      licence: c.licence,
-    })),
-  };
-  writeFileSync(join(videoDir, MIX_FILE), toJson(report));
-  return report;
 }
