@@ -1,10 +1,10 @@
 # Build report: How Much Money Do MLM Participants Actually Make?
 
-get-rich-quick / decision:mlm-and-seminars, 2026-10-18T03:45:40.304Z. `npm run video -- qa get-rich-quick decision:mlm-and-seminars`
+get-rich-quick / decision:mlm-and-seminars, 2026-10-18T06:42:19.851Z. `npm run video -- spike get-rich-quick decision:mlm-and-seminars`
 
 **Segment.** 42 of 42 storyboard scenes (sc01 to sc43), 66 sentences. Kinds: sc01 phone, sc02 tree, sc03 quote, sc04 stacked-bar, sc05 question, sc06 title, sc07 evidence-cards, sc08 quote, sc09 tree-coins, sc10 quote, sc11 transition, sc12 disclosures, sc13 stat-tiles, sc14 fine-print, sc15 person-grid, sc16 waterfall, sc17 excerpt, sc18 rank-table, sc19 pair, sc20 dot-plot, sc21 bar, sc22 bar, sc23 question, sc24 commission-icons, sc25 excerpt, sc26 tree-customer, sc27 tree-base, sc28 excerpt, sc29 waffle, sc30 pyramid, sc31 bar, sc32 title, sc33 three-measures, sc35 list, sc36 list, sc37 phone-reply, sc38 base-rate, sc39 tree-base, sc40 list, sc41 closing, sc42 tree-base, sc43 phone-end.
 
-**Output.** get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4: 723.40s, 1920x1080 @ 30 fps, h264 + aac, 21702 frames, rendered in 0s ($0 (local CPU)).
+**Output.** get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4: 723.41s, 1920x1080 @ 30 fps, h264 + aac, 21702 frames, rendered in 999.6s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate -10%), mp3, 699.43s of speech at about 146 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -79,24 +79,38 @@ get-rich-quick / decision:mlm-and-seminars, 2026-10-18T03:45:40.304Z. `npm run v
 
 **Architecture.** Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS).
 
-**Fingerprints.** script 51e7788c5c, storyboard 0c12e8fcc7, narration 0c390593af, config 70618c4192.
+**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix f427211ed6: music -20.1 dB under the voice while it speaks, peak -1 dB.
 
-## QA: passed (30 of 30)
+| Cue | Asset | From | To | Gain | Level |
+|---|---|---|---|---|---|
+| opening | undertow/pulse | 5.0s | 60.2s | -11 dB | -37.0 dB |
+| pitch | undertow/active | 60.2s | 145.4s | -13 dB | -37.7 dB |
+| disclosures | undertow/texture | 145.4s | 275.6s | -13 dB | -40.3 dB |
+| plans | undertow/texture | 345.1s | 531.3s | -13 dB | -40.3 dB |
+| qualifications | undertow/texture | 567.2s | 621.4s | -16 dB | -43.5 dB |
+| implications | undertow/motif | 621.4s | 696.1s | -11 dB | -35.8 dB |
+| conclusion | undertow/rest | 696.1s | 723.4s | -10 dB | -35.6 dB |
+
+**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. A passing build is technical completion only; a person approves the release.
+
+**Fingerprints.** script 51e7788c5c, storyboard 0c12e8fcc7, narration 0c390593af, config 082f8b09a9, music f427211ed6.
+
+## QA: passed (36 of 36)
 
 | Check | Result | Detail |
 |---|---|---|
-| mp4 decodable | ok | 723.400s |
+| mp4 decodable | ok | 723.413s |
 | video stream | ok | h264 1920x1080 @ 30 |
 | resolution | ok | 1920x1080 |
 | frame rate | ok | 30 |
 | h264 | ok | h264 |
 | frame count | ok | 21702 frames, timeline 21702 |
-| duration in range | ok | 723.40s in [722.4,724.4] |
-| duration matches timeline | ok | 723.400s vs 723.400s (21702 frames) |
+| duration in range | ok | 723.41s in [722.4,724.4] |
+| duration matches timeline | ok | 723.413s vs 723.400s (21702 frames) |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
-| audio length matches video | ok | 0.000s apart |
-| no clipping | ok | peak -1.4 dB, mean -19.5 dB |
+| audio length matches video | ok | 0.013s apart |
+| no clipping | ok | peak -1 dB, mean -19.4 dB |
 | no long silence | ok | none >= 3s |
 | narration not truncated | ok | 66 sentences fit their slots |
 | scene order | ok | sc01 to sc43 (42) |
@@ -110,6 +124,12 @@ get-rich-quick / decision:mlm-and-seminars, 2026-10-18T03:45:40.304Z. `npm run v
 | chart data matches storyboard | ok | 11 charts |
 | excerpts resolve | ok | 4 excerpts with their highlights |
 | assets and kinds supported | ok | 30 kinds |
+| music cues resolve | ok | 7 cues over 1 compositions |
+| soundtrack mixed | ok | 7 cues, 2026-10-18T06:40:30.712Z |
+| mix is of this cue sheet | ok | mix f427211ed6, cue sheet f427211ed6 |
+| every cue sounded | ok | 7 cues audible where placed |
+| music under the voice | ok | -20.1 dB relative to speech (want -40 to -10) |
+| mix under the ceiling | ok | peak -1 dB, ceiling -1 dB |
 | scene boundaries follow measured audio | ok | 42 scenes, 66 sentences |
 | cues inside their sentences | ok | 86 cues |
 | final scene complete | ok | ends 723.40s |
@@ -125,3 +145,4 @@ Inspection frames: 171 in video/frames/; contact sheet get-rich-quick/scripts/de
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes
 - automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision
+- music levels are measured, not heard: a person judges the balance and the continuity in the review pass
