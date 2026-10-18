@@ -4,7 +4,7 @@
 // committed artifacts (the opening four scenes are the spike's regression fixture).
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { scriptFingerprint } from '../src/lib/script';
 import type { Storyboard } from '../src/lib/storyboard';
@@ -18,7 +18,7 @@ import { COMPONENTS } from '../src/video/remotion/scenes';
 import { narrate } from '../src/video/narration';
 import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
-import { relativeScene, sceneKey } from '../src/video/render';
+import { deepImports, relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import { type TtsProvider, provider, providerLimitations } from '../src/video/tts';
@@ -442,5 +442,24 @@ describe('build report limitations', () => {
     ]);
     expect(providerLimitations('openai').join()).not.toMatch(/edge-tts/);
     expect(providerLimitations('fake')).toEqual([]);
+  });
+});
+
+describe('render cache key', () => {
+  it('follows value imports to the end and skips type-only ones', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'vk-imports-'));
+    try {
+      writeFileSync(
+        join(dir, 'a.tsx'),
+        "import { b } from './b';\nimport type { T } from './t';\nexport const a = b;\n",
+      );
+      writeFileSync(join(dir, 'b.ts'), "import { c } from './c';\nexport const b = c;\n");
+      writeFileSync(join(dir, 'c.ts'), 'export const c = 1;\n');
+      writeFileSync(join(dir, 't.ts'), 'export type T = number;\n');
+      const names = [...deepImports([join(dir, 'a.tsx')])].map((f) => basename(f)).sort();
+      expect(names).toEqual(['a.tsx', 'b.ts', 'c.ts']);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

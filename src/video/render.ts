@@ -3,7 +3,7 @@
 // the version of the code that draws it, so a change to one scene or one component re-renders only what it touches.
 // The studio preview (npm run video -- preview) uses the same entry point and timeline.json.
 import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
@@ -18,21 +18,39 @@ const SRC_DIR = fileURLToPath(new URL('./', import.meta.url));
 const SHARED = ['Root.tsx', 'Video.tsx', 'Citation.tsx', 'theme.ts', 'glyphs.tsx', 'index.ts'];
 const SHARED_LIB = ['types.ts', 'words.ts'];
 
-/** The code that draws a kind: the files every scene goes through, the kind's component file, and the modules that
- *  file imports from src/video (one level: chart.ts, cues.ts, excerpt.ts and the like), so editing a chart helper
- *  re-renders the chart scenes and nothing else. */
+const resolve = (f: string) =>
+  [f + '.ts', f + '.tsx', join(f, 'index.ts'), f].find((x) => /\.tsx?$/.test(x) && existsSync(x)) ?? null;
+/** Relative imports of a module, resolved to files; `values` skips `import type` (types never change pixels). */
+const importsOf = (file: string, values = false): string[] =>
+  [...readFileSync(file, 'utf8').matchAll(/^import ([^;]*?)from '(\.\.?\/[^']+)'/gms)]
+    .filter((m) => !values || !m[1].startsWith('type '))
+    .map((m) => resolve(join(dirname(file), m[2])))
+    .filter((f): f is string => f !== null);
+/** Every module reachable from `entries` by value imports, the entries included. */
+export function deepImports(entries: string[]): Set<string> {
+  const seen = new Set<string>();
+  for (const stack = [...entries]; stack.length; ) {
+    const f = stack.pop()!;
+    if (seen.has(f)) continue;
+    seen.add(f);
+    stack.push(...importsOf(f, true));
+  }
+  return seen;
+}
+
+/** The code that draws a kind: the files every scene goes through, the kind's component file, every module it
+ *  imports, and the modules those import in turn (value imports, followed to the end), so editing a chart helper
+ *  re-renders the chart scenes and nothing else, however deep the helper sits. */
 export function rendererVersion(kind: TimelineScene['kind']): string {
   const component = join(REMOTION_DIR, 'scenes', `${ALL_KINDS[kind].component}.tsx`);
-  const source = readFileSync(component, 'utf8');
-  const imports = [...source.matchAll(/from '(\.\.?\/[^']+)'/g)]
-    .map((m) => join(REMOTION_DIR, 'scenes', m[1]))
-    .map((f) => (existsSync(f + '.ts') ? f + '.ts' : existsSync(f + '.tsx') ? f + '.tsx' : f))
-    .filter((f) => existsSync(f));
+  const direct = importsOf(component);
+  const deep = deepImports(direct);
   const files = [
     ...SHARED.map((f) => join(REMOTION_DIR, f)),
     ...SHARED_LIB.map((f) => join(SRC_DIR, f)),
     component,
-    ...imports,
+    ...direct,
+    ...[...deep].sort(), // after the direct imports, so a key only moves when a deeper file is new or edited
   ];
   return sha([...new Set(files)].map((f) => readFileSync(f, 'utf8').replace(/\r\n?/g, '\n')).join('\n---\n'));
 }
