@@ -1,5 +1,6 @@
 ---
 import { author, site } from '../config/site';
+import { href } from '../lib/url';
 ---
 
 <footer class="border-t print:hidden">
@@ -22,6 +23,7 @@ import { author, site } from '../config/site';
         ))
       }
       <li><a href={site.repo} class="hover:text-foreground">Source</a></li>
+      <li><a href={href('/production/')} class="hover:text-foreground">Production</a></li>
     </ul>
     <p class="basis-full text-xs">
       {`© ${new Date().getFullYear()} ${author.name} · ${site.name} · a side project of `}

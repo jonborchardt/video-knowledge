@@ -169,6 +169,32 @@ approved script, package, validation and storyboard fingerprints in `release.jso
 Baseline: `mlm-script-v1` is the first locked package (`get-rich-quick/scripts/decision-mlm-and-seminars/release.json`);
 rendering work starts from it.
 
+## Production board
+
+`/production/` on the site shows what stage every topic, story and script is in. Everything on it is derived at
+build time by `src/lib/production.ts` from the committed files: the research pipeline per topic (sources listed vs
+fetched, fetched vs extracted, documents vs recorded verdicts, report vs store, stories.json vs a fresh `discover`,
+candidates reviewed), each story's readiness, and for each `<topic>/scripts/<slug>/` the health of every artifact.
+"Current" means re-running the library on today's inputs reproduces the file, the same test `lock` applies
+(`buildPackage`, `validateScript`, `buildStoryboard`, `releaseCheck`); "stale" means it would not; "pending" means an
+agent step is owed; "blocked" means the gate says so. Each row names the next command or brief. There is no state
+machine: the stage is the first artifact that is missing or not current.
+
+The one hand-written input is `production.json` at the repo root, for decisions no artifact records:
+
+```json
+{
+  "get-rich-quick/decision:selling-online": {
+    "decision": "parked",
+    "note": "no study bears on it",
+    "date": "2026-10-18"
+  }
+}
+```
+
+`decision` is `queued` (produce this next), `parked` (with the reason) or `published` (with `url`). Keys must name a
+story in that topic's `stories.json`; the build fails otherwise.
+
 ## Website
 
 An [Astro](https://astro.build) site with Tailwind. Each topic with a `report.json` becomes a page (`src/pages/[topic]/index.astro`), linked from a home page. Pages are rendered at build time; the only client script is the tab bar and the claim search.
