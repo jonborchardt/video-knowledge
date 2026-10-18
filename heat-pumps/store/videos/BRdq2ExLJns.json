@@ -1,0 +1,137 @@
+{
+  "id": "BRdq2ExLJns",
+  "title": "How to calculate when heat pumps make financial sense (and other heat pump follow-up thoughts)",
+  "channel": "Technology Connextras",
+  "origin": "manual",
+  "fetched": "2026-10-18",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UClRwC5Vc8HrB6vGx6Ti-lhA",
+  "durationSec": 1290,
+  "thumbnail": "https://i.ytimg.com/vi/BRdq2ExLJns/sddefault.jpg",
+  "summary": "Technology Connections shows how to work out the COP a heat pump needs to beat gas or propane from local fuel and electricity prices, and argues every AC should be a heat pump.",
+  "topics": {
+    "primary": "heat-pumps",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+      "stance": "asserts",
+      "quote": "you need to equate your cost per kilowatt hour of your heating fuel and then compare that to your cost of electricity",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/heat-pump-beats-gas-running-cost",
+      "stance": "asserts",
+      "quote": "to get a heat pump to match the cost of gas it needs to have a cop of four",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.9,
+          "note": "Break-even follows directly from energy prices per kWh and the furnace's efficiency; it is a standard calculation.",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "The break-even seasonal COP is the electricity-to-gas price ratio times the furnace AFUE (US 2024: 3.45 x 0.95 = 3.28), so the threshold is slightly below the raw price ratio.",
+          "source": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.45,
+          "note": "Edwards computes savings as fuel price times load divided by furnace efficiency, minus electricity price times load divided by heat pump COP, so the break-even COP is the price ratio multiplied by furnace efficiency, not the bare price ratio.",
+          "source": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L653-L672",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "The crossover equation sets the heat pump's cost per delivered Btu (electricity price over COP) equal to the gas cost (gas price over furnace efficiency), so the threshold is the price ratio times furnace efficiency, not the bare price ratio.",
+          "source": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3372-L3384",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.4,
+          "note": "In the UK the electricity-to-gas price ratio was about 4.1 while the heat pump used roughly a third of the gas energy it displaced, and running costs came out £190/yr higher, consistent with the ratio rule.",
+          "source": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1071-L1075",
+          "date": "2026-10-18"
+        }
+      ]
+    },
+    {
+      "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
+      "stance": "asserts",
+      "quote": "your electricity is 15 cents per kilowatt hour well then you're never gonna get a heat pump to beat the cost of gas",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/heat-pump-costs-less-run-heating",
+      "stance": "asserts",
+      "quote": "as of now i only need to get a cop of two to be paying less than propane for heating",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/ground-source-geothermal-heat-pumps-run",
+      "stance": "asserts",
+      "quote": "a geothermal heat pump is not feasible for the vast majority of people",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+      "stance": "asserts",
+      "quote": "on that variable rate plan here in the winter the electric cost is generally always lower",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+      "stance": "asserts",
+      "quote": "why would you not also want it to be a heat pump some days of the year it's going to cost you less",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/choosing-heat-pump-instead-new-central",
+      "stance": "asserts",
+      "quote": "there should not be a significant price delta between a standard air conditioner",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/landlords-who-don-pay-utility-bills",
+      "stance": "asserts",
+      "quote": "they will always take the cheap option because that's in their best interest",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.8,
+          "note": "The split-incentive problem in rentals is well documented: owners who don't pay bills underinvest in efficiency.",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.35,
+          "note": "Edwards frames renter split incentives as a barrier and finds a 10% rise in rented units in a tract cuts the odds of heat pump use by 4%, though the RECS replication did not confirm the renter effect.",
+          "source": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L238-L243",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.35,
+          "note": "Renters usually pay energy bills while landlords pay for heating systems, so landlords have limited incentive to invest in a heat pump whose savings go to tenants (an argument, not a measurement).",
+          "source": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1633-L1640",
+          "date": "2026-10-18"
+        }
+      ]
+    }
+  ]
+}

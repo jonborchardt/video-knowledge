@@ -1,0 +1,2151 @@
+Source: Louise Bernard, Andy Hackett, Robert D. Metcalfe, Andrew Schein, Decarbonizing Heat: The Impact of Heat Pumps and a Time-of-Use Heat Pump Tariff on Energy Demand, NBER Working Paper 33036 (October 2024), https://www.nber.org/system/files/working_papers/w33036/w33036.pdf (retrieved 2026-10-18)
+Excerpt: main text, tables and figures; references and online appendix dropped
+
+                                    NBER WORKING PAPER SERIES
+
+                                         DECARBONIZING HEAT:
+                                  THE IMPACT OF HEAT PUMPS AND
+                 A TIME-OF-USE HEAT PUMP TARIFF ON ENERGY DEMAND
+
+                                                 Louise Bernard
+                                                  Andy Hackett
+                                               Robert D. Metcalfe
+                                                 Andrew Schein
+
+                                             Working Paper 33036
+                                     http://www.nber.org/papers/w33036
+
+                         NATIONAL BUREAU OF ECONOMIC RESEARCH
+                                         1050 Massachusetts Avenue
+                                             Cambridge, MA 02138
+                                                  October 2024
+
+We are very grateful to Lucy Bourke, Daniel Lopez Garcia, Izzy Woolgar, and Lucy Yu for their
+comments and formative critique. We thank Cal Gibson at Octopus Energy, who was a
+fundamental partner in our processing and understanding of Octopus Energy’s consumer adoption
+and consumption data. We also thank Alex Schoch, Geraldine De Boisse, Mat Oates, Ben Ferris,
+Jaye Cribb and many others at Octopus Energy Group for implementing the heat pump program
+and Cosy Octopus heat pump time-of-use tariff, working with us to survey Octopus Energy
+customers about how they use their heat pumps, and helping us process and use Octopus Energy
+customer data. We are thankful to Oli Berry, Edwin Chan, Jess Colleen, Lucas Davis, Nathan
+Hendren, Sethu Odayappan, Toby Park, Andy Regan, TJ Root, Blake Shaffer, Phil Steele, Kieron
+Stopforth, and Max Woollard for excellent comments. All mistakes herein are ours alone. Conflicts
+of Interest: Centre for Net Zero is part of Octopus Energy Group Limited. The views expressed
+herein are those of the authors and do not necessarily reflect the views of the National Bureau of
+Economic Research.
+
+NBER working papers are circulated for discussion and comment purposes. They have not been
+peer-reviewed or been subject to the review by the NBER Board of Directors that accompanies
+official NBER publications.
+
+© 2024 by Louise Bernard, Andy Hackett, Robert D. Metcalfe, and Andrew Schein. All rights
+reserved. Short sections of text, not to exceed two paragraphs, may be quoted without explicit
+permission provided that full credit, including © notice, is given to the source.
+
+Decarbonizing Heat: The Impact of Heat Pumps and a Time-of-Use Heat Pump Tariff on
+Energy Demand
+Louise Bernard, Andy Hackett, Robert D. Metcalfe, and Andrew Schein
+NBER Working Paper No. 33036
+October 2024
+JEL No. H2, Q40
+
+                                     ABSTRACT
+
+Heat pumps have been proposed as the leading technology in the electrification of domestic heat
+and therefore could play a crucial part in the transition to low-carbon energy systems. However,
+there is very little causal evidence of the impact of heat pumps on energy demand and the impact of
+marginal prices to help optimize energy demand with heat pumps. We leverage a staggered roll-out of
+heat pumps from Octopus Energy Group to show that: (1) heat pumps have a large impact on
+energy demand, on average causing a 90% reduction in home gas use and a 61% increase in
+home electricity use–overall, households reduced total energy demand by 40% and carbon
+dioxide emissions by 36% in 2024 (with an average of 68% emissions savings over the lifetime of
+the heat pump); (2) a time-of-use tariff designed for heat pumps can provide large demand flexibility
+benefits, halving electricity consumption during the evening peak to help balance the grid, and that
+load shifting is possible on the coldest days and from all building types in our sample; (3) the
+marginal value of public funds of the current UK heat pump subsidy is £1.24 (for every £1 spent by
+the Government). Overall, we find that heat pumps can meaningfully decarbonize heat and
+subsidies to encourage heat pumps can be welfare-enhancing.
+
+Louise Bernard                       Robert D. Metcalfe
+                                     Columbia University
+Centre for Net Zero                  and NBER
+United Kingdom                       rdm2176@columbia.edu
+louise.bernard@centrefornetzero.org
+
+Andy Hackett                         Andrew Schein
+                                     Centre for Net Zero
+Centre for Net Zero                  United Kingdom
+United Kingdom                       andrew.schein@gmail.com
+andy.hackett@centrefornetzero.org
+
+1 Introduction
+
+Half of the global final energy consumption is related to heat, which accounts for 40% of global
+carbon emissions, almost half of which is used to heat buildings (International Energy Agency,
+2019). In many industrialized countries, homes rely on gas boilers to provide heat, leading to
+large shares of these countries’ carbon emissions. Replacing these heating appliances with heat
+pumps using low-carbon electricity has the potential to reduce household carbon emissions
+and energy costs (Billimoria et al., 2021, Gaur et al., 2021). Heat electrification has been recom-
+mended by the IEA (2021) and IPCC (2022) as fundamental to decarbonization and is critical
+if ambitious world climate goals are to be met by the mid-21st century. Heat pumps have been
+recognized as the key universal solution for this heat decarbonization (Rosenow et al., 2022),
+and as a result many governments around the world are subsidizing the adoption of industrial,
+commercial, and residential heat pumps.
+
+    Electrification of heat may cause large problems for grid operators and consumers. For in-
+stance, in the UK (like many industrialized countries), the electrification of heat will be a major
+determinant of the more than doubling of electricity demand expected by 2050, which will in-
+creasingly be met by variable renewable generation (National Grid ESO, 2024). It is predicted
+that electrified heat will have a major impact on peak demand, with the prospect of a surge in
+demand from millions of households on a cold day, leading to fears of power outages (Zhang
+et al., 2022). Electric heat demand is therefore a critical concern for the future operation of
+low-carbon grids as well as planning for necessary upgrades to network capacity, which face
+significant costs and challenges. Demand flexibility is presented as a potential solution to re-
+duce peak heat demand and mitigate capacity constraints, incentivizing consumers to shift con-
+sumption outside of peak periods when the grid is under strain, namely through time-of-use
+tariffs. Such time-of-use tariffs might be very socially valuable with flexible demand technolo-
+gies (Schittekatte et al., 2024), and such tariffs have productivity and investment efficiency bene-
+fits (Borenstein, 2005), as well as potentially improving environmental outcomes (Holland and
+Mansur, 2008).
+
+    However, there is a lack of credible causal evidence on the change in both electricity and
+gas demand from heat pumps, and then the change in demand from time-of-use tariffs that
+encourage customers to adjust how they use their heat pumps. Despite engineering estimates
+suggesting that heat pumps are three to four times more efficient than gas boilers at turning
+energy demand into heat, these estimates are mostly descriptive studies of in-situ performance
+of a handful of heat pumps (Carroll et al., 2020, Energy Systems Catapult, 2023, IEA, 2022). In
+particular, while there are some large model estimates of the impact on greenhouse gas emis-
+sions (Blum et al., 2010, Deetjen et al., 2021, Ruhnau et al., 2019, Thomaßen et al., 2021), the
+societal benefits of heat pumps might depend on the carbon content of the source of electric-
+
+                                                              2
+
+ity (Kaufman et al., 2019, Walker et al., 2022).1 In addition, while modeling work shows that
+heat pumps could increase grid flexibility (Arteconi et al., 2016, Baeten et al., 2017, Flower et al.,
+2020, Franken et al., 2025, Hedegaard and Mu¨ nster, 2013, Quiggin and Buswell, 2016, Teng et al.,
+2016, Waite and Modi, 2020), we have no causal evidence on how any heat pump interventions,
+let alone time-of-use tariffs designed for heat pumps, affect energy demand (Schittekatte et al.,
+2023, Turk et al., 2024).
+
+    Accurate estimates of the causal impact of heat pumps on energy demand are crucial for
+energy system operators contending with electrification to expand grids in an efficient and low-
+cost way.2 Furthermore, for many governments around the world considering introducing or
+amending a heat pump subsidy, understanding the causal change in overall energy demand is
+essential to estimate the optimal heat pump subsidy for society and understand payback periods
+of major home energy investments.3
+
+    In our study, we estimate the causal impact of heat pumps on energy demand (with a sam-
+ple of 1,321 heat pump adopting customers)4 and, separately, the impact of a time-of-use tariff
+designed for heat pump owners (with a sample of 6,631 time-of-use tariff adopting customers).
+In both cases, we employ a staggered difference-in-differences identification strategy, whereby
+everyone in our sample eventually adopts a heat pump with the utility, but they adopt a heat
+pump at different times of the year due to the utility being unable to treat everyone (i.e., in-
+stall heat pumps) at once.5 This natural experiment allows us to causally estimate the impact
+of heat pumps on electricity and gas demand using actual consumption data from Octopus En-
+ergy consumers in Great Britain. We use this same natural experiment and a similar staggered
+
+     1There have been previous calls for creating a credible counterfactual (Carmichael, 2022, Rathmell et al., 2021,
+Rosenow and Hamels, 2023).
+
+     2Evidence of heat flexibility will also inform policy and business models designed to encourage this behavior in
+consumers, particularly as heat demand is expected to be less elastic than other demand due to temporal constraints
+and the primacy of consumer comfort (The Centre for Research in Energy Demand Solutions, 2023, Wilczynski
+et al., 2023).
+
+     3Many countries around the world currently subsidize heat pump adoption (in a renovation or a new build).
+For instance, in 2023, the U.S. Inflation Reduction Act has a $2,000 subsidy (in New York it is $8,000 for low-income
+households), the UK has a £7,500 subsidy, and many other countries in Europe have similar levels of subsidy
+(Austria: €5,000; Belgium €6,400; Croatia: €4,250; Czech Rep: €5,700; Denmark: ¢4,500; Finland: €4,000; France:
+€15,000; Germany: €15,000; Ireland: €6,500; Italy: up to 85% of cost; Lithuania: €14,500; Netherlands: €5,100;
+Norway: €1,000; Poland: €10,750; Portugal: €2,500; Slovakia: €11,400; Spain: €13,500; Sweden: €5,000; Switzerland:
+€15,200) (European Heat Pump Association and others, 2023). This list goes to shows that most industrialized
+countries are spending a great deal of public money by subsidizing heat pumps despite no credible causal evidence
+that they reduce energy demand and carbon dioxide emissions (which are needed to estimate the policy-relevant
+optimal subsidy).
+
+     4In our data, we know the exact weeks in which the heat pump was installed, which contrasts with much of
+the previous literature using self-reported survey responses.
+
+     5In October 2023, the UK Government increased the size of the heat pump subsidy, and this raised the demand
+for heat pumps. The demand for Octopus Energy heat pumps outstripped supply, which caused an average delay
+of 28 weeks between agreeing to buy the heat pump and installation of the heat pump.
+
+                                                              3
+
+difference-in-differences estimator to identify the impact of Octopus Energy’s new heat pump
+time-of-use tariff on energy demand. We address the weaknesses of the two way fixed effects
+(TWFE) difference-in-differences estimator highlighted by the recent literature (Baker et al.,
+2022, Callaway and Sant’Anna, 2021, Goodman-Bacon, 2021) by using Callaway and Sant’Anna
+(2021) (CS) dynamic estimators (in addition to Borusyak et al. (2024)).
+
+1.1 Primary Findings
+
+We have three main sets of results. First, we find that the adoption of heat pumps causes a
+substantial change in energy demand. For gas, on average we find a 90% decrease in demand
+per year – a 9,351 kilowatt-hour (kWh) reduction, from a baseline of 10,336 kWh per year.6 For
+electricity, we find a 61% increase in demand per year – a 3,080 kWh increase, from a baseline of
+5,062 kWh per year. Altogether, we find that households substantially reduce their total energy
+(electricity plus gas) demand – the gas reduction is greater in absolute terms than the electric-
+ity increase. In other words, heat pumps replace gas demand with electricity using only about
+30% of the energy. This is broadly in line with engineering estimates of heat pumps having ap-
+proximately 300% efficiency of a gas boiler. In our preferred empirical specification, households
+reduced energy use by approximately 40%7 by replacing their gas boiler8 with a heat pump. In
+today’s terms, that is equivalent to a 1.16 tonne reduction in CO2eq emissions per household per
+year – we calculate that this is a 36% reduction on their pre-heat-pump adoption CO2eq foot-
+print from annual energy consumption of 3.23 tonnes.9 By the end of an assumed 20-year heat
+pump lifespan (i.e., in 2043), emissions savings rise to 1.86 tonnes per year as the electricity grid
+decarbonizes. Overall, this indicates that heat pumps can reduce a household’s CO2 equivalent
+emissions by 68% throughout their operational lifespan.10
+
+    We also estimate how heat pump adoption affects demand over different seasons, temper-
+atures, times of the day, and types of homes – all potential moderators for different treatment
+effects. Our analysis measures long-term impacts: on average, we have over five months of
+
+     6This is largely a mechanical result of households no longer needing any gas and thus stop all gas contracts,
+but some households do continue using gas for cooking.
+
+     7We refer here to end-use demand. Electricity generation may be greater than end-use demand due to upstream
+efficiency losses. When we calculate CO2eq impacts of demand, we use emissions factors that account for these
+upstream efficiency losses.
+
+     8In the UK, the majority of households heat their homes with gas boilers that heat up water and distribute
+through the home via radiators, what is commonly as a “wet” heating system.
+
+     9We use UK Government (2024a) and Department for Energy Security and Net Zero (2023b) estimates of
+CO2eq per kWh of electricity and gas consumption. In 2024, electricity marginal carbon intensity is 0.226 kg CO2eq
+per kWh, whereas gas carbon intensity is 0.20226 0.226 kg CO2eq per kWh.
+
+    10This lifetime emissions savings figure is based on the assumption that the impact of heat pumps and pre-heat
+pump energy consumption remain constant over time, with the only variable being the decreasing carbon intensity
+of electricity as it becomes cleaner (i.e. in 2043, the reduction on pre-heat-pump adoption emissions is 89%.
+
+                                                              4
+
+post-heat-pump-adoption consumption data for our sample, and many of the customers in our
+analysis sample have heat pumps for two winters (18 months). We find that most of the in-
+crease in electricity consumption is concentrated during the winter months, with virtually no
+increases in demand past 15°C. We find that heat pumps alone do not drastically change the
+shape of electricity demand during the day, suggesting that heat pumps alone do not provide
+demand flexibility. We find no clear evidence that properties with worse energy performance
+certificate ratings or in areas with higher incomes (based on middle layer super output area
+or based on individual property value) increase their electricity consumption more than other
+properties. However, we find that floor area (a proxy for heat loss) shows a correlation with
+the increase in electricity consumption due to heat pump installation.
+
+    We assess the external validity of our results to a broader population sample. While our
+sample is not fully representative of the entire population, we explore the generalizability of
+the estimated effects by re-weighting our data to match the covariate distribution of Octopus
+Energy smart meter customers in terms of annual electricity consumption, property value, en-
+ergy performance rating, and floor area. After applying this re-weighting, the treatment effects
+remain consistent, indicating that our findings may be generalizable to the national population.
+This result reinforces the notion that the observed effects of heat pumps are largely mechani-
+cal — though they do not significantly change energy usage patterns in homes, they are more
+efficient from a kWh perspective.
+
+    Second, we investigate heat flexibility by estimating the causal impact of Octopus Energy’s
+heat pump time-of-use tariff on energy demand. The tariff, named Cosy Octopus, was introduced
+at the end of December 2022. As heat becomes the main source of electricity demand, a time-of-
+use tariff for heat pump owners is designed to shift electricity consumption away from times of
+grid constraints and higher marginal prices – this is especially important as the grid is supplied
+by more renewable generation. For most of the time in our analysis frame, the tariff includes
+two three-hour “Cosy” periods (4-7am and 1-4pm) with a 40% reduction in the marginal price,
+and a three-hour peak period (4-7pm) with a 60% increase in the marginal price. All other
+hours are billed at the customers’ typical standard marginal price.11 We analyze consumption
+impacts from December 2022 through June 2024. The identification strategy here is the same as
+for heat pump adoption – we use the staggered enrolment into the time-of-use tariff over time
+and estimate the impact against everyone who eventually becomes treated (in other words, all
+customers in our sample eventually “opt in” to treatment). The identification strategy comes
+from the increase in the UK heat pump subsidy which drew a great deal of attention from
+consumers.12
+
+    11(This Cosy tariff is priced closer to the wholesale price of energy than the standard tariff, whose price does
+not change by hour of the day.
+
+    12This identification strategy of using a change in attention – an “advertising effect” – to examine tariff switching
+and inertia is related to analyses by Dressler and Weiergraeber (2023), Hastings et al. (2017), Ho et al. (2017),
+Honka et al. (2017), Hortac¸su et al. (2017).
+
+                                                              5
+
+    Again, our analysis measures relatively long-term consumption impacts, covering customers’
+consumption for an average of seven months after Cosy adoption. Over 500 customers in our
+sample have two winters of data on Cosy. We observe stable and persistent treatment effects over
+time, where adopting Cosy causes a decrease in peak rate electricity consumption and simulta-
+neous increase in consumption during the two cheaper off-peak time periods. Based on yearly
+averages, we find that switching to Cosy causes: (i) a more than doubling of consumption in the
+morning Cosy off-peak period (4-7am); (ii) a nearly doubling of consumption in the afternoon
+Cosy off-peak period (1-4pm); (iii) a halving of peak consumption (4-7pm); and (iv) a ≈28%
+consumption reduction during all other times (the other 15 hours of the day). In summary,
+in the off-peak periods, prices drop by 40% and electricity demand increases by 100%. In the
+peak period, prices increase by 60% and electricity demand decreases by 50%.13 These implied
+own-price and cross-price elasticities are large. Cosy adopters save £318 – ≈18% on their energy
+costs from switching to Cosy – compared to if they are on Octopus Energy’s standard tariff. Of
+this £318 in savings, £78 is “structural” winnings, while £240 comes from demand shifting.14
+
+    We also analyze the impact of the time-of-use tariff on different moderators (e.g., seasons,
+outdoor temperatures, and households). We find that households’ load shifting towards off-
+peak times is twice as high during the winter, while peak avoidance persists during non-winter
+months, but with a much smaller magnitude of reduction. We find greater peak reduction and
+off-peak increase on colder days, among larger homes (measured by floor area), and among
+homes that Octopus Energy predicts have high heat loss (based on data from the homes’ energy
+performance certificate). We also find larger absolute shifts in demand from higher-income
+households, but all income levels shift consumption and benefit equally as a fraction of their
+bill from the time-of-use tariff.15 We believe that these findings are linked. We see greater
+impact of time-of-use tariffs where heat pumps have higher energy consumption due to higher
+heat loss – whether this higher heat loss is due to external conditions such as cold weather,
+or to property-specific characteristics such as higher floor area or heating needs. In a survey
+we ran with these customers, a majority of respondents say they automate their heat pumps
+through smart thermostats.16 We also find that when we re-weight the estimates to have the
+identical covariate distribution as Octopus Energy smart meter customers on annual electricity
+consumption, property value, energy performance rating, and floor area, the treatment effects
+
+    13During our sample time period, there were no secondary effects on causing local distribution peaks, which
+has been recently noted for EV time-of-use tariffs (Bailey, Brown, Myers, Shaffer and Wolak, 2024).
+
+    14This means that, on average, customers benefit on this tariff even without shifting their consumption. How-
+ever, consumers who are more elastic with their heating benefit more form the tariff (Borenstein, 2007, Ito et al.,
+2023).
+
+    15This result is consistent with other research suggesting that dynamic pricing benefits all households (Boren-
+stein, 2013, Burger et al., 2020, Leslie et al., 2021), but in contrast to the research suggesting an income gradient
+(Cahana et al., 2022, Horowitz and Lave, 2014).
+
+    16This finding echoes the results from Jessoe and Rapson (2014) and Bollinger and Hartmann (2020) that house-
+holds need the correct technology in order to respond to time-varying prices.
+
+                                                              6
+
+are somewhat smaller in absolute terms given the slightly above-average size of the homes in
+our Cosy sample.
+
+    Third, given our demand estimates from heat pumps and the time-of-use tariff, we calculate
+the welfare changes of policies to encourage heat pump adoption. We compute the marginal
+value of public funds (MVPF) (Hahn et al., 2024, Hendren and Sprung-Keyser, 2020) for the
+heat pump subsidy in the UK (the Boiler Upgrade Scheme) to understand its efficiency. We also
+estimate the resource, government, and social cost per tonne for the heat pump subsidy. The
+subsidy was introduced in May 2022, with a £5,000 subsidy for air-source heat pumps, which
+increased to £7,500 per air-source heat pump from 23 October 2023.17 Using data on the predic-
+tions of the grid over the next 20 years, the change in the social cost of carbon (SCC) over the
+next 20 years,18 and assuming that half of the new adopters from the subsidy are marginal and
+the rest are inframarginal (which is similar to other large residential energy efficiency elastici-
+ties – see Hahn et al. (2024)), we find that the average MVPF of the current heat pump subsidy
+administered in 2023 is 1.24. This means that the heat pump subsidy generates £1.24 in societal
+benefits for the £1 in net government cost. The 1.24 MVPF calculated in our study for the heat
+pump subsidy is favorable to other subsidies to reduce CO2 (Hahn et al., 2024).19 The MVPF
+increases to 1.90 if we include the learning by doing benefits of the subsidy wherein greater
+production reduces costs. Given learning rates for heat pumps are not well established in the
+literature, this estimate assumes a similar rate as for gas boilers; it should therefore be treated
+with caution.
+
+    We also find that resource and social costs per tonne of CO2 are both £125 and £122, re-
+spectively, while the government cost per tonne of CO2 is £450. When we consider the changes
+in demand that result from the time-of-use heat pump tariff, the resource and social costs per
+
+    17The subsidy has been focused on upfront costs of heat pumps (U.K. Department for Business, Energy &
+Industrial Strategy, 2021), as some previous evidence points to these costs being pivotal for consumers (Shen
+et al., 2022). Note that it also subsidizes ground-source heat pumps and biomass boilers. Our analysis focuses on
+air-source heat pumps.
+
+    18The UK government’s SCC is £250 per tonne of CO2 but it is calculated by estimating the marginal abatement
+cost (i.e., resource costs) per tonne of CO2. The government estimates the amount of CO2 that is needed to meet
+the UK’s future CO2 targets and walks up the marginal abatement cost curve until it hits that CO2 target, which
+hits costs at £250 per tonne of CO2. This UK government approach is in contrast to how other countries, like the
+US, estimate the social cost of carbon. Those other countries use the marginal damage per tonne of CO2 from
+integrated assessment models (EPA, 2022).
+
+    19This favorability to other policies is particularly evident when analyzing the initial £1 of the subsidy, which
+yields a marginal value of public funds (MVPF) of 2.77, excluding the benefits from learning by doing. Addition-
+ally, as the carbon intensity of electricity generation is expected to decline over time, the reduction in CO2 emissions
+from heat pumps will increase (based on the government forecasts we use, emissions savings on pre-heat-pump
+adoption consumption reach 89% in 2043). This implies that the MVPF for a heat pump subsidy will likely rise in
+the future, suggesting that higher optimal subsidies for heat pumps could be justified moving forward.
+
+                                                              7
+
+tonne of CO2 reduce to -£31 and -£35, respectively.20 In either case, the government cost per
+tonne is greater than the social cost per tonne, but this ignores the benefits of the subsidies to
+inframarginal customers. As shown in Hahn et al. (2024), the MVPF includes the inframarginal
+benefits and is overall a better measure of welfare from subsidies than cost per tonne.
+
+1.2 Relationship to Existing Literature
+
+While our paper is focused on a change in fuel type, we can compare the impacts on energy use
+and CO2 emissions to that from the general literature on energy conservation and energy effi-
+ciency. Much of this literature suggests that engineers’ predictions about demand reductions
+from such technologies are not the same as the actual demand reductions when having a cred-
+ible counterfactual (Brandon et al., 2022, Fowlie et al., 2018). Our paper is slightly in contrast
+to these papers since, based on a robust counterfactual, we observe demand reductions from
+heat pump adoption in our sample that are largely in line with engineering estimates – in that
+heat pumps cause a nearly total elimination of gas consumption and an increase in electricity
+consumption of about 30% of the magnitude (in kWh) of the gas consumption abated, in line
+with heat pumps having approximately 300% efficiency (Jadun et al., 2017).21
+
+    To the best of our knowledge, the treatment effect of heat pumps in this paper – a 40% re-
+duction in household energy demand and a total 68% reduction in household CO2 emissions –
+is the largest ever estimated for an energy demand reduction technology or intervention with
+a credible identification strategy. Heat pumps demonstrate a demand reduction effect that is
+two to three times greater than that of weatherization efforts (Allcott and Greenstone, 2017,
+Fowlie et al., 2018) and larger than other low carbon technologies.22 Given the ambitious na-
+tional and international CO2 reduction targets set, policymakers need to prioritize encouraging
+technologies capable of significantly reducing society’s CO2 emissions. Heat pumps are one
+such technology, and our findings suggest they should be subsidized, as such subsidies are
+welfare-enhancing. Such heat pump subsidies also have a larger MVPF than other subsidies
+to reduce CO2 in the residential sector, such as for more energy-efficient appliances, insulated
+homes (through weatherization), and electric vehicles. Moreover, pairing heat pumps with
+time-of-use tariffs specifically designed for this technology can make them cost-effective for
+households while delivering flexibility benefits to the grid.
+
+    20This negative number suggests that consumers save money by adopting a heat pump and the associated time-
+of-use tariff (Cosy Octopus).
+
+    21There have been instances when the engineering estimates are in line with the energy demand changes, e.g.,
+Berkouwer and Dean (2022). Our treatment effect of the heat pumps on demand are larger than some of the earlier
+studies that estimate changes over time without a clear counterfactual group and where the measurement of the
+adoption of heat pumps is based on self-selected survey responses (Alberini et al., 2016, Liang et al., 2022).
+
+    22The heat pump demand effect is towards the higher end of the range of estimates from installing solar PV on
+energy demand (Beppler et al., 2023, D’Agosti and Danza, 2023, Kattenberg et al., 2022, Qiu et al., 2019)
+
+                                                              8
+
+    Furthermore, our estimates of the shift in consumption from the heat pump time-of-use
+tariff are somewhat larger than the existing literature. Some of the existing papers in this area
+with similar pricing structures (Fowlie et al., 2021) show price elasticity of approximately -0.075
+in the context of critical peak pricing events. We find that our Cosy impacts imply own-price
+elasticities of -1 to -2.23 Our estimates of within-day shifting might be larger because the tariff
+was focused specifically for heat pump users who might be more elastic and select into the tariff
+based on economic benefit (Ito et al., 2023); or the way that consumers can respond to prices
+is easier, since the technology can be automated to be switched on during off-peak periods
+and turned off at peak and all other time periods, and time-of-use tariffs with technologies are
+associated with price changes have larger demand changes (Faruqui and Sergici, 2010, Faruqui
+et al., 2017, Jessoe and Rapson, 2014).24 On this last possibility, we note that, in responses to a
+survey we sent to customers about how they responded to Cosy, around 70% say they use smart
+thermostats or automation settings on their heat pumps to change their energy use in response
+to the time-of-use pricing schedule. While we cannot separate out these potential mechanisms,
+it seems that ease-of-shift with heat pumps is particularly important and thus future research
+on technology-specific tariffs has a great deal of potential value.
+
+    Our study relates to the wider literature on heat pumps. For example, heat pump adoption
+is related to geography, climate, and electricity prices (Anderson and Kirkpatrick, 2024, Davis,
+2023a,b, Sahari, 2019), and also property prices (Shen et al., 2021). We find that the average
+income level of areas with heat pump customers in our sample is slightly higher than the rest
+of England and Wales, consistent with previous research showing that low carbon technologies
+and the subsidies associated with such technologies largely go to higher-income households
+(Borenstein, 2017, Borenstein and Davis, 2016, De Groote and Verboven, 2019, Feger et al., 2022,
+Metcalf, 2019), and in contrast to the pattern of heat pump adoption that Davis (2023a) finds
+in the US. The population in the areas that heat pump customers are based is also older and
+slightly more educated.
+
+    Our research also contributes to the literature on tariff design and switching. Many studies
+suggest a high degree of inertia in energy tariff markets, often due to significant switching costs
+(Gravert, 2024, Hortac¸su et al., 2017). However, in our case, we examine a technology-specific
+tariff that consumers can easily benefit from through simple forms of automation. No previous
+empirical study has explored switching in the context of such a technology-specific tariff.25 As
+
+    23We acknowledge here that we have three different time periods, where prices are changing simultaneously in
+peak and off-peak, but remaining static for all other times in comparison to the counterfactual tariff. This makes
+comparisons in price elasticities more nuanced.
+
+    24It has been previously noted that heat pumps might provide excellent flexibility for time-varying prices (Arte-
+coni et al., 2013, Fitzpatrick et al., 2020, Lyden et al., 2024, Pallonetto et al., 2016, Rodr´ıguez et al., 2018, Schibuola
+et al., 2015, Sweetnam et al., 2019).
+
+    25The closest work has focused on understanding whether changing incentives for night-time EV charging affect
+demand (Bailey, Brown, Shaffer and Wolak, 2024, Qiu et al., 2022).
+
+                                                              9
+
+heat pumps and smart thermostats become more prevalent across energy markets, and as de-
+mand for these tariffs increases, we believe that future switching studies should focus on the
+benefits and costs associated with adopting these types of tariffs.
+
+    The rest of the paper is structured as follows. First, we present the set-up and identification
+strategy in Section 2. Next, we show the main results for the impact of heat pump installation
+on energy use and subsequent adoption of heat pump specific time-of-use tariff in Section 3.
+We discuss welfare implications in Section 4. Finally, we summarize the main results in the
+conclusion Section 5.
+
+2 Set-up and Identification Strategy
+
+In this section, we outline our approach to identifying the causal impacts of two key interven-
+tions on energy consumption: the installation of heat pumps and the adoption of a specific
+time-of-use tariff tailored for heat pump users.26 In our set-up, we first isolate the causal impact
+of heat pumps on energy demand, and then isolate the causal impact of a heat pump tariff on
+energy demand.
+
+2.1 Heat Pump Installation
+
+Our primary goal is to identify the causal impact of heat pumps on consumer energy demand.
+Estimating this causal impact by comparing those who adopt a heat pump versus those who
+do not may be plagued by various sources of bias. Those that adopt heat pumps may differ
+systematically from other customers in a multitude of unobservable ways that correlate with
+their potential outcomes.
+
+    To address this concern, we use the staggering of heat pump adoption around Great Britain
+among customers purchasing their heat pumps from Octopus Energy to create a counterfactual
+control group who adopted a heat pump but were delayed in doing so. Octopus Energy has
+been installing heat pumps since February 2022 and was taking orders as of December 2021.
+In Figure 1, we show how Octopus Energy’s rollout of heat pumps progressed over time. We
+plot both installations and their corresponding deals. Deals are defined as the customer paying
+a refundable deposit to obtain their heat pump (they have skin in the game). We see a natural
+delay between customers making a deal for the heat pump and installation, due to installation
+constraints. This delay provides us with a natural experiment to understand the impact of heat
+pumps on energy demand for all those who want a heat pump. We see evidence that deals
+increased markedly in September 2023, when the Government announced its plan to increase
+
+    26The tariff included every unit of energy used in the household but was designed to be more friendly for heat
+pump users.
+
+                                                             10
+
+the level of the main subsidy for heat pumps (the Boiler Upgrade Scheme), from £5,000 to
+£7,500 per air-source heat pump. However, because of the delay between deal and order, we see
+a slower and steadier increase in heat pump installations both before and after September 2023.
+
+                                    Figure 1: Weekly deals and installations
+
+Note: We show weekly heat pump adoptions in solid purple – these adoptions, together, comprise our sample of
+1,321 heat pump adopters. We also show in hashed gray the deals for these 1,321 adoptions. The drop-off in the
+deals line is not reflective of broader trends in heat pump adoption by Octopus Energy customers – it is driven by
+the fact that we only show deals for the customers whose installation was complete by 15 June 2024 (customers
+who are in our analytical sample, i.e., the solid purple line). The Boiler Upgrade Scheme was increased from £5,000
+to £7,500 in October 2023, with the announcement of this change coming in September 2023.
+
+    We use the whole universe of Octopus Energy retail customers that adopted a heat pump
+with Octopus Energy as their heat pump installer. There are 1,321 such customers who adopted
+a heat pump as early as 28 February 2022 or as late as 15 June 2024, and who have sufficient
+consumption data for analysis. Customers who have a deal but no installation as of 15 June 2024
+are akin to never treated in our sample; we exclude these 514 customers from our main analysis
+but include them in a robustness check we present in Table A.2. We examine consumption from
+
+                                                             11
+
+13 December 2021 through 15 June 2024.27
+
+    Heat pumps in our sample have an average size of 8kW, which is quite representative of
+the average heat pump sold. Almost all customers in our sample took advantage of the Boiler
+Upgrade Scheme subsidy. On average, it was worth £6,800 to the customers in our sample – this
+is a weighted average of the £5,000 subsidy level and the later, more generous, £7,500 level.28
+
+    Our quasi-experimental design presents some econometric challenges. In particular, stag-
+gered difference-in-differences models may produce biased estimates if treatment effects are
+heterogeneous across units and over time (Callaway and Sant’Anna, 2021, Goodman-Bacon,
+2021). This might happen in our setup because: (a) households may get better at using their
+heat pump over time; and (b) households could also adopt more low carbon technologies to
+complement their heat pump usage. With this in mind, we calculate Callaway and Sant’Anna
+(2021) (CS) difference-in-differences estimators. We do this by aggregating the data at weekly
+level. Our cohorts are divided by their week of heat pump adoption, and the unit of observation
+is the average consumption for household i in the cohort g in week t.
+
+    The CS model is estimated as follows. We start by calculating the group-time Average Treat-
+ment Effect on the Treated (ATTs) for all our treated cohorts and weeks, and then aggregate
+these group-time ATTs across different groups or time periods to obtain summary measures of
+treatment effects relevant to our analysis. We examine three ways of using CS to aggregate and
+understand HP impacts. First, dynamic effects: this captures how the treatment effect evolves
+over time since adoption. Second, calendar-time effects: this assesses the impact of treatment
+across different points in the calendar, accounting for when the treatment occurred, which is
+particularly important as heat pump impacts are seasonal. Third, overall treatment effect: for
+an overall measure, the ATT is averaged across all groups and time periods.
+
+    Our outcome Yit is the energy consumption (gas, electricity or gas + electricity consumption,
+
+    27Smart meter data availability in the sample is contingent upon customers having an active contract with Oc-
+topus Energy during the time period (December 2021 to June 2024), a functioning smart meter, and granting
+permission to share half-hourly data. This results in limitations, as we cannot access prior installation data for
+customers who acquired a heat pump with Octopus Energy but were not existing customers at the time. Similarly,
+data gaps exist for customers who joined and then switched to another provider. The situation is even more com-
+plex with gas data. Despite the popularity of dual tariffs in the UK, some customers have different suppliers for
+gas and electricity. Consequently, although 82% of customers who installed heat pumps also used gas, we can only
+observe a fraction of this subset. For a visualization of these dynamics, see Figure A.1.
+
+    28For commercial sensitivity reasons, we are not able to share the cost to households in our sample after the
+Boiler Upgrade Scheme subsidy. However, we note that the average cost of heat pump installation since the Boiler
+Upgrade Scheme subsidy was increased to £7,500 per air-source heat pump (in October 2023), according to MCS
+(Microgeneration Certification Scheme (MCS), 2024), is £12,713. This is a simple average of MCS’s monthly average
+cost for air-source heat pumps from November 2023 through June 2024. Heat pumps must be certified by MCS to
+be eligible for the Boiler Upgrade Scheme subsidy, so we believe that MCS data encompasses all relevant air-source
+heat pump installations during this period, implying an average private expenditure of £5,213 per air-source heat
+pump after the subsidy was applied.
+
+                                                             12
+
+which we call “total energy”) for household i in week t. We define G as the first week the heat
+pump was fully installed. We do not observe if customers change heating systems later, but
+we consider it unlikely. Yit(0) is household i’s potential energy use at time t if they remain
+untreated. Yit(g) is the potential energy use for household i at time t if they were first treated in
+week g. Gig is a dummy variable equal to one if a household i had a heat pump installed in week
+g, and zero otherwise. For simplicity, we will consider that some customers get a heat pump in
+week 2 (in reality, we observe more weeks before treatment). Thus, g = 2, . . . , τ .
+
+    The observed and potential outcomes for each household i can be written as:
+
+                             τ                                    (1)
+
+Yit = Yit(0) + (Yit(g) − Yit(0)) · Gig
+
+                           g=2
+
+    We define the Average Treatment Effect on the Treated (ATT) for cohort (week of adoption)
+g at time t (referred to as the group-time average treatment effect in the Callaway and Sant’Anna
+(2021) framework) as:
+
+AT Tgt = Egt [Yt(g) − Yt(0) | Gg = 1]                             (2)
+
+    This group-time ATT measures the expected difference in energy consumption at time t for
+customers who received the heat pump in week g, compared to what their consumption would
+have been without the treatment.
+
+    The dynamic effects (event-style analysis) for the time e since adoption, with e = t − g, can
+be written as:
+
+θes(e) = 1 {g + e ≤ τ } P (G = g | G + e ≤ τ ) · AT T (g, g + e)  (3)
+
+                g∈G
+
+    Here, P (G = g | G + e ≤ τ ) represents the probability that a customer was first treated
+in week g, given that they are observed e periods after treatment. This probability acts as a
+weight, ensuring that the treatment effect AT T (g, g + e) is appropriately scaled according to
+the size of the group treated in week g and their exposure duration. This aggregation averages
+the treatment effect for all customers who have been treated for exactly e periods. However, it
+should be noted that this approach introduces some compositional effects because it mixes the
+treatment effects across different cohorts who might have different baseline energy consumption
+patterns due to seasonality or other factors. Therefore, it should only be interpreted as the
+treatment effect for exposure e if we assume that AT Tg,g+e does not vary across cohorts. In the
+case of heat pump analysis, this effect varies across cohorts as customers install their heat pumps
+at different times of the year.
+
+    Then, we calculate the calendar-time average treatment effect, which can be defined as:
+
+13
+
+                θc(t˜) = 1 t˜ ≥ g P (G = g | G ≤ t˜) · AT T (g, t)       (4)
+
+                              g∈G
+
+    This expression captures the average treatment effect at a specific calendar time t˜, weighted
+by the probability that a customer was treated by week t˜. This helps in understanding the impact
+of heat pump installations across different points in time, accounting for when the treatment
+was administered.
+
+    Finally, the simple overall treatment effect can be expressed as:
+
+                θWO  =  1      τ                                         (5)
+                        κ
+                                  1 {t ≥ g} AT Tgt · P (G = g | G ≤ τ )
+
+                           g∈G t=2
+
+where κ =  g∈G  τ    1  {t  ≥  g}  P  (G  =  g  |  G  ≤  τ ).  This normalization ensures that the
+                t=2
+
+weights sum to 1. The overall treatment effect θWO is a weighted average of the group-time ATTs,
+
+putting more weight on larger groups and those who have remained in treatment for longer pe-
+
+riods. This method avoids the issues associated with traditional two-way fixed effects (TWFE)
+
+models, such as negative weighting, which can lead to biased estimates.
+
+    The validity of our identification strategy rests on several key assumptions. First, we have
+irreversible treatment, so once a customer installs a heat pump, they do not revert to their previ-
+ous heating system, which is a very reasonable assumption. Second, we have random sampling,
+so selection into receiving a heat pump earlier versus receiving a heat pump later is not corre-
+lated with trends in energy use. Importantly, the average waiting time in our sample is 28 weeks
+(nearly half a year), due to installation constraints and not energy levels or trends. This time
+period between initial quote and final installation is a key natural experiment for our identifi-
+cation strategy, as it implies that many of the customers who do not yet have a heat pump and
+form our counterfactual are customers who nevertheless want a heat pump.
+
+    Third, we have no anticipation, so customers do not change their behavior in anticipation of
+heat pump installation, or if they do, this anticipation is limited to a clearly defined period. We
+use an anticipation period of one week to account for the 5 days it takes to remove the previous
+heating source and install all the necessary parts of the heat pump system in properties.29 Last,
+we assume unconditional parallel trends. This assumption, based on “not-yet-treated” groups,
+
+    29We see evidence of longer anticipation effects than one week, as can be seen in Figure A.15. Specifically, heat
+pump impacts increase slightly when we use longer anticipation periods. This is especially the case for the extent
+to which heat pumps cause a reduction in gas consumption. We hypothesize that this pattern may be due to
+people removing their gas meters more than one week before heat pump installation, even up to five weeks before
+heat pump installation. Customers might then use portable electric heaters as temporary substitutes during this
+period. The upshot of these possibilities is that our results could be an underestimate of the electricity increase
+and, especially, gas reduction, caused by heat pumps. However, we use the more conservative estimates generated
+by assuming one week anticipation.
+
+                                                             14
+
+ensures that the comparison between treated and untreated groups is valid, as the trends in
+outcomes would have been parallel in the absence of treatment.
+
+    For a visual inspection of pre-trends, we include event study style plots in Section 3.1.2.
+Due to our sample size, we have a great deal of power to reject differences in trends close to
+zero, addressing concerns (Freyaldenhoven et al., 2019, Roth, 2022, Roth et al., 2023) that low
+statistical power could undermine the validity of parallel trends tests.
+
+    Finally, note that, in addition to the CS estimators, for certain heterogeneity analyses (in
+particular, see Sections 3.1.5 and 3.2.5), we run TWFE models.30 We use this TWFE model
+to interact treatment (heat pump installation or tariff adoption) with contextual variables or
+customers characteristics. However, because the comparison between earlier adopters to later
+adopters may bias our coefficients, we only use TWFE results to estimate the shape of the re-
+lationship between the treatment and interaction variables of interest. Overall, we find a small
+amount of bias in the TWFE estimates (approximately 8% for analysis of electricity consump-
+tion, but larger for analysis of gas consumption; see Table A.1). We still use the CS estimates as
+the model of choice for estimating the treatment effects.
+
+2.1.1 Threats to Internal and External Validity
+
+For internal validity, we show in Section 3.1.2 that we have parallel trends in pre-adoption en-
+ergy use between the earlier and later heat pump adopters in the CS framework. There might
+be other threats to identification, such as the co-varying adoption of other technologies in the
+home. Before 08 May 2024, the Boiler Upgrade Scheme required an energy performance cer-
+tificate with no recommendations for loft and cavity wall insulation. In our sample and data,
+we find evidence that insulation is adopted many time periods before heat pump adoption. We
+discuss some further technologies that might threaten internal validity in Section 3.1.4, such as
+electric vehicles and solar panels. These technologies together are the future of decarbonization
+
+30The TWFE model is:
+
+                      Yit = αi + λt + δDit + βHDDit + ϵit  (6)
+
+with Yit being the energy consumption for household i at time t. We run different models depending on the
+analysis: weekly overall energy, gas and electricity consumption in kWh in week t for the heat pump analysis, and
+average half hourly electricity consumption by rate period in kWh in day t for the heat pump specific tariff analysis.
+Dit is a dummy variable equal to 1 if the customer has a heat pump installed for the week t, 0 otherwise for the heat
+pump analysis. Dit is a dummy variable equal to 1 if the customer has adopted the heat pump specific tariff in day t,
+0 otherwise for the heat pump specific tariff analysis; HDDit is the average heating degrees in week/day t and GSP
+Group of household i for the heat pump and heat pump specific tariff analysis respectively. We use average daily
+temperature measured at the GSP Group level, based on the highest-quality weather station in the GSP Group.
+GSP Groups are zones commonly used in the energy sector in Great Britain to divide customers geographically.
+There are 14 GSP Groups. These are the same regions that determine slight variations in the exact prices of Cosy, as
+shown in Section A.2.1.) αi + λt are household i and week/day t fixed effects, and the standard errors are clustered
+at the customer households level.
+
+                      15
+
+in the residential sector; thus our analysis of their interaction with heat pumps is a beneficial
+feature of our sample that we exploit.
+
+    For external validity, we compare those in our sample to those who are not in our sample.31
+We compare the geographic areas in which we have heat pump adopting customers to other
+geographic areas in England and Wales in Table A.14. We use these ecological comparisons
+because we lack individual-level data on certain key variables about our sample, such as their
+household income. In Great Britain, the Office of National Statistics (ONS) compiles data on
+income and related statistics at various levels of geographic granularity. The measure we use is
+at the middle layer super output area (MSOA). There are 7,201 MSOAs in England and Wales,
+each comprising on average approximately 8,000 people.32 We use approximately 6,000 MSOAs
+that have full data from the ONS on average income, demographics and socio-economics vari-
+ables used at the MSOA level.
+
+    We find that the average income level of areas with heat pump customers in our sample is
+slightly higher than the rest of England and Wales (household income of £49.3k in our sample
+versus £46.1k in all other areas). This difference is consistent with previous research showing
+that low carbon technologies and the subsidies associated with such technologies largely go to
+higher-income households (Borenstein, 2017, Borenstein and Davis, 2016, De Groote and Ver-
+boven, 2019, Feger et al., 2022, Metcalf, 2019), and in contrast to the pattern of heat pump adop-
+tion that Davis (2023a) finds in the US. Using the Index of Multiple Deprivation (IMD) (created
+by the Consumer Data Research Centre) to measures relative deprivation across each of the con-
+stituent nations of the United Kingdom, we find that areas with heat pump customers are also
+slightly less likely to be deprived.33 The population in the areas that heat pump customers come
+from is also slightly older and slightly more likely to have achieved a Level 4 qualification (the
+latter being a measure of educational attainment, equivalent to a high school degree). Interest-
+ingly, the property prices in treated areas are lower than the property prices in the control areas,
+suggesting that there is not a consistent story that all of the early adopters have large differences
+in income.
+
+    Beyond observable differences between our heat pump adopter sample and other customers,
+we note that our sample comprises “early adopters” who may be different in unobservable ways
+from the general population. In addition, our heat pump adopter sample comprises reasonably
+well-insulated properties, given it was a funding condition for the Boiler Upgrade Scheme until
+08 May 2024, as noted above.
+
+    31In Section A.3.2, we re-weight our sample to have the identical covariate distribution as Octopus Energy smart
+meter customers on annual electricity consumption, property value, energy performance rating, and floor area.
+
+    32Scotland uses a different system of aggregation; we focus this descriptive analysis on England and Wales.
+    33The IMD datasets are small area measures of relative deprivation across each of the constituent nations of
+the United Kingdom. Dimensions include income, employment, education, health, crime, barriers to housing and
+services, and the living environment.
+
+                                                             16
+
+2.2 Heat Pump Time-of-Use Tariff Adoption
+
+We also aim to evaluate the causal impact of a specific time-of-use tariff for heat pump users,
+called Cosy Octopus, on energy demand. Octopus Energy designed this new tariff in 2022 to en-
+courage heat pump users to shift their electricity demand in a way that would be beneficial for
+reducing wholesale power procurement costs; in other words, encouraging heat pump owning
+customers to shift their electricity consumption away from peak periods, which are most pol-
+luting for the grid. The marginal price faced by Cosy-adopting customers differs by hour of the
+day, as we show in Figure 2.
+
+    Specifically, Cosy’s marginal price shape has two off-peak periods and one peak period. The
+first off-peak period is in the morning, from 4am to 7am, and the second in the early afternoon,
+from 1pm to 4pm. The peak period is from 4pm to 7pm. All other hours are charged at the
+standard tariff’s marginal price. In contrast, a standard tariff would have no hour-of-day varying
+marginal prices. The design of the tariff with respect to prices varying within a day is designed
+to broadly correlate with wholesale market prices. We show average wholesale prices across the
+four Cosy periods in 2022, 2023, and the first half of 2024 in Table A.7 based on data from LCP
+Delta (2024). We find that the Cosy tariffs’ consumer-facing marginal prices are correlated with
+wholesale prices, albeit in a way that flattens within- and between-day variation in wholesale
+prices. However, the tariff structure is also designed with an eye toward how people use heat
+pumps; in particular, a sustained period of “pre-heating” in the afternoon low-price Cosy period
+might improve customers’ ability to constrain their demand during the higher-priced Cosy peak
+period. This tariff can also be viewed as a way to encourage the adoption of heat pumps more
+generally because consumers can reduce running costs by adopting a heat pump with a specially
+designed tariff.
+
+    We use the entire universe of Octopus Energy customers who switched to the Cosy tariff
+– 6,631 customers who adopted the Cosy tariff as early as 13 December 2022 or as late as 15
+June 2024. Interestingly, the announcement in September 2023 of the coming increase in the
+heat pump subsidy made national headlines in the British media and made customers more
+likely to switch to the heat pump tariff. This is likely to be purely an advertising effect on the
+switching rates, which has been found in other studies in energy (Dressler and Weiergraeber,
+2023, Hortac¸su et al., 2017), healthcare (Ho et al., 2017), social security (Hastings et al., 2017)
+and banking (Honka et al., 2017). Therefore, our identification strategy is that there are no
+differences in the pre-trends between earlier versus later Cosy tariff adopters, and the presence
+of the subsidy provides an exogenous shock on attention to the heat pump tariff offered by
+Octopus.
+
+    Our Cosy analysis covers the same time period as the heat pump adoption analysis. There-
+fore, we use consumption data from 13 December 2021 through to 15 June 2024. Our analysis
+thus measures relatively long-term consumption impacts, covering customers’ consumption for
+
+                                                             17
+
+                                           Figure 2: Cosy Rate by Period
+
+Note: We show the marginal price for Cosy adopting customers by time of day (blue line) compared to the typical
+marginal price of Octopus Energy’s standard tariff, on 13 December 2022, the day that Cosy was first available to
+customers. The two off-peak 40%-reduction on typical marginal price “Cosy” periods are shaded light red, while
+the peak period with 160% of the typical marginal price is shaded light blue. We use the prices for customers
+in the North West England, as of 15 June 2024. Marginal prices vary slightly by customers’ region. There are 14
+regions for tariff pricing in Great Britain. In all 14 regions, the overall structure of the marginal prices of the Cosy
+tariff is similar: 40% lower than the typical marginal rate for the Cosy off-peak periods, 60% higher than the typical
+marginal rate for the peak period, and the typical marginal rate for all other hours of the day. Prices also can change
+over time; but, again, the overall structure of the prices has always been as in Figure 2 during the period of our
+analysis, except in the final two months of our analysis period when the peak was 151% of the standard rate and
+off-peak was 45% lower. (See Section A.2.1 for further detail.)
+
+on average seven months after Cosy Octopus adoption, not just the weeks immediately before and
+after adoption. Many customers in our sample have two winters of data on Cosy Octopus.
+
+    Similar to the heat pump analysis, we employ CS models to assess the causal impact of the
+Cosy tariff on consumption during different periods of the day. We use the same CS model
+as Equations (1) to (5), but where Gig is an indicator for adoption of the Cosy tariff, and our
+sample is 6,631 Cosy adopters rather than 1,321 heat pump adopters. As with the heat pump
+analysis, our identification strategy relies on the assumption that the electricity consumption of
+customers that adopted Cosy earlier would have followed a parallel trend to control customers
+(in this case, those who adopted Cosy later) in the absence of adoption of the tariff. We also
+assume that once customers adopt the tariff, they do not leave. In reality, although the majority
+of customers stay on Cosy, some of them switch back and forth or leave completely, as discussed
+in Section 2.2.1. However, while earlier adopters have slightly different characteristics than later
+adopters, there is little heterogeneity in treatment effect, as shown in Section A.2.7. We believe
+that impacts are similar because mechanisms are similar; as discussed in Section 3.2.2, in a sur-
+vey we sent customers, we find that the main way that customers respond to Cosy is through
+smart thermostat settings.
+
+                                                             18
+
+2.2.1 Timeline of Cosy Adoption
+The tariff officially launched in December 2022. The rate of new adoptions per week was stable
+for the first year and then increased during Winter 2023-2024, as shown in Figure 3. As discussed
+above, we speculate that this increase was driven by the increase in the Boiler Upgrade Scheme
+subsidy for heat pumps, announced in September 2023, which may have heightened public
+interest in heat pumps and increased online discussion of the Cosy tariff, at the time the only
+tariff designed especially for heat pumps.
+
+                                 Figure 3: Weekly Adoption of the Cosy tariff
+
+Note: We show weekly switches to Cosy Octopus among the 6,631 customers in our Cosy analysis sample. The
+Boiler Upgrade Scheme was increased from £5,000 to £7,500 in October 2023, with the announcement of this change
+coming in September 2023.
+
+    Before discussing the analysis, there are some features of the panel dataset and tariff switch-
+ing to note. First, we only have smart meter data if the customer has an active contract with
+Octopus, a working smart meter, and has given consent to share half hourly data (required
+to join Cosy; note that 96% of Octopus Energy smart meter customers allow half-hourly data
+sharing). We present in Figure A.19 how our treatment and the smart meter data availability
+interacts. We have an imbalanced panel, with customers entering and exiting our sample due
+to smart meter data availability at different times. Obtaining a smart meter is a prerequisite
+for adopting Cosy, leading to a pattern in which data is more likely to be missing before Cosy
+adoption than after.
+
+    Second, we investigate from and to which tariffs customers are switching. From our sample
+of customers, the great majority (N=4,830) switched to Cosy and stayed on Cosy. Another 1,403
+switched to Cosy and then switched to another tariff. Finally, 504 have multiple contracts, by
+which we mean a more complicated switching pattern, such as switches to, away from, and
+
+                                                             19
+
+then back to Cosy. The majority of our Cosy adopters were previously enrolled on standard,
+non-time-of-use tariffs before switching to Cosy. Customers that switch to Cosy but then switch
+to another tariff are likely to adopt another “smart” tariff. Smart tariffs are time-of-use tariffs
+that make use of more granular readings from smart meters.34 Overall, prior to Cosy adoption,
+88% of adopters are on a non-smart tariff. After adopting Cosy, only 2% revert back to a non-
+smart tariff.
+
+    Among customers who purchased their heat pump from Octopus Energy from February
+2022 through June 2024,35 more than two thirds adopted a smart tariff, with Cosy Octopus be-
+ing the third most popular of these tariffs. Intelligent Octopus Go and Agile, which precede
+Cosy in popularity, are two tariffs offering, respectively, automated cheap electric vehicle (EV)
+charging, and dynamic time-of-use where each half-hour of the year reflects day-ahead whole-
+sale prices. Given that many heat pump owners also have EVs, it is reasonable to hypothesize
+that customers who charge their EVs at home might prefer Intelligent Octopus Go. Meanwhile,
+Agile is a popular tariff among the most engaged energy enthusiasts.
+
+2.2.2 Geographic Representativeness
+
+In this section, we present the same geographic representativeness checks as in Section 2.1.1 in
+Table A.15. Similar to the heat pump installation sample, Cosy adopters generally live in MSOAs
+with a higher total annual income, average age, and share of level 4 qualifications. The share of
+households not deprived in any dimension is higher and the average household size is lower.
+We examine heterogeneity in the treatment effects by these characteristics.
+
+    Finally, we present a comparison of the Cosy adopters, Heat pump adopters and a random
+sample of Octopus Energy smart meter users in Table A.16 using the DOMUS dataset. Note that
+the property prices presented are different from the previous tables as they do not come from
+the same source. This table shows that Cosy adopters have larger and more valuable properties
+than more recent heat pump adopters and the random sample of Octopus Energy smart meter
+customers. Recent heat pump adopters (at least, those who purchased their heat pumps in-
+stalled by Octopus Energy) have better energy efficiency. Finally, property prices for both heat
+pump and heat pump tariff adopters are much higher than a random sample of customers.36
+
+    34Before the widespread adoption of smart meters, some households had special electricity meters that enabled
+a simple time-of-use tariff by registering consumption depending on whether it fell during pre-set “peak” or “off-
+peak” times of day. These traditional time-of-use tariffs have existed since at least 1978 in Great Britain (Electricity
+Council, 1987). Smart meters allow retailers to offer a wider range of time-of-use tariffs and enable customers to
+switch between various tariffs without changing their meter’s physical hardware.
+
+    35In other words, these are customers who are in both our heat pump adoption and our Cosy adoption analyses.
+    36In Section A.3.2, we re-weight our sample to have the identical covariate distribution as Octopus Energy smart
+meter customers on annual electricity consumption, property value, energy performance rating, and floor area.
+
+                                                             20
+
+3 Empirical Analysis
+
+Our analysis is divided into two parts, each addressing distinct aspects of energy consumption
+related to heat pumps. First, we examine the impact of heat pump installation on overall en-
+ergy consumption. Second, we investigate the effects of a time-of-use tariff designed for heat
+pump users. This tariff aims to incentivize users to shift their energy usage to off-peak periods,
+potentially reducing peak demand and overall energy costs.
+
+3.1 Impact of Heat Pump Installation on Energy Consumption
+
+3.1.1 Main results
+
+We show the results of three CS models in Table 1: weekly electricity consumption (kWh) for all
+customers in our sample (1,321 customers grouped into 100 cohorts in Column 1); weekly gas
+consumption (kWh) for the 80% of the customers in our sample who have a contract with Octo-
+pus Energy to supply them with mains gas (1,079 customers grouped into 98 cohorts in Column
+2); and (again only for those 80% supplied with mains gas), weekly energy consumption – by
+which we mean, the sum of weekly electricity plus gas consumption, in kWh (in Column 3). We
+then multiply coefficients and standard errors by 52 to show the impacts in annual consump-
+tion terms; this is solely to improve interpretability for readers accustomed to examining annual
+electricity and gas consumption.
+
+    In all three analyses, we start by aggregating half-hourly customer data into weekly adoption
+cohorts and calculating weekly consumption. The CS simple Aggregate Group-Time Average
+Treatment Effect (AGGTE) estimator is used to evaluate the impact of heat pump installation on
+electricity consumption for each weekly cohort of adopters. In this analysis, the control group
+comprises units that have not yet adopted heat pumps. We defined the first week of treatment
+as the first week where the customers are fully treated (e.g., if their “true” installation date is
+midweek, their first week will be the next week). We assume a one-week anticipation effect to
+take into account that the average installation lasts 5 days. That means that our group “effect”
+is effectively calculated using periods up to one week before installation. Similarly, we lose the
+last estimates of the event study style analysis as we effectively do not have any more untreated
+cohorts. The main assumption remains the same – that, in absence of treatment, the cohorts
+would have followed similar trends. The significance level for confidence intervals is set at 0.01,
+and standard errors are bootstrapped with 1000 iterations. Clustering is done at the weekly
+adoption cohort level. The estimation method used is doubly robust (DR), which combines
+
+                                                             21
+
+Table 1: Heat Pump Installation on Yearly Energy Consumption in kWh
+
+Model:                  Electricity  Gas    Overall
+                            (1)      (2)      (3)
+
+Variable                3,080.0*** -9,350.7*** -6,119.8***
+Is HP Installed = 1      (140.8) (347.9) (401.9)
+
+Pre-treatment Average   5,062.1 10,335.7 15,287.2
+Yearly Consumption
+
+Fit statistics          1,321        1,079  1,079
+Number of Households     100          98     98
+Number of Cohorts        127          127    127
+Number of Time Periods
+
+Clustered (Household) standard-errors in parentheses
+Estimation Method: Doubly Robust
+Control Group: Not Yet Treated, Anticipation Periods: 1
+Signif. Codes: *** 99% confidence band does not cover 0
+
+Note: We show estimates from three CS estimates of the impact of consumption on customers’ electricity con-
+sumption (column 1), gas consumption (column 2), and overall (electricity plus gas) consumption (column 3).
+The latter two models’ are from a subset of our full sample for customers with gas consumption before their heat
+pump installation.
+
+                        22
+
+propensity score weighting and outcome regression.37
+
+    We find that heat pump installations have large impacts on energy consumption. They in-
+crease annual electricity consumption in our sample of 1,321 customers by 3,080 kWh. Relative
+to our sample’s baseline average pre-heat-pump consumption of 5,062 kWh per year, this in-
+crease represents 61% of pre-installation annual electricity consumption.
+
+    Most of the customers in our sample have a gas boiler before installing their heat pump, ac-
+cording to administrative survey data related to their heat pump purchase. Thus, in addition to
+examining electricity consumption, we look at gas consumption data for 1,079 Octopus Energy
+customers who had their heat pumps installed between February 2022 and May 2024 (a subset
+of the full sample), had a gas account with Octopus Energy before heat pump installation, and
+have sufficient gas consumption data. Similar to the electricity consumption analysis, the data
+spans 13 December 2021 through 15 June 2024, providing a comprehensive view of gas usage
+patterns before and after heat pump installation. We lack gas consumption data for customers
+that were not with Octopus Energy before signing up for a heat pump or never had gas. There
+is also more missing data from smart meters for gas consumption than for electricity consump-
+tion. We use only the customers for whom we have at least one week of gas consumption data
+in the pre-installation period. We mechanically exclude customers who obtain their gas from
+retailers other than Octopus Energy. For these reasons, our sample is smaller for our gas and
+overall energy consumption analyses, even though the majority of our heat pump adopters sam-
+ple have gas boilers as their previous heating source. In Table A.6, we show that the electricity
+consumption impacts for this smaller sample are similar to our larger sample.
+
+    The heat pump decreases customers’ gas consumption by 9,351 kWh per year (column 2).
+Relative to the pre-installation average of 10,336 kWh, this consumption reduction corresponds
+to a 90% decrease in gas consumption. Octopus Energy’s standard procedure to install a heat
+pump is to remove the previous heating source.38 Given these aspects of the heat pump instal-
+lation, one would expect heat pump adoption to cause a sharp reduction in gas consumption.
+Our empirical analysis confirms this expectation.
+
+    We find that the heat pump installation reduces overall energy (electricity plus gas) con-
+sumption by 6,119.8 kWh per year (column 3). Relative to the pre-installation average energy
+
+    37The analysis uses a varying base period, and for robustness, we examine a universal base period in Figure A.14.
+We do not observe significant pre-trends with this method, either. Additionally, we apply an alternative estimator
+from Borusyak et al. (2024) in Figure A.12, which yields similarly consistent results. Finally, see Figure A.13 for a
+TWFE event study visualization.
+
+    38The installation typically lasts four days, though in the beginning of the analysis period installations could
+last five days. They involve removal of the previous heat source first, followed by installation of a new hot water
+tank. Pipe work, radiators, and the heat pump are installed in the next two days. The final one to two days are
+spent fully commissioning the new system and teaching the customer how to operate their new heating system. If
+the installation happens on cold days, Octopus Energy provides electric heaters during the process.
+
+                                                             23
+
+consumption of 15,287.2 kWh per year, this represents a 40% decrease.39 The substantial de-
+crease in overall energy highlights that heat pumps are more efficient than gas boilers at turning
+energy input into heat output–which is the overall decarbonizing heat result. Nevertheless, be-
+cause electricity currently costs more per kWh than gas, in terms of ongoing marginal costs, we
+estimate slightly higher running costs between gas boiler heated homes and comparable homes
+heated via heat pumps.40 However, the adoption of time-of-use tariffs like Cosy can reduce the
+electricity consumption costs of the heat pump. We discuss these estimates in more depth in
+Section 4.
+
+3.1.2 Dynamic ATTs
+
+Using our CS model, we show the dynamic ATT of heat pump installation on electricity con-
+sumption in Figure 5. We find that the impact of heat pump installation is effectively instan-
+taneous: a sharp decrease in gas consumption and corresponding increase in electricity con-
+sumption. After the large effects at adoption, we see a pattern that we believe is influenced by
+the seasonal effects discussed in Figure 5; our cohorts are of unequal size, making the dynamic
+ATT sensitive to the season when the largest cohorts adopted. There is little change in electricity
+or gas consumption before adoption.
+
+3.1.3 Seasonal Variation
+
+Using our CS models of electricity and gas consumption, we show the calendar ATT of heat
+pump installation in Figure 5. There is a marked seasonal variation. We find that during winter,
+the calendar ATT increase in electricity consumption reaches over 200 kWh per week but drops
+to almost 0 between April to October. The decrease in gas consumption is larger in magnitude,
+but shows similar seasonal patterns, with very little decrease during warm months and a large
+decrease during the winter.
+
+    39These results are not exactly what one obtains by summing the coefficients from our electricity and gas con-
+sumption analyses, partly because the sample for our gas and overall energy consumption analyses, as discussed
+above; as we show in Table A.6, however, the electricity impacts are similar between our full sample and the smaller
+gas-consumption-analysis sample.
+
+    40As of 15 June 2024, the average electricity unit rate for Octopus Energy customers was £0.2450 versus a gas
+unit rate of £0.0604 (Octopus Energy, 2024). 3,080.0 * £0.2450 -9,350.7 * £0.0604 comes to £190 higher running costs
+per year from heat pump compared with gas boiler, by this calculation; though note that insofar as customers
+may disconnect from the gas grid entirely, they can save approximately £100 per year, bringing the running costs
+difference to only £83/year. UK Government (2024a) retail price estimates show similar differences in fuel prices,
+although electricity and gas rates are both higher than Octopus Energy’s unit rates. We use these latter UK Gov-
+ernment (2024a) prices to forecast running costs from 2024 through 2043 in Section 4, as they provide retail price
+forecasts through 2100.
+
+                                                             24
+
+                                 Figure 4: Gas and Electricity Dynamic ATTs
+
+Note: We show dynamic ATTs from our CS models of heat pumps’ impact on customers’ weekly electricity (pur-
+ple) and gas (dark gray) consumption (kWh). The outcome on the y-axis is weekly consumption in kWh. The
+x-axis shows weeks since adoption, where week 0 is the adoption week.
+
+3.1.4 Mechanisms and Threats
+Threats to identification are changes to the home including the presence of other low-carbon
+technologies (LCTs – chiefly solar PV panels, batteries, and electric vehicles) and home fabric
+improvement that correlate with the timing of when a customer installs their heat pump. To
+investigate these threats, we conduct several checks on the presence of LCTs. We then discuss
+how our evidence should be considered in light of fabric changes and other changes to the home.
+Incorporating these technologies into the analysis is important as all of these technologies are
+integral to decarbonizing residential energy demand.
+
+                                                             25
+
+                                 Figure 5: Gas and Electricity Calendar ATTs
+
+Note: We show calendar ATT from our CS models of heat pumps’ impact on customers’ weekly electricity (purple)
+and gas (dark gray) consumption (kWh). The outcome on the y-axis is weekly consumption in kWh, while the
+x-axis shows the week of the year.
+
+EV Ownership: First, we look at whether EV ownership interacts with heat pump installation
+impact. To do this, we create a binary variable for EV ownership.41 We find that EV ownership
+does not significantly affect the coefficients on heat pump installation (see Table A.3). EV own-
+ers have higher electricity consumption than non-EV-owners, but the impact of the heat pump
+that we identify is not significantly different for them to non-EV-owners.
+
+    We then conduct another analysis, focusing specifically on EV charging events before and
+after heat pump adoption (see Table A.4). We find that getting a heat pump does not affect
+
+    41EV owners are defined as having at least 1 charging event per week for 2 consecutive weeks. EV charging is
+specifically defined as consumption above 3.5 kWh per half-hour for 4 to 12 consecutive half-hours. The 3.5kWh
+per half-hour threshold is driven by the assumption that most charging is done by EV chargers that draw 7 kW or
+more of power. Once an EV is detected, the customer is defined as an EV owner for the remainder of the analysis
+period.
+
+                                                             26
+
+charging behavior. For each event, we define the main period as the time during which most of
+the charging occurred; we then examine the probability of the charging event occurring in each
+period of the time-of-use tariff for heat pump owners we explore in Section 3.2. Our motivation
+here is to check that EV ownership does not substantially interact with heat pump consumption
+impacts by time of day; we use Cosy’s time-of-use periods as a useful proxy for testing this
+question. We use a simple linear probability model with customer and day fixed effects. Our
+findings indicate that, prior to heat pump installation, 95% of the charging events took place
+during the “Other” period. Following heat pump installation, there was no significant change
+in habits and charging time.
+
+Solar PV: Before getting a heat pump installed, customers answered a survey to confirm their
+home’s suitability in which they self-reported the presence of other LCTs in the home. Thus,
+we know that 609 out of 1,213 of the sample that installed a heat pump already had solar PV at
+home.42 We interact the presence of solar PV and having a heat pump installed on electricity
+consumption in a TWFE difference-in-differences estimation in Table A.5. We find that cus-
+tomers with solar PV have lower consumption during the day (afternoon and peak rate) before
+heat pump installation. This smaller consumption is carried on after the heat pump installation,
+with a smaller increase in consumption during afternoon and peak rate periods. However, there
+is no noticeable impact on overall consumption, possibly due to slightly higher heat pump im-
+pact in other periods, but also potentially due to low power to detect relatively small interaction
+effect sizes in our model.
+
+Fabric Improvements and Other Changes to the Home Another potential challenge to iden-
+tifying the impact of heat pump installation is fabric improvements (better insulation). We do
+not have a strategy to empirically investigate the extent to which our heat pump installation im-
+pacts are confounded with correlated upgrades to a home’s insulation. Indeed, improvements
+to insulation may be inherently linked to a heat pump installation if the heat pump installer
+recommends fabric improvements along with changing the heating system. However, we note
+the immediacy of the impact of heat pump installation on both gas and electricity consump-
+tion in Figure 4. This immediacy strongly suggests that the observed changes are due to the
+heat pump installation itself, rather than insulation that happened close in time, but not neces-
+sarily the week of, the heat pump installation. Furthermore, it is likely that any improvements
+to insulation occurred prior to heat pump installation, given that access to the Boiler Upgrade
+Scheme (which the vast majority of our sample used) was contingent, until 08 May 2024, on
+an EPC with no outstanding recommendations for loft and cavity wall insulation. The lack of
+pre-trends in Figure 4 also implies that fabric improvements in the weeks or months before heat
+pump installation are minimal, have minimal impact on energy consumption, and/or are so
+
+    42The survey is missing for the earliest installations, hence the sample here being 1,213 rather than 1,321.
+
+                                                             27
+
+highly dispersed in time as to be indistinguishable between the treatment and control groups;
+though it is also possible that this pattern could be driven by insulation being upgraded on the
+same day as heat pump installation.
+
+    A final consideration is that significant life changes, such as having a baby, are unlikely
+to coincide with heat pump installation.43 However, the control group may experience more
+such changes, suggesting that we might have some downward bias on our treatment effects.44
+However, the immediate impact of the heat pump installation on energy consumption is again
+evidence that the impact we have identified is the heat pump installation, not correlated life
+changes.
+
+3.1.5 Outside Temperature
+
+We use the same heat pump adopters sample to calculate the impact of installing a heat pump
+by outside temperature. In order to model the interaction between heat pump installation and
+outside temperature on electricity consumption, we run the following difference-in-differences
+model using a two-way fixed effects (TWFE) model. We show in Table A.1 how our main CS
+model compares with the TWFE model. We think that the TWFE model estimates are slightly
+inflated due to the improper comparisons between earlier and later joiners and thus do not use
+it as a benchmark here. However, we do not think that the bias impacts the relative impacts
+of temperature and other heterogeneity analyses, and thus we use the TWFE model to plot
+interactions of interest.
+
+Consumptionit =              ωdTidt +              αdTidt × HPinstalledit + δt + γi + ϵit  (7)
+
+                 d=0,...,25            d=0,...,25
+
+    where: Consumptionit is average half hourly electricity consumption in kWh for household
+i on day t; Tidt is a set of dummy variables for temperature in °C d (ranging from 0 to 25 degrees
+with temperature below 0 and above 25 degrees boxed). The dummies are equal to 1 if the
+average temperature on day t and GSP of household i is equal to T d. HPinstalledit is a dummy
+variable equal to 1 if the customer had a heat pump installed, 0 otherwise, and δt, γi are day t
+and household i fixed effects. The standard errors are clustered at the household (i) level.
+
+    We analyze the interaction between having a heat pump installed and the outside temper-
+ature on electricity consumption. By including temperature as a separate control variable, we
+ensure that the interaction terms specifically reflect the impact of having a heat pump at vari-
+ous outside temperatures. We do not include the standalone variable for having a heat pump
+
+    43Households would have to have incredible foresight to schedule their hump pump adoption date on exactly
+the same date when their baby will be born.
+
+    44Such a criticism will also extend to all studies examining switching to a LCT or a new tariff because you cannot
+force households to comply – people might comply based on future lifestyle or household characteristics that are
+unobservable to the researcher.
+
+                                       28
+
+installed; its effect is captured within the interaction terms. By controlling for temperature inde-
+pendently, we isolate the interaction effect from the direct influence of temperature on electricity
+consumption.
+
+    We plot the results of this analysis in Figure 6. We see an almost linear interaction between
+temperature and heat pump installation on electricity consumption below 15°C. Past 15°C, the
+interaction disappears. We show in Section A.1.5 that this relationship holds true across differ-
+ent times of day, including the peak time (which is between 16:00 and 19:00 in the UK).45 Lower
+outside temperatures drive higher electricity usage due to increased heating demand.
+
+    These variations in outside temperature are crucial to understand how our staggered difference-
+in-differences results differ from more classic set-ups. Although our effects are persistent in
+time, they are also seasonal; we capture averages of these seasonal impacts when computing
+overall difference-in-differences estimates. This dynamic has two implications for our main
+results (Section 3.1.1) and event study estimates (Section 3.1.2). First, coefficients only cap-
+ture yearly averages - hiding an almost null effect during summer months and relatively much
+larger increase during the winter. Second, the event study style analysis will partially capture
+the composition of cohorts, as discussed in Section 3.1.2. As we have more people adopting
+during Winter 2024, our event study style dynamic ATT coefficients will partially capture this
+variation.
+
+3.1.6 Heterogeneity Analysis
+
+Energy Efficiency of the Property: Our analysis reveals that there is no significant interaction
+between having a heat pump and the Energy Performance Certificate (EPC) rating of the prop-
+erty on electricity consumption (see Figure A.6). This indicates that the impact of heat pump
+installation on energy usage is consistent regardless of the energy efficiency rating of the house.
+Whether a property has a high or low EPC rating, the additional electricity consumption due to
+heat pump installation follows a similar pattern. Note that this should not be confused with the
+direct impact of EPC on electricity consumption - where lower EPC rating homes do consume
+more electricity. With all this said, note again that due to the conditions of the Boiler Upgrade
+Scheme around insulation up until 08 May 2024, it is likely that very few of the homes in our
+sample have poor insulation.
+
+Floor Area: On the other hand, our analysis reveals that there is a greater increase in electric-
+ity consumption after heat pump installation for properties with greater floor area as shown in
+Figure A.7. In this context, floor area could be a proxy for heat loss, the rate at which a building
+
+    45For convenience, we show these impacts by the rate periods of the Cosy tariff investigated in Section 3.2.1, but
+it should be noted that the majority of our heat pump adopting customers are on tariffs other than Cosy.
+
+                                                             29
+
+                 Figure 6: Impact of Heat Pump Installation by Outside Temperature
+
+Note: We show the interaction between temperature (the average temperature on a day) and heat pumps’ impact
+on daily electricity consumption in kWh (left vertical axis) in a TWFE model. We also show the TWFE average
+treatment effect in dashed grey, and thus on the right vertical axis we show the ratio of the TWFE interaction
+over the average treatment effect; we interpret this ratio as showing when the temperature-conditional heat pump
+impact is higher or lower than the heat pump “main effect”.
+
+loses heat to the outside environment.46 Properties with higher floor area likely require more
+energy to maintain a comfortable indoor temperature, leading to increased electricity consump-
+tion after heat pump installation.
+
+Previous Heat Source: We hold data on customers’ previous heat source from administrative
+data related to the heat pump purchase process. These data come from a pre-installation survey
+with the homeowner carried out by Octopus Energy. As shown in Figure A.10, the increase
+in electricity consumption after installing a heat pump is the lowest (indeed, is negative) for
+customers that previously had electric heating or heating usually used in combination with
+electric heaters (like solid fuel heaters). That said, note that the great majority of the customers
+in our sample had a gas boiler previously.
+
+Heat Pump Adopter Area Average Income: We also look at whether the heat pump’s impact
+varies by MSOA income in Figure 7. We split MSOA income into deciles (based on all MSOAs
+in England and Wales) to explore this relationship. We find little evidence of a relationship
+between heat pump impact on electricity consumption and MSOA income. We see a similarly
+noisy pattern of heat pump impact by property value decile in Figure A.11, though there may
+
+    46We also show in Figure A.8 a similar pattern of heat pump impact increasing with predicted heat loss, using
+an algorithm developed by Octopus Energy to predict the size of heat pump a home will require based on data
+from the homes’ Energy Performance Certificates. We also believe that some of the regional heterogeneity we see
+in Figure A.9 may be due to differing average floor area among adopters by region of Great Britain.
+
+                                                             30
+
+be a positive relationship.47
+                     Figure 7: Impact of Heat Pump Installation by MSOA Income
+
+Note: We show the interaction between MSOA income and heat pumps’ impact on daily electricity consumption
+in kWh (left vertical axis) in a TWFE model. We also show the TWFE average treatment effect in dashed grey,
+and thus on the right vertical axis we show the ratio of the TWFE interaction over the average treatment effect; we
+interpret this ratio as showing when the MSOA-income-decile-conditional heat pump impact is higher or lower
+than the heat pump “main effect”.
+
+3.2 Impact of Heat Pump Specific Tariff on Energy Consumption
+
+We have established that heat pumps substantially increase electricity consumption. We also
+show in Figure 8 that this increase is fairly similar across all hours of the day, including the
+traditional evening peak (16:00 to 19:00). In this section, we investigate to what extent a novel
+time-of-use tariff specially designed for heat pump owners, Cosy Octopus, causes customers to
+shift electricity consumption away from the peak towards less carbon-intensive periods of the
+day.
+
+3.2.1 Main Results
+We implement the same CS difference-in-differences approach as in Section 3.1. In this case,
+our sample is the 6,631 customers who adopted a the Cosy tariff as early as 13 December 2022 or
+
+    47We examine how this and other treatment effect heterogeneity affects our estimates in Table A.21, where we
+re-weight our sample to have the identical covariate distribution as Octopus Energy smart meter customers on
+annual electricity consumption, property value, energy performance rating, and floor area.
+
+                                                             31
+
+as late as 15 June 2024. Table 2 presents the effects of switching to the Cosy tariff on customers’
+electricity consumption across different times of the day using consumption in kWh per period,
+along with a separate analysis for overall daily consumption.48
+
+              Table 2: Cosy Adoption on Half Hourly Electricity Consumption in kWh
+
+Model:                   Morning Cosy Afternoon Cosy Peak Rate   Other  Overall
+                                (1) (2) (3)                       (4)     (5)
+
+Variable                 0.5071***  0.2926*              -0.2242*** -0.1066*** 0.0105
+Has Adopted Cosy = 1     (0.0126)   (0.0098)             (0.0105) (0.0072) (0.0069)
+
+Pre-treatment Average    0.3659     0.3199               0.4404  0.3843 0.3798
+Half Hourly Consumption
+
+Fit statistics           6,631      6,631                6,631   6,631  6,631
+Number of Households      78         78                   78      78     78
+Number of Cohorts         129        129                  129     129    129
+Number of Time Periods
+
+Clustered (Household) standard-errors in parentheses
+Estimation Method: Doubly Robust
+Control Group: Not Yet Treated, Anticipation Periods: 0
+Signif. Codes: *** 99% confidence band does not cover 0
+
+Note: We show estimates from five CS estimates of the impact of consumption on customers’ electricity during the
+morning Cosy period 4am-7am (column 1), afternoon Cosy period 1pm-4pm (column 2), peak period 4pm-7pm
+(column 3), other hours of the day (column 4), and “overall”, i.e,. across all 48 half-hours of the day (column 5).
+
+    In summary, switching to the Cosy tariff appears to effectively encourage customers to in-
+crease their electricity consumption during incentivized periods (Cosy’s morning and afternoon
+off-peak periods) while decreasing usage during peak and standard-rate times. Customers on
+the Cosy off-peak rate from 04:00 to 07:00 increase their electricity consumption by an average
+of 0.51 kWh per half hour, more than doubling their pre-Cosy-adoption consumption during
+those hours (column 1). There is also a significant increase in consumption during the after-
+noon Cosy period from 13:00 to 16:00, with customers consuming an additional 0.29 kWh per
+half hour on average, a 91% increase on pre-Cosy consumption during that period (column 2).
+Consumption during the peak rate period (16:00 - 19:00) decreases by 0.22 kWh per half hour,
+halving pre-Cosy-adoption consumption during those hours (column 3). Consumption during
+other times of the day, charged at customers’ typical marginal price, decreases by 0.11 kWh per
+half hour, a reduction of approximately 28% on pre-Cosy-adoption consumption during those
+hours (column 4) Finally, despite these shifts in consumption patterns throughout the day, the
+
+    48We compare these estimates to TWFE models in Table A.8.
+
+                                                             32
+
+change in overall daily electricity consumption is very close to zero (column 5).
+
+    The implied own-price and cross-price elasticities are large. However, interpretation is com-
+plex, because multiple prices are changing at the same time. Own-price elasticities may interact
+with cross-price elasticities. In the simplest analysis – ignoring cross-price elasticities – in the
+off-peak periods, prices drop by 40% and electricity demand increases by ≈100%, implying an
+own-price elasticity of -2.5. That said, note that there is variation between the two off-peak
+periods, with greater own-price elasticity in the morning off-peak period than the afternoon
+off-peak period. Similarly, in the peak period, prices increase by 60% and electricity demand
+decreases by 50%, implying an own-price elasticity of -0.8. However, there are interdependen-
+cies between periods; this is clear when considering the large reduction in consumption in the
+standard-rate “other” hours of the day despite no change in price, implying large cross-price
+elasticities operating alongside own-price elasticities.
+
+3.2.2 Mechanisms and Threats
+
+How Cosy Customers Change Their Behavior: To better understand these effects on the level
+of the half-hour49, we run a variation of a TWFE model using half-hourly smart meter data
+for a random sample50 of 500 Octopus Energy customers (among our heat pump installation
+analysis sample) and another random 500 customers from our Cosy analysis sample, in both
+cases looking at consumption data from the 13 December 2021 to 06 March 2024. We model:
+
+Yit = ω0              SPst + α              SPts × Xit + βHDDit + δt + γi + ϵit  (8)
+
+          s=1,...,48            s=1,...,48
+
+    where: Yit is half hourly electricity consumption in kWh for household i on settlement period
+t; SPst is a set of dummy for all the 48 settlement periods of a day s (so equivalent to half hour;
+the dummies are equal to 1 if the settlement period s is equal to the settlement period in half
+hour t; Xit is a dummy variable equal to 1 if the customer has a heat pump installed, 0 otherwise
+(or alternatively a dummy variable equals 1 if the customer has adopted Cosy, 0 otherwise);
+HDDit is the average heating degrees in day t and GSP of household i; and δt, γi are day t and
+household i fixed effects. The standard errors are clustered at the household (i) level.
+
+    We visualize these models’ results in Figure 8, which illustrates the average electricity con-
+sumption by settlement period (half-hour intervals) for customers. This visual representation
+
+    49Most Octopus Energy customers’ smart meters record half-hourly consumption data; this is thus the most
+granular level of temporal disaggregation. In Great Britain, retailers procure electricity and settle their customers’
+consumption against that procurement at the half-hourly level, so half-hours are often known as “settlement peri-
+ods”. We use half-hour and settlement periods synonymously.
+
+    50We run the analysis on a random subsample due to computational constraints of running a large TWFE inter-
+action model on 220 millions rows
+
+                                                             33
+
+helps to differentiate the impact of each intervention on electricity use over time. We see a tail-
+ing off of the effect in each Cosy off-peak period. We hypothesize that this is because people set
+their thermostat setpoints higher in these periods and by the end of the period the home is more
+likely to have reached the setpoint temperature, so the heat pump is not working as hard. This
+hypothesis is corroborated by evidence from a survey we sent to customers who had switched
+to Cosy Octopus, discussed immediately below.
+
+    We also see strong suggestive evidence that the Cosy impacts are driven by customers modu-
+lating their heat demand from a particular heterogeneity analysis we conduct. Octopus Energy,
+for commercial purposes, developed an algorithm to predict homes’ heat loss, in kW. Heat loss
+is an important measure for heat pump installations, as it influences installer recommenda-
+tions on heat pump size. Octopus Energy created their algorithm using publicly available data,
+mostly from customers’ EPC, for example customers’ floor area and the EPC’s predicted annual
+heating and hot water usage (in kWh). We find that higher predicted heat loss is associated
+with higher Cosy impacts in both the off-peak and peak periods (see Figures A.33 and A.34).
+
+Survey Responses: We conducted a survey to understand more about the mechanisms of en-
+ergy demand shift inside the home, as well as heat pump and other low carbon technology
+(LCT) interactions. We sent our survey to 1,000 Cosy customers on 08 July 2024, in which 39%
+of recipients responded.51 According to these customers, three brands – Mitsubishi, Daikin, and
+Vaillant – constitute the majority of heat pumps. Of the 70% of respondents who know their
+heat pump’s size, the majority have heat pumps between 7-16kW. The implied median size is
+9-12 kW.
+
+    We also ask about whether and how customers respond to Cosy’s different unit rates. 85% of
+respondents say they change their energy use in response to the time-of-use pricing schedule.
+Among customers who did not respond affirmatively to this question, some added free-text
+responses that indicate they charge and discharge a home battery rather than changing other
+energy consumption behaviors. We see suggestive evidence in Table A.11 that battery charge
+and discharge is indeed an important part of the Cosy impact for customers with home batter-
+ies. Among respondents who respond to the time-of-use pricing schedule, 59% do so using
+a smart thermostat. Respondents could “tick” multiple options to this question; other popular
+methods included manual adjustments (34%), using alternative heating sources (11%), and ac-
+tivating a special mode on the heat pump (8%). Among this same 85% of respondents, other key
+changes to the home’s electricity consumption included modulating how and when the home
+battery charges and discharges (38%) and doing likewise with an EV charger (17%). Many free-
+text responses noted manual and semi-automated strategies involving other appliances, such
+as avoiding using the dishwasher and other energy intensive appliances during the peak rate
+
+    51We see in Table A.13 that respondents and non-respondents are similar on key observable characteristics –
+property energy efficiency rating, floor area, and property value.
+
+                                                             34
+
+                                     Figure 8: Consumption by Half Hour
+
+Note: The purple line is the impact per half-hour of heat pump installation itself in each half-hour of the day. The
+blue line is the impact of Cosy adoption in each half-hour of the day. Coefficients and 95% confidence intervals are
+from a TWFE model using half-hourly smart meter data for a random sample of 500 Octopus Energy customers
+(among our heat pump installation analysis sample) and another random 500 customers from our Cosy analysis
+sample, in both cases looking at consumption data from the 13 December 2021 to 06 March 2024. We interact the
+heat-pump / Cosy indicator with half-hour of the day; the omitted category is 1 (midnight). We also control for
+household, half-hour, and day fixed effects, heating degree days, and suspected EV charging (as indicated by their
+smart meter consumption signature – 3.5kWh/half-hour, i.e., 7kW, for 4 to 12 consecutive half-hours). To plot the
+effect of heat pumps, we only use customers without a time-of-use tariff to avoid capturing load shifting from Cosy
+or other time-of-use tariffs that heat pump adopting customers tend to adopt. (We do not exclude them from the
+daily/weekly analysis of heat pumps in Section 3.1, as we assume that the time-of-use tariffs shift consumption
+within the day rather than creating or destroying demand, as we find with Cosy in Section 3.2.1.) We show in
+Figure A.20 this same plot, but where we include these customers on time-of-use tariffs in the heat pump analysis
+sample.
+
+                                                             35
+
+period and using special water heaters during specific periods. In summary, customers seem to
+employ a mix of methods to respond to the time-of-use pricing schedule, but automated meth-
+ods dominate, in particular using a smart thermostat to set thermostat temperatures in line with
+the pricing schedule.
+
+    Finally, we ask about characteristics about the home and occupants. Among respondents,
+60% have solar PV panels, 38% have batteries, and 18% have electric vehicle(s). Only 32% have
+no LCTs other than their heat pump. We also ask when the customer’s heat pump was installed.
+We find that 18% have heat pumps installed before 2020; there is a relatively uniform spread of
+installations between 2010 through 2019, with very few before 2010. We see very fast growth
+in installations in 2020 and beyond: 4% of the 382 customers had installations in 2020, 10% in
+2021, 21% in 2022, 27% in 2023, and 17% in (the first half of) 2024.
+
+Heat Pump Ownership: We also consider whether our identification of the impact of Cosy
+might be biased by customers adopting heat pumps near in time to adoption of the Cosy tariff.
+We find that our results are similar across a range of model specifications that control for heat
+pump installation date, among different sets of customers where we know their heat pump
+installation date (see Figure A.21).
+
+EV Ownership: In Table A.9, we do the same check as in Section 3.1.4 and include a binary
+variable for whether a customer has the electricity consumption signature of EV ownership.
+We find that EV ownership does affect the coefficients on Cosy adoption; their “Other” period
+consumption reduction is greater than non-EV-owners, as is their peak period reduction; and
+their morning Cosy period consumption increase is higher than non-EV-owners.
+
+    To understand this result in more depth, we then conduct another analysis, focusing specifi-
+cally on EV charging events before and after Cosy adoption. For each event, we define the main
+period as the time during which most of the charging occurred. For each charging event, we ex-
+amine the probability of it occurring in each of the four periods of interest in our main analysis
+(i.e., see Table 2). We use a simple linear probability model with customer and day fixed effects.
+Our findings indicate that, prior to Cosy adoption, 87% of the charging events took place during
+the “Other” period. Following Cosy adoption, charging during the “Other” and “Peak” peri-
+ods decrease by 62 and 4 percentage points, respectively. This decrease is offset by an increase
+in charging during the “Morning Cosy” period (+56 percentage points) and the “Afternoon
+Cosy” period (+10 percentage points).
+
+                                                             36
+
+               Table 3: Cosy Adoption on Probability of Charging EV by Period
+
+Dependent Variable:                                   Morning Cosy         Charging EV        Other
+Model:                                                       (1)    Afternoon Cosy Peak Rate   (4)
+
+                                                                            (2) (3)
+
+Variables                                             0.5562∗∗∗     0.1040∗∗∗  -0.0416∗∗∗ -0.6185∗∗∗
+Cosy Contract Active = 1                              (0.0146)      (0.0074)    (0.0049) (0.0166)
+
+Pre-Treatment Average Half Hourly Consumption         0.0534        0.0299     0.0472         0.8695
+
+Fixed-effects                                             Yes Yes Yes Yes
+Household                                                 Yes Yes Yes Yes
+Day
+
+Fit statistics                                        127,789       127,789    127,789        127,789
+Observations                                           1,743         1,743      1,743          1,743
+Number of Households                                  0.53117       0.25667    0.19607        0.64428
+R2
+
+Clustered (Household) standard-errors in parentheses
+Signif. Codes: ***: 0.01, **: 0.05, *: 0.1
+
+Note: We show the results of four OLS models where the dependent variable is whether a charging event occurred
+in the period of interest – morning Cosy 4am-7am (column 1), afternoon Cosy 1pm-4pm (column 2), peak 4pm-
+7pm (column 3), and all other hours of the day (column 4). The sample is 127,789 charging events among 1,743
+Cosy adopters for whom we detect evidence of EV charging. Where a charging events stretches across multiple
+periods, we attribute it to the period that comprises the majority of the event (in minutes). We see that among these
+EV owning Cosy adopters, Cosy adoption is associated with more charging the off-peak period and less in the peak
+and other periods.
+
+Cosy Leavers: Finally, we focus on customers that leave Cosy. We run the main regression but
+add an interaction for leavers to see if leavers performed differently while they were on Cosy. In
+Table A.10, we find that leavers actually shift away from the peak as much as other customers.
+However, they shift load more from other time periods to the morning off-peak period, an in-
+dication that they might be more likely to be charging an EV than non-leavers. We explore this
+hypothesis by examining the share of customers with detected EVs among customers that stay
+on Cosy versus the leavers. We find that leavers are twice as likely to have an EV (38% versus
+23%). This pattern may also explain why people that leave Cosy are still quite likely to stay on
+smart tariff. The main reason for leaving is not the hassle or difficulty of being on a smart tariff
+but the interactions with other LCTs that customers might have.
+
+                                                      37
+
+3.2.3 Dynamic ATTs
+
+We plot dynamic ATTs for half-hourly electricity consumption during the four periods of Cosy
+tariff’s pricing in Figure 9.52 We see immediate impacts on consumption in all four of these
+periods. As with our analysis of the impact of heat pumps in Section 3.1.1, there appears to be
+differing impacts over time, but we believe these seeming changes in the dynamic ATT may be
+caused by the Cosy treatment effect sensitivity to temperature/season discussed in Section 3.2.4
+and the nonuniform adoption of Cosy over time, rather than genuine fatigue, habituation, or
+learning effects.53
+
+3.2.4 Seasonal Variations
+
+In this section, we explore the impact of Cosy on electricity consumption throughout the year.
+We show below the four plots representing the ATT by Calendar Time for each period (Morning
+Cosy, Afternoon Cosy, Peak Rate, Other and daily Overall) in Figure 10. The two first plots
+reveal significant load shifting to the two Cosy off-peak periods. The shift is largest during
+colder months (October to March). On the other hand, load shifting is close to zero during
+warmer months.
+
+    The third and fourth plots indicate that the increase in off-peak time consumption is asso-
+ciated with a decrease in peak and other time periods. Interestingly, this effect persists during
+the summer, indicating that Cosy adopters shift not only heating but also other appliance usage.
+This finding suggests the potential for further comparison with load shifting patterns observed
+under other tariffs.
+
+    In terms of general consumption, we find a moderate increase during the winter but decrease
+during the summer. Together, these effects average out to a main effect that centers around zero
+on average. We hypothesize that the peak reduction in summer drives the overall consump-
+tion reduction in summer - i.e., at least some demand destruction, rather than purely shifting.
+However, this may be paired with some demand creation in the winter, causing a higher overall
+consumption during that season.
+
+    The magnitude and persistence of the Cosy effects align with the hypothesis discussed in
+Section 3.2.2 that most customers are responding to Cosy by using smart thermostats. Once a
+customer sets up their smart thermostat schedule to respond to the Cosy tariff, such as by having
+lower thermostat set-points during the peak period and higher thermostat set-points during the
+off-peak periods, this one-off behavior could plausibly be expected to lead to durable changes to
+
+    52We use a varying baseline here. For the same plots with universal baselines, see Figure A.22; and for an
+alternative estimator from Borusyak et al. (2024), see Figure A.38. Finally, see Section A.2.12 for TWFE event study
+visualizations.
+
+    53For more investigation of how these cohort and seasonal dynamics may interact, see Section A.2.8.
+
+                                                             38
+
+                                          Figure 9: Cosy Dynamic ATTs
+
+Note: We show dynamic ATTs from our CS models of the Cosy impact on customers’ electricity consumption by
+Cosy period. Colors: black indicates before adoption, while blue indicates after adoption. Top left: morning off-
+peak. Top right: afternoon off-peak. Bottom left: evening peak. Bottom right: all other periods of the day.
+
+customers’ consumption profile. This hypothesis is also consistent with the seasonal pattern of
+Cosy’s impact, given that thermostat set-points only affect the heat pump’s consumption when
+they are above the home’s internal temperature. As heating needs abate in warmer months, we
+would expect to see a diminishing in the impact of Cosy if that impact were driven by customers
+setting up a smart thermostat schedule (or other similar automation). We further explore this
+relationship between Cosy and temperature in Section 3.2.5.
+
+                                                             39
+
+                                  Figure 10: Cosy Electricity Calendar ATTs
+
+Note: We show calendar ATT from our CS models of the Cosy impact on customers’ electricity consumption by
+Cosy period. Top left: morning off-peak. Top right: afternoon off-peak. Bottom left: evening peak. Bottom right:
+all other periods of the day.
+
+3.2.5 Outside Temperature
+In order to investigate the relationship between load shifting induced by Cosy’s prices and the
+seasonal variations that we observe in Section 3.2.4, we plot the interaction between the average
+outside temperature in degrees normalized by the TWFE coefficient for that period 54 and Cosy
+adoption in Figure 11. We control for customer and day fixed effects as well as daily average
+outside temperature in ºC, meaning that we only capture the additional impact of a change in
+temperature after adopting Cosy. The direct impact of temperature on electricity consumption
+is not plotted in this graph.
+
+    54We use average daily temperature measured at the GSP Group level, based on the highest-quality weather
+station in the GSP Group. GSP Groups are zones commonly used in the energy sector in Great Britain to divide
+customers geographically. There are 14 GSP Groups. These are the same regions that determine slight variations
+in the exact prices of Cosy, as shown in Section A.2.1.
+
+                                                             40
+
+                             Figure 11: Impact of Cosy by Outside Temperature
+
+Note: We show the interaction between temperature (the average temperature on a day) and heat pumps’ impact
+on daily electricity consumption in kWh (left vertical axis) in a TWFE model. We also show the TWFE ATE main
+effect in dashed blue, and thus on the right vertical axis we show the ratio of the TWFE interaction over the main
+effect; we interpret this ratio as showing when the temperature-conditional heat pump impact is higher or lower
+than the Cosy “main effect”.
+
+    For all periods, the impact of Cosy is double the average treatment effect from Table 2 for
+the coldest outside temperatures (shown in blue-dashed line in Figure 11). For both off-peak
+periods, we find that the colder the period, the more shift in consumption takes place. The rela-
+tionship between increased shifting and temperature stops around 14ºC, giving credence to the
+idea that this extra shifting is heating from peak time being displaced at cheap periods. Dur-
+ing the peak period, we observe the reverse relationship, where more and more consumption is
+shifted away after adoption as temperatures get colder. There does not seem to be a point where
+customers are unable to shift more, but it is important to note that we do not observe many very
+cold days, with very few peak periods where the average temperature was below 0ºC.
+
+    This result of greater shifting when it is colder outside may be considered surprising. One
+might expect an attenuation in shifting – especially of shifting away from the peak period –
+when the temperature was colder outside, based on the idea that customers might be less will-
+ing to sacrifice comfort at these periods. However, the relationship with temperature makes
+sense when one considers the counterfactual consumption in these homes is also higher than
+
+                                                             41
+
+usual when it is colder outside, as shown in Section 3.1.5.55 Finally, we do not observe a strong
+relationship between outside temperature and Cosy adoption for other periods.
+
+3.2.6 Heterogeneity analysis
+
+We conduct heterogeneity analyses to understand the moderators for our treatment effects. We
+examine treatment effects for customers with differing annual electricity consumption, EPC rat-
+ings, floor area, and whether or not the most recent tariff before adopting Cosy was a time-of-
+use tariff. Higher annual electricity consumption and floor area are both associated with larger
+reductions in peak time consumption, suggesting that larger consumers load shift more than
+smaller consumers, in absolute terms. Customers who previously had a time-of-use tariff also
+achieve greater peak-period reductions, indicating they might be more responsive to the incen-
+tives provided by Cosy. However, the impact of Cosy adoption does not significantly differ by
+EPC rating (A to G), suggesting that home energy efficiency does not play a major role in the
+effectiveness of Cosy in reducing peak time consumption, or that these overall ratings are noisy
+proxies for properties’ efficiency.
+
+Annual electricity consumption: As shown in Figure A.29, higher annual energy consump-
+tion is associated with a larger Cosy reduction of peak time consumption.56 For context, the me-
+dian annual consumption is 5,258 kWh (5.258 MWh) and the mean is 6,106 kWh (6.106 MWh),
+with the distribution being quite skewed to the left. Therefore, while the average treatment
+effect is a reduction of 1.2 kWh, large consumers are driving this result. When we normalize
+consumption by share of total energy per period, we find no significant difference in the impact
+of adopting Cosy depending on customers’ annual consumption (see Figure A.30).57
+
+    55Even so, one might expect a treatment effect that neither diminishes nor increases with lower temperature.
+There is theoretically a linear relationship between energy input and heat output because the rate of heat diffusion
+is proportional to the difference in temperatures (the “gradient”), and this would imply no change in the absolute
+kWh difference between Cosy- and non-Cosy-adopting homes depending on external temperature. Instead, we see
+a pattern of greater shifting at lower temperatures. We believe the reason for this pattern may be due to heat
+pumps’ load compensation, where heat pumps raise their flow temperatures, sacrificing some efficiency, when the
+difference between indoor desired temperature and indoor actual temperature widens. This load compensation
+would be more dramatic in homes with higher thermostat setpoints, creating greater shifting away from the peak
+period in homes who adopt Cosy and in doing so set lower setpoints during the peak period.
+
+    56In the British energy sector, EAC, an acronym for Estimated Annual Consumption, is an important measure
+that retailers hold for all customers for billing and settlement purposes.
+
+    57We examine how this and other treatment effect heterogeneity affects our estimates in Table A.24, where we
+re-weight our sample to have the identical covariate distribution as Octopus Energy smart meter customers on
+annual electricity consumption, property value, energy performance rating, and floor area.
+
+                                                             42
+
+Energy Performance Certificate ratings: We see in Figure A.28 that there is no significant
+interaction between Cosy’s impact on peak time consumption reduction and a home’s EPC rating
+(A to G). This finding suggests that the energy efficiency of the home, as indicated by EPC
+ratings, does not significantly affect the impact of Cosy adoption on peak time consumption; or
+that the EPC ratings are noisy proxies for energy efficiency, at least among our sample. We also
+note that, due to the previous requirement that recipients of the Boiler Upgrade Scheme have
+no recommendations for loft and cavity wall insulation, the differences in EPC ratings within
+our sample is less likely to be due to significant differences in insulation.
+
+Floor area: We see in Figure A.31 that there is a clear interaction between Cosy impact on peak
+rate period consumption and floor area. We believe this interaction is driven by floor area being
+a proxy for a home’s heat loss rate, and thus is related to our annual consumption heterogeneity
+analysis results. Greater floor area homes shift more electricity consumption away from the
+peak, in absolute terms, than smaller floor area homes. Similar to the annual consumption
+analysis, this pattern is much less clear for Cosy’s impact on share of electricity consumption
+spent during the peak period, as seen in Figure A.32.58
+
+Income and property value: We see a similar interaction between the average income level
+in a customer’s area and shifting in Figure A.35, perhaps driven by different property sizes in
+these areas. We also look at heterogeneity in impacts by property value, finding again a similar
+pattern of higher shifting in higher-value homes. Finally, in Figure A.37, we plot savings from
+adopting Cosy (due to both structural winnings and gains from demand shifts), finding higher
+absolute savings in higher-value homes but similar savings as a proportion of customers’ pre-
+Cosy bills.
+
+Previous contract being a time-of-use tariff: In Table A.12, we interact P revIsT oU (a binary
+indicator equal to 1 if the customer’s most recent tariff before Cosy was a time-of-use tariff)
+with their current tariff being Cosy. We see greater load shifting when this is the case. For
+example, in Column 3, we see that the interaction term is significant (-0.0679 kWh per period),
+indicating that customers previously on a time-of-use tariff reduce their peak time consumption
+significantly more after adopting Cosy. This pattern could be due to the presence of additional
+LCTs that prompted the original change to a time-of-use tariff before moving to Cosy, or to
+some other latent advantage these customers have in shifting their electricity consumption that
+drives their tariff choices even before Cosy adoption. However, these customers constitute a
+small minority (8.7% of our sample); our main results are mostly driven by the more than 90%
+of customers who were on flat-rate tariffs before adopting Cosy, given that the coefficients on
+OnCosyit = 1 are similar in Table 2 as they are in Table A.12.
+
+    58Heterogeneity by region (?? may be related to differing average floor area among Cosy adopters by region.
+
+                                                             43
+
+4 Welfare analysis
+
+In this section, we use the causal impacts we identify in Section 3.1.1, regarding the adoption of
+heat pumps, and Section 3.2.1, regarding the adoption of a time-of-use tariff specially designed
+for heat pumps, to investigate the two interventions’ effects on customers’ private expenditure,
+government spending on the subsidy for heat pump adoption, and societal welfare.59 We use the
+marginal value of public funds (MVPF) as a measure of welfare and use resource, government,
+and social cost per tonne of CO2eq as our measures of cost-effectiveness.
+
+Environmental and economic benefits: For all of the above measures, we need to value the
+environmental and economic private benefits from heat pumps. In order to calculate and mon-
+etize greenhouse gas emissions abatement, we use a series of UK Government outputs for most
+calculations, supplemented with data from WattTime, a nonprofit that models marginal emis-
+sions intensities for each half-hour of the year. We use conversion factors from Department
+for Energy Security and Net Zero (2023b) to calculate the CO2eq per kWh of natural gas con-
+sumption. This output also provides CO2eq per kWh of electricity consumption in 2023, but we
+instead use a different UK Government (2024a) output to estimate long-run marginal emissions
+per kWh of domestic consumption for the years 2024 through 2043; this is necessary to account
+for electricity carbon intensity declining towards near-zero by 2050.60 We use carbon values (£
+per tonne of CO2eq), akin to the Social Cost of Carbon, from the Department for Energy Se-
+curity and Net Zero (2023a) valuation of greenhouse gas emissions for policy appraisal and
+evaluation.61 We use UK Government (2024a) conversion factors for kWh of gas and electricity
+to monetize avoided air quality harms. In order to understand the CO2eq abatement impacts of
+the causal effects of adopting Cosy, we use modeled marginal emissions intensities from Watt-
+Time; this is necessary because the UK Government emissions intensity factors we use for our
+other calculations do not estimate different emissions intensities by hour of day, whereas Cosy’s
+key behavioral impacts are related to what time of day customers consume electricity.
+
+    In our welfare and cost-effectiveness analyses, it should be noted that the estimates we use
+
+    59The key results we use are: (i) Heat pump causal impact on electricity consumption (kWh, annual): 3,080;
+(ii) heat pump causal impact on gas consumption (kWh, annual): –9,351; (iii) Cosy adoption impact on consump-
+tion in the peak period (16:00 to 19:00) of the day (kWh, per half-hour): -0.2242; (iv) Cosy adoption impact on
+consumption in the morning off-peak period (04:00 to 07:00) of the day (kWh, per half-hour): 0.5071; (v) Cosy
+adoption impact on consumption in the afternoon off-peak period (13:00 to 16:00) of the day (kWh, per half-hour):
+0.2926; and (vi) Cosy adoption impact on consumption in the other hours of the day (kWh, per half-hour): -0.1066.
+
+    60We use the latest estimates from UK Government (2024a), but there is inherent uncertainty in forecasting
+long-run emissions, which are sensitive to economic, societal, and technological developments.
+
+    61We use a 3.5% discount rate, as recommended by HM Treasury (2020) “Green Book” guidance, for all calcu-
+lations of net present value. We do this even for avoided air quality harms, despite UK Government guidance to
+use a lower 1.5% discount rate for these specific harms. We use UK Government (2024b) data to convert £non−2023
+values into £2023.
+
+                                                             44
+
+for the impact of heat pumps on electricity versus gas consumption is based on two slightly
+different samples, as discussed in Section 3.1.1. Our gas consumption impacts come from a
+sample of customers who overwhelmingly had gas boilers as their previous heating source.
+In contrast, our electricity consumption impacts include customers who had heating systems
+other than gas boilers before their heat pump installation. As we show in Figure A.10, heat
+pump impacts do vary by previous heating source. We believe this average impact is the correct
+estimate for welfare calculations given that the population of British households itself comprises
+a range of heating sources, not just gas boilers.62
+
+    We make a series of assumptions about the Boiler Upgrade Scheme subsidy and how it affects
+demand for heat pumps. The subsidy value per heat pump became £7,500 in October 2023. We
+assume that 50% of those who used the subsidy to purchase their heat pump were marginal
+adopters, and 50% were inframarginal, based on research into other subsidies for large energy
+related investments for homeowners (Hahn et al., 2024), similar to Davis (2023a)’s assumptions
+regarding uptake of a US tax credit for heat pumps.63
+
+    In estimating running cost differences between heat pumps and gas boilers, we use the UK
+Government (2024a) retail energy price forecast. In estimating the savings from adopting Cosy,
+however, we use Octopus Energy (2024) prices as of 15 June 2024. The reason for this difference
+is that, for analysis of Cosy’s impacts on customer bills, we need to compare within-retailer
+unit rates depending on customers’ tariff choice, rather than using average electricity tariff rates
+across all British retailers.
+
+    Finally, we make assumptions about the average costs of air source heat pumps and gas
+boilers. As we discuss in Section 2.1, we estimate average total expenditure (private expenditure
++ subsidy) of Boiler Upgrade Scheme installations between November 2023 and June 2024 to be
+£12,713, implying a private expenditure of £5,213. We also assume that the alternative capital
+expenditure facing householders would be a gas boiler costing £2,250 (Myers et al., 2018).
+
+    62Our sample composition is similar to the general public, with 85% of our sample previously having gas boilers,
+matching the Committee on Climate Change (2016) estimate for the proportion of British homes connected to the
+gas grid using a boiler and wet-based central heating system.
+
+    63We assume that inframarginal heat pump adopters value the subsidy “pound for pound” (i.e., a 100% transfer
+from Government to consumers), while marginal heat pump adopters value the subsidy at 50% of its value on
+average. For these marginal customers who are induced to get the heat pump from the subsidy, we do not know
+whether it was the first or last £1 of the policy that induced their response. If it was the first £1, then they would
+value roughly the entirety of the transfer at its cost. If it were the last £1, then they would have a near-zero valuation
+of the subsidy. Following the classic triangle approximation to deadweight loss in Harberger (1964) (and the
+approach taken in Hendren and Sprung-Keyser (2020) and Hahn et al. (2024)). The underlying assumption is
+that the latent value of the subsidy varies uniformly in the population, implying a linear demand curve. We also
+conduct a set of analyses assuming 25% of customers are marginal and 75% are inframarginal. In brief, these
+assumptions mean that in our MVPF estimations, we assume that customers enjoy 75% of the subsidy value in the
+analyses where we assume 50% of customers are marginal (or 87.5%, in the analyses where we assume only 25%
+of customers are marginal).
+
+                                                             45
+
+Private energy expenditure, carbon impacts, and avoided air pollution: Based on these as-
+sumptions, we find large impacts of heat pumps on CO2eq and a range of impacts on private
+expenditure depending on whether customers adopt time-of-use tariffs like Cosy.
+
+    We find that heat pumps have somewhat higher operating expenditure (i.e., “running costs”)
+than gas boilers, based on the consumption impacts we identify and current and forecast future
+retail prices. Heat pumps cost £190 more per year to run, based on Octopus Energy’s standard
+tariff’s electricity and gas prices as of 15 June 2024 (or £323 more per year based on the Govern-
+ment’s estimated retail energy costs in 2024).64 This latter estimate decreases over time, accord-
+ing to the UK Government (2024a) estimated retail energy costs in future years (where electric-
+ity retail prices decline relative to gas retail prices).65 Currently, customers pay approximately
+£100 per year for their mains gas connection; insofar as a heat pump enables full disconnection
+from mains gas, this disconnection further reduces annual costs by £100. To derive a net present
+value of the higher or lower running costs of heat pumps compared to gas boilers, we assume
+that customers do disconnect from mains gas. Under this assumption, customer operating costs
+are slightly higher for heat pumps than gas boilers over the 20-year time horizon between heat
+pump versus gas boiler; the net present cost of the heat pump’s higher operating expenditure
+is £1,159 over the 20 years (using UK Government (2024a) estimated retail energy costs). We
+choose 20 years as an important time bound given that heating systems tend to last for approx-
+imately 20 years (for example, Davis (2023a) also assumes 20-year lifespan in evaluating the
+welfare impacts of a heat pump subsidy in the US).
+
+    In total, the net private cost of the heat pump is then £4,121. This figure is the £5,213 private
+capital expenditure on the heat pump, minus the £2,250 avoided expenditure on a gas boiler,
+plus the £1,159 higher net present cost in terms of operating expenditures (all sums are rounded
+to the nearest £1).
+
+    Heat pumps have large impacts on customers’ CO2eq decrease in emissions, starting at 1.16
+tonnes CO2eq and increasing to 1.86 tonnes as the marginal emissions intensity of electricity ap-
+proaches zero by 2043, totaling 32.9 tonnes of CO2eq abated in the 20 years from 2023 through
+2043. Overall, this indicates that heat pumps can reduce a household’s CO2 equivalent emis-
+
+    64For context, we estimate that customers would pay approximately £2,200 per year for their energy pre-heat-
+pump-adoption on Octopus Energy’s current standard tariff.
+
+    65We do not test whether consumers’ expectations of the price match the Government data, but based on pre-
+vious research on people using existing prices for forecasting (Anderson et al., 2013), our welfare estimates would
+not change.
+
+                                                             46
+
+sions by 68% throughout their operational lifespan.66 For context, we calculate that 1.16 tonnes
+is 36% of the customers’ pre-heat-pump adoption annual energy consumption CO2eq footprint.
+The net present value of these CO2eq benefits is £6,954.
+
+    Heat pumps also cause some reduction in air pollution in the UK associated with gas con-
+sumption. Their increase in electricity consumption is associated with some additional air qual-
+ity harms, but the net impact of these two impacts is a benefit to air quality starting at £11/year
+in 2024. As with CO2eq abatement, the impacts rise over time, to £16/year by 2043, as the UK
+electricity grid is forecast to decarbonize and therefore become cleaner from the perspective of
+air pollution as well. The net present value of these air pollution benefits is £206.
+
+    The impacts of Cosy result in near-zero impacts on CO2eq abatement and large reductions
+in customers’ annual expenditure on energy. Switching to Cosy saves customers £318 per year
+compared to if they were on the standard tariff at Octopus Energy. This is 17.9% of their pre-Cosy
+adoption electricity bill, assuming they were on Octopus Energy’s standard non-time-of-use
+tariff. Of this £318 in savings, £78 is “structural” winnings (customers would save £78 per year
+even if their consumption patterns did not change), while £240 comes from their annualized
+consumption changes by period, multiplied by the difference in marginal price between the
+Cosy tariff and Octopus Energy’s standard tariff, for each period of the day. Assuming these
+figures persist across 20 years, the net present value of these savings is £4,675.67
+
+Fiscal externalities: The adoption of heat pumps causes four changes in Government revenue
+above and beyond the direct subsidy cost. First, we examine changes in VAT from avoided gas
+boiler purchases, which incur 20% VAT in the UK, whereas heat pumps receiving the Boiler Up-
+grade Scheme subsidy incur no VAT. Given our assumption that gas boilers cost £2,250 (Myers
+et al., 2018), £375 is VAT that the Government does not receive when customers instead purchase
+a heat pump.
+
+    Second, heat pumps also cause higher electricity and lower gas consumption, as shown in
+
+    66This figure is based on the assumption that the impact of heat pumps and pre-heat pump energy consumption
+remain constant over time, with the only variable being the decreasing carbon intensity of electricity as it becomes
+cleaner (in 2043, the reduction on pre-heat-pump adoption emissions is 89%). By way of comparison, Davis (2023a)
+estimates that a heat pump tax credit in the US abates only four tonnes of CO2 over 20 years; suggesting that heat
+pumps themselves abate eight tonnes of CO2eq given his assumption, similar to ours, that 50% of those receiving
+the credit are marginal. We believe the large difference in our estimates of CO2eq abatement impact per heat pump
+is mostly due to assumptions about the carbon intensity of electricity versus natural gas. The US carbon intensity
+figure that Davis (2023a) uses implies that electricity is about twice as CO2eq-intensive as natural gas. In contrast,
+our assumption, based on UK Government (2024a), is that the two sources of energy are nearly equal in CO2eq
+intensity today, with electricity CO2eq intensity falling to near-zero by 2043.
+
+    67In our welfare calculations, we do not measure any thermal discomfort, because due to the envelope theo-
+rem, people who adopt heat pumps and/or Cosy should be indifferent between more comfort and paying more in
+comparison to less comfort and paying less.
+
+                                                             47
+
+Section 3.1.1, but overall the running costs are higher, as discussed just above; across 20 years,
+the net present value of this extra VAT is £137. Third, heat pumps also cause extra Government
+revenue from the UK’s Emissions Trading Scheme, which covers gas consumption from gen-
+erators to produce electricity but not domestic gas consumption for heat. For each year from
+2024 through 2043, we multiply the annual increase in electricity consumption from heat pump
+adoption (3,080 kWh) by the forecast long-run marginal carbon intensity from UK Government
+(2024a) and the forecast ETS allowance price (£ per tonne CO2eq) from UK Government (2023).
+We find a net present value of this increased revenue of £355.
+
+    Finally, we model the benefit to future UK Government tax revenue from abated CO2eq from
+the Boiler Upgrade Scheme. As Hahn et al. (2024) discuss, the costs of CO2eq are partly driven
+by reductions in gross domestic product from climate change, which reduce tax revenue. We
+assume that the UK proportion of global GDP is 3.2% (PwC, 2024) and the proportion of UK
+GDP that the Government receives as tax revenue is 33.5% (Office for Budget Responsibility,
+2024). We multiply the product of these proportions (1.07%) by the monetized benefits of the
+CO2eq abatement caused by the heat pumps each year from 2024 through 2043. The net present
+value of this climate change abatement fiscal externality is £75.
+
+    The total value of these fiscal externalities is £191 in extra Government revenue per heat
+pump adoption. In our estimations (immediately below) of costs per tonne CO2eq abatement
+and welfare analyses associated with the Boiler Upgrade Scheme specifically, we multiply this
+figure by the proportion of customers assumed to be marginal in adopting the heat pump due
+to the Boiler Upgrade Scheme, so as to avoid crediting or penalizing the subsidy for the impact
+of heat pumps that would have been adopted notwithstanding the subsidy.68
+
+Costs per tonne CO2eq abatement and welfare analysis: Next, we examine how these es-
+timates relate to welfare and cost-effectiveness. Following Hahn et al. (2024), we examine in
+Table 4 how impacts vary depending on whether we look at resource cost per tonne of CO2eq
+abatement, social cost per tonne, government cost per tonne, or the MVPF. As Hahn et al. (2024)
+discuss, resource cost per tonne of CO2eq abstracts from the causal effects of a policy, ignoring
+
+    68There are a range of potential fiscal externalities we believe do not apply in this context. We do not model
+changes to electricity and gas prices caused by the changes in electricity and gas consumption that heat pumps
+cause (known as spillovers or rebound effects) because the UK demand is small in the context of global trade of
+natural gas, and prices for natural gas for domestic heating as well as electricity are both ultimately set to a great
+extent by the cost of globally traded natural gas commodity benchmarks. We do not model changes in corporate
+profits and therefore corporate tax revenue to the UK Government on the assumption that the markets we analyze
+are competitive. We do not anticipate changes in Government revenue or expenditure on programs to support
+renewable generation such as the Renewable Obligation, Feed-in-Tariff, or Contracts for Differences because they
+are all subsidies for non-marginal generators. We also model no changes to revenue from the Climate Change Levy,
+as it only covers non-domestic electricity and gas consumption, whereas the Boiler Upgrade Scheme incentivizes
+heat pump adoption by domestic households.
+
+                                                             48
+
+the cost of subsidizing purchases by inframarginal customers. Social cost per tonne captures a
+comprehensive set of non-resource benefits, including the benefits of avoided air pollution, but
+the canonical formulation still ignores the cost of transfers to inframarginal customers. Govern-
+ment cost per tonne of CO2eq does account for the cost of transfers to inframarginal customers,
+but it counts only the cost of these transfers without crediting that transfer as a partial benefit
+to recipients.
+
+    The MVPF calculates the net benefits of policies relative to net government cost, account-
+ing for both costs and benefits of transfers to inframarginal customers. Following Hahn et al.
+(2024), we assume perfect competition in the market for heat pumps x (i.e., no producer prof-
+its), assume V captures all the environmental benefits due to a change in the quantity of heat
+pumps x, we can calculate the MVPF as:
+
+                                                                xdτ + V dx                                                  (9)
+                                                  MV PF =                                                                  (10)
+
+                                                                xdτ + τ dx
+
+                                                            =   1+    V  (−ϵ)
+                                                                1+    p
+
+                                                                      τ  (−ϵ)
+                                                                      p
+
+where    −ϵ  =   dx   p  =  dx p  is  the  percentage  change     in  consumption          of  heat  pumps  in  response   to
+                −dτ   x     dp x
+
+a 1% increase in consumer price (i.e., ϵ is the price elasticity of heat pump demand). Here, the
+
+environmental impact of the policy change is given by the elasticity, ϵ, times the environmental
+
+externality  of  the     heat  pump    relative   to  the  price  of  the   good,    V  .  The    fiscal  externality  is  given
+                                                                                     p
+
+by  the  elasticity,  ϵ,  times   the  tax  rate  relative  to  the  price  of  the  good      τ  .
+                                                                                               p
+
+    We find that the social/resource cost per tonne diverges sharply from the government cost
+per tonne, demonstrating the sensitivity of cost per tonne analyses to their definition.69 Indeed,
+
+we see negative social and resource cost per tonne (-£20/tonne and -£17/tonne, respectively)
+
+when assuming that 100% of heat pump owners adopt Cosy. This result stems from the net
+
+private cost of the heat pump (£4,121) being lower than the net present value of the savings we
+
+calculate from switching to Cosy (£4,675). The MVPF figures are similar to each other whether
+
+or not we assume adoption of Cosy, as these private benefits of Cosy do not influence the MVPF
+
+of the Boiler Upgrade Scheme subsidy specifically. As shown in Table 4, we find MVPFs above
+
+1, both where we assume that 50% of BUS recipients are marginal and where this figure is only
+
+25%, indicating that the Boiler Upgrade Scheme has positive welfare benefits. Our preferred
+
+specification is the second row Table 4 – 1.24. We show the benefits and costs that drive this
+
+estimate in Figure 12.
+
+    69Interestingly, we find similar cost per tonne as Davis (2023a), who estimates that a $2,000 heat pump credit
+in the US would be associated with a $500 cost per tonne of CO2eq. This similarity to our result hides some
+underlying differences. We estimate approximately four times higher CO2eq abatement from heat pumps, due
+to Great Britain’s lower carbon intensity of electricity compared to the US, but the UK heat pump subsidy is also
+approximately four times higher than the US subsidy that Davis (2023a) investigates. Note that it is not clear to us
+whether Davis (2023a) looks at cost per imperial or metric ton. All of our calculations are in terms of tonnes (i.e.,
+metric tons).
+
+                                                            49
+
+            Table 4: MVPF and Other Measures of Cost Effectiveness
+
+            Discount  % Marginal MVPF  Resource  Government         Social Cost
+            Rate                       Cost per  Cost per           per tonne
+                      25% 1.12         tonne     tonne
+                      50% 1.24
+Just BUS    3.5%      50% 1.24         £125      £906               £122
+Just BUS    3.5%      25% 1.16         £125      £450               £122
+BUS + Cosy  3.5%      50% 1.32         -£17      £450               -£20
+                      50% 1.32
+Just BUS    2%                         £128      £904               £125
+Just BUS    2%                         £128      £448               £125
+BUS + Cosy  2%                         -£33      £448               -£36
+
+Note: There are many ways of evaluating the benefits and costs of the UK’s heat pump subsidy, the Boiler Upgrade
+Scheme (BUS). We show the marginal value of public funds (MVPF) as a measure of welfare and use resource,
+government, and social cost per tonne as measures of cost-effectiveness. We show how these measures vary de-
+pending on the discount rate (HM Treasury (2020) recommends 3.5%, but we also show results for the more
+traditional 2% discount rate, percentage of customers who are marginal (i.e., motivated by BUS to adopt a heat
+pump) versus inframarginal (i.e., would have adopted a heat pump regardless of the subsidy), and whether we
+assume heat pump adopters also adopt Cosy. Our preferred specification is the second row, with no Cosy adoption,
+a discount rate of 3.5%, and an assumption that 50% of customers are marginals and 50% are inframarginals.
+
+    The above welfare calculations do not include any learning by doing benefits. Hahn et al.
+(2024) show that these learning by doing benefits can increase MVPFs significantly, and indeed
+are the largest component of the numerator of the MVPF for certain policies. However, we
+lack evidence on the extent to which heat pump costs are declining as cumulative production
+increases. There is evidence of a 14% learning rate for gas boilers (Weiss et al., 2009), but it is
+unclear whether this rate would transport well to heat pumps.70 If we assume that the learning
+rate for gas boilers is similar to heat pumps, then we can construct an MVPF with learning by
+doing. We use the worldwide heat pump cumulative production up until 2023 and then the 2023
+production.71 We also assume the price elasticity of demand of heat pumps is -1.2, the learning
+rate is 14%, and 100% pass through to consumers. We then can estimate the two benefits of
+the learning rate: the benefits to all of the inframarginals around the world of reducing prices
+and the benefits to the environment from getting marginal households to adopt heat pumps
+faster. We estimate the MVPF to be 1.90 when we include such benefits of learning by doing
+
+    70Some evidence shows very small or zero decrease in heat pump prices, so far, in the UK (Heptonstall and
+Winskel, 2023, Sissons et al., 2022), but there may be learning by doing masked by inflation in the cost of key
+inputs, temporarily constrained supply enabling high mark-ups, more complex homes being attempted over time
+(making simple year-to-year comparisons invalid), or incomplete pass-through of the subsidy to consumers. There
+is no publicly available data on the marginal cost of a heat pump.
+
+    71By the end of 2023, there was 1220 GW of heat pump capacity operating worldwide (up from 500 GW in 2010
+(IEA, 2023)), with sales in 2023 being 110 GW. For this analysis, we assume 8kW heat pumps, based on 8kW being
+the average size in our sample.
+
+                                                             50
+
+          Figure 12: Marginal Value of Public Funds (MVPF) of Boiler Upgrade Scheme
+
+Note: We show the welfare benefits and costs of the Boiler Upgrade Scheme’s subsidy for air-source heat pumps
+– specifically, for the second row of Table 4 (“Just BUS”, 3.5% discount rate, 50% of customers as marginal). We
+show these benefits and costs per £7,500, which from October 2023 is the level of the subsidy offered to British
+households for adopting an air-source heat pump. In blue, we show benefits: transfers to customers receiving the
+subsidy, CO2eq abatement benefits from marginal customers, and air quality benefits from marginal customers.
+These total £9,205 per £7,500 subsidy (1.227, in navy). In light purple, we show the costs. First, the subsidy itself.
+Next, lost VAT from avoided boiler purchases from marginal customers. Then, three increases in Government
+revenue that reduce the Government cost: extra VAT from increased energy expenditure, extra Emissions Trading
+Scheme (ETS) revenue from marginal customers, and the “climate change fiscal externality” of tax revenue from
+avoided climate change. These total £7,404 per £7,500 (0.987, in dark purple). The MVPF is then 1.227/0.987 =
+1.24.
+
+(£1,698 of benefits to future inframarginals, or £0.23 per £1 subsidy cost; and £3,193 from future
+environmental benefits, or £0.43 per £1 subsidy cost).
+
+Limitations and omissions: There may be benefits to the Boiler Upgrade Scheme and to heat
+pumps in general that we ignore in these MVPF calculations, which should be kept in mind
+in interpreting our results. These omissions mean that the MVPFs we present are likely lower
+bounds.
+
+    First, as discussed above, the 1.24 MVPF assumes no learning by doing benefits, which has
+a significant impact. We have estimated accounting for learning by doing could increase the
+average MVPF to 1.90, noting the limitations in evidence on heat pump learning rates.
+
+                                                             51
+
+    Second, heat pumps may cause customers to adopt other low-carbon technologies such as
+home batteries and solar panels. Heat pumps increase customers’ electricity consumption (as
+shown in Section 3.1.1), and this increased electricity consumption may increase the private
+benefits to homeowners from adopting home batteries and solar panels. Insofar as these ad-
+ditional technology adoptions cause further CO2eq reductions, we undervalue the impact of
+heat pumps on CO2eq abatement. However, there is not yet good evidence on the strength
+of the causal association between heat pump adoption and the adoption of other low-carbon
+technologies, so we ignore this potential benefit.
+
+    Third, the CO2eq benefits we model from adoption of heat pumps increase meaningfully in
+the future due to the grid decarbonization assumed by UK Government (2024a). If the grid
+were to decarbonize faster (or more slowly) than expected, the CO2eq benefits from Cosy adop-
+tion would be higher (or lower). A related issue is that adoption of time-of-use tariffs is an
+important enabler of a decarbonized grid, by making demand more responsive to grid needs,
+thereby allowing system operators to avoid using dispatchable fossil fuel generation to match
+unresponsive demand. We do not directly model this benefit.
+
+    Finally, there is an important uncertainty about retail energy prices in Great Britain in the
+near future: whether certain levies on electricity and implicit subsidies on gas will be reversed.72
+Lower retail electricity prices and higher retail gas prices would increase the private benefits
+from heat pump adoption by making electricity cheaper and gas more expensive per kWh; in
+turn, the resource and social costs per tonne of heat pumps would decrease. These regulatory
+changes would not directly affect the Government cost per tonne nor our MVPFs, except insofar
+as they affect customers’ elasticity of demand for heat pumps.
+
+5 Conclusion

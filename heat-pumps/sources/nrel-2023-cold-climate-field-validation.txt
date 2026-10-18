@@ -1,0 +1,2698 @@
+Source: Jon Winkler, Sugi Ramaraj (NREL), Field Validation of Air-Source Heat Pumps for Cold Climates, NREL/TP-5500-84745 (May 2023), https://docs.nlr.gov/docs/fy23osti/84745.pdf (retrieved 2026-10-18)
+Excerpt: main report; references and Appendix A (field protocol forms) dropped
+
+Field Validation of Air-Source Heat
+Pumps for Cold Climates
+
+Jon Winkler and Sugi Ramaraj
+
+National Renewable Energy Laboratory
+
+NREL is a national laboratory of the U.S. Department of Energy          Technical Report
+Office of Energy Efficiency & Renewable Energy                          NREL/TP-5500-84745
+Operated by the Alliance for Sustainable Energy, LLC
+                                                                        May 2023
+This report is available at no cost from the National Renewable Energy
+Laboratory (NREL) at www.nrel.gov/publications.
+
+Contract No. DE-AC36-08GO28308
+
+Field Validation of Air-Source Heat
+Pumps for Cold Climates
+
+Jon Winkler and Sugi Ramaraj
+
+National Renewable Energy Laboratory
+
+Suggested Citation
+
+Winkler, Jon and Sugi Ramaraj. 2023. Field Validation of Air-Source Heat Pumps for Cold
+Climates. Golden, CO: National Renewable Energy Laboratory. NREL/TP-5500-84745.
+https://www.nrel.gov/docs/fy23osti/84745.pdf.
+
+NREL is a national laboratory of the U.S. Department of Energy          Technical Report
+Office of Energy Efficiency & Renewable Energy                          NREL/TP-5500-84745
+Operated by the Alliance for Sustainable Energy, LLC                    May 2023
+
+This report is available at no cost from the National Renewable Energy  National Renewable Energy Laboratory
+Laboratory (NREL) at www.nrel.gov/publications.                         15013 Denver West Parkway
+                                                                        Golden, CO 80401
+Contract No. DE-AC36-08GO28308                                          303-275-3000 • www.nrel.gov
+
+                                                                      NOTICE
+
+This work was authored by the National Renewable Energy Laboratory, operated by Alliance for Sustainable
+Energy, LLC, for the U.S. Department of Energy (DOE) under Contract No. DE-AC36-08GO28308. Funding
+provided by the U.S. Department of Energy Office of Energy Efficiency and Renewable Energy Building
+Technologies Office. The views expressed herein do not necessarily represent the views of the DOE or the U.S.
+Government.
+
+                                This report is available at no cost from the National Renewable
+                                Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                U.S. Department of Energy (DOE) reports produced after 1991
+                                and a growing number of pre-1991 documents are available
+                                free via www.OSTI.gov.
+
+Cover Photos by Dennis Schroeder: (clockwise, left to right) NREL 51934, NREL 45897, NREL 42160, NREL 45891, NREL 48097,
+NREL 46526.
+
+NREL prints on paper that contains recycled content.
+
+     Preface
+
+        This project measured the in-field performance of centrally ducted, variable-capacity air-source
+        heat pumps in cold climates to validate performance and develop field-based performance maps.
+        The work presented in this report does not represent performance of any product relative to
+        regulated minimum efficiency requirements.
+        The laboratory and field site used for this work are not certified rating test facilities. The
+        conditions and methods under which products were characterized for this work differ from
+        standard rating conditions, as described.
+        Because the methods and conditions differ, the reported results are not comparable to rated
+        product performance and should only be used to estimate performance under the measured
+        conditions.
+
+                                                                 iii
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     Acknowledgments
+
+        We would like to thank Dale Hoffmeyer and Catherine Rivest at the U.S. Department of Energy
+        for their support of our work. We would like to acknowledge Bob Davis at Ecotope, Inc. for his
+       efforts to recruit participants during the COVID-19 pandemic, lead the installation of the
+       monitoring equipment and house data collection, and routinely assure data collection was
+        running smoothly. We appreciate the assistance from Greg Barker and Ed Hancock at Mountain
+        Energy Partnerships for their expertise with configuring and programming Campbell data
+        logging systems. This project benefited from a strong collaboration with Rebecca Trojanowski
+        and Tom Butcher at Brookhaven National Laboratory.
+
+                                                                 iv
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+List of Acronyms
+
+ACCA   Air Conditioning Contractors of America
+ACH    air changes per hour
+AHRI   Air-Conditioning, Heating, and Refrigeration Institute
+BNL    Brookhaven National Laboratory
+COP    coefficient of performance
+CT     current transformer
+DOE    U.S. Department of Energy
+DSE    distribution system efficiency
+EIA    U.S. Energy Information Agency
+HDD65  heating degree days
+HSPF   heating seasonal performance factor
+IDU    indoor unit
+IECC   International Energy Conservation Code
+MSHP   mini-split heat pump
+NEEP   Northeast Energy Efficiency Partnerships
+NREL   National Renewable Energy Laboratory
+ODU    outdoor unit
+RH     relative humidity
+SEER   seasonal energy efficiency ratio
+SRTM   Site-Responsible Team Member
+WBT    wet-bulb temperature
+
+                                                                  v
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     Executive Summary
+
+        Heating energy is the largest end-use for U.S. residential buildings, accounting for approximately
+        one-third of residential building energy consumption (EIA 2021). Historically, air-source heat
+        pumps have been limited to temperate climates because of subpar performance at extremely cold
+        outdoor air temperatures. However, recent advances to cold-climate air-source heat pump
+        technology, which typically rely on inverter-driven, variable-speed compressors and variable-
+        speed fans, have significantly improved low-temperature heat pump performance, enabling the
+        technology to save energy for many homes in cold climates.
+
+        Many researchers have field validated single-zone, ductless mini-split heat pumps (MSHPs),
+        typically used to displace a home’s existing heating system in cold climates. However, most U.S.
+        homes utilize a central, forced air heating system to distribute warm air throughout the home. In
+        the mid-2000s, central split heat pump systems with variable-speed compressors were introduced
+        to the market. However, despite the availability of inverter-driven central heat pump systems,
+        questions remain regarding in-field performance when installed in cold climates.
+
+        In fall 2018, the National Renewable Energy Laboratory (NREL) and Brookhaven National
+        Laboratory (BNL) embarked on a U.S. Department of Energy funded study to measure in-field
+        performance of both MSHPs and centrally ducted, variable-speed heat pumps in cold climates.
+        NREL and BNL collaborated to develop a common field test protocol to guide these two
+       independent, yet coordinated, studies. Monitoring equipment installation started in February
+       2021 and was completed by the following September. Because the focus of the study was on
+       heating performance, data was collected for at least one full winter and concluded in summer
+       2022. The NREL study discussed in this report focused exclusively on centrally ducted heat
+       pumps.
+
+       The primary objective of this project was to measure in-field performance of centrally ducted,
+        variable-capacity air-source heat pumps in cold climates to validate performance and develop
+        field-based performance maps. The project focused on quantifying heat pump performance at
+        cold temperatures.
+
+        We fulfilled the project objective by monitoring 13 central heat pump systems installed in single-
+        family residential buildings located in a cold climate for at least one full winter season. This
+        report describes the house characteristics and heat pump specifications, field monitoring and data
+        analysis methodologies, and measured heating and cooling field performance. Due to an
+        instrumentation issue, this report includes data on 12 of the 13 monitored heat pumps.
+
+        The sites identified for the study were primarily located in the northwest United States, as homes
+        in the region tend to have all-electric space heating systems and high-efficiency heat pumps have
+        been incentivized in the region for several years. NREL partnered with Ecotope, Inc., a small
+        energy consulting firm located in Seattle, for site recruitment, monitoring equipment installation,
+        and data quality management. All the sites included in the study had previously installed a high-
+        efficiency central heat pump system. One site in a Denver suburb had the only dual fuel heat
+        pump in the study.
+
+        We used airside and power measurements, collected at five-second intervals, to quantify heat
+        pump capacity, coefficient of performance (COP), and auxiliary heater energy consumption. We
+
+                                                                 vi
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        developed algorithms to automatically determine the heat pump operating mode including
+        defrost and auxiliary heating operation. A whole-house thermal and duct audit was completed
+        during the initial site visit to estimate winter heating loads and assess heat pump sizing. Whole-
+        home heating design loads were calculated at ASHRAE 99% design temperatures (ASHRAE
+        2017) and compared to manufacturer-reported maximum capacities to assess the heat pump
+        sizing at each site.
+        Figure ES-1 compares the estimated fraction of the building load met by compressor-based
+        heating to the heat pump sizing, where a value of 100% represents a heat pump that has been
+        perfectly sized to match the building’s heating load at the 99% design temperature. Several heat
+        pumps in the study were undersized based on this metric. The fraction of the heating load served
+        by the compressor depends on the heat pump sizing, winter weather, occupant thermostat
+        settings and schedule, heat pump controls, and heat pump capacity retention at cold
+        temperatures.
+        The heat pump at Site 8 was undersized due to an inefficient distribution system and thus the
+        system relied on the electric resistance auxiliary heater to meet ~20% of the building’s heating
+        load during winter 2021–2022. The heat pump at Site 8 also ran the auxiliary heater for
+        approximately six minutes following every defrost cycle and occasionally relied on the auxiliary
+        heater to recover from thermostat setback periods. These three factors significantly decreased the
+        overall performance of the heat pump.
+
+          Figure ES-1. Fraction of the building heating load served by the compressor compared to the heat
+                      pump sizing percentage at the 99% heating design temperature winter 2021-2022.
+
+        In contrast, the heat pump at Site 10 satisfied nearly 95% of the heating load despite being
+        undersized as well; however, the weather during the winter was warmer than normal when
+        compared to the heating design temperature. The weather at Site 13 was also warmer than
+        normal and the auxiliary heat rarely turned on, resulting in the compressor meeting most of the
+
+                                                                 vii
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        building’s heating load. The winter weather at Site 11 was colder than normal and the heat pump
+        was sized to meet 63% of the design heating load, which resulted in the compressor meeting less
+        than 80% of the heating load. The heat pump at Site 2 had a clear operational and/or control fault
+        midway through the winter resulting in poor system performance, where the auxiliary heat was
+        over-utilized. As a result, a low fraction of the building’s heating load was served by the
+        compressor.
+        The heat pumps at Sites 1 and 7 were the only two heat pumps in the study sized with excess
+        heating capacity and as expected, both sites utilized the compressor to meet more than 95% of
+        the season’s heating load.
+        Figure ES-2 plots the compressor-based heating seasonal COP and the overall system heating
+        COP for the twelve sites. The compressor-based heating COP was calculated by summing the
+       total heat delivered divided by the total indoor and outdoor unit energy consumption during time
+       periods with compressor-based heating. The average seasonal compressor-based heating COP
+       across all twelve sites averaged 2.5, ranging from 1.7 (Site 6) to 3.5 (Site 8). Though Site 8 had
+       the highest heat pumping (i.e., compressor-based heating) COP, the auxiliary heater consumed a
+       significant amount of energy, lowering the overall heating COP.
+
+           Figure ES-2. Seasonal compressor-based heating and system heating COPs during winter 2021–
+                                                                   2022 for each site.
+
+        The seasonal system heating COP accounts for auxiliary heat energy consumption, which lowers
+        the overall COP because the auxiliary heater operates at a COP of 1. This significantly lowered
+       the overall heating COP for several sites. Specifically at Sites 2 and 8, the auxiliary heat lowered
+       the overall system COP by more than 30%. Six sites (Sites 1, 4, 6, 7, 10, and 13) had relatively
+
+                                                                 viii
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        little auxiliary heater usage and thus the heating COP was lowered by less than 7% for these
+        homes.
+
+        Additional conclusions include:
+
+            • Heating COP: Heating COPs were compared to manufacturer-reported values attained
+                 from either the Northeast Energy Efficiency Partnership’s Cold-Climate Air Source Heat
+                 Pump Product Listing (NEEP 2022) or manufacturer-published expanded performance
+                 tables. Steady state COPs at 7 of the 12 sites aligned closely with expected performance.
+                 For the remaining sites, the measured COPs were lower than expected. One potential
+                 cause for low COP is a low indoor airflow rate. However, sites with lower-than-expected
+                 COPs did not consistently have low indoor unit airflow rates.
+
+            • Heating capacity: The measured capacity tended to be closer to the minimum
+                 manufacturer-reported capacity rather than the maximum. For 5 of the 12 sites, the
+                 measured capacity aligned well with maximum manufacturer-reported capacity at cold
+                 outdoor air temperatures.
+
+            • Capacity modulation: Heat pumps at 11 of the sites included variable-capacity
+                 compressors. However, despite having modulation capabilities, the heat pumps were off
+                 for a significant fraction of the time at outdoor temperatures where we expected the
+                 system to run continuously. This could be due to occupant thermostat setpoint schedules
+                 or the equipment controls.
+
+            • Auxiliary heat use: The electric resistance auxiliary heater energy use exceeded 40% of
+                 the compressor-based heating energy at 5 of the 11 reported-on all-electric sites. At 2 of
+                 those 5 sites, the auxiliary heating consumed more energy than compressor-based heating
+                 operation. This was due to one system being undersized and use of auxiliary heat after
+                 defrost and during setback recovery (Site 8) and a control and/or sensor fault in one
+                 system (Site 2).
+
+            • Defrost operation: All systems spent a relatively small fraction of the operating hours in
+                 defrost mode. However, the energy consumed by defrost operation exceeded 20% of the
+                 compressor-based heating energy at 4 of 12 sites as the auxiliary heater was turned on
+                 during defrost. Two sites ran the auxiliary heater for more than five minutes following
+                 the defrost cycle. Defrost operation was the primary consumer of auxiliary heating at 3 of
+                 11 sites. (Defrost energy use was not fully accounted for at the dual fuel site because
+                 natural gas consumption was not directly measured. However, the natural gas furnace did
+                 operate during defrost.)
+
+            • Heating supply air temperature: The supply air temperature for all sites rarely exceeded
+                 100°F. Five sites maintained a relatively constant supply air temperature independent of
+                 outdoor air temperature, while the supply air temperature decreased at colder outdoor air
+                 temperatures for six of the sites. Supply air temperatures around 80°F were not
+                 uncommon.
+
+                                                                 ix
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     Table of Contents
+
+         1 Introduction........................................................................................................................................... 1
+
+             1.1 Project Overview and Objective.................................................................................................... 2
+             1.2 Key Research Questions................................................................................................................ 3
+             1.3 Approach Overview ...................................................................................................................... 3
+
+         2 Site Characteristics and Heat Pump Information.............................................................................. 5
+
+             2.1 Site Locations................................................................................................................................ 5
+             2.2 Site Issues and Resolutions ........................................................................................................... 6
+
+                    2.2.1 Heat Pump Installation Issues .......................................................................................... 6
+                    2.2.2 Data Logging Issues ......................................................................................................... 6
+             2.3 Weather Data During Monitoring ................................................................................................. 7
+             2.4 Site Characteristics...................................................................................................................... 10
+             2.5 Heat Pump Specifications and Settings....................................................................................... 10
+             2.6 House Heating Loads and Heat Pump Sizing ............................................................................. 16
+
+         3 Field Monitoring Methodology .......................................................................................................... 19
+
+             3.1 Field Protocol .............................................................................................................................. 19
+             3.2 Data Acquisition.......................................................................................................................... 19
+             3.3 Blower Airflow Data and Correlations ....................................................................................... 20
+
+         4 Data Analysis Approach .................................................................................................................... 24
+
+             4.1 Determining Heat Pump Operating Modes ................................................................................. 27
+                    4.1.1 System Off Mode ........................................................................................................... 27
+                    4.1.2 Fan-Only Mode .............................................................................................................. 28
+                    4.1.3 Compressor Heating Mode............................................................................................. 29
+                    4.1.4 Auxiliary Heating Mode................................................................................................. 31
+                    4.1.5 Compressor + Auxiliary Heating Mode ......................................................................... 32
+                    4.1.6 Defrost Mode ................................................................................................................. 33
+                    4.1.7 Cooling Mode................................................................................................................. 34
+
+             4.2 Determining Steady State Periods............................................................................................... 36
+             4.3 Performance Calculations ........................................................................................................... 37
+
+         5 Heating Mode Performance Results and Discussion ..................................................................... 39
+
+             5.1 Heating Season Summary Data................................................................................................... 39
+             5.2 Heating Season Operating Modes ............................................................................................... 42
+             5.3 Compressor-Based Heating COP and Capacity .......................................................................... 44
+             5.4 Auxiliary Heater Use................................................................................................................... 51
+             5.5 Cycling and Capacity Modulation............................................................................................... 54
+             5.6 Defrost......................................................................................................................................... 62
+             5.7 Heating Supply Air Temperature ................................................................................................ 65
+             5.8 Standby Power Consumption ...................................................................................................... 65
+
+         6 Cooling Mode Performance Results and Discussion ..................................................................... 72
+
+             6.1 Cooling Season Operating Modes............................................................................................... 72
+             6.2 Cooling Capacity and Coefficient of Performance ..................................................................... 72
+             6.3 Capacity Modulation and Cycling............................................................................................... 77
+
+         7 Summary and Conclusions ............................................................................................................... 81
+
+             7.1 Recommendations to Improve Installed Performance ................................................................ 82
+             7.2 Recommendations to Improve the Field Protocol ....................................................................... 83
+
+         References ................................................................................................................................................. 84
+         Appendix A. Field Protocol Data Entry Forms ....................................................................................... 86
+
+             Checklist (Condensed Protocol) and Data Entry Form for Air-Source Heat Pumps Cold-Climate Field
+                    Performance Project .................................................................................................................... 86
+
+             Form 1a: Ducted Systems: House Information Table .......................................................................... 87
+             Form 2a: Home’s Heating Energy Use ................................................................................................ 88
+
+                                                                  x
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+             Form 2b: Home’s Cooling Energy Use ................................................................................................ 90
+             Form 3: Site Photos of Heat Pump ....................................................................................................... 92
+             Form 4: Heat Pump Information and Product Data.............................................................................. 93
+             Form 5: Commissioning Data* ............................................................................................................ 94
+             Form 6a: Ducted Systems – Blower Airflow Data............................................................................... 95
+             Form 7: Data Logger Channel List....................................................................................................... 96
+
+                    Indoor Data Logger (CR1000) .................................................................................................... 96
+                    Outdoor Data Logger (CR1000).................................................................................................. 97
+             Form 8: Home Thermal Audit.............................................................................................................. 98
+             Ducts..................................................................................................................................................... 99
+             Blower Door Test ............................................................................................................................... 100
+             Exterior Duct Leakage Testing........................................................................................................... 101
+
+                                                                 xi
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     List of Figures
+
+        Figure ES-1. Fraction of the building heating load served by the compressor compared to the heat pump
+                        sizing percentage at the 99% heating design temperature winter 2021-2022. ....................... vii
+
+        Figure ES-2. Seasonal compressor-based heating and system heating COPs during winter 2021–2022 for
+                        each site.................................................................................................................................viii
+
+        Figure 1. Residential heat pump market penetration in the United States (EIA 2020)................................. 1
+        Figure 2. (a) Northwest site locations and (b) IECC climate zone map........................................................ 6
+        Figure 3. Outdoor temperature histograms for the monitoring period for each site. .................................... 9
+        Figure 4. House heating load lines (blue) and manufacturer-reported maximum and minimum heating
+
+                        capacities (red solid and dashed lines, respectively).............................................................. 17
+        Figure 5. Schematic depicting key measurements on the IDU and ODU used to meet project objectives. 20
+        Figure 6. Measured blower airflow rate and power (points) and correlation used for performance
+
+                        calculations (lines). ................................................................................................................ 21
+        Figure 7. Flow plate used for IDU airflow measurement. .......................................................................... 22
+        Figure 8. Comparison of field-measured indoor unit airflow rate to manufacturer-reported airflow rates
+
+                        listed in the AHRI Directory of Certified Products................................................................ 23
+        Figure 9. Flow chart outlining the data processing approach along with the decision tree for determining
+
+                        the heat pump operating mode. .............................................................................................. 26
+        Figure 10. Automatically detected heat pump operation mode during a cold winter period...................... 27
+        Figure 11. Outdoor power and compressor inverter frequency during a period with cycling. ................... 28
+        Figure 12. Automatically detected system off operation mode during a period with cycling. ................... 28
+        Figure 13. Blower power, outdoor power, and compressor inverter frequency during a period with fan-
+
+                        only operation. ....................................................................................................................... 29
+        Figure 14. Automatically detected operation mode during an example period with fan-only operation.... 29
+        Figure 15. Blower power, outdoor power, and compressor inverter frequency during a period with heating
+
+                        cycle. ...................................................................................................................................... 30
+        Figure 16. Supply and return air temperature during a period with heating cycle...................................... 30
+        Figure 17. Automatically detected compressor heating operation mode during an example period. ......... 30
+        Figure 18. Blower power and supply and return air temperature during a period with auxiliary heating
+
+                        operation................................................................................................................................. 31
+        Figure 19. Automatically detected operation mode during an example period with auxiliary heating
+
+                        operation................................................................................................................................. 31
+        Figure 20. Blower power, outdoor and indoor power, and compressor inverter frequency during a period
+
+                        with compressor + auxiliary heating operation...................................................................... 32
+        Figure 21. Supply and return air temperature during a period with compressor + auxiliary heating
+
+                        operation................................................................................................................................. 32
+        Figure 22. Automatically detected compressor + auxiliary heating operation mode during an example
+
+                        period. .................................................................................................................................... 33
+        Figure 23. Air and refrigerant temperatures during a defrost cycle............................................................ 33
+        Figure 24. ODU and IDU power during a defrost cycle. ............................................................................ 34
+        Figure 25. Automatically detected defrost cycle......................................................................................... 34
+        Figure 26. Blower power, outdoor power, and compressor inverter frequency during a period with cooling
+
+                        cycle. ...................................................................................................................................... 35
+        Figure 27. Air and refrigerant temperatures during a period with cooling cycle........................................ 35
+        Figure 28. Automatically detected cooling operation mode during an example period. ............................ 35
+        Figure 29. Supply air temperature and inverter frequency over a moving data window. ........................... 36
+        Figure 30. Steady state detection using hybrid online steady state detection method. ............................... 37
+        Figure 31. Heat pump operational modes at cold temperatures during winter 2021–2022. ....................... 43
+        Figure 32. Box and whisker plot of steady-state compressor-based heating COPs (blue boxes) and
+
+                        manufacturer-reported COPs at minimum and maximum speeds (red lines). ....................... 46
+
+                                                                 xii
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        Figure 33. Mean steady-state compressor-based heating COPs (blue bars) and manufacturer-reported
+                        COPS at minimum and maximum speeds (red lines). ........................................................... 47
+
+        Figure 34. Box and whisker plot of steady-state compressor-based heating capacity (blue boxes) and
+                        manufacturer-reported capacities at minimum and maximum speeds (red lines).................. 48
+
+        Figure 35. Mean steady-state compressor-based heating capacity binned by outdoor temperature (blue
+                        bars) and manufacturer-reported capacities at minimum and maximum speeds (red lines). . 49
+
+        Figure 36. Box and whisker plot of steady-state compressor-based heating IDU airflow rate (blue boxes)
+                        and manufacturer-reported full load and minimum speed airflow rates (red lines)............... 50
+
+        Figure 37. Site 2 daily ODU and auxiliary heater energy use during winter 2021–2022........................... 52
+        Figure 38. Operating modes for Sites 2 and 8 to highlight auxiliary heat use............................................ 52
+        Figure 39. High cycling rate at Site 13 during mild temperatures. ............................................................. 55
+        Figure 40. High cycling rate resolved at Site 13......................................................................................... 56
+        Figure 41. Auxiliary heater energy in heating (blue) and defrost (orange) modes during winter 2021–
+
+                        2022........................................................................................................................................ 57
+        Figure 42. Mean compressor heating runtime fraction. .............................................................................. 58
+        Figure 43. Box and whisker plot of compressor cycles per hour during winter 2021–2022. ..................... 59
+        Figure 44. Box and whisker plot of inverter frequency during steady-state compressor-based heating
+
+                        operation................................................................................................................................. 60
+        Figure 45. Fraction of time spent at a given inverter frequency during steady-state compressor-based
+
+                        heating operation during winter 2021–2022. ......................................................................... 61
+        Figure 46. An example day with frequent defrost cycles for the heat pump at Site 7. ............................... 62
+        Figure 47. ODU, IDU, and blower power and compressor inverter frequency during a day with frequent
+
+                        defrost cycles at Site 7. .......................................................................................................... 63
+        Figure 48. Air and refrigerant temperatures during a day with frequent defrost cycles at Site 7. .............. 63
+        Figure 49. An example day with a long defrost cycle at Site 7................................................................... 64
+        Figure 50. ODU, IDU, and compressor inverter frequency during a long defrost cycle at Site 7. ............. 64
+        Figure 51. Air and refrigerant temperatures during a long defrost cycle at Site 7...................................... 64
+        Figure 52. Time spent in defrost mode during winter 2021–2022.............................................................. 67
+        Figure 53. Total number of defrost cycles during winter 2021–2022......................................................... 68
+        Figure 54. Box and whisker plot showing the defrost cycle length during winter 2021–2022................... 69
+        Figure 55. Box and whisker plot showing heat pump supply air temperature during periods of steady-state
+
+                        compressor-based heating. ..................................................................................................... 70
+        Figure 56. Average ODU (orange) and IDU (blue) standby power during winter 2021–2022. ................. 71
+        Figure 57. Heat pump operational modes at warm outdoor air temperatures. ............................................ 73
+        Figure 58. Box and whisker plot of steady-state cooling COPs. ................................................................ 74
+        Figure 59. Mean steady-state cooling COPs............................................................................................... 75
+        Figure 60. Box and whisker plot of steady-state cooling total capacity. .................................................... 76
+        Figure 61. Box and whisker plot of compressor cycles per hour during cooling mode operation for Sites 1,
+
+                        2, 3, and 10............................................................................................................................. 77
+        Figure 62. Mean cooling runtime fraction. ................................................................................................. 79
+        Figure 63. Box and whisker plot of inverter frequency during steady-state cooling operation. ................. 80
+
+     List of Tables
+
+        Table 1. Heat Pump Site Information ........................................................................................................... 5
+        Table 2. Number of Hours with Cold Temperatures..................................................................................... 8
+        Table 3. House Characteristics, Site Design Temperatures, and House Design Heating Loads for the
+
+                        Northwestern Sites ................................................................................................................. 13
+        Table 4. Heat Pump Product Data and Specifications ................................................................................ 14
+        Table 5. Heat Pump Installation and Operation Information and Auxiliary Heat Specifications............... 15
+
+                                                                 xiii
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        Table 6. Heat Pump Sizing and Site Balance Temperatures....................................................................... 18
+        Table 7. List of Key Sensor Types.............................................................................................................. 20
+        Table 8. Coefficients for the Blower Fan Curve ......................................................................................... 22
+        Table 9. Measurements Used for Data Processing and Calculations.......................................................... 24
+        Table 10. Calculated Moist Air Properties.................................................................................................. 25
+        Table 11. Summary of Heating Data for Winter 2021–2022...................................................................... 41
+        Table 12. Auxiliary Heat Runtime at Cold Temperatures During Winter 2022–2023 ............................... 54
+        Table 13. Auxiliary Heat Use Following a Defrost Cycle During Winter 2021–2022............................... 65
+
+                                                                 xiv
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     1 Introduction
+
+        Heating energy is the largest end-use for U.S. residential buildings, accounting for approximately
+        one-third of residential building energy consumption (EIA 2021). Historically, air-source heat
+        pumps have been limited to temperate climates because of subpar performance at extremely cold
+        outdoor air temperatures. Heat pumps have also not seen significant market penetration in
+        regions with access to natural gas. However, recent advances to cold-climate air-source heat
+        pump technology, which typically rely on inverter-driven, variable-speed compressors and
+        variable-speed fans, have significantly improved low-temperature heat pump performance
+        enabling the technology to potentially save energy for many homes in cold climates. Despite the
+        relatively recent technology advancements, heat pump technology is more common in warmer
+        climates, as shown in Figure 1, which provides a breakdown of heat pump use throughout the
+        United States based on the U.S. Energy Information Agency 2020 Residential Energy
+        Consumption Survey (EIA 2020).
+
+                        Heat pump
+                        Steam or hot water
+                        Central warm-air furnace
+                        Other
+
+                    Figure 1. Residential heat pump market penetration in the United States (EIA 2020).
+
+        Inverter-driven compressor technology was developed in the 1970s and 1980s for mini-split heat
+        pumps (MSHPs) and nowadays nearly all MSHPs on the market incorporate an inverter-driven
+        compressor. An inverter modulates the compressor speed, allowing the heat pump to
+        dynamically adjust the heating and cooling capacity to better match the building load. Inverter-
+        driven heat pumps are more efficient at part-loads and offer improved cold-climate performance
+        because the system increases the compressor speed at low outdoor temperatures. Inverter-driven
+        compressors are commonly also referred to as variable-speed and variable-capacity.
+
+                                                                  1
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        Many researchers have field validated single-zone ductless MSHPs, which are typically used to
+        displace a home’s existing heating system in cold climates (CADMUS 2016; CADMUS 2017;
+        Larson et al. 2013). The majority of MSHPs provide point-source heating and cooling,
+        eliminating the need for an air distribution system and making MSHPs an attractive solution in
+        homes lacking ductwork such as those with hydronic or electric baseboard heating. However,
+        two-thirds of U.S. homes utilize a central, forced air heating system to distribute warm air
+        throughout the home, which is reflected in the proportion of homes that utilize a central warm-air
+        furnace shown in Figure 1. Though MSHPs are not limited to ductless configurations, the
+       compact-ducted MSHP air handlers do not typically have the heating capacity necessary to
+        condition an entire U.S. home. Multi-split heat pumps (MSHPs with more than one indoor unit)
+        condition multiple rooms within a home and are available in larger capacities than those of
+        single-zone MSHPs.
+
+        In the mid-2000s, central heat pump systems with variable-speed compressors were introduced
+        to the market. Fixed capacity and two-stage central heat pump systems continue to dominate
+        sales; however, manufacturers continue to routinely introduce variable-speed models to the
+        market (Salmonsen 2018). Variable-speed, central heat pumps were initially offered by top
+        brands at the highest efficiency levels; however, central heat pumps with variable-speed
+        compressors are now offered by nearly every brand at a range of efficiencies. Despite the
+        availability of inverter-driven, central heat pump systems, questions remain regarding in-field
+        performance when installed in cold climates.
+
+        In fall 2018, the National Renewable Energy Laboratory (NREL) and Brookhaven National
+        Laboratory (BNL) embarked on a U.S. Department of Energy (DOE) funded study to measure
+        in-field performance of both MSHPs and centrally ducted variable-speed heat pumps in cold
+        climates. NREL and BNL collaborated to develop a common field test protocol to guide the two
+        independent, yet coordinated, studies. Monitoring equipment installation started in February
+        2021 and was completed by the following September. Because the focus of the study was heating
+        performance, data was collected for at least one full winter and concluded in summer 2022. The
+        NREL study focused exclusively on centrally ducted heat pumps. Specific monitoring equipment
+        installation dates and system types are listed for each site in Section 2.
+
+      1.1 Project Overview and Objective
+
+        The primary objective of this project was to measure in-field performance of centrally ducted,
+        variable-capacity air-source heat pumps in cold climates to validate performance and develop
+        field-based performance maps. The project focused on quantifying heat pump performance at
+        cold temperatures.
+
+        We fulfilled the project objective by monitoring 13 central heat pump systems installed in single-
+        family detached residential buildings located in a cold climate for at least one full winter season.
+        This report describes the house characteristics and heat pump specifications (Section 2), field
+        monitoring and data analysis methodologies (Sections 3 and 4, respectively), and heating and
+        cooling measured field performance (Sections 5 and 6, respectively).
+
+                                                                  2
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      1.2 Key Research Questions
+
+        The project’s key research questions are broken down into five key areas, listed below. The
+        research questions focus on heating mode performance with interest specifically at cold
+        temperatures.
+
+            1. Heat Pump Installed Capacity and Efficiency (Section 5.3)
+
+                 a. What is the measured heating capacity and efficiency of installed, central, variable-
+                 capacity heat pump systems, specifically at cold temperatures?
+
+                 b. How does the measured performance in the field compare to the expected
+                 performance?
+
+            2. Auxiliary Heat Use (Section 5.4)
+
+                 a. How much energy is consumed by the electric resistance auxiliary heater?
+
+                 b. How often does the auxiliary heat turn on and what factors determine usage, such as
+                 outdoor air temperature or defrost mode?
+
+            3. Variable-Capacity Modulation and Heat Pump Sizing (Section 5.5)
+
+                 a. How does the cycling rate and runtime of the variable-capacity heat pumps depend on
+                 outdoor air temperature?
+
+                 b. What fraction of the home’s heating load is satisfied by compressor-based heating at
+                 cold temperatures?
+
+            4. Defrost Mode Energy (Section 5.6)
+
+                 a. How much energy is consumed by the heat pump while in defrost mode?
+
+                 b. How often do defrost cycles occur, what is the duration, and how does the frequency
+                 and duration depend on outdoor air temperature?
+
+            5. Supply Air Temperature (Section 5.7)
+
+                 a. What is the heat pump supply air temperature when using compressor-based heating at
+                 various outdoor air temperatures?
+
+      1.3 Approach Overview
+
+        The sites identified for the study were primarily located in the northwest United States because
+        homes in the region tend to have all-electric space heating systems, and high-efficiency heat
+        pumps have been incentivized for several years. NREL partnered with Ecotope, Inc., a small
+        energy consulting firm located in Seattle, for site recruitment, monitoring equipment installation,
+        and data quality management. All the sites included in the study had previously installed a high-
+        efficiency, central heat pump system.
+
+        We used airside and power measurements to quantify heat pump capacity, coefficient of
+        performance (COP), and auxiliary heater energy consumption. Two independent, standalone data
+        loggers were used at each site—one located within proximity of the heat pump outdoor unit
+        (ODU) and the other close to indoor unit (IDU). This approach minimized time on site by
+        reducing the need to run wires, and data was combined during post-processing. The ODU data
+
+                                                                  3
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        logger included a weather station to monitor outdoor air dry-bulb temperature and relative
+       humidity.
+       During the initial site visit, Ecotope correlated the IDU airflow rate to the blower power
+       consumption by temporary installing an air handler flow plate or duct blaster to measure the
+       indoor airflow at a range of blower speeds. Blower power was measured throughout the study to
+       estimate the indoor airflow rate during the long-term monitoring. A whole-house thermal and
+        duct audit was also completed during the initial site visit to assess the winter heating loads and
+        heat pump sizing. A full description of the approach can be found in Section 3.
+
+                                                                  4
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+2 Site Characteristics and Heat Pump Information
+
+2.1 Site Locations
+
+We monitored 13 central heat pump systems for this study. Twelve of the sites were in the
+northwestern United States (Washington and Montana) and one site was located close to NREL
+in Colorado. Table 1 summarizes the site location details including the site heating degree days
+(HDD65) (ASHRAE 2017), elevation, which is important for data processing, and monitoring
+equipment installation date.
+
+                Table 1. Heat Pump Site Information
+
+Site  Location         HDD65  Elevation              Monitoring
+ID
+                              (ft)                   Install Date
+1 Paterson, WA         5,097
+                              380                    2/1/2021
+2 Prosser, WA          4,936  666                    2/2/2021
+                              5,597                  12/14/2020
+3 Broomfield, CO 5,667        499                    2/3/2021
+                              1,648                  2/11/2021
+4     Benton City, WA  4,936  2,002                  2/24/2021
+                              1,876                  2/23/2021
+5 Nine Mile Falls, WA 6,130   2,487                  3/22/2021
+                              2,352                  3/25/2021
+6 Spokane Valley, WA 6,130    3,570                  6/23/2021
+                              1,843                  7/6/2021
+7     S. Spokane, WA   6,130  1,843                  7/8/2021
+                              1,900                  9/15/2021
+8 Valleyford, WA 6,627
+
+9 Cheney, WA           6,776
+
+10 Hamilton, MT        7,372
+
+11 Spokane, WA         6,627
+
+12 Spokane, WA         6,627
+
+13 Glenwood, WA        5,898
+
+Figure 2 shows the Northwest site locations and the International Energy Conservation Code
+(IECC) climate zone map for reference (PNNL 2022). All the sites in Washington and Colorado
+were in IECC Climate Zone 5, which has a similar climate to Connecticut, Massachusetts, and
+southern Vermont. Site 10, which was in Montana, is in IECC Climate Zone 6. Sites 1, 2, and 4
+were in southern Washington, east of the Cascades, while Sites 5–9, 11, and 12 were near
+Spokane in northern Washington. Site 13 was close to Mount Adams (located at ~2,000 ft above
+sea level). Sites 1–4 were selected to be close to NREL and Ecotope office locations to minimize
+travel during the COVID-19 pandemic.
+
+                                                                  5
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                             (a) (b)
+
+                               Figure 2. (a) Northwest site locations and (b) IECC climate zone map.
+
+      2.2 Site Issues and Resolutions
+
+        2.2.1 Heat Pump Installation Issues
+        Site 2: Site 2 was instrumented in February 2021. We quickly observed that there were lengthy
+        time periods in which the compressor would not run, and the system would exclusively use
+        auxiliary heat to condition the building. Ecotope revisited the site in March 2021 with a
+        manufacturer service technician to resolve the issue. System performance did subsequently
+        improve; however, as Section 5 will show, Site 2 often used the auxiliary heater to heat the
+        home.
+
+        Site 4: While Ecotope field researchers were measuring the indoor airflow rate during the initial
+        site visit, the blower failed to operate at more than one airflow rate. At that time, the building
+        occupant mentioned the system did not modulate as expected. Ecotope contacted a manufacturer
+        service technician and the IDU control board was replaced during a service call in March 2021.
+        Ecotope revisited the site to collect a set of airflow measurements, which were used for the data
+        analysis.
+
+        Site 7: Site 7 instrumentation was installed in late February 2021. Despite having a limited
+        amount of heating data, we concluded the heating COP at Site 7 was lower than expected and the
+        system was using too much auxiliary heat. Ecotope and the homeowner engaged with the service
+        technician, who reluctantly admitted there was a performance issue due to undersized return
+        ductwork. The return plenum was reconstructed in June 2021 and Ecotope remeasured the
+        blower airflow rates for the airflow rate correlation. Following the repair, the capacity increased
+        and modulation improved; however, as Section 5 will show, the COP was still lower than
+        expected.
+
+        2.2.2 Data Logging Issues
+        Site 3: The ODU power measurement enclosure leaked during summer 2021 and was replaced a
+        few months later. Thus, we lost a few months of summer data.
+
+        Site 9: Site 9 was in a rural location without a reliable cell phone signal. We routinely made
+        connections to the indoor logger to download the data but could not resolve connection issues to
+        the outdoor logger despite relocating the antenna and adding a diversity antenna to the cell
+
+                                                                  6
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        modem. All the data loggers included a back-up memory module. However, after a site visit in
+        October 2021 to manually download the data, the backup memory module failed to record future
+        readings, resulting in significant data loss. Because only a complete set of IDU data was
+        obtained, Site 9 is not included in this report.
+
+        Site 12: Site 12 was also in a rural location without a reliable cell phone signal and there were
+        random errors with writing data to the backup memory module. Thus, the data set for Site 12 is
+        not as extensive as other sites in the study.
+
+        Site 13: The ODU inverter frequency measurement at Site 13 failed early during the monitoring
+        period and was not fixed. However, all other measurements reliably collected data, allowing us
+        to determine the heat pump’s capacity and COP.
+
+      2.3 Weather Data During Monitoring
+
+        Because the study was primarily focused on quantifying cold temperature performance, it is
+        useful to compare the measured temperature data to typical weather for each site. One approach
+        is to count the hours of data at or below the heating design temperatures. Table 2 lists the 99%
+        and 99.6% ASHRAE heating design temperatures for each site and the number of hours below
+        the corresponding temperature. The 99% heating design temperature is defined as the outdoor
+        temperature that a given location stays above for 99% of the hours in a year using a 30-year
+        average (ASHRAE 2017). Accordingly, the outdoor temperature at a location would be colder
+        than the 99% heating design temperature for approximately 88 hours per year (on average).
+        Based on this metric, Sites 2, 4, 8, 10, 12, and 13 had warmer than average temperatures during
+        the monitoring period. The data logging issue for Site 12 explains the relatively few hours of
+        cold temperature data.
+
+        As some sites were monitored for more than a single winter, we include the number of hours
+        during the entire monitoring period as well as during winter 2021–2022. It is useful to have a
+        consistent monitoring period across all sites when comparing performance for some metrics,
+        such as auxiliary heat energy, which is why we included two different hour counts in Table 2.
+        However, with exception of Site 3, there were very few hours with cold temperatures prior to
+        winter 2021–2022.
+
+        Figure 3 plots outdoor temperature histograms for the entire monitoring periods for each site.
+
+                                                                  7
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+               Table 2. Number of Hours with Cold Temperatures
+
+Site ID  Design Temperature  Number Hours Colder than the Design Temperature
+         [°F]                Entire Monitoring Period Winter 2021–2022
+1
+2        99%   99.6%         99%    99.6%  99%                  99.6%
+3        18.3  11.7
+4        15.6  7.4           98 22.4 86.5 22.4
+5        5.1   -1.4
+6        15.6  7.4           79.8 3.7      76.7 3.7
+7        13.8  7.6
+8        13.8  7.6           134.1  46.6   71.6                 15.3
+10       13.8  7.6
+11       11    4.7           69.8 8.4      69.2 8.4
+12       3.1   -3.8
+13       11    4.7           144.3  10.8   133                  10.8
+         11    4.7
+         13.7  7.8           130.3  13.3   130.3                13.3
+
+                             137.5  21.9   137.5                21.9
+
+                             51.8 3.3      51.8 3.3
+
+                             48.3 13       48.3 13
+
+                             106.8  6.2    106.8                6.2
+
+                             8080
+
+                             26.9 6.5      26.9 6.5
+
+                                                                  8
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                     Figure 3. Outdoor temperature histograms for the monitoring period for each site.
+
+                                                                  9
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+2.4 Site Characteristics
+
+A whole-house thermal and duct audit was completed for all the northwest U.S. sites during the
+initial site visit to calculate the design heating load. The following parameters were assessed:
+
+• Exterior and interzonal wall surface area and insulation R-value
+• Ceiling surface area and insulation R-value
+• Foundation type, surface area, and insulation R-value
+• Glazing surface area and U-value
+• Whole-house air changes per hour (ACH) at 50 Pascals depressurization
+• Distribution system efficiency (DSE) calculation inputs, such duct surface area, insulation R-
+
+    value, and air leakage.
+
+The design heating load was calculated for each site using procedures based on Air Conditioning
+Contractors of America Manual J (ACCA 2016). However, we assumed an indoor temperature
+of 65°F rather than the Manual J assumption of 70°F to account for internal gains and building
+thermal mass. Table 3 lists the whole-house total heat transfer coefficient, distribution system
+efficiency, and design heating loads assuming a 99% heating design temperature. A distribution
+system efficiency of 100% indicates the home’s ductwork was located within the thermal
+envelope. Sites 5, 8, and 13 had notably poor ductwork resulting in high heating design loads.
+
+The whole-home design heating load was calculated using the whole-house total heat transfer
+coefficient (UAwh), the distribution system efficiency (DSE), and the 99% heating design
+temperature (Tdesign) based on the following equation.
+
+       ������������̇ ������������������������������������������������������������������������,ℎ������������������������  =  ������������������������������������ℎ  ∗  �65  −  �������������������������������������������������������������������������������������  (1)
+                                                     ������������������������������������
+
+where
+
+       ������������������������������������ℎ = ������������������������������������������������������������ + �������������������2������������0������50� ������������ℎ������������������������������������������������ �16.01�               (2)
+
+where UAenv is the overall heat transfer coefficient of the thermal enclosure, ACH50 is single-
+point, whole-house ACH measured at 50 Pascal depressurization converted to an estimated
+natural ACH1, and Vhouse is the house interior volume.
+
+2.5 Heat Pump Specifications and Settings
+
+Table 4 lists the heat pump product data and specifications for each site. All systems were
+variable-capacity systems except for Site 12, which was a two-stage system. Additionally, all
+sites were fully electric except for Site 3, which had a dual fuel system with a natural gas furnace
+for backup heating.
+
+         1 http://www.homeenergy.org/show/article/nav/blowerdoor/id/1015
+
+                                                                 10
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        The nominal heating and cooling capacities, heating seasonal performance factors (HSPFs), and
+        seasonal energy efficiency ratios (SEERs) were sourced from the Air-Conditioning, Heating, and
+        Refrigeration Institute (AHRI) Directory of Certified Products (AHRI 2022).
+
+        The Northeast Energy Efficiency Partnerships (NEEP) developed and published a cold-climate
+        air-source heat pump specification and maintains a product listing of manufacturer-submitted
+       data for heat pumps that meet the specification (NEEP 2021). The product list is popular in the
+       industry and is often used by utility programs to define rebate requirements. Nine of the 13
+       monitored heat pumps are currently listed as meeting the specification. For ducted heat pump
+       systems, the NEEP Cold-Climate Air-Source Heat Pump Specification Version 3.1 requirements
+       include the following:
+
+       • HSPF ≥ 9.0
+       • COP ≥ 1.75 at 5°F
+       • SEER ≥ 15.0
+       • Reporting of capacity and COP at minimum, rated, and maximum speeds at 47°F, 17°F, and
+
+            5°F.
+
+       Version 4, which requires performance based on HSPF2 and SEER2, became effective starting
+       January 1, 2023 (NEEP 2022).
+
+       NEEP requires manufacturers to report heat pump capacity and COP at 5°F whereas the AHRI
+       Directory of Certified Products only reports the capacity at 17°F, which is the coldest
+       temperature required during the ratings test. The updated heat pump DOE test procedure
+       (Appendix M1) now allows for an optional cold temperature test to be conducted at 5°F (10 CFR
+       Part 430 2022, AHRI 2020). The DOE Cold Climate Heat Pump Challenge allows for an
+       optional test condition of -15°F (DOE 2021).
+
+       Table 4 lists the manufacturer-reported maximum capacity at 5°F; however, the data source of
+       the maximum capacity varied across the sites. The manufacturer-reported data in the NEEP heat
+       pump list was used for systems included in the product listing. Otherwise, manufacturer
+       expanded performance table data was used. The coldest outdoor temperature listed in expanded
+       performance table data for Sites 3 and 6 was 7°F, which is noted in Table 4 with italicized text.
+       The heating capacity retention at cold temperatures can be assessed by comparing the nominal
+       heating capacity, which is measured at an outdoor temperature of 47°F, to the maximum heating
+       capacity at 5°F. The capacity retention ranged from 48% to 68% for the sites with data at 5°F.
+
+       Table 4 also lists the minimum heating capacity at 47°F for the variable-capacity systems, which
+       was sourced from the NEEP product list or manufacturer expanded performance tables. The
+       equipment’s turndown ratio can be assessed by comparing the nominal heating capacity at 47°F
+       to the minimum heating capacity, which varied from 0.2 (Site 3) to 0.7 (Site 11).
+
+       All the systems installed at the northwestern U.S. locations utilized a draw-through blower
+       configuration, meaning the blower was downstream of the indoor heat pump coil. The dual fuel
+       system at Site 3 used a blow-through configuration because the indoor coil was installed
+       downstream of the furnace.
+
+                                                                 11
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        Table 5 lists information regarding the heat pump installation, operation, and auxiliary heat. The
+        compressor lockout temperature is defined as the minimum outdoor temperature at which the
+        compressor operates that can be specified using the system’s communicating thermostat. Most
+        systems have a hard-coded compressor lockout temperature at a colder temperature to protect the
+       equipment. The auxiliary heat lockout temperature is defined as the maximum outdoor
+       temperature at which the auxiliary heat source operates. When the outdoor temperature is above
+       the compressor lockout temperature and below the auxiliary lockout temperature, the compressor
+       and electric resistance auxiliary heater should be allowed to operate simultaneously. The heating
+       setpoints were self-reported by the building occupants at the onset of the study and collected via
+       the occupant survey included in Appendix A.
+       As previously noted, all systems included an auxiliary electric resistance heater except for Site 3,
+       which had a natural gas backup furnace. The electric resistance auxiliary heating elements were
+       wired using multiple stages and included a lockout temperature above which the auxiliary heater
+       should not operate.
+       All variable-speed heat pumps, except for the heat pump at Site 10, used manufacturer-specific,
+        communicating thermostats. A communicating heat pump system utilizes a proprietary serial
+        communication protocol to send operational and performance data to all the components
+        (thermostat, IDU, and ODU) in the system. In a noncommunicating system, the thermostat
+        energies a set of individual wires to control the heat pump. Most variable-speed heat pumps
+        utilize communicating thermostats to control the compressor and blower speeds.
+
+                                                                 12
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Table 3. House Characteristics, Site Design Temperatures, and House Design Heating Loads for the Northwestern Sites
+
+Site a  Conditioned  ACH50b  Total Heat Transfer Coeff.  Distribution  Design Temperature [°F]            Design
+        Floor Area           (UA) [kBtu/h-°F]            System                                           Heating
+                                                         Efficiency e  99%                         99.6%  Load
+        [ft2]                Envelope c Whole-house d                                                     [kBtu/h] f
+                                                                                                          32.7
+1 3,800              4.5 497   637                       91%           18.3                        11.7   36.6
+                                                                                                   7.4    37.1
+2 1,750              4.4 523   600                       81%           15.6                        7.4    53.1
+                                                                                                   7.6    38.6
+4 3,600              4.2 480   579                       77%           15.6                        7.6    37.7
+                                                                                                   7.6    84.0
+5 3,600              6.9 464   601                       58%           13.8                        4.7    26.4
+                                                                                                   6.8    39.2
+6 3,325              5.1 628   754                       100%          13.8                        -3.8   44.7
+                                                                                                   4.7    30.7
+7 2,340              9.9 595   736                       100%          13.8                        4.7    46.2
+                                                                                                   7.8
+8 3,300              6.2 576   824                       53%           11
+
+9 3,000              4.2 419   496                       100%          11.7
+
+10 1,240             10.6 377  481                       76%           3.1
+
+11 3,020             6.2 468   604                       73%           11
+
+12 3,600             3.2 483   568                       100%          11
+
+13 1,940             8.8 390   513                       57%           13.7
+
+a Thermal audit was completed at all sites except for Site 3.
+b ACH measured using a blower door whole-house depressurization test at 50 Pascals.
+c Total heat transfer coefficient for walls, floors, ceilings, and windows.
+d Whole-house total heat transfer coefficient accounting for natural infiltration.
+e Distribution system efficiency determined using methodology specified in ASHRAE Standard 152.
+f Design heating load calculated using the 99% design temperature and indoor temperature of 65°F.
+
+                                                                 13
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                             Table 4. Heat Pump Product Data and Specifications
+
+                                  Nominal Capacity b  Heating Capacity           Heating COP
+
+Site  NEEP      HSPF b   SEER b   Heating   Cooling   Maximum   Minimum@         Maximum      Minimum
+      Listed a  [Btu/W]  [Btu/W]  [kBtu/h]  [kBtu/h]  @ 5°F     47°F             Speed @      Speed @
+                                                                                 5°F          47°F
+                                                      [kBtu/h]  [kBtu/h]
+
+1 Yes           11       19       56        58.5 30.5 16.9 2.2                                5.0
+
+2 Yes           9.6      19 45              48        22        18.3             2.0          4.5
+3 No            8.5      15.5 33            32.6      16.5 c    6.7              1.7 c        2.3
+
+4 Yes           9.6      19.5 46.5          46.5      26.8      18.8             2.0          4.6
+
+5 Yes           10       20       33        34.8      18.6      9.4              2.2          3.9
+                                            46        22.1 c    15.9             2.3 c        4.9
+6 No            11       18       46
+
+7 Yes           11       22       46        46        31.1 12                    2.3 4.5
+
+8 Yes           10       19.3 42.5          47        28.4 12.1 1.8                           4.7
+
+9 Yes           9.8      19.5 35.2          35.2      22.1      13.4             1.9          4.9
+
+10 Yes          10       19       34.4      34.8      20.2      16.5             2.3          4.8
+
+11 No           10       19       44.5      45        25.6 d    32.1             2.7          4.7
+
+12 No           9        16 46.5            47.5      22.4 d    N/A              2.6          N/A
+
+13 Yes          10.4 16.5 39                36        25.9 11.8 2.3                           3.2
+
+a Based on whether an exact outdoor and indoor unit match was found in NEEP’s Cold Climate Air Source Heat Pump List.
+b Listed values based on information attained from the AHRI Directory of Certified Product Performance.
+c Values based on expanded performance table data at 7°F outdoor air temperature, which was the minimum temperature included.
+d Values based on expanded performance table data since the equipment was not included in NEEP’s Cold Climate Air Source Heat Pump List.
+
+                                                                 14
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      Table 5. Heat Pump Installation and Operation Information and Auxiliary Heat Specifications
+
+Site  Heat Pump     IDU       Compressor Auxiliary Heat Specifications  Number of  Heating Setpoints [°F]
+      Install Date  Location  Lockout a                                 Zones      Occupied Setback
+                                          Capacity  Stages Lockout b
+
+1     3/31/2019     Living Zone Disabled  15 kW     3    35°F           3          73 70
+
+2     7/20/2019     Garage    Disabled    20 kW     4    25°F           1          71 66
+
+3     9/11/2020     Attic     ~5°F        90 kBtu/h c 2  ~25°F          1          68 68
+
+4     4/23/2019     Attic     N/A         15 kW     3    N/A            2          N/A N/A
+
+5     3/18/2019     Crawlspace 5°F        20 kW     4    35°F           1          70 66
+
+6 4/1/2016          Basement  6°F         15 kW     1    35°F           1          68 62
+
+7     2/15/2021     Crawlspace 0°F        20 kW     4    40°F           1          70 67
+
+8     6/24/2019     Garage    5°F         20 kW     3    35°F           1          70 65
+
+9     3/27/2019     Basement  15°F        15 kW     N/A 35°F            1          69 69
+
+10 10/30/2018 Crawlspace Disabled         10 kW     2    30°F           1          70 68
+
+11 11/1/2018        Living Zone N/A       20 kW     2    N/A            1          72 68
+
+12 3/1/2018         Basement  5°F         9 kW      N/A 35°F            1          73 67
+
+13 8/17/2021        Garage    Disabled    10 kW     2    20°F           1          70 67
+
+a Compressor lockout temperature defined as the minimum outdoor temperature at which the compressor operates that can specified using the
+thermostat.
+
+b Auxiliary heat lockout temperature defined as the maximum outdoor temperature at which the auxiliary heat source operates.
+
+c Site 3 included a dual-fuel heat pump with a two-stage natural gas furnace with the capacity specified in kBtu/h.
+
+                                                                    15
+
+   This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      2.6 House Heating Loads and Heat Pump Sizing
+
+        Figure 4 plots the house heating loads (blue lines) using the total heat transfer coefficients and
+        distribution system efficiencies from Table 3 along with the manufacturer-provided maximum
+        and minimum heating capacities (red solid and dashed lines, respectively). Site 3 is not shown in
+        Figure 4 because a thermal audit at this site was not completed. The house heating loads,
+        calculated using Equation 1, are shown for the 99.6% and 99% heating design temperatures for
+        each site. The heating load was assumed to equal zero at an outdoor temperature of 65°F. The
+        maximum and minimum heat pump capacities are plotted using manufacturer data at 5°F, 17°F,
+        and 47°F, which tends to neglect capacity loss due to defrost cycles. Table 6 lists the estimated
+        heat pump maximum capacity using manufacturer data at the 99% design temperature and
+        calculates the percent of under- or oversizing by dividing the estimated heat pump capacity by
+        the building’s heating load. Thus, an undersized system has a value less than 100%.
+
+        Comparing the heating load and heating capacity lines indicates the amount the heat pump is
+        either under- or oversized for the house. The heat pumps installed at Sites 5 and 8 are clearly
+        very undersized for the house, given that the heat pump is expected to satisfy less than 40% of
+        the heating load at the design temperature. Sites with undersized heat pumps have high balance
+        point temperatures, which is the temperature at which the heating load and maximum capacity
+        lines intersect. Presumably, at temperatures colder than the balance point, auxiliary heat is
+        required to satisfy the building heating load. The heat pumps at Sites 10, 11, and 13 also appear
+        to be undersized. The auxiliary heat usage, analyzed in Section 5, is a good indicator of
+        undersizing.
+
+        The temperature at which the minimum capacity and heating load lines intersect is used to
+        estimate when the equipment will have to cycle on and off to meet load because the heat pump
+        has reached the minimum turndown. For example, the heat pump at Site 6 should be capable of
+        modulating the compressor to run continuously at temperatures below ~47°F. However, because
+        the heating loads lines do not account for solar and internal gains and thermostat temperature
+        setback schedules, the equipment will likely cycle at cooler temperatures than indicated in Figure
+        4.
+
+                                                                 16
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+             Figure 4. House heating load lines (blue) and manufacturer-reported maximum and minimum
+                                     heating capacities (red solid and dashed lines, respectively).
+
+                                                                 17
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Table 6. Heat Pump Sizing and Site Balance Temperatures
+
+         99% Design  Design      Maximum         Maximum      Balance Point
+Site Temperature     Heating    Capacity at  Capacity/Design  Temperature
+                               99% Design
+               [°F]    Load    Temperature           Load            [°F]
+
+                     [kBtu/h]     [kBtu/h]            [%]
+
+1 18.3 32.7                    38.6          118%             13.8
+
+2 15.6 36.6                    25.9          71%              23.7
+
+4 15.6 37.1                    31.0          84%              20.6
+
+5 13.8 53.1                    20.7          39%              36.9
+
+6 13.8 38.6                    31.7          82%              17.8
+
+7 13.8 37.7                    39.5          105%             12.7
+
+8 11 84.0 31.4                               37%              38.8
+
+9 11.7 26.4                    25.8          98%              12.3
+
+10 3.1 39.2 19.6                             50%              23.1
+
+11 11 44.7 28.3                              63%              23.8
+
+12 11 30.7 25.8                              84%              15.3
+
+13 13.7              46.2      28.0          61%              27.9
+
+                                                                 18
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     3 Field Monitoring Methodology
+
+      3.1 Field Protocol
+
+        In 2020, BNL, NREL, DOE, Oak Ridge National Laboratory, and the project subcontractors
+        collaborated to develop a field protocol that dictated the data collection and instrumentation plan
+        (BNL 2020). The field protocol described all the key aspects of the study—house thermal audit
+        data collection, heating and cooling equipment information and product data, site photos, blower
+        airflow correlation testing, data logging and measurement locations, and the commissioning
+        process. The detailed field protocol was used to develop a series of data entry forms for
+        subcontractors to use in the field, which can be found in Appendix A.
+
+        The field protocol was designed to answer the project’s key research questions while ensuring
+        consistency between the NREL and BNL approaches. Air-side temperature and humidity
+        measurements were taken to calculate heat pump capacity and COP, which relied on an airflow
+        rate correlation developed using data collected while the field technician was onsite installing the
+        instrumentation. The airflow rate correlation, which is further described in Section 3.3, was used
+        in data processing to calculate the real-time indoor airflow rate as a function of the measured
+        blower power.
+
+        The field protocol allowed for flexibility to adapt to the real-world conditions encountered by the
+        field technician while installing the instrumentation. Most of the refrigerant-side measurements
+        specified in the protocol were disregarded as installation was overly invasive to the equipment
+        while in the field. However, as described in Section 4, the vapor line surface temperature
+        measurement was critical for determining heat pump operating mode.
+
+      3.2 Data Acquisition
+
+        As mentioned in Section 1, all homes in this study utilized a centrally ducted heat pump for
+        space conditioning. Two independent, standalone data loggers were used at each site—one
+        located within proximity of the heat pump ODU and the other close to IDU. This approach was
+        chosen to minimize the time spent on site, and the data collected from the ODU and IDU loggers
+       was combined during post-processing. Each data logger was paired with a cell modem to
+        facilitate remote downloading and a backup memory module in case of communication issues.
+
+       Figure 5 shows a schematic of the key measurements on the IDU and ODU. Three
+       thermocouples were installed in the supply air stream to assess the temperature distribution in the
+       supply duct, which could affect the capacity calculation. Supply and return temperature and
+       relative humidity (RH) sensors were installed to calculate the latent cooling capacity and air
+       density. The IDU total electrical power measurement was used to determine the auxiliary heat
+       usage while the blower electrical power measurement was used in the airflow rate correlation.
+       The inverter frequency, which is directly proportional to the compressor speed, was measured by
+       placing a current transformer (CT) on one of the wires exiting the ODU inverter and connecting
+       that directly to the pulse count channel of the data logger.
+
+       Table 7 lists the specific sensors corresponding to the measurements in Figure 5.
+
+                                                                 19
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 5. Schematic depicting key measurements on the IDU and ODU used to meet project
+                                                          objectives.
+
+                                     Table 7. List of Key Sensor Types
+
+                        IDU                                                    ODU
+
+Measurement                  Sensor               Measurement                  Sensor
+
+Supply air temperature (3) Type-T thermocouple    Outdoor air temperature (3)  Type-T thermocouple
+
+Supply air temperature and   Vaisala HMP110       Outdoor air temperature and  Vaisala HMP110
+relative humidity                                 relative humidity
+
+Return air temperature       Type-T thermocouple  Vapor line surface           Type-T thermocouple
+                                                  temperature
+
+Return air temperature and   Vaisala HMP110       ODU total energy             WattNode
+relative humidity                                                              WNB-3D-240-P
+IDU total energy             WattNode
+                             WNB-3D-240-P         Inverter frequency           Continental Controls ACTL-
+IDU blower energy                                                              0750-005 OPT 1V
+                             WattNode
+                             WNB-3D-240-P
+
+3.3 Blower Airflow Data and Correlations
+
+A correlation between IDU blower power and indoor airflow rate was used to calculate capacity
+and COP. During the installation of the indoor monitoring equipment, blower power and indoor
+airflow rate were measured at four or more blower speeds. The system was set in different
+operating modes using the thermostat technician checkout function. The airflow rate was
+
+                                                                 20
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+measured using a flow plate with a manufacturer-specified accuracy of ±5% at a minimum of
+
+four points, and the corresponding blower power measurement was taken. For Sites 4 and 7,
+
+airflow tests were reconducted following system/ductwork repairs and resolution of the blower
+
+modulation issue. Figure 6 plots the measured airflow rate versus the measured blower power
+
+(points) and the corresponding correlation (dashed line) used for data processing and analysis.
+                                       airflow rate (������������̇������������������������������������������������������������������������
+The volumetric                         on the fan laws.                             )  is  proportional  to  the  cubed                                             root  of  the  blower  power
+(������������̇������������������������������������������������������������������������) based
+
+                                                                                           ������������̇������������������������������������������������������������������������ = ������������ ∗ 3����������������̇ ���������������������������������������������������������������������                         (3)
+
+The coefficient a from Equation 3 for each site was determined by fitting the measured fan data,
+and these are listed in Table 8.
+
+           Figure 6. Measured blower airflow rate and power (points) and correlation used for performance
+                                                                  calculations (lines).
+
+        The Site 3 blower airflow is lower than the other systems because it is located at an elevation of
+        5,597 feet above sea level, and lower density air results in decreased blower airflow rate. The
+        impact of the site elevation, as listed in Table 1, is accounted for in the air mass flow rate (���������̇���������������������������������������)
+        and psychrometric calculations.
+
+                                                                 21
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                               Table 8. Coefficients for the Blower Fan Curve
+                                                                 Site ������������
+                                                                        1 1851.83
+                                                                        2 1935.90
+                                                                        3 1188.98
+                                                                        4 1696.72
+                                                                        5 1643.87
+                                                                        6 1624.89
+                                                                        7 1439.28
+                                                                        8 1848.41
+                                                                        9 2496.67
+                                                                        10 1608.64
+                                                                        11 1733.14
+                                                                        12 1916.93
+                                                                        13 1426.82
+
+        As mentioned above, the indoor airflow rate was measured using a flow plate (Figure 7), with a
+        manufacturer-specified accuracy of ±5%, placed in the return filter slot. The system was run in at
+        least three operating modes set using the thermostat.
+
+                                         Figure 7. Flow plate used for IDU airflow measurement.
+
+        Figure 8 compares the measured airflow rate values to the manufacturer-reported cooling airflow
+        rates in the AHRI Directory of Certified Products (AHRI 2022), which are reported in standard
+
+                                                                 22
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        cubic feet per minute (SCFM). Even though the field-measured airflow rates and the
+        manufacturer-reported values are measured using different devices, under different operating
+        conditions, and potentially with different control settings, comparing the two sets of values is
+        useful to better understand the COP results presented in Section 5. Maximum measured airflow
+        rates at 8 of the 12 sites (Sites 2, 3, 4, 5, 8, 9, 11, and 12) aligned well with the manufacturer-
+        reported values, which is shown where the error bar, associated with the measured value,
+        overlaps with the reported value. (Error bars are only included for the maximum airflow rate for
+        clarity.) The remaining four sites had lower-than-expected airflow rates which could be due to
+        control settings, operating mode, or restrictive ductwork. We could not find manufacturer-
+        reported airflow rates for Site 13.
+
+           Figure 8. Comparison of field-measured indoor unit airflow rate to manufacturer-reported airflow
+                                         rates listed in the AHRI Directory of Certified Products.
+
+                                                                 23
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+4 Data Analysis Approach
+
+The overall data processing approach is outlined in Figure 9. Data processing starts with the
+indoor and outdoor data stream for each site, which can originate from one or more data logger
+files containing the raw measurements. Based on the field protocol, the measurements are
+collected at five-second intervals. Appendix A lists the full set of field measurements obtained
+from the field protocol and Table 9 lists a subset of those parameters that are used to calculate
+the heat pump performance. The average supply air temperature (������������������������������������������������) is the mean of the three
+supply air temperature measurements prescribed in the field protocol.
+
+Table 9. Measurements Used for Data Processing and Calculations
+
+Category             Description                          Symbol
+                     Return dry-bulb temperature
+Air temperature and  Average supply dry-bulb temperature  ������������������������������������������������
+humidity             Return relative humidity             ������������������������������������������������
+                     Supply relative humidity             ������������������������������������������������������������
+Refrigerant          Outdoor dry-bulb temperature         ������������������������������������������������������������
+temperature                                               ������������������������������������������������
+                     Outdoor coil, cooling mode exit
+Power                                                         ������������������������������������������������,������������������������������������������������������������ ������������������������������������������������
+                     IDU power
+                     Blower power                         ���������������̇ ���������������������������������
+                     ODU power                            ���������������̇ ���������������������������������������������������������������������
+                     Compressor inverter frequency        ���������������̇ ���������������������������������
+                     Total system power                   ������������������������������������������������
+                                                          ���������������̇ ���������������������������������������������������������
+
+The data was processed using the following key steps:
+
+    1. The indoor and outdoor data logger files containing the raw measurements for each site
+         were combined into a single data frame for data processing.
+
+    2. Measured supply and return dry-bulb temperatures and relative humidities were used to
+         calculate the moist air properties listed in Table 10 using equations provided in the
+         ASHRAE Handbook of Fundamentals (ASHRAE 2017).
+
+    3. The timeseries data was resampled and aggregated into 30-second frequency bins using
+         arithmetic mean for easy data management and more reliable processing.
+
+    4. Seven different heat pump operating modes (system off, fan-only, compressor heating,
+         auxiliary heating, compressor + auxiliary heating, defrost, and cooling) were detected by
+         comparing temperature and power measurements with the tolerances (Section 4.1).
+
+                                                                 24
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+5. Periods of steady state operation were automatically determined using a custom steady
+    state detector (Section 4.2). Heat pump start-up periods were also detected.
+
+6. Heat pump indoor mass flow rate, capacity, and COP were calculated for heating and
+    cooling modes (Section 4.3).
+
+Table 10. Calculated Moist Air Properties
+
+Category  Description      Symbol
+Return    Humidity ratio
+          Dry air density  ωret
+Supply    Enthalpy         ρret
+          Humidity ratio   hret
+          Dry air density  ωsup
+          Specific heat    ρsup
+          Enthalpy         Cp,sup
+                           hsup
+
+The data processing and calculations were implemented using a series of Python scripts, which
+were easily applied to each of the heat pump sites included in the study using site-specific inputs
+such as elevation, blower configuration, blower airflow correlation inputs, and operating mode
+tolerances. The Python scripts were developed using open-source numerical data processing
+packages and made available to all project team members through a GitHub repository. Data
+processing was automated to utilize the collected data efficiently and reliably.
+
+The data was collected and processed for all the sites starting from the monitoring equipment
+installation date (Table 1) and ending in early August 2022.
+
+                                                                 25
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 9. Flow chart outlining the data processing approach along with the decision tree for determining the heat pump operating mode.
+
+                                                                                26
+
+                 This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+4.1 Determining Heat Pump Operating Modes
+
+The heat pump operating mode was automatically detected to process the large amount of data
+efficiently and reliably. We were able to develop algorithms to automatically detect the
+following seven modes:
+
+    1. System off
+
+    2. Fan-only
+
+    3. Compressor heating
+
+    4. Auxiliary heating
+
+    5. Compressor + auxiliary heating
+
+    6. Defrost
+
+    7. Cooling
+
+The operation mode was more easily determined after the 5-second data was resampled to 30-
+second intervals. Figure 10 shows different heat pump operational modes detected for Site 1
+during a particularly cold winter day in 2021.
+
+      Figure 10. Automatically detected heat pump operation mode during a cold winter period.
+
+In the following sections, different sites and different example periods are presented to
+demonstrate how the modes were detected automatically based on the equations.
+
+4.1.1 System Off Mode
+Detecting when the system is off is necessary to analyze the standby power consumption. The
+system was considered off when the ODU power (���������������̇ ���������������������������������) and compressor inverter frequency
+(������������������������������������������������) measurements were less than the respective tolerances ������������ as shown in Equations 4 and 5:
+
+������������������������������������������������ < ������������������������������������������������    (4)
+
+���������������̇ ��������������������������������� < ������������������������������������������������  (5)
+
+The specific tolerances ������������ for each measurement were adjusted for each heat pump. Figure 11 and
+Figure 12 show a snapshot of data for Site 1 from April 2021, displaying cycling and the
+
+                                                                 27
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+algorithm’s detection of when the system was off based on the outdoor power and inverter
+frequency, followed by cycling on in heating mode.
+
+     Figure 11. Outdoor power and compressor inverter frequency during a period with cycling.
+
+Figure 12. Automatically detected system off operation mode during a period with cycling.
+
+4.1.2 Fan-Only Mode
+
+The system was considered to be in fan-only mode when the compressor was off based on
+Equations 4 and 5 while the indoor blower fan was on based on the tolerances on blower power
+(������������������������������������������������������������������������������������) from the following equation:
+
+���������������̇ ��������������������������������������������������������������������� > ������������������������������������������������������������������������������������  (6)
+
+There were several instances at each of the sites where the blower fan was running continuously
+or briefly turned on prior to the compressor turning on. This can be seen in Figure 13 and Figure
+14 for Site 6 on a particularly cold day in November 2021 where the system cycled between off,
+fan-only, and compressor-based heating mode. The system was operating continuously in fan-
+only mode from approximately 2:15 p.m. to 10 p.m.
+
+                                                                 28
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 13. Blower power, outdoor power, and compressor inverter frequency during a period with
+                                                        fan-only operation.
+
+Figure 14. Automatically detected operation mode during an example period with fan-only
+                                                         operation.
+
+4.1.3 Compressor Heating Mode
+
+Heating mode performance was the focus of the study and therefore it is critical to accurately
+detect when the system is operating in heating mode. Heating mode can easily be detected when
+the system is on, opposite to Equations 4 and 5 and supplying warm air, based on the following
+equations, where ������������������������������������������������,ℎ������������������������ was assumed to be 20°C (68°F).
+
+������������������������������������������������ > ������������������������������������������������,ℎ������������������������  (7)
+
+������������������������������������������������ > ������������������������������������������������            (8)
+
+However, we are also interested in measuring the cycling performance immediately after the unit
+cycles on, and Equation 7 and 8 will only detect heating operation if the unit is supplying warm
+air. We use Equations 9 and 10 to determine if the unit has cycled on in heating mode where the
+supply air temperature is increasing and when the outdoor temperature is below 15°C (59°F).
+
+������������������������������������������������������������������������������������� > 0              (9)
+
+������������������������������������������������ < ������������������������������������������������,ℎ������������������������  (10)
+
+29
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        Figure 15 through Figure 17 shows the heat pump operation for Site 8 on a particularly cold day
+       in November 2021, which shows that the compressor heating mode is detected immediately after
+       the unit cycles on. This is evident based on the inverter frequency and ODU power (Figure 15)
+       and supply and return air temperatures (Figure 16).
+
+          Figure 15. Blower power, outdoor power, and compressor inverter frequency during a period with
+                                                                      heating cycle.
+
+                       Figure 16. Supply and return air temperature during a period with heating cycle.
+
+          Figure 17. Automatically detected compressor heating operation mode during an example period.
+
+                                                                 30
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+4.1.4 Auxiliary Heating Mode
+
+Because this study was particularly interested in cold temperature performance, it was important
+
+to detect auxiliary heating mode to explore how frequently the system utilizes the auxiliary heat
+
+at cold temperatures. Auxiliary heating mode occurs when the auxiliary heating system is
+
+exclusively used to heat the building and can happen when the outdoor air temperature is colder
+
+than the compressor lockout temperature. This mode was detected when the fan was running
+
+based on Equation 6, heating is detected with the compressor being off, and the auxiliary heater
+                                                                                                                          (���������������̇ ���������������������������������
+is on, which was found by identifying when                          the difference between IDU       power                                     )  and
+blower power (���������������̇ ���������������������������������������������������������������������) was greater than the  IDU power tolerance value        (������������������������������������������������).
+
+                              ���������������̇��������������������������������� − ���������������̇ ��������������������������������������������������������������������� > ������������������������������������������������                                               (11)
+
+All systems included an auxiliary electric resistance, auxiliary heater except for Site 3, which had
+a natural gas backup furnace. Furnace operation was detected when the fan was on, heating with
+compressor off, and the supply air temperature was higher than 104°F (40°C). From Figure 18, it
+can be observed for Site 3 that the supply air temperature is higher and blower fan is on when
+auxiliary heating is provided on a particularly cold day in January 2022.
+
+             Figure 18. Blower power and supply and return air temperature during a period with auxiliary
+                                                                   heating operation.
+
+         Figure 19. Automatically detected operation mode during an example period with auxiliary heating
+                                                                         operation.
+
+                                                                 31
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        4.1.5 Compressor + Auxiliary Heating Mode
+        This mode was detected when both compressor and auxiliary heater were on to provide heating
+        at low outdoor temperature. The equations to detect compressor heating mode and auxiliary
+        heating mode must be satisfied. Figure 20 through Figure 22 show a cold winter day in
+        December 2021 for Site 11 when the system operated in compressor + auxiliary heating mode
+        continuously from 4:25 a.m. to 5:30 a.m., which was detected based on Equations 7–11.
+
+          Figure 20. Blower power, outdoor and indoor power, and compressor inverter frequency during a
+                                          period with compressor + auxiliary heating operation.
+
+          Figure 21. Supply and return air temperature during a period with compressor + auxiliary heating
+                                                                         operation.
+
+                                                                 32
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 22. Automatically detected compressor + auxiliary heating operation mode during an
+                                                      example period.
+
+4.1.6 Defrost Mode
+
+Defrost mode was challenging to detect because of the transient measurements during the cycle.
+We found defrost mode can be automatically detected when the system and/or auxiliary heat is
+on, it is cool outside, and the refrigerant vapor line surface temperature (������������������������������������������������,������������������������������������������������������������ ������������������������������������������������) is
+decreasing and is below the set tolerance.
+
+    ������������������������������������������������������������,������������������������������������������������������������ ������������������������������������������������������������������������� < 0                                      (12)
+������������������������������������������������,������������������������������������������������������������ ������������������������������������������������ < ������������������������������������������������,������������������������������������������������������������ ������������������������������������������������  (13)
+
+������������������������������������������������ < ������������������������������������������������,������������������������������������������������������������������������������������                                                 (14)
+
+To reliably detect defrost operation, we set ������������������������������������������������,������������������������������������������������������������������������������������ to 50°F (10°C). From Figure 23, it can be
+observed that as ������������������������������������������������,������������������������������������������������������������ ������������������������������������������������ decreases at outdoor temperature below 50°F (10°C), defrost
+mode is detected for Site 7. The defrost cycle lasted for about seven minutes. It is also interesting
+to note that the defrost cycle is followed by compressor + auxiliary heating mode to account for
+defrost recovery, which is shown in Figure 25.
+
+                                 Figure 23. Air and refrigerant temperatures during a defrost cycle.
+
+                                                                 33
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 24. ODU and IDU power during a defrost cycle.
+
+Figure 25. Automatically detected defrost cycle.
+
+4.1.7 Cooling Mode
+
+Cooling mode was easily detected when the system was on opposite to Equations 4 and 5 and
+supplying cold air, based on the following equations, where the supply temperature tolerance
+value for cooling, ������������������������������������������������,������������������������������������ was assumed to be 69.8°F (21°C).
+
+������������������������������������������������ < ������������������������������������������������,������������������������������������                         (15)
+
+������������������������������������������������ < ������������������������������������������������                                      (16)
+
+However, we were also interested in measuring the cycling performance immediately after the
+unit cycles on in cooling mode. Equation 15 and 16 will only detect cooling operating if the unit
+is supplying cold air. We use Equations 17 and 18 to determine if the unit has cycled on in
+cooling mode and when the outdoor temperature is above 50°F (10°C).
+
+������������������������������������������������������������,������������������������������������������������������������ ������������������������������������������������������������������������� < 0  (17)
+
+������������������������������������������������ > ������������������������������������������������,������������������������������������                         (18)
+
+                                                                 34
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        Figure 26 through Figure 28 show relevant measurements during a period with cooling cycle for
+        Site 7. Cooling mode was easily detected when the system was on and supply air temperature
+        was less than the return temperature at higher outdoor temperature.
+
+          Figure 26. Blower power, outdoor power, and compressor inverter frequency during a period with
+                                                                      cooling cycle.
+
+                        Figure 27. Air and refrigerant temperatures during a period with cooling cycle.
+
+                   Figure 28. Automatically detected cooling operation mode during an example period.
+
+                                                                 35
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      4.2 Determining Steady State Periods
+
+        Automatic detection of steady state operation was required to assess steady state performance.
+        We used a hybrid online steady state detection method which employs slope detection in
+        conjunction with variance detection to identify steady state over a moving data window. Li and
+        Braun (2003) incorporated a combination slope and variance method to determine the steady
+        state of seven state variables in their fault detection and diagnosis research on packaged air
+        conditioning equipment.
+
+        A linear regression is performed over a predefined moving data window and the fitted slope is
+        monitored. When the absolute value of the slope falls below the defined threshold, the process
+        signal is considered steady. Even though the slope method can filter out transient data, it cannot
+        differentiate cyclic behavior of oscillating data. The variance of a moving data window is
+       monitored to characterize random variation of the data and the steady state is detected if the
+       variance is below a defined threshold. A large threshold for moving variance method will include
+       some of the transient data while small thresholds carry a risk of isolating data with both
+       deterministic and random variations. Thus, a combination of both slope detection and variance
+       detection methods will ensure good performance.
+
+        The detection parameters, thresholds, and moving window size depend on the characteristics of
+       data and algorithm employed. We use the average supply air temperature, ������������������������������������������������, and inverter
+        frequency, ������������������������������������������������ to determine if the system has reached steady state. Initial estimates of thresholds
+       and window size were determined for each site and the detection parameters were tuned to
+        predict steady state accurately. The slope threshold for ������������������������������������������������ is set at 0.02°C/s and the variance
+        threshold is set at 0.02°C2 to identify good performance data. Similarly, the slope threshold for
+        inverter frequency is 0.01 and the variance threshold is set at 0.01 Ηz2. The length of the moving
+        window was set at two minutes using the resampled 30-second data. If the data was continuously
+        steady for three minutes, then the data row was identified as steady state operation condition.
+
+        Figure 29 and Figure 30 show the identification of steady state from the rolling window of
+        supply air temperature and inverter frequency data. During this example period for Site 1, the
+        algorithm detects multiple steady state periods. At other times, the variation in supply air
+        temperature and inverter frequency means the system is not in steady state.
+
+                   Figure 29. Supply air temperature and inverter frequency over a moving data window.
+
+                                                                 36
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 30. Steady state detection using hybrid online steady state detection method.
+
+4.3 Performance Calculations
+
+The following three parameters were calculated to determine the heat pump performance:
+
+    1. Indoor unit mass flow rate (���������̇���������������������������������������)
+    2. Heat pump capacity (������������̇ )
+
+    3. Coefficient of performance (COP)
+
+The capacity and COP were calculated for heating and cooling modes separately.
+
+The indoor unit air mass flow rate (���������̇���������������������������������������) was calculated using:                                          (19)
+                                                   ���������̇��������������������������������������� = ������������������������������������������������������������̇������������������������������������������������������������������������
+
+where ������������������������������������������������ is either the supply or return dry air density for a draw through or push through
+blower, respectively, and the blower volumetric air flow rate (������������̇������������������������������������������������������������������������) was calculated using a
+correlation derived from data collected during the initial site visit that uses the measured blower
+power (Equation 3).
+
+Using the indoor unit mass flow rate, the sensible capacity (������������̇������������������������������������������������������������������������������������������������) was calculated as (AHRI
+2017):
+
+������������̇ ������������������������������������������������������������������������������������������������  =  ���������̇����������������������������������������������������������������������������������������������������������������−������������������������������������������������ �              (20)
+                                                   1+������������������������������������������������
+
+For heating mode, the latent heating capacity (������������̇������������������������������������������������������������������������) was 0. The total heat pump capacity (������������̇ )
+is the sum of sensible and latent capacity as shown in the equation below:
+
+������������̇ = ������������̇ ������������������������������������������������������������������������������������������������ + ������������̇ ������������������������������������������������������������������������                                       (21)
+
+For cooling mode, the total capacity was directly calculated as:                                                      (22)
+                                                ������������̇ = ���������̇����������������������������������������ℎ������������������������������������ − ℎ������������������������������������ �
+
+                                                                 37
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+And finally, the COP for compressor-based heating and cooling is calculated using:                                         (23)
+                                              ������������������������������������ = �������������̇ ����������������̇ ��������������������������������� + ���������������̇ ����������������������������������������������������������������������
+
+The data was resampled to 30-second intervals prior to conducting the calculations to reduce
+noise, allowing for more consistent operating mode detection.
+
+                                                                 38
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     5 Heating Mode Performance Results and Discussion
+
+      5.1 Heating Season Summary Data
+
+        Prior to discussing detailed results from the study, we summarize the heat pump performance for
+        each site during winter 2021–2022, as all sites were being monitored during this time. Results
+        are listed in Table 11 (note that Site 12 had less data than the other sites due to an issue with the
+        data logger). To ensure we captured all hours with heating operation during the winter months,
+        we assumed winter 2021–2022 started on October 1, 2021 and ended on March 30, 2022.
+
+        Table 11 lists the percent of time a heat pump was either completely off, operating in fan-only
+        mode, utilizing compressor-based heating, running the auxiliary heat, or in defrost mode during
+        the six-month period. Section 5.2 goes into further detail by plotting operating mode binned by
+        outdoor air temperature. Although all the heat pumps had some ability to modulate, the heat
+        pumps were off for a significant fraction of the time during these months. For example, the heat
+        pump at Site 11 was off nearly 75% of the time. This could have been partially due to a gas
+        fireplace in the living room; however, the homeowner stated it was infrequently used on some
+        evenings. Sites 3, 6, and 12 set their thermostats to continuous fan mode for lengthy time
+        periods, which is why those sites had less time when the system was completely turned off.
+
+        The auxiliary heat energy use listed in Table 11 was determined by summing the auxiliary heater
+        energy during time periods of auxiliary-only heating and compressor with auxiliary heating;
+        meaning defrost cycles are not included in the summation. The auxiliary heat energy use for
+        Sites 2, 5, 8, 11, and 12 exceeded nearly 40% of the compressor-based heating energy and for
+        Sites 2 and 8 the auxiliary heat used more energy than compressor-based heating. Based on the
+        heat pump sizing and house load lines plotted in Figure 4 from Section 2.6, we expected
+        auxiliary heat energy use to be high for Sites 5, 8, and 11, because the heat pump balance
+        temperature for these two sites was approximately 37°F, 39°F, and 24°F, respectively. However,
+        based on Figure 4, it appeared that heat pump for Site 2 was more appropriately sized than for
+        Sites 10 and 13, which had relatively little auxiliary heat runtime. Auxiliary heat energy use is
+        further described in Section 5.4.
+
+        The defrost energy was determined by summing the total IDU and ODU energy use during the
+        reverse cycle operation and does not consider energy consumed during defrost recovery. Though
+        a relatively small fraction of the time was spent in defrost mode for all sites except Site 7, the
+        defrost cycle did consume a relatively significant amount of energy for some sites. For Sites 5, 7,
+        8, and 11, the defrost energy use exceeded 20% of the energy used for compressor-based heating.
+        Defrost energy is further described in Section 5.6.
+
+        The third-to-last row in Table 11 lists the compressor-based heating COP during winter 2021–
+        2022. The seasonal heat pumping COP was calculated by summing the total heat output for each
+        30-second sample, i, and dividing by the total IDU and ODU energy use during compressor-
+        based heating operation, which neglects auxiliary heat energy use.
+
+            ������������������������������������������������������������,������������������������������������������������������������������������ = ∑ ������������̇ ������������� ∑����������������̇ ���������������������������������,������������ + ���������������̇ ���������������������������������������������������������������������,������������� ∀������������ compressor only heating samples (24)
+
+                                                                 39
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Site 8 had the highest compressor-based heating seasonal COP but also had the highest auxiliary
+heat energy use. The average seasonal COP across all twelve sites was 2.5 and varied from 1.7
+(Site 6) to 3.5 (Site 8). Heat pump COP is further described in Section 5.3.
+
+Unfortunately, the heating output could not be accurately measured when the auxiliary heat was
+turned on due to the proximity of the thermocouples to the heating elements. Therefore, we used
+the seasonal heat pump COP (������������������������������������������������������������,������������������������������������������������������������������������) to estimate the compressor-based portion of the
+heating output when both the compressor and auxiliary elements were turned on. This was then
+used to estimate the overall system COP and the fraction of the heating load served by the
+compressor. The following equations were used where heating output and energy consumption
+are summed for all samples, i, for all modes of heating operation. The overall system COP
+(������������������������������������������������������������������������������������������������������������,������������������������������������������������������������������������) accounts for the heat delivered to the house during compressor-based heating,
+compressor-based heating with auxiliary heating, and auxiliary heating only.
+
+The seasonal heating pump output (������������������������������������,������������������������������������������������������������������������,������������������������������������������������������������) was estimated using Equation 25 for all
+samples, i, with heat pump operation (compressor-based heating and compressor with auxiliary
+
+heating).
+
+������������������������������������,������������������������������������������������������������������������,������������������������������������������������������������ = ������������������������������������������������������������,������������������������������������������������������������������������ ∙ ∑����������������̇ ���������������������������������,������������ + ���������������̇ ���������������������������������������������������������������������,�������������                       (25)
+
+Because all the auxiliary heater energy is transferred to the IDU air stream, the overall system
+COP can be estimated using the following equation:
+
+                    ������������������������������������������������������������������������������������������������������������,������������������������������������������������������������������������ = �������������������������������������,������������������������������������������������������������������������,������������������������������������������������������������ + ∑ ���������������̇���������������������������������,���������������∑ ���������������̇ ���������������������������������,������������ + ∑ ������������̇������������������������������������,������������� (26)
+
+Lastly, we estimate the fraction of the building heating load served by the compressor using
+Equation 27.
+
+������������������������������������������������������������������������������������������������������������������������������������ = ������������������������������������,������������������������������������������������������������������������,������������������������������������������������������������� �������������������������������������,������������������������������������������������������������������������,������������������������������������������������������������ + ∑ ������������̇������������������������������������,�������������  (27)
+
+The last two rows of Table 11 list the estimated fraction of the building’s heating load served by
+the compressor and the overall system COP accounting for auxiliary heating. These two metrics
+could not be calculated for Site 3 because we did not measure the natural gas consumption. Sites
+2, 8, and 11 utilized the vapor compression system the least amount for building heating. The
+sites with the highest fractions of load served by the compressor correspond to the sites with the
+least amount of auxiliary heating. The large amount of auxiliary heating at Site 8 effectively
+decreased the heat pump seasonal COP from 3.5 to 2.4.
+
+The fraction of load served by the compressor and overall system COP were also plotted in
+Figure ES-1 and Figure ES-2, respectively.
+
+                                                                 40
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                     Table 11. Summary of Heating Data for Winter 2021–2022
+
+                         Site 1 Site 2 Site 3 Site 4 Site 5 Site 6 Site 7 Site 8 Site 10 Site 11                        Site 12  Site 13
+                                                                                                                        2,524 d  4,367
+Hours of data            4,368 4,367 4,368 4,368 4,368 4,368 4,368 4,367 4,368 4,368                                    22.9     35.0
+                                                                                                                        44.2     0.3
+Percent of time system   40.9   4.9    18.2 59.9 43.8 1.6  24.7 35.5 41.3 74.8
+off [%]                                                                                                                 32.0     64.1
+
+Percent of time with     0.8    43.6 41.9 1.9    0.8  38.1 19.4 8.0  8.2                                         0.3    5.2      0.2
+fan-only operation [%]                                                                                                  0.6      0.6
+                                                                                                                        1,957    5,636
+Percent of time with     57.4   40.4   35.5 37.0 52.7 58.6 49.3 54.6 48.4 23.4                                          360      348
+compressor operation                                                                                                    803      44
+[%]                                                                                                                     182      45
+                                                                                                                        2.4      1.9
+Percent of time with     2.1    9.1    3.6 1.9 6.0 2.0 8.3 11.8 2.9 4.1                                                 0.87     0.99
+auxiliary heat on [%]                                                                                                   2.0      1.9
+
+Percent of time in       0.3 0.9       1.3 1.2 1.9 0.4 6.3 1.5 1.0 0.9
+defrost [%]
+
+Compressor-based         4,497  3,343  2,498 2,901 3,340 4,894 5,438 4,326 3,670 2,248
+heating energy [kWh] a
+
+Blower energy            549 614       687 170 460 274 520 799 321 485
+(season) [kWh]
+
+Auxiliary heater energy  512    3,446 N/A e 314  1,268 1,041 549  4,524 354                                      1,693
+(heating) [kWh]
+
+Defrost cycle [kWh] b 130       464    44   565 804 119 2,266 1,256 288 525
+
+Compressor-based         2.5    2.7    2.8 3.1 2.7 1.7 2.0 3.5 2.7 2.3
+heating season COP c
+
+Fraction of load served  0.96   0.73   N/A  0.97 0.88 0.89 0.95 0.81 0.96 0.77
+by compressor
+
+System heating           2.4 1.9       N/A 2.9 2.2 1.5 1.9 2.4 2.6 1.8
+season COP
+
+a Includes ODU and IDU (blower) energy.
+b Defrost cycle energy listed here does not include periods of recovery.
+c Heating season COP was calculated by summing total heat output, then dividing ODU and IDU energy consumption.
+
+d Site 12 logger issue resulted in fewer hours of data collected during winter 2021–2022.
+e Natural gas consumption for Site 3 was not measured.
+
+                                                                 41
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      5.2 Heating Season Operating Modes
+
+        Because this study was particularly focused on cold temperature performance, it is interesting to
+        explore the heat pump operating mode specifically at cold temperatures (<28°F) to understand
+        how frequently the system utilizes compressor-based and/or auxiliary heat. Figure 31 plots the
+        hours of data collected during winter 2021–2022, colored by operating mode. We filtered the
+        data for Figure 31 to coincide with winter 2021–2022 to have an approximately equal number of
+        total hours for each site.
+
+        The bars shaded pink indicate hours with only compressor-based heating, meaning the auxiliary
+        heat is turned off and the system is exclusively using the vapor compression system to heat the
+        building. Steady-state and transient time periods are both included.
+
+        The hours shaded orange and red denote operation of the auxiliary heater, where orange refers to
+        hours with simultaneous compressor and auxiliary heating and red corresponds to only auxiliary
+        heat. Sites 2 and 8 are the two all-electric sites with the most auxiliary heat runtime, which is
+        further discussed in Section 5.4. Site 2 was the only all-electric site with a significant amount of
+        time during which the auxiliary heat was exclusively used to heat the building. This was despite
+        the auxiliary heat lockout temperature being set to 25°F, meaning the auxiliary heat should not
+        have turned on at temperatures above 25°F, indicating a sensor or control issue with the system.
+        The dual fuel system at Site 3 could not run the heat pump and furnace simultaneously because
+        the indoor coil was downstream of the furnace. Thus, we do not see any hours at Site 3 with
+        simultaneous compressor and auxiliary heating.
+
+        Most of the all-electric sites had very few hours with outdoor temperatures below the compressor
+        lockout temperature (listed in Table 5). Site 10 was the exception. Though the compressor
+        lockout temperature at Site 10 was disabled, the compressor did not run at temperatures below
+        0°F, which was likely due to an on-board control setting that cannot be adjusted in the field. The
+        compressor lockout temperature for Site 3 was adjusted by the homeowner during the study but
+        it is clear the compressor does not run below 4°F.
+
+        Times when the system is either off or in fan-only mode are denoted by gray and green,
+        respectively. Notably, the variable-capacity heat pumps spent large portions of time during
+        which they did not provide space heating at cold temperatures. Most sites utilized thermostat
+        temperature setbacks (Table 5), which could explain time periods without system operation;
+        however detailed setpoint schedules were not collected during the homeowner survey. Section
+        5.5 further explores the measured heat pump runtime fractions and capacity modulation.
+
+        Lastly, defrost is denoted in Figure 31 by the purple bars. Except for Site 7, a relatively low
+        proportion of time was spent in defrost mode. The algorithm for determining defrost mode was
+        presented in Section 4.1.6 and did not include the time spent recovering from the reverse cycle.
+        The heat pump systems included in the study are all premium products that likely utilize on-
+        board sensors to initiate demand-based defrost and the need to defrost the outdoor heat
+        exchanger generally decreases at cold temperatures because of the low moisture content.
+        Additionally, all the sites were in dry climate zones where the need to defrost the outdoor coil
+        would be much less than that of heat pumps installed in humid or marine climate zones.
+
+                                                                 42
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                 Figure 31. Heat pump operational modes at cold temperatures during winter 2021–2022.
+
+                                                                 43
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      5.3 Compressor-Based Heating COP and Capacity
+
+        The compressor-based heating COP is a measure of heat pumping efficiency and neglects
+        auxiliary heat energy consumption and distribution system losses. Figure 32 and Figure 33 plot
+       the steady-state compressor-based heating COP. Figure 32 plots 30-second down-sampled data
+       using a box and whisker plot; whereas Figure 33 plots the capacity-weighted mean COP
+       calculated by summing total heat output within a temperature bin and dividing it by the total
+       energy consumption. The blue boxes or bars are the field-measured results, which account for the
+       blower power (e.g., net COP), and the red lines are manufacturer-reported values at minimum
+       and maximum compressor speeds. The higher manufacturer-reported COPs in Figure 32 and
+       Figure 33 are at the minimum compressor speed and lower COPs are at the maximum
+       compressor speed. Figure 34 and Figure 35 are similar to Figure 32 and Figure 33, plotting
+       compressor-based heating capacity rather than COP.
+
+       The variation in steady-state COP and capacity in Figure 32 and Figure 34 , respectively, can be
+        explained by variations in compressor speed and return air temperature. Site 12 was the only site
+        without a variable-capacity compressor, which explains why there was little variation in the 30-
+        second steady state data.
+
+        The four COP and capacity plots compare the field-measured results to manufacturer-reported
+        values to approximate the expected performance, which were either sourced from the NEEP
+        product list or manufacturer expanded performance tables. The three points correspond to the
+        three outdoor temperatures listed in the NEEP product list: 5°F, 17°F, and 47°F.
+
+        Manufacturer-reported COPs and capacities may be from laboratory measurements or heat pump
+       system models, and certain control settings and operating conditions, such as indoor airflow rate,
+       return air temperature and compressor speed, may be different between the field-collected data
+        and manufacturer-reported values. These potential sources of discrepancy are important to
+        consider when viewing Figure 32 through Figure 35. Despite the potential sources of
+        discrepancy, comparing the field-measured performance to expected values is useful to estimate
+        the expected performance.
+
+        From Figure 32, the steady-state heating COPs at 7 of the 12 sites (Sites 2, 3, 4, 5, 8, 10, and 13)
+        agreed reasonably well with manufacturer-reported values, indicated by the box and whisker
+        plots that span the manufacturer-reported COP range at most temperature bins. For the remaining
+        sites (Sites 1, 6, 7, 11, and 12), the measured COPs were lower than the manufacturer-reported
+        values. Though the heat pump at Site 8 had the highest compressor-based heating COP, the site
+        also had the highest auxiliary heat energy consumption which decreases the overall system COP.
+
+        In Figure 34 and Figure 35, the manufacturer-reported capacity increases as the outdoor air
+        temperature gets warmer, which is the expected trend. However, modulating systems vary the
+        compressor capacity based on the building load, which decreases as the outdoor air temperature
+        get warmer. Thus, it is not surprising that the field-measured capacity for some sites exhibit
+        opposite trends with respect to outdoor air temperature. Site 12 is one of the exceptions where
+        the measured capacity increases as the outdoor air temperature gets warmer. Recall that Site 12 is
+        a two-stage system with limited modulating capability.
+
+                                                                 44
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        The measured capacity tends to be closer to the minimum manufacturer-reported capacity rather
+        than the maximum. From Figure 34, the measured capacity is close to the maximum
+        manufacturer-reported capacity at cold outdoor air temperatures for Sites 3, 8, 10, 11, and 13.
+        Even though Site 8 had the most auxiliary heat runtime, the heat pump capacity does align well
+        with manufacturer-reported values, underscoring that the auxiliary heat runtime is due to
+        equipment under-sizing.
+        Figure 36 plots the steady state compressor heating indoor airflow rate, calculated using the
+        blower airflow correlation, and compares it to manufacturer-reported values listed in the AHRI
+        Product Directory (AHRI 2022). Figure 6 plotted the measured IDU airflow rates collected
+        during the site visit. Sites with lower-than-expected COPs (Sites 1, 6, 7, 11, and 12) did not
+        consistently have lower-than-expected IDU airflow rates. Additionally, out of the sites with
+        COPs that aligned most closely with manufacturer-reported values (Sites 3, 4, 5, 8, and 10),
+        some had lower than expected IDU airflow (Sites 3, 4, and 10). Thus, lower-than-expected IDU
+        airflow does not consistently explain the lower-than-expected COP.
+
+                                                                 45
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 32. Box and whisker plot of steady-state compressor-based heating COPs (blue boxes) and manufacturer-reported COPs at
+                                                              minimum and maximum speeds (red lines).
+
+                                                                            46
+
+             This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 33. Mean steady-state compressor-based heating COPs (blue bars) and manufacturer-reported COPS at minimum and
+                                                                     maximum speeds (red lines).
+
+                                                                         47
+
+         This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 34. Box and whisker plot of steady-state compressor-based heating capacity (blue boxes) and manufacturer-reported
+                                                 capacities at minimum and maximum speeds (red lines).
+
+                                                                         48
+
+        This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 35. Mean steady-state compressor-based heating capacity binned by outdoor temperature (blue bars) and manufacturer-
+                                            reported capacities at minimum and maximum speeds (red lines).
+
+                                                                          49
+
+           This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 36. Box and whisker plot of steady-state compressor-based heating IDU airflow rate (blue boxes) and manufacturer-reported
+                                                        full load and minimum speed airflow rates (red lines).
+
+                                                                             50
+
+              This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      5.4 Auxiliary Heater Use
+
+        For all-electric homes that utilize electric resistance auxiliary heating elements, excessive
+        auxiliary heater runtime can be costly and lead to significant energy waste. Thus, efforts should
+        be taken to minimize auxiliary usage by proper heat pump sizing and control settings.
+
+        Figure 41 plots the auxiliary heater energy consumed during winter 2021–2022 for the all-
+        electric sites, binned by outdoor air temperature, and differentiates the energy consumed during
+        heating modes (compressor with auxiliary and auxiliary-only) and defrost operation. The
+        auxiliary heater energy use was calculated by subtracting the blower energy from the IDU total
+        energy use. As previously mentioned, the natural gas used by the furnace at Site 3 was not
+        directly monitored. In Figure 41, it is important to observe that the y-axis scale is different for
+        Site 8 due to the high auxiliary heat usage at this one site.
+
+        Section 5.6 elaborates further on defrost energy use. However, auxiliary heater energy is linked
+       to defrost as all the heat pumps ran the auxiliary heater during, and sometimes after, defrost
+       cycles. In Figure 41, we see the auxiliary heater energy for Site 4 was primarily consumed during
+       defrost.
+
+       The auxiliary heater energy use plotted in Figure 41 largely corresponds to the auxiliary heat
+       lockout temperatures listed in Table 5. This indicates there is little energy consumed in the
+       warmer bin adjacent to the lockout temperature. The exceptions are Sites 2 and 8, which are
+       elaborated on below.
+
+       Sites 2 and 8 consumed the most auxiliary heating energy. From Table 11, the auxiliary heater
+       energy consumption for Sites 2 and 8 was greater than the energy consumed during compressor-
+       based heating operation. The reason for the excessive auxiliary heat energy appears to be
+       different for each of the sites.
+
+       The high auxiliary heat use at Site 2 appears to be caused by a fault with the controls or the
+        onboard outdoor temperature sensor. From Figure 38, we see the auxiliary heat turned on at
+        outdoor air temperatures well above the specified auxiliary heat lockout temperature, which was
+        25°F for Site 2 (Table 5). Additionally, there were many hours at relatively warm outdoor
+        temperatures (40°–50°F) when the auxiliary heater was the only heat source and the compressor
+        was not running despite the compressor lockout temperature being disabled (Table 5). The fault
+        started on February 16, which is evident when plotting the daily ODU and auxiliary heater
+        energy use in Figure 37. The heat pump at Site 2 did not utilize the compressor from February 16
+        through April 11 and exclusively used the electric resistance auxiliary heater to heat the home. It
+        is worth noting that the homeowner did not notice the change in heat pump behavior during this
+        time.
+
+                                                                 51
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                   Figure 37. Site 2 daily ODU and auxiliary heater energy use during winter 2021–2022.
+
+        As previously mentioned, the heat pump installed at Site 8 was undersized for the house load
+        with a balance point temperature of ~39°F, and in Figure 38, the orange bars indicate the
+        auxiliary heat at Site 8 was used extensively at outdoor air temperatures below 40°F. Thus, the
+        heating load calculations predicted the excessive auxiliary heat energy use at Site 8. Based on
+        Figure 4, the heat pump at Site 5 was also identified as undersized for the heating load, and the
+        heat pumps at Sites 10, 11, and 13 were potentially undersized. Out of the eleven reported-on
+        homes in the Northwest, Sites 11 and 5 consumed the third- and fourth-most auxiliary heat
+        energy, respectively. The auxiliary heat at Sites 10 and 13 consumed a relatively small amount of
+        energy. Despite having the coldest weather in the study, Site 10 was able to utilize compressor-
+        based heating for nearly all the heating load except at outdoor temperatures below 0°–4°F, when
+        the system relied exclusively on the auxiliary heat. The auxiliary heat at Site 13 was primarily
+        used during defrost cycles and the following recovery period.
+
+                          Figure 38. Operating modes for Sites 2 and 8 to highlight auxiliary heat use.
+
+                                                                 52
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        Table 12 shows the auxiliary heat runtime, in hours, during winter 2021–2022, binned by
+        outdoor air temperature. The hours of auxiliary operation in Table 12 include operating modes of
+        compressor plus auxiliary heating and auxiliary heating only; thus, time spent in defrost mode is
+        not included here. The percentages in Table 12 are calculated as the amount of time the auxiliary
+        heat is turned on divided by the total amount of time the system is providing heating. For
+        example, a value of 50% would indicate the auxiliary heat is on for half the time when the
+        system is providing space heating. In general, the auxiliary heater usage increases at colder
+        temperature bins. The odd trend for Site 1 could be due to the small amount of data in the coldest
+        three temperature bins.
+        The dual fuel heat pump at Site 3 could not run the natural gas furnace and heat pump
+        simultaneously. The homeowner tweaked the heat pump and furnace lockout temperatures
+        slightly during the study; however, the compressor lockout temperature hovered around 5°F and
+        natural gas furnace lockout temperature was around 24°F. When the outdoor temperature was in
+        between the two lockout temperatures, the system would assign heating priority to the heat
+        pump, treating the natural gas furnace as an additional stage of heating. From Table 12, we see
+        the heat pump was primarily used at outdoor air temperatures above 8°F. Below 8°F, the furnace
+        was utilized more.
+
+                                                                 53
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+         Table 12. Auxiliary Heat Runtime at Cold Temperatures During Winter 2022–2023
+
+         Total            0°–4°F   4°–8°F     Auxiliary Heating Runtime [hours]  24°–28°F  28°–32°F
+Site Hours                                      (Percent of Total Heating Time)  7.2       21.5
+                                                                                 (12.7%)   (8.2%)
+ID of                                      8°–12°F 12°–16°F 16°–20°F 20°–24°F    34.6      52
+         Data ≤0°F                                                               (21.3%)   (12.1%)
+                                                                                 0.3       0
+1 605    0.2 0.3 2.4 3.7 7.7                                   11       11.2     (0.2%)    (0.0%)
+                                                                                 3.1       7.8
+         (20.0%) (17.0%) (26.0%) (32.2%) (24.3%) (20.8%) (12.7%)                 (4.4%)    (3.3%)
+                                                                                 25.4      39.6
+                     0 0 3.4 7.4 14.6 23.4 24.9                                  (9.9%)    (9.1%)
+2 1135                                                                           15.8      20.4
+                                                                                 (5.2%)    (4.0%)
+                     N/A N/A (69.7%) (32.4%) (36.7%) (27.6%) (28.1%)             7.9       11.1
+                                                                                 (3.6%)    (3.2%)
+3 1119   12.5 20.2 21.3 24.4 12.4                              8.3      0.6      79.5      83.1
+                                                                        (0.5%)   (39.6%)   (22.0%)
+         (100.0%) (96.2%) (64.3%) (46.1%) (23.1%) (8.8%)                         6.8       6.1
+                                                                                 (2.9%)    (1.9%)
+                     0    2.4      2.4 0.5            4.1      3.7      1.2      35.4      29.1
+4 844                     (86.7%)  (58.3%) (16.1%)    (8.8%)   (4.4%)   (2.7%)   (20.3%)   (14.1%)
+                                                                                 16.7      24.5
+                     N/A                                                         (28.0%)   (24.5%)
+                                                                                 1.6       1.7
+                     0    0        3.4 21.4           21.6     18.2     20.9     (0.5%)    (0.3%)
+5 1712                    (0.0%)   (35.4%) (36.5%)    (32.6%)  (19.1%)  (13.6%)
+
+                     N/A
+
+                     0    5.3      2.6 6.1            7.4      5.4      8.3
+6 1401                    (87.2%)  (32.8%) (10.6%)    (6.9%)   (5.7%)   (5.5%)
+
+                     N/A
+
+                     0    0.1 9.8 14.6                11.2     2.7      3.5
+7 1369                    (100.0%) (54.9%) (39.5%)    (16.5%)  (3.9%)   (3.2%)
+
+                     N/A
+
+                     0    0.3      5 23               36       34.6     46.1
+8 1386                    (51.4%)  (54.9%) (55.2%)    (53.3%)  (48.7%)  (44.1%)
+
+                     N/A
+
+                     14.5 11.4 8.2 6.6                6.6      6        5.2
+10 1819                                               (4.8%)   (3.9%)   (2.8%)
+
+                     (100.0%) (84.4%) (15.9%) (7.9%)
+
+                     0    1.2 11.3 13.2               4.6      11       16.7
+11 1594                   (100.0%) (61.5%) (30.1%)    (17.4%)  (25.3%)  (24.2%)
+
+                     N/A
+
+12 409   0                0        0 7.6 10.4 8.5                       11.9
+
+         N/A N/A N/A (75.7%) (46.1%) (39.8%) (29.5%)
+
+13 1252  0 0 00 0 0 0
+
+         N/A              N/A      (0.0%) (0.0%) (0.0%)        (0.0%)   (0.0%)
+
+5.5 Cycling and Capacity Modulation
+
+Variable-capacity equipment adjusts the compressor speed to match the building load which
+should lead to lower cycling rates compared to single-stage and two-speed equipment, thereby
+improving efficiency and occupant thermal comfort. Thus, equipment runtime is expected to be
+higher than non-variable-capacity equipment; however, the equipment operates at higher COPs
+at lower compressor speeds.
+
+Figure 42 plots the mean compressor heating runtime fraction binned by outdoor temperature,
+which was calculated by summing the fraction of time the compressor was operating in
+compressor-based heating, compressor plus backup, or defrost modes and dividing it by the total
+number of hours in the bin. Thus, a runtime fraction of 0.5 indicates the compressor was
+operating for 50% of the time. Figure 43 plots the number of cycles per hour binned by outdoor
+
+                                                                 54
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        air temperature, which was determined by counting the number of times the system cycled from
+        off to heating (compressor-based heating, compressor with auxiliary heating, and auxiliary
+        heating only) during a given hour. In general, we expect equipment with high runtime fractions
+        to have low cycling rates because if the equipment is running for a large fraction of the time, it
+        will not be cycling on and off.
+
+        We generally see the compressor runtime fraction increase as the outdoor air temperature drops
+        because the compressor operates longer to meet the building heating load. However, the
+        monitored runtime fractions are generally lower than expected based on the heating capacity and
+        building load lines plotted in Figure 4, which could be due to solar gains or occupant thermostat
+        heating setpoint adjustments. Site 6 had the highest runtime fraction, and the compressor ran
+        nearly 100% of the time when outdoor air temperatures were between 5°F and 25°F. At Sites 3,
+        5, 8, and 10, the compressor runtime fraction decreases at the coldest temperature bins because
+        the equipment has switched to using exclusively auxiliary heat. This trend is most pronounced at
+        Site 3 due to the binary operation of the either the compressor or furnace in the dual fuel system.
+        An occupant’s thermostat temperature setback schedule can also explain lower-than-expected
+        runtime fractions, such as at Site 8 where we expected compressor runtime fractions to be higher
+        as the heat pump was undersized. Site 11 had the lowest mean runtime fractions, which was due
+        to long time spans where the equipment did not operate and thus the runtime fraction was zero
+        for many hours. This also explains the trends in Figure 43 for Site 11. The heat pump at Site 11
+        often had one on-cycle during a 24-hour period; thus there were many hours with zero on/off
+        cycles.
+
+        The cycling rate for most sites was approximately 1–2 cycles per hour. However, the heat pump
+        at Site 13 cycled notably more than the other sites and exhibited higher than normal cycling rates
+        at outdoor air temperatures above 40°F. Figure 39 plots an eight-hour period from Site 13
+        showing the ODU and IDU power consumption for a mild day in November 2021 where outdoor
+        air temperature ranged from 40°–45°F. During this time, the equipment exhibited short cycling
+        with ~7–8 cycles per hour. It is possible the issue was resolved with a service call because the
+        short cycling issue appears to have been resolved starting in early January (Figure 40).
+
+                                  Figure 39. High cycling rate at Site 13 during mild temperatures.
+
+                                                                 55
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                              Figure 40. High cycling rate resolved at Site 13.
+
+        Figure 44 plots the compressor inverter frequency during steady state heat operation, which is
+        proportional to the compressor speed, and Figure 45 plots a histogram of the fraction of time
+        spent in each inverter frequency bin during winter 2021–2022. There was a measurement error
+        with the inverter frequency at Site 13, so plots for Site 13 are not included in Figure 44 and
+        Figure 45.
+
+        During steady-state heating, we expect the inverter frequency to be higher at colder outdoor air
+        temperatures because the system will increase the compressor speed to match higher building
+        heating loads. However, the onboard controls for some systems, such as the heat pumps at Sites
+        3 and 6, decrease the compressor speed at very cold temperatures, which is observable in Figure
+        44. Additionally, because a variable-capacity heat pump should adjust the compressor speed to
+        match the heating load, we expect a narrow range of steady state inverter frequencies at each
+        outdoor air temperature bin, which is clear at Sites 1–6 and 10. The plot for Site 8 in Figure 44
+        indicates the system operated at a broad range of compressor speeds for most outdoor air
+        temperature bins; however, Figure 45 shows the compressor operated primarily at low and high
+        speeds. The heat pump at Site 10 was the only noncommunicating system in the study, which
+        explains why there was less variation in the inverter frequency with respect to outdoor air
+        temperature compared to other systems.
+
+        From Figure 45 we see that systems operated for a relatively small amount of time at maximum
+        compressor speed and Sites 1, 3, 4, 7, 8, 10, and 11 operated at minimum compressor speed for
+        the greatest amount of time. The inverter frequency for the heat pump at Site 5 was more evenly
+        spread across the range of speeds compared to the other sites. The heat pump at Site 3 was not a
+        fully variable system with five discrete compressor speeds, which is evident in the histogram.
+
+                                                                 56
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     Figure 41. Auxiliary heater energy in heating (blue) and defrost (orange) modes during winter 2021–2022.
+
+                                                                 57
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                         Figure 42. Mean compressor heating runtime fraction.
+
+                                                                 58
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                Figure 43. Box and whisker plot of compressor cycles per hour during winter 2021–2022.
+
+                                                                 59
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 44. Box and whisker plot of inverter frequency during steady-state compressor-based heating operation.
+
+                                                                 60
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 45. Fraction of time spent at a given inverter frequency during steady-state compressor-based heating operation during winter
+                                                                                        2021–2022.
+
+                                                                              61
+
+               This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      5.6 Defrost
+
+        During heating operation at cool outdoor air temperatures, frost can accumulate on the outdoor
+        coil when the coil surface temperature is colder than the outdoor dewpoint temperature.
+        Excessive frost formation will reduce the ODU airflow rate and overall heat transfer and thus
+        must be periodically melted to maintain performance. Defrosting the outdoor coil is
+        accomplished by using the compressor to send hot refrigerant to the coil, which is the same as
+        cooling mode operation. Defrost operation is important to investigate because it can consume a
+        significant amount of energy.
+
+        Figure 52 shows the total amount of time spent in defrost mode with respect to the outdoor wet-
+        bulb temperature (WBT) during winter 2021–2022. We see that a relatively small fraction of the
+        time was spent in defrost mode for all sites except Site 7. However, the amount of energy
+        consumed by defrost mode was significant for Sites 5, 7, 8, and 11, shown in Table 11, where
+        defrost mode consumed more than 20% of the energy used to provide compressor-based heating.
+        Figure 53 shows the total number of defrost cycles during winter 2021–2022, which was
+        determined by counting the total number of defrost cycles in an outdoor WBT bin. The number
+        of defrost cycles was highest between 20° and 40°F outdoor WBT, which is expected as defrost
+        isn’t necessary at warm outdoor air temperatures, and at cold outdoor temperatures the air
+        moisture content is low.
+
+        From Figure 53, we see the heat pump at Site 7 had the most defrost cycles, which warrants
+        additional discussion. Figure 46 shows a particular day with frequent defrost cycles, occurring as
+        frequently as every 30 minutes between midnight and 10 a.m. with an average length of
+        approximately seven minutes. Figure 47 and Figure 48 show the corresponding power and
+        temperature measurements during this period. The outdoor air temperature was consistently
+        around 32°F (0°C). We see that the refrigerant vapor line surface temperature (������������������������������������������������,������������������������������������,������������������������������������,������������������������������������������������)
+        decreases while the compressor operates during the reverse cycle and the auxiliary heater is
+        turned on, which indicates a defrost cycle is occurring. It appears the system operates at a
+        particular speed during defrost. During the early morning hours shortly after midnight, we see
+        the compressor speed increase during the defrost cycle. However, during the hours of 4 a.m. to 6
+        p.m., we see the system decrease the compressor speed during defrost. It is unclear why the heat
+        pump at Site 7 controlled the defrost operation in this manner.
+
+                     Figure 46. An example day with frequent defrost cycles for the heat pump at Site 7.
+
+                                                                 62
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+             Figure 47. ODU, IDU, and blower power and compressor inverter frequency during a day with
+                                                         frequent defrost cycles at Site 7.
+
+             Figure 48. Air and refrigerant temperatures during a day with frequent defrost cycles at Site 7.
+
+        Figure 54 plots the defrost cycle lengths for each site. For most of the sites, we see the length of
+        the defrost cycle was longer at lower outdoor WBT, which is expected as demand-based defrost
+        control is typically terminated using an outdoor coil surface temperature sensor. A few sites
+        (Sites 1, 3, and 13) had defrost cycles lasting less than five minutes while most of the sites had
+        average cycle lengths of 3–7 minutes. The exceptions were Sites 4, 7, and 8 which had longer
+        defrost cycles. The long defrost cycles for Site 4 were at cold outdoor WBTs and from Figure 53
+        we see there were a relatively small amount of defrost cycles in this temperature bin.
+        Figure 49 shows an example winter day for Site 7 with a long defrost cycle lasting for about 16
+        minutes between 4:28 a.m. and 4:43 a.m. where each point represents the operating mode for
+        each 30-second sample. Figure 50 and Figure 51 show the corresponding power and temperature
+        measurements during this defrost cycle. Despite the first stage of the auxiliary heater being on
+        for the defrost cycle, the supply air temperature is lower than the return temperature, which
+        means the defrost cycle will cool the house when the outdoor temperature is approximately
+        10.4°F (-12°C). Utilizing more than 5 kW of the 20-kW auxiliary heater could have potentially
+        mitigated the cooling effect.
+
+                                                                 63
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                    Figure 49. An example day with a long defrost cycle at Site 7.
+
+          Figure 50. ODU power, IDU power, and compressor inverter frequency during a long defrost cycle
+                                                                          at Site 7.
+
+                       Figure 51. Air and refrigerant temperatures during a long defrost cycle at Site 7.
+
+        The defrost energy listed in Table 11 was calculated during the reverse cycle operation and did
+        not include energy consumed during the defrost recovery period. For all the sites, the auxiliary
+        heater operated during and/or immediately following the defrost cycle. The dual fuel system at
+        Site 3 ran the gas furnace during the defrost cycle, which essentially transfers furnace heat to the
+
+                                                                 64
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+heat pump refrigeration system to melt the frost as the furnace was downstream of the indoor
+coil. Table 13 lists the auxiliary heater average runtime and power following the reverse defrost
+cycle. Sites 1, 8, and 13 ran auxiliary heat following the defrost cycle while most of the other
+sites only ran the auxiliary heat during the defrost cycle. The heat pumps at Sites 1 and 8 had the
+same manufacturer. In some instances, the auxiliary heat ran for longer time periods following a
+defrost cycle depending on the building heating load. To differentiate and account for auxiliary
+heat during defrost recovery, we took the statistical mode of the auxiliary heat runtime following
+a defrost cycle to calculate the auxiliary heating cycle runtime and corresponding average power.
+
+Table 13. Auxiliary Heat Use Following a Defrost Cycle During Winter 2021–2022
+
+Site ID    Auxiliary Heater     Average Auxiliary
+         Runtime Following     Heater Cycle Power
+   1                         Following Defrost [kW]
+   2        Defrost [min.]
+   4                6.5                   11.9
+   5                0.5                    8.1
+   6                0.5                   10.6
+   7                0.5                    8.0
+   8                0.5                   13.3
+   10               0.5                    6.6
+   11               5.5                   18.3
+   12               1.0                    4.5
+   13               0.5                   13.8
+                    0.5                   10.0
+                    2.5                    6.1
+
+5.7 Heating Supply Air Temperature
+
+Central forced air heat pumps have a reputation for supplying cooler air compared natural gas
+furnaces, which could lead to thermal comfort issues for occupants accustomed to furnaces.
+Additionally, the supply air temperature is proportional to the heating capacity, which decreases
+as the outdoor temperature gets colder.
+
+Figure 55 plots the steady-state compressor-based heating supply temperature binned by outdoor
+air temperature. In general, the supply air temperature for all sites rarely exceeded 100°F,
+whereas fossil-fuel furnaces typically supply air close to 120°F. Some sites maintained a
+relatively constant supply air temperature independent of outdoor air temperature (Sites 1, 4, 5,
+6, and 13), while the supply air temperature decreased at colder outdoor air temperatures for
+others (Sites 2, 7, 8, 10, 11, and 12). The supply air temperature at Site 6 had a notable step
+change between the 40°–45°F and 45°–50°F temperature bins, which appears to be due to the
+compressor speed control, shown in Figure 44, which exhibited a similar trend.
+
+5.8 Standby Power Consumption
+
+Booten, Christensen, and Winkler (2014) showed that crankcase heater energy use can be
+significant in oversized heat pumps. Though most of the heat pumps in this study were estimated
+
+                                                                 65
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        to be undersized (Table 6), we briefly discuss the standby energy use, which was calculated
+        when the systems were off.
+        Figure 56 plots the ODU and IDU power consumption when the systems were off. All heat
+        pumps in the study included a compressor crankcase heater in the ODU but the type (internal or
+        bellyband), wattage, and control algorithm varied across the sites. Site 7 had the highest standby
+        power of the all-electric sites, consistently consuming ~80 Watts. The ODU standby power for
+       the heat pump at Site 5 was dependent on the outdoor air temperature indicating the crankcase
+       heater was turned off at temperatures above ~45°F. The ODU standby power for the other sites
+       was not dependent upon the outdoor air temperature. The increase in the IDU standby power for
+       Site 3 at cold temperatures could be due to the furnace inducer motor turning on prior to the
+       blower during the furnace startup sequence.
+
+                                                                 66
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                  Figure 52. Time spent in defrost mode during winter 2021–2022.
+
+                                                                 67
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                Figure 53. Total number of defrost cycles during winter 2021–2022.
+
+                                                                 68
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+               Figure 54. Box and whisker plot showing the defrost cycle length during winter 2021–2022.
+
+                                                                 69
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+Figure 55. Box and whisker plot showing heat pump supply air temperature during periods of steady-state compressor-based
+                                                                                    heating.
+
+                                                                         70
+
+         This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                Figure 56. Average ODU (orange) and IDU (blue) standby power during winter 2021–2022.
+
+                                                                 71
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     6 Cooling Mode Performance Results and Discussion
+
+        Though the focus of the study was on assessing heating mode performance specifically at cold
+        outdoor temperatures, the conditions at most sites also reached hot outdoor temperatures and
+        cooling data was collected. This section briefly summarizes the observed cooling mode
+        performance.
+
+      6.1 Cooling Season Operating Modes
+
+        During the cooling season the heat pumps are either off, in fan-only mode, or in cooling mode.
+        Figure 57 shows a histogram of operating modes binned by outdoor temperatures ranging from
+        75°–115°F. The outdoor temperature exceeded 110°F for several hours at some sites, which is
+        unusually warm for these locations. For reference, the ASHRAE 1% summer dry-bulb
+        temperature for Spokane, Washington is 88.9°F, which means the outdoor temperature exceeds
+        88.9°F for approximately 88 hours per year, on average. Some sites had a few hundred hours
+        above 90°F, as shown in Figure 57.
+
+        Despite the unusually warm summer conditions, several heat pumps did not operate for many
+        hours in cooling mode. The heat pumps at Sites 4, 8, 10, 12, and 13 were off for most of the
+        summer. The lack of heat pump cooling operation could have been due to occupant thermostat
+        schedules or diurnal temperature changes precooling the building. The heat pump at Site 7
+        operated in cooling mode for the greatest amount of time. It is interesting to note that the return
+        plenum issue (mentioned in Section 2.2.1) was confirmed and resolved by the installation
+        contractor during the summer because the occupants were uncomfortable.
+
+        Similar to the winter season, the heat pumps at Sites 3, 6, and 12 ran for a significant amount of
+        time in fan-only mode. Sites 2 and 8 also ran the heat pump in fan-only mode during the
+        summer.
+
+      6.2 Cooling Capacity and Coefficient of Performance
+
+        Figure 58 and Figure 59 plot the steady-state cooling COP. Figure 58 plots 30-second down-
+        sampled data using a box and whisker plot, whereas Figure 59 plots the capacity-weighted mean
+        COP calculated by summing total cooling output within a temperature bin and dividing it by the
+        total energy consumption. IDU blower power is accounted for in the COP calculation (e.g., net
+        COP). Figure 60 is similar to Figure 58, plotting cooling capacity rather than COP. In general,
+        we see the cooling COP decrease as the outdoor air temperature increases, as expected. For
+        several sites we see the steady state capacity increase as the outdoor air temperature rises
+        because the heat pump increases the compressor speed to meet higher building cooling loads.
+        The heat pump at Site 13 did not operate for many hours in cooling mode, particularly at outdoor
+        temperatures below 100°F, which explains the lack of steady state COP data in Figure 58
+        through Figure 60.
+
+                                                                 72
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                          Figure 57. Heat pump operational modes at warm outdoor air temperatures.
+
+                                                                 73
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                   Figure 58. Box and whisker plot of steady-state cooling COPs.
+
+                                                                 74
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                                 Figure 59. Mean steady-state cooling COPs.
+
+                                                                 75
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                              Figure 60. Box and whisker plot of steady-state cooling total capacity.
+
+                                                                 76
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+      6.3 Capacity Modulation and Cycling
+
+        Figure 62 plots the mean cooling runtime fraction binned by outdoor temperature, which was
+        calculated by summing the fraction of time the system was operating in cooling mode and
+        dividing it by the total number of hours in the bin. The trends in Figure 62 are similar to the data
+        plotted in Figure 57, and in general, we see the compressor runtime fraction increase as the
+        outdoor air temperature gets hotter because the compressor operates longer to meet the building
+        cooling load. The heat pumps at Sites 3, 8, 12, and 13 rarely operated for more than 75% of the
+        time at any outdoor temperature bin. The heat pumps at Sites 6 and 11 ran continuously at
+        outdoor temperatures above 90°F and 95°F, respectively. The cooling runtime fraction for the
+        heat pump at Site 7 equaled one for most of the summer. As the focus of the study was on
+        heating mode performance, design cooling load calculations were not conducted. Thus, it is
+        difficult to assess the heat pump sizing for cooling operation.
+        The heat pumps at all but four sites operated at very low cycling rates. Figure 61 plots the
+        number of cycles per hour binned by outdoor air temperature for Sites 1, 2, 3, and 10, which was
+        determined by counting the number of times the system cycled from off to cooling. The other
+        sites are not plotted because there were zero on/off cycles for most of the hours, similar to the
+        75°–80°F temperature bin for Site 3 in Figure 61. The cooling mode cycling rates for Sites 1 and
+        2 were higher compared to heating mode cycling, whereas cooling and heating cycling rates
+        were similar for Sites 3 and 10.
+
+                        Figure 61. Box and whisker plot of compressor cycles per hour during cooling
+                                                    mode operation for Sites 1, 2, 3, and 10.
+
+                                                                 77
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+        Figure 63 plots the steady state cooling compressor inverter frequency, which is proportional to
+        the compressor speed. There was a measurement error with the inverter frequency at Site 13, so
+        plots for Site 13 are not included in Figure 63. In general, the inverter frequencies were similar
+        for cooling and heating for most sites.
+        During steady-state cooling, we expect the inverter frequency to be higher at warmer outdoor air
+        temperatures as the system will increase the compressor speed to match higher building cooling
+        loads. Additionally, because a variable-capacity heat pump should adjust the compressor speed
+        to match the cooling load, we expect a narrow range of steady state inverter frequencies at each
+        outdoor air temperature bin, which is clear at Sites 1, 5, 6, 8, and 10. Variation in steady state
+        inverter frequency within a temperature bin could be due to variation in solar loads.
+
+                                                                 78
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+                                                   Figure 62. Mean cooling runtime fraction.
+
+                                                                 79
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+              Figure 63. Box and whisker plot of inverter frequency during steady-state cooling operation.
+
+                                                                 80
+
+This report is available at no cost from the National Renewable Energy Laboratory (NREL) at www.nrel.gov/publications.
+
+     7 Summary and Conclusions
+
+        NREL monitored 13 central heat pump systems installed in single-family residential buildings
+        located in a cold climate for at least one full winter season. This report described the house
+        characteristics and heat pump specifications, field monitoring and data analysis methodologies,
+        and measured heating and cooling field performance. Due to an instrumentation issue, this report
+        included data on 12 of the 13 monitored heat pumps.
+
+        The primary objective of this project was to measure in-field performance of centrally ducted,
+        variable-capacity air-source heat pumps in cold climates to validate performance and develop
+        field-based performance maps. The project focused on quantifying heat pump performance at
+        cold temperatures.
+
+        The sites identified for the study were primarily located in the northwestern United States as
+        homes in the region tend to have all-electric space heating systems and high-efficiency heat
+        pumps have been incentivized for several years. NREL partnered with Ecotope, Inc., a small
+        energy consulting firm located in Seattle, for site recruitment and monitoring equipment
+        installation. All the sites included in the study had previously installed a high-efficiency central
+        heat pump system. One site, located in a Denver suburb, had the only dual fuel heat pump in the
+        study.
+
+        Conclusions include:
+
+            • Heating COP: Heating COPs were compared to manufacturer-reported values attained
+                 from either the NEEP Cold-Climate Air Source Heat Pump Product Listing (NEEP 2022)
+                 or manufacturer-published expanded performance tables. Steady state COPs at 7 of the
+                 12 sites agreed well with expected performance. For the remaining sites, the measured
+                 COPs were lower than expected. One potential cause for low COP is a low indoor airflow
+                 rate. However, sites with lower-than-expected COPs did not consistently have low indoor
+                 unit airflow rates. Nor were the heat pumps with lower-than-expected COPs consistently
+                 from certain manufacturers.
+
+            • Heating capacity: The measured capacity was closer to the minimum manufacturer-
+                 reported capacity rather than the maximum most of the time. For 5 of the 12 sites, the
+                 measured capacity aligned well with maximum manufacturer-reported capacity at cold
+                 outdoor air temperatures. Four of the sites with lower-than-expected COP also had lower-
+                 than-expected capacity.
+
+            • Capacity Modulation: Heat pumps at 11 of the reported-on sites included variable-
+                 capacity compressors. However, despite having modulation capabilities, the heat pumps
