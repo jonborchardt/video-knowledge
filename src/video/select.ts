@@ -27,22 +27,8 @@ import {
   kindOf,
   unsupportedWhy,
 } from './kinds';
+import { VIDEO_DIR, VIDEO_FILES } from './files';
 import type { Citation, RenderConfig } from './types';
-
-export const VIDEO_DIR = 'video';
-export const VIDEO_FILES = {
-  config: 'render.json',
-  narration: 'narration.json',
-  timeline: 'timeline.json',
-  mp4: 'segment.mp4',
-  report: 'build-report.json',
-  reportMd: 'build-report.md',
-  frames: 'frames',
-  scenes: 'scenes', // rendered scene chunks, cached by key
-  contact: 'contact-sheet.png',
-} as const;
-export const videoDir = (topic: string, storyId: string, root = process.cwd()) =>
-  join(scriptDir(topic, storyId, root), VIDEO_DIR);
 
 export interface SegmentInputs {
   script: Script;

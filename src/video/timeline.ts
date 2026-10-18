@@ -3,7 +3,7 @@
 // its word is spoken on, and every excerpt to its passage, or the build fails.
 import type { PassageReader } from '../lib/evidence';
 import { sha } from '../lib/io';
-import { narrationFingerprint } from './narration';
+import { narrationFingerprint } from './files';
 import type { Segment } from './select';
 import {
   FPS,

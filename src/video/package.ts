@@ -8,7 +8,8 @@ import { join } from 'node:path';
 import { fileSha, sha, toJson } from '../lib/io';
 import { extractFrame } from './ffmpeg';
 import type { BuildReport } from './report';
-import { VIDEO_FILES, type Segment } from './select';
+import { VIDEO_FILES } from './files';
+import type { Segment } from './select';
 import type { Timeline } from './types';
 
 export const REVIEW_DIR = 'review';

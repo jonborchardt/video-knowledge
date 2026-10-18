@@ -6,15 +6,9 @@ import { join } from 'node:path';
 import { readJson, sha, toJson } from '../lib/io';
 import { probe } from './ffmpeg';
 import type { Segment } from './select';
-import { VIDEO_FILES } from './select';
+import { NARRATION_DIR, VIDEO_FILES, narrationKey } from './files';
 import { type TtsProvider, provider as defaultProvider } from './tts';
 import type { NarrationManifest, SentenceAudio } from './types';
-
-export const NARRATION_DIR = 'narration';
-export const narrationKey = (voice: Segment['config']['voice'], text: string) =>
-  sha(`${voice.provider}|${voice.voice}|${voice.rate}|${text}`);
-export const narrationFingerprint = (m: NarrationManifest) =>
-  sha(m.sentences.map((s) => `${s.id}:${s.sha}`).join('\n'));
 
 export interface NarrateOptions {
   force?: boolean; // regenerate even when cached

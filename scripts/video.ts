@@ -26,7 +26,8 @@ import { type QaResult, extractInspectionFrames, qaSegment } from '../src/video/
 import { assemble } from '../src/video/assemble';
 import { ENTRY, renderContactSheet, renderScenes } from '../src/video/render';
 import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
-import { VIDEO_FILES, loadSegment, videoDir } from '../src/video/select';
+import { VIDEO_FILES, videoDir } from '../src/video/files';
+import { loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import type { NarrationManifest, Timeline } from '../src/video/types';
 
