@@ -4,7 +4,8 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, ROOT } from './io';
 
-export type Verdict = 'right' | 'wrong' | 'partly' | 'untestable' | 'unknown';
+import type { Verdict } from './corpus';
+export type { Verdict };
 const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
 
 // The slice of `watcher report --json` this site reads.

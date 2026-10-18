@@ -2,7 +2,9 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { corpusOf } from '../src/lib/corpus';
 import { type Assertion, docKey, passageReader, studyVerdicts, validate } from '../src/lib/evidence';
+import { loadTopic } from '../src/lib/topics';
 import { DOC_A, DOC_B, DOC_C, claim, corpus, guess, reader, sources, study } from './corpus';
 
 const FASTER = 'AI tools make experienced developers faster';
@@ -413,5 +415,15 @@ describe('line endings', () => {
     writeFileSync(join(dir, 'demo', 'sources', 'crlf.txt'), 'one\r\ntwo\r\nthree\r\n');
     expect(passageReader(dir)('demo/sources/crlf.txt#L1-L2')).toBe(passageReader(dir)('demo/sources/lf.txt#L1-L2'));
     expect(passageReader(dir)('demo/sources/crlf.txt#L2')).toBe('two');
+  });
+});
+
+describe('the research corpus', () => {
+  it('carries only the research fields of a topic', () => {
+    const c = corpusOf(loadTopic('get-rich-quick'));
+    expect(Object.keys(c.claims[0]).sort()).toEqual(
+      ['confidence', 'decidedBy', 'id', 'lean', 'sources', 'text', 'verdict', 'verdicts'].sort(),
+    );
+    expect(Object.keys(c).sort()).toEqual(['claims', 'docNames', 'name', 'sameStudy']);
   });
 });

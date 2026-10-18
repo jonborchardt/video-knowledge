@@ -8,6 +8,7 @@
 // Stages are independent and persisted; a rejected script never touches research or story discovery.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { fileSha, readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadReview, reviewPath } from '../src/lib/review';
@@ -62,7 +63,7 @@ function stagePackage(): EvidencePackage {
   const story = file.stories.find((s) => s.id === storyId);
   if (!story) throw new Error(`no story ${storyId} in ${storiesPath(topic)} (rejected stories cannot be scripted)`);
   if (story.readiness !== 'ready') console.error(`warning: story is ${story.readiness}: ${story.readinessWhy}`);
-  const t = loadTopic(topic);
+  const t = corpusOf(loadTopic(topic));
   const old = readJson<EvidencePackage>(p(FILES.pkg));
   const pkg = buildPackage(story, t, read, {
     review: loadReview(topic),
@@ -92,7 +93,7 @@ function stageValidate(): { script: Script; v: ScriptValidation; pkg: EvidencePa
   const pkg = readJson<EvidencePackage>(p(FILES.pkg));
   const review = readJson<ScriptReviewFile>(p(FILES.review));
   const previous = readJson<ScriptValidation>(p(FILES.validation));
-  const v = validateScript(script, loadTopic(topic), read, {
+  const v = validateScript(script, corpusOf(loadTopic(topic)), read, {
     review,
     judgments: loadReview(topic).applicability,
     previous,
@@ -143,7 +144,7 @@ function stageLock() {
   const plan = readJson<StoryboardPlan>(p(FILES.storyboard));
   if (!script || !pkg || !plan)
     return refuse('script.json, evidence-package.json and storyboard.json are all required');
-  const live = validateScript(script, loadTopic(topic), read, {
+  const live = validateScript(script, corpusOf(loadTopic(topic)), read, {
     review: readJson<ScriptReviewFile>(p(FILES.review)),
     judgments: loadReview(topic).applicability,
     previous: v,

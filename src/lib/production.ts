@@ -5,6 +5,7 @@
 // queue, park or mark a story published, which no artifact records.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
 import { fileSha, lf, readJson, toJson, ROOT } from './io';
 import { type ReviewFile, loadReview, reviewPath } from './review';
@@ -141,7 +142,7 @@ interface BoardContext {
   p: (f: string) => string; // absolute path in the script directory
   r: (f: string) => string; // repo-relative path in the script directory
   read: PassageReader;
-  t: Topic;
+  t: Corpus;
   review: ReviewFile;
   story: Story | undefined;
   pkg: EvidencePackage | null;
@@ -536,7 +537,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     p,
     r: (f) => rel(p(f), root),
     read: passageReader(root),
-    t: loadTopic(topic),
+    t: corpusOf(loadTopic(topic)),
     review: loadReview(topic, root),
     story: loadStories(topic)?.stories.find((s) => s.id === storyId),
     pkg: readJson<EvidencePackage>(p(FILES.pkg)),

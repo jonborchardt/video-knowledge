@@ -2,6 +2,7 @@
 // Pure apart from its readers: passages, documents and transcripts are injected, so it runs on an in-memory corpus.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { Corpus } from './corpus';
 import { type PassageReader, type Stance, applicabilityOf, judgmentKey } from './evidence';
 import { lf, sha, ROOT } from './io';
 import type { ReviewFile } from './review';
@@ -15,7 +16,6 @@ import {
   norm,
 } from './script';
 import type { Story } from './stories';
-import type { Topic } from './topics';
 
 const DEFAULT_AUDIENCE =
   'General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).';
@@ -66,7 +66,7 @@ export interface PackageOptions {
 
 export function buildPackage(
   story: Story,
-  t: Topic,
+  t: Corpus,
   read: PassageReader,
   {
     review = {},
@@ -91,10 +91,10 @@ export function buildPackage(
     let d = docs.get(file);
     if (!d) {
       const text = readDoc(file) ?? '';
-      const same = t.sameStudy[fileOf(cite)];
+      const same = t.sameStudy?.[fileOf(cite)];
       d = {
         file,
-        name: t.docNames[fileOf(cite)] ?? fileOf(cite),
+        name: t.docNames?.[fileOf(cite)] ?? fileOf(cite),
         sha: sha(text),
         lines: text ? text.split('\n').length : 0,
         sameStudyAs: same ? `${t.name}/sources/${same}` : null,

@@ -34,7 +34,7 @@ import {
   sentences,
   words,
 } from './script';
-import type { ClaimView } from './topics';
+import type { CorpusClaim } from './corpus';
 
 const NUMBERISH = /\d|\$|\bper ?cent\b|\bpercent\b/i;
 /** Quoted spans in a sentence: straight or curly double quotes, the words inside. */
@@ -258,7 +258,7 @@ interface AssertionContext {
   read: PassageReader;
   corpus: Corpus;
   judgments: ReviewFile['applicability'];
-  byId: Map<string, ClaimView>;
+  byId: Map<string, CorpusClaim>;
   pkg: EvidencePackage | null;
 }
 
@@ -502,7 +502,7 @@ export function validateScript(
     read,
     corpus: { name: t.name, claims: t.claims, sameStudy: t.sameStudy ?? {} },
     judgments,
-    byId: new Map<string, ClaimView>(t.claims.map((c) => [c.id, c])),
+    byId: new Map<string, CorpusClaim>(t.claims.map((c) => [c.id, c])),
     pkg,
   };
   const top = scriptIssues(script, all, pkg, hashDoc);
