@@ -9,12 +9,15 @@ import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
 import type { ReviewFile } from './review';
 import {
   type AssertionResult,
+  type Calc,
   type EvidencePackage,
   type Issue,
+  type Quote,
   MAX_REVISIONS,
   type ReviewFinding,
   RUNTIME,
   type Script,
+  type ScriptAssertion,
   type ScriptReviewFile,
   type ScriptStatus,
   type ScriptValidation,
@@ -65,33 +68,18 @@ export interface ValidateOptions {
   hashDoc?: DocHasher;
 }
 
-export function validateScript(
-  script: Script,
-  t: Corpus,
-  read: PassageReader,
-  { review = null, judgments = {}, previous = null, pkg = null, hashDoc = docHasher() }: ValidateOptions = {},
-): ScriptValidation {
-  const packageFingerprint = pkg?.fingerprint ?? null;
-  // A source may be quoted on several claims; the statement (and its context) is the one on the claim cited.
-  const statementOf = (claims: string[], source: string) =>
-    pkg?.claims
-      .filter((c) => claims.includes(c.id))
-      .flatMap((c) => c.statements)
-      .find((s) => s.source === source) ?? null;
-  const wpm = script.generation?.wordsPerMinute || WPM_DEFAULT;
-  const corpus: Corpus = { name: t.name, claims: t.claims, sameStudy: t.sameStudy ?? {} };
-  const byId = new Map<string, ClaimView>(t.claims.map((c) => [c.id, c]));
-  const all = sentences(script);
-  const top: Issue[] = [];
-  const issue = (
-    sentence: string,
-    category: string,
-    severity: Severity,
-    explanation: string,
-    extra: Partial<Issue> = {},
-  ): Issue => ({ sentence, category, severity, explanation, by: 'deterministic', ...extra });
+const issue = (
+  sentence: string,
+  category: string,
+  severity: Severity,
+  explanation: string,
+  extra: Partial<Issue> = {},
+): Issue => ({ sentence, category, severity, explanation, by: 'deterministic', ...extra });
+type ScriptSentence = ReturnType<typeof sentences>[number];
 
-  // Structure.
+/** Script-level checks: structure, the package the script was written from, and the cited documents' bytes. */
+function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackage | null, hashDoc: DocHasher): Issue[] {
+  const top: Issue[] = [];
   const seen = new Set<string>();
   for (const s of all) {
     if (seen.has(s.id)) top.push(issue(s.id, 'structure', 'blocking', `duplicate sentence id ${s.id}`));
@@ -103,13 +91,13 @@ export function validateScript(
   for (const x of script.sections)
     if (!(SECTIONS as readonly string[]).includes(x.name))
       top.push(issue('-', 'structure', 'blocking', `unknown section "${x.name}"`));
-  if (packageFingerprint && script.generation?.evidencePackage !== packageFingerprint)
+  if (pkg && script.generation?.evidencePackage !== pkg.fingerprint)
     top.push(
       issue(
         '-',
         'stale-package',
         'warning',
-        `the script was written from evidence package ${script.generation?.evidencePackage ?? '?'}; the current package is ${packageFingerprint}`,
+        `the script was written from evidence package ${script.generation?.evidencePackage ?? '?'}; the current package is ${pkg.fingerprint}`,
       ),
     );
   if (!script.generation?.model) top.push(issue('-', 'provenance', 'warning', 'generation.model is missing'));
@@ -141,12 +129,31 @@ export function validateScript(
         );
     }
   }
+  return top;
+}
 
+/** The reviewer's file against the current script: whether its approvals count, the findings still open (same
+ *  sentence fingerprint), the history of resolved ones, and the issues about the review itself. */
+interface ReviewMerge {
+  current: boolean;
+  prints: Map<string, string>;
+  open: ReviewFinding[];
+  resolved: (ReviewFinding & { resolvedBy: number })[];
+  issues: Issue[];
+}
+function mergeReview(
+  script: Script,
+  all: ScriptSentence[],
+  review: ScriptReviewFile | null,
+  pkg: EvidencePackage | null,
+  previous: ScriptValidation | null,
+): ReviewMerge {
+  const issues: Issue[] = [];
   // A review is bound to the package it was made against: approvals of another package (or of none, an older file)
   // count for nothing, while its findings still apply by sentence fingerprint.
-  const reviewCurrent = !!review && (!pkg || review.packageFingerprint === pkg.fingerprint);
-  if (review && !reviewCurrent)
-    top.push(
+  const current = !!review && (!pkg || review.packageFingerprint === pkg.fingerprint);
+  if (review && !current)
+    issues.push(
       issue(
         '-',
         'stale-review',
@@ -174,7 +181,6 @@ export function validateScript(
     void _by;
     if (!resolvedNow.has(key(f))) resolvedNow.set(key(f), { ...finding, resolvedBy: script.revision });
   }
-  const resolved = [...resolvedNow.values()];
   // A finding's references must be reproducible from the repository: no URLs, no absolute paths, no gitignored caches.
   const unreproducible = (ref: string) =>
     /^https?:/i.test(ref) || /^([A-Za-z]:)?[\\/]/.test(ref) || /(^|\/)(store\/transcripts|work)\//.test(ref);
@@ -182,7 +188,7 @@ export function validateScript(
     // open or resolved: history must stay reproducible too
     for (const ref of f.refs ?? [])
       if (unreproducible(ref))
-        top.push(
+        issues.push(
           issue(
             f.sentence,
             'unreproducible-ref',
@@ -193,268 +199,324 @@ export function validateScript(
             },
           ),
         );
+  return { current, prints, open, resolved: [...resolvedNow.values()], issues };
+}
 
-  const results: SentenceResult[] = all.map((s) => {
-    const issues: Issue[] = [];
-    const fp = prints.get(s.id)!;
-    const assertions = s.assertions ?? [];
-    for (const a of assertions)
-      if (!a.id.startsWith(`${s.id}.`))
-        issues.push(issue(s.id, 'structure', 'blocking', `assertion id ${a.id} must start with ${s.id}.`));
-    const factualType = s.type === 'factual' || s.type === 'attributed';
-    if (factualType && !assertions.length)
-      issues.push(
-        issue(s.id, 'missing-provenance', 'blocking', `a ${s.type} sentence with no assertion: nothing to check`, {
-          suggestion: 'Add an assertion per factual claim with its claim and evidence, or retype the sentence.',
-        }),
-      );
-    if (!factualType && !assertions.length && NUMBERISH.test(wordsToDigits(s.text)))
+/** Sentence-level checks: provenance for a factual sentence, every quotation declared, every figure on an assertion. */
+function sentenceIssues(s: ScriptSentence): Issue[] {
+  const issues: Issue[] = [];
+  const assertions = s.assertions ?? [];
+  for (const a of assertions)
+    if (!a.id.startsWith(`${s.id}.`))
+      issues.push(issue(s.id, 'structure', 'blocking', `assertion id ${a.id} must start with ${s.id}.`));
+  const factualType = s.type === 'factual' || s.type === 'attributed';
+  if (factualType && !assertions.length)
+    issues.push(
+      issue(s.id, 'missing-provenance', 'blocking', `a ${s.type} sentence with no assertion: nothing to check`, {
+        suggestion: 'Add an assertion per factual claim with its claim and evidence, or retype the sentence.',
+      }),
+    );
+  if (!factualType && !assertions.length && NUMBERISH.test(wordsToDigits(s.text)))
+    issues.push(
+      issue(
+        s.id,
+        'figure-in-non-factual',
+        'warning',
+        `a ${s.type} sentence carries a figure; the reviewer must confirm it is not a representative outcome`,
+      ),
+    );
+  // Every quotation in the narration must be declared on an assertion (quote.text), or it is never checked.
+  const declared = assertions.map((a) => norm(a.quote?.text ?? '')).filter(Boolean);
+  for (const span of quotedSpans(s.text))
+    if (norm(span).split(' ').length >= 3 && !declared.some((d) => d.includes(norm(span))))
       issues.push(
         issue(
           s.id,
-          'figure-in-non-factual',
-          'warning',
-          `a ${s.type} sentence carries a figure; the reviewer must confirm it is not a representative outcome`,
+          'quote-unchecked',
+          factualType ? 'blocking' : 'warning',
+          `the quoted words "${span}" are on no assertion's quote, so nothing checked them against a passage or a source`,
+          {
+            suggestion: 'Declare the quotation on an assertion with quote.text and its cite or source, or unquote it.',
+          },
         ),
       );
-    // Every quotation in the narration must be declared on an assertion (quote.text), or it is never checked.
-    const declared = assertions.map((a) => norm(a.quote?.text ?? '')).filter(Boolean);
-    for (const span of quotedSpans(s.text))
-      if (norm(span).split(' ').length >= 3 && !declared.some((d) => d.includes(norm(span))))
+  // Every figure in the sentence must belong to some assertion, so no part of a sentence rides on another's evidence.
+  const covered = assertions.map((a) => a.text).join(' ');
+  if (assertions.length)
+    for (const n of nums(s.text))
+      if (!hasFigure(covered, n))
         issues.push(
-          issue(
-            s.id,
-            'quote-unchecked',
-            factualType ? 'blocking' : 'warning',
-            `the quoted words "${span}" are on no assertion's quote, so nothing checked them against a passage or a source`,
-            {
-              suggestion:
-                'Declare the quotation on an assertion with quote.text and its cite or source, or unquote it.',
-            },
-          ),
+          issue(s.id, 'figure-without-assertion', 'blocking', `the figure "${n}" is in no assertion of this sentence`, {
+            suggestion: `Add an assertion that states "${n}" and cites the passage it comes from.`,
+          }),
         );
-    // Every figure in the sentence must belong to some assertion, so no part of a sentence rides on another's evidence.
-    const covered = assertions.map((a) => a.text).join(' ');
-    if (assertions.length)
-      for (const n of nums(s.text))
-        if (!hasFigure(covered, n))
-          issues.push(
-            issue(
-              s.id,
-              'figure-without-assertion',
-              'blocking',
-              `the figure "${n}" is in no assertion of this sentence`,
-              {
-                suggestion: `Add an assertion that states "${n}" and cites the passage it comes from.`,
-              },
-            ),
-          );
+  return issues;
+}
 
-    const ar: AssertionResult[] = assertions.map((a) => {
-      const own: Issue[] = [];
-      const add = (category: string, severity: Severity, explanation: string, extra: Partial<Issue> = {}) =>
-        own.push(issue(s.id, category, severity, explanation, { assertion: a.id, ...extra }));
-      const cites = new Set(a.evidence.filter(isStudyRef).map((r) => r.cite));
-      const statementIds = new Set(
-        a.evidence
-          .filter((r): r is { kind: 'statement'; claim: string; source: string } => r.kind === 'statement')
-          .map((r) => r.source),
-      );
-      // Calculation: inputs from cited passages, arithmetic that reproduces, result as written.
-      const derived: string[] = [];
-      if (a.calc) {
-        const c = a.calc;
-        const bad: string[] = [];
-        for (const inp of c.inputs) {
-          if (!cites.has(inp.cite))
-            bad.push(`input ${inp.value} cites ${inp.cite}, which is not among the assertion's evidence`);
-          else {
-            const p = read(inp.cite);
-            if (p === null) bad.push(`passage not found: ${inp.cite}`);
-            else if (!hasFigure(p, inp.value)) bad.push(`input ${inp.value} is not in ${inp.cite}`);
-          }
-        }
-        for (const n of nums(c.expression))
-          if (!c.inputs.some((i) => i.value.replaceAll(',', '') === n) && !CONSTANTS.has(n))
-            bad.push(`operand ${n} is not a declared input`);
-        const v = evalExpr(c.expression);
-        const r = Number(c.result.replaceAll(',', ''));
-        if (v === null) bad.push(`cannot evaluate "${c.expression}"`);
-        else if (!Number.isFinite(r) || Math.abs(v - r) > 0.5 * 10 ** -decimals(c.result) + 1e-9)
-          bad.push(`${c.expression} = ${v}, not ${c.result}`);
-        if (!hasFigure(a.text, c.result)) bad.push(`the result ${c.result} is not in the assertion text`);
-        if (bad.length)
-          add('bad-arithmetic', 'blocking', bad.join('; '), { suggestion: 'Fix the inputs or drop the figure.' });
-        else derived.push(c.result.replaceAll(',', ''));
-      }
-      const v = validate(
-        { id: a.id, text: a.text, kind: a.kind, claims: a.claims, evidence: a.evidence, derived },
-        corpus,
-        read,
-        judgments,
-      );
-      for (const p of v.problems) add('bad-reference', 'blocking', p);
-      if (v.decision === 'blocked' && !v.problems.length)
-        add(
-          v.limitations.some((l) => /figure/.test(l))
-            ? 'invented-number'
-            : v.status === 'unsupported'
-              ? 'contradicted'
-              : 'unsupported',
-          'blocking',
-          v.limitations.join(' ') || v.explanation,
-          { suggestion: v.suggestions.join(' ') || undefined },
-        );
-      else if (v.decision === 'qualify') {
-        // The limitation that applies: the cited qualifying verdicts, else whatever the gate said (minus the wording note).
-        const citedQ = v.qualifying.filter((x) => x.cited);
-        const why = citedQ.length
-          ? citedQ.map((x) => `${x.by}: ${x.note}`)
-          : v.limitations.filter((l) => !l.startsWith('Wording differs') && !/is stronger than the evidence/.test(l));
-        const universal = v.limitations.find((l) => /is stronger than the evidence/.test(l));
-        add('needs-qualification', 'warning', [...why, ...(universal ? [universal] : []), ...v.suggestions].join(' '), {
-          suggestion: a.qualifications?.length
-            ? `The writer says the narration carries it: ${a.qualifications.join(' ')}`
-            : 'Say where the narration carries this limitation (qualifications), or narrow the sentence.',
-        });
-      } else if (v.review)
-        add(
-          'wording',
-          'info',
-          'Wording differs from the canonical claim; the reviewer confirms the passages entail it.',
-        );
-      // Attribution figures come from what the source actually said.
-      if (a.kind === 'attribution') {
-        const quotes = v.context
-          .filter((x) => x.role === 'statement')
-          .map((x) => x.note)
-          .join('\n');
-        const stated = wordsToDigits(a.text).match(/^(\d+) sources?\b/)?.[1];
-        for (const n of nums(a.text))
-          if (n !== stated && !hasFigure(quotes, n))
-            add('figure-not-in-quote', 'blocking', `the figure "${n}" is not in the cited source statements`);
-      }
-      // Quotation: the exact words, inside the cited passage or statement.
-      if (a.quote) {
-        const q = a.quote;
-        if (norm(q.text).split(' ').length < 3) add('quote', 'blocking', 'a quotation needs at least three words');
-        if (q.cite) {
-          if (!cites.has(q.cite))
-            add('quote', 'blocking', `the quotation cites ${q.cite}, which is not among the assertion's evidence`);
-          else {
-            const p = read(q.cite);
-            if (p === null) add('quote', 'blocking', `passage not found: ${q.cite}`);
-            else if (!norm(p).includes(norm(q.text))) add('misquote', 'blocking', `"${q.text}" is not in ${q.cite}`);
-            // A named speaker on a study quotation must be the passage, the study or the document, and in the sentence.
-            if (q.speaker) {
-              const study = a.claims
-                .flatMap((c) => byId.get(c.id)?.verdicts ?? [])
-                .filter((x) => x.cite === q.cite)
-                .map((x) => x.by);
-              const docName = pkg?.documents.find((d) => d.file === docOf(q.cite!))?.name ?? '';
-              const where = [p ?? '', ...study, docName].join('\n');
-              if (!mentions(s.text, q.speaker) || !mentions(where, q.speaker))
-                add(
-                  'speaker-unverified',
-                  'blocking',
-                  `speaker "${q.speaker}" must be named in the sentence and be the study, the document or words in the passage`,
-                );
-            }
-          }
-        } else if (q.source) {
-          const st = a.claims.map((c) => byId.get(c.id)?.sources.find((x) => x.id === q.source)).find(Boolean);
-          if (!statementIds.has(q.source) || !st)
-            add(
-              'quote',
-              'blocking',
-              `the quotation names source ${q.source}, which is not among the assertion's evidence`,
-            );
-          else if (!norm(st.quote).includes(norm(q.text)))
-            add('misquote', 'blocking', `"${q.text}" is not in the recorded quote from ${q.source}: "${st.quote}"`);
-          // Speaker attribution: the person the narration names must be in the transcript window the package
-          // persisted around the quote, or in the source's title or channel. Never taken on trust.
-          const packaged =
-            statementOf(
-              a.claims.filter((c) => byId.get(c.id)?.sources.some((x) => x.id === q.source)).map((c) => c.id),
-              q.source,
-            )?.context ?? null;
-          const context = packaged && !packaged.startsWith('(quote not located)') ? packaged : null; // an unlocated window is not evidence
-          const named = st ? `${st.title}\n${st.channel}` : '';
-          if (!st || !statementIds.has(q.source)) {
-            /* already blocked above */
-          } else if (!q.speaker)
-            add(
-              'speaker-missing',
-              'warning',
-              'the quotation names no speaker; the reviewer confirms the narration does not say who spoke',
-              {
-                suggestion: 'Set quote.speaker to the name, role or show the narration attributes the words to.',
-              },
-            );
-          else if (!mentions(s.text, q.speaker))
-            add('speaker-unverified', 'blocking', `speaker "${q.speaker}" is not named in the sentence`, {
-              suggestion: 'quote.speaker is who the narration says spoke; use those words.',
-            });
-          else if (mentions(named, q.speaker) || (context !== null && mentions(context, q.speaker))) {
-            /* verified */
-          } else
-            add(
-              'speaker-unverified',
-              'blocking',
-              context === null
-                ? `speaker "${q.speaker}" is not the source title or channel and there is no located transcript context in the evidence package`
-                : `speaker "${q.speaker}" is not in the transcript context around the quote, the source title or the channel`,
-              { suggestion: 'Name the speaker as the transcript does, or attribute the words to the source itself.' },
-            );
-        } else add('quote', 'blocking', 'a quotation needs a cite or a source');
-        if (!norm(s.text).includes(norm(q.text))) add('quote', 'blocking', 'the quoted words are not in the sentence');
-      }
-      const blocked = own.some((x) => x.severity === 'blocking');
-      return {
-        id: a.id,
-        text: a.text,
-        kind: a.kind,
-        ...(a.calc ? { calc: a.calc } : {}),
-        ...(a.quote ? { quote: a.quote } : {}),
-        status: blocked ? 'blocked' : 'needs-review',
-        validation: v,
-        issues: own,
-      };
-    });
+/** What one assertion is checked against: the passages, the corpus, the review's applicability, the package. */
+interface AssertionContext {
+  read: PassageReader;
+  corpus: Corpus;
+  judgments: ReviewFile['applicability'];
+  byId: Map<string, ClaimView>;
+  pkg: EvidencePackage | null;
+}
 
-    const reviewHere = open.filter((f) => f.sentence === s.id).map<Issue>((f) => ({ ...f, by: 'review' }));
-    issues.push(...reviewHere);
-    // A reviewer may retire a deterministic warning (never a blocking issue) at this exact fingerprint.
-    for (const i of [...issues, ...ar.flatMap((a) => a.issues)]) {
-      const d = review?.dispositions?.[i.assertion ?? s.id];
-      if (
-        reviewCurrent &&
-        i.by === 'deterministic' &&
-        i.severity === 'warning' &&
-        d &&
-        d.fingerprint === fp &&
-        d.category === i.category
-      )
-        i.disposition = d.reason;
+/** The calculation: inputs from cited passages, arithmetic that reproduces, the result as written. Returns the
+ *  problems and, when there are none, the derived figure the gate may accept. */
+function checkCalc(
+  c: Calc,
+  text: string,
+  cites: Set<string>,
+  read: PassageReader,
+): { bad: string[]; derived: string[] } {
+  const bad: string[] = [];
+  for (const inp of c.inputs) {
+    if (!cites.has(inp.cite))
+      bad.push(`input ${inp.value} cites ${inp.cite}, which is not among the assertion's evidence`);
+    else {
+      const p = read(inp.cite);
+      if (p === null) bad.push(`passage not found: ${inp.cite}`);
+      else if (!hasFigure(p, inp.value)) bad.push(`input ${inp.value} is not in ${inp.cite}`);
     }
-    const approved = reviewCurrent && review!.approved?.[s.id] === fp;
-    const blocking = [...issues, ...ar.flatMap((a) => a.issues)].some((x) => x.severity === 'blocking');
-    for (const a of ar) if (a.status !== 'blocked') a.status = approved && !blocking ? 'verified' : 'needs-review';
-    // Every sentence needs the reviewer: a hypothetical or a transition can smuggle a fact the code cannot see.
-    const status: SentenceResult['status'] = blocking ? 'blocked' : approved ? 'verified' : 'needs-review';
-    return {
-      id: s.id,
-      section: s.section,
-      text: s.text,
-      type: s.type,
-      fingerprint: fp,
-      words: words(s.text),
-      status,
-      approved,
-      assertions: ar,
-      issues,
-    };
-  });
+  }
+  for (const n of nums(c.expression))
+    if (!c.inputs.some((i) => i.value.replaceAll(',', '') === n) && !CONSTANTS.has(n))
+      bad.push(`operand ${n} is not a declared input`);
+  const v = evalExpr(c.expression);
+  const r = Number(c.result.replaceAll(',', ''));
+  if (v === null) bad.push(`cannot evaluate "${c.expression}"`);
+  else if (!Number.isFinite(r) || Math.abs(v - r) > 0.5 * 10 ** -decimals(c.result) + 1e-9)
+    bad.push(`${c.expression} = ${v}, not ${c.result}`);
+  if (!hasFigure(text, c.result)) bad.push(`the result ${c.result} is not in the assertion text`);
+  return { bad, derived: bad.length ? [] : [c.result.replaceAll(',', '')] };
+}
+
+/** The quotation: the exact words, inside the cited passage or the recorded statement, with a verified speaker. */
+function quoteIssues(
+  a: ScriptAssertion,
+  q: Quote,
+  s: ScriptSentence,
+  cites: Set<string>,
+  statementIds: Set<string>,
+  { read, byId, pkg }: AssertionContext,
+  add: (category: string, severity: Severity, explanation: string, extra?: Partial<Issue>) => void,
+) {
+  if (norm(q.text).split(' ').length < 3) add('quote', 'blocking', 'a quotation needs at least three words');
+  if (q.cite) {
+    if (!cites.has(q.cite))
+      add('quote', 'blocking', `the quotation cites ${q.cite}, which is not among the assertion's evidence`);
+    else {
+      const p = read(q.cite);
+      if (p === null) add('quote', 'blocking', `passage not found: ${q.cite}`);
+      else if (!norm(p).includes(norm(q.text))) add('misquote', 'blocking', `"${q.text}" is not in ${q.cite}`);
+      // A named speaker on a study quotation must be the passage, the study or the document, and in the sentence.
+      if (q.speaker) {
+        const study = a.claims
+          .flatMap((c) => byId.get(c.id)?.verdicts ?? [])
+          .filter((x) => x.cite === q.cite)
+          .map((x) => x.by);
+        const docName = pkg?.documents.find((d) => d.file === docOf(q.cite!))?.name ?? '';
+        const where = [p ?? '', ...study, docName].join('\n');
+        if (!mentions(s.text, q.speaker) || !mentions(where, q.speaker))
+          add(
+            'speaker-unverified',
+            'blocking',
+            `speaker "${q.speaker}" must be named in the sentence and be the study, the document or words in the passage`,
+          );
+      }
+    }
+  } else if (q.source) {
+    const st = a.claims.map((c) => byId.get(c.id)?.sources.find((x) => x.id === q.source)).find(Boolean);
+    if (!statementIds.has(q.source) || !st)
+      add('quote', 'blocking', `the quotation names source ${q.source}, which is not among the assertion's evidence`);
+    else if (!norm(st.quote).includes(norm(q.text)))
+      add('misquote', 'blocking', `"${q.text}" is not in the recorded quote from ${q.source}: "${st.quote}"`);
+    // Speaker attribution: the person the narration names must be in the transcript window the package persisted
+    // around the quote, or in the source's title or channel. Never taken on trust. A source may be quoted on several
+    // claims; the statement (and its context) is the one on the claim cited.
+    const claimIds = a.claims.filter((c) => byId.get(c.id)?.sources.some((x) => x.id === q.source)).map((c) => c.id);
+    const packaged =
+      pkg?.claims
+        .filter((c) => claimIds.includes(c.id))
+        .flatMap((c) => c.statements)
+        .find((x) => x.source === q.source)?.context ?? null;
+    const context = packaged && !packaged.startsWith('(quote not located)') ? packaged : null; // an unlocated window is not evidence
+    const named = st ? `${st.title}\n${st.channel}` : '';
+    if (!st || !statementIds.has(q.source)) {
+      /* already blocked above */
+    } else if (!q.speaker)
+      add(
+        'speaker-missing',
+        'warning',
+        'the quotation names no speaker; the reviewer confirms the narration does not say who spoke',
+        {
+          suggestion: 'Set quote.speaker to the name, role or show the narration attributes the words to.',
+        },
+      );
+    else if (!mentions(s.text, q.speaker))
+      add('speaker-unverified', 'blocking', `speaker "${q.speaker}" is not named in the sentence`, {
+        suggestion: 'quote.speaker is who the narration says spoke; use those words.',
+      });
+    else if (mentions(named, q.speaker) || (context !== null && mentions(context, q.speaker))) {
+      /* verified */
+    } else
+      add(
+        'speaker-unverified',
+        'blocking',
+        context === null
+          ? `speaker "${q.speaker}" is not the source title or channel and there is no located transcript context in the evidence package`
+          : `speaker "${q.speaker}" is not in the transcript context around the quote, the source title or the channel`,
+        { suggestion: 'Name the speaker as the transcript does, or attribute the words to the source itself.' },
+      );
+  } else add('quote', 'blocking', 'a quotation needs a cite or a source');
+  if (!norm(s.text).includes(norm(q.text))) add('quote', 'blocking', 'the quoted words are not in the sentence');
+}
+
+/** One assertion through the evidence gate, plus its calculation, attribution figures and quotation. */
+function checkAssertion(a: ScriptAssertion, s: ScriptSentence, ctx: AssertionContext): AssertionResult {
+  const own: Issue[] = [];
+  const add = (category: string, severity: Severity, explanation: string, extra: Partial<Issue> = {}) =>
+    own.push(issue(s.id, category, severity, explanation, { assertion: a.id, ...extra }));
+  const cites = new Set(a.evidence.filter(isStudyRef).map((r) => r.cite));
+  const statementIds = new Set(
+    a.evidence
+      .filter((r): r is { kind: 'statement'; claim: string; source: string } => r.kind === 'statement')
+      .map((r) => r.source),
+  );
+  let derived: string[] = [];
+  if (a.calc) {
+    const c = checkCalc(a.calc, a.text, cites, ctx.read);
+    if (c.bad.length)
+      add('bad-arithmetic', 'blocking', c.bad.join('; '), { suggestion: 'Fix the inputs or drop the figure.' });
+    derived = c.derived;
+  }
+  const v = validate(
+    { id: a.id, text: a.text, kind: a.kind, claims: a.claims, evidence: a.evidence, derived },
+    ctx.corpus,
+    ctx.read,
+    ctx.judgments,
+  );
+  for (const p of v.problems) add('bad-reference', 'blocking', p);
+  if (v.decision === 'blocked' && !v.problems.length)
+    add(
+      v.limitations.some((l) => /figure/.test(l))
+        ? 'invented-number'
+        : v.status === 'unsupported'
+          ? 'contradicted'
+          : 'unsupported',
+      'blocking',
+      v.limitations.join(' ') || v.explanation,
+      { suggestion: v.suggestions.join(' ') || undefined },
+    );
+  else if (v.decision === 'qualify') {
+    // The limitation that applies: the cited qualifying verdicts, else whatever the gate said (minus the wording note).
+    const citedQ = v.qualifying.filter((x) => x.cited);
+    const why = citedQ.length
+      ? citedQ.map((x) => `${x.by}: ${x.note}`)
+      : v.limitations.filter((l) => !l.startsWith('Wording differs') && !/is stronger than the evidence/.test(l));
+    const universal = v.limitations.find((l) => /is stronger than the evidence/.test(l));
+    add('needs-qualification', 'warning', [...why, ...(universal ? [universal] : []), ...v.suggestions].join(' '), {
+      suggestion: a.qualifications?.length
+        ? `The writer says the narration carries it: ${a.qualifications.join(' ')}`
+        : 'Say where the narration carries this limitation (qualifications), or narrow the sentence.',
+    });
+  } else if (v.review)
+    add('wording', 'info', 'Wording differs from the canonical claim; the reviewer confirms the passages entail it.');
+  // Attribution figures come from what the source actually said.
+  if (a.kind === 'attribution') {
+    const quotes = v.context
+      .filter((x) => x.role === 'statement')
+      .map((x) => x.note)
+      .join('\n');
+    const stated = wordsToDigits(a.text).match(/^(\d+) sources?\b/)?.[1];
+    for (const n of nums(a.text))
+      if (n !== stated && !hasFigure(quotes, n))
+        add('figure-not-in-quote', 'blocking', `the figure "${n}" is not in the cited source statements`);
+  }
+  if (a.quote) quoteIssues(a, a.quote, s, cites, statementIds, ctx, add);
+  const blocked = own.some((x) => x.severity === 'blocking');
+  return {
+    id: a.id,
+    text: a.text,
+    kind: a.kind,
+    ...(a.calc ? { calc: a.calc } : {}),
+    ...(a.quote ? { quote: a.quote } : {}),
+    status: blocked ? 'blocked' : 'needs-review',
+    validation: v,
+    issues: own,
+  };
+}
+
+/** The review applied to one sentence: its open findings, the dispositions that retire warnings at this exact
+ *  fingerprint, the approval, and the resulting statuses. */
+function judgeSentence(
+  s: ScriptSentence,
+  issues: Issue[],
+  ar: AssertionResult[],
+  m: ReviewMerge,
+  review: ScriptReviewFile | null,
+): SentenceResult {
+  const fp = m.prints.get(s.id)!;
+  issues.push(...m.open.filter((f) => f.sentence === s.id).map<Issue>((f) => ({ ...f, by: 'review' })));
+  // A reviewer may retire a deterministic warning (never a blocking issue) at this exact fingerprint.
+  for (const i of [...issues, ...ar.flatMap((a) => a.issues)]) {
+    const d = review?.dispositions?.[i.assertion ?? s.id];
+    if (
+      m.current &&
+      i.by === 'deterministic' &&
+      i.severity === 'warning' &&
+      d &&
+      d.fingerprint === fp &&
+      d.category === i.category
+    )
+      i.disposition = d.reason;
+  }
+  const approved = m.current && review!.approved?.[s.id] === fp;
+  const blocking = [...issues, ...ar.flatMap((a) => a.issues)].some((x) => x.severity === 'blocking');
+  for (const a of ar) if (a.status !== 'blocked') a.status = approved && !blocking ? 'verified' : 'needs-review';
+  // Every sentence needs the reviewer: a hypothetical or a transition can smuggle a fact the code cannot see.
+  return {
+    id: s.id,
+    section: s.section,
+    text: s.text,
+    type: s.type,
+    fingerprint: fp,
+    words: words(s.text),
+    status: blocking ? 'blocked' : approved ? 'verified' : 'needs-review',
+    approved,
+    assertions: ar,
+    issues,
+  };
+}
+
+export function validateScript(
+  script: Script,
+  t: Corpus,
+  read: PassageReader,
+  { review = null, judgments = {}, previous = null, pkg = null, hashDoc = docHasher() }: ValidateOptions = {},
+): ScriptValidation {
+  const wpm = script.generation?.wordsPerMinute || WPM_DEFAULT;
+  const all = sentences(script);
+  const ctx: AssertionContext = {
+    read,
+    corpus: { name: t.name, claims: t.claims, sameStudy: t.sameStudy ?? {} },
+    judgments,
+    byId: new Map<string, ClaimView>(t.claims.map((c) => [c.id, c])),
+    pkg,
+  };
+  const top = scriptIssues(script, all, pkg, hashDoc);
+  const merge = mergeReview(script, all, review, pkg, previous);
+  top.push(...merge.issues);
+  const results = all.map((s) =>
+    judgeSentence(
+      s,
+      sentenceIssues(s),
+      (s.assertions ?? []).map((a) => checkAssertion(a, s, ctx)),
+      merge,
+      review,
+    ),
+  );
 
   const w = results.reduce((n, s) => n + s.words, 0);
   const sw = results.reduce((n, s) => n + spokenWords(s.text), 0);
@@ -479,13 +541,7 @@ export function validateScript(
   const date = new Date().toISOString();
   const history = [
     ...(previous?.history ?? []).filter((h) => h.revision !== script.revision),
-    {
-      revision: script.revision,
-      date,
-      status,
-      blocking,
-      warnings,
-    },
+    { revision: script.revision, date, status, blocking, warnings },
   ];
   return {
     topic: script.topic,
@@ -494,7 +550,7 @@ export function validateScript(
     date,
     status,
     scriptFingerprint: scriptFingerprint(script),
-    packageFingerprint,
+    packageFingerprint: pkg?.fingerprint ?? null,
     wordsPerMinute: wpm,
     words: w,
     spokenWords: sw,
@@ -512,7 +568,7 @@ export function validateScript(
     revisionLimitReached: status === 'blocked' && script.revision >= MAX_REVISIONS,
     sentences: results,
     issues,
-    resolved,
+    resolved: merge.resolved,
     history,
   };
 }
