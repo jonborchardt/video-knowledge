@@ -15,6 +15,7 @@
 // contradictions and qualifications are pulled from every study verdict on the claim, so none can be hidden.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { lf } from './io';
 import { hasFigure, nums } from './numbers';
 import type { ClaimVerdictView, ClaimView, Topic, Verdict } from './topics';
 
@@ -94,7 +95,6 @@ export interface Validation {
 export type PassageReader = (cite: string) => string | null;
 
 /** Line endings as checked out (CRLF on Windows, LF elsewhere) must not change a passage, a sha or a fingerprint. */
-export const lf = (s: string) => s.replace(/\r\n?/g, '\n');
 
 /** Reads `<topic>/sources/<file>.txt#L10-L24` from the repo; null when the file or the lines do not exist. */
 export function passageReader(root = process.cwd()): PassageReader {

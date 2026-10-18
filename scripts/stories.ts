@@ -7,7 +7,8 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { type Assertion, passageReader, validate, type Validation } from '../src/lib/evidence';
 import { loadReview } from '../src/lib/review';
-import { discover, loadStories, storiesPath, type Story, toJson } from '../src/lib/stories';
+import { discover, loadStories, storiesPath, type Story } from '../src/lib/stories';
+import { toJson } from '../src/lib/io';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, ...rest] = process.argv.slice(2);

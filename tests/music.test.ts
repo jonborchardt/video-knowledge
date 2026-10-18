@@ -6,7 +6,7 @@ import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha } from '../src/lib/script';
+import { readJson, sha } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
 import {
   CHANNELS,

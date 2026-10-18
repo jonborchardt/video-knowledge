@@ -6,7 +6,7 @@
 //   video section -> music cue -> composition/variation -> rendered audio asset (music/<composition>/<variation>.wav)
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, sha, toJson } from '../lib/script';
+import { readJson, sha, toJson } from '../lib/io';
 import { CHANNELS, type Duck, RATE, type Span, decodePcm, encodeAac, mixDown, placeCue, rmsDb } from './mix';
 import type { Timeline } from './types';
 

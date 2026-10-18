@@ -2,6 +2,7 @@
 // The report already decides each claim's verdict; nothing here re-judges.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { readJson } from './io';
 
 export type Verdict = 'right' | 'wrong' | 'partly' | 'untestable' | 'unknown';
 const JUDGED: Verdict[] = ['right', 'wrong', 'partly'];
@@ -166,7 +167,6 @@ export interface Topic {
 }
 
 const ROOT = process.cwd();
-const readJson = <T>(p: string): T | null => (existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as T) : null);
 export const VAL: Record<string, number> = { right: 1, partly: 0.5, wrong: -1 };
 
 /** Topic folders that have a report with claims. */

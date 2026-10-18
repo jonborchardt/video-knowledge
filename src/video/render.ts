@@ -8,7 +8,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
-import { sha } from '../lib/script';
+import { sha } from '../lib/io';
 import { narrationTrack, concatVideo, mux } from './ffmpeg';
 import { COMPONENT_FILE } from './kinds';
 import { type MixReport, type MusicConfig, type ResolvedCue, mixSoundtrack } from './music';

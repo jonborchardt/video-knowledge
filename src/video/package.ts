@@ -5,8 +5,7 @@
 // that it is a review build and whether it is cleared for public release.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileSha } from '../lib/production';
-import { sha, toJson } from '../lib/script';
+import { fileSha, sha, toJson } from '../lib/io';
 import { extractFrame } from './ffmpeg';
 import type { BuildReport } from './report';
 import { VIDEO_FILES, type Segment } from './select';

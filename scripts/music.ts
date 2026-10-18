@@ -10,7 +10,7 @@
 import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
-import { readJson, sha, toJson } from '../src/lib/script';
+import { readJson, sha, toJson } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
 import { COMPOSITION_FILE, type Composition, MUSIC_DIR, type Variation, loadComposition } from '../src/video/music';
 

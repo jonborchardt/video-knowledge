@@ -8,8 +8,9 @@
 // viewer-facing framing. Without it, multi-claim stories cap at needs-review and titles are plain questions.
 //
 // Every score is an editorial heuristic from corpus counts and the audit, labelled as such. Nothing is audience data.
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
+import { readJson } from './io';
 import {
   type Assertion,
   type EvidenceItem,
@@ -614,15 +615,10 @@ export function discover(t: StoryInput, readPassage: PassageReader, review: Revi
   };
 }
 
-/** Serialises without passages: provenance stays with the citation, and the CLI re-reads them on demand. */
-export const toJson = (file: StoriesFile) =>
-  JSON.stringify(file, (k, v) => (k === 'passage' ? undefined : v), 1) + '\n';
-
 const ROOT = process.cwd();
 export const storiesPath = (topic: string) => join(ROOT, topic, 'stories.json');
 export function loadStories(topic: string): StoriesFile | null {
-  const p = storiesPath(topic);
-  return existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as StoriesFile) : null;
+  return readJson<StoriesFile>(storiesPath(topic));
 }
 /** Topics with a stories.json. */
 /** Topics with a report and a stories.json (loadTopic needs the report). */

@@ -11,8 +11,7 @@
 // that is not in the passage, a calculation that does not reproduce, or a reference that does not resolve blocks.
 // Approval needs both layers: no blocking issue, and a reviewer's approval of the sentence's current fingerprint.
 // A changed sentence changes its fingerprint, so a revision never inherits an approval.
-import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   type Applicability,
@@ -24,9 +23,9 @@ import {
   type Validation,
   applicabilityOf,
   judgmentKey,
-  lf,
   validate,
 } from './evidence';
+import { lf, sha, toJson } from './io';
 import { hasFigure, nums, spokenWords, wordsToDigits } from './numbers';
 import type { ReviewFile } from './review';
 import type { Story } from './stories';
@@ -126,7 +125,6 @@ export interface EvidencePackage {
 
 const DEFAULT_AUDIENCE =
   'General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).';
-export const sha = (s: string | Buffer) => createHash('sha1').update(s).digest('hex').slice(0, 10);
 const docOf = (cite: string) => cite.split('#')[0];
 const fileOf = (cite: string) => docOf(cite).split('/').pop()!;
 const isStudyRef = (r: EvidenceRef): r is { kind: 'study'; claim: string; cite: string } => r.kind === 'study';
@@ -1199,13 +1197,6 @@ export const FILES = {
   reviewMd: 'review.md',
   release: 'release.json',
 } as const;
-export const readJson = <T>(p: string): T | null => (existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as T) : null);
-/** Serialises without passages: provenance stays with the citation, and the CLI re-reads them on demand. */
-export const toJson = (x: unknown) => JSON.stringify(x, (k, v) => (k === 'passage' ? undefined : v), 1) + '\n';
-export function writeArtifact(dir: string, name: string, content: string) {
-  mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, name), content);
-}
 /** Every <topic>/scripts/<slug> with a script.json, for the site and the tests. */
 export function scriptDirs(root = process.cwd()): { topic: string; slug: string; dir: string }[] {
   return topicNames().flatMap((topic) => {

@@ -5,7 +5,8 @@
 // queue, park or mark a story published, which no artifact records.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { lf, passageReader } from './evidence';
+import { passageReader } from './evidence';
+import { fileSha, lf, readJson, toJson } from './io';
 import { loadReview, reviewPath } from './review';
 import {
   type EvidencePackage,
@@ -16,16 +17,14 @@ import {
   type ScriptValidation,
   buildPackage,
   docHasher,
-  readJson,
   releaseCheck,
   scriptDir,
-  sha,
   storyboardFingerprint,
   storySlug,
   validateScript,
   validationFingerprint,
 } from './script';
-import { discover, loadStories, storiesPath, toJson as storiesJson, type Story } from './stories';
+import { discover, loadStories, storiesPath, type Story } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildReport } from '../video/report';
@@ -132,7 +131,6 @@ const nonBlank = (file: string) =>
         .split('\n')
         .filter((l) => l.trim() && !l.trim().startsWith('#')).length
     : 0;
-export const fileSha = (f: string) => (existsSync(f) ? sha(lf(readFileSync(f, 'utf8'))) : 'missing');
 const worst = (checks: Check[]): Health => {
   for (const h of ['blocked', 'stale', 'missing', 'pending'] as const) if (checks.some((c) => c.health === h)) return h;
   return checks.every((c) => c.health === 'done') ? 'done' : 'current';
@@ -526,7 +524,7 @@ export function topicBoard(name: string, root = process.cwd(), decisions = loadD
     checks.push({ name: 'stories', health: 'missing', detail: 'not discovered', file: `${name}/stories.json` });
     next = `npm run stories -- discover ${name}`;
   } else {
-    const again = storiesJson(discover(topic, passageReader(root), review));
+    const again = toJson(discover(topic, passageReader(root), review));
     const current = lf(again) === lf(readFileSync(storiesPath(name), 'utf8'));
     checks.push({
       name: 'stories',

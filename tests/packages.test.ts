@@ -14,13 +14,12 @@ import {
   type ScriptReviewFile,
   buildPackage,
   docHasher,
-  readJson,
   releaseCheck,
   scriptDirs,
   sentences,
-  toJson,
   validateScript,
 } from '../src/lib/script';
+import { readJson, toJson } from '../src/lib/io';
 import { loadStories } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';

@@ -8,7 +8,8 @@
 // Stages are independent and persisted; a rejected script never touches research or story discovery.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { lf, passageReader } from '../src/lib/evidence';
+import { passageReader } from '../src/lib/evidence';
+import { fileSha, readJson, toJson, writeArtifact } from '../src/lib/io';
 import { loadReview, reviewPath } from '../src/lib/review';
 import {
   type EvidencePackage,
@@ -19,19 +20,15 @@ import {
   type ScriptReviewFile,
   type ScriptValidation,
   buildPackage,
-  readJson,
   renderReviewMd,
   renderScriptMd,
   scriptDir,
   sentenceFingerprint,
   sentences,
-  sha,
   storyboardFingerprint,
-  toJson,
   transcriptReader,
   validateScript,
   validationFingerprint,
-  writeArtifact,
 } from '../src/lib/script';
 import { loadStories, storiesPath } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
@@ -57,7 +54,6 @@ if (!cmd || !topic || !storyId) usage();
 const dir = scriptDir(topic, storyId);
 const read = passageReader();
 const p = (name: string) => join(dir, name);
-const fileSha = (f: string) => (existsSync(f) ? sha(lf(readFileSync(f, 'utf8'))) : 'missing'); // checkout-independent
 const rel = (f: string) =>
   f
     .replace(process.cwd() + '\\', '')

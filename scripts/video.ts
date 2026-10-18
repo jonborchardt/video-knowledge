@@ -17,7 +17,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
-import { readJson, sha, toJson } from '../src/lib/script';
+import { readJson, sha, toJson } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';

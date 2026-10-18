@@ -9,7 +9,6 @@ import {
   type Release,
   type Script,
   type ScriptValidation,
-  readJson,
   scriptDir,
   scriptFingerprint,
   sentenceFingerprint,
@@ -17,6 +16,7 @@ import {
   storyboardFingerprint,
   validationFingerprint,
 } from '../lib/script';
+import { readJson } from '../lib/io';
 import type { Scene, Storyboard } from '../lib/storyboard';
 import { ACCEPTS, REQUIRED_CUES, SUPPORTED_ASSETS, type SceneKind, kindOf, unsupportedWhy } from './kinds';
 import type { Citation, RenderConfig } from './types';
