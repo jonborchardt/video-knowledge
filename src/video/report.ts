@@ -1,12 +1,13 @@
 // The build report: what was rendered from what, with what, and how the QA went. video/build-report.json and .md.
-// src/lib/production.ts reads segment.scenes, output, narration, fingerprints and qa from the JSON.
+// The production board reads it through BuildSummary (src/lib/build-report.ts), which BuildReport extends.
+import type { BuildSummary, Clearance } from '../lib/build-report';
 import type { Probe } from './ffmpeg';
 import type { MixReport } from './music';
 import type { QaResult } from './qa';
 import type { Segment } from './select';
 import type { NarrationManifest, Timeline } from './types';
 
-export interface BuildReport {
+export interface BuildReport extends BuildSummary {
   topic: string;
   story: string;
   title: string;
@@ -44,8 +45,7 @@ export interface BuildReport {
     cues: { id: string; asset: string; start: number; end: number; gain: number; rmsDb: number }[];
     levels: Pick<MixReport, 'peakDb' | 'musicPeakDb' | 'narrationPeakDb' | 'musicUnderSpeechDb' | 'musicScale'>;
   } | null;
-  /** Technical completion is not clearance: both must hold before a public release. */
-  clearance: { narration: boolean; music: boolean | null; publishable: boolean; why: string[] };
+  clearance: Clearance;
   fingerprints: Timeline['fingerprints'];
   qa: { ok: boolean; checks: QaResult['checks']; frames: string[]; contactSheet: string | null };
   limitations: string[];

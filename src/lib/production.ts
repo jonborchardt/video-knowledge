@@ -24,7 +24,7 @@ import { validateScript } from './script-validation';
 import { discover, loadStories, storiesPath, type Story } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
-import type { BuildReport } from '../video/report';
+import type { BuildSummary, Clearance } from './build-report';
 
 export type Health = 'done' | 'current' | 'stale' | 'blocked' | 'missing' | 'pending';
 export interface Check {
@@ -77,7 +77,7 @@ const VIDEO_REPORT = 'video/build-report.json';
 const REVIEW_PACKAGE = 'video/review/review.json';
 /** Technical readiness, editorial approval and licensing clearance are three different things; the board keeps the
  *  third here, read from the build report, so a card can be fully rendered and still say "release blocked". */
-export type Clearance = BuildReport['clearance'];
+export type { Clearance };
 export interface Version {
   revision: number;
   date: string;
@@ -150,7 +150,7 @@ interface BoardContext {
   v: ScriptValidation | null;
   plan: StoryboardPlan | null;
   release: Release | null;
-  vr: BuildReport | null;
+  vr: BuildSummary | null;
   live: ScriptValidation | null; // the validation re-run in memory (validation stage)
   sb: Storyboard | null; // the storyboard re-filled against it (storyboard stage)
 }
@@ -545,7 +545,7 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
     v: readJson<ScriptValidation>(p(FILES.validation)),
     plan: readJson<StoryboardPlan>(p(FILES.storyboard)),
     release: readJson<Release>(p(FILES.release)),
-    vr: readJson<BuildReport>(p(VIDEO_REPORT)),
+    vr: readJson<BuildSummary>(p(VIDEO_REPORT)),
     live: null,
     sb: null,
   };
