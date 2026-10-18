@@ -2,7 +2,7 @@
  "topic": "get-rich-quick",
  "story": "decision:mlm-and-seminars",
  "title": "How Much Money Do MLM Participants Actually Make?",
- "generatedAt": "2026-10-18T03:45:40.304Z",
+ "generatedAt": "2026-10-18T07:13:46.249Z",
  "command": "npm run video -- qa get-rich-quick decision:mlm-and-seminars",
  "segment": {
   "scenes": [
@@ -165,7 +165,8 @@
  },
  "output": {
   "file": "get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4",
-  "seconds": 723.4,
+  "sha": "03c1e5ad75",
+  "seconds": 723.413,
   "width": 1920,
   "height": 1080,
   "fps": 30,
@@ -588,11 +589,111 @@
   "frames": 21702,
   "cost": "$0 (local CPU)"
  },
+ "music": {
+  "fingerprint": "f427211ed6",
+  "compositions": [
+   {
+    "id": "undertow",
+    "title": "Undertow",
+    "generator": {
+     "name": "strudel-bench",
+     "repo": "https://github.com/jonborchardt/strudel-bench",
+     "version": "f63f2c5 (songs/undertow.strudel not yet committed)"
+    },
+    "source": {
+     "file": "songs/undertow.strudel",
+     "sha": "c7fbeafb07",
+     "cps": 0.35,
+     "bpm": 84,
+     "key": "D:minor"
+    },
+    "licence": {
+     "cleared": true,
+     "samples": [],
+     "attribution": [],
+     "notes": "original composition; every voice is a built-in oscillator or synth patch, no sample pack and no soundfont, so no third-party sound is in the render"
+    }
+   }
+  ],
+  "cues": [
+   {
+    "id": "opening",
+    "asset": "undertow/pulse",
+    "start": 4.966666666666667,
+    "end": 60.233333333333334,
+    "gain": -11,
+    "rmsDb": -37
+   },
+   {
+    "id": "pitch",
+    "asset": "undertow/active",
+    "start": 60.233333333333334,
+    "end": 145.36666666666667,
+    "gain": -13,
+    "rmsDb": -37.7
+   },
+   {
+    "id": "disclosures",
+    "asset": "undertow/texture",
+    "start": 145.36666666666667,
+    "end": 275.56666666666666,
+    "gain": -13,
+    "rmsDb": -40.3
+   },
+   {
+    "id": "plans",
+    "asset": "undertow/texture",
+    "start": 345.06666666666666,
+    "end": 531.3,
+    "gain": -13,
+    "rmsDb": -40.3
+   },
+   {
+    "id": "qualifications",
+    "asset": "undertow/texture",
+    "start": 567.1666666666666,
+    "end": 621.3666666666667,
+    "gain": -16,
+    "rmsDb": -43.5
+   },
+   {
+    "id": "implications",
+    "asset": "undertow/motif",
+    "start": 621.3666666666667,
+    "end": 696.1,
+    "gain": -11,
+    "rmsDb": -35.8
+   },
+   {
+    "id": "conclusion",
+    "asset": "undertow/rest",
+    "start": 696.1,
+    "end": 723.4,
+    "gain": -10,
+    "rmsDb": -35.6
+   }
+  ],
+  "levels": {
+   "peakDb": -1,
+   "musicPeakDb": -22.5,
+   "narrationPeakDb": -1.4,
+   "musicUnderSpeechDb": -20.1,
+   "musicScale": 1
+  }
+ },
+ "clearance": {
+  "narration": false,
+  "music": true,
+  "publishable": false,
+  "why": [
+   "narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media"
+  ]
+ },
  "fingerprints": {
   "script": "51e7788c5c",
   "storyboard": "0c12e8fcc7",
   "narration": "0c390593af",
-  "config": "70618c4192"
+  "config": "082f8b09a9"
  },
  "qa": {
   "ok": true,
@@ -600,7 +701,7 @@
    {
     "name": "mp4 decodable",
     "ok": true,
-    "detail": "723.400s"
+    "detail": "723.413s"
    },
    {
     "name": "video stream",
@@ -630,12 +731,12 @@
    {
     "name": "duration in range",
     "ok": true,
-    "detail": "723.40s in [722.4,724.4]"
+    "detail": "723.41s in [722.4,724.4]"
    },
    {
     "name": "duration matches timeline",
     "ok": true,
-    "detail": "723.400s vs 723.400s (21702 frames)"
+    "detail": "723.413s vs 723.400s (21702 frames)"
    },
    {
     "name": "audio stream",
@@ -650,12 +751,12 @@
    {
     "name": "audio length matches video",
     "ok": true,
-    "detail": "0.000s apart"
+    "detail": "0.013s apart"
    },
    {
     "name": "no clipping",
     "ok": true,
-    "detail": "peak -1.4 dB, mean -19.5 dB"
+    "detail": "peak -1 dB, mean -19.4 dB"
    },
    {
     "name": "no long silence",
@@ -721,6 +822,36 @@
     "name": "assets and kinds supported",
     "ok": true,
     "detail": "30 kinds"
+   },
+   {
+    "name": "music cues resolve",
+    "ok": true,
+    "detail": "7 cues over 1 compositions"
+   },
+   {
+    "name": "soundtrack mixed",
+    "ok": true,
+    "detail": "7 cues, 2026-10-18T07:11:53.574Z"
+   },
+   {
+    "name": "mix is of this cue sheet",
+    "ok": true,
+    "detail": "mix f427211ed6, cue sheet f427211ed6"
+   },
+   {
+    "name": "every cue sounded",
+    "ok": true,
+    "detail": "7 cues audible where placed"
+   },
+   {
+    "name": "music under the voice",
+    "ok": true,
+    "detail": "-20.1 dB relative to speech (want -40 to -10)"
+   },
+   {
+    "name": "mix under the ceiling",
+    "ok": true,
+    "detail": "peak -1 dB, ceiling -1 dB"
    },
    {
     "name": "scene boundaries follow measured audio",
@@ -928,6 +1059,7 @@
   "word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early",
   "system fonts (Georgia, Segoe UI): renders on another machine may set type differently",
   "scene transitions are a short fade over the field; no cross-dissolve between scenes",
-  "automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision"
+  "automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision",
+  "music levels are measured, not heard: a person judges the balance and the continuity in the review pass"
  ]
 }

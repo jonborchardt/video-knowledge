@@ -54,6 +54,7 @@ export interface RenderConfig {
   cues: Record<string, Record<string, Cue>>; // scene id -> cue name -> narration word
   kinds?: Record<string, SceneKind>; // scene id -> bespoke renderer, where the storyboard category alone does not say
   options?: Record<string, SceneOptions>; // scene id -> layout choices for that renderer
+  chapters?: Record<string, string>; // scene id -> chapter title for the upload description; default: the script's sections
 }
 
 export interface TimelineWord {

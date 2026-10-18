@@ -186,10 +186,11 @@ npm run video -- qa <topic> <story-id>         # checks, frames in video/frames/
 npm run video -- preview <topic> <story-id>    # Remotion studio on the same composition and timeline
 ```
 
-Commit `render.json`, `narration.json`, `timeline.json` and the build report; the audio, chunks, frames, contact
-sheet and mp4 are ignored. The production board (`/production/`) reads the build report: a render of every
-storyboard scene that passes QA against the locked fingerprints is `rendered`; anything less is `video`. QA is
-integrity and consistency only; a person reviews the contact sheet and the video before any publication decision.
+Commit `render.json`, `narration.json`, `timeline.json`, `music.json`, `mix.json` and the build report; the audio,
+chunks, frames, contact sheet and mp4 are ignored. The production board (`/production/`) reads the build report: a
+render of every storyboard scene that passes QA against the locked fingerprints is `rendered`, with a soundtrack
+mixed in it is `scored`, with a current review package `packaged`; anything less is `video`. QA is integrity and
+consistency only; a person reviews the contact sheet and the video before any publication decision.
 Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
 only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
 gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without
@@ -200,6 +201,69 @@ approved script, package, validation and storyboard fingerprints in `release.jso
 
 Baseline: `mlm-script-v1` is the first locked package (`get-rich-quick/scripts/decision-mlm-and-seminars/release.json`);
 rendering work starts from it.
+
+### Soundtrack
+
+Music is a bed under the narration, placed by `video/music.json` (the cue sheet) over compositions in `music/`
+(`music/README.md` has the contract). A composition is one strudel-bench song; each of its sections is rendered on
+its own as a variation (`music/<composition>/<variation>.wav`, gitignored, with its sha, length, bar count and
+provenance in `composition.json`). A cue names a variation and two scene anchors, never seconds:
+
+```json
+{
+  "duck": { "db": -2.5, "attack": 0.4, "release": 1.2 },
+  "cues": [
+    {
+      "id": "opening",
+      "asset": "undertow/pulse",
+      "from": "sc02",
+      "to": "sc06",
+      "gain": -11,
+      "fadeIn": 3,
+      "fadeOut": 3
+    },
+    { "id": "conclusion", "asset": "undertow/rest", "from": "sc42", "to": "sc43", "gain": -10, "loop": false }
+  ]
+}
+```
+
+`from` is the measured start of its scene, `to` the measured end (`sc12:end-2`, `sc07+1.5` offset from an edge);
+scenes between cues are silent on purpose. `render` resolves the cues against the timeline, decodes the assets,
+loops them on the bar boundary with the variation's crossfade, fades, ducks under speech, sums them under the
+loudness-normalised narration, turns the music down (never the voice) if the sum would pass -1 dBFS, and writes
+`video/mix.json`. Nothing in the chunk cache knows about music, so a cue change re-mixes the audio in a couple of
+minutes and re-renders no scene. Only a full render mixes: `--scene` and `--from/--to` renders are narration only and
+leave `mix.json` alone. Levels in `mix.json` are as mixed, after any turning down. QA fails when the mix on disk is
+not the mix of the committed cue sheet, a cue did not sound, or the music is closer than 10 dB to the voice or
+further than 40 dB from it. The build report records
+each composition's generator commit, source sha, tempo, key, sample packs with their licences, attribution lines
+and whether it is cleared, separately from the narration voice's licence: `clearance.publishable` is true only when
+both hold, and a passing build never sets it. A re-import keeps a composition's clearance only while its sample
+packs and soundfonts are the same; a new sound source lapses it until a person imports with `--cleared` again.
+
+```
+npm run music -- import <id> --source <strudel-bench>/songs/<name>.strudel --repo <strudel-bench> <strudel-bench>/renders/<name>.*.wav
+npm run music -- render <id>        # STRUDEL_BENCH=<dir>, npm run headless running there: re-render every variation and import
+npm run music -- show <id>
+```
+
+### Private review package
+
+```
+npm run video -- package <topic> <story-id>
+```
+
+writes `video/review/`: the mp4 copied as `<slug>-review-private.mp4` (gitignored), `README.md`, `description.txt`
+(the paste-ready description: a review-build notice, chapters at measured timestamps from `render.json`'s
+`chapters` or the script's sections, the studies and sources, the voice and music provenance, the clearance line),
+`checklist.md` (opening, intelligibility, music balance and continuity, citations, charts, pacing, transitions,
+glitches, conclusion, local vs YouTube playback), the build report, a `thumbnail.png` from the title card, and
+`review.json` (which build report it was made from; the board calls it stale when that changes). It refuses an mp4
+other than the one QA checked (the build report records its sha), and chapters YouTube would ignore: fewer than
+three, one under 10 s, or a scene not in the timeline. Upload the mp4
+to YouTube as a **private** video by hand; there is no API call. Record the outcome in `production.json` with
+`decision: "reviewing"` and the URL. The package says in every file that it is a review build and whether public
+release is blocked; the Edge voice keeps it blocked until the video is re-narrated under commercial terms.
 
 ## Production board
 
@@ -224,8 +288,39 @@ The one hand-written input is `production.json` at the repo root, for decisions 
 }
 ```
 
-`decision` is `queued` (produce this next), `parked` (with the reason) or `published` (with `url`). Keys must name a
-story in that topic's `stories.json`; the build fails otherwise.
+`decision` is `queued` (produce this next), `parked` (with the reason), `reviewing` (uploaded privately for human
+review, with `url`) or `published` (with `url`). Keys must name a story in that topic's `stories.json`; the build
+fails otherwise. The board keeps three things apart: technical readiness (the stage, from the artifacts), editorial
+approval (`reviewing` and `published`, from this file) and licensing clearance (from the build report: the voice's
+licence and each composition's `cleared`), so a card can be `packaged` and still say "public release blocked".
+
+## Reproducing the MLM video
+
+A fresh checkout plus these makes `get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4` again:
+
+- **Node 22+** (`npm ci`); Remotion downloads Chrome on the first render. The ffmpeg and ffprobe used everywhere
+  are the ones in Remotion's compositor package; `FFMPEG_DIR` overrides the directory.
+- **Python 3 with `pip install edge-tts`** for the draft voice (`VK_PYTHON` names the interpreter, default
+  `python`). `VK_TTS_PROVIDER=openai` with `OPENAI_API_KEY` switches to the commercial voice; nothing needs it.
+- **The music assets**: `music/undertow/*.wav` are not committed. Either copy `music/undertow/source.strudel` into a
+  strudel-bench checkout as `songs/undertow.strudel`, run `npm run headless -- songs/undertow.strudel` there, and
+  `STRUDEL_BENCH=<dir> npm run music -- render undertow` here; or delete `video/music.json` to build without music.
+  The watcher checkout (`../retire-sim/watcher`) is not needed for any video step.
+
+```
+npm run video -- narrate get-rich-quick decision:mlm-and-seminars     # cached per sentence; --regenerate to redo
+npm run video -- timeline get-rich-quick decision:mlm-and-seminars
+npm run video -- render get-rich-quick decision:mlm-and-seminars [--scene sc17 | --from sc10 --to sc20] [--force]
+npm run video -- qa get-rich-quick decision:mlm-and-seminars
+npm run video -- spike get-rich-quick decision:mlm-and-seminars       # the four above
+npm run video -- package get-rich-quick decision:mlm-and-seminars     # video/review/
+npm run validate                                                      # typecheck, lint, format, build, tests
+```
+
+What invalidates what: a sentence's text, the voice or the rate regenerates that sentence's audio; a storyboard scene
+or the component that draws it re-renders that scene's chunk; anything in `music.json`, a variation's bytes or a
+scene's timing re-mixes the audio; nothing else touches the chunks. No step reads a file outside the repo except
+the strudel-bench checkout when regenerating music.
 
 ## Website
 

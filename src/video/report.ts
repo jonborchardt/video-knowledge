@@ -1,6 +1,7 @@
 // The build report: what was rendered from what, with what, and how the QA went. video/build-report.json and .md.
 // src/lib/production.ts reads segment.scenes, output, narration, fingerprints and qa from the JSON.
 import type { Probe } from './ffmpeg';
+import type { MixReport } from './music';
 import type { QaResult } from './qa';
 import type { Segment } from './select';
 import type { NarrationManifest, Timeline } from './types';
@@ -14,6 +15,7 @@ export interface BuildReport {
   segment: { scenes: string[]; sentences: string[]; kinds: Record<string, string>; storyboardScenes: number };
   output: {
     file: string;
+    sha: string | null; // of the mp4 QA checked; the review package refuses any other file
     seconds: number;
     width: number;
     height: number;
@@ -35,6 +37,15 @@ export interface BuildReport {
     cost: string;
   };
   rendering: { architecture: string; seconds: number; frames: number; cost: string };
+  /** The soundtrack, when one was mixed: provenance per composition and the mix levels. Null: narration only. */
+  music: {
+    fingerprint: string;
+    compositions: MixReport['compositions'];
+    cues: { id: string; asset: string; start: number; end: number; gain: number; rmsDb: number }[];
+    levels: Pick<MixReport, 'peakDb' | 'musicPeakDb' | 'narrationPeakDb' | 'musicUnderSpeechDb' | 'musicScale'>;
+  } | null;
+  /** Technical completion is not clearance: both must hold before a public release. */
+  clearance: { narration: boolean; music: boolean | null; publishable: boolean; why: string[] };
   fingerprints: Timeline['fingerprints'];
   qa: { ok: boolean; checks: QaResult['checks']; frames: string[]; contactSheet: string | null };
   limitations: string[];
@@ -44,15 +55,23 @@ export function buildReport(
   seg: Segment,
   tl: Timeline,
   manifest: NarrationManifest,
-  out: { file: string; probe: Probe | null; renderSeconds: number },
+  out: { file: string; probe: Probe | null; sha?: string | null; renderSeconds: number },
   qa: QaResult,
   command: string,
   contactSheet: string | null = null,
+  mix: MixReport | null = null,
 ): BuildReport {
   const p = out.probe;
   const speech = manifest.sentences.reduce((n, s) => n + s.duration, 0);
   const words = seg.sentences.reduce((n, s) => n + s.text.split(/\s+/).length, 0);
   const publishable = /^commercial/.test(manifest.licence);
+  const musicCleared = mix ? mix.compositions.every((c) => c.licence.cleared) : null;
+  const why = [
+    ...(publishable ? [] : [`narration is ${manifest.licence}`]),
+    ...(mix?.compositions ?? [])
+      .filter((c) => !c.licence.cleared)
+      .map((c) => `music ${c.id} is not cleared${c.licence.notes ? `: ${c.licence.notes}` : ''}`),
+  ];
   return {
     topic: tl.topic,
     story: tl.story,
@@ -68,6 +87,7 @@ export function buildReport(
     output: p
       ? {
           file: out.file,
+          sha: out.sha ?? null,
           seconds: p.duration,
           width: p.video?.width ?? 0,
           height: p.video?.height ?? 0,
@@ -97,6 +117,28 @@ export function buildReport(
       frames: tl.durationInFrames,
       cost: '$0 (local CPU)',
     },
+    music: mix
+      ? {
+          fingerprint: mix.fingerprint,
+          compositions: mix.compositions,
+          cues: mix.cues.map((c) => ({
+            id: c.id,
+            asset: c.asset,
+            start: c.start,
+            end: c.end,
+            gain: c.gain,
+            rmsDb: c.rmsDb,
+          })),
+          levels: {
+            peakDb: mix.peakDb,
+            musicPeakDb: mix.musicPeakDb,
+            narrationPeakDb: mix.narrationPeakDb,
+            musicUnderSpeechDb: mix.musicUnderSpeechDb,
+            musicScale: mix.musicScale,
+          },
+        }
+      : null,
+    clearance: { narration: publishable, music: musicCleared, publishable: publishable && musicCleared !== false, why },
     fingerprints: tl.fingerprints,
     qa: { ok: qa.ok, checks: qa.checks, frames: qa.frames.map((f) => f.file), contactSheet },
     limitations: [
@@ -107,6 +149,9 @@ export function buildReport(
       'system fonts (Georgia, Segoe UI): renders on another machine may set type differently',
       'scene transitions are a short fade over the field; no cross-dissolve between scenes',
       'automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision',
+      mix
+        ? 'music levels are measured, not heard: a person judges the balance and the continuity in the review pass'
+        : 'no soundtrack: narration only',
       ...(seg.release ? [] : ['no release.json: the script and storyboard are validated but not locked']),
     ],
   };
@@ -136,7 +181,29 @@ export function renderReportMd(r: BuildReport): string {
     '',
     `**Architecture.** ${r.rendering.architecture}.`,
     '',
-    `**Fingerprints.** script ${r.fingerprints.script}, storyboard ${r.fingerprints.storyboard}, narration ${r.fingerprints.narration}, config ${r.fingerprints.config}.`,
+    ...(r.music
+      ? [
+          `**Soundtrack.** ${r.music.compositions
+            .map(
+              (c) =>
+                `${c.title} (${c.generator.name} ${c.generator.version}, ${c.source.file} ${c.source.sha}, ${c.source.bpm} bpm ${c.source.key}; ${c.licence.cleared ? 'cleared' : 'NOT cleared'}${c.licence.samples.length ? `; samples: ${c.licence.samples.map((s) => `${s.pack} ${s.licence}`).join(', ')}` : '; no samples'}${c.licence.attribution.length ? `; attribution: ${c.licence.attribution.join(' / ')}` : ''})`,
+            )
+            .join(
+              '; ',
+            )}. Mix ${r.music.fingerprint}: music ${r.music.levels.musicUnderSpeechDb} dB under the voice while it speaks, peak ${r.music.levels.peakDb} dB${r.music.levels.musicScale < 1 ? ` (music scaled x${r.music.levels.musicScale})` : ''}.`,
+          '',
+          '| Cue | Asset | From | To | Gain | Level |',
+          '|---|---|---|---|---|---|',
+          ...r.music.cues.map(
+            (c) =>
+              `| ${c.id} | ${c.asset} | ${c.start.toFixed(1)}s | ${c.end.toFixed(1)}s | ${c.gain} dB | ${c.rmsDb.toFixed(1)} dB |`,
+          ),
+          '',
+        ]
+      : ['**Soundtrack.** none (narration only).', '']),
+    `**Clearance.** ${r.clearance.publishable ? 'Narration and music are both cleared for publication.' : `**Not cleared for public release:** ${r.clearance.why.join('; ')}.`} A passing build is technical completion only; a person approves the release.`,
+    '',
+    `**Fingerprints.** script ${r.fingerprints.script}, storyboard ${r.fingerprints.storyboard}, narration ${r.fingerprints.narration}, config ${r.fingerprints.config}${r.music ? `, music ${r.music.fingerprint}` : ''}.`,
     '',
     `## QA: ${r.qa.ok ? 'passed' : 'FAILED'} (${r.qa.checks.filter((c) => c.ok).length} of ${r.qa.checks.length})`,
     '',

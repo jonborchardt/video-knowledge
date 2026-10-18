@@ -24,7 +24,7 @@ describe('production board', () => {
     expect(names.slice(0, 6)).toEqual(['evidence package', 'script', 'validation', 'review', 'storyboard', 'release']);
     const locked = prod.checks.find((c) => c.name === 'release')!.health === 'done';
     if (locked) {
-      expect(['locked', 'video', 'rendered']).toContain(prod.stage);
+      expect(['locked', 'video', 'rendered', 'scored', 'packaged']).toContain(prod.stage);
       expect(names.includes('video')).toBe(prod.stage !== 'locked' || prod.checks.some((c) => c.name === 'video'));
       expect(prod.blockers).toEqual([]);
       expect(prod.versions.some((v) => v.locked)).toBe(true);

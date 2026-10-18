@@ -11,6 +11,7 @@ import { openBrowser, renderMedia, renderStill, selectComposition } from '@remot
 import { sha } from '../lib/script';
 import { narrationTrack, concatVideo, mux } from './ffmpeg';
 import { COMPONENT_FILE } from './kinds';
+import { type MixReport, type MusicConfig, type ResolvedCue, mixSoundtrack } from './music';
 import { COMPOSITION, CONTACT } from './remotion/Root';
 import type { NarrationManifest, Timeline, TimelineScene } from './types';
 
@@ -117,7 +118,15 @@ export async function renderScenes(
   return out;
 }
 
-/** Concatenate the chunks of a contiguous run of scenes and lay the narration under them; writes `out`. */
+/** The soundtrack to mix under the narration: the cue sheet and its cues resolved against the timeline. */
+export interface Soundtrack {
+  config: MusicConfig;
+  cues: ResolvedCue[];
+}
+
+/** Concatenate the chunks of a contiguous run of scenes and lay the narration under them, with the soundtrack mixed
+ *  in when one is given (the caller passes it for a full render only); writes `out` and, with music, video/mix.json.
+ *  Returns the mix report (null without music). */
 export function assemble(
   tl: Timeline,
   manifest: NarrationManifest,
@@ -125,7 +134,8 @@ export function assemble(
   publicDir: string,
   out: string,
   loudnorm = true,
-) {
+  music: Soundtrack | null = null,
+): MixReport | null {
   if (!chunks.length) throw new Error('nothing to assemble');
   for (let i = 1; i < chunks.length; i++)
     if (chunks[i].scene.start !== chunks[i - 1].scene.start + chunks[i - 1].scene.duration)
@@ -145,16 +155,22 @@ export function assemble(
   });
   const video = out + '.video.mp4';
   const audio = out + '.audio.m4a';
+  const mixed = out + '.mix.m4a';
+  let report: MixReport | null = null;
   try {
     concatVideo(
       chunks.map((c) => c.file),
       video,
     );
     narrationTrack(slots, audio, loudnorm);
-    mux(video, audio, out);
+    if (music) {
+      report = mixSoundtrack(audio, music.config, music.cues, tl, [first / tl.fps, end / tl.fps], mixed, publicDir);
+      mux(video, mixed, out);
+    } else mux(video, audio, out);
   } finally {
-    for (const f of [video, audio]) if (existsSync(f)) unlinkSync(f);
+    for (const f of [video, audio, mixed]) if (existsSync(f)) unlinkSync(f);
   }
+  return report;
 }
 
 /** A contact sheet of inspection frames (paths relative to publicDir), one PNG. */
