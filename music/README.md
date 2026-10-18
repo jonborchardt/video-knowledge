@@ -55,11 +55,22 @@ npm run music -- render <id> [--port 3000]     # STRUDEL_BENCH=<dir> with `npm r
 npm run music -- show <id>
 ```
 
-`render` needs the song in strudel-bench's `songs/`; until a composition is adopted there, copy
-`music/<id>/source.strudel` to `<strudel-bench>/songs/<name>.strudel` first (the manifest records the sha either way).
+`render` needs the song in a temporary strudel-bench checkout's `songs/`: copy `music/<id>/source.strudel` to
+`<strudel-bench>/songs/<name>.strudel` first (the manifest records the sha). Commit nothing in strudel-bench; how to
+write a new song there is in `scripts/briefs/strudel-bench.md`.
+
+## What a song must be
+
+From the listening pass on `undertow`; whoever writes the next song reads this with the strudel skill.
+
+- Keep the instrument, tone and speed of `undertow`: oscillators, a dark pad, a sine drone and tick, 84 bpm.
+- Leave no silent stretches in the video: the cue sheet covers every scene, first to last.
+- No melody or lead line, nothing vocal-sounding, and no build-up or climax.
+- The music is a background bed with no story of its own.
+- Listen to it before it goes into a video.
 
 ## undertow
 
 The first composition, for the MLM video: D minor, 84 bpm, every voice an oscillator, five sections (`pulse`,
-`active`, `texture`, `motif`, `rest`). See `scripts/briefs/strudel-bench.md` for the handoff that asks strudel-bench
-to adopt and improve it.
+`active`, `texture`, `motif`, `rest`). The video uses only `pulse`, `active` and `texture`: `motif` and `rest` carry a
+lead line, which the rules above now rule out.

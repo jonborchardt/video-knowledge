@@ -4,7 +4,7 @@ Upload `decision-mlm-and-seminars-review-private.mp4` to YouTube as a **private*
 
 - Working title: [PRIVATE REVIEW] How Much Money Do MLM Participants Actually Make?
 - Duration: 12:03 (723.4s), 1920x1080 @ 30 fps
-- MP4 sha: 03c1e5ad75; build report b68a5385df; QA 36/36
+- MP4 sha: 7ee2856f14; build report 8659ce50f3; QA 36/36
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card)
 
@@ -24,7 +24,7 @@ Upload `decision-mlm-and-seminars-review-private.mp4` to YouTube as a **private*
 
 - Narration: edge / en-US-AndrewMultilingualNeural (rate -10%), 699.43s of speech, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only.**
 - Music: Undertow (undertow), strudel-bench f63f2c5 (songs/undertow.strudel not yet committed) at https://github.com/jonborchardt/strudel-bench, source songs/undertow.strudel c7fbeafb07, 84 bpm D:minor. Cleared; no samples. original composition; every voice is a built-in oscillator or synth patch, no sample pack and no soundfont, so no third-party sound is in the render.
-- Mix: 7 cues, music -20.1 dB under the voice while it speaks, peak -1 dB.
+- Mix: 4 cues, music -19.6 dB under the voice while it speaks, peak -1.2 dB.
 - Clearance: narration no, music yes. Not cleared for public release.
 
 ## After the review
