@@ -2,11 +2,11 @@
 // contract (anchors, cue sheet validation against the compositions on disk, fingerprints), the mix under a narration
 // track end to end (synthetic WAVs, no TTS, no strudel-bench), what it does not touch (the chunk cache), the report's
 // clearance and the production board's reading of it. The MLM cue sheet is checked against its committed timeline.
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson, sha } from '../src/lib/io';
+import { fileSha, readJson, sha, toJson } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
 import {
   CHANNELS,
@@ -35,11 +35,23 @@ import {
 } from '../src/video/music';
 import { MUSIC_TOLERANCE } from '../src/video/qa';
 import { sceneKey } from '../src/video/render';
-import { buildReport } from '../src/video/report';
-import { checkSegment } from '../src/video/select';
+import { type BuildReport, buildReport } from '../src/video/report';
+import { checkSegment, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import type { Timeline } from '../src/video/types';
-import { chapters } from '../src/video/package';
+import {
+  REVIEW_DIR,
+  REVIEW_FILES,
+  type ReviewPackage,
+  chapters,
+  renderChecklist,
+  renderDescription,
+  renderReadme,
+  reviewData,
+  reviewInputProblem,
+  reviewMp4Name,
+  thumbnailScene,
+} from '../src/video/package';
 import { inputs, manifest } from './video-helpers';
 
 describe('review package chapters', () => {
@@ -556,5 +568,30 @@ describe('the MLM soundtrack', () => {
     expect(cues[0].start).toBeGreaterThan(0); // the storyboard opens cold: no music under sc01
     const mix = readJson<MixReport>(join(dir, MIX_FILE));
     if (mix) expect(mix.compositions.every((c) => c.licence.cleared)).toBe(true);
+  });
+});
+
+describe('the MLM review package', () => {
+  it('regenerates byte-for-byte from the committed build report, timeline and segment', () => {
+    const vdir = join('get-rich-quick', 'scripts', 'decision-mlm-and-seminars', 'video');
+    const rdir = join(vdir, REVIEW_DIR);
+    const committed = readJson<ReviewPackage>(join(rdir, REVIEW_FILES.json))!;
+    const report = readJson<BuildReport>(join(vdir, 'build-report.json'))!;
+    const tl = readJson<Timeline>(join(vdir, 'timeline.json'))!;
+    const seg = loadSegment('get-rich-quick', 'decision:mlm-and-seminars');
+    expect(reviewInputProblem(report, committed.mp4Sha)).toBeNull();
+    expect(reviewInputProblem(report, 'other')).toMatch(/not the file QA checked/);
+    const pkg = reviewData(seg, tl, report, {
+      mp4: reviewMp4Name(vdir),
+      mp4Sha: committed.mp4Sha,
+      buildReport: fileSha(join(vdir, 'build-report.json')),
+      thumbnail: !!thumbnailScene(tl),
+      generatedAt: committed.generatedAt,
+    });
+    const text = (f: string) => readFileSync(join(rdir, f), 'utf8').replace(/\r\n/g, '\n');
+    expect(toJson(pkg)).toBe(text(REVIEW_FILES.json));
+    expect(renderReadme(pkg, tl, report)).toBe(text(REVIEW_FILES.readme));
+    expect(renderDescription(pkg, seg, tl, report)).toBe(text(REVIEW_FILES.description));
+    expect(renderChecklist(pkg, tl)).toBe(text(REVIEW_FILES.checklist));
   });
 });
