@@ -164,10 +164,37 @@ const stripOf = (r: StoryRow & { topic: { name: string } }) => {
                   : href(`/${r.topic.name}/stories/`);
                 return (
                   <article class="grid gap-1.5 rounded-md border bg-card p-2 text-card-foreground">
-                    <div class="eyebrow text-muted-foreground">{r.topic.label}</div>
+                    <div class="flex items-baseline justify-between gap-2">
+                      <span class="eyebrow text-muted-foreground">{r.topic.label}</span>
+                      <span
+                        class="font-mono text-sm font-semibold tabular-nums"
+                        title={`overall ${r.story.scores.overall}: ${r.story.scores.explanation}`}
+                      >
+                        {r.story.scores.overall.toFixed(2)}
+                      </span>
+                    </div>
                     <a class="text-sm leading-snug font-medium text-primary" href={target}>
                       {r.story.title}
                     </a>
+                    <dl
+                      class="grid grid-cols-[auto_1fr_auto] items-center gap-x-1.5 gap-y-0.5 text-[11px] text-muted-foreground"
+                      title={r.story.scores.explanation}
+                    >
+                      {(
+                        [
+                          ['editorial', r.story.scores.editorial],
+                          ['evidence', r.story.scores.evidence],
+                        ] as const
+                      ).map(([k, v]) => (
+                        <>
+                          <dt class="w-14">{k}</dt>
+                          <dd class="h-1 rounded-xs bg-border">
+                            <div class="h-full rounded-xs bg-primary" style={`width:${Math.round(v * 100)}%`} />
+                          </dd>
+                          <dd class="font-mono tabular-nums">{v.toFixed(2)}</dd>
+                        </>
+                      ))}
+                    </dl>
                     <div class="flex flex-wrap items-center gap-1">
                       <span class:list={[badge, HEALTH[h].colour]}>
                         {r.production ? `${HEALTH[h].label} · r${r.production.versions.length || '0'}` : r.story.format}
