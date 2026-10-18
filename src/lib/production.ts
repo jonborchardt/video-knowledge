@@ -28,6 +28,7 @@ import {
 import { discover, loadStories, storiesPath, toJson as storiesJson, type Story } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
+import type { BuildReport } from '../video/report';
 
 export type Health = 'done' | 'current' | 'stale' | 'blocked' | 'missing' | 'pending';
 export interface Check {
@@ -40,11 +41,12 @@ export interface Check {
 
 /** A person's decision about a story that no artifact records. Keyed `<topic>/<story-id>` in production.json. */
 export interface Decision {
-  decision: 'queued' | 'parked' | 'published';
+  decision: 'queued' | 'parked' | 'reviewing' | 'published';
   note: string;
   date: string; // ISO date
-  url?: string; // the published video, when decision is published
+  url?: string; // the private review upload (reviewing) or the published video (published)
 }
+export const DECISIONS = ['queued', 'parked', 'reviewing', 'published'] as const;
 export const DECISIONS_FILE = 'production.json';
 export function loadDecisions(root = process.cwd()): Record<string, Decision> {
   return readJson<Record<string, Decision>>(join(root, DECISIONS_FILE)) ?? {};
@@ -59,7 +61,9 @@ export type ProductionStage =
   | 'lock'
   | 'locked' // release.json, no render yet
   | 'video' // a segment rendered (partial, stale or failing QA)
-  | 'rendered'; // every storyboard scene rendered against the locked fingerprints and QA passed
+  | 'rendered' // every storyboard scene rendered against the locked fingerprints and QA passed; no soundtrack yet
+  | 'scored' // the soundtrack mixed in and QA passed; no review package yet
+  | 'packaged'; // video/review/ made from this build: upload it privately and review it
 export const PRODUCTION_STAGES: ProductionStage[] = [
   'package',
   'script',
@@ -70,17 +74,14 @@ export const PRODUCTION_STAGES: ProductionStage[] = [
   'locked',
   'video',
   'rendered',
+  'scored',
+  'packaged',
 ];
-/** The slice of video/build-report.json the board reads (written by npm run video; names in src/video/select.ts). */
-interface BuildReport {
-  generatedAt: string;
-  segment: { scenes: string[] };
-  output: { file: string; seconds: number } | null;
-  narration: { provider: string; voice: string; publishable?: boolean };
-  fingerprints: { script: string; storyboard: string };
-  qa: { ok: boolean; checks: { name: string; ok: boolean; detail: string }[] };
-}
 const VIDEO_REPORT = 'video/build-report.json';
+const REVIEW_PACKAGE = 'video/review/review.json';
+/** Technical readiness, editorial approval and licensing clearance are three different things; the board keeps the
+ *  third here, read from the build report, so a card can be fully rendered and still say "release blocked". */
+export type Clearance = BuildReport['clearance'];
 export interface Version {
   revision: number;
   date: string;
@@ -103,6 +104,7 @@ export interface Production {
   versions: Version[];
   fingerprints: { script: string | null; package: string | null; validation: string | null; storyboard: string | null };
   model: string | null;
+  clearance: Clearance | null; // from the build report, once there is one
 }
 
 export interface StoryRow {
@@ -365,7 +367,9 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
 
   // 7. Video: the committed build report must come from the locked script and storyboard and pass its QA.
   const vr = readJson<BuildReport>(p(VIDEO_REPORT));
+  let clearance: Clearance | null = null;
   if (vr && release) {
+    clearance = vr.clearance;
     const total = sb?.scenes.length ?? 0;
     const bound =
       vr.fingerprints.script === release.fingerprints.script &&
@@ -373,7 +377,7 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
     const failed = vr.qa.checks.filter((c) => !c.ok);
     const full = total > 0 && vr.segment.scenes.length >= total;
     const draft = vr.narration.publishable === false; // the voice's terms do not cover a published video
-    const health: Health = !bound ? 'stale' : !vr.qa.ok ? 'blocked' : full && !draft ? 'done' : 'pending';
+    const health: Health = !bound ? 'stale' : !vr.qa.ok ? 'blocked' : full ? 'done' : 'pending';
     checks.push({
       name: 'video',
       health,
@@ -390,11 +394,42 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
         next = `extend video/render.json past ${vr.segment.scenes.at(-1)} (${total - vr.segment.scenes.length} scenes left), then ${cmd}`;
       } else {
         stage = 'rendered';
-        next = draft
-          ? `review the video, then re-narrate with a commercial voice (VK_TTS_PROVIDER=openai) and ${cmd}`
-          : 'review the video, publish, then record it in production.json';
+        next = `write video/music.json (cues over music/<composition>/ assets), then npm run video -- render ${topic} ${storyId} and qa`;
       }
     }
+    // 8. Soundtrack: mixed into this build (the QA already checked the mix is of the committed cue sheet).
+    if (vr.music) {
+      checks.push({
+        name: 'soundtrack',
+        health: vr.music.cleared ? 'done' : 'pending',
+        detail: `${vr.music.compositions.map((c) => c.title).join(', ')}${vr.music.cleared ? '' : ' (not cleared for publication)'}`,
+        file: r('video/mix.json'),
+        date: vr.generatedAt,
+      });
+      if (stage === 'rendered') {
+        stage = 'scored';
+        next = `npm run video -- package ${topic} ${storyId}`;
+      }
+    }
+    // 9. Review package: made from this very build report.
+    const rp = readJson<{ generatedAt: string; buildReport: string; mp4: string }>(p(REVIEW_PACKAGE));
+    const reportSha = fileSha(p(VIDEO_REPORT));
+    if (rp) {
+      const current = rp.buildReport === reportSha;
+      checks.push({
+        name: 'review package',
+        health: current ? 'done' : 'stale',
+        detail: current ? `video/review/${rp.mp4}, private review build` : 'made from an earlier build; package again',
+        file: r(REVIEW_PACKAGE),
+        date: rp.generatedAt,
+      });
+      if (stage === 'scored' && current) {
+        stage = 'packaged';
+        next = `upload video/review/${rp.mp4} to YouTube as a private video, review it with video/review/checklist.md, then record {"decision": "reviewing", "url": ...} in production.json`;
+      }
+    }
+    if (!clearance.publishable && (stage === 'scored' || stage === 'packaged'))
+      next += `; public release is blocked: ${clearance.why.join('; ')}`;
   }
 
   const versions: Version[] = (v?.history ?? []).map((h) => ({
@@ -403,7 +438,7 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
     locked: release?.revision === h.revision,
   }));
   const health: Health =
-    stage === 'rendered' || stage === 'locked'
+    stage === 'rendered' || stage === 'scored' || stage === 'packaged' || stage === 'locked'
       ? 'done'
       : worst(checks.filter((c) => c.health !== 'missing')) === 'current' && blockers.length === 0
         ? 'current'
@@ -419,6 +454,7 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
     blockers,
     checks,
     versions,
+    clearance,
     fingerprints: {
       script: v?.scriptFingerprint ?? null,
       package: pkg?.fingerprint ?? null,
@@ -512,6 +548,12 @@ export function topicBoard(name: string, root = process.cwd(), decisions = loadD
       let n: string;
       if (decision?.decision === 'published') n = `published${decision.url ? `: ${decision.url}` : ''}`;
       else if (decision?.decision === 'parked') n = `parked: ${decision.note}`;
+      else if (decision?.decision === 'reviewing')
+        n = `human review pending${decision.url ? ` at ${decision.url}` : ''}: ${decision.note}${
+          production?.clearance && !production.clearance.publishable
+            ? `; public release blocked: ${production.clearance.why.join('; ')}`
+            : ''
+        }`;
       else if (production) n = production.next;
       else if (story.readiness === 'ready') n = `npm run script -- package ${name} ${story.id}`;
       else if (story.readiness === 'needs-review')
@@ -521,7 +563,10 @@ export function topicBoard(name: string, root = process.cwd(), decisions = loadD
     }
     const queued = stories.find((s) => s.decision?.decision === 'queued');
     const active = stories.find(
-      (s) => s.production && !['locked', 'rendered'].includes(s.production.stage) && s.decision?.decision !== 'parked',
+      (s) =>
+        s.production &&
+        !['locked', 'rendered', 'scored', 'packaged'].includes(s.production.stage) &&
+        !['parked', 'reviewing'].includes(s.decision?.decision ?? ''),
     );
     const ready = stories.find((s) => !s.production && s.story.readiness === 'ready' && !s.decision);
     next =
@@ -549,6 +594,9 @@ export const COLUMNS = [
   'locked',
   'video',
   'rendered',
+  'scored',
+  'packaged',
+  'reviewing',
   'published',
   'parked',
 ] as const;
@@ -556,6 +604,7 @@ export type Column = (typeof COLUMNS)[number];
 export function columnOf(r: StoryRow): Column {
   if (r.decision?.decision === 'published') return 'published';
   if (r.decision?.decision === 'parked') return 'parked';
+  if (r.decision?.decision === 'reviewing') return 'reviewing';
   if (r.production) return r.production.stage === 'review' ? 'script-review' : r.production.stage;
   return r.story.readiness === 'rejected' ? 'parked' : r.story.readiness;
 }
@@ -563,8 +612,8 @@ export function columnOf(r: StoryRow): Column {
 export function board(root = process.cwd()): TopicBoard[] {
   const decisions = loadDecisions(root);
   for (const [k, d] of Object.entries(decisions)) {
-    if (!['queued', 'parked', 'published'].includes(d.decision) || typeof d.note !== 'string' || !d.date)
-      throw new Error(`${DECISIONS_FILE}: ${k} needs decision (queued|parked|published), note and date`);
+    if (!DECISIONS.includes(d.decision) || typeof d.note !== 'string' || !d.date)
+      throw new Error(`${DECISIONS_FILE}: ${k} needs decision (${DECISIONS.join('|')}), note and date`);
   }
   return topicNames().map((n) => topicBoard(n, root, decisions));
 }

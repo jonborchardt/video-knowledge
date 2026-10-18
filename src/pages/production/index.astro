@@ -40,7 +40,14 @@ const COLUMN: Record<Column, { label: string; help: string; colour: string }> = 
   lock: { label: 'Lock', help: 'passed and ok; sign off', colour: '' },
   locked: { label: 'Locked', help: 'release.json; nothing rendered yet', colour: 'text-success' },
   video: { label: 'Video', help: 'a segment rendered; more scenes to go', colour: '' },
-  rendered: { label: 'Rendered', help: 'every scene rendered, QA passed', colour: 'text-success' },
+  rendered: { label: 'Rendered', help: 'every scene rendered, QA passed; no soundtrack', colour: '' },
+  scored: { label: 'Scored', help: 'soundtrack mixed, QA passed', colour: '' },
+  packaged: { label: 'Packaged', help: 'private review package made from this build', colour: 'text-success' },
+  reviewing: {
+    label: 'In review',
+    help: 'uploaded privately; a person is reviewing (production.json)',
+    colour: 'text-warning',
+  },
   published: { label: 'Published', help: 'production.json', colour: 'text-success' },
   parked: { label: 'Parked', help: 'production.json', colour: 'text-muted-foreground' },
 };
@@ -54,10 +61,10 @@ const chip = (c: Check) => `${c.name}: ${c.health}`;
 const cardHealth = (r: StoryRow): Health =>
   r.production ? r.production.health : r.story.readiness === 'ready' ? 'current' : 'pending';
 // Every stage a card has passed, from readiness through lock: what ran, and what is still to come.
-const STRIP = COLUMNS.filter((c) => !['parked', 'published'].includes(c));
+const STRIP = COLUMNS.filter((c) => !['parked', 'reviewing', 'published'].includes(c));
 const stripOf = (r: StoryRow & { topic: { name: string } }) => {
   const col = columnOf(r);
-  const at = col === 'published' ? STRIP.length : STRIP.indexOf(col);
+  const at = col === 'published' || col === 'reviewing' ? STRIP.length : STRIP.indexOf(col);
   return STRIP.map((s, i) => ({ s, state: i < at ? 'done' : i === at ? 'current' : 'todo' }));
 };
 ---
