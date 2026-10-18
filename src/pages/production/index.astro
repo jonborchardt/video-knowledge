@@ -1,0 +1,335 @@
+---
+// The production board: a kanban of every story across topics, a column per lifecycle stage, each card placed by the
+// stage its committed artifacts derive to (src/lib/production.ts). Above it, each topic's research pipeline; below,
+// artifact-by-artifact inspection of every script directory. Static, no client script.
+import Base from '../../layouts/Base.astro';
+import { site } from '../../config/site';
+import {
+  board,
+  type Check,
+  type Column,
+  COLUMNS,
+  columnOf,
+  type Health,
+  PRODUCTION_STAGES,
+  type StoryRow,
+} from '../../lib/production';
+import { href } from '../../lib/url';
+
+const topics = board();
+const rows = topics.flatMap((t) => t.stories.map((s) => ({ ...s, topic: t.topic })));
+const productions = rows.filter((s) => s.production);
+const columns = COLUMNS.map((c) => ({ c, cards: rows.filter((r) => columnOf(r) === c) }));
+const HEALTH: Record<Health, { label: string; colour: string }> = {
+  done: { label: 'done', colour: 'text-success' },
+  current: { label: 'current', colour: 'text-success' },
+  pending: { label: 'pending', colour: 'text-warning' },
+  stale: { label: 'stale', colour: 'text-warning' },
+  blocked: { label: 'blocked', colour: 'text-destructive' },
+  missing: { label: 'missing', colour: 'text-muted-foreground' },
+};
+const COLUMN: Record<Column, { label: string; help: string; colour: string }> = {
+  'needs-research': { label: 'Needs research', help: 'essential evidence missing', colour: 'text-primary' },
+  'needs-review': { label: 'Needs review', help: 'a person settles the listed points', colour: 'text-warning' },
+  ready: { label: 'Ready', help: 'evidence gate passed; no script yet', colour: 'text-success' },
+  package: { label: 'Package', help: 'build the evidence package', colour: '' },
+  script: { label: 'Script', help: 'writer agent (scripts/briefs/script.md)', colour: '' },
+  validate: { label: 'Validate', help: 'deterministic gate', colour: '' },
+  'script-review': { label: 'Review', help: 'independent reviewer agent', colour: '' },
+  storyboard: { label: 'Storyboard', help: 'storyboard agent, then fill and check', colour: '' },
+  lock: { label: 'Lock', help: 'passed and ok; sign off', colour: '' },
+  locked: { label: 'Locked', help: 'release.json; nothing rendered yet', colour: 'text-success' },
+  video: { label: 'Video', help: 'a segment rendered; more scenes to go', colour: '' },
+  rendered: { label: 'Rendered', help: 'every scene rendered, QA passed', colour: 'text-success' },
+  published: { label: 'Published', help: 'production.json', colour: 'text-success' },
+  parked: { label: 'Parked', help: 'production.json', colour: 'text-muted-foreground' },
+};
+const badge =
+  'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase';
+const small = 'text-sm text-muted-foreground';
+const mono = 'font-mono text-xs [overflow-wrap:anywhere]';
+const blob = (file: string) => `${site.repo}/blob/main/${file}`;
+const day = (iso?: string) => (iso ? iso.slice(0, 10) : '');
+const chip = (c: Check) => `${c.name}: ${c.health}`;
+const cardHealth = (r: StoryRow): Health =>
+  r.production ? r.production.health : r.story.readiness === 'ready' ? 'current' : 'pending';
+// Every stage a card has passed, from readiness through lock: what ran, and what is still to come.
+const STRIP = COLUMNS.filter((c) => !['parked', 'published'].includes(c));
+const stripOf = (r: StoryRow & { topic: { name: string } }) => {
+  const col = columnOf(r);
+  const at = col === 'published' ? STRIP.length : STRIP.indexOf(col);
+  return STRIP.map((s, i) => ({ s, state: i < at ? 'done' : i === at ? 'current' : 'todo' }));
+};
+---
+
+<Base
+  title="Production board"
+  description="What stage every topic, story and script is in, derived from the committed artifacts."
+>
+  <header>
+    <div class="eyebrow text-muted-foreground">Production</div>
+    <h1 class="mt-1 text-display font-semibold">Topic → story → script</h1>
+    <p class="mt-3 max-w-prose text-muted-foreground">
+      Every card is placed by its committed artifacts: readiness from <code>stories.json</code>, then the first script
+      stage whose file is missing or not current (re-running the library on today's inputs must reproduce the file, the
+      test <code>lock</code> applies). <em>Stale</em> means it would not; <em>pending</em> an agent step is owed;
+      <em>blocked</em> the gate says so. The strip on each card is what has run (filled) and what is still to come. Only <code
+        >production.json</code
+      > is hand-written (queued, parked, published), because no artifact records those.
+    </p>
+  </header>
+
+  <section class="grid gap-3">
+    <h2 class="text-featured font-semibold">Research pipeline</h2>
+    {
+      topics.map(({ topic: t, checks, stories, rejected, next }) => (
+        <div class="grid gap-2 rounded-lg border bg-card p-3 text-card-foreground sm:grid-cols-[14rem_1fr]">
+          <div>
+            <a class="font-semibold text-primary" href={href(`/${t.name}/`)}>
+              {t.label}
+            </a>
+            <p class={small}>
+              {t.counted} sources · {t.claims.length} claims · {t.studies} studies · {stories.length} stories ·{' '}
+              {rejected} rejected
+            </p>
+          </div>
+          <div class="grid gap-2">
+            <ul class="flex flex-wrap gap-2" aria-label="Research pipeline">
+              {checks.map((c) => (
+                <li>
+                  <details>
+                    <summary
+                      class:list={[
+                        badge,
+                        HEALTH[c.health].colour,
+                        'cursor-pointer list-none [&::-webkit-details-marker]:hidden',
+                      ]}
+                      title={c.detail}
+                    >
+                      {chip(c)}
+                    </summary>
+                    <p class="mt-1 max-w-prose text-sm">
+                      {c.detail}
+                      {c.file && (
+                        <>
+                          {' '}
+                          <a class={mono} href={blob(c.file)}>
+                            {c.file}
+                          </a>
+                        </>
+                      )}
+                    </p>
+                  </details>
+                </li>
+              ))}
+            </ul>
+            <p class="text-sm">
+              <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{next}</code>
+            </p>
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  <section class="grid gap-3">
+    <h2 class="text-featured font-semibold">Stories</h2>
+    <div class="mx-[calc(50%-50vw+1rem)] overflow-x-auto pb-3">
+      <ol class="flex gap-3" aria-label="Kanban">
+        {
+          columns.map(({ c, cards }) => (
+            <li
+              class:list={[
+                'flex flex-none flex-col gap-2 rounded-lg bg-muted/60 p-2',
+                cards.length ? 'w-56' : 'w-9 items-center',
+              ]}
+              data-column={c}
+            >
+              <h3
+                class:list={[
+                  'flex items-baseline justify-between px-1 text-sm font-semibold',
+                  !cards.length && 'py-1 [writing-mode:vertical-rl]',
+                ]}
+              >
+                <span class:list={[COLUMN[c].colour]} title={COLUMN[c].help}>
+                  {COLUMN[c].label}
+                </span>
+                {cards.length > 0 && <span class="font-mono text-xs text-muted-foreground">{cards.length}</span>}
+              </h3>
+              {cards.length > 0 && <p class="px-1 text-xs text-muted-foreground">{COLUMN[c].help}</p>}
+              {cards.map((r) => {
+                const h = cardHealth(r);
+                const target = r.production
+                  ? `#${r.topic.name}-${r.production.slug}`
+                  : href(`/${r.topic.name}/stories/`);
+                return (
+                  <article class="grid gap-1.5 rounded-md border bg-card p-2 text-card-foreground">
+                    <div class="eyebrow text-muted-foreground">{r.topic.label}</div>
+                    <a class="text-sm leading-snug font-medium text-primary" href={target}>
+                      {r.story.title}
+                    </a>
+                    <div class="flex flex-wrap items-center gap-1">
+                      <span class:list={[badge, HEALTH[h].colour]}>
+                        {r.production ? `${HEALTH[h].label} · r${r.production.versions.length || '0'}` : r.story.format}
+                      </span>
+                      {r.decision && <span class={badge}>{r.decision.decision}</span>}
+                    </div>
+                    <ol class="flex gap-px" aria-label="Stages">
+                      {stripOf(r).map(({ s, state }) => (
+                        <li
+                          class:list={[
+                            'h-1.5 flex-1 rounded-xs',
+                            state === 'done' ? 'bg-success' : state === 'current' ? 'bg-warning' : 'bg-border',
+                          ]}
+                          title={`${COLUMN[s].label}: ${state}`}
+                        />
+                      ))}
+                    </ol>
+                    <p class:list={[mono, 'text-muted-foreground']}>
+                      {r.next.length > 110 ? r.next.slice(0, 110) + '…' : r.next}
+                    </p>
+                  </article>
+                );
+              })}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  {
+    productions.length > 0 && (
+      <section class="grid gap-6">
+        <h2 class="text-featured font-semibold">Scripts: artifact inspection</h2>
+        {productions.map(({ production: p }) => (
+          <article id={`${p!.topic}-${p!.slug}`} class="grid gap-3 rounded-lg border bg-card p-4 text-card-foreground">
+            <div class="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <div class="eyebrow text-muted-foreground">
+                  {p!.topic} / {p!.story}
+                </div>
+                <h3 class="text-title font-semibold">
+                  <a class="text-primary" href={href(`/${p!.topic}/scripts/${p!.slug}/`)}>
+                    {p!.dir}
+                  </a>
+                </h3>
+                <p class={small}>
+                  {p!.model ?? 'no model recorded'} · script {p!.fingerprints.script ?? '—'} · package{' '}
+                  {p!.fingerprints.package ?? '—'}
+                </p>
+              </div>
+              <span class:list={[badge, HEALTH[p!.health].colour]}>
+                {p!.stage} · {HEALTH[p!.health].label}
+              </span>
+            </div>
+
+            <ol class="flex flex-wrap gap-1 text-xs" aria-label="Stages">
+              {PRODUCTION_STAGES.map((s, i) => {
+                const at = PRODUCTION_STAGES.indexOf(p!.stage);
+                return (
+                  <li
+                    class:list={[
+                      'rounded-sm border px-1.5 py-0.5 font-mono',
+                      i < at
+                        ? 'border-success text-success'
+                        : i === at
+                          ? 'border-current font-semibold'
+                          : 'text-muted-foreground',
+                    ]}
+                  >
+                    {s}
+                  </li>
+                );
+              })}
+            </ol>
+
+            <p class="text-sm">
+              <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{p!.next}</code>
+            </p>
+            {p!.blockers.length > 0 && (
+              <ul class="list-disc pl-5 text-sm text-warning">
+                {p!.blockers.map((b) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+            )}
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead class="text-left text-xs text-muted-foreground uppercase">
+                  <tr>
+                    <th class="py-1 pr-3 font-medium">Artifact</th>
+                    <th class="py-1 pr-3 font-medium">Health</th>
+                    <th class="py-1 pr-3 font-medium">Detail</th>
+                    <th class="py-1 font-medium">Date</th>
+                  </tr>
+                </thead>
+                <tbody class="align-top">
+                  {p!.checks.map((c) => (
+                    <tr class="border-t">
+                      <td class="py-1.5 pr-3 whitespace-nowrap">
+                        {c.file ? (
+                          <a class={mono} href={blob(c.file)}>
+                            {c.name}
+                          </a>
+                        ) : (
+                          <span class={mono}>{c.name}</span>
+                        )}
+                      </td>
+                      <td class="py-1.5 pr-3">
+                        <span class:list={[badge, HEALTH[c.health].colour]}>{HEALTH[c.health].label}</span>
+                      </td>
+                      <td class="py-1.5 pr-3">{c.detail}</td>
+                      <td class:list={['py-1.5 whitespace-nowrap', mono, 'text-muted-foreground']}>{day(c.date)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {p!.versions.length > 0 && (
+              <div>
+                <h4 class="mb-1 text-sm font-semibold">Revisions</h4>
+                <ol class="grid gap-1 text-sm">
+                  {p!.versions.map((v) => (
+                    <li class="flex flex-wrap items-center gap-2">
+                      <span class={mono}>r{v.revision}</span>
+                      <span class={[mono, 'text-muted-foreground'].join(' ')}>{day(v.date)}</span>
+                      <span
+                        class:list={[
+                          badge,
+                          v.status === 'passed'
+                            ? 'text-success'
+                            : v.status === 'blocked'
+                              ? 'text-destructive'
+                              : 'text-warning',
+                        ]}
+                      >
+                        {v.status}
+                      </span>
+                      <span class="text-muted-foreground">
+                        {v.blocking} blocking, {v.warnings} warnings
+                      </span>
+                      {v.reviewed && <span class={badge}>reviewed</span>}
+                      {v.locked && <span class:list={[badge, 'text-success']}>locked</span>}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            <dl class="grid gap-x-4 gap-y-1 text-xs sm:grid-cols-[auto_1fr]">
+              {Object.entries(p!.fingerprints).map(([k, v]) => (
+                <>
+                  <dt class="font-mono text-muted-foreground uppercase">{k}</dt>
+                  <dd class="font-mono">{v ?? '—'}</dd>
+                </>
+              ))}
+            </dl>
+          </article>
+        ))}
+      </section>
+    )
+  }
+</Base>

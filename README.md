@@ -158,6 +158,28 @@ guidance for a designer. Every chart point and on-screen figure must be in a cit
 Everything needed to inspect and re-validate a script is committed: the package records the sha of every cited
 document and a transcript window around every recorded source quote (`statements[].context`, the only place a
 speaker attribution can be confirmed from), so `<topic>/sources/*.txt` plus `<topic>/scripts/<slug>/` is enough.
+
+## Video
+
+A validated storyboard becomes an MP4 in `<topic>/scripts/<slug>/video/`. `render.json` (committed, written by
+hand) names the contiguous scenes to render, the voice, and the cues: which narration word each animation waits
+for. Narration is one file per sentence from the provider in `VK_TTS_PROVIDER` (default `edge`: Microsoft neural
+voices through `pip install edge-tts`, free, word boundaries included), cached by voice, rate and text, with the
+measured duration in `narration.json`. The timeline tiles the scenes by that measured audio, never by the word-count
+estimate, and resolves every cue to the frame its word is spoken on. The composition is Remotion (React, one component
+per scene kind in `src/video/remotion/scenes/`); ffmpeg comes with Remotion, nothing else is installed. Rendering
+needs Chrome (downloaded on first run). Scene kinds the renderer does not have are reported, never substituted.
+
+```
+npm run video -- spike <topic> <story-id>      # narrate, timeline, render video/segment.mp4, qa, build-report.md
+npm run video -- narrate <topic> <story-id>    # only the audio (add --regenerate to ignore the cache)
+npm run video -- timeline <topic> <story-id>   # only video/timeline.json
+npm run video -- render <topic> <story-id>     # only the mp4
+npm run video -- qa <topic> <story-id>         # checks, inspection frames in video/frames/, the report (exit 2 on failure)
+npm run video -- preview <topic> <story-id>    # Remotion studio on the same composition and timeline
+```
+
+Commit `render.json`, `narration.json`, `timeline.json` and the build report; the audio, frames and mp4 are ignored.
 Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
 only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
 gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without
@@ -168,6 +190,32 @@ approved script, package, validation and storyboard fingerprints in `release.jso
 
 Baseline: `mlm-script-v1` is the first locked package (`get-rich-quick/scripts/decision-mlm-and-seminars/release.json`);
 rendering work starts from it.
+
+## Production board
+
+`/production/` on the site shows what stage every topic, story and script is in. Everything on it is derived at
+build time by `src/lib/production.ts` from the committed files: the research pipeline per topic (sources listed vs
+fetched, fetched vs extracted, documents vs recorded verdicts, report vs store, stories.json vs a fresh `discover`,
+candidates reviewed), each story's readiness, and for each `<topic>/scripts/<slug>/` the health of every artifact.
+"Current" means re-running the library on today's inputs reproduces the file, the same test `lock` applies
+(`buildPackage`, `validateScript`, `buildStoryboard`, `releaseCheck`); "stale" means it would not; "pending" means an
+agent step is owed; "blocked" means the gate says so. Each row names the next command or brief. There is no state
+machine: the stage is the first artifact that is missing or not current.
+
+The one hand-written input is `production.json` at the repo root, for decisions no artifact records:
+
+```json
+{
+  "get-rich-quick/decision:selling-online": {
+    "decision": "parked",
+    "note": "no study bears on it",
+    "date": "2026-10-18"
+  }
+}
+```
+
+`decision` is `queued` (produce this next), `parked` (with the reason) or `published` (with `url`). Keys must name a
+story in that topic's `stories.json`; the build fails otherwise.
 
 ## Website
 
