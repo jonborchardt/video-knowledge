@@ -22,7 +22,7 @@ import { probe } from '../src/video/ffmpeg';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
 import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
-import { qaSegment } from '../src/video/qa';
+import { type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
 import { ENTRY, assemble, renderContactSheet, renderScenes } from '../src/video/render';
 import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
 import { VIDEO_FILES, loadSegment, videoDir } from '../src/video/select';
@@ -149,11 +149,12 @@ async function stageQa(
   if (!m || !tl) throw new Error('run narrate and timeline first');
   const out = p(VIDEO_FILES.mp4);
   const mix = readJson<MixReport>(p(MIX_FILE));
-  const qa = qaSegment(out, dir, tl, seg, m, {
-    frames: !rest.includes('--no-frames'),
-    mix,
-    music: loadMusicConfig(dir),
-  });
+  const verdict = qaSegment(out, tl, seg, m, { mix, music: loadMusicConfig(dir) });
+  const decodable = verdict.checks.some((c) => c.name === 'mp4 decodable' && c.ok);
+  const qa: QaResult = {
+    ...verdict,
+    frames: decodable && !rest.includes('--no-frames') ? extractInspectionFrames(out, dir, tl) : [],
+  };
   let contact: string | null = null;
   if (qa.frames.length) {
     contact = p(VIDEO_FILES.contact);

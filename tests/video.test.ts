@@ -11,9 +11,10 @@ import type { Storyboard } from '../src/lib/storyboard';
 import { pointFrames } from '../src/video/chart';
 import { cue, lineFrames, spokenAt } from '../src/video/cues';
 import { excerptWindow, flowPassage } from '../src/video/excerpt';
-import { audioStats, probe } from '../src/video/ffmpeg';
+import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
 import { ACCEPTS, COMPONENT_FILE, KINDS, kindOf, unsupportedWhy } from '../src/video/kinds';
 import { narrate } from '../src/video/narration';
+import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
 import { assemble, relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
@@ -197,6 +198,35 @@ describe('timeline', () => {
     expect(c).toBe(b + 30);
     expect(lineFrames({ ...sc, cues: { 'line:3': 999 } })[2]).toBe(999);
     expect(cue(sc, 'missing', 7)).toBe(7);
+  });
+});
+
+describe('qa check groups (no ffmpeg)', () => {
+  const inp = inputs();
+  const seg = checkSegment(inp);
+  const m = manifest(inp);
+  const tl = buildTimeline(seg, m);
+  const seconds = tl.durationInFrames / tl.fps;
+  const failed = (checks: { name: string; ok: boolean }[]) => checks.filter((c) => !c.ok).map((c) => c.name);
+
+  it('content and sync pass on the fixture, and a reordered timeline fails', () => {
+    expect(failed(contentChecks(tl, seg))).toEqual([]);
+    const p = { duration: seconds, video: null, audio: null } as unknown as Probe;
+    expect(failed(syncChecks(p, tl, seg, m))).toEqual([]);
+    const swapped = { ...tl, scenes: [...tl.scenes].reverse() };
+    expect(failed(contentChecks(swapped, seg))).toContain('scene order');
+  });
+
+  it('blank checks read luma samples: a flat stretch fails, varied content passes', () => {
+    const n = Math.ceil(seconds * TOLERANCE.samplesPerSecond);
+    const varied = Array.from({ length: n }, () => ({ mean: 100, sd: 20 }));
+    expect(failed(blankChecks(varied, tl))).toEqual([]);
+    const flat = varied.map(() => ({ mean: 0, sd: 0 }));
+    expect(failed(blankChecks(flat, tl))).toEqual(['no blank sections', 'every scene has content']);
+  });
+
+  it('no music config is a passing soundtrack check', () => {
+    expect(soundtrackChecks(tl, {})).toEqual([{ name: 'soundtrack', ok: true, detail: 'none: no video/music.json' }]);
   });
 });
 
