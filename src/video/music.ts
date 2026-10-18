@@ -7,7 +7,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, sha, toJson } from '../lib/script';
-import { type Duck, type Span, decodePcm, encodeAac, mixDown, placeCue, rmsDb } from './mix';
+import { CHANNELS, type Duck, RATE, type Span, decodePcm, encodeAac, mixDown, placeCue, rmsDb } from './mix';
 import type { Timeline } from './types';
 
 export const MUSIC_DIR = 'music'; // repo root: compositions shared by every video
@@ -24,7 +24,6 @@ export interface Variation {
   loop: boolean; // may be repeated: it is whole cycles, so the seam falls on a bar
   crossfade: number; // seconds of head to blend over the cut tail at each seam (strudel-bench renders start dry and stop mid-reverb)
   intensity?: string; // the composition's own word for it: 'low', 'pulse', 'full', ...
-  layers?: string[]; // the stems or layers audible in this variation
   command: string; // how to regenerate it in the generator repo
   renderedAt: string;
 }
@@ -33,7 +32,7 @@ export interface Composition {
   id: string; // directory name
   title: string;
   generator: { name: string; repo: string; version: string }; // repo URL and the commit the render came from
-  source: { file: string; sha: string; cps: number; bpm: number; key: string; notes?: string }; // the Strudel source
+  source: { file: string; sha: string; cps: number; bpm: number; key: string }; // the Strudel source
   licence: {
     cleared: boolean; // every sound source is licensed for a published, monetised video
     samples: { pack: string; licence: string; source: string; attribution?: string }[];
@@ -43,14 +42,13 @@ export interface Composition {
   variations: Record<string, Variation>;
 }
 
-/** A scene anchor: "sc12" (the scene's start for `from`, its end for `to`), "sc12:start", "sc12:end", with an optional
- *  offset in seconds: "sc12+1.5", "sc20:end-2". */
-export type Anchor = string;
 export interface MusicCue {
   id: string;
   asset: string; // "<composition>/<variation>"
-  from: Anchor;
-  to: Anchor;
+  /** Scene anchors: "sc12" (the scene's start for `from`, its end for `to`), "sc12:start", "sc12:end", with an
+   *  optional offset in seconds: "sc12+1.5", "sc20:end-2". */
+  from: string;
+  to: string;
   gain: number; // dB applied to the asset (music beds sit well under narration: -18 to -30)
   fadeIn?: number; // seconds, default 1
   fadeOut?: number; // seconds, default 2
@@ -82,14 +80,14 @@ export interface ResolvedCue {
 
 const ANCHOR = /^(\w+?)(?::(start|end))?([+-]\d+(?:\.\d+)?)?$/;
 export function parseAnchor(
-  a: Anchor,
+  a: string,
   edge: 'start' | 'end',
 ): { scene: string; edge: 'start' | 'end'; offset: number } {
   const m = ANCHOR.exec(a.trim());
   if (!m) throw new Error(`bad anchor "${a}": expected <scene id>[:start|:end][+/-seconds]`);
   return { scene: m[1], edge: (m[2] as 'start' | 'end' | undefined) ?? edge, offset: Number(m[3] ?? 0) };
 }
-export function anchorSeconds(a: Anchor, edge: 'start' | 'end', tl: Timeline): number {
+export function anchorSeconds(a: string, edge: 'start' | 'end', tl: Timeline): number {
   const p = parseAnchor(a, edge);
   const s = tl.scenes.find((x) => x.id === p.scene);
   if (!s) throw new Error(`anchor "${a}": scene ${p.scene} is not in the timeline`);
@@ -198,7 +196,6 @@ export interface MixReport {
   musicPeakDb: number;
   peakDb: number;
   musicScale: number;
-  musicRmsDb: number; // the music bus over the whole window
   speechRmsDb: number; // the narration while sentences are spoken
   musicUnderSpeechDb: number; // music bus level during speech, relative to the narration: how far under the voice it sits
   cues: {
@@ -232,18 +229,29 @@ export function mixSoundtrack(
   const speech = speechSpans(tl).map((s): Span => [s[0] - window[0], s[1] - window[0]]);
   const pcm = new Map<string, Float32Array>();
   const placed: MixReport['cues'] = [];
+  const frames = bus.length / CHANNELS;
   for (const c of cues) {
     if (!pcm.has(c.file)) pcm.set(c.file, decodePcm(c.file));
-    const solo = new Float32Array(narration.length);
-    const p = { ...c, pcm: pcm.get(c.file)!, start: c.start - window[0], end: c.end - window[0] };
-    const sounded = placeCue(solo, p, speech);
-    for (let i = 0; i < bus.length; i++) bus[i] += solo[i];
+    // the cue on a buffer as long as its span (not the whole track), then added into the bus at its start
+    const a = Math.max(0, c.start - window[0]);
+    const b = Math.min(frames / RATE, c.end - window[0]);
+    const solo = new Float32Array(Math.max(0, Math.round((b - a) * RATE)) * CHANNELS);
+    const p = { ...c, pcm: pcm.get(c.file)!, start: 0, end: b - a };
+    const sounded = solo.length
+      ? placeCue(
+          solo,
+          p,
+          speech.map((s): Span => [s[0] - a, s[1] - a]),
+        )
+      : [0, 0];
+    const at = Math.round(a * RATE) * CHANNELS;
+    for (let i = 0; i < solo.length && at + i < bus.length; i++) bus[at + i] += solo[i];
     placed.push({
       id: c.id,
       asset: c.asset,
       start: c.start,
       end: c.end,
-      sounded: [sounded[0] + window[0], sounded[1] + window[0]],
+      sounded: [sounded[0] + a + window[0], sounded[1] + a + window[0]],
       rmsDb: rmsDb(solo, sounded[0], sounded[1]),
       gain: c.gain,
       loop: c.loop,
@@ -251,6 +259,8 @@ export function mixSoundtrack(
     });
   }
   const m = mixDown(narration, bus, ceilingDb);
+  const scaleDb = 20 * Math.log10(m.musicScale || 1e-12); // levels are reported as mixed, after the ceiling's scaling
+  for (const c of placed) c.rmsDb = Math.round((c.rmsDb + scaleDb) * 10) / 10;
   encodeAac(m.pcm, out);
   const over = (x: Float32Array, spans: Span[]) => {
     // rms over a set of spans: power-weighted by length
@@ -268,7 +278,6 @@ export function mixSoundtrack(
   };
   const speechRmsDb = over(narration, speech);
   const musicDuring = over(bus, speech);
-  const seen = new Set<string>();
   const report: MixReport = {
     generatedAt: new Date().toISOString(),
     fingerprint: musicFingerprint(cfg, cues),
@@ -278,19 +287,16 @@ export function mixSoundtrack(
     musicPeakDb: m.musicPeakDb,
     peakDb: m.peakDb,
     musicScale: m.musicScale,
-    musicRmsDb: rmsDb(bus, 0, bus.length / 2 / 48000),
     speechRmsDb,
-    musicUnderSpeechDb: Math.round((musicDuring - speechRmsDb) * 10) / 10,
+    musicUnderSpeechDb: Math.round((musicDuring + scaleDb - speechRmsDb) * 10) / 10,
     cues: placed,
-    compositions: cues
-      .filter((c) => !seen.has(c.composition.id) && seen.add(c.composition.id))
-      .map(({ composition: c }) => ({
-        id: c.id,
-        title: c.title,
-        generator: c.generator,
-        source: c.source,
-        licence: c.licence,
-      })),
+    compositions: [...new Map(cues.map((c) => [c.composition.id, c.composition])).values()].map((c) => ({
+      id: c.id,
+      title: c.title,
+      generator: c.generator,
+      source: c.source,
+      licence: c.licence,
+    })),
   };
   writeFileSync(join(videoDir, MIX_FILE), toJson(report));
   return report;

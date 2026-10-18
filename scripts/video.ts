@@ -7,17 +7,17 @@
 //                                                    every scene of render.json into video/segment.mp4, or the given range into video/scenes/<range>.mp4
 //   qa <topic> <story-id> [--no-frames]              check the mp4, extract inspection frames, write video/build-report.json, .md and the contact sheet
 //   spike <topic> <story-id> [--regenerate] [--force] narrate, timeline, render, qa
-//   package <topic> <story-id> [--no-copy]           the private review package in video/review/: the mp4 (copied unless --no-copy),
+//   package <topic> <story-id>                       the private review package in video/review/: the mp4 (copied),
 //                                                    working title, description with measured chapters and sources, provenance, checklist
 //   preview <topic> <story-id>                       open the Remotion studio on the same composition and timeline
 // Inputs: the validated script, storyboard and evidence package in <topic>/scripts/<slug>/ and video/render.json
 // (scenes, voice, cues, kinds, options), plus video/music.json (cues over music/<composition>/ assets) when there is a
 // soundtrack. Media is written to <topic>/scripts/<slug>/video/ and is not committed.
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
-import { readJson, toJson } from '../src/lib/script';
+import { readJson, sha, toJson } from '../src/lib/script';
 import { probe } from '../src/video/ffmpeg';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
@@ -122,8 +122,10 @@ async function stageRender(
     },
   });
   const rendered = chunks.filter((c) => !c.cached).length;
-  const config = loadMusicConfig(dir);
+  // the soundtrack belongs to the full segment: a scene or range render is narration only and leaves mix.json alone
+  const config = only ? null : loadMusicConfig(dir);
   const music = config ? { config, cues: resolveCues(config, tl) } : null;
+  if (!only && !config && existsSync(p(MIX_FILE))) unlinkSync(p(MIX_FILE)); // it would misdescribe this file
   const mix = assemble(tl, m, chunks, dir, out, true, music);
   const seconds = (Date.now() - t0) / 1000;
   const frames = chunks.reduce((n, c) => n + c.scene.duration, 0);
@@ -170,7 +172,12 @@ async function stageQa(
     seg,
     tl,
     m,
-    { file: rel(out), probe: existsSync(out) ? probe(out) : null, renderSeconds },
+    {
+      file: rel(out),
+      probe: existsSync(out) ? probe(out) : null,
+      sha: existsSync(out) ? sha(readFileSync(out)) : null,
+      renderSeconds,
+    },
     qa,
     command,
     contact ? rel(contact) : null,
@@ -195,10 +202,7 @@ function stagePackage() {
     report.fingerprints.storyboard !== seg.fingerprints.storyboard
   )
     throw new Error('the build report is from another script or storyboard; run qa again');
-  const r = buildReviewPackage(seg, tl, report, dir, {
-    copy: !rest.includes('--no-copy'),
-    log: (l) => console.log(`  ${l}`),
-  });
+  const r = buildReviewPackage(seg, tl, report, dir, (l) => console.log(`  ${l}`));
   console.log(
     `wrote ${rel(p(REVIEW_DIR))}: ${r.title}, ${r.chapters.length} chapters, ${r.sources.studies.length} studies, ${r.sources.sources.length} sources; ${r.provenance.clearance.publishable ? 'cleared' : 'public release BLOCKED: ' + r.provenance.clearance.why.join('; ')}`,
   );

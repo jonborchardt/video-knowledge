@@ -11,7 +11,7 @@ import { openBrowser, renderMedia, renderStill, selectComposition } from '@remot
 import { sha } from '../lib/script';
 import { narrationTrack, concatVideo, mux } from './ffmpeg';
 import { COMPONENT_FILE } from './kinds';
-import { MIX_FILE, type MixReport, type MusicConfig, type ResolvedCue, mixSoundtrack } from './music';
+import { type MixReport, type MusicConfig, type ResolvedCue, mixSoundtrack } from './music';
 import { COMPOSITION, CONTACT } from './remotion/Root';
 import type { NarrationManifest, Timeline, TimelineScene } from './types';
 
@@ -125,7 +125,8 @@ export interface Soundtrack {
 }
 
 /** Concatenate the chunks of a contiguous run of scenes and lay the narration under them, with the soundtrack mixed
- *  in when there is one; writes `out` and, with music, video/mix.json. Returns the mix report (null without music). */
+ *  in when one is given (the caller passes it for a full render only); writes `out` and, with music, video/mix.json.
+ *  Returns the mix report (null without music). */
 export function assemble(
   tl: Timeline,
   manifest: NarrationManifest,
@@ -165,11 +166,7 @@ export function assemble(
     if (music) {
       report = mixSoundtrack(audio, music.config, music.cues, tl, [first / tl.fps, end / tl.fps], mixed, publicDir);
       mux(video, mixed, out);
-    } else {
-      mux(video, audio, out);
-      const stale = join(publicDir, MIX_FILE);
-      if (existsSync(stale)) unlinkSync(stale); // no cue sheet: a report from an earlier mix would misdescribe this file
-    }
+    } else mux(video, audio, out);
   } finally {
     for (const f of [video, audio, mixed]) if (existsSync(f)) unlinkSync(f);
   }

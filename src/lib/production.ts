@@ -132,7 +132,7 @@ const nonBlank = (file: string) =>
         .split('\n')
         .filter((l) => l.trim() && !l.trim().startsWith('#')).length
     : 0;
-const fileSha = (f: string) => (existsSync(f) ? sha(lf(readFileSync(f, 'utf8'))) : 'missing');
+export const fileSha = (f: string) => (existsSync(f) ? sha(lf(readFileSync(f, 'utf8'))) : 'missing');
 const worst = (checks: Check[]): Health => {
   for (const h of ['blocked', 'stale', 'missing', 'pending'] as const) if (checks.some((c) => c.health === h)) return h;
   return checks.every((c) => c.health === 'done') ? 'done' : 'current';
@@ -401,8 +401,8 @@ export function productionOf(topic: string, storyId: string, root = process.cwd(
     if (vr.music) {
       checks.push({
         name: 'soundtrack',
-        health: vr.music.cleared ? 'done' : 'pending',
-        detail: `${vr.music.compositions.map((c) => c.title).join(', ')}${vr.music.cleared ? '' : ' (not cleared for publication)'}`,
+        health: vr.clearance.music ? 'done' : 'pending',
+        detail: `${vr.music.compositions.map((c) => c.title).join(', ')}${vr.clearance.music ? '' : ' (not cleared for publication)'}`,
         file: r('video/mix.json'),
         date: vr.generatedAt,
       });

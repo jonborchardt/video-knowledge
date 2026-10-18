@@ -39,7 +39,33 @@ import { buildReport } from '../src/video/report';
 import { checkSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import type { Timeline } from '../src/video/types';
+import { chapters } from '../src/video/package';
 import { inputs, manifest } from './video-helpers';
+
+describe('review package chapters', () => {
+  const tl = (): Timeline => {
+    const t = buildTimeline(checkSegment(inputs()), manifest(inputs()));
+    // stretch the fixture's scenes to 20 s each so the YouTube 10 s rule is not what is being tested
+    t.scenes.forEach((s, i) => Object.assign(s, { start: i * 600, duration: 600 }));
+    return { ...t, durationInFrames: t.scenes.length * 600 };
+  };
+  const seg = (ch?: Record<string, string>) => checkSegment(inputs({ config: ch ? { chapters: ch } : {} }));
+  it('takes render.json chapters at measured starts, first pinned to 0:00', () => {
+    const c = chapters(seg({ sc01: 'One', sc02: 'Two', sc03: 'Three' }), tl());
+    expect(c.map((x) => [x.stamp, x.title])).toEqual([
+      ['0:00', 'One'],
+      ['0:20', 'Two'],
+      ['0:40', 'Three'],
+    ]);
+  });
+  it('refuses chapters YouTube would ignore, and scenes that are not there', () => {
+    expect(() => chapters(seg({ sc01: 'One', sc02: 'Two' }), tl())).toThrow(/at least 3/);
+    expect(() => chapters(seg({ sc01: 'One', sc02: 'Two', sc99: 'X' }), tl())).toThrow(/sc99, not in the timeline/);
+    const tight = tl();
+    tight.scenes[1].start = 150; // 5 s after the first
+    expect(() => chapters(seg({ sc01: 'One', sc02: 'Two', sc03: 'Three' }), tight)).toThrow(/under 10 s: Two/);
+  });
+});
 
 const sec = (s: number) => Math.round(s * RATE);
 /** A stereo buffer `seconds` long filled by `f(t)` on both channels. */
@@ -174,6 +200,17 @@ describe('pcm mixer', () => {
     expect(quiet.musicScale).toBe(1);
     expect(quiet.peakDb).toBeCloseTo(20 * Math.log10(0.86), 0);
     expect(() => mixDown(voice, silence(2), -1)).toThrow(/differ in length/);
+  });
+  it('adds no music where the voice alone reaches the ceiling, and does not let that sample zero the bed', () => {
+    const voice = tone(1, (t) => (Math.abs(t - 0.5) < 0.001 ? 0.95 : 0.1));
+    const m = mixDown(
+      voice,
+      tone(1, () => 0.2),
+      -1,
+    );
+    expect(m.musicScale).toBe(1);
+    expect(at(m.pcm, 0.5)).toBeCloseTo(0.95, 4);
+    expect(at(m.pcm, 0.2)).toBeCloseTo(0.3, 4);
   });
   it('refuses an empty asset', () => {
     expect(() => placeCue(silence(1), place({ pcm: new Float32Array(0) }), [])).toThrow(/no audio/);
@@ -417,7 +454,6 @@ describe('build report clearance and the board', () => {
     musicPeakDb: -20,
     peakDb: -1.2,
     musicScale: 1,
-    musicRmsDb: -40,
     speechRmsDb: -19,
     musicUnderSpeechDb: -21,
     cues: [
@@ -457,7 +493,7 @@ describe('build report clearance and the board', () => {
       publishable: false,
       why: ['narration is draft only: test voice'],
     });
-    expect(r.music?.cleared).toBe(true);
+    expect(r.clearance.music).toBe(true);
     expect(r.music?.compositions[0].licence.attribution).toEqual(['OpenAIR, University of York']);
     const commercial = { ...m, licence: 'commercial: test terms' };
     const ok = buildReport(

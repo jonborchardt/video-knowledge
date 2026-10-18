@@ -15,6 +15,7 @@ export interface BuildReport {
   segment: { scenes: string[]; sentences: string[]; kinds: Record<string, string>; storyboardScenes: number };
   output: {
     file: string;
+    sha: string | null; // of the mp4 QA checked; the review package refuses any other file
     seconds: number;
     width: number;
     height: number;
@@ -38,7 +39,6 @@ export interface BuildReport {
   rendering: { architecture: string; seconds: number; frames: number; cost: string };
   /** The soundtrack, when one was mixed: provenance per composition and the mix levels. Null: narration only. */
   music: {
-    cleared: boolean; // every composition's sound sources are licensed for publication
     fingerprint: string;
     compositions: MixReport['compositions'];
     cues: { id: string; asset: string; start: number; end: number; gain: number; rmsDb: number }[];
@@ -55,7 +55,7 @@ export function buildReport(
   seg: Segment,
   tl: Timeline,
   manifest: NarrationManifest,
-  out: { file: string; probe: Probe | null; renderSeconds: number },
+  out: { file: string; probe: Probe | null; sha?: string | null; renderSeconds: number },
   qa: QaResult,
   command: string,
   contactSheet: string | null = null,
@@ -87,6 +87,7 @@ export function buildReport(
     output: p
       ? {
           file: out.file,
+          sha: out.sha ?? null,
           seconds: p.duration,
           width: p.video?.width ?? 0,
           height: p.video?.height ?? 0,
@@ -118,7 +119,6 @@ export function buildReport(
     },
     music: mix
       ? {
-          cleared: musicCleared === true,
           fingerprint: mix.fingerprint,
           compositions: mix.compositions,
           cues: mix.cues.map((c) => ({

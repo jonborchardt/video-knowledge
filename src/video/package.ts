@@ -5,6 +5,7 @@
 // that it is a review build and whether it is cleared for public release.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileSha } from '../lib/production';
 import { sha, toJson } from '../lib/script';
 import { extractFrame } from './ffmpeg';
 import type { BuildReport } from './report';
@@ -58,6 +59,8 @@ export function chapters(seg: Segment, tl: Timeline): Chapter[] {
   const sceneOf = new Map(tl.scenes.flatMap((s) => s.sentences.map((x) => [x.id, s.id] as const)));
   const start = (id: string) => (tl.scenes.find((s) => s.id === id)?.start ?? 0) / tl.fps;
   const named = seg.config.chapters;
+  for (const id of Object.keys(named ?? {}))
+    if (!tl.scenes.some((s) => s.id === id)) throw new Error(`render.json chapters names ${id}, not in the timeline`);
   const list: Chapter[] = named
     ? Object.entries(named).map(([scene, title]) => ({ scene, seconds: start(scene), stamp: '', title }))
     : seg.script.sections.flatMap((sec) => {
@@ -68,6 +71,10 @@ export function chapters(seg: Segment, tl: Timeline): Chapter[] {
       });
   list.sort((a, b) => a.seconds - b.seconds);
   if (list.length) list[0].seconds = 0;
+  // YouTube ignores every chapter unless there are at least three, starting at 0:00, each at least 10 s long
+  if (list.length < 3) throw new Error(`${list.length} chapters; YouTube needs at least 3`);
+  const short = list.filter((c, i) => i > 0 && c.seconds - list[i - 1].seconds < 10);
+  if (short.length) throw new Error(`chapters under 10 s: ${short.map((c) => c.title).join(', ')}`);
   return list.map((c) => ({ ...c, stamp: stamp(c.seconds) }));
 }
 
@@ -91,11 +98,14 @@ export function buildReviewPackage(
   tl: Timeline,
   report: BuildReport,
   videoDir: string,
-  opts: { copy?: boolean; log?: (l: string) => void } = {},
+  log?: (l: string) => void,
 ): ReviewPackage {
   const mp4 = join(videoDir, VIDEO_FILES.mp4);
   if (!existsSync(mp4)) throw new Error(`no ${mp4}; render first`);
   if (!report.qa.ok) throw new Error('the build report says QA failed; fix the build before packaging it');
+  const mp4Sha = sha(readFileSync(mp4));
+  if (mp4Sha !== report.output?.sha)
+    throw new Error(`${VIDEO_FILES.mp4} (${mp4Sha}) is not the file QA checked (${report.output?.sha}); run qa again`);
   const dir = join(videoDir, REVIEW_DIR);
   mkdirSync(dir, { recursive: true });
   const slug = videoDir
@@ -103,15 +113,16 @@ export function buildReviewPackage(
     .split(/[\\/]/)
     .pop();
   const mp4Name = `${slug}-review-private.mp4`;
-  if (opts.copy !== false) copyFileSync(mp4, join(dir, mp4Name));
-  const mp4Bytes = readFileSync(mp4);
+  copyFileSync(mp4, join(dir, mp4Name));
   const ch = chapters(seg, tl);
   const studies = seg.pkg.documents.map((d) => ({ name: d.name, file: d.file }));
-  const seen = new Set<string>();
-  const sources = seg.pkg.claims
-    .flatMap((c) => c.statements)
-    .filter((s) => !seen.has(s.href) && seen.add(s.href))
-    .map((s) => ({ channel: s.channel, title: s.title, href: s.href }));
+  const sources = [
+    ...new Map(
+      seg.pkg.claims
+        .flatMap((c) => c.statements)
+        .map((s) => [s.href, { channel: s.channel, title: s.title, href: s.href }]),
+    ).values(),
+  ];
   const title = `[PRIVATE REVIEW] ${tl.title}`;
   const musicLine = report.music
     ? report.music.compositions
@@ -149,7 +160,7 @@ export function buildReviewPackage(
   }
   const reportJson = join(videoDir, VIDEO_FILES.report);
   const files = [
-    opts.copy !== false ? mp4Name : null,
+    mp4Name,
     REVIEW_FILES.readme,
     REVIEW_FILES.description,
     REVIEW_FILES.checklist,
@@ -161,10 +172,10 @@ export function buildReviewPackage(
     generatedAt: new Date().toISOString(),
     status: 'private review build',
     title,
-    mp4: opts.copy !== false ? mp4Name : `../${VIDEO_FILES.mp4}`,
-    mp4Sha: sha(mp4Bytes),
+    mp4: mp4Name,
+    mp4Sha,
     seconds: report.output?.seconds ?? tl.durationInFrames / tl.fps,
-    buildReport: sha(readFileSync(reportJson)),
+    buildReport: fileSha(reportJson),
     chapters: ch,
     sources: { studies, sources },
     provenance: { narration: report.narration, music: report.music, clearance: report.clearance },
@@ -227,6 +238,6 @@ export function buildReviewPackage(
   );
   copyFileSync(join(videoDir, VIDEO_FILES.reportMd), join(dir, REVIEW_FILES.report));
   writeFileSync(join(dir, REVIEW_FILES.json), toJson(pkg));
-  opts.log?.(`${files.length} files in ${dir}`);
+  log?.(`${files.length} files in ${dir}`);
   return pkg;
 }

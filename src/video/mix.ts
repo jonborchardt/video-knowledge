@@ -176,9 +176,9 @@ export function placeCue(bus: Pcm, p: Placement, speech: Span[]): Span {
   return [from, to];
 }
 
-export function peak(pcm: Pcm, from = 0, to = pcm.length): number {
+export function peak(pcm: Pcm): number {
   let m = 0;
-  for (let i = from; i < to; i++) {
+  for (let i = 0; i < pcm.length; i++) {
     const v = Math.abs(pcm[i]);
     if (v > m) m = v;
   }
@@ -204,24 +204,13 @@ export interface MixDown {
 export function mixDown(narration: Pcm, music: Pcm, ceilingDb = -1): MixDown {
   if (music.length !== narration.length) throw new Error('narration and music buses differ in length');
   const ceiling = dbToGain(ceilingDb);
-  const n = narration.length;
+  // the largest music scale that keeps every summed sample under the ceiling; a voice sample already over it is
+  // the narration's own peak (loudnorm caps it at -1.5 dBTP) and says nothing about the music
   let scale = 1;
-  const out = new Float32Array(n);
-  for (let pass = 0; pass < 40; pass++) {
-    let over = 1;
-    for (let i = 0; i < n; i++) {
-      out[i] = narration[i] + music[i] * scale;
-      const v = Math.abs(out[i]);
-      if (v > ceiling) {
-        // the music fraction that would fit at this sample, if any (the narration alone may already be over)
-        const room = ceiling - Math.abs(narration[i]);
-        const m = Math.abs(music[i] * scale);
-        over = Math.min(over, room > 0 && m > 0 ? room / m : 0.9);
-      }
-    }
-    if (over >= 1) break;
-    scale *= Math.min(0.97, over);
-  }
+  for (let i = 0; i < narration.length; i++)
+    if (Math.abs(narration[i]) < ceiling && Math.abs(narration[i] + music[i] * scale) > ceiling)
+      scale = Math.max(0, (ceiling - Math.abs(narration[i])) / Math.abs(music[i]));
+  const out = narration.map((v, i) => (Math.abs(v) < ceiling ? v + music[i] * scale : v));
   return {
     pcm: out,
     narrationPeakDb: gainToDb(peak(narration)),

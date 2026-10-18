@@ -34,7 +34,7 @@ if (!cmd || !id) usage();
 const dir = join(process.cwd(), MUSIC_DIR, id);
 
 /** What the song header declares: tempo, key, packs. The header is JavaScript; these are read by pattern, not run. */
-export function readHeader(source: string) {
+function readHeader(source: string) {
   const num = (k: string) => {
     const m = new RegExp(`\\b${k}:\\s*([\\d.]+)`).exec(source);
     return m ? Number(m[1]) : undefined;
@@ -110,15 +110,22 @@ function importWavs(
     };
     console.log(`  ${section}: ${seconds.toFixed(2)}s, ${cycles} cycles, sha ${variations[section].sha}`);
   }
-  const samples = packLicences(opts.repo, h.packs);
-  const cleared = opts.cleared !== undefined ? true : (old?.licence.cleared ?? false);
-  const notes = [
-    opts.cleared ?? old?.licence.notes,
-    h.packs.length ? undefined : 'no sample pack: every voice is an oscillator or a synth patch',
-    h.soundfonts.length
-      ? `uses GM soundfonts streamed by strudel-bench (${h.soundfonts.join(', ')}): check their terms`
-      : undefined,
-  ].filter(Boolean);
+  const samples: Composition['licence']['samples'] = [
+    ...packLicences(opts.repo, h.packs),
+    ...h.soundfonts.map((f) => ({
+      pack: f,
+      licence: 'unknown: GM soundfont streamed by strudel-bench',
+      source: 'strudel-bench',
+    })),
+  ];
+  // a person's clearance holds only for the sound sources it was given for: a new pack or soundfont lapses it
+  const same =
+    JSON.stringify(old?.licence.samples.map((s) => s.pack).sort()) ===
+    JSON.stringify(samples.map((s) => s.pack).sort());
+  const cleared = opts.cleared !== undefined ? true : same && (old?.licence.cleared ?? false);
+  if (old?.licence.cleared && !cleared)
+    console.log('  clearance lapsed: the sound sources changed; re-import with --cleared "<why>"');
+  const notes = cleared ? (opts.cleared ?? old?.licence.notes) : undefined;
   const comp: Composition = {
     id,
     title: opts.title ?? old?.title ?? id,
@@ -138,7 +145,7 @@ function importWavs(
       cleared,
       samples,
       attribution: old?.licence.attribution ?? samples.flatMap((s) => (s.attribution ? [s.attribution] : [])),
-      ...(notes.length ? { notes: notes.join('; ') } : {}),
+      ...(notes ? { notes } : {}),
     },
     variations,
   };
