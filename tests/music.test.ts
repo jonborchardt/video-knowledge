@@ -556,16 +556,18 @@ describe('the MLM soundtrack', () => {
   const tl = readJson<Timeline>(join(dir, 'timeline.json'));
   const cfg = readJson<MusicConfig>(join(dir, 'music.json'));
   const assets = existsSync(join('music', 'undertow', 'pulse.wav')); // the WAVs are not committed; CI has none
-  it.skipIf(!tl || !cfg || !assets)('places every cue inside the committed timeline on an undertow asset', () => {
+  it.skipIf(!tl || !cfg || !assets)('covers the committed timeline end to end with undertow bed sections', () => {
     const cues = resolveCues(cfg!, tl!, process.cwd());
-    expect(cues.length).toBeGreaterThanOrEqual(5);
+    const seconds = tl!.durationInFrames / tl!.fps;
     expect(new Set(cues.map((c) => c.composition.id))).toEqual(new Set(['undertow']));
+    // music/README.md: no silent stretch, first scene to last; no section with a lead line (motif, rest)
+    expect(cues[0].start).toBe(0);
+    expect(cues.at(-1)!.end).toBeCloseTo(seconds, 6);
+    cues.slice(1).forEach((c, i) => expect(c.start).toBeCloseTo(cues[i].end, 6));
     for (const c of cues) {
-      expect(c.start).toBeGreaterThanOrEqual(0);
-      expect(c.end).toBeLessThanOrEqual(tl!.durationInFrames / tl!.fps + 1e-6);
+      expect(['undertow/pulse', 'undertow/active', 'undertow/texture']).toContain(c.asset);
       expect(c.gain).toBeLessThanOrEqual(-6); // a bed, never a lead
     }
-    expect(cues[0].start).toBeGreaterThan(0); // the storyboard opens cold: no music under sc01
     const mix = readJson<MixReport>(join(dir, MIX_FILE));
     if (mix) expect(mix.compositions.every((c) => c.licence.cleared)).toBe(true);
   });

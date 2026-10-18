@@ -41,23 +41,34 @@ short sine bass figure and a quiet `glass` arpeggio), `texture` 16 (pad and dron
 four-bar motif on a `glass` triangle), `rest` 8 (the motif resolving to the root; not a loop). `npm run check` is
 clean; the renders measure -22 dBFS rms, peaks -8 to -15 dBFS, no silence. It was written from
 `.claude/skills/strudel/SKILL.md` without the mixing pass (no `npm run measure` was run) and nobody has listened
-to it yet. The song lived only in a scratch clone; it is **not committed anywhere in strudel-bench**.
+to it yet. It lives only here; strudel-bench never commits it.
+
+## Making a new song
+
+strudel-bench stays a tool; songs live here (`music/<id>/source.strudel`). For a new song or a fix to one:
+
+1. Copy the song into a temporary checkout of strudel-bench (`songs/<name>.strudel`; a new song starts there).
+2. Write or fix it with `.claude/skills/strudel/SKILL.md` and run its mixing pass (`measure`, `lint`, the passes in
+   the skill).
+3. Render the sections and import them here with `npm run music -- import` (or `npm run music -- render <id>`).
+4. Commit nothing in strudel-bench.
+
+## Notes for every song (from the listening pass on `undertow`)
+
+- Keep the instrument, tone and speed of `undertow`: oscillators, a dark pad, a sine drone and tick, 84 bpm.
+- Leave no silent stretches in the video: the cue sheet covers every scene, first to last.
+- No melody or lead line, nothing vocal-sounding, and no build-up or climax.
+- The music is a background bed with no story of its own.
+- Listen to it before it goes into a video.
 
 ## Asks
 
-1. **Adopt `undertow`** into `songs/` (from `video-knowledge/music/undertow/source.strudel`), run your mixing pass
-   (`measure`, `lint`, the five passes in the skill), and keep the section names and bar counts, or tell
-   video-knowledge the new ones. Keep it oscillator-only unless a pack is CC0 and you say so in a note: the video's
-   build report prints each pack's licence and whether the music is cleared.
-2. **A `notes.json`** for it with the request ("a restrained documentary bed for a video about MLM income:
-   sparse, low dynamics, no drums, no melody under dense explanation, a motif that returns, an ending that resolves")
-   and the changes you make, per the skill's step 7.
-3. **If cheap, a render sidecar**: `renders/<name>.<section>.json` with `{ song, section, cycles, cps, bpm, key,
+1. **If cheap, a render sidecar**: `renders/<name>.<section>.json` with `{ song, section, cycles, cps, bpm, key,
 seed, seconds, sampleRate, packs: [{ name, licence }], commit }`. The importer would read it instead of the
    header. Not blocking: the header read works.
-4. **If cheap, a loop-friendly render flag** (`--loop`: schedule one extra bar and fold its tail under the head, or
+2. **If cheap, a loop-friendly render flag** (`--loop`: schedule one extra bar and fold its tail under the head, or
    just include `tail` seconds so the crossfade has reverb to blend into). Not blocking.
-5. **Say what is not cleared.** `legal.html` is out of date (it names a `freekit` pack); the Strudel CDN packs'
+3. **Say what is not cleared.** `legal.html` is out of date (it names a `freekit` pack); the Strudel CDN packs'
    licences are not restated in the repo. For any future composition that uses a pack or a soundfont, one line per
    pack in `notes.json` (licence, attribution text) is what video-knowledge records.
 
