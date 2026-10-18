@@ -6,6 +6,7 @@ import { sentences } from '../lib/script';
 import { excerptWindow } from './excerpt';
 import { audioStats, extractFrame, lumaSamples, probe } from './ffmpeg';
 import { SUPPORTED_ASSETS } from './kinds';
+import { type MixReport, type MusicConfig, musicFingerprint, resolveCues } from './music';
 import type { Segment } from './select';
 import { buildTimeline } from './timeline';
 import type { NarrationManifest, Timeline } from './types';
@@ -35,7 +36,15 @@ export const TOLERANCE = {
 export interface QaOptions {
   frames?: boolean; // extract inspection frames into video/frames (default true)
   duration?: [number, number]; // seconds; default the timeline's length plus or minus durationSlack
+  music?: MusicConfig | null; // the cue sheet, when there is one
+  mix?: MixReport | null; // what the last assembly mixed (video/mix.json)
+  root?: string; // repo root for the compositions
 }
+export const MUSIC_TOLERANCE = {
+  minUnderSpeechDb: 10, // the music bus must sit at least this far under the voice while it speaks
+  maxUnderSpeechDb: 40, // and no further: beyond that it is inaudible, so the cue is wrong or the asset silent
+  cueSilenceDb: -60, // a cue whose own rms is below this did not sound
+};
 
 export function qaSegment(
   mp4: string,
@@ -204,6 +213,46 @@ export function qaSegment(
     problems.filter((p) => /assets|unsupported/.test(p)).join(', ') ||
       `${new Set(tl.scenes.map((s) => s.kind)).size} kinds`,
   );
+
+  // Soundtrack: the cue sheet resolves, the mix on disk is the mix of this cue sheet, and it sits under the voice.
+  if (opts.music) {
+    let resolved: ReturnType<typeof resolveCues> | null = null;
+    try {
+      resolved = resolveCues(opts.music, tl, opts.root);
+      check(
+        'music cues resolve',
+        true,
+        `${resolved.length} cues over ${new Set(resolved.map((c) => c.composition.id)).size} compositions`,
+      );
+    } catch (e) {
+      check('music cues resolve', false, String(e instanceof Error ? e.message : e).replace(/\s+/g, ' '));
+    }
+    const mix = opts.mix;
+    check('soundtrack mixed', !!mix, mix ? `${mix.cues.length} cues, ${mix.generatedAt}` : 'no mix.json: run render');
+    if (mix && resolved) {
+      const want = musicFingerprint(opts.music, resolved);
+      check('mix is of this cue sheet', mix.fingerprint === want, `mix ${mix.fingerprint}, cue sheet ${want}`);
+      const silent = mix.cues.filter(
+        (c) => c.rmsDb < MUSIC_TOLERANCE.cueSilenceDb || c.sounded[1] - c.sounded[0] < 0.5,
+      );
+      check(
+        'every cue sounded',
+        silent.length === 0,
+        silent.map((c) => c.id).join(', ') || `${mix.cues.length} cues audible where placed`,
+      );
+      check(
+        'music under the voice',
+        mix.musicUnderSpeechDb <= -MUSIC_TOLERANCE.minUnderSpeechDb &&
+          mix.musicUnderSpeechDb >= -MUSIC_TOLERANCE.maxUnderSpeechDb,
+        `${mix.musicUnderSpeechDb} dB relative to speech (want -${MUSIC_TOLERANCE.maxUnderSpeechDb} to -${MUSIC_TOLERANCE.minUnderSpeechDb})`,
+      );
+      check(
+        'mix under the ceiling',
+        mix.peakDb <= mix.ceilingDb + 0.1,
+        `peak ${mix.peakDb} dB, ceiling ${mix.ceilingDb} dB${mix.musicScale < 1 ? `, music scaled x${mix.musicScale}` : ''}`,
+      );
+    }
+  } else check('soundtrack', true, 'none: no video/music.json');
 
   // Synchronisation.
   const again = buildTimeline(seg, manifest, fps, () => 'x');
