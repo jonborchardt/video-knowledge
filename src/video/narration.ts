@@ -23,27 +23,31 @@ export interface NarrateOptions {
 }
 
 /** Resolve or generate the audio for every sentence of the segment; writes <videoDir>/narration.json and returns it. */
-export function narrate(seg: Segment, videoDir: string, opts: NarrateOptions = {}): NarrationManifest {
+export async function narrate(seg: Segment, videoDir: string, opts: NarrateOptions = {}): Promise<NarrationManifest> {
   const voice = seg.config.voice;
   const tts = opts.tts ?? defaultProvider(voice.provider);
   const log = opts.log ?? (() => {});
   const old = readJson<NarrationManifest>(join(videoDir, VIDEO_FILES.narration));
-  const cached = new Map((old?.sentences ?? []).map((s) => [s.file, s]));
+  const cached = (old?.sentences ?? []).filter(
+    () => old?.provider === tts.id && old?.voice === voice.voice && old?.rate === voice.rate,
+  );
   mkdirSync(join(videoDir, NARRATION_DIR), { recursive: true });
-  let model: string | undefined = old?.model;
-  let format = old?.format ?? '';
-  const out: SentenceAudio[] = seg.sentences.map((s) => {
+  let model: string | undefined = old?.provider === tts.id ? old?.model : undefined;
+  let format = old?.provider === tts.id ? (old?.format ?? '') : '';
+  const out: SentenceAudio[] = [];
+  for (const s of seg.sentences) {
     const key = narrationKey(voice, s.text);
     const base = `${NARRATION_DIR}/${s.id}-${key}`;
-    const hit = [...cached.values()].find((c) => c.file.startsWith(base + '.') && c.text === s.text);
+    const hit = cached.find((c) => c.file.startsWith(base + '.') && c.text === s.text);
     if (hit && !opts.force && existsSync(join(videoDir, hit.file))) {
       const bytes = readFileSync(join(videoDir, hit.file));
       if (sha(bytes) === hit.sha) {
         log(`${s.id}: cached ${hit.file} (${hit.duration}s)`);
-        return { ...hit, fingerprint: s.fingerprint };
+        out.push({ ...hit, fingerprint: s.fingerprint });
+        continue;
       }
     }
-    const r = tts.synthesize(s.text, voice.voice, voice.rate, join(videoDir, base));
+    const r = await tts.synthesize(s.text, voice.voice, voice.rate, join(videoDir, base));
     const file = `${base}.${r.format}`;
     const bytes = readFileSync(join(videoDir, file));
     const duration = probe(join(videoDir, file)).duration;
@@ -53,15 +57,28 @@ export function narrate(seg: Segment, videoDir: string, opts: NarrateOptions = {
       throw new Error(`${s.id}: last word ends at ${last.end}s but the audio is ${duration}s: truncated`);
     model = r.model ?? model;
     format = r.format;
-    log(`${s.id}: synthesised ${file} (${duration.toFixed(2)}s, ${r.words.length} boundaries)`);
-    return { id: s.id, text: s.text, fingerprint: s.fingerprint, file, sha: sha(bytes), duration, words: r.words };
-  });
+    log(
+      `${s.id}: synthesised ${file} (${duration.toFixed(2)}s, ${r.words.length} boundaries${r.cost ? `, $${r.cost}` : ''})`,
+    );
+    out.push({
+      id: s.id,
+      text: s.text,
+      fingerprint: s.fingerprint,
+      file,
+      sha: sha(bytes),
+      duration,
+      words: r.words,
+      ...(r.cost ? { cost: r.cost } : {}),
+    });
+  }
   const manifest: NarrationManifest = {
     provider: tts.id,
     voice: voice.voice,
     rate: voice.rate,
     ...(model ? { model } : {}),
     format,
+    licence: tts.licence,
+    cost: Math.round(out.reduce((n, s) => n + (s.cost ?? 0), 0) * 1e4) / 1e4,
     generatedAt: new Date().toISOString(),
     sentences: out,
   };

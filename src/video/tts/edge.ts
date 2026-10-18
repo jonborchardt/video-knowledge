@@ -1,6 +1,6 @@
 // Microsoft Edge neural voices through the edge-tts Python package (pip install edge-tts). Free, no key, and it reports
-// word boundaries, which is what drives the animation cues. Unofficial API: fine for a spike, confirm licensing before
-// publishing. VK_PYTHON names the interpreter (default python).
+// word boundaries, which is what drives the animation cues. Unofficial API with no licence for published media: draft
+// narration only. VK_PYTHON names the interpreter (default python).
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import type { TtsProvider, TtsResult } from './index';
@@ -9,7 +9,8 @@ const script = fileURLToPath(new URL('./edge_tts.py', import.meta.url));
 
 export const edge: TtsProvider = {
   id: 'edge',
-  synthesize(text, voice, rate, outFile): TtsResult {
+  licence: 'draft only: unofficial Microsoft Edge read-aloud API, no terms for published media',
+  async synthesize(text, voice, rate, outFile): Promise<TtsResult> {
     const r = spawnSync(process.env.VK_PYTHON ?? 'python', ['-I', script], {
       input: JSON.stringify({ text, voice, rate, out: outFile + '.mp3' }),
       encoding: 'utf8',

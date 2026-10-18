@@ -1,10 +1,11 @@
 // Media QA: what a machine can check about the rendered MP4 against the timeline, the storyboard and the script.
-// Artistic quality is not checked here; the extracted frames in video/frames/ are for a person to look at.
+// Artistic quality is not checked here; the extracted frames in video/frames/ and the contact sheet are for a person.
 import { existsSync, mkdirSync, readdirSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 import { sentences } from '../lib/script';
-import { SUPPORTED_ASSETS } from './kinds';
+import { excerptWindow } from './excerpt';
 import { audioStats, extractFrame, lumaSamples, probe } from './ffmpeg';
+import { SUPPORTED_ASSETS } from './kinds';
 import type { Segment } from './select';
 import { buildTimeline } from './timeline';
 import type { NarrationManifest, Timeline } from './types';
@@ -20,11 +21,11 @@ export interface QaResult {
   frames: { file: string; frame: number; label: string }[];
 }
 export const TOLERANCE = {
-  durationSeconds: [30, 60] as [number, number], // the spike's target segment length
+  durationSlack: 1, // seconds either side of the timeline's length, unless a range is given
   frameSlack: 0.05, // seconds the container may differ from frames/fps
   avSyncSeconds: 0.25, // audio and video stream lengths
   peakDb: -0.1, // above this the narration is clipping
-  silenceSeconds: 2, // the longest silence allowed (pauses are 1 s plus the audio tails)
+  silenceSeconds: 3, // the longest silence allowed (pauses are up to 2 s plus the audio tails)
   silenceNoiseDb: -40,
   blankRunSeconds: 1.5, // flat frames this long in a row are a missing render, not a transition
   flatSd: 1.5, // luma standard deviation below which a thumbnail is flat
@@ -33,7 +34,7 @@ export const TOLERANCE = {
 
 export interface QaOptions {
   frames?: boolean; // extract inspection frames into video/frames (default true)
-  duration?: [number, number];
+  duration?: [number, number]; // seconds; default the timeline's length plus or minus durationSlack
 }
 
 export function qaSegment(
@@ -48,7 +49,8 @@ export function qaSegment(
   const check = (name: string, ok: boolean, detail: string) => checks.push({ name, ok, detail });
   const fps = tl.fps;
   const sec = (frame: number) => (frame / fps).toFixed(2);
-  const range = opts.duration ?? TOLERANCE.durationSeconds;
+  const expected = tl.durationInFrames / fps;
+  const range = opts.duration ?? [expected - TOLERANCE.durationSlack, expected + TOLERANCE.durationSlack];
 
   // Video integrity.
   if (!existsSync(mp4)) {
@@ -76,13 +78,17 @@ export function qaSegment(
     );
     check('frame rate', Math.abs(p.video.fps - fps) < 0.01, `${p.video.fps}`);
     check('h264', p.video.codec === 'h264', p.video.codec);
+    check(
+      'frame count',
+      p.video.frames === tl.durationInFrames,
+      `${p.video.frames} frames, timeline ${tl.durationInFrames}`,
+    );
   }
   check(
     'duration in range',
     p.duration >= range[0] && p.duration <= range[1],
-    `${p.duration.toFixed(2)}s in [${range}]`,
+    `${p.duration.toFixed(2)}s in [${range.map((x) => x.toFixed(1))}]`,
   );
-  const expected = tl.durationInFrames / fps;
   check(
     'duration matches timeline',
     Math.abs(p.duration - expected) <= 1 / fps + TOLERANCE.frameSlack,
@@ -105,19 +111,24 @@ export function qaSegment(
         : `none >= ${TOLERANCE.silenceSeconds}s`,
     );
   }
-  for (const s of tl.scenes.flatMap((x) => x.sentences)) {
-    const m = manifest.sentences.find((x) => x.id === s.id);
-    const lastWord = m?.words.at(-1)?.end ?? 0;
-    check(
-      `narration ${s.id} not truncated`,
-      !!m && m.duration >= lastWord - 0.05 && s.duration >= Math.ceil(m.duration * fps),
-      m ? `audio ${m.duration}s, last word ${lastWord}s, slot ${s.duration} frames` : 'not in manifest',
-    );
-  }
+  const truncated = tl.scenes
+    .flatMap((x) => x.sentences)
+    .filter((s) => {
+      const m = manifest.sentences.find((x) => x.id === s.id);
+      const lastWord = m?.words.at(-1)?.end ?? 0;
+      return !m || m.duration < lastWord - 0.05 || s.duration < Math.ceil(m.duration * fps);
+    });
+  check(
+    'narration not truncated',
+    truncated.length === 0,
+    truncated.length
+      ? truncated.map((s) => s.id).join(', ')
+      : `${tl.scenes.flatMap((x) => x.sentences).length} sentences fit their slots`,
+  );
 
   // Content integrity.
   const ids = tl.scenes.map((s) => s.id);
-  check('scene order', ids.join() === seg.config.scenes.join(), ids.join(' '));
+  check('scene order', ids.join() === seg.config.scenes.join(), `${ids[0]} to ${ids.at(-1)} (${ids.length})`);
   const sb = seg.storyboard.scenes.map((s) => s.id);
   const k = sb.indexOf(ids[0]);
   check(
@@ -125,54 +136,92 @@ export function qaSegment(
     k >= 0 && sb.slice(k, k + ids.length).join() === ids.join(),
     `from ${ids[0]}`,
   );
-  const text = new Map(sentences(seg.script).map((s) => [s.id, s.text]));
-  for (const s of tl.scenes.flatMap((x) => x.sentences))
-    check(`narration ${s.id} matches script`, text.get(s.id) === s.text, s.text.slice(0, 60));
+  const all = sentences(seg.script);
+  const text = new Map(all.map((s) => [s.id, s.text]));
+  const have = new Set(tl.scenes.flatMap((x) => x.sentences.map((s) => s.id)));
+  const full = ids.length === sb.length;
+  check(
+    full ? 'every storyboard scene rendered' : 'partial render',
+    true,
+    full ? `${ids.length} scenes` : `${ids.length} of ${sb.length} scenes`,
+  );
+  if (full) {
+    const missing = all.filter((s) => !have.has(s.id)).map((s) => s.id);
+    check(
+      'every script sentence narrated',
+      missing.length === 0,
+      missing.length ? `missing ${missing.join(', ')}` : `${all.length} sentences in script order`,
+    );
+    const order = tl.scenes.flatMap((x) => x.sentences.map((s) => s.id));
+    check('sentences in script order', order.join() === all.map((s) => s.id).join(), order.length + ' sentences');
+  }
+  const mismatched = tl.scenes.flatMap((x) => x.sentences).filter((s) => text.get(s.id) !== s.text);
+  check(
+    'narration matches script',
+    mismatched.length === 0,
+    mismatched.length ? mismatched.map((s) => s.id).join(', ') : 'every sentence verbatim',
+  );
   check(
     'fingerprints',
     tl.fingerprints.script === seg.fingerprints.script && tl.fingerprints.storyboard === seg.fingerprints.storyboard,
-    `script ${tl.fingerprints.script}, storyboard ${tl.fingerprints.storyboard}`,
+    `script ${tl.fingerprints.script}, storyboard ${tl.fingerprints.storyboard}${seg.release ? ' (locked)' : ' (no release)'}`,
   );
+  const problems: string[] = [];
   for (const { scene, citations } of seg.scenes) {
     const t = tl.scenes.find((x) => x.id === scene.id);
     const want = (scene.citations ?? []).map((c) => c.label);
-    const have = t?.citations.map((c) => c.label) ?? [];
-    check(
-      `${scene.id} citations`,
-      want.every((l) => have.includes(l)) && citations.length === want.length,
-      want.join('; ') || 'none',
-    );
-    if (scene.visual.chart)
-      check(
-        `${scene.id} chart data`,
-        JSON.stringify(t?.chart?.points) === JSON.stringify(scene.visual.chart.points),
-        scene.visual.chart.points.map((p) => `${p.label}=${p.display}`).join(', '),
-      );
-    check(
-      `${scene.id} assets`,
-      (t?.assets ?? []).every((a) => SUPPORTED_ASSETS.has(a)),
-      (t?.assets ?? []).join(', ') || 'none',
-    );
-    check(`${scene.id} rendered as`, !!t?.kind, t?.kind ?? 'unsupported');
+    const got = t?.citations.map((c) => c.label) ?? [];
+    if (!want.every((l) => got.includes(l)) || citations.length !== want.length) problems.push(`${scene.id} citations`);
+    if (scene.visual.chart && JSON.stringify(t?.chart?.points) !== JSON.stringify(scene.visual.chart.points))
+      problems.push(`${scene.id} chart data`);
+    if (!(t?.assets ?? []).every((a) => SUPPORTED_ASSETS.has(a))) problems.push(`${scene.id} assets`);
+    if (!t?.kind) problems.push(`${scene.id} unsupported`);
+    if (scene.visual.excerpt) {
+      const ex = t?.excerpt;
+      if (!ex?.text) problems.push(`${scene.id} excerpt text`);
+      else if (ex.highlight && excerptWindow(ex.text, ex.highlight).match === null)
+        problems.push(`${scene.id} highlight not in passage`);
+    }
   }
+  check(
+    'citations present',
+    !problems.some((p) => p.endsWith('citations')),
+    `${tl.scenes.reduce((n, s) => n + s.citations.length, 0)} on-screen citations resolved`,
+  );
+  check(
+    'chart data matches storyboard',
+    !problems.some((p) => p.endsWith('chart data')),
+    `${tl.scenes.filter((s) => s.chart).length} charts`,
+  );
+  check(
+    'excerpts resolve',
+    !problems.some((p) => /excerpt|highlight/.test(p)),
+    `${tl.scenes.filter((s) => s.excerpt).length} excerpts with their highlights`,
+  );
+  check(
+    'assets and kinds supported',
+    !problems.some((p) => /assets|unsupported/.test(p)),
+    problems.filter((p) => /assets|unsupported/.test(p)).join(', ') ||
+      `${new Set(tl.scenes.map((s) => s.kind)).size} kinds`,
+  );
 
   // Synchronisation.
-  const again = buildTimeline(seg, manifest, fps);
+  const again = buildTimeline(seg, manifest, fps, () => 'x');
   check(
     'scene boundaries follow measured audio',
     again.scenes.every((s, i) => s.start === tl.scenes[i]?.start && s.duration === tl.scenes[i]?.duration),
-    tl.scenes.map((s) => `${s.id} ${sec(s.start)}-${sec(s.start + s.duration)}s`).join(', '),
+    `${tl.scenes.length} scenes, ${tl.scenes.flatMap((s) => s.sentences).length} sentences`,
   );
+  const badCues: string[] = [];
+  let cues = 0;
   for (const s of tl.scenes)
     for (const [name, frame] of Object.entries(s.cues)) {
-      const c = seg.config.cues[s.id][name];
-      const sent = s.sentences.find((x) => x.id === c.sentence)!;
-      check(
-        `${s.id} cue ${name} inside ${c.sentence}`,
-        frame >= sent.start && frame < sent.start + sent.duration,
-        `"${c.word}" at ${sec(frame)}s, sentence ${sec(sent.start)}-${sec(sent.start + sent.duration)}s`,
-      );
+      cues++;
+      const c = seg.config.cues[s.id]?.[name];
+      const sent = s.sentences.find((x) => x.id === c?.sentence);
+      if (!c || !sent || frame < sent.start || frame >= sent.start + sent.duration) badCues.push(`${s.id}.${name}`);
     }
+  check('cues inside their sentences', badCues.length === 0, badCues.join(', ') || `${cues} cues`);
   const last = tl.scenes.at(-1)!;
   check(
     'final scene complete',
@@ -191,21 +240,22 @@ export function qaSegment(
     run = f ? run + 1 : 0;
     if (run > worst) [worst, where] = [run, i];
   });
+  const endFade = last.kind === 'phone-end'; // the storyboard's dim to black at the end is intentional
+  const worstAt = where / TOLERANCE.samplesPerSecond;
   check(
     'no blank sections',
-    worst < maxRun,
-    worst
-      ? `longest flat run ${worst / TOLERANCE.samplesPerSecond}s ending at ${(where / TOLERANCE.samplesPerSecond).toFixed(1)}s`
-      : 'none',
+    worst < maxRun || (endFade && worstAt >= last.start / fps),
+    worst ? `longest flat run ${worst / TOLERANCE.samplesPerSecond}s ending at ${worstAt.toFixed(1)}s` : 'none',
   );
-  for (const s of tl.scenes) {
+  const notRendered = tl.scenes.filter((s) => {
     const i = Math.min(samples.length - 1, Math.floor(((s.start + s.duration / 2) / fps) * TOLERANCE.samplesPerSecond));
-    check(
-      `${s.id} rendered`,
-      samples[i] !== undefined && samples[i].sd >= TOLERANCE.flatSd,
-      samples[i] ? `mid-scene luma sd ${samples[i].sd.toFixed(1)}` : 'no sample',
-    );
-  }
+    return samples[i] === undefined || samples[i].sd < TOLERANCE.flatSd;
+  });
+  check(
+    'every scene has content',
+    notRendered.length === 0,
+    notRendered.length ? notRendered.map((s) => s.id).join(', ') : 'mid-scene luma varies in every scene',
+  );
 
   // Inspection frames.
   const frames: QaResult['frames'] = [];
@@ -217,7 +267,10 @@ export function qaSegment(
     for (const s of tl.scenes) {
       wanted.push({ frame: s.start + Math.round(s.duration / 2), label: `${s.id}-mid` });
       for (const [name, frame] of Object.entries(s.cues))
-        wanted.push({ frame: frame + 15, label: `${s.id}-${name.replace(/[^a-z0-9]+/gi, '-')}` });
+        wanted.push({
+          frame: Math.min(frame + 15, s.start + s.duration - 1),
+          label: `${s.id}-${name.replace(/[^a-z0-9]+/gi, '-')}`,
+        });
       wanted.push({ frame: s.start + s.duration - 2, label: `${s.id}-end` });
     }
     for (const w of wanted.sort((a, b) => a.frame - b.frame)) {

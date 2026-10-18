@@ -2,15 +2,22 @@
 
 export const normWord = (w: string) => w.toLowerCase().replace(/[^a-z0-9]/g, '');
 
-/** One token per spoken word. edge-tts groups a numeral with the word before it ("asked 601", "47 percent"); each
- *  token keeps the whole boundary's span, so a numeral cue lands at the start of its boundary. */
-export function tokens<T extends { text: string }>(words: T[]): T[] {
-  return words.flatMap((w) =>
-    w.text
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((t) => ({ ...w, text: t })),
-  );
+/** One token per spoken word. edge-tts groups a numeral with the word before it ("asked 601", "47 percent"); the
+ *  boundary's span is split between the tokens in proportion to their letters, so "601" starts after "asked" rather
+ *  than with it. A single-word boundary is returned as is. */
+export function tokens<T extends { text: string; start?: number; end?: number }>(words: T[]): T[] {
+  return words.flatMap((w) => {
+    const parts = w.text.split(/\s+/).filter(Boolean);
+    if (parts.length <= 1) return [w];
+    const total = parts.reduce((n, p) => n + p.length, 0);
+    const span = (w.end ?? 0) - (w.start ?? 0);
+    let at = w.start ?? 0;
+    return parts.map((p) => {
+      const start = at;
+      at += (span * p.length) / total;
+      return { ...w, text: p, start, end: at };
+    });
+  });
 }
 
 /** The nth (1-based) token equal to `word`, or null. */

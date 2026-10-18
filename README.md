@@ -162,24 +162,34 @@ speaker attribution can be confirmed from), so `<topic>/sources/*.txt` plus `<to
 ## Video
 
 A validated storyboard becomes an MP4 in `<topic>/scripts/<slug>/video/`. `render.json` (committed, written by
-hand) names the contiguous scenes to render, the voice, and the cues: which narration word each animation waits
-for. Narration is one file per sentence from the provider in `VK_TTS_PROVIDER` (default `edge`: Microsoft neural
-voices through `pip install edge-tts`, free, word boundaries included), cached by voice, rate and text, with the
-measured duration in `narration.json`. The timeline tiles the scenes by that measured audio, never by the word-count
-estimate, and resolves every cue to the frame its word is spoken on. The composition is Remotion (React, one component
-per scene kind in `src/video/remotion/scenes/`); ffmpeg comes with Remotion, nothing else is installed. Rendering
-needs Chrome (downloaded on first run). Scene kinds the renderer does not have are reported, never substituted.
+hand) names the contiguous scenes to render, the voice, the cues (which narration word each animation waits for), a
+bespoke `kinds` entry for scenes the storyboard category alone does not identify (one scene's own diagram or
+animation), and per-scene `options` (layout choices, never figures). Narration is one file per sentence, cached by
+voice, rate and text, with the measured duration and word boundaries in `narration.json`. Providers: `edge`
+(Microsoft neural voices through `pip install edge-tts`, free, draft only: no licence for published media) and
+`openai` (commercial terms; `OPENAI_API_KEY`, word timestamps from its transcription of the output, cost estimated
+in the manifest). The timeline tiles the scenes by the measured audio, never by the word-count estimate, resolves
+every cue to the frame its word is spoken on, and reads each cited excerpt from the corpus. The composition is
+Remotion (React, one component per scene kind in `src/video/remotion/scenes/`, the closed kind list in
+`src/video/kinds.ts`). Scenes render one at a time into cached chunks (`video/scenes/`, keyed by the scene and the
+code that draws it), the chunks are concatenated without re-encoding, and the narration is laid down as one
+loudness-normalised track; ffmpeg comes with Remotion, nothing else is installed. Rendering needs Chrome (downloaded
+on first run). A scene without a renderer is reported, never substituted.
 
 ```
-npm run video -- spike <topic> <story-id>      # narrate, timeline, render video/segment.mp4, qa, build-report.md
+npm run video -- spike <topic> <story-id>      # narrate, timeline, render video/segment.mp4, qa, report, contact sheet
 npm run video -- narrate <topic> <story-id>    # only the audio (add --regenerate to ignore the cache)
 npm run video -- timeline <topic> <story-id>   # only video/timeline.json
-npm run video -- render <topic> <story-id>     # only the mp4
-npm run video -- qa <topic> <story-id>         # checks, inspection frames in video/frames/, the report (exit 2 on failure)
+npm run video -- render <topic> <story-id> [--scene sc17 | --from sc10 --to sc20] [--force]
+                                               # the whole render.json into video/segment.mp4, or a range into video/scenes/<range>.mp4
+npm run video -- qa <topic> <story-id>         # checks, frames in video/frames/, video/contact-sheet.png, the report (exit 2 on failure)
 npm run video -- preview <topic> <story-id>    # Remotion studio on the same composition and timeline
 ```
 
-Commit `render.json`, `narration.json`, `timeline.json` and the build report; the audio, frames and mp4 are ignored.
+Commit `render.json`, `narration.json`, `timeline.json` and the build report; the audio, chunks, frames, contact
+sheet and mp4 are ignored. The production board (`/production/`) reads the build report: a render of every
+storyboard scene that passes QA against the locked fingerprints is `rendered`; anything less is `video`. QA is
+integrity and consistency only; a person reviews the contact sheet and the video before any publication decision.
 Validation blocks when a cited document no longer matches its recorded sha (`stale-source`), and a review counts
 only for the package fingerprint it names; two documents marked `sameStudy` in `site.json` count as one. The
 gitignored transcripts are needed only to build a package for a new story; rebuilding an existing package without

@@ -1,6 +1,7 @@
 // Timeline: the measured narration durations tile the scenes; the storyboard's word-count estimates are not used.
-// Deterministic given the segment, the manifest and render.json. Every cue resolves to the frame its word is spoken
-// on, or the build fails.
+// Deterministic given the segment, the manifest, render.json and the cited passages. Every cue resolves to the frame
+// its word is spoken on, and every excerpt to its passage, or the build fails.
+import type { PassageReader } from '../lib/evidence';
 import { sha } from '../lib/script';
 import { narrationFingerprint } from './narration';
 import type { Segment } from './select';
@@ -15,11 +16,20 @@ import {
 } from './types';
 import { findWord, tokens } from './words';
 
-export type SegmentCore = Pick<Segment, 'scenes' | 'sentences' | 'config' | 'fingerprints' | 'script' | 'storyboard'>;
+export type SegmentCore = Pick<
+  Segment,
+  'scenes' | 'sentences' | 'config' | 'fingerprints' | 'script' | 'storyboard' | 'pkg'
+>;
 
-export function buildTimeline(seg: SegmentCore, manifest: NarrationManifest, fps = FPS): Timeline {
+export function buildTimeline(
+  seg: SegmentCore,
+  manifest: NarrationManifest,
+  fps = FPS,
+  read?: PassageReader,
+): Timeline {
   const f = (seconds: number) => Math.round(seconds * fps);
   const audio = new Map(manifest.sentences.map((s) => [s.id, s]));
+  const docName = new Map(seg.pkg.documents.map((d) => [d.file, d.name]));
   let cursor = 0;
   const scenes: TimelineScene[] = seg.scenes.map(({ scene, kind, citations }, order) => {
     const start = cursor;
@@ -55,6 +65,20 @@ export function buildTimeline(seg: SegmentCore, manifest: NarrationManifest, fps
       if (!w) throw new Error(`${scene.id}: cue "${name}": "${c.word}" is not spoken in ${c.sentence}`);
       cues[name] = w.frame;
     }
+    let excerpt: TimelineScene['excerpt'] = null;
+    if (scene.visual.excerpt) {
+      const { cite, highlight } = scene.visual.excerpt;
+      const text = read?.(cite) ?? null;
+      if (text === null) throw new Error(`${scene.id}: excerpt ${cite} cannot be read from the corpus`);
+      const [file, anchor] = cite.split('#');
+      excerpt = {
+        cite,
+        doc: docName.get(file) ?? file,
+        lines: (anchor ?? '').replace(/L/g, ''),
+        text,
+        highlight: highlight ?? null,
+      };
+    }
     return {
       id: scene.id,
       order: order + 1,
@@ -66,8 +90,10 @@ export function buildTimeline(seg: SegmentCore, manifest: NarrationManifest, fps
       cues,
       onScreenText: scene.visual.onScreenText ?? [],
       chart: scene.visual.chart ?? null,
+      excerpt,
       citations,
       assets: scene.visual.assetIds ?? [],
+      options: seg.config.options?.[scene.id] ?? {},
     };
   });
   return {
@@ -83,7 +109,7 @@ export function buildTimeline(seg: SegmentCore, manifest: NarrationManifest, fps
       narration: narrationFingerprint(manifest),
       config: sha(JSON.stringify(seg.config)),
     },
-    narration: { provider: manifest.provider, voice: manifest.voice, rate: manifest.rate },
+    narration: { provider: manifest.provider, voice: manifest.voice, rate: manifest.rate, licence: manifest.licence },
     scenes,
   };
 }
