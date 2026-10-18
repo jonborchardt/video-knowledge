@@ -16,7 +16,7 @@ import {
   sentences,
   storySlug,
 } from '../lib/script';
-import { readJson } from '../lib/io';
+import { readJson, ROOT } from '../lib/io';
 import type { Scene, Storyboard } from '../lib/storyboard';
 import {
   GENERIC,
@@ -174,7 +174,7 @@ export function checkSegment(
 }
 
 /** The segment from <topic>/scripts/<slug>/ and its video/render.json; throws listing every problem. */
-export function loadSegment(topic: string, storyId: string, root = process.cwd()): Segment {
+export function loadSegment(topic: string, storyId: string, root = ROOT): Segment {
   const dir = scriptDir(topic, storyId, root);
   const need = <T>(name: string, hint: string): T => {
     const p = join(dir, name);

@@ -29,7 +29,7 @@ const importsOf = (file: string, values = false): string[] =>
 /** Every module reachable from `entries` by value imports, the entries included. */
 export function deepImports(entries: string[]): Set<string> {
   const seen = new Set<string>();
-  for (const stack = [...entries]; stack.length; ) {
+  for (const stack = [...entries]; stack.length;) {
     const f = stack.pop()!;
     if (seen.has(f)) continue;
     seen.add(f);

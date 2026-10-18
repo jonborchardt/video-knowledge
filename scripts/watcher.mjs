@@ -4,8 +4,9 @@ import { execFileSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ROOT } from '../src/lib/io.ts'; // one definition of the repo root, shared with the TypeScript stages
 
-export const ROOT = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+export { ROOT };
 const CLI = join(process.env.WATCHER_DIR ?? join(ROOT, '..', 'retire-sim', 'watcher'), 'src', 'cli.ts');
 
 export function watcher(args, opts = {}) {

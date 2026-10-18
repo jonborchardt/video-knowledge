@@ -6,7 +6,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { type PassageReader, passageReader } from './evidence';
-import { fileSha, lf, readJson, toJson } from './io';
+import { fileSha, lf, readJson, toJson, ROOT } from './io';
 import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
@@ -44,7 +44,7 @@ export interface Decision {
 }
 export const DECISIONS = ['queued', 'parked', 'reviewing', 'published'] as const;
 export const DECISIONS_FILE = 'production.json';
-export function loadDecisions(root = process.cwd()): Record<string, Decision> {
+export function loadDecisions(root = ROOT): Record<string, Decision> {
   return readJson<Record<string, Decision>>(join(root, DECISIONS_FILE)) ?? {};
 }
 
@@ -525,7 +525,7 @@ const BOARD_STAGES: BoardStage[] = [
 ];
 
 /** One script directory, checked artifact by artifact against what the library would produce now. */
-export function productionOf(topic: string, storyId: string, root = process.cwd()): Production | null {
+export function productionOf(topic: string, storyId: string, root = ROOT): Production | null {
   const dir = scriptDir(topic, storyId, root);
   if (!existsSync(dir)) return null;
   const p = (f: string) => join(dir, f);
@@ -614,7 +614,7 @@ interface StoreVideo {
 }
 
 /** The research pipeline for one topic, as the store records it, then every story with its production (if any). */
-export function topicBoard(name: string, root = process.cwd(), decisions = loadDecisions(root)): TopicBoard {
+export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(root)): TopicBoard {
   const dir = join(root, name);
   const topic = loadTopic(name);
   const checks: Check[] = [];
@@ -750,7 +750,7 @@ export function columnOf(r: StoryRow): Column {
   return r.story.readiness === 'rejected' ? 'parked' : r.story.readiness;
 }
 
-export function board(root = process.cwd()): TopicBoard[] {
+export function board(root = ROOT): TopicBoard[] {
   const decisions = loadDecisions(root);
   for (const [k, d] of Object.entries(decisions)) {
     if (!DECISIONS.includes(d.decision) || typeof d.note !== 'string' || !d.date)

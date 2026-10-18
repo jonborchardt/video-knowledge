@@ -12,7 +12,7 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Applicability, Assertion, EvidenceRef, Stance, Validation } from './evidence';
-import { sha } from './io';
+import { sha, ROOT } from './io';
 import type { Story } from './stories';
 import { topicNames } from './topics';
 
@@ -289,7 +289,7 @@ export interface Release {
 // ---- files -------------------------------------------------------------------------------------------------------
 
 export const storySlug = (storyId: string) => storyId.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
-export const scriptDir = (topic: string, storyId: string, root = process.cwd()) =>
+export const scriptDir = (topic: string, storyId: string, root = ROOT) =>
   join(root, topic, 'scripts', storySlug(storyId));
 export const FILES = {
   pkg: 'evidence-package.json',
@@ -303,7 +303,7 @@ export const FILES = {
   release: 'release.json',
 } as const;
 /** Every <topic>/scripts/<slug> with a script.json, for the site and the tests. */
-export function scriptDirs(root = process.cwd()): { topic: string; slug: string; dir: string }[] {
+export function scriptDirs(root = ROOT): { topic: string; slug: string; dir: string }[] {
   return topicNames().flatMap((topic) => {
     const base = join(root, topic, 'scripts');
     if (!existsSync(base)) return [];

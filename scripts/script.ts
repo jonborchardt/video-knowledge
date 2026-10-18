@@ -9,7 +9,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
-import { fileSha, readJson, toJson, writeArtifact } from '../src/lib/io';
+import { fileSha, readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadReview, reviewPath } from '../src/lib/review';
 import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
@@ -52,8 +52,8 @@ const read = passageReader();
 const p = (name: string) => join(dir, name);
 const rel = (f: string) =>
   f
-    .replace(process.cwd() + '\\', '')
-    .replace(process.cwd() + '/', '')
+    .replace(ROOT + '\\', '')
+    .replace(ROOT + '/', '')
     .replaceAll('\\', '/');
 
 function stagePackage(): EvidencePackage {
@@ -69,7 +69,7 @@ function stagePackage(): EvidencePackage {
     inputs: {
       stories: fileSha(storiesPath(topic)),
       review: fileSha(reviewPath(topic)),
-      report: fileSha(join(process.cwd(), topic, 'report.json')),
+      report: fileSha(join(ROOT, topic, 'report.json')),
     },
     readTranscript: transcriptReader(topic),
     previous: old,

@@ -10,7 +10,7 @@
 // Every score is an editorial heuristic from corpus counts and the audit, labelled as such. Nothing is audience data.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson } from './io';
+import { readJson, ROOT } from './io';
 import {
   type Assertion,
   type EvidenceItem,
@@ -615,7 +615,6 @@ export function discover(t: StoryInput, readPassage: PassageReader, review: Revi
   };
 }
 
-const ROOT = process.cwd();
 export const storiesPath = (topic: string) => join(ROOT, topic, 'stories.json');
 export function loadStories(topic: string): StoriesFile | null {
   return readJson<StoriesFile>(storiesPath(topic));

@@ -17,7 +17,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
-import { readJson, sha, toJson } from '../src/lib/io';
+import { readJson, sha, toJson, ROOT } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
@@ -51,7 +51,7 @@ const dir = videoDir(topic, storyId);
 const p = (name: string) => join(dir, name);
 const rel = (f: string) =>
   f
-    .replace(process.cwd(), '')
+    .replace(ROOT, '')
     .replace(/^[\\/]/, '')
     .replaceAll('\\', '/');
 const command = `npm run video -- ${cmd} ${topic} ${storyId}${rest.length ? ' ' + rest.join(' ') : ''}`;

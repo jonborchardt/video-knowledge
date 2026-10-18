@@ -3,7 +3,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type PassageReader, type Stance, applicabilityOf, judgmentKey } from './evidence';
-import { lf, sha } from './io';
+import { lf, sha, ROOT } from './io';
 import type { ReviewFile } from './review';
 import {
   type EvidencePackage,
@@ -23,7 +23,7 @@ const fileOf = (cite: string) => docOf(cite).split('/').pop()!;
 
 /** Reads a repo-relative document (`<topic>/sources/<file>.txt`) with normalised line endings; null when it is gone. */
 export type DocReader = (file: string) => string | null;
-export function docReader(root = process.cwd()): DocReader {
+export function docReader(root = ROOT): DocReader {
   return (file) => {
     const p = join(root, file);
     return existsSync(p) ? lf(readFileSync(p, 'utf8')) : null;
@@ -31,7 +31,7 @@ export function docReader(root = process.cwd()): DocReader {
 }
 export type DocHasher = (file: string) => string | null;
 /** The sha the package records for a document; null when the reader has no such file. */
-export function docHasher(readDoc: DocReader | string = process.cwd()): DocHasher {
+export function docHasher(readDoc: DocReader | string = ROOT): DocHasher {
   const r = typeof readDoc === 'string' ? docReader(readDoc) : readDoc;
   return (file) => {
     const text = r(file);
@@ -40,7 +40,7 @@ export function docHasher(readDoc: DocReader | string = process.cwd()): DocHashe
 }
 export type TranscriptReader = (sourceId: string) => string | null;
 /** Reads `<root>/<topic>/store/transcripts/<source id>.txt` (a gitignored cache); null when it is not there. */
-export function transcriptReader(topic: string, root = process.cwd()): TranscriptReader {
+export function transcriptReader(topic: string, root = ROOT): TranscriptReader {
   return (id) => {
     const p = join(root, topic, 'store', 'transcripts', `${id}.txt`);
     return existsSync(p) ? readFileSync(p, 'utf8') : null;

@@ -7,7 +7,7 @@
 //   video section -> music cue -> composition/variation -> rendered audio asset (music/<composition>/<variation>.wav)
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, sha } from '../lib/io';
+import { readJson, sha, ROOT } from '../lib/io';
 import type { Duck, Span } from './mix';
 import type { Timeline } from './types';
 
@@ -96,7 +96,7 @@ export function anchorSeconds(a: string, edge: 'start' | 'end', tl: Timeline): n
   return Math.max(0, Math.min(tl.durationInFrames / tl.fps, at / tl.fps + p.offset));
 }
 
-export function loadComposition(id: string, root = process.cwd()): Composition {
+export function loadComposition(id: string, root = ROOT): Composition {
   const dir = join(root, MUSIC_DIR, id);
   const c = readJson<Composition>(join(dir, COMPOSITION_FILE));
   if (!c) throw new Error(`no ${MUSIC_DIR}/${id}/${COMPOSITION_FILE}`);
@@ -106,7 +106,7 @@ export function loadComposition(id: string, root = process.cwd()): Composition {
 
 /** Resolve every cue of `cfg` against the timeline and the composition manifests on disk; throws listing every
  *  problem (a missing asset, an unknown scene, an end before a start, a WAV whose bytes are not the manifest's). */
-export function resolveCues(cfg: MusicConfig, tl: Timeline, root = process.cwd()): ResolvedCue[] {
+export function resolveCues(cfg: MusicConfig, tl: Timeline, root = ROOT): ResolvedCue[] {
   const problems: string[] = [];
   const out: ResolvedCue[] = [];
   const seen = new Set<string>();
