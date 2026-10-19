@@ -53,14 +53,14 @@ export const BranchClosing: FC<{ scene: TimelineScene }> = ({ scene }) => {
           height={box.h}
           rx={36}
           fill="none"
-          stroke={pulse > 0 ? theme.slate : theme.muted}
+          stroke={pulse > 0.01 ? theme.slate : theme.muted}
           strokeWidth={4 + 6 * pulse}
           opacity={ramp(t, scene.start + 4, 12)}
         />
         <text
           x={box.x + 40}
           y={box.y - 24}
-          fill={pulse > 0 ? theme.slate : theme.muted}
+          fill={pulse > 0.01 ? theme.slate : theme.muted}
           fontSize={44}
           opacity={ramp(t, scene.start + 4, 12)}
         >

@@ -4,7 +4,7 @@ Upload `surprise-most-new-businesses-including-online-stores-review-private.mp4`
 
 - Working title: [PRIVATE REVIEW] Do Most New Businesses Really Fail in a Few Years?
 - Duration: 9:54 (595.0s), 1920x1080 @ 30 fps
-- MP4 sha: 2f9e7e89fc; build report 4c72c01392; QA 36/36
+- MP4 sha: 5686179708; build report 52eb3f775b; QA 36/36
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card)
 

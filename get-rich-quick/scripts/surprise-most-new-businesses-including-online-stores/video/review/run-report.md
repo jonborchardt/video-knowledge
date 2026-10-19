@@ -42,7 +42,7 @@ refuse anything (no cited verdict was replaced).
 
 - sc25: built as `nb-branch-closing` (new component `BranchClosing.tsx`). A company outline holds three stores; the
   middle one goes dark with a "closing" tag on "stopped", and the outline pulses on "carries". A separate visual
-  reviewer approved it at key `c3f14ef107`. No scene was drawn as labelled text instead of its diagram.
+  reviewer approved it at key `c3f14ef107`; after the code review fixed the outline staying slate after its pulse, a fresh reviewer re-approved it at `8af71fa279` and the video was re-rendered (QA passed again). No scene was drawn as labelled text instead of its diagram.
 - The storyboard planned no other diagrams. The definitions are shown as document excerpts (sc20, sc24, sc26).
 
 ## Video fixes

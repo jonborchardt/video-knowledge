@@ -1,10 +1,10 @@
 # Build report: Do Most New Businesses Really Fail in a Few Years?
 
-get-rich-quick / surprise:most-new-businesses-including-online-stores, 2026-10-19T08:30:39.292Z. `npm run video -- qa get-rich-quick surprise:most-new-businesses-including-online-stores`
+get-rich-quick / surprise:most-new-businesses-including-online-stores, 2026-10-19T14:50:23.742Z. `npm run video -- spike get-rich-quick surprise:most-new-businesses-including-online-stores`
 
 **Segment.** 36 of 36 storyboard scenes (sc01 to sc36), 58 sentences. Kinds: sc01 quote, sc02 quote, sc03 title, sc04 question, sc05 excerpt, sc06 quote, sc07 list, sc08 quote, sc09 question, sc10 stat-tiles, sc11 bar, sc12 bar, sc13 bar, sc14 bar, sc15 bar, sc16 transition, sc17 list, sc18 stat-tiles, sc19 stat-tiles, sc20 excerpt, sc21 stat-tiles, sc22 bar, sc23 transition, sc24 excerpt, sc25 nb-branch-closing, sc26 excerpt, sc27 list, sc28 list, sc29 title, sc30 question, sc31 list, sc32 list, sc33 question, sc34 bar, sc35 list, sc36 title.
 
-**Output.** get-rich-quick/scripts/surprise-most-new-businesses-including-online-stores/video/segment.mp4: 594.99s, 1920x1080 @ 30 fps, h264 + aac, 17849 frames, rendered in 0s ($0 (local CPU)).
+**Output.** get-rich-quick/scripts/surprise-most-new-businesses-including-online-stores/video/segment.mp4: 594.99s, 1920x1080 @ 30 fps, h264 + aac, 17849 frames, rendered in 109.6s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate -10%), mp3, 574.78s of speech at about 144 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -114,7 +114,7 @@ get-rich-quick / surprise:most-new-businesses-including-online-stores, 2026-10-1
 | excerpts resolve | ok | 4 excerpts with their highlights |
 | assets and kinds supported | ok | 9 kinds |
 | music cues resolve | ok | 4 cues over 1 compositions |
-| soundtrack mixed | ok | 4 cues, 2026-10-19T08:29:23.341Z |
+| soundtrack mixed | ok | 4 cues, 2026-10-19T14:49:11.920Z |
 | mix is of this cue sheet | ok | mix 844aeba44a, cue sheet 844aeba44a |
 | every cue sounded | ok | 4 cues audible where placed |
 | music under the voice | ok | -19.3 dB relative to speech (want -40 to -10) |
