@@ -6,10 +6,17 @@ import type { TimelineScene } from '../../types';
 import { GUTTER, easeOut, ramp, theme } from '../theme';
 
 const COLORS = [theme.red, theme.slate, theme.green];
+const NAMED: Record<string, string> = {
+  red: theme.red,
+  slate: theme.slate,
+  green: theme.green,
+  amber: theme.amber,
+  muted: theme.muted,
+};
 
-/** One bar filling left to right, each segment on its `point:<label>` cue; widths are the published percentages of the
+/** One bar filling left to right (segment colours from options.colors when given), each segment on its `point:<label>` cue; widths are the published percentages of the
  *  full bar, so a total under 100 leaves the remainder visibly empty. `stacked-bar` (sc04) opens with a big number
- *  counting up (cue `count`). `base-rate` (sc38) merges the first two segments under one label (the first on-screen
+ *  counting up (cue `count`) when its first on-screen line starts with one. `base-rate` (sc38) merges the first two segments under one label (the first on-screen
  *  line) on the `merge` cue, with the sum shown as its parts beneath; the third segment takes the third line. */
 export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
@@ -18,7 +25,13 @@ export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const base = scene.kind === 'base-rate';
   const count = cue(scene, 'count', s0.start + 10);
   const [big, ...rest] = (scene.onScreenText[0] ?? '').split(/\s+/);
-  const target = base ? NaN : Number(big.replace(/[^0-9.]/g, ''));
+  const target = base || !/^[0-9]/.test(big) ? NaN : Number(big.replace(/[^0-9.]/g, ''));
+  // options.colors: segment colours in point order, e.g. "slate,red,muted"; default red, slate, green.
+  const colors = scene.options.colors
+    ? String(scene.options.colors)
+        .split(',')
+        .map((c) => NAMED[c.trim()] ?? theme.muted)
+    : COLORS;
   const shown = Number.isFinite(target) ? Math.round(target * easeOut((t - count) / 24)) : null;
   const fills = pointFrames(scene);
   const lines = lineFrames(scene);
@@ -68,7 +81,7 @@ export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
             const merged = base && i < 2 ? merge : 0;
             const color = merged
               ? `rgb(${201 + (111 - 201) * merged * (i === 0 ? 0 : 1)}, ${71 + (143 - 71) * merged * (i === 0 ? 0 : 1)}, ${61 + (179 - 61) * merged * (i === 0 ? 0 : 1)})`
-              : COLORS[i % COLORS.length];
+              : colors[i % colors.length];
             return (
               <div
                 key={p.label}
@@ -152,7 +165,7 @@ export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   left,
                   top: 0,
                   fontSize: 32,
-                  color: COLORS[i % COLORS.length],
+                  color: colors[i % colors.length],
                   opacity: ramp(t, fills[i] + 8, 8),
                   whiteSpace: 'nowrap',
                   maxWidth: W - left,

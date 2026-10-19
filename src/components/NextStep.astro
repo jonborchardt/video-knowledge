@@ -1,6 +1,6 @@
 ---
-// A board item's next move: a button that opens a native popover (no client script) listing each step as a
-// command to run, a prompt to hand an agent, or a manual step. One click selects a block for copying.
+// A board item's next move: a button that opens a native popover listing each step as a command to run, a
+// prompt to hand an agent, or a manual step. Each block has a Copy button (the only client script here).
 import { type Step, stepsOf, type Upload } from '../lib/production';
 
 interface Props {
@@ -28,6 +28,7 @@ const LABEL: Record<Step['kind'], string> = {
   prompt: 'Give an agent this prompt',
   do: 'Do',
 };
+const COPY = 'absolute top-1 right-1 rounded-sm border bg-card px-1.5 py-0.5 text-xs hover:bg-muted';
 ---
 
 <button
@@ -40,7 +41,7 @@ const LABEL: Record<Step['kind'], string> = {
 <div
   popover
   id={id}
-  class="w-[min(40rem,calc(100vw-2rem))] rounded-lg border bg-card p-4 text-card-foreground shadow-lg backdrop:bg-black/40"
+  class="max-h-[calc(100dvh-2rem)] w-[min(40rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border bg-card p-4 text-card-foreground shadow-lg backdrop:bg-black/40"
 >
   <div class="mb-3 flex items-baseline justify-between gap-2">
     <h3 class="font-semibold">Next{story ? `: ${story}` : `: ${topic}`}</h3>
@@ -68,10 +69,14 @@ const LABEL: Record<Step['kind'], string> = {
                 {fields.map(([k, v]) => (
                   <div class="grid gap-0.5">
                     <dt class="text-xs text-muted-foreground">{k}</dt>
-                    <dd>
-                      <pre class="max-h-48 overflow-auto rounded-md bg-muted p-2 font-mono text-xs whitespace-pre-wrap select-all">
-                        {v}
-                      </pre>
+                    <dd class="relative">
+                      <pre
+                        class="max-h-48 overflow-auto rounded-md bg-muted p-2 pr-14 font-mono text-xs whitespace-pre-wrap select-all"
+                        set:text={v}
+                      />
+                      <button type="button" data-copy class={COPY}>
+                        Copy
+                      </button>
                     </dd>
                   </div>
                 ))}
@@ -80,12 +85,29 @@ const LABEL: Record<Step['kind'], string> = {
           ) : s.kind === 'do' ? (
             <p class="text-sm">{s.text}</p>
           ) : (
-            <pre class="overflow-x-auto rounded-md bg-muted p-2 font-mono text-xs whitespace-pre-wrap select-all">
-              {s.text}
-            </pre>
+            <div class="relative">
+              <pre
+                class="overflow-x-auto rounded-md bg-muted p-2 pr-14 font-mono text-xs whitespace-pre-wrap select-all"
+                set:text={s.text}
+              />
+              <button type="button" data-copy class={COPY}>
+                Copy
+              </button>
+            </div>
           )}
         </li>
       ))
     }
   </ol>
 </div>
+
+<script>
+  document.addEventListener('click', async (e) => {
+    const b = (e.target as Element).closest<HTMLButtonElement>('[data-copy]');
+    const text = b?.parentElement?.querySelector('pre')?.textContent;
+    if (!b || text == null) return;
+    await navigator.clipboard.writeText(text);
+    b.textContent = 'Copied';
+    setTimeout(() => (b.textContent = 'Copy'), 1500);
+  });
+</script>

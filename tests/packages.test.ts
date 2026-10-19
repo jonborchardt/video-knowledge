@@ -78,7 +78,7 @@ describe.skipIf(!dirs.length)('committed script packages', () => {
       expect(v.minutes).toBeLessThanOrEqual(12.5);
     });
 
-    it('the storyboard covers the script and its charts resolve', () => {
+    it.skipIf(!plan)('the storyboard covers the script and its charts resolve', () => {
       const sb = buildStoryboard(plan!, script, validation(), pkg, read);
       expect(sb.issues.filter((i) => i.severity === 'blocking')).toEqual([]);
       expect(sb.status).toBe('ok');
