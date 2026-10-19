@@ -584,7 +584,7 @@ const videoStage: BoardStage = ({ topic, storyId, r, release, vr, sb }, s) => {
         stage: 'video',
         kind: 'qa-failed',
         why: `video QA failed: ${failed.map((c) => c.name).join(', ')}`,
-        cmd,
+        cmd: `agent: scripts/briefs/video-fix.md, then ${cmd}`,
       },
     };
   return {
@@ -596,7 +596,7 @@ const videoStage: BoardStage = ({ topic, storyId, r, release, vr, sb }, s) => {
         }
       : {
           stage: 'rendered',
-          next: `write video/music.json (cues over music/<composition>/ assets), then npm run video -- render ${topic} ${storyId}, then npm run video -- qa ${topic} ${storyId}`,
+          next: `npm run music -- cues ${topic} ${storyId}, then npm run video -- render ${topic} ${storyId}, then npm run video -- qa ${topic} ${storyId}`,
         },
   };
 };
