@@ -1,11 +1,14 @@
 // The production board derives every stage from the committed artifacts; the locked MLM package must read as locked
 // with no blockers, and every topic must derive without throwing.
-import { mkdirSync, mkdtempSync, rmSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { board, productionOf, stepsOf } from '../src/lib/production';
-import { scriptDir, scriptDirs } from '../src/lib/script';
+import { readJson, toJson } from '../src/lib/io';
+import { board, productionOf, stepsOf, validationHaltKind } from '../src/lib/production';
+import { type Script, scriptDir, scriptDirs } from '../src/lib/script';
+import { copyTopic } from './production-helpers';
+import { blockedScript, run } from './script-helpers';
 
 describe('production board', () => {
   const topics = board();
@@ -47,8 +50,32 @@ describe('production board', () => {
       expect(prod.stage).toBe('package');
       expect(prod.blockers).toEqual(['no evidence package']);
       expect(prod.next).toBe('npm run script -- package get-rich-quick decision:empty');
+      expect(prod.halt).toEqual({ kind: 'missing', stage: 'package', why: 'no evidence package' });
     } finally {
       rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe('halt kinds', () => {
+  it('a blocked validation maps to revision-limit or blocking-findings', () => {
+    expect(validationHaltKind(run(blockedScript(3)))).toBe('revision-limit');
+    expect(validationHaltKind(run(blockedScript(1)))).toBe('blocking-findings');
+  });
+
+  it('a script asking for evidence halts with needs-evidence', () => {
+    const c = copyTopic('heat-pumps');
+    try {
+      const story = 'decision:when-does-it-pay-for-itself';
+      const f = join(c.dir(story), 'script.json');
+      const s = readJson<Script>(f)!;
+      s.generation.needsEvidence = [{ claim: 'heat-pumps/heat-pump-pays-itself-through-lower', why: 'baseline' }];
+      writeFileSync(f, toJson(s));
+      const prod = productionOf('heat-pumps', story, c.root)!;
+      expect(prod.halt?.kind).toBe('needs-evidence');
+      expect(prod.next.startsWith('agent: scripts/briefs/evidence.md')).toBe(true);
+    } finally {
+      c.cleanup();
     }
   });
 });

@@ -27,6 +27,25 @@ import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storybo
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from './build-report';
 
+/** Why a stage halted, for a loop that decides what to do next without parsing prose. */
+export type HaltKind =
+  | 'missing'
+  | 'stale'
+  | 'blocking-findings'
+  | 'revision-limit'
+  | 'needs-evidence'
+  | 'review-pending'
+  | 'storyboard-blocked'
+  | 'render-check'
+  | 'needs-graphics'
+  | 'graphics-review'
+  | 'lock'
+  | 'qa-failed'
+  | 'story-left';
+/** A blocked validation: the writer revises, unless the pass has spent its revisions. */
+export const validationHaltKind = (live: ScriptValidation): 'revision-limit' | 'blocking-findings' =>
+  live.revisionLimitReached ? 'revision-limit' : 'blocking-findings';
+
 export type Health = 'done' | 'current' | 'stale' | 'blocked' | 'missing' | 'pending';
 export interface Check {
   name: string; // the artifact or process
@@ -102,6 +121,7 @@ export interface Production {
   model: string | null;
   clearance: Clearance | null; // from the build report, once there is one
   upload: Upload | null; // what the YouTube upload form takes, once the stage is packaged
+  halt: { kind: HaltKind; stage: ProductionStage; why: string } | null; // the first halt, if any
 }
 /** The private review upload, read from the review package (video/review/). Paths are repo-relative. */
 export interface Upload {
@@ -172,7 +192,7 @@ interface BoardState {
  *  advancing the stage (which a stage only asks for when the state allows it). */
 interface StageResult {
   checks?: Check[];
-  halt?: { stage: ProductionStage; why: string; cmd: string };
+  halt?: { stage: ProductionStage; kind: HaltKind; why: string; cmd: string };
   blocker?: string;
   advance?: { stage: ProductionStage; next: string };
   live?: ScriptValidation;
@@ -185,7 +205,7 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
   if (!pkg)
     return {
       checks: [{ name: 'evidence package', health: 'missing', detail: 'not built', file: r(FILES.pkg) }],
-      halt: { stage: 'package', why: 'no evidence package', cmd: s.next },
+      halt: { stage: 'package', kind: 'missing', why: 'no evidence package', cmd: s.next },
     };
   if (!story)
     return {
@@ -198,7 +218,12 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
           date: pkg.generatedAt,
         },
       ],
-      halt: { stage: 'package', why: 'the story left stories.json', cmd: `npm run stories -- show ${topic}` },
+      halt: {
+        stage: 'package',
+        kind: 'story-left',
+        why: 'the story left stories.json',
+        cmd: `npm run stories -- show ${topic}`,
+      },
     };
   const again = buildPackage(story, t, read, { review, inputs: pkg.inputs, readDoc: docReader(root), previous: pkg });
   const inputsNow = {
@@ -224,7 +249,7 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
   if (!current)
     return {
       checks: [check],
-      halt: { stage: 'package', why: 'the evidence package no longer matches its inputs', cmd: s.next },
+      halt: { stage: 'package', kind: 'stale', why: 'the evidence package no longer matches its inputs', cmd: s.next },
     };
   return {
     checks: [check],
@@ -237,9 +262,15 @@ const scriptStage: BoardStage = ({ r, pkg, script }) => {
   if (!script)
     return {
       checks: [{ name: 'script', health: 'missing', detail: 'not written', file: r(FILES.script) }],
-      halt: { stage: 'script', why: 'no script.json', cmd: `agent: scripts/briefs/script.md -> ${r(FILES.script)}` },
+      halt: {
+        stage: 'script',
+        kind: 'missing',
+        why: 'no script.json',
+        cmd: `agent: scripts/briefs/script.md -> ${r(FILES.script)}`,
+      },
     };
   const bound = !pkg || script.generation?.evidencePackage === pkg.fingerprint;
+  const wants = script.generation?.needsEvidence ?? [];
   return {
     checks: [
       {
@@ -250,13 +281,21 @@ const scriptStage: BoardStage = ({ r, pkg, script }) => {
         date: script.generation?.date,
       },
     ],
-    halt: bound
-      ? undefined
-      : {
+    halt: !bound
+      ? {
           stage: 'script',
+          kind: 'stale',
           why: 'the script was written against an older evidence package',
           cmd: `agent: scripts/briefs/script.md (revise)`,
-        },
+        }
+      : wants.length
+        ? {
+            stage: 'script',
+            kind: 'needs-evidence',
+            why: `the writer needs evidence: ${wants.map((w) => `${w.claim} (${w.why})`).join('; ')}`,
+            cmd: 'agent: scripts/briefs/evidence.md',
+          }
+        : undefined,
   };
 };
 
@@ -295,15 +334,18 @@ const validationStage: BoardStage = ({ topic, storyId, root, r, read, t, review,
   const cmd = `npm run script -- validate ${topic} ${storyId}`;
   const halt: StageResult['halt'] =
     !v || !same
-      ? { stage: 'validate', why: 'validation.json is not current', cmd }
+      ? { stage: 'validate', kind: v ? 'stale' : 'missing', why: 'validation.json is not current', cmd }
       : live.status === 'blocked'
         ? {
             stage: 'script',
+            kind: validationHaltKind(live),
             why: `${open.length} blocking issue${open.length === 1 ? '' : 's'}: ${open
               .slice(0, 3)
               .map((i) => `${i.sentence} ${i.category}`)
               .join(', ')}`,
-            cmd: `agent: scripts/briefs/script.md (revise), then ${cmd}`,
+            cmd: live.revisionLimitReached
+              ? 'stop: revision limit reached with blocking findings'
+              : `agent: scripts/briefs/script.md (revise), then ${cmd}`,
           }
         : undefined;
   return { checks: [check], halt, live };
@@ -317,6 +359,7 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
       checks: [{ name: 'review', health: 'missing', detail: 'no independent review', file: r(FILES.review) }],
       halt: {
         stage: 'review',
+        kind: 'missing',
         why: 'no script-review.json',
         cmd: `agent: scripts/briefs/script-review.md -> ${r(FILES.review)}`,
       },
@@ -340,6 +383,7 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
         ? undefined
         : {
             stage: 'review',
+            kind: 'review-pending',
             why: 'the review does not cover the current script',
             cmd: `agent: scripts/briefs/script-review.md (re-review), then npm run script -- validate ${topic} ${storyId}`,
           },
@@ -354,6 +398,7 @@ const storyboardStage: BoardStage = ({ topic, storyId, r, read, pkg, script, pla
       checks: [{ name: 'storyboard', health: 'missing', detail: 'not planned', file: r(FILES.storyboard) }],
       halt: {
         stage: 'storyboard',
+        kind: 'missing',
         why: 'no storyboard.json',
         cmd: `agent: scripts/briefs/storyboard.md -> ${r(FILES.storyboard)}`,
       },
@@ -385,11 +430,12 @@ const storyboardStage: BoardStage = ({ topic, storyId, r, read, pkg, script, pla
       sb.status !== 'ok'
         ? {
             stage: 'storyboard',
+            kind: 'storyboard-blocked',
             why: 'the storyboard has blocking issues',
             cmd: `agent: scripts/briefs/storyboard.md (revise), then ${cmd}`,
           }
         : !same
-          ? { stage: 'storyboard', why: 'storyboard.json is not current', cmd }
+          ? { stage: 'storyboard', kind: 'stale', why: 'storyboard.json is not current', cmd }
           : undefined,
     sb,
   };
@@ -401,7 +447,12 @@ const releaseStage: BoardStage = ({ topic, storyId, r, release, live, sb }, s) =
   if (!release)
     return {
       checks: [{ name: 'release', health: 'missing', detail: 'not locked', file: r(FILES.release) }],
-      halt: { stage: 'lock', why: 'validation passed and the storyboard is ok; nobody has signed off', cmd: lock },
+      halt: {
+        stage: 'lock',
+        kind: 'lock',
+        why: 'validation passed and the storyboard is ok; nobody has signed off',
+        cmd: lock,
+      },
     };
   const stale = live ? releaseCheck(release, live, sb) : [];
   return {
@@ -417,7 +468,12 @@ const releaseStage: BoardStage = ({ topic, storyId, r, release, live, sb }, s) =
       },
     ],
     halt: stale.length
-      ? { stage: 'lock', why: 'release.json no longer matches the files', cmd: `review the drift, then ${lock}` }
+      ? {
+          stage: 'lock',
+          kind: 'stale',
+          why: 'release.json no longer matches the files',
+          cmd: `review the drift, then ${lock}`,
+        }
       : undefined,
     advance:
       !stale.length && !s.stopped ? { stage: 'locked', next: `npm run video -- spike ${topic} ${storyId}` } : undefined,
@@ -447,12 +503,22 @@ const videoStage: BoardStage = ({ topic, storyId, r, release, vr, sb }, s) => {
   if (!bound)
     return {
       checks: [check],
-      halt: { stage: 'video', why: 'the video was rendered from fingerprints the lock no longer names', cmd },
+      halt: {
+        stage: 'video',
+        kind: 'stale',
+        why: 'the video was rendered from fingerprints the lock no longer names',
+        cmd,
+      },
     };
   if (!vr.qa.ok)
     return {
       checks: [check],
-      halt: { stage: 'video', why: `video QA failed: ${failed.map((c) => c.name).join(', ')}`, cmd },
+      halt: {
+        stage: 'video',
+        kind: 'qa-failed',
+        why: `video QA failed: ${failed.map((c) => c.name).join(', ')}`,
+        cmd,
+      },
     };
   return {
     checks: [check],
@@ -572,6 +638,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
   const s: BoardState = { stage: 'package', next: `npm run script -- package ${topic} ${storyId}`, stopped: false };
   const checks: Check[] = [];
   const blockers: string[] = [];
+  let halt: Production['halt'] = null;
   for (const stage of BOARD_STAGES) {
     const res = stage(c, s);
     checks.push(...(res.checks ?? []));
@@ -584,6 +651,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
       s.stage = res.halt.stage;
       s.next = res.halt.cmd;
       blockers.push(res.halt.why);
+      halt = { kind: res.halt.kind, stage: res.halt.stage, why: res.halt.why };
     }
     if (res.advance) {
       s.stage = res.advance.stage;
@@ -617,6 +685,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     versions,
     clearance: vr && release ? vr.clearance : null,
     upload: stage === 'packaged' ? uploadOf(p, c.r) : null,
+    halt,
     fingerprints: {
       script: v?.scriptFingerprint ?? null,
       package: pkg?.fingerprint ?? null,

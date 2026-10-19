@@ -144,3 +144,15 @@ export const scene = (
   visual: { category: 'typography', description: 'words on screen' },
   ...extra,
 });
+/** A script blocked by an invented figure (the passage says 47%, not 77%), at the given revision. */
+export const blockedScript = (revision: number, extra: Partial<Script> = {}): Script => ({
+  ...script(
+    [
+      sentence('s02', 'Of 601 people surveyed, 77 percent lost money.', 'factual', [
+        fact('s02.a', 'Of 601 participants, 77% reported losing money.'),
+      ]),
+    ],
+    revision,
+  ),
+  ...extra,
+});

@@ -8,6 +8,7 @@ import {
   type EvidencePackage,
   type Release,
   type Script,
+  revisionsInPass,
   scriptDir,
   sentenceFingerprint,
   sentences,
@@ -30,6 +31,7 @@ import {
   RENTAL,
   approveAll,
   asTopic,
+  blockedScript,
   cats,
   corpus,
   fact,
@@ -910,5 +912,24 @@ describe('review fixes: sameStudy and release', () => {
     expect(releaseCheck(rel, vv, edited).map((i) => i.category)).toEqual(['release-stale']);
     const other = { ...rel, fingerprints: { ...rel.fingerprints, validation: 'x' } };
     expect(releaseCheck(other, vv, sb).map((i) => i.category)).toEqual(['release-stale']);
+  });
+});
+
+describe('revision passes', () => {
+  it('revisions count within the pass', () => {
+    expect(revisionsInPass(blockedScript(5, { passStartRevision: 3 }))).toBe(2);
+    expect(revisionsInPass(blockedScript(3))).toBe(3);
+  });
+
+  it('the revision limit applies per pass and a corrective entry lifts it', () => {
+    expect(run(blockedScript(3)).status).toBe('blocked');
+    expect(run(blockedScript(3)).revisionLimitReached).toBe(true);
+    expect(run(blockedScript(4, { passStartRevision: 3 })).revisionLimitReached).toBe(false);
+    const corr = blockedScript(4);
+    corr.generation = {
+      ...corr.generation,
+      corrective: [{ revision: 4, reason: 'r', sentences: ['s02'], authorizedBy: 'jon' }],
+    };
+    expect(run(corr).revisionLimitReached).toBe(false);
   });
 });
