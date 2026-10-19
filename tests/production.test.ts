@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { readJson, toJson } from '../src/lib/io';
-import { board, productionOf, stepsOf, validationHaltKind } from '../src/lib/production';
+import { board, boardNext, productionOf, stepsOf, validationHaltKind } from '../src/lib/production';
 import { type Script, scriptDir, scriptDirs } from '../src/lib/script';
 import { copyTopic } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
@@ -77,6 +77,25 @@ describe('halt kinds', () => {
     } finally {
       c.cleanup();
     }
+  });
+});
+
+describe('board next', () => {
+  it('boardNext for a story without a script dir', () => {
+    const n = boardNext('heat-pumps', 'decision:what-happens-when-it-gets-cold');
+    expect(n.stage).toBe('package');
+    expect(n.steps).toEqual([
+      { kind: 'run', text: 'npm run script -- package heat-pumps decision:what-happens-when-it-gets-cold' },
+    ]);
+    expect(n.done).toBe(false);
+  });
+
+  it('boardNext of an unknown story stops', () => {
+    expect(boardNext('heat-pumps', 'decision:no-such-story').halt?.kind).toBe('story-left');
+  });
+
+  it('boardNext of a packaged story is done', () => {
+    expect(boardNext('get-rich-quick', 'decision:mlm-and-seminars').done).toBe(true);
   });
 });
 

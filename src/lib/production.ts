@@ -696,6 +696,29 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
   };
 }
 
+/** The loop's one question: where is this story, and what moves it on. */
+export interface BoardNext {
+  topic: string;
+  story: string;
+  stage: ProductionStage;
+  next: string;
+  steps: Step[];
+  halt: Production['halt'];
+  done: boolean;
+}
+export function boardNext(topic: string, storyId: string, root = ROOT): BoardNext {
+  const prod = productionOf(topic, storyId, root);
+  const ready = loadStories(topic, root)?.stories.find((s) => s.id === storyId)?.readiness === 'ready';
+  const { stage, next, halt } = prod ?? {
+    stage: 'package' as const,
+    next: ready ? `npm run script -- package ${topic} ${storyId}` : 'stop: the story is not ready',
+    halt: ready
+      ? { kind: 'missing' as const, stage: 'package' as const, why: 'no evidence package' }
+      : { kind: 'story-left' as const, stage: 'package' as const, why: 'the story is not ready in stories.json' },
+  };
+  return { topic, story: storyId, stage, next, steps: stepsOf(next, topic, storyId), halt, done: stage === 'packaged' };
+}
+
 interface StoreVideo {
   id: string;
   transcript: string;
