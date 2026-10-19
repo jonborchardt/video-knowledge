@@ -17,7 +17,21 @@ import {
   stepsOf,
   validationHaltKind,
 } from '../src/lib/production';
-import { type Script, scriptDir, scriptDirs, scriptFingerprint } from '../src/lib/script';
+import { corpusOf } from '../src/lib/corpus';
+import { passageReader } from '../src/lib/evidence';
+import { docHasher, docReader } from '../src/lib/evidence-package';
+import { loadReview } from '../src/lib/review';
+import { validateScript } from '../src/lib/script-validation';
+import { loadTopic } from '../src/lib/topics';
+import {
+  type EvidencePackage,
+  type Script,
+  type ScriptReviewFile,
+  type ScriptValidation,
+  scriptDir,
+  scriptDirs,
+  scriptFingerprint,
+} from '../src/lib/script';
 import { copyTopic } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
@@ -85,6 +99,40 @@ describe('halt kinds', () => {
       const prod = productionOf('heat-pumps', story, c.root)!;
       expect(prod.halt?.kind).toBe('needs-evidence');
       expect(prod.next.startsWith('agent: scripts/briefs/evidence.md')).toBe(true);
+    } finally {
+      c.cleanup();
+    }
+  });
+});
+
+describe('review findings', () => {
+  it('a sentence the reviewer holds on a warning goes back to the writer, not to another review', () => {
+    const c = copyTopic('get-rich-quick');
+    try {
+      const story = 'decision:mlm-and-seminars';
+      const f = join(c.dir(story), 'script-review.json');
+      const r = readJson<ScriptReviewFile>(f)!;
+      const [id, fingerprint] = Object.entries(r.approved)[0];
+      delete r.approved[id];
+      r.findings.push({ sentence: id, fingerprint, category: 'x', severity: 'warning', explanation: 'imprecise' });
+      writeFileSync(f, toJson(r));
+      const dir = c.dir(story);
+      const v = validateScript(
+        readJson<Script>(join(dir, 'script.json'))!,
+        corpusOf(loadTopic('get-rich-quick')),
+        passageReader(c.root),
+        {
+          review: r,
+          judgments: loadReview('get-rich-quick', c.root).applicability,
+          previous: readJson<ScriptValidation>(join(dir, 'validation.json')),
+          pkg: readJson<EvidencePackage>(join(dir, 'evidence-package.json'))!,
+          hashDoc: docHasher(docReader(c.root)),
+        },
+      );
+      writeFileSync(join(dir, 'validation.json'), toJson(v));
+      const prod = productionOf('get-rich-quick', story, c.root)!;
+      expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
+      expect(prod.next).toContain('agent: scripts/briefs/script.md (revise)');
     } finally {
       c.cleanup();
     }
