@@ -194,9 +194,12 @@ async function stageQa(
   writeFileSync(p(VIDEO_FILES.report), toJson(r));
   writeFileSync(p(VIDEO_FILES.reportMd), renderReportMd(r));
   for (const c of qa.checks) if (!c.ok) console.log(`  FAIL ${c.name}: ${c.detail}`);
+  const failed = qa.checks.filter((c) => !c.ok).length;
   console.log(
-    `${qa.ok ? 'passed' : 'FAILED'}: ${qa.checks.filter((c) => c.ok).length} of ${qa.checks.length} checks, ${qa.frames.length} frames in ${rel(join(dir, VIDEO_FILES.frames))}${contact ? `, ${rel(contact)}` : ''}; wrote ${rel(p(VIDEO_FILES.reportMd))}`,
+    `${qa.ok ? 'passed' : 'FAILED'}: ${qa.checks.length - failed} of ${qa.checks.length} checks, ${qa.frames.length} frames in ${rel(join(dir, VIDEO_FILES.frames))}${contact ? `, ${rel(contact)}` : ''}; wrote ${rel(p(VIDEO_FILES.reportMd))}`,
   );
+  // the last line, whatever ran before it: a reader (or a loop) never has to find the verdict in the log
+  console.log(qa.ok ? 'RESULT: PASSED' : `RESULT: FAILED (${failed} of ${qa.checks.length} checks failed)`);
   if (!qa.ok) process.exitCode = 2;
 }
 
@@ -326,5 +329,6 @@ try {
   }
 } catch (e) {
   console.error(e instanceof Error ? e.message : e);
+  if (['qa', 'spike', 'render'].includes(cmd)) console.log('RESULT: FAILED (stopped with an error, above)');
   process.exit(2);
 }

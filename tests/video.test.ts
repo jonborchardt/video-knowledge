@@ -238,6 +238,22 @@ describe('qa check groups (no ffmpeg)', () => {
     expect(failed(contentChecks(swapped, seg))).toContain('scene order');
   });
 
+  it('blankChecks names every flat run with its scene', () => {
+    const sps = TOLERANCE.samplesPerSecond;
+    const n = Math.ceil(seconds * sps);
+    const samples = Array.from({ length: n }, () => ({ mean: 100, sd: 20 }));
+    const flatten = (from: number, len: number) => {
+      for (let i = Math.floor(from * sps); i < Math.min(n, Math.floor((from + len) * sps)); i++)
+        samples[i] = { mean: 0, sd: 0 };
+    };
+    flatten(0, TOLERANCE.blankRunSeconds + 0.2); // start of sc01
+    flatten(tl.scenes[2].start / tl.fps, TOLERANCE.blankRunSeconds + 0.2); // start of sc03
+    const check = blankChecks(samples, tl).find((c) => c.name === 'no blank sections')!;
+    expect(check.ok).toBe(false);
+    expect(check.detail).toContain('in sc01');
+    expect(check.detail).toContain('in sc03');
+  });
+
   it('blank checks read luma samples: a flat stretch fails, varied content passes', () => {
     const n = Math.ceil(seconds * TOLERANCE.samplesPerSecond);
     const varied = Array.from({ length: n }, () => ({ mean: 100, sd: 20 }));
