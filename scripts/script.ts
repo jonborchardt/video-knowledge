@@ -5,7 +5,7 @@
 //   storyboard <topic> <story-id>           fill and check storyboard.json against the script; writes storyboard.md, review.md
 //   run <topic> <story-id> [--wpm N]        every stage whose inputs exist, then the next agent step (see scripts/briefs/)
 //   lock <topic> <story-id> --approved-by "<name>"   write release.json (the approved fingerprints) when validation passed, the storyboard is ok
-//                                                    and video/render-check.json is current with every graphic approved; a real name or "automated: ..."
+//                                                    and the render check (re-run) is ok with every graphic approved; a real name or "automated: ..."
 // Stages are independent and persisted; a rejected script never touches research or story discovery.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -15,7 +15,8 @@ import { fileSha, readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadReview, reviewPath } from '../src/lib/review';
 import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
 import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
-import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems, renderConfigSha } from '../src/lib/render-check';
+import { renderCheckProblems } from '../src/lib/render-check';
+import { writeRenderCheck } from '../src/video/check';
 import {
   type EvidencePackage,
   FILES,
@@ -133,13 +134,13 @@ function stageLock() {
     process.exitCode = 2;
   };
   if (!v || !sb) return refuse('run validate and storyboard first');
+  // the check is re-run here, not read from video/render-check.json: an edited component changes a graphic's key
+  const rc = existsSync(p('video/render.json')) ? writeRenderCheck(topic, storyId) : null;
   const reasons = [
     approverProblem(approvedBy),
-    ...renderCheckProblems(readJson<RenderCheckSummary>(p(RENDER_CHECK)), {
-      script: v.scriptFingerprint,
-      storyboard: storyboardFingerprint(sb),
-      config: renderConfigSha(dir),
-    }),
+    ...(rc
+      ? renderCheckProblems(rc, rc.fingerprints)
+      : [`no video/render.json: run npm run video -- init ${topic} ${storyId}`]),
   ].filter((x): x is string => !!x);
   if (reasons.length) return refuse(reasons.join('\n  '));
   if (v.status !== 'passed') return refuse(`validation is ${v.status}, not passed`);

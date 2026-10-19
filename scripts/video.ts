@@ -253,8 +253,8 @@ async function stageFrames() {
   let m = old!;
   if (!cached) {
     m = await narrate(seg, dir, { log: (l) => console.log(`  ${l}`) });
-    if (old) {
-      // narrate wrote only this scene's sentences; keep the rest of the manifest, in script order
+    if (old?.provider === v.provider && old.voice === v.voice && old.rate === v.rate) {
+      // narrate wrote only this scene's sentences; keep the rest of the manifest (same voice), in script order
       const order = new Map(inp.script.sections.flatMap((x) => x.sentences).map((s, i) => [s.id, i]));
       const mine = new Set(m.sentences.map((s) => s.id));
       m.sentences = [...old.sentences.filter((s) => !mine.has(s.id)), ...m.sentences].sort(

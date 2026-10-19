@@ -25,11 +25,12 @@ export function citedPairs(topic: string, root = ROOT): Map<string, string> {
   return out;
 }
 
-/** One message per verdict that would replace a cited verdict on the same claim and document with another range. */
+/** One message per verdict that would replace a verdict a script cites (same claim and document: the store keeps one,
+ *  so even the same range with another verdict, or a retraction, changes what the script rests on). */
 export function replacedCited(verdicts: { claim: string; source: string }[], cited: Map<string, string>): string[] {
   return verdicts.flatMap(({ claim, source }) => {
     const was = cited.get(`${claim}|${docOf(source)}`);
-    return was && was !== source
+    return was
       ? [`${claim}: ${source} would replace ${was}, which a script cites (record it on the claim it decides)`]
       : [];
   });

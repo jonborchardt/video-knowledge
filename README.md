@@ -321,7 +321,9 @@ revisions with blocking findings open stops the run.
 
 On a `packaged` story the popover offers the send-back prompt instead, ending in `Notes:`; each note goes to the
 artifact that owns it (wording to the script, a graphic to its component, pacing and music to `render.json` and
-`music.json`) and everything downstream is redone.
+`music.json`) and everything downstream is redone. The board binds a build to the script, storyboard and
+`render.json`, so a pacing note re-renders by itself; a revised graphic is re-rendered by the run after its visual
+review (only the changed scene chunk renders again).
 
 ## Reproducing the MLM video
 

@@ -148,6 +148,9 @@ blockers listed, and a person decides. A revision that only answers warnings the
 
 ## Send-back and corrective passes
 
+The run or a person sets `passStartRevision` and `generation.corrective`; never set them yourself to
+get past the revision limit.
+
 - **Notes pass** (the prompt says so): an editor watched the video and sent notes. The run has set
   `passStartRevision` to the revision you start from, so this pass has its own three revisions.
   Apply the notes and only the notes; keep every sentence the notes do not touch word for word.

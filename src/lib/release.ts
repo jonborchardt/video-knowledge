@@ -18,9 +18,8 @@ export const storyboardFingerprint = (sb: Storyboard) => {
 };
 /** Why a lock's --approved-by is not a real approver: missing, blank, or a placeholder copied from help text. */
 export function approverProblem(name: string | undefined): string | null {
-  if (name?.startsWith('automated: ')) return null;
   const n = name?.trim() ?? '';
-  return !n || /^<[^>]*>$/.test(n) || n.includes('<name>') || n.includes('<approver>')
+  return !n || n === 'automated:' || /<[^>]*>/.test(n)
     ? '--approved-by needs a real name (a person, or "automated: ...")'
     : null;
 }
