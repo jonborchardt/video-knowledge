@@ -177,6 +177,11 @@ describe('next steps', () => {
     ]);
   });
 
+  it('promptOf carries the notes and corrective modes', () => {
+    expect(stepsOf('agent: scripts/briefs/script.md (notes)', 't', 's')[0].text).toContain('send-back pass');
+    expect(stepsOf('agent: scripts/briefs/script.md (corrective)', 't', 's')[0].text).toContain('corrective pass');
+  });
+
   it('gives every board item at least one step', () => {
     for (const t of board()) {
       expect(stepsOf(t.next, t.topic.name).length).toBeGreaterThan(0);

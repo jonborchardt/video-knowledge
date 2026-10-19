@@ -952,6 +952,9 @@ const MODES: Record<string, string> = {
     'This is a revision: the file exists. Fix what validation.json, script-review.json or the storyboard check flag and keep what passed.',
   're-review':
     'This is a re-review: script-review.json exists. Judge every sentence without a current approval (the show sheet lists them).',
+  notes:
+    'This is a send-back pass: apply the editor notes below to the artifact this brief owns, change nothing else, and keep what passed.',
+  corrective: 'This is a corrective pass: change only the sentences listed in generation.corrective for this revision.',
 };
 
 const promptOf = (
