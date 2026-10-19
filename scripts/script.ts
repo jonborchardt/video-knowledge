@@ -11,11 +11,11 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
-import { fileSha, readJson, sha, toJson, writeArtifact, ROOT } from '../src/lib/io';
+import { fileSha, readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadReview, reviewPath } from '../src/lib/review';
 import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
 import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
-import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';
+import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems, renderConfigSha } from '../src/lib/render-check';
 import {
   type EvidencePackage,
   FILES,
@@ -133,13 +133,12 @@ function stageLock() {
     process.exitCode = 2;
   };
   if (!v || !sb) return refuse('run validate and storyboard first');
-  const config = existsSync(p('video/render.json')) ? sha(readFileSync(p('video/render.json'), 'utf8')) : '';
   const reasons = [
     approverProblem(approvedBy),
     ...renderCheckProblems(readJson<RenderCheckSummary>(p(RENDER_CHECK)), {
       script: v.scriptFingerprint,
       storyboard: storyboardFingerprint(sb),
-      config,
+      config: renderConfigSha(dir),
     }),
   ].filter((x): x is string => !!x);
   if (reasons.length) return refuse(reasons.join('\n  '));

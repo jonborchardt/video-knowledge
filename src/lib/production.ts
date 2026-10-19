@@ -7,8 +7,14 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
-import { fileSha, lf, readJson, sha, toJson, ROOT } from './io';
-import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems } from './render-check';
+import { fileSha, lf, readJson, toJson, ROOT } from './io';
+import {
+  RENDER_CHECK,
+  type RenderCheckSummary,
+  renderCheckProblems,
+  renderCheckStale,
+  renderConfigSha,
+} from './render-check';
 import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
@@ -463,11 +469,10 @@ const storyboardStage: BoardStage = ({ topic, storyId, r, read, pkg, script, pla
 // 6. Graphics: render.json drafted, every scene renderable, every diagram drawn and every bespoke graphic approved by a
 // visual review, all at the current script, storyboard and render.json (video/render-check.json, written by
 // `npm run video -- check`). Releases locked before this stage existed (no version) are grandfathered.
-const graphicsStage: BoardStage = ({ topic, storyId, p, r, release, live, sb }, s) => {
+const graphicsStage: BoardStage = ({ topic, storyId, root, p, r, release, live, sb }, s) => {
   if (!live || !sb || s.stopped || (release && release.version !== 2)) return {};
   const check = `npm run video -- check ${topic} ${storyId}`;
-  const config = p('video/render.json');
-  if (!existsSync(config))
+  if (!existsSync(p('video/render.json')))
     return {
       checks: [{ name: 'graphics', health: 'missing', detail: 'no video/render.json', file: r('video/render.json') }],
       halt: {
@@ -481,35 +486,36 @@ const graphicsStage: BoardStage = ({ topic, storyId, p, r, release, live, sb }, 
   const now = {
     script: live.scriptFingerprint,
     storyboard: storyboardFingerprint(sb),
-    config: sha(readFileSync(config, 'utf8')),
+    config: renderConfigSha(scriptDir(topic, storyId, root)),
   };
   const problems = renderCheckProblems(rc, now);
-  const stale = !rc || problems[0]?.includes('npm run video -- check');
+  const stale = renderCheckStale(rc, now);
   const unapproved = rc?.graphics.filter((g) => !g.approved).map((g) => g.scene) ?? [];
-  const halt: StageResult['halt'] = stale
-    ? { stage: 'graphics', kind: 'render-check', why: problems[0], cmd: check }
-    : rc.needsGraphics.length
-      ? {
-          stage: 'graphics',
-          kind: 'needs-graphics',
-          why: `${rc.needsGraphics.join(', ')} need a graphic`,
-          cmd: `agent: scripts/briefs/graphics.md (${rc.needsGraphics.join(',')}), then ${check}`,
-        }
-      : unapproved.length
+  const halt: StageResult['halt'] =
+    stale || !rc
+      ? { stage: 'graphics', kind: 'render-check', why: problems[0], cmd: check }
+      : rc.needsGraphics.length
         ? {
             stage: 'graphics',
-            kind: 'graphics-review',
-            why: `${unapproved.join(', ')} not approved by the visual review`,
-            cmd: `agent: scripts/briefs/visual-review.md (${unapproved.join(',')}), then ${check}`,
+            kind: 'needs-graphics',
+            why: `${rc.needsGraphics.join(', ')} need a graphic`,
+            cmd: `agent: scripts/briefs/graphics.md (${rc.needsGraphics.join(',')}), then ${check}`,
           }
-        : problems.length
+        : unapproved.length
           ? {
               stage: 'graphics',
-              kind: 'render-check',
-              why: problems.slice(0, 3).join('; '),
-              cmd: `agent: scripts/briefs/video-fix.md, then ${check}`,
+              kind: 'graphics-review',
+              why: `${unapproved.join(', ')} not approved by the visual review`,
+              cmd: `agent: scripts/briefs/visual-review.md (${unapproved.join(',')}), then ${check}`,
             }
-          : undefined;
+          : problems.length
+            ? {
+                stage: 'graphics',
+                kind: 'render-check',
+                why: problems.slice(0, 3).join('; '),
+                cmd: `agent: scripts/briefs/video-fix.md, then ${check}`,
+              }
+            : undefined;
   return {
     checks: [
       {
@@ -978,24 +984,16 @@ const MODES: Record<string, string> = {
   corrective: 'This is a corrective pass: change only the sentences listed in generation.corrective for this revision.',
 };
 
-const promptOf = (
-  brief: string,
-  topic: string,
-  story?: string,
-  mode?: string,
-  out?: string,
-  point?: string,
-  scenes?: string,
-) =>
+const promptOf = (brief: string, topic: string, story?: string, mode?: string, out?: string, point?: string) =>
   [
     `Read scripts/briefs/${brief} and follow it.`,
     `Topic: ${topic}`,
     story && `Story: ${story}`,
-    scenes && `Scenes: ${scenes}`,
+    mode && /^sc\d+(,sc\d+)*$/.test(mode) && `Scenes: ${mode}`,
     out && `Write: ${out}`,
     brief === 'script-review.md' && 'You did not write this script; review it independently.',
     brief === 'visual-review.md' && 'You did not build these graphics; judge them independently.',
-    mode && (MODES[mode] ?? `Mode: ${mode}`),
+    mode && !/^sc\d/.test(mode) && (MODES[mode] ?? `Mode: ${mode}`),
     point && `Settle: ${point}`,
     'Finish by running the command the brief names, and stop when it passes.',
   ]
@@ -1010,15 +1008,7 @@ export function stepsOf(next: string, topic: string, story?: string): Step[] {
   const steps = main.split(/,? then /).flatMap((part): Step[] => {
     if (part.startsWith('npm run ')) return [{ kind: 'run', text: part }];
     const agent = /^agent: scripts\/briefs\/(\S+?\.md)(?: \(([\w,-]+)\))?(?: -> (\S+))?$/.exec(part);
-    if (agent) {
-      const scenes = agent[2] && /^sc\d+(,sc\d+)*$/.test(agent[2]) ? agent[2] : undefined;
-      return [
-        {
-          kind: 'prompt',
-          text: promptOf(agent[1], topic, story, scenes ? undefined : agent[2], agent[3], undefined, scenes),
-        },
-      ];
-    }
+    if (agent) return [{ kind: 'prompt', text: promptOf(agent[1], topic, story, agent[2], agent[3]) }];
     const settle = /^settle in story-review\.json: (.*)$/s.exec(part);
     if (settle)
       return [
