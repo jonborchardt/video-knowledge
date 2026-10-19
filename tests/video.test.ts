@@ -547,6 +547,15 @@ describe('render config draft and render check', () => {
     expect(rc.ok).toBe(false);
   });
 
+  it('a bespoke kind draws its own registered assets', () => {
+    const plan = scenes();
+    plan[0] = { ...plan[0], visual: { category: 'diagram', description: 'a flow', assetIds: ['phone-ui'] } };
+    const bespoke: KindRegistry = { 'x-flow': { component: 'Text', accepts: ['diagram'] } };
+    const unknown = { ...plan[0], visual: { ...plan[0].visual, assetIds: ['made-for-sc01'] } };
+    const inp = inputs({ plan: [unknown, plan[1], plan[2]], config: { kinds: { sc01: 'x-flow' as SceneKind } } });
+    expect(checkSegment(inp, bespoke).problems.join()).not.toMatch(/has no renderer/);
+  });
+
   it('a bar with dollar points is a problem', () => {
     const plan = scenes();
     plan[1] = {

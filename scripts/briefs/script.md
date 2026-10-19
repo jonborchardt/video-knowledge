@@ -143,8 +143,8 @@ After review, read `validation.json` (open issues, by sentence) and `review.md`.
 finding: remove the assertion, narrow or qualify it, rewrite it as an attributed claim, say the
 evidence is insufficient, or record that it needs research (in `generation.notes`). Change only
 the sentences the findings touch; bump `revision`; keep ids. A changed sentence loses its approval
-and is reviewed again. At most three revisions: after that the output stays as it is with its
-blockers listed, and a person decides.
+and is reviewed again. A pass has three revisions to clear its blocking findings: after that, with blockers still open, the output stays as it is with its
+blockers listed, and a person decides. A revision that only answers warnings the reviewer holds a sentence on is not limited.
 
 ## Send-back and corrective passes
 
