@@ -947,6 +947,11 @@ export interface Step {
   text: string;
 }
 
+/** The prompt that starts or resumes a whole /produce run (.claude/skills/produce/SKILL.md) on one story. */
+export const runPromptOf = (topic: string, storyId: string) => `/produce ${topic} ${storyId}\nApprover: <your name>`;
+/** The same run as a send-back pass: the editor's notes go after the last line. */
+export const sendBackPromptOf = (topic: string, storyId: string) => `${runPromptOf(topic, storyId)}\nNotes:\n- `;
+
 const MODES: Record<string, string> = {
   revise:
     'This is a revision: the file exists. Fix what validation.json, script-review.json or the storyboard check flag and keep what passed.',

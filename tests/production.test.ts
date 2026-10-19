@@ -8,7 +8,15 @@ import { readJson, sha, toJson } from '../src/lib/io';
 import { storyboardFingerprint } from '../src/lib/release';
 import type { RenderCheckSummary } from '../src/lib/render-check';
 import type { Storyboard } from '../src/lib/storyboard';
-import { board, boardNext, productionOf, stepsOf, validationHaltKind } from '../src/lib/production';
+import {
+  board,
+  boardNext,
+  productionOf,
+  runPromptOf,
+  sendBackPromptOf,
+  stepsOf,
+  validationHaltKind,
+} from '../src/lib/production';
 import { type Script, scriptDir, scriptDirs, scriptFingerprint } from '../src/lib/script';
 import { copyTopic } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
@@ -175,6 +183,11 @@ describe('next steps', () => {
       { kind: 'do', text: '1 listed; 1 not fetched' },
       { kind: 'run', text: 'npm run report' },
     ]);
+  });
+
+  it('run and send-back prompts', () => {
+    expect(runPromptOf('t', 's')).toBe('/produce t s\nApprover: <your name>');
+    expect(sendBackPromptOf('t', 's')).toBe('/produce t s\nApprover: <your name>\nNotes:\n- ');
   });
 
   it('promptOf carries the notes and corrective modes', () => {
