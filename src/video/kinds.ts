@@ -59,6 +59,10 @@ export const bespokeFor = (videoKey: string): KindRegistry => (BESPOKE as Record
 
 const GENERIC_SPECS: [GenericKind, KindSpec][] = Object.entries(GENERIC) as [GenericKind, KindSpec][];
 export const SUPPORTED_ASSETS = new Set(GENERIC_SPECS.flatMap(([, k]) => k.assets ?? []));
+/** The assets no renderer draws for a scene of this kind: a bespoke kind is the scene's own graphic and draws the
+ *  assets the storyboard registered for it; a generic kind draws only the supported ones. */
+export const unsupportedAssets = (kind: string, assets: string[]) =>
+  Object.hasOwn(GENERIC, kind) ? assets.filter((a) => !SUPPORTED_ASSETS.has(a)) : [];
 
 /** The kind for a scene: the render.json override when this video knows it and it accepts the category, else the
  *  generic inference. */
