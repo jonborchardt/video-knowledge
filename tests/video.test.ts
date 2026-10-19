@@ -19,6 +19,8 @@ import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
 import { BESPOKE } from '../src/video/bespoke';
 import { ALL_KINDS, GENERIC, bespokeFor, kindOf, unsupportedWhy } from '../src/video/kinds';
 import { COMPONENTS } from '../src/video/remotion/scenes';
+import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
+import { theme } from '../src/video/remotion/theme';
 import { narrate } from '../src/video/narration';
 import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
@@ -557,5 +559,15 @@ describe('render config draft and render check', () => {
     expect(checkSegment(inputs({ plan, config: { cues: {} } })).problems.join('\n')).toContain(
       'bar draws percent and count points',
     );
+  });
+});
+
+describe('StackedBar', () => {
+  it('StackedBar headline and colours', () => {
+    expect(headlineNumber('bills only')).toBeNull();
+    expect(headlineNumber('601 people asked')).toBe(601);
+    expect(segmentColors('slate,red,muted')).toEqual([theme.slate, theme.red, theme.muted]);
+    expect(segmentColors('slate,purple')).toEqual([theme.slate, theme.muted]);
+    expect(segmentColors(undefined)).toEqual([theme.red, theme.slate, theme.green]);
   });
 });
