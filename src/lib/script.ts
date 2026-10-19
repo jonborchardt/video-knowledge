@@ -279,6 +279,8 @@ export const norm = (s: string) =>
 
 /** Written by `npm run script -- lock` once validation passed and the storyboard is ok: the fingerprints approved. */
 export interface Release {
+  /** 2: locked after a current render check (graphics approved). Absent: an older release, grandfathered. */
+  version?: 2;
   topic: string;
   story: string;
   approvedBy: string; // a person, or "automated: ..." so a reader knows nobody signed off

@@ -3,7 +3,8 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
-import { releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
+import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
+import { type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';
 import {
   type EvidencePackage,
   type Release,
@@ -931,5 +932,36 @@ describe('revision passes', () => {
       corrective: [{ revision: 4, reason: 'r', sentences: ['s02'], authorizedBy: 'jon' }],
     };
     expect(run(corr).revisionLimitReached).toBe(false);
+  });
+});
+
+describe('lock guards', () => {
+  it('approverProblem rejects placeholders', () => {
+    for (const n of [undefined, '', '  ', '<name>', '<approver>', 'by <name>'])
+      expect(approverProblem(n)).not.toBeNull();
+    for (const n of ['jon', 'Jon Borchardt', 'automated: /produce run started by jon'])
+      expect(approverProblem(n)).toBeNull();
+  });
+
+  it('renderCheckProblems', () => {
+    const now = { script: 's', storyboard: 'b', config: 'c' };
+    const rc: RenderCheckSummary = {
+      generatedAt: 'd',
+      fingerprints: now,
+      ok: true,
+      problems: [],
+      graphics: [],
+      needsGraphics: [],
+    };
+    expect(renderCheckProblems(null, now)).toEqual(['no video/render-check.json: run npm run video -- check']);
+    expect(renderCheckProblems(rc, now)).toEqual([]);
+    expect(renderCheckProblems(rc, { ...now, storyboard: 'b2' })).toEqual([
+      'render check is for script s / storyboard b / config c; now s / b2 / c: run npm run video -- check',
+    ]);
+    expect(renderCheckProblems({ ...rc, ok: false, problems: ['sc02: x'] }, now)).toEqual(['sc02: x']);
+    expect(
+      renderCheckProblems({ ...rc, graphics: [{ scene: 'sc18', kind: 'k', key: 'x', approved: false }] }, now),
+    ).toEqual(['graphic sc18 is not approved by the visual review']);
+    expect(renderCheckProblems({ ...rc, ok: false, needsGraphics: ['sc18'] }, now)).toEqual(['sc18 needs a graphic']);
   });
 });

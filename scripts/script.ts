@@ -4,16 +4,18 @@
 //   show <topic> <story-id> [sentence-id]   the reviewer's sheet: each sentence, its assertions, fingerprints and passages
 //   storyboard <topic> <story-id>           fill and check storyboard.json against the script; writes storyboard.md, review.md
 //   run <topic> <story-id> [--wpm N]        every stage whose inputs exist, then the next agent step (see scripts/briefs/)
-//   lock <topic> <story-id> --approved-by "<name>"   write release.json (the approved fingerprints) when validation passed and the storyboard is ok
+//   lock <topic> <story-id> --approved-by "<name>"   write release.json (the approved fingerprints) when validation passed, the storyboard is ok
+//                                                    and video/render-check.json is current with every graphic approved; a real name or "automated: ..."
 // Stages are independent and persisted; a rejected script never touches research or story discovery.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
-import { fileSha, readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
+import { fileSha, readJson, sha, toJson, writeArtifact, ROOT } from '../src/lib/io';
 import { loadReview, reviewPath } from '../src/lib/review';
 import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
-import { releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
+import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
+import { RENDER_CHECK, type RenderCheckSummary, renderCheckProblems } from '../src/lib/render-check';
 import {
   type EvidencePackage,
   FILES,
@@ -130,8 +132,17 @@ function stageLock() {
     console.error(`not locked: ${why}`);
     process.exitCode = 2;
   };
-  if (!approvedBy) return refuse('--approved-by "<name>" is required (a person, or "automated: ..." )');
   if (!v || !sb) return refuse('run validate and storyboard first');
+  const config = existsSync(p('video/render.json')) ? sha(readFileSync(p('video/render.json'), 'utf8')) : '';
+  const reasons = [
+    approverProblem(approvedBy),
+    ...renderCheckProblems(readJson<RenderCheckSummary>(p(RENDER_CHECK)), {
+      script: v.scriptFingerprint,
+      storyboard: storyboardFingerprint(sb),
+      config,
+    }),
+  ].filter((x): x is string => !!x);
+  if (reasons.length) return refuse(reasons.join('\n  '));
   if (v.status !== 'passed') return refuse(`validation is ${v.status}, not passed`);
   if (sb.status !== 'ok') return refuse(`storyboard is ${sb.status}, not ok`);
   if (sb.scriptFingerprint !== v.scriptFingerprint)
@@ -160,9 +171,10 @@ function stageLock() {
       `storyboard.json does not match the current script and package (${liveSb.status}): re-run storyboard`,
     );
   const release: Release = {
+    version: 2,
     topic,
     story: storyId,
-    approvedBy,
+    approvedBy: approvedBy!,
     date: new Date().toISOString(),
     revision: v.revision,
     fingerprints: {
