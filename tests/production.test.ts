@@ -1,12 +1,15 @@
 // The production board derives every stage from the committed artifacts; the locked MLM package must read as locked
 // with no blockers, and every topic must derive without throwing.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readJson, toJson } from '../src/lib/io';
+import { readJson, sha, toJson } from '../src/lib/io';
+import { storyboardFingerprint } from '../src/lib/release';
+import type { RenderCheckSummary } from '../src/lib/render-check';
+import type { Storyboard } from '../src/lib/storyboard';
 import { board, boardNext, productionOf, stepsOf, validationHaltKind } from '../src/lib/production';
-import { type Script, scriptDir, scriptDirs } from '../src/lib/script';
+import { type Script, scriptDir, scriptDirs, scriptFingerprint } from '../src/lib/script';
 import { copyTopic } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
@@ -26,7 +29,7 @@ describe('production board', () => {
     const prod = topics
       .flatMap((t) => t.stories)
       .find((s) => s.production?.dir.endsWith(dir.split(/[\\/]/).pop()!))!.production!;
-    const names = prod.checks.map((c) => c.name);
+    const names = prod.checks.map((c) => c.name).filter((n) => n !== 'graphics');
     expect(names.slice(0, 6)).toEqual(['evidence package', 'script', 'validation', 'review', 'storyboard', 'release']);
     const locked = prod.checks.find((c) => c.name === 'release')!.health === 'done';
     if (locked) {
@@ -77,6 +80,63 @@ describe('halt kinds', () => {
     } finally {
       c.cleanup();
     }
+  });
+});
+
+describe('graphics stage', () => {
+  const HP = 'heat-pumps',
+    HPS = 'decision:when-does-it-pay-for-itself';
+  const writeCheck = (dir: string, over: Partial<RenderCheckSummary>) => {
+    const script = readJson<Script>(join(dir, 'script.json'))!;
+    const sb = readJson<Storyboard>(join(dir, 'storyboard.json'))!;
+    const rc: RenderCheckSummary = {
+      generatedAt: 'd',
+      fingerprints: {
+        script: scriptFingerprint(script),
+        storyboard: storyboardFingerprint(sb),
+        config: sha(readFileSync(join(dir, 'video', 'render.json'), 'utf8')),
+      },
+      ok: true,
+      problems: [],
+      graphics: [],
+      needsGraphics: [],
+      ...over,
+    };
+    writeFileSync(join(dir, 'video', 'render-check.json'), toJson(rc));
+  };
+
+  it('grandfathered release skips graphics', () => {
+    const c = copyTopic(HP);
+    try {
+      expect(productionOf(HP, HPS, c.root)!.stage).toBe('packaged');
+    } finally {
+      c.cleanup();
+    }
+  });
+
+  it('without a release the graphics stage gates the lock', () => {
+    const c = copyTopic(HP);
+    try {
+      const dir = c.dir(HPS);
+      rmSync(join(dir, 'release.json'));
+      expect(productionOf(HP, HPS, c.root)!.halt?.kind).toBe('render-check');
+      writeCheck(dir, { ok: false, needsGraphics: ['sc18'] });
+      const p1 = productionOf(HP, HPS, c.root)!;
+      expect(p1.halt?.kind).toBe('needs-graphics');
+      expect(p1.next).toContain('agent: scripts/briefs/graphics.md (sc18)');
+      writeCheck(dir, { graphics: [{ scene: 'sc18', kind: 'hp-labels', key: 'k', approved: false }] });
+      expect(productionOf(HP, HPS, c.root)!.halt?.kind).toBe('graphics-review');
+      writeCheck(dir, { graphics: [{ scene: 'sc18', kind: 'hp-labels', key: 'k', approved: true }] });
+      const p2 = productionOf(HP, HPS, c.root)!;
+      expect(p2.stage).toBe('lock');
+      expect(p2.next).toContain('--approved-by "<approver>"');
+    } finally {
+      c.cleanup();
+    }
+  });
+
+  it('stepsOf passes a scene list to the graphics brief', () => {
+    expect(stepsOf('agent: scripts/briefs/graphics.md (sc18,sc20)', 't', 's')[0].text).toContain('Scenes: sc18,sc20');
   });
 });
 
