@@ -2,14 +2,14 @@
 // and has an agent that did not build each bespoke graphic approved its frames? Writes video/render-check.json (the
 // library's RenderCheckSummary), which the lock and the board's graphics stage read. A graphic is approved at a key
 // (the scene plus the code that draws it), so editing either asks for a new visual review.
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, sha, toJson, ROOT } from '../lib/io';
-import { RENDER_CHECK, type RenderCheckSummary } from '../lib/render-check';
+import { RENDER_CHECK, type RenderCheckSummary, renderConfigSha } from '../lib/render-check';
 import { scriptDir, storySlug } from '../lib/script';
 import type { Scene } from '../lib/storyboard';
 import { VIDEO_FILES, videoDir } from './files';
-import { ALL_KINDS, type KindRegistry, type SceneKind, bespokeFor } from './kinds';
+import { type KindRegistry, type SceneKind, bespokeFor } from './kinds';
 import { componentVersion } from './render';
 import { type Segment, checkSegment, loadInputs } from './select';
 
@@ -21,10 +21,8 @@ export interface VisualReview {
   >;
 }
 
-export const graphicKey = (scene: Scene, kind: SceneKind, specs: KindRegistry = ALL_KINDS) =>
-  sha(toJson({ scene, code: componentVersion(specs[kind].component) }));
-
-const drawn = (s: Scene) => s.visual.category === 'diagram' || s.visual.category === 'animation';
+export const graphicKey = (scene: Scene, kind: SceneKind, bespoke: KindRegistry) =>
+  sha(toJson({ scene, code: componentVersion(bespoke[kind].component) }));
 
 export function renderCheck(
   seg: Segment,
@@ -35,11 +33,13 @@ export function renderCheck(
   const kindOfScene = new Map(seg.scenes.map((s) => [s.scene.id, s.kind]));
   const selected = seg.storyboard.scenes.filter((s) => seg.config.scenes?.includes(s.id));
   // a diagram drawn by a generic kind came from a registered asset that draws it; anything else needs a graphic
-  const needsGraphics = selected.filter((s) => drawn(s) && !kindOfScene.has(s.id)).map((s) => s.id);
+  const needsGraphics = selected
+    .filter((s) => ['diagram', 'animation'].includes(s.visual.category) && !kindOfScene.has(s.id))
+    .map((s) => s.id);
   const graphics = seg.scenes
     .filter((s) => Object.hasOwn(bespoke, s.kind))
     .map(({ scene, kind }) => {
-      const key = graphicKey(scene, kind, { ...ALL_KINDS, ...bespoke });
+      const key = graphicKey(scene, kind, bespoke);
       const r = review?.scenes[scene.id];
       return { scene: scene.id, kind, key, approved: r?.verdict === 'approved' && r.key === key };
     });
@@ -60,13 +60,13 @@ export function writeRenderCheck(topic: string, storyId: string, root = ROOT): R
   const dir = videoDir(topic, storyId, root);
   const bespoke = bespokeFor(`${topic}/${storySlug(storyId)}`);
   const seg = checkSegment({ ...loadInputs(topic, storyId, root), release: null }, bespoke);
-  const configFile = join(dir, VIDEO_FILES.config);
+  const sdir = scriptDir(topic, storyId, root);
   const rc = renderCheck(
     seg,
     readJson<VisualReview>(join(dir, VIDEO_FILES.visualReview)),
-    existsSync(configFile) ? sha(readFileSync(configFile, 'utf8')) : '',
+    renderConfigSha(sdir),
     bespoke,
   );
-  writeFileSync(join(scriptDir(topic, storyId, root), RENDER_CHECK), toJson(rc));
+  writeFileSync(join(sdir, RENDER_CHECK), toJson(rc));
   return rc;
 }
