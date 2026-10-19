@@ -3,7 +3,7 @@
  "basis": {
   "claims": 708,
   "sources": 171,
-  "studies": 17,
+  "studies": 20,
   "candidates": 38
  },
  "stories": [
@@ -861,6 +861,289 @@
    }
   },
   {
+   "id": "surprise:most-new-businesses-including-online-stores",
+   "kind": "surprise",
+   "title": "Do Most New Businesses Really Fail in a Few Years?",
+   "alternates": [
+    "How Long Does the Average New Business Actually Last?",
+    "The Survival Curve Behind 'Most Businesses Fail'"
+   ],
+   "question": "Do most new businesses really fail within a few years?",
+   "whyWatch": "The failure statistic is quoted both to discourage and to sell; the official survival table says something more precise.",
+   "tension": "'Most fail within a few years' against a curve where half are still open after five.",
+   "evidenceNeeded": "Survival rates by age for new establishments, with a breakdown for online stores.",
+   "evidenceAvailable": [
+    "bls-qcew-concepts.txt: partly (0.4, direct)",
+    "bls-bed-age-survival-faq.txt: partly (0.4, partial)",
+    "bls-bed-faq.txt: partly (0.4, direct)",
+    "BLS business survival table: partly (0.6, direct)",
+    "Taylor, The Case against MLM: right (0.45, partial)"
+   ],
+   "gaps": [
+    "Taylor, The Case against MLM differs: Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores."
+   ],
+   "premise": "The BLS survival table says 79.6% of establishments opened in 2015 survived one year, 61.4% three, 50.2% five and 34.7% ten, so about half close within five years and two-thirds within ten. 'Most fail within a few years' overstates it; exits include sales and relocations, not only failures; and there is no breakdown for online stores. Taylor's second-hand SBA and NFIB figures agree on the shape.",
+   "claims": [
+    "get-rich-quick/most-new-businesses-including-online-stores"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Nine in ten businesses fail: where does that number come from?",
+    "conflict": "The statistic versus the table.",
+    "evidence": "The BLS cohort survival curve, what an 'exit' includes, and the absence of online-store data.",
+    "resolution": "About half within five years, two-thirds within ten; 'most within a few years' is wrong, 'most eventually' is right.",
+    "takeaway": "Quote the curve, not the slogan."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One number with a caveat."
+   },
+   "format": "short",
+   "formatWhy": "One table and one correction; a segment, not a film.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.53,
+    "curiosity": 0.8,
+    "stakes": 0.5,
+    "depth": 0.8,
+    "originality": 1,
+    "evidence": 0.96,
+    "editorial": 0.69,
+    "overall": 0.8,
+    "explanation": "editorial 0.69 = mean of coherence 0.8 (review), relevance 0.53 (4 sources, 4 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 0.8 (5 studies, 1 claim, tension); evidence 0.96 = strongest BLS business survival table at 0.6 (direct) across 5 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.8), central conclusion qualified with accepted qualifications, 1 essential finding verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Most new businesses, including online stores, fail within a few years",
+     "kind": "fact",
+     "modality": "typical",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+        "cite": "get-rich-quick/sources/bls-qcew-concepts.txt#L48-L48"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "bls-qcew-concepts.txt",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "BLS defines an establishment as a single economic unit such as a store or factory, typically at one physical location, in contrast to a firm or company, which may consist of one or more establishments; establishment survival counts places of business, not businesses.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+        "cite": "get-rich-quick/sources/bls-bed-age-survival-faq.txt#L67-L73"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "bls-bed-age-survival-faq.txt",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "BLS age and survival data are measured at the establishment level, not the firm level: a chain store's new branch is a new opening for the establishment tables though only an expansion for the firm, so the survival tables are not a business failure rate.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"though\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+        "cite": "get-rich-quick/sources/bls-bed-faq.txt#L118-L120"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "bls-bed-faq.txt",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "A BLS closing is an establishment that had positive employment and then reports none (or zero) in the current quarter; the definition records that payroll employment stopped at that unit, not why, so an exit is not necessarily a failure.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+        "cite": "get-rich-quick/sources/bls-establishment-survival.txt#L555-L568"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "BLS business survival table",
+       "verdict": "partly",
+       "confidence": 0.6,
+       "note": "Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
+       "applicability": "direct",
+       "basis": "review",
+       "why": "the official survival table decides the claim as worded: it measures exactly how many close within a few years, and the answer is about half within five"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+        "cite": "get-rich-quick/sources/taylor-case-against-mlm.txt#L1010-L1022"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Taylor, The Case against MLM",
+       "verdict": "right",
+       "confidence": 0.45,
+       "note": "Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "second-hand SBA and NFIB figures for small businesses generally; nothing on online stores"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "bls-qcew-concepts.txt: BLS defines an establishment as a single economic unit such as a store or factory, typically at one physical location, in contrast to a firm or company, which may consist of one or more establishments; establishment survival counts places of business, not businesses.",
+      "bls-bed-age-survival-faq.txt: BLS age and survival data are measured at the establishment level, not the firm level: a chain store's new branch is a new opening for the establishment tables though only an expansion for the firm, so the survival tables are not a business failure rate. [partial: the verdict note limits its own scope (\"though\")]",
+      "bls-bed-faq.txt: A BLS closing is an establishment that had positive employment and then reports none (or zero) in the current quarter; the definition records that payroll employment stopped at that unit, not why, so an exit is not necessarily a failure.",
+      "BLS business survival table: Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
+      "Taylor, The Case against MLM: Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores. [partial: second-hand SBA and NFIB figures for small businesses generally; nothing on online stores]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 5 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Most new businesses, including online stores, fail within a few years",
+       "kind": "fact",
+       "modality": "typical",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+          "cite": "get-rich-quick/sources/bls-qcew-concepts.txt#L48-L48"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "bls-qcew-concepts.txt",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "BLS defines an establishment as a single economic unit such as a store or factory, typically at one physical location, in contrast to a firm or company, which may consist of one or more establishments; establishment survival counts places of business, not businesses.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+          "cite": "get-rich-quick/sources/bls-bed-age-survival-faq.txt#L67-L73"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "bls-bed-age-survival-faq.txt",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "BLS age and survival data are measured at the establishment level, not the firm level: a chain store's new branch is a new opening for the establishment tables though only an expansion for the firm, so the survival tables are not a business failure rate.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"though\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+          "cite": "get-rich-quick/sources/bls-bed-faq.txt#L118-L120"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "bls-bed-faq.txt",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "A BLS closing is an establishment that had positive employment and then reports none (or zero) in the current quarter; the definition records that payroll employment stopped at that unit, not why, so an exit is not necessarily a failure.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+          "cite": "get-rich-quick/sources/bls-establishment-survival.txt#L555-L568"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "BLS business survival table",
+         "verdict": "partly",
+         "confidence": 0.6,
+         "note": "Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
+         "applicability": "direct",
+         "basis": "review",
+         "why": "the official survival table decides the claim as worded: it measures exactly how many close within a few years, and the answer is about half within five"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/most-new-businesses-including-online-stores",
+          "cite": "get-rich-quick/sources/taylor-case-against-mlm.txt#L1010-L1022"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Taylor, The Case against MLM",
+         "verdict": "right",
+         "confidence": 0.45,
+         "note": "Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "second-hand SBA and NFIB figures for small businesses generally; nothing on online stores"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "bls-qcew-concepts.txt: BLS defines an establishment as a single economic unit such as a store or factory, typically at one physical location, in contrast to a firm or company, which may consist of one or more establishments; establishment survival counts places of business, not businesses.",
+        "bls-bed-age-survival-faq.txt: BLS age and survival data are measured at the establishment level, not the firm level: a chain store's new branch is a new opening for the establishment tables though only an expansion for the firm, so the survival tables are not a business failure rate. [partial: the verdict note limits its own scope (\"though\")]",
+        "bls-bed-faq.txt: A BLS closing is an establishment that had positive employment and then reports none (or zero) in the current quarter; the definition records that payroll employment stopped at that unit, not why, so an exit is not necessarily a failure.",
+        "BLS business survival table: Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
+        "Taylor, The Case against MLM: Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores. [partial: second-hand SBA and NFIB figures for small businesses generally; nothing on online stores]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 5 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
    "id": "surprise:commission-free-brokers-sell-order-flow",
    "kind": "surprise",
    "title": "Is 'Commission-Free' Trading Actually Free?",
@@ -1113,184 +1396,6 @@
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
        "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.5), 1 qualifying."
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "surprise:most-new-businesses-including-online-stores",
-   "kind": "surprise",
-   "title": "Do Most New Businesses Really Fail in a Few Years?",
-   "alternates": [
-    "How Long Does the Average New Business Actually Last?",
-    "The Survival Curve Behind 'Most Businesses Fail'"
-   ],
-   "question": "Do most new businesses really fail within a few years?",
-   "whyWatch": "The failure statistic is quoted both to discourage and to sell; the official survival table says something more precise.",
-   "tension": "'Most fail within a few years' against a curve where half are still open after five.",
-   "evidenceNeeded": "Survival rates by age for new establishments, with a breakdown for online stores.",
-   "evidenceAvailable": [
-    "BLS business survival table: partly (0.6, direct)",
-    "Taylor, The Case against MLM: right (0.45, partial)"
-   ],
-   "gaps": [
-    "Taylor, The Case against MLM differs: Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores."
-   ],
-   "premise": "The BLS survival table says 79.6% of establishments opened in 2015 survived one year, 61.4% three, 50.2% five and 34.7% ten, so about half close within five years and two-thirds within ten. 'Most fail within a few years' overstates it; exits include sales and relocations, not only failures; and there is no breakdown for online stores. Taylor's second-hand SBA and NFIB figures agree on the shape.",
-   "claims": [
-    "get-rich-quick/most-new-businesses-including-online-stores"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "Nine in ten businesses fail: where does that number come from?",
-    "conflict": "The statistic versus the table.",
-    "evidence": "The BLS cohort survival curve, what an 'exit' includes, and the absence of online-store data.",
-    "resolution": "About half within five years, two-thirds within ten; 'most within a few years' is wrong, 'most eventually' is right.",
-    "takeaway": "Quote the curve, not the slogan."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One number with a caveat."
-   },
-   "format": "short",
-   "formatWhy": "One table and one correction; a segment, not a film.",
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.53,
-    "curiosity": 0.8,
-    "stakes": 0.5,
-    "depth": 0.67,
-    "originality": 1,
-    "evidence": 0.69,
-    "editorial": 0.66,
-    "overall": 0.67,
-    "explanation": "editorial 0.66 = mean of coherence 0.8 (review), relevance 0.53 (4 sources, 4 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 0.67 (2 studies, 1 claim, tension); evidence 0.69 = strongest BLS business survival table at 0.6 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.8), central conclusion qualified with accepted qualifications, 1 essential finding verified, no pending review.",
-   "blocking": [],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Most new businesses, including online stores, fail within a few years",
-     "kind": "fact",
-     "modality": "typical",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "get-rich-quick/most-new-businesses-including-online-stores",
-        "cite": "get-rich-quick/sources/bls-establishment-survival.txt#L555-L568"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "BLS business survival table",
-       "verdict": "partly",
-       "confidence": 0.6,
-       "note": "Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
-       "applicability": "direct",
-       "basis": "review",
-       "why": "the official survival table decides the claim as worded: it measures exactly how many close within a few years, and the answer is about half within five"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "get-rich-quick/most-new-businesses-including-online-stores",
-        "cite": "get-rich-quick/sources/taylor-case-against-mlm.txt#L1010-L1022"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Taylor, The Case against MLM",
-       "verdict": "right",
-       "confidence": 0.45,
-       "note": "Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores.",
-       "applicability": "partial",
-       "basis": "review",
-       "why": "second-hand SBA and NFIB figures for small businesses generally; nothing on online stores"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "BLS business survival table: Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
-      "Taylor, The Case against MLM: Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores. [partial: second-hand SBA and NFIB figures for small businesses generally; nothing on online stores]"
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): no direct support, 2 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "Most new businesses, including online stores, fail within a few years",
-       "kind": "fact",
-       "modality": "typical",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/most-new-businesses-including-online-stores",
-          "cite": "get-rich-quick/sources/bls-establishment-survival.txt#L555-L568"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "BLS business survival table",
-         "verdict": "partly",
-         "confidence": 0.6,
-         "note": "Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
-         "applicability": "direct",
-         "basis": "review",
-         "why": "the official survival table decides the claim as worded: it measures exactly how many close within a few years, and the answer is about half within five"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/most-new-businesses-including-online-stores",
-          "cite": "get-rich-quick/sources/taylor-case-against-mlm.txt#L1010-L1022"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Taylor, The Case against MLM",
-         "verdict": "right",
-         "confidence": 0.45,
-         "note": "Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores.",
-         "applicability": "partial",
-         "basis": "review",
-         "why": "second-hand SBA and NFIB figures for small businesses generally; nothing on online stores"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "BLS business survival table: Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
-        "Taylor, The Case against MLM: Taylor quotes SBA figures that 44% of small businesses survive at least four years and 31% at least seven, and an NFIB survey finding 64.2% failed within ten years; general small-business data, not specific to online stores. [partial: second-hand SBA and NFIB figures for small businesses generally; nothing on online stores]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 2 qualifying."
       }
      }
     ]
@@ -2747,6 +2852,19 @@
        "ref": {
         "kind": "statement",
         "claim": "get-rich-quick/dropshipping-needs-upfront-inventory-because-customer",
+        "source": "UZaxRAyV1fI"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "The UGLY Truth About Dropshipping That No Guru Will Tell You",
+       "verdict": null,
+       "confidence": null,
+       "note": "you can list many products online just to see what sells"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "get-rich-quick/dropshipping-needs-upfront-inventory-because-customer",
         "source": "dodropshipping-is-dropshipping-still-worth-it"
        },
        "cited": true,
@@ -2794,19 +2912,6 @@
        "verdict": null,
        "confidence": null,
        "note": "dropshippers don’t have to buy any inventory upfront"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "get-rich-quick/dropshipping-needs-upfront-inventory-because-customer",
-        "source": "UZaxRAyV1fI"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "The UGLY Truth About Dropshipping That No Guru Will Tell You",
-       "verdict": null,
-       "confidence": null,
-       "note": "you can list many products online just to see what sells"
       },
       {
        "ref": {
@@ -2864,6 +2969,19 @@
          "ref": {
           "kind": "statement",
           "claim": "get-rich-quick/dropshipping-needs-upfront-inventory-because-customer",
+          "source": "UZaxRAyV1fI"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "The UGLY Truth About Dropshipping That No Guru Will Tell You",
+         "verdict": null,
+         "confidence": null,
+         "note": "you can list many products online just to see what sells"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "get-rich-quick/dropshipping-needs-upfront-inventory-because-customer",
           "source": "dodropshipping-is-dropshipping-still-worth-it"
          },
          "cited": true,
@@ -2911,19 +3029,6 @@
          "verdict": null,
          "confidence": null,
          "note": "dropshippers don’t have to buy any inventory upfront"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "get-rich-quick/dropshipping-needs-upfront-inventory-because-customer",
-          "source": "UZaxRAyV1fI"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "The UGLY Truth About Dropshipping That No Guru Will Tell You",
-         "verdict": null,
-         "confidence": null,
-         "note": "you can list many products online just to see what sells"
         },
         {
          "ref": {
@@ -3111,19 +3216,6 @@
          "ref": {
           "kind": "statement",
           "claim": "get-rich-quick/low-effort-arbitrage-pays-only-early",
-          "source": "biYciU1uiUw"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Contrepreneurs: The Mikkelsen Twins",
-         "verdict": null,
-         "confidence": null,
-         "note": "there was a narrow window of time where Audible’s gates were wide open, but there wasn’t a lot of competition yet"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "get-rich-quick/low-effort-arbitrage-pays-only-early",
           "source": "DZoeGR_tatA"
          },
          "cited": true,
@@ -3145,6 +3237,32 @@
          "verdict": null,
          "confidence": null,
          "note": "if there was something easy out there someone else would grab it"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "get-rich-quick/low-effort-arbitrage-pays-only-early",
+          "source": "UZaxRAyV1fI"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "The UGLY Truth About Dropshipping That No Guru Will Tell You",
+         "verdict": null,
+         "confidence": null,
+         "note": "you will face pricing pressure from other competing retailers offering the exact same goods"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "get-rich-quick/low-effort-arbitrage-pays-only-early",
+          "source": "biYciU1uiUw"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Contrepreneurs: The Mikkelsen Twins",
+         "verdict": null,
+         "confidence": null,
+         "note": "there was a narrow window of time where Audible’s gates were wide open, but there wasn’t a lot of competition yet"
         },
         {
          "ref": {
@@ -3189,19 +3307,6 @@
          "ref": {
           "kind": "statement",
           "claim": "get-rich-quick/low-effort-arbitrage-pays-only-early",
-          "source": "UZaxRAyV1fI"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "The UGLY Truth About Dropshipping That No Guru Will Tell You",
-         "verdict": null,
-         "confidence": null,
-         "note": "you will face pricing pressure from other competing retailers offering the exact same goods"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "get-rich-quick/low-effort-arbitrage-pays-only-early",
           "source": "zWi7i165YZE"
          },
          "cited": true,
@@ -3241,19 +3346,6 @@
          "ref": {
           "kind": "statement",
           "claim": "get-rich-quick/anyone-who-stays-consistent-will-reach",
-          "source": "h8_2FVvCEe0"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "F*ck it. Zero to $1,000/Day With Faceless YouTube Automation (Just Copy Me)",
-         "verdict": null,
-         "confidence": null,
-         "note": "as long as you stay consistent, you will go easily from zero to a thousand dollars a day"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "get-rich-quick/anyone-who-stays-consistent-will-reach",
           "source": "VjpY2cETzy4"
          },
          "cited": true,
@@ -3262,6 +3354,19 @@
          "verdict": null,
          "confidence": null,
          "note": "if you're able to be consistent and avoid burnout the potential is endless and it's one of the best side hustles out there right now"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "get-rich-quick/anyone-who-stays-consistent-will-reach",
+          "source": "h8_2FVvCEe0"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "F*ck it. Zero to $1,000/Day With Faceless YouTube Automation (Just Copy Me)",
+         "verdict": null,
+         "confidence": null,
+         "note": "as long as you stay consistent, you will go easily from zero to a thousand dollars a day"
         }
        ],
        "problems": [],
@@ -3319,6 +3424,19 @@
          "ref": {
           "kind": "statement",
           "claim": "get-rich-quick/most-new-youtube-channels-earn-nothing",
+          "source": "VjpY2cETzy4"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "How To Start A YouTube Automation Business in 10 Minutes",
+         "verdict": null,
+         "confidence": null,
+         "note": "most people fail when it comes to this type of business for three reasons the first is from burnout"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "get-rich-quick/most-new-youtube-channels-earn-nothing",
           "source": "j_KrWStXYDk"
          },
          "cited": true,
@@ -3353,19 +3471,6 @@
          "verdict": null,
          "confidence": null,
          "note": "it's very slow to monetize and most people quit before they make any money here"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "get-rich-quick/most-new-youtube-channels-earn-nothing",
-          "source": "VjpY2cETzy4"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "How To Start A YouTube Automation Business in 10 Minutes",
-         "verdict": null,
-         "confidence": null,
-         "note": "most people fail when it comes to this type of business for three reasons the first is from burnout"
         }
        ],
        "problems": [],

@@ -4,6 +4,7 @@ import type { FC } from 'react';
 import { ALL_KINDS, type SceneKind } from '../../kinds';
 import type { TimelineScene } from '../../types';
 import { Bar } from './Bar';
+import { BranchClosing } from './BranchClosing';
 import { CommissionIcons } from './CommissionIcons';
 import { Composite } from './Composite';
 import { DotPlot } from './DotPlot';
@@ -25,6 +26,7 @@ import { Waterfall } from './Waterfall';
 
 export const COMPONENTS = {
   Bar,
+  BranchClosing,
   CommissionIcons,
   Composite,
   DotPlot,
