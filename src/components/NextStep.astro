@@ -1,7 +1,8 @@
 ---
 // A board item's next move: a button that opens a native popover listing each step as a command to run, a
-// prompt to hand an agent, or a manual step. Each block has a Copy button (the only client script here).
-import { type Step, stepsOf, type Upload } from '../lib/production';
+// prompt to hand an agent, or a manual step. Each block has a Copy button (the only client script here). A story
+// with a stage gets the /produce prompt first: start or resume the whole run, or (once packaged) send it back.
+import { runPromptOf, sendBackPromptOf, type Step, stepsOf, type Upload } from '../lib/production';
 
 interface Props {
   id: string;
@@ -9,9 +10,20 @@ interface Props {
   topic: string;
   story?: string;
   upload?: Upload | null; // fills in the YouTube form when a step is the upload
+  stage?: string; // the production stage, or 'ready' for a ready story with no production yet
 }
-const { id, next, topic, story, upload } = Astro.props;
-const steps = stepsOf(next, topic, story);
+const { id, next, topic, story, upload, stage } = Astro.props;
+const run: Step[] =
+  story && stage
+    ? [{ kind: 'prompt', text: stage === 'packaged' ? sendBackPromptOf(topic, story) : runPromptOf(topic, story) }]
+    : [];
+const steps = [...run, ...stepsOf(next, topic, story)];
+const labelOf = (s: Step) =>
+  s.kind === 'prompt' && s.text.startsWith('/produce ')
+    ? stage === 'packaged'
+      ? 'Send it back: paste into Claude Code, add your notes'
+      : 'The whole run: paste into Claude Code'
+    : LABEL[s.kind];
 const isUpload = (s: Step) => !!upload && s.kind === 'do' && s.text.startsWith('upload ');
 const fields = upload
   ? [
@@ -60,7 +72,7 @@ const COPY = 'absolute top-1 right-1 rounded-sm border bg-card px-1.5 py-0.5 tex
         <li class="grid gap-1">
           <span class="eyebrow text-muted-foreground">
             {steps.length > 1 ? `${i + 1}. ` : ''}
-            {LABEL[s.kind]}
+            {labelOf(s)}
           </span>
           {isUpload(s) ? (
             <>

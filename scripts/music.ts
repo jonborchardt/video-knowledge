@@ -5,6 +5,8 @@
 //   render <composition> [--port 3000]  ask the strudel-bench page that is open (npm run headless there) to render every variation again
 //                                 from its recorded command, then import the result; needs STRUDEL_BENCH=<dir>
 //   show <composition>              the manifest in one screen
+//   cues <topic> <story-id> [--composition <id>] [--force]
+//                                 draft <story>/video/music.json from the script's sections over a cleared composition (kept unless --force)
 // Compositions are written in strudel-bench (https://github.com/jonborchardt/strudel-bench); this repo only keeps the
 // rendered sections, their provenance and the cue sheets that place them (video/music.json).
 import { spawnSync } from 'node:child_process';
@@ -12,7 +14,10 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from
 import { basename, join, resolve } from 'node:path';
 import { readJson, sha, toJson, ROOT } from '../src/lib/io';
 import { probe } from '../src/video/ffmpeg';
+import { FILES, type Script, scriptDir } from '../src/lib/script';
+import type { Storyboard } from '../src/lib/storyboard';
 import { COMPOSITION_FILE, type Composition, MUSIC_DIR, type Variation, loadComposition } from '../src/video/music';
+import { compositions, draftCueSheet, pickComposition } from '../src/video/music-draft';
 
 const [cmd, id, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
@@ -24,7 +29,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 8)
+      .slice(0, 10)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -210,6 +215,34 @@ try {
         console.log(
           `  ${k}: ${v.seconds}s, ${v.cycles} cycles, loop ${v.loop} (crossfade ${v.crossfade}s), ${v.file} ${v.sha}`,
         );
+      break;
+    }
+    case 'cues': {
+      const storyId = positional[0];
+      if (!storyId) usage();
+      const sdir = scriptDir(id, storyId);
+      const out = join(sdir, 'video', 'music.json');
+      const relOut = out
+        .replace(ROOT, '')
+        .replace(/^[\\/]/, '')
+        .replaceAll('\\', '/');
+      if (existsSync(out) && !rest.includes('--force')) {
+        console.log(`kept existing ${relOut}`);
+        break;
+      }
+      const want = flag('--composition');
+      const c = pickComposition(compositions(), want);
+      if (!c) {
+        console.error(want ? `${want} is not a cleared composition in music/` : 'no cleared composition in music/');
+        process.exit(2);
+      }
+      const script = readJson<Script>(join(sdir, FILES.script));
+      const sb = readJson<Storyboard>(join(sdir, FILES.storyboard));
+      if (!script || !sb?.scenes) throw new Error(`no script.json or storyboard.json in ${sdir}`);
+      const m = draftCueSheet(script, sb, c);
+      mkdirSync(join(sdir, 'video'), { recursive: true });
+      writeFileSync(out, toJson(m));
+      console.log(`wrote ${relOut}: ${c.id}, ${m.cues.map((x) => `${x.id} ${x.from}-${x.to}`).join(', ')}`);
       break;
     }
     default:

@@ -15,6 +15,7 @@ import {
   type Issue,
   type Quote,
   MAX_REVISIONS,
+  revisionsInPass,
   type ReviewFinding,
   RUNTIME,
   type Script,
@@ -566,7 +567,10 @@ export function validateScript(
       dispositioned,
       unreviewed,
     },
-    revisionLimitReached: status === 'blocked' && script.revision >= MAX_REVISIONS,
+    revisionLimitReached:
+      status === 'blocked' &&
+      revisionsInPass(script) >= MAX_REVISIONS &&
+      !script.generation.corrective?.some((c) => c.revision === script.revision),
     sentences: results,
     issues,
     resolved: merge.resolved,

@@ -21,10 +21,10 @@ import type { Scene, Storyboard } from '../lib/storyboard';
 import {
   GENERIC,
   type KindRegistry,
-  SUPPORTED_ASSETS,
   type SceneKind,
   bespokeFor,
   kindOf,
+  unsupportedAssets,
   unsupportedWhy,
 } from './kinds';
 import { VIDEO_DIR, VIDEO_FILES } from './files';
@@ -135,8 +135,8 @@ export function checkSegment(
       continue;
     }
     const spec = specs[kind];
-    for (const a of scene.visual.assetIds ?? [])
-      if (!SUPPORTED_ASSETS.has(a)) bad(`${scene.id}: asset "${a}" has no renderer`);
+    for (const a of unsupportedAssets(kind, scene.visual.assetIds ?? []))
+      bad(`${scene.id}: asset "${a}" has no renderer`);
     if (scene.visual.category === 'data-chart') {
       const pts = scene.visual.chart?.points ?? [];
       if (!pts.length) bad(`${scene.id}: a chart with no points`);
@@ -147,6 +147,8 @@ export function checkSegment(
         if (!known.has(p.cite)) bad(`${scene.id}: chart point "${p.label}" cites ${p.cite}, not in the package`);
         if (spec.percent && p.unit !== 'percent')
           bad(`${scene.id}: ${kind} draws percentages; "${p.label}" is ${p.unit}`);
+        if (kind === 'bar' && p.unit !== 'percent' && p.unit !== 'count')
+          bad(`${scene.id}: bar draws percent and count points; "${p.label}" is ${p.unit}`);
       }
       if (spec.percent) {
         const total = pts.reduce((n, p) => n + (Number.isFinite(p.value) ? p.value : 0), 0);
@@ -173,8 +175,8 @@ export function checkSegment(
   return { ...inp, scenes, sentences: out, fingerprints: fp, problems };
 }
 
-/** The segment from <topic>/scripts/<slug>/ and its video/render.json; throws listing every problem. */
-export function loadSegment(topic: string, storyId: string, root = ROOT): Segment {
+/** The segment's inputs from <topic>/scripts/<slug>/ and its video/render.json; throws when a file is missing. */
+export function loadInputs(topic: string, storyId: string, root = ROOT): SegmentInputs {
   const dir = scriptDir(topic, storyId, root);
   const need = <T>(name: string, hint: string): T => {
     const p = join(dir, name);
@@ -184,14 +186,19 @@ export function loadSegment(topic: string, storyId: string, root = ROOT): Segmen
   };
   const configPath = join(dir, VIDEO_DIR, VIDEO_FILES.config);
   if (!existsSync(configPath)) throw new Error(`no ${configPath}: name the scenes, voice and cues to render`);
-  const seg = checkSegment({
+  return {
     script: need<Script>(FILES.script, 'write the script first'),
     storyboard: need<Storyboard>(FILES.storyboard, 'run npm run script -- storyboard'),
     validation: need<ScriptValidation>(FILES.validation, 'run npm run script -- validate'),
     release: readJson<Release>(join(dir, FILES.release)),
     pkg: need<EvidencePackage>(FILES.pkg, 'run npm run script -- package'),
     config: JSON.parse(readFileSync(configPath, 'utf8')) as RenderConfig,
-  });
+  };
+}
+
+/** The segment from <topic>/scripts/<slug>/ and its video/render.json; throws listing every problem. */
+export function loadSegment(topic: string, storyId: string, root = ROOT): Segment {
+  const seg = checkSegment(loadInputs(topic, storyId, root));
   if (seg.problems.length) throw new Error(`cannot render:\n  ${seg.problems.join('\n  ')}`);
   return seg;
 }

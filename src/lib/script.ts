@@ -151,6 +151,8 @@ export interface Script {
   story: string;
   title: string;
   revision: number; // 1 for the first draft; the writer increments it on each revision
+  /** The revision a send-back pass started from (absent = 0): the revision limit counts revisions within the pass. */
+  passStartRevision?: number;
   generation: {
     model: string;
     brief: string;
@@ -158,9 +160,14 @@ export interface Script {
     wordsPerMinute: number;
     evidencePackage: string; // package fingerprint the draft was written from
     notes?: string;
+    /** A sanctioned corrective pass past the revision limit: only the listed sentences change, for the reason given. */
+    corrective?: { revision: number; reason: string; sentences: string[]; authorizedBy: string }[];
+    /** The writer stopped because a finding needs a passage the package does not have; the evidence agent closes it. */
+    needsEvidence?: { claim: string; why: string; hint?: string }[];
   };
   sections: Section[];
 }
+export const revisionsInPass = (s: Script) => s.revision - (s.passStartRevision ?? 0);
 
 export interface Issue {
   sentence: string;
@@ -272,6 +279,8 @@ export const norm = (s: string) =>
 
 /** Written by `npm run script -- lock` once validation passed and the storyboard is ok: the fingerprints approved. */
 export interface Release {
+  /** 2: locked after a current render check (graphics approved). Absent: an older release, grandfathered. */
+  version?: 2;
   topic: string;
   story: string;
   approvedBy: string; // a person, or "automated: ..." so a reader knows nobody signed off

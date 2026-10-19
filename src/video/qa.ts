@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { sentences } from '../lib/script';
 import { excerptWindow } from './excerpt';
 import { type AudioStats, type Probe, audioStats, extractFrame, lumaSamples, probe } from './ffmpeg';
-import { ALL_KINDS, SUPPORTED_ASSETS } from './kinds';
+import { ALL_KINDS, unsupportedAssets } from './kinds';
 import { type MixReport, type MusicConfig, musicFingerprint, resolveCues } from './music';
 import type { Segment } from './select';
 import { buildTimeline } from './timeline';
@@ -229,7 +229,7 @@ export function contentChecks(tl: Timeline, seg: Segment): Check[] {
     if (!want.every((l) => got.includes(l)) || citations.length !== want.length) problems.push(`${scene.id} citations`);
     if (scene.visual.chart && JSON.stringify(t?.chart?.points) !== JSON.stringify(scene.visual.chart.points))
       problems.push(`${scene.id} chart data`);
-    if (!(t?.assets ?? []).every((a) => SUPPORTED_ASSETS.has(a))) problems.push(`${scene.id} assets`);
+    if (!t || unsupportedAssets(t.kind, t.assets).length) problems.push(`${scene.id} assets`);
     if (!t?.kind) problems.push(`${scene.id} unsupported`);
     if (scene.visual.excerpt) {
       const ex = t?.excerpt;
@@ -345,16 +345,22 @@ export function syncChecks(p: Probe, tl: Timeline, seg: Segment, manifest: Narra
 export function blankChecks(samples: Luma, tl: Timeline): Check[] {
   const fps = tl.fps;
   const last = tl.scenes.at(-1)!;
-  const maxRun = TOLERANCE.blankRunSeconds * TOLERANCE.samplesPerSecond;
+  const sps = TOLERANCE.samplesPerSecond;
+  const maxRun = Math.ceil(TOLERANCE.blankRunSeconds * sps);
   let run = 0;
   let worst = 0;
   let where = -1;
+  const runs: { from: number; to: number }[] = []; // sample indices, inclusive
   samples.forEach((s, i) => {
     run = s.sd < TOLERANCE.flatSd ? run + 1 : 0;
     if (run > worst) [worst, where] = [run, i];
+    if (run === maxRun) runs.push({ from: i - run + 1, to: i });
+    else if (run > maxRun) runs.at(-1)!.to = i;
   });
   const endFade = !!ALL_KINDS[last.kind]?.fadesOut; // a dim to black at the end is intentional
-  const worstAt = where / TOLERANCE.samplesPerSecond;
+  const worstAt = where / sps;
+  const sceneAt = (sec: number) => tl.scenes.findLast((s) => s.start / fps <= sec) ?? tl.scenes[0];
+  const blank = runs.filter((r) => !(endFade && r.from / sps >= last.start / fps));
   const notRendered = tl.scenes.filter((s) => {
     const i = Math.min(samples.length - 1, Math.floor(((s.start + s.duration / 2) / fps) * TOLERANCE.samplesPerSecond));
     return samples[i] === undefined || samples[i].sd < TOLERANCE.flatSd;
@@ -362,8 +368,14 @@ export function blankChecks(samples: Luma, tl: Timeline): Check[] {
   return [
     check(
       'no blank sections',
-      worst < maxRun || (endFade && worstAt >= last.start / fps),
-      worst ? `longest flat run ${worst / TOLERANCE.samplesPerSecond}s ending at ${worstAt.toFixed(1)}s` : 'none',
+      !blank.length,
+      blank.length
+        ? blank
+            .map((r) => `${(r.from / sps).toFixed(1)}-${((r.to + 1) / sps).toFixed(1)}s in ${sceneAt(r.from / sps).id}`)
+            .join('; ')
+        : worst
+          ? `longest flat run ${worst / sps}s ending at ${worstAt.toFixed(1)}s`
+          : 'none',
     ),
     check(
       'every scene has content',

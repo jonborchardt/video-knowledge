@@ -38,6 +38,7 @@ const COLUMN: Record<Column, { label: string; help: string; colour: string }> = 
   validate: { label: 'Validate', help: 'deterministic gate', colour: '' },
   'script-review': { label: 'Review', help: 'independent reviewer agent', colour: '' },
   storyboard: { label: 'Storyboard', help: 'storyboard agent, then fill and check', colour: '' },
+  graphics: { label: 'Graphics', help: 'render.json, bespoke graphics and their visual review', colour: '' },
   lock: { label: 'Lock', help: 'passed and ok; sign off', colour: '' },
   locked: { label: 'Locked', help: 'release.json; nothing rendered yet', colour: 'text-success' },
   video: { label: 'Video', help: 'a segment rendered; more scenes to go', colour: '' },
@@ -230,6 +231,11 @@ const stripOf = (r: StoryRow & { topic: { name: string } }) => {
                       topic={r.topic.name}
                       story={r.story.id}
                       upload={r.production?.upload}
+                      stage={
+                        r.decision
+                          ? undefined
+                          : (r.production?.stage ?? (r.story.readiness === 'ready' ? 'ready' : undefined))
+                      }
                     />
                   </article>
                 );
@@ -296,6 +302,7 @@ const stripOf = (r: StoryRow & { topic: { name: string } }) => {
               topic={p!.topic}
               story={p!.story}
               upload={p!.upload}
+              stage={p!.stage}
             />
             {p!.blockers.length > 0 && (
               <ul class="list-disc pl-5 text-sm text-warning">

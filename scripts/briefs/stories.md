@@ -13,7 +13,10 @@ the judgment the code cannot make. Nothing here changes a verdict or adds eviden
    population, conditions, timeframe, quantity, causality and modality? Read the passage
    (`npm run stories -- show <topic> <story-id>` prints it). Only record a judgment where
    the heuristic default shown in the audit is wrong or where the story depends on it,
-   keyed `"<claim id>|<asserts|denies>|<cite>"`. Record one of:
+   keyed `"<claim id>|<asserts|denies>|<cite>"`. The stance in the key is the story
+   sentence's stance on the claim, not the verdict's direction: `asserts` when the story
+   presents the claim as supported or qualified, `denies` when it says the evidence does not
+   support it. Record one of:
    - `direct`: the passage establishes the sentence, or something incompatible with it.
    - `partial`: it establishes part of it, or the same thing in a narrower setting.
    - `contextual`: relevant background that does not decide it. A base rate ("most lose")

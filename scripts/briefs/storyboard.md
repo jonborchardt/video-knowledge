@@ -63,6 +63,29 @@ conclusion). Each scene:
   or `{"label": "...", "source": "<source id>"}`; keep the label tied to the specific finding.
 - `direction`: transitions, animation beats, timing.
 
+## What the renderer draws
+
+The video stage maps each scene to a renderer (`src/video/kinds.ts`, `GENERIC`); a scene nothing
+draws fails the build. Plan within this vocabulary:
+
+- `typography`: one line is a `title`, one line ending in `?` a `question` (typed on), every line
+  in quotation marks a `quote`, several lines a `list` built one per sentence.
+- `data-chart` by `chart.type`: `bar` (horizontal bars; draws only `percent` and `count` points),
+  `stacked-bar` and `dot-plot` (percentages totalling at most 100), `waffle`, `table` (a rank
+  table), `stat-tiles` (one tile per point, any unit: dollars and mixed units go here).
+- `document-excerpt` with `visual.excerpt`: the cited passage with the highlight.
+- `transition`: a split field or wipe.
+- Assets that bring their own renderer: `phone-ui` (animation), `node-tree`, `evidence-cards`,
+  `person-grid`, `commission-icons` (diagrams), `disclosure-thumbnails` (excerpt), `dot-plot-601`.
+  Use `assetIds` only from this list or for an asset you register for a graphic to be built.
+- `diagram` and `animation` without one of those assets are built as bespoke graphics after this
+  stage (`scripts/briefs/graphics.md`) from your `visual.description`: describe them precisely
+  (what is drawn, its labels, what moves and when), because the builder works from that alone.
+
+Quote cards carry only the quoted words; the citation names the speaker or source. On-screen labels
+should be words the narration speaks, so they can appear as they are said; a label the narration
+never says needs its own beat in `direction`.
+
 ## The file
 
 ```json

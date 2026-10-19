@@ -16,6 +16,14 @@ export const storyboardFingerprint = (sb: Storyboard) => {
   void [_i, _s];
   return sha(toJson(rest));
 };
+/** Why a lock's --approved-by is not a real approver: missing, blank, or a placeholder copied from help text. */
+export function approverProblem(name: string | undefined): string | null {
+  const n = name?.trim() ?? '';
+  return !n || n === 'automated:' || /<[^>]*>/.test(n)
+    ? '--approved-by needs a real name (a person, or "automated: ...")'
+    : null;
+}
+
 /** One warning per locked fingerprint the current script, package, validation or storyboard no longer matches. */
 export function releaseCheck(release: Release | null, v: ScriptValidation, sb: Storyboard | null): Issue[] {
   if (!release) return [];

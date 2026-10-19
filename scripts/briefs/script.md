@@ -8,6 +8,31 @@ independent reviewer (`scripts/briefs/script-review.md`) then judges the wording
 against both. Nothing here adds evidence: if the package cannot support a sentence, the sentence
 changes, not the evidence.
 
+## Before writing
+
+For every study you will use, find in the package what it compares against and whom it measured:
+the comparison baseline (replacing like for like at end of life, against keeping the old system,
+against doing nothing), the population (all homes, one fuel, one region), the period and the
+measure (gross or net, median or mean). A sentence that compares two findings must compare them on
+the same baseline; if the package does not say a finding's baseline, that is an evidence gap, not
+something to infer.
+
+## When the evidence is missing
+
+If a finding the story needs rests on a passage the package does not have (a baseline, a
+population, a figure the reviewer asked for), do not work around it with a vaguer sentence. Add an
+entry to `generation.needsEvidence` and stop:
+
+```json
+"needsEvidence": [
+  { "claim": "<topic>/<slug>", "why": "the national figures' baseline is not in the package", "hint": "<topic>/sources/<file>.txt" }
+]
+```
+
+A separate evidence agent (`scripts/briefs/evidence.md`) records what decides it and rebuilds the
+package. When you revise against the rebuilt package, clear `needsEvidence` (remove the field).
+If the gap could not be closed, say in the sentence that the evidence cannot answer.
+
 ## What to write
 
 A faceless, research-based YouTube narration of 8 to 12 minutes (1,200 to 1,800 words at the
@@ -118,8 +143,21 @@ After review, read `validation.json` (open issues, by sentence) and `review.md`.
 finding: remove the assertion, narrow or qualify it, rewrite it as an attributed claim, say the
 evidence is insufficient, or record that it needs research (in `generation.notes`). Change only
 the sentences the findings touch; bump `revision`; keep ids. A changed sentence loses its approval
-and is reviewed again. At most three revisions: after that the output stays as it is with its
-blockers listed, and a person decides.
+and is reviewed again. A pass has three revisions to clear its blocking findings: after that, with blockers still open, the output stays as it is with its
+blockers listed, and a person decides. A revision that only answers warnings the reviewer holds a sentence on is not limited.
+
+## Send-back and corrective passes
+
+The run or a person sets `passStartRevision` and `generation.corrective`; never set them yourself to
+get past the revision limit.
+
+- **Notes pass** (the prompt says so): an editor watched the video and sent notes. The run has set
+  `passStartRevision` to the revision you start from, so this pass has its own three revisions.
+  Apply the notes and only the notes; keep every sentence the notes do not touch word for word.
+- **Corrective pass** (the prompt says so): the revision limit was reached, and a person
+  authorised fixing named sentences against the existing evidence. `generation.corrective` has an
+  entry for this revision (`revision`, `reason`, `sentences`, `authorizedBy`); change only the
+  sentences it lists.
 
 Final reply: word count and runtime, the deterministic result, and the three sentences you are
 least sure the evidence supports as worded.

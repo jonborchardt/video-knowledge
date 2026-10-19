@@ -16,6 +16,7 @@ export const VIDEO_FILES = {
   frames: 'frames',
   scenes: 'scenes', // rendered scene chunks, cached by key
   contact: 'contact-sheet.png',
+  visualReview: 'visual-review.json', // the independent visual review of the bespoke graphics (src/video/check.ts)
 } as const;
 export const NARRATION_DIR = 'narration';
 export const videoDir = (topic: string, storyId: string, root?: string) =>

@@ -5,7 +5,6 @@ import { cue, lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { GUTTER, easeOut, ramp, theme } from '../theme';
 
-const COLORS = [theme.red, theme.slate, theme.green];
 const NAMED: Record<string, string> = {
   red: theme.red,
   slate: theme.slate,
@@ -13,6 +12,22 @@ const NAMED: Record<string, string> = {
   amber: theme.amber,
   muted: theme.muted,
 };
+
+/** The big number a scene opens with: only when the first on-screen word starts with a digit ("601 people asked"),
+ *  never from a label ("bills only" is not 0). */
+export function headlineNumber(line: string): number | null {
+  const first = line.split(/\s+/)[0] ?? '';
+  return /^[0-9]/.test(first) ? Number(first.replace(/[^0-9.]/g, '')) : null;
+}
+/** options.colors: segment colours in point order as theme names, e.g. "slate,red,muted"; unknown names are muted;
+ *  default red, slate, green. A layout choice, so "lower bills" need not be drawn red. */
+export function segmentColors(option: string | number | boolean | undefined): string[] {
+  return option === undefined
+    ? [theme.red, theme.slate, theme.green]
+    : String(option)
+        .split(',')
+        .map((c) => NAMED[c.trim()] ?? theme.muted);
+}
 
 /** One bar filling left to right (segment colours from options.colors when given), each segment on its `point:<label>` cue; widths are the published percentages of the
  *  full bar, so a total under 100 leaves the remainder visibly empty. `stacked-bar` (sc04) opens with a big number
@@ -24,15 +39,10 @@ export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const s0 = scene.sentences[0];
   const base = scene.kind === 'base-rate';
   const count = cue(scene, 'count', s0.start + 10);
-  const [big, ...rest] = (scene.onScreenText[0] ?? '').split(/\s+/);
-  const target = base || !/^[0-9]/.test(big) ? NaN : Number(big.replace(/[^0-9.]/g, ''));
-  // options.colors: segment colours in point order, e.g. "slate,red,muted"; default red, slate, green.
-  const colors = scene.options.colors
-    ? String(scene.options.colors)
-        .split(',')
-        .map((c) => NAMED[c.trim()] ?? theme.muted)
-    : COLORS;
-  const shown = Number.isFinite(target) ? Math.round(target * easeOut((t - count) / 24)) : null;
+  const rest = (scene.onScreenText[0] ?? '').split(/\s+/).slice(1);
+  const target = base ? null : headlineNumber(scene.onScreenText[0] ?? '');
+  const colors = segmentColors(scene.options.colors);
+  const shown = target !== null && Number.isFinite(target) ? Math.round(target * easeOut((t - count) / 24)) : null;
   const fills = pointFrames(scene);
   const lines = lineFrames(scene);
   const merge = base ? ramp(t, cue(scene, 'merge', lines[0]), 14) : 0;

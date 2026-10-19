@@ -6,7 +6,10 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { fileSha, readJson, sha, toJson } from '../src/lib/io';
+import { fileSha, readJson, sha, toJson, ROOT } from '../src/lib/io';
+import { type Script, scriptDir } from '../src/lib/script';
+import type { Storyboard } from '../src/lib/storyboard';
+import { draftCueSheet, pickComposition } from '../src/video/music-draft';
 import { probe } from '../src/video/ffmpeg';
 import {
   CHANNELS,
@@ -595,5 +598,36 @@ describe('the MLM review package', () => {
     expect(renderReadme(pkg, tl, report)).toBe(text(REVIEW_FILES.readme));
     expect(renderDescription(pkg, seg, tl, report)).toBe(text(REVIEW_FILES.description));
     expect(renderChecklist(pkg, tl)).toBe(text(REVIEW_FILES.checklist));
+  });
+});
+
+describe('cue sheet draft', () => {
+  const dir = scriptDir('heat-pumps', 'decision:when-does-it-pay-for-itself');
+  const script = () => readJson<Script>(join(dir, 'script.json'))!;
+  const sb = () => readJson<Storyboard>(join(dir, 'storyboard.json'))!;
+  const undertow = () => readJson<Composition>(join(ROOT, 'music', 'undertow', 'composition.json'))!;
+
+  it('draftCueSheet covers every scene contiguously by section', () => {
+    const m = draftCueSheet(script(), sb(), undertow());
+    expect(m.cues.map((c) => [c.id, c.asset, c.from, c.to])).toEqual([
+      ['opening', 'undertow/pulse', 'sc01', 'sc05'],
+      ['setup', 'undertow/active', 'sc06', 'sc08'],
+      ['evidence', 'undertow/texture', 'sc09', 'sc29'],
+      ['ending', 'undertow/pulse', 'sc30', 'sc34'],
+    ]);
+  });
+
+  it('fallback variation', () => {
+    const c = { ...undertow(), variations: { bed: { ...undertow().variations.texture, loop: true } } };
+    const cues = draftCueSheet(script(), sb(), c).cues;
+    expect(new Set(cues.map((x) => x.asset))).toEqual(new Set(['undertow/bed']));
+    expect(cues.every((x) => x.loop)).toBe(true);
+  });
+
+  it('no cleared composition', () => {
+    const u = undertow();
+    expect(pickComposition([{ ...u, licence: { ...u.licence, cleared: false } }])).toBeNull();
+    expect(pickComposition([u])?.id).toBe('undertow');
+    expect(pickComposition([u], 'undertoe')).toBeNull();
   });
 });

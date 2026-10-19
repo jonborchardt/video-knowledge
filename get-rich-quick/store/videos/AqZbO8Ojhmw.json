@@ -116,6 +116,38 @@
           "note": "Of US private establishments opened in the year to March 2015, 79.6% survived one year, 61.4% three years, 50.2% five years and 34.7% ten years (other cohorts are similar), so about half close within five years and two-thirds within ten; 'most fail within a few years' overstates it, establishment exits include sales and relocations rather than only failures, and there is no online-store breakdown.",
           "source": "get-rich-quick/sources/bls-establishment-survival.txt#L555-L568",
           "date": "2026-10-16"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "BLS defines an establishment as a single economic unit such as a store or factory, typically at one physical location, in contrast to a firm or company, which may consist of one or more establishments; establishment survival counts places of business, not businesses.",
+          "source": "get-rich-quick/sources/bls-qcew-concepts.txt#L48-L48",
+          "date": "2026-10-19"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "BLS age and survival data are measured at the establishment level, not the firm level: a chain store's new branch is a new opening for the establishment tables though only an expansion for the firm, so the survival tables are not a business failure rate.",
+          "source": "get-rich-quick/sources/bls-bed-age-survival-faq.txt#L67-L73",
+          "date": "2026-10-19"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "A BLS closing is an establishment that had positive employment and then reports none (or zero) in the current quarter; the definition records that payroll employment stopped at that unit, not why, so an exit is not necessarily a failure.",
+          "source": "get-rich-quick/sources/bls-bed-faq.txt#L118-L120",
+          "date": "2026-10-19"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "BLS links establishment records across quarters by state UI id, and where the id changes through predecessor and successor records (including a change in ownership or a restructuring) or a match on name, address and phone, so a sold or reorganised establishment is meant to continue rather than count as a closing; unmatched records would still appear as an exit.",
+          "source": "get-rich-quick/sources/bls-bed-faq.txt#L96-L98",
+          "date": "2026-10-19"
         }
       ]
     },

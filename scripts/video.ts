@@ -10,15 +10,20 @@
 //   package <topic> <story-id>                       the private review package in video/review/: the mp4 (copied),
 //                                                    working title, description with measured chapters and sources, provenance, checklist
 //   preview <topic> <story-id>                       open the Remotion studio on the same composition and timeline
+//   init <topic> <story-id> [--force]                draft video/render.json from the storyboard (kept unless --force); lists the scenes needing a graphic
+//   check <topic> <story-id>                         renderability and graphics approval before the lock: writes video/render-check.json
+//   frames <topic> <story-id> --scene <id>           render one scene on its own and write video/frames/<id>-start, -mid, -end.png
 // Inputs: the validated script, storyboard and evidence package in <topic>/scripts/<slug>/ and video/render.json
 // (scenes, voice, cues, kinds, options), plus video/music.json (cues over music/<composition>/ assets) when there is a
 // soundtrack. Media is written to <topic>/scripts/<slug>/video/ and is not committed.
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, sha, toJson, ROOT } from '../src/lib/io';
-import { probe } from '../src/video/ffmpeg';
+import { extractFrame, probe } from '../src/video/ffmpeg';
+import { writeRenderCheck } from '../src/video/check';
+import { initVideo } from '../src/video/init';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
 import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
@@ -27,7 +32,7 @@ import { assemble } from '../src/video/assemble';
 import { ENTRY, renderContactSheet, renderScenes } from '../src/video/render';
 import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
 import { VIDEO_FILES, videoDir } from '../src/video/files';
-import { loadSegment } from '../src/video/select';
+import { checkSegment, loadInputs, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import type { NarrationManifest, Timeline } from '../src/video/types';
 
@@ -40,7 +45,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 14)
+      .slice(0, 17)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -189,9 +194,12 @@ async function stageQa(
   writeFileSync(p(VIDEO_FILES.report), toJson(r));
   writeFileSync(p(VIDEO_FILES.reportMd), renderReportMd(r));
   for (const c of qa.checks) if (!c.ok) console.log(`  FAIL ${c.name}: ${c.detail}`);
+  const failed = qa.checks.filter((c) => !c.ok).length;
   console.log(
-    `${qa.ok ? 'passed' : 'FAILED'}: ${qa.checks.filter((c) => c.ok).length} of ${qa.checks.length} checks, ${qa.frames.length} frames in ${rel(join(dir, VIDEO_FILES.frames))}${contact ? `, ${rel(contact)}` : ''}; wrote ${rel(p(VIDEO_FILES.reportMd))}`,
+    `${qa.ok ? 'passed' : 'FAILED'}: ${qa.checks.length - failed} of ${qa.checks.length} checks, ${qa.frames.length} frames in ${rel(join(dir, VIDEO_FILES.frames))}${contact ? `, ${rel(contact)}` : ''}; wrote ${rel(p(VIDEO_FILES.reportMd))}`,
   );
+  // the last line, whatever ran before it: a reader (or a loop) never has to find the verdict in the log
+  console.log(qa.ok ? 'RESULT: PASSED' : `RESULT: FAILED (${failed} of ${qa.checks.length} checks failed)`);
   if (!qa.ok) process.exitCode = 2;
 }
 
@@ -209,6 +217,65 @@ function stagePackage() {
   console.log(
     `wrote ${rel(p(REVIEW_DIR))}: ${r.title}, ${r.chapters.length} chapters, ${r.sources.studies.length} studies, ${r.sources.sources.length} sources; ${r.provenance.clearance.publishable ? 'cleared' : 'public release BLOCKED: ' + r.provenance.clearance.why.join('; ')}`,
   );
+}
+
+function stageInit() {
+  const r = initVideo(topic, storyId, { force: rest.includes('--force') });
+  console.log(`${r.written ? 'wrote' : 'kept existing'} ${rel(p(VIDEO_FILES.config))}`);
+  if (r.needsGraphics.length) console.log(`needs a graphic: ${r.needsGraphics.join(',')}`);
+}
+
+function stageCheck() {
+  const rc = writeRenderCheck(topic, storyId);
+  for (const x of rc.problems) console.log(`  PROBLEM ${x}`);
+  if (rc.needsGraphics.length) console.log(`  needs a graphic: ${rc.needsGraphics.join(',')}`);
+  for (const g of rc.graphics)
+    console.log(`  graphic ${g.scene} ${g.kind} key ${g.key}${g.approved ? ' approved' : ''}`);
+  console.log(`${rc.ok ? 'ok' : 'NOT OK'}: wrote ${rel(join(dir, 'render-check.json'))}`);
+  if (!rc.ok) process.exitCode = 2;
+}
+
+/** One scene rendered on its own (its own narration, cached; its own one-scene timeline, not written) and three
+ *  frames from it, for the graphics builder and the visual reviewer. Other scenes may still lack a renderer. */
+async function stageFrames() {
+  const id = flag('--scene');
+  if (!id) throw new Error('--scene <id> is required');
+  const inp = loadInputs(topic, storyId);
+  const seg = checkSegment({ ...inp, release: null, config: { ...inp.config, scenes: [id] } });
+  if (seg.problems.length) throw new Error(`cannot render ${id}:\n  ${seg.problems.join('\n  ')}`);
+  const old = readJson<NarrationManifest>(p(VIDEO_FILES.narration));
+  const v = seg.config.voice;
+  const cached =
+    old?.provider === v.provider &&
+    old.voice === v.voice &&
+    old.rate === v.rate &&
+    seg.sentences.every((s) => old.sentences.some((o) => o.id === s.id && o.text === s.text && existsSync(p(o.file))));
+  let m = old!;
+  if (!cached) {
+    m = await narrate(seg, dir, { log: (l) => console.log(`  ${l}`) });
+    if (old?.provider === v.provider && old.voice === v.voice && old.rate === v.rate) {
+      // narrate wrote only this scene's sentences; keep the rest of the manifest (same voice), in script order
+      const order = new Map(inp.script.sections.flatMap((x) => x.sentences).map((s, i) => [s.id, i]));
+      const mine = new Set(m.sentences.map((s) => s.id));
+      m.sentences = [...old.sentences.filter((s) => !mine.has(s.id)), ...m.sentences].sort(
+        (a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0),
+      );
+      writeFileSync(p(VIDEO_FILES.narration), toJson(m));
+    }
+  }
+  const tl = buildTimeline(seg, m, undefined, passageReader());
+  const [chunk] = await renderScenes(tl, dir, p(VIDEO_FILES.scenes), { log: (l) => console.log(`  ${l}`) });
+  const s = chunk.scene;
+  mkdirSync(p(VIDEO_FILES.frames), { recursive: true });
+  for (const [label, frame] of [
+    ['start', Math.min(15, s.duration - 1)],
+    ['mid', Math.round(s.duration / 2)],
+    ['end', s.duration - 2],
+  ] as const) {
+    const out = p(`${VIDEO_FILES.frames}/${id}-${label}.png`);
+    extractFrame(chunk.file, frame / tl.fps, out);
+    console.log(`wrote ${rel(out)} (${sec(frame, tl.fps)}s into the scene)`);
+  }
 }
 
 function preview() {
@@ -248,10 +315,20 @@ try {
     case 'preview':
       preview();
       break;
+    case 'init':
+      stageInit();
+      break;
+    case 'check':
+      stageCheck();
+      break;
+    case 'frames':
+      await stageFrames();
+      break;
     default:
       usage();
   }
 } catch (e) {
   console.error(e instanceof Error ? e.message : e);
+  if (['qa', 'spike', 'render'].includes(cmd)) console.log('RESULT: FAILED (stopped with an error, above)');
   process.exit(2);
 }

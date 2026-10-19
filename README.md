@@ -295,6 +295,36 @@ fails otherwise. The board keeps three things apart: technical readiness (the st
 approval (`reviewing` and `published`, from this file) and licensing clearance (from the build report: the voice's
 licence and each composition's `cleared`), so a card can be `packaged` and still say "public release blocked".
 
+## Producing a story
+
+On the board, a story that is not yet `packaged` offers one prompt first in its "What next?" popover:
+
+```
+/produce <topic> <story-id>
+Approver: <your name>
+```
+
+Paste it into a Claude Code session in this repo (fill in your name) and leave. The `/produce` skill
+(`.claude/skills/produce/SKILL.md`) works on its own branch, `produce/<topic>-<story slug>`, and loops on
+`npm run board -- next <topic> <story-id> --json`: it runs each command the board names and hands each brief to a
+fresh agent (the writer and reviewer, the graphics builder and visual reviewer, are never the same agent). Between
+`storyboard` and `lock` the board's `graphics` stage drafts `video/render.json` (`npm run video -- init`), has a
+bespoke component built for each diagram or animation (`scripts/briefs/graphics.md`), judged from its frames by
+another agent (`scripts/briefs/visual-review.md`), and requires a current `npm run video -- check`. After the lock it
+renders, drafts the cue sheet (`npm run music -- cues`), mixes, runs QA and makes the review package.
+
+It ends one of two ways: **packaged** (committed after `npm run validate`, never pushed, with
+`video/review/run-report.md` listing every judgment call: evidence added, revisions, graphics, music, the QA result),
+or **stopped** (nothing committed; the stage, the open problem and what would unblock it). A missing passage goes to
+an evidence agent (`scripts/briefs/evidence.md`) rather than a weaker sentence; a writer pass that spends its three
+revisions with blocking findings open stops the run.
+
+On a `packaged` story the popover offers the send-back prompt instead, ending in `Notes:`; each note goes to the
+artifact that owns it (wording to the script, a graphic to its component, pacing and music to `render.json` and
+`music.json`) and everything downstream is redone. The board binds a build to the script, storyboard and
+`render.json`, so a pacing note re-renders by itself; a revised graphic is re-rendered by the run after its visual
+review (only the changed scene chunk renders again).
+
 ## Reproducing the MLM video
 
 A fresh checkout plus these makes `get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4` again:
