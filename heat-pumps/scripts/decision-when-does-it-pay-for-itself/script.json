@@ -1,0 +1,1497 @@
+{
+  "topic": "heat-pumps",
+  "story": "decision:when-does-it-pay-for-itself",
+  "title": "Does a Heat Pump Ever Pay for Itself?",
+  "revision": 4,
+  "generation": {
+    "model": "claude-opus-5-5",
+    "brief": "scripts/briefs/script.md",
+    "date": "2026-10-18",
+    "wordsPerMinute": 150,
+    "evidencePackage": "7ed281af45",
+    "notes": "Revision 3, the last writer revision, against the second independent review. Evidence: one verdict recorded through record-sources at the editor's request (Wilson L709-L716 on the payback-baseline claim); the story now also includes three claims whose verdicts already existed (the payback baseline with Deetjen L500-L506, heat pumps needing a well-insulated home with Wilson L522-L529, and most households seeing lower bills with Wilson L362-L366). The package was rebuilt. Baseline: s14 and s17 now state that both national models price the heat pump against like-for-like replacement at the end of the old equipment's life; s62 says the shares are therefore the good-timing case. The timing section no longer adds timing on top of the national figures: s31 says the field data show the cost of switching early, s43 says replacement time is the case the national figures describe, s55 says switching a working gas system early is worse than anything the models priced, and s58 says 'even when bought at replacement time'. Oil (s29): both lifetime models count equipment cost and disagree; the sentence gives both results with no explanation the evidence does not provide. Warnings: s47 now says the medium- and high-efficiency units could be smaller; s63 adds insulation's effect on the share of homes with higher bills and on lifetime value by climate; s64 gives RMI's rooftop-solar case and drops 'only'. Earlier: s13, s27 and s51 deleted in revision 2. The two CEE Minnesota documents are one study, narrated as one (s37). Years are avoided where no cited passage carries them. Revision 4 is an editor-authorized corrective pass after the revision limit, strictly limited to s31, s43 and s55 (the final review's one blocking finding and two warnings), with no other sentence changed and no new evidence: s31 says 'good-timing case' instead of 'best timing'; s43 names the about-a-year payback as the Minnesota example with a propane backup; s55 attributes 'rarely came out ahead' to the second model only and keeps the national lab model's contrasting result for warm-climate gas homes with central AC (s55.c, the passage s29 already cites)."
+  },
+  "sections": [
+    {
+      "name": "hook",
+      "sentences": [
+        {
+          "id": "s01",
+          "text": "A common pitch for a heat pump ends the same way: it pays for itself.",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s02",
+          "text": "One HVAC company, Atlas AC, tells its viewers that the extra cost of converting a gas system \"could be offset in savings by year five\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s02.a",
+              "text": "Atlas AC says the increased cost to convert a gas system to a heat pump \"could be offset in savings by year five\".",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "source": "OAok8omYqSY"
+                }
+              ],
+              "quote": {
+                "text": "could be offset in savings by year five",
+                "source": "OAok8omYqSY",
+                "speaker": "Atlas AC"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s03",
+          "text": "In a Skill Builder video about a British home, the verdict is even quicker: \"So, four years you got your money back\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s03.a",
+              "text": "In a Skill Builder video, the payback on a heat pump is put at four years: \"So, four years you got your money back\".",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "source": "Z_kl8k0OsFY"
+                }
+              ],
+              "quote": {
+                "text": "So, four years you got your money back",
+                "source": "Z_kl8k0OsFY",
+                "speaker": "Skill Builder"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s04",
+          "text": "Then the Washington Post ran the numbers for one gas-heated house with a basic heat pump, and got a very different answer, \"making the payback period around 48 years\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s04.a",
+              "text": "The Washington Post's modelling of a gas-heated home with a minimum-efficiency heat pump found \"the payback period around 48 years\".",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "source": "washingtonpost-home-efficiency-emissions-cost"
+                }
+              ],
+              "quote": {
+                "text": "making the payback period around 48 years",
+                "source": "washingtonpost-home-efficiency-emissions-cost",
+                "speaker": "Washington Post"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s05",
+          "text": "That is not a rounding error.",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s06",
+          "text": "So which homes get their money back from a heat pump, how fast, and which ones never do?",
+          "type": "rhetorical"
+        }
+      ]
+    },
+    {
+      "name": "setup",
+      "sentences": [
+        {
+          "id": "s07",
+          "text": "Pitches like these describe payback as if it were a property of the machine.",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s08",
+          "text": "Even an electrification group that promotes heat pumps is more careful, telling readers that \"a heat pump will often pay off in about 15 years\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s08.a",
+              "text": "An electrification advocacy guide says that, with energy bill savings, \"a heat pump will often pay off in about 15 years\".",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "source": "homes-rewiringamerica-heat-pumps-save-money"
+                }
+              ],
+              "quote": {
+                "text": "a heat pump will often pay off in about 15 years",
+                "source": "homes-rewiringamerica-heat-pumps-save-money"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s09",
+          "text": "And one British owner who publishes detailed running data, Tom Bray, concluded that \"a simple calculation would suggest around 18 to 25 years\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s09.a",
+              "text": "Tom Bray, reporting his own heat pump data, says \"a simple calculation would suggest around 18 to 25 years\" to pay back.",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "source": "ERBmFsatOOM"
+                }
+              ],
+              "quote": {
+                "text": "a simple calculation would suggest around 18 to 25 years",
+                "source": "ERBmFsatOOM",
+                "speaker": "Tom Bray"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s10",
+          "text": "Every one of those numbers could be right for the house it describes.",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s11",
+          "text": "The question is what happens across millions of houses, so that is where we will look: at national models that run the numbers home by home, and at meters in real homes.",
+          "type": "transitional"
+        }
+      ]
+    },
+    {
+      "name": "investigation",
+      "sentences": [
+        {
+          "id": "s12",
+          "text": "Start with a national laboratory model that simulated about 550,000 representative American homes.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s12.a",
+              "text": "The national model behind the best-case lifetime figure covers a representative set of 550,000 homes.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/most-homes-would-save-money-over",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/most-homes-would-save-money-over",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L645-L647"
+                }
+              ],
+              "qualifications": [
+                "Descriptive: the sentence names the model whose figures s14 to s21 use to test the claim that most homes would save."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s14",
+          "text": "Over the life of the equipment and without any subsidy, compared with replacing the old equipment like for like when it wears out, 59 percent came out ahead if every home picked its single best option.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s14.a",
+              "text": "Even choosing the best upgrade package for each modelled home, only 59% had a positive unsubsidized net present value.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/most-homes-would-save-money-over",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/most-homes-would-save-money-over",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L645-L647"
+                }
+              ],
+              "qualifications": [
+                "The sentence names the condition (every home picks its best option); s15 says no single heat pump reached that share; s20 calls it a thin majority."
+              ]
+            },
+            {
+              "id": "s14.b",
+              "text": "Wilson's consumer economics compare heat pump installation with a reference scenario of like-for-like replacement of equipment at end of lifetime.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-should-count-only-heat-pump",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s15",
+          "text": "But no real buyer gets to pick with perfect hindsight, and no single heat pump did that well: the cheapest, minimum-efficiency units came out ahead in 55 percent of homes, and the premium cold-climate units in only 21 percent, because their higher price ate the extra savings.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s15.a",
+              "text": "The minimum-efficiency heat pump had the largest share of homes with positive unsubsidized NPV, 55%; higher upfront costs cut the share to 41% and 21% for the medium- and high-efficiency cold-climate units.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520"
+                }
+              ],
+              "qualifications": [
+                "A model with its own price assumptions; the narration calls it a model."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s16",
+          "text": "A second national model of single-family houses was harsher still.",
+          "type": "transitional"
+        },
+        {
+          "id": "s17",
+          "text": "It found a heat pump would pay off for about 16.7 million houses, 21 percent of all single-family homes, at the energy prices it assumed, again counting only the extra cost over replacing the old heater with a similar one when it nears the end of its life.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s17.a",
+              "text": "Deetjen finds 16.7 million houses, 21% of the US single-family residential stock, could benefit economically from replacing their heater with a heat pump.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L570-L574"
+                }
+              ],
+              "qualifications": [
+                "The denominator is all single-family houses, as the sentence says; 'at the energy prices it assumed' carries the model's price assumptions next to the figure."
+              ]
+            },
+            {
+              "id": "s17.b",
+              "text": "Deetjen counts only the extra cost of a heat pump over replacing the existing heater with a similar technology, assuming purchase when the existing heater is nearing the end of its life.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-should-count-only-heat-pump",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L500-L506"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s62",
+          "text": "So both figures are already the good-timing case: the heat pump bought at the moment the old equipment would have had to be replaced anyway.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s62.a",
+              "text": "Both national models price the heat pump as bought at the end of the old equipment's life, counting only the extra cost over a like-for-like replacement.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-should-count-only-heat-pump",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716"
+                },
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L500-L506"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s18",
+          "text": "So is it a majority, or a minority?",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s19",
+          "text": "A third team, mapping energy bills county by county, found 53 percent of households would see lower bills, 19 percent higher ones, and 28 percent no clear change either way.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s19.a",
+              "text": "Edwards' Monte Carlo bill model finds 53% of households with reduced energy bills, 19% with higher costs and 28% with no clear benefit or cost.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L292-L299"
+                }
+              ],
+              "qualifications": [
+                "The sentence says this is bills, not lifetime value."
+              ]
+            }
+          ],
+          "note": "Revision 2 drops the earlier-studies 30%/60% figures (the 60% may be Wilson itself) and gives Edwards' own result instead."
+        },
+        {
+          "id": "s20",
+          "text": "Even the most generous lifetime figure here, the 59 percent, is a thin majority, and it assumes every home picks its best option.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s20.a",
+              "text": "The highest share of homes with positive lifetime value in the national model is 59%, with the best package chosen for each home.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/most-homes-would-save-money-over",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/most-homes-would-save-money-over",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L645-L647"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s21",
+          "text": "If only a slim majority of homes come out ahead over the whole life of the equipment, a payback of a few years cannot be the typical case.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s21.a",
+              "text": "With positive unsubsidized NPV over the equipment life for at most 55% of homes per heat pump option, a few-year payback is not the typical outcome.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s22",
+          "text": "Which raises the more useful question: who is in the winning group?",
+          "type": "transitional"
+        },
+        {
+          "id": "s23",
+          "text": "The national lab model names one of the biggest factors, and it is what you heat with today.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s23.a",
+              "text": "Primary heating fuel is one of the two housing characteristics with the largest impact on heat pump bill savings in the national model.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L414"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s24",
+          "text": "For homes that now heat with electricity, fuel oil or propane and already have air conditioning, the national lab model found that almost all would see lower bills, with median savings of $300 to $650 a year.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s24.a",
+              "text": "For homes heating with electricity, fuel oil or propane that have AC, 95% to 100% have positive bill savings, with median savings of $300 to $650 per year.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L414"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s25",
+          "text": "For gas-heated homes with air conditioning, it depended on the equipment: anywhere from 38 to 99 percent saved on their bills.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s25.a",
+              "text": "For 46 million gas-heated homes with AC, the share with positive bill savings ranges from 38% to 99% depending on heat pump performance.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L414"
+                }
+              ],
+              "qualifications": [
+                "Bill savings, not payback; the sentence says it depends on the equipment."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s26",
+          "text": "The second model put it more bluntly: switching from natural gas \"rarely produces a benefit\", especially in cold climates.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s26.a",
+              "text": "Deetjen finds switching a home's heating from natural gas to a heat pump \"rarely produces a benefit\", especially in cold climates.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L646-L654"
+                }
+              ],
+              "quote": {
+                "text": "rarely produces a benefit",
+                "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L646-L654"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s28",
+          "text": "On oil, the models disagree.",
+          "type": "transitional"
+        },
+        {
+          "id": "s29",
+          "text": "The national lab model, counting the cost of the equipment, found a basic heat pump came out ahead over its life for most homes heated with fuel oil; the second model found a switch from oil \"usually causes the homeowner a private economic loss\", in part because nearly 65 percent of oil-heated houses are in cold climates.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s29.a",
+              "text": "In Wilson's model the minimum-efficiency heat pump has positive unsubsidized NPV for a group that includes most homes that use fuel oil for heating.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520"
+                }
+              ],
+              "qualifications": [
+                "A lifetime (16-year NPV) result, not a few-year payback, which is why it sits under the payback claim's denial; the sentence sets it against the other model's opposite result."
+              ]
+            },
+            {
+              "id": "s29.b",
+              "text": "Deetjen finds heat pump adoption in fuel-oil-heated homes \"usually causes the homeowner a private economic loss\"; nearly 65% of fuel-oil-heated houses are in cold climates.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+                }
+              ],
+              "quote": {
+                "text": "usually causes the homeowner a private economic loss",
+                "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+              },
+              "qualifications": [
+                "The two lifetime models disagree on oil; the sentence gives both, with no explanation the evidence does not provide."
+              ]
+            }
+          ],
+          "note": "Revision 3: both models count equipment cost; the sentence states the disagreement instead of explaining it as a difference in measure."
+        },
+        {
+          "id": "s30",
+          "text": "Meters in New England homes found ductless heat pumps \"always operate less expensively than propane heating systems\", and cheaper to run than oil too, except on very cold days.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s30.a",
+              "text": "Cadmus found ductless heat pumps \"always operate less expensively than propane heating systems\", and cheaper to run than oil except in very cold conditions.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
+                }
+              ],
+              "quote": {
+                "text": "always operate less expensively than propane heating systems",
+                "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s31",
+          "text": "Both of those national figures are already the good-timing case; the field data show what it costs to switch before the old equipment is due.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s31.a",
+              "text": "Both national models price the heat pump against replacing the old equipment like for like at the end of its life.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-should-count-only-heat-pump",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716"
+                },
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L500-L506"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s32",
+          "text": "A Minnesota study priced a cold-climate heat pump with a propane furnace as backup at $9,450 installed, using a national cost database.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s32.a",
+              "text": "Using the NREL cost database, the Minnesota study puts the average cold-climate heat pump with propane furnace backup at $9,450 installed.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s33",
+          "text": "Installed while the old furnace and air conditioner still worked, its simple payback came to 14.5 years against an older furnace and 28.8 years against an efficient condensing one, longer than the 18 years the study expects the equipment to last.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s33.a",
+              "text": "With no equipment failure, simple payback is 14.5 years against an 82% furnace and 28.8 years against a condensing furnace; the study assumes an 18-year life expectancy.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ],
+              "qualifications": [
+                "s32 names the propane-backup system and the cost database; s55 says the gas-home evidence differs."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s34",
+          "text": "Installed when both had failed and needed replacing anyway, the extra cost fell to just $370, and the payback to between 0.6 and 1.1 years.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s34.a",
+              "text": "When both the furnace and AC have failed, the incremental cost is $370 and simple payback is 1.1 years against a condensing furnace and 0.6 years against an 82% furnace.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s35",
+          "text": "Same house, same machine, same bills.",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s36",
+          "text": "The only thing that changed was what you would have had to buy anyway.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s36.a",
+              "text": "The Minnesota payback range comes from the incremental cost over the equipment that would otherwise be replaced, with the same $9,450 installed cost in each scenario.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s37",
+          "text": "The project's later report, from the same Minnesota research, put it plainly: for retrofits, paybacks will typically run \"longer than 10 years, unless equipment replacement is necessary\", and drop to 5 to 6 years when either the heating or the cooling system has failed.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s37.a",
+              "text": "CEE reports that for retrofits paybacks will typically be \"longer than 10 years, unless equipment replacement is necessary\", and drop to 5-6 years at either heating or cooling system failure.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L513-L516"
+                }
+              ],
+              "quote": {
+                "text": "longer than 10 years, unless equipment replacement is necessary",
+                "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L513-L516"
+              },
+              "qualifications": [
+                "Same study as the Minnesota report above (sameStudy); the narration presents it as the same research, not a second source."
+              ]
+            }
+          ],
+          "note": "The two CEE documents are one study; the sentence says so."
+        },
+        {
+          "id": "s38",
+          "text": "A model of gas-heated homes in Chicago, Providence, Houston and Oakland, at the energy prices it used, found the same pattern.",
+          "type": "transitional"
+        },
+        {
+          "id": "s39",
+          "text": "Switching paid off for gas customers who \"would otherwise need to replace both a furnace and air conditioner simultaneously\".",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s39.a",
+              "text": "RMI finds electrification cost-effective for gas customers who \"would otherwise need to replace both a furnace and air conditioner simultaneously\".",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L150-L161"
+                }
+              ],
+              "quote": {
+                "text": "would otherwise need to replace both a furnace and air conditioner simultaneously",
+                "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L150-L161"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s40",
+          "text": "Otherwise, existing gas homes that switched both heating and water heating to electric either paid more for energy, in colder Chicago and Providence, or saved too little to make up the extra cost, in Houston and Oakland.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s40.a",
+              "text": "For existing gas homes electrifying space and water heating, RMI finds they either pay more for energy (Chicago, Providence) or save too little to make up the extra capital cost (Houston, Oakland).",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L158-L161"
+                }
+              ],
+              "qualifications": [
+                "s38 says the result is at the prices the model used; the sentence says it covers heating and water heating together."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "findings",
+      "sentences": [
+        {
+          "id": "s41",
+          "text": "Put the pieces together and a pattern appears.",
+          "type": "transitional"
+        },
+        {
+          "id": "s42",
+          "text": "If you are leaving propane or electric resistance heat, a heat pump usually pays.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s42.a",
+              "text": "Homes leaving propane or electric resistance heat are the clearest winners from a heat pump.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L414"
+                },
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+                }
+              ],
+              "qualifications": [
+                "Oil is excluded here; s26 carries the oil exception."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s43",
+          "text": "Buying when the old equipment is due for replacement is the case the national figures already describe; in the Minnesota example, with a propane furnace as backup, replacing a failed furnace and air conditioner together cut the payback from decades to about a year.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s43.a",
+              "text": "Both national models price the heat pump against like-for-like replacement at the end of the old equipment's life.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-should-count-only-heat-pump",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716"
+                },
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L500-L506"
+                }
+              ]
+            },
+            {
+              "id": "s43.b",
+              "text": "In the Minnesota cost data, simple payback falls from 14.5-28.8 years with no failure to 0.6-1.1 years when both the furnace and AC have failed.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ],
+              "qualifications": [
+                "s32 says the system has a propane furnace backup."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s44",
+          "text": "And if you are tearing out a working gas furnace, the models mostly say it will not pay back on energy savings alone.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s44.a",
+              "text": "Switching from natural gas rarely produces a private benefit in Deetjen's model.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L646-L654"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "qualifications",
+      "sentences": [
+        {
+          "id": "s45",
+          "text": "There are things that move these numbers.",
+          "type": "transitional"
+        },
+        {
+          "id": "s46",
+          "text": "The first is insulation: for older or leaky homes, Consumer Reports says \"it’s always a good idea to first upgrade your insulation and seal any air leaks\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s46.a",
+              "text": "Consumer Reports advises, for poorly insulated, leaky or older homes, first upgrading insulation and sealing air leaks.",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "heat-pumps/air-sealing-insulation-should-come-before",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/air-sealing-insulation-should-come-before",
+                  "source": "consumerreports-buying-guide"
+                }
+              ],
+              "quote": {
+                "text": "it’s always a good idea to first upgrade your insulation and seal any air leaks",
+                "source": "consumerreports-buying-guide",
+                "speaker": "Consumer Reports"
+              }
+            }
+          ],
+          "note": "Consumer Reports gives the advice under 'your house is poorly insulated or leaky... if yours is an older home'; the sentence carries that condition."
+        },
+        {
+          "id": "s47",
+          "text": "In one group of homes the national lab model examined, sealing and insulating let the medium- and high-efficiency heat pumps be smaller, cutting their installed cost by $2,500 to $4,000.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s47.a",
+              "text": "For the example segment, envelope upgrades reduce the mean rated capacity of the medium- and high-efficiency heat pumps and their mean installation costs by $4,000 and $2,500.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/air-sealing-insulation-should-come-before",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/air-sealing-insulation-should-come-before",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L465-L479"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s48",
+          "text": "But the insulation work itself added about $9,000 in that group, so the total upfront cost went up.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s48.a",
+              "text": "In the example segment the envelope upgrades add a mean $9,000 per dwelling, so the net effect is an overall increase in upfront costs.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/air-sealing-insulation-should-come-before",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/air-sealing-insulation-should-come-before",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L465-L479"
+                }
+              ],
+              "qualifications": [
+                "The sentence is the qualification: insulating first raised total upfront cost in that group."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s63",
+          "text": "It did cut the share of homes whose bills went up with the cheapest units, from 39 percent to 19 percent, and it nudged the lifetime numbers up slightly in cold climates while lowering them in warmer ones.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s63.a",
+              "text": "Bills rise in 39% of homes with the minimum-efficiency heat pump, and in 19% if combined with envelope upgrades.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/most-households-would-see-lower-energy",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/most-households-would-see-lower-energy",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L362-L366"
+                }
+              ]
+            },
+            {
+              "id": "s63.b",
+              "text": "In the cold and very-cold climate zones the envelope upgrade scenarios slightly increase the share of homes with positive unsubsidized NPV, whereas they generally decrease it in warmer climates.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-need-home-well-insulated",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-need-home-well-insulated",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L522-L529"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s49",
+          "text": "The second is your own house: the model found the spread between homes in the same place was bigger than the spread between places.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s49.a",
+              "text": "Bill savings vary more between the 5th and 95th percentile homes within one location than geographically.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L368-L373"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s50",
+          "text": "And the savings the model finds depend on local climate and energy prices, so an average is not a forecast for your house.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s50.a",
+              "text": "Bill savings vary geographically with climate, energy prices and housing stock.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L368-L373"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "implications",
+      "sentences": [
+        {
+          "id": "s52",
+          "text": "So what should you do with this?",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s53",
+          "text": "If you heat with propane or electric baseboards, you are in the group where the models here found the biggest savings, so getting quotes is worth your time.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s53.a",
+              "text": "Homes heating with propane or electric resistance see the largest savings from heat pumps.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L414"
+                },
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s54",
+          "text": "If your furnace or air conditioner is near the end of its life, that is the moment the extra cost of a heat pump shrinks the most.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s54.a",
+              "text": "Heat pump payback is shortest at the time the existing furnace or AC fails, when the incremental cost is smallest.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s55",
+          "text": "And if both are working fine and you heat with gas, switching early is a worse case than anything these models priced; even at replacement time, the second model found gas homes rarely came out ahead, while the national lab model found most gas homes with central air in warmer climates did.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s55.a",
+              "text": "Both national models price the heat pump against like-for-like replacement at end of life, not early replacement of working equipment.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-should-count-only-heat-pump",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716"
+                },
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L500-L506"
+                }
+              ]
+            },
+            {
+              "id": "s55.b",
+              "text": "Switching a home's heating from natural gas to a heat pump \"rarely produces a benefit\" in Deetjen's model.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L646-L654"
+                }
+              ]
+            },
+            {
+              "id": "s55.c",
+              "text": "In Wilson's model the minimum-efficiency heat pump has positive unsubsidized NPV for a group that also includes most homes that use natural gas and have central AC in warmer climates.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520"
+                }
+              ],
+              "qualifications": [
+                "A lifetime (16-year NPV) result against like-for-like replacement, not a few-year payback; s29 uses the same passage for oil."
+              ]
+            }
+          ],
+          "note": "Corrective pass: 'rarely came out ahead' is attributed to the second model (Deetjen) only, with the national lab model's contrasting result for warm-climate gas homes with central AC."
+        },
+        {
+          "id": "s64",
+          "text": "In the model of Chicago, Providence, Houston and Oakland, switching paid off for gas homes that needed a new furnace and air conditioner at the same time, or that paired it with rooftop solar.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s64.a",
+              "text": "RMI finds electrification cost-effective for gas customers who would otherwise need to replace both a furnace and air conditioner simultaneously, and for customers who bundle rooftop solar with electrification.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L150-L161"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s56",
+          "text": "Whatever a seller promises, ask one question: payback compared with what, a new furnace and air conditioner, or nothing at all?",
+          "type": "rhetorical"
+        }
+      ]
+    },
+    {
+      "name": "conclusion",
+      "sentences": [
+        {
+          "id": "s57",
+          "text": "So, does a heat pump pay for itself?",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s58",
+          "text": "For some homes, quickly; for many, never: even when bought at replacement time, one national model found a lifetime gain for 21 percent of all single-family houses, the other for at most 55 percent of homes with any single heat pump.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s58.a",
+              "text": "Deetjen finds 21% of US single-family houses could benefit economically, counting only the extra cost over replacing the existing heater at the end of its life.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L570-L574"
+                }
+              ]
+            },
+            {
+              "id": "s58.b",
+              "text": "In the national lab model, the best single heat pump option has positive unsubsidized NPV for 55% of homes, against like-for-like replacement at end of lifetime.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520"
+                }
+              ]
+            },
+            {
+              "id": "s58.c",
+              "text": "Both models price the heat pump against replacement of the old equipment at the end of its life.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-should-count-only-heat-pump",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716"
+                },
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L500-L506"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s59",
+          "text": "Which group you are in depends on the fuel you are leaving, the prices where you live, and whether you buy when your old equipment needs replacing anyway.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s59.a",
+              "text": "Heat pump economics depend on baseline heating fuel, climate and prices, and the equipment being replaced.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L646-L654"
+                },
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s60",
+          "text": "A quick payback is possible.",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s61",
+          "text": "It just is not a promise anyone can make about your house before looking at it.",
+          "type": "rhetorical"
+        }
+      ]
+    }
+  ]
+}

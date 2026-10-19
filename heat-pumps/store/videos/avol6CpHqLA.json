@@ -1,0 +1,123 @@
+{
+  "id": "avol6CpHqLA",
+  "title": "Heat pumps and COLD WEATHER 🥶🔥",
+  "channel": "The Thought Provocateur",
+  "origin": "manual",
+  "fetched": "2026-10-18",
+  "transcript": "auto",
+  "watched": false,
+  "channelId": "UCVyfrw6CcrxavbVBxviKiSQ",
+  "durationSec": 700,
+  "thumbnail": "https://i.ytimg.com/vi_webp/avol6CpHqLA/sddefault.webp",
+  "summary": "A Colorado HVAC contractor explains cold-weather heat pump performance, backup heat, low-ambient ratings, inverter versus single-stage units, mini-splits and defrost cycles.",
+  "topics": {
+    "primary": "heat-pumps",
+    "secondary": []
+  },
+  "assertions": [
+    {
+      "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+      "stance": "denies",
+      "quote": "the bottom line is that modern heat pumps work well in most cold climates",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/modern-cold-climate-heat-pumps-keep",
+      "stance": "asserts",
+      "quote": "they are rated to perform down to negative 10 Fahrenheit",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/basic-single-stage-heat-pumps-rated",
+      "stance": "asserts",
+      "quote": "most single stage 14 Seer or 16 Seer heat pumps are only graded down to 25 or 30 degrees Fahrenheit",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "partly",
+          "confidence": 0.6,
+          "note": "Single-speed heat pumps still produce heat below freezing but lose capacity quickly and usually need backup below balance points around 25-35°F.",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.35,
+          "note": "The modelled minimum-efficiency single-speed heat pump keeps 47% of rated capacity at 5F and runs down to 0F, based on lab test data.",
+          "source": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L1072-L1078",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Installers lock out non-cold-climate ASHPs at about 25-35F because capacity, efficiency and supply air temperature are unfavourable below that; this is practice, not a rating limit.",
+          "source": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L716-L722",
+          "date": "2026-10-18"
+        }
+      ]
+    },
+    {
+      "claim": "heat-pumps/seer-hspf-ratings-not-fully-capture",
+      "stance": "asserts",
+      "quote": "some systems may have lower hspf or Seer ratings but actually be more efficient",
+      "verdicts": [
+        {
+          "method": "prior",
+          "verdict": "right",
+          "confidence": 0.7,
+          "note": "SEER2 and HSPF2 are test-condition averages that understate cold-climate differences; low-ambient COP data add information.",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.4,
+          "note": "Rating tests such as AFUE and HSPF are run at fixed conditions to compare units and are not meant to represent installed efficiency, though the heat pumps' rated 17F COPs were within measurement error of field data.",
+          "source": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L413-L419",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.45,
+          "note": "Field COPs at 5 of 12 sites fell below manufacturer-reported values, and auxiliary heat (COP 1) cut overall system COP by over 30% at two sites, effects ratings do not capture.",
+          "source": "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L224-L237",
+          "date": "2026-10-18"
+        },
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.6,
+          "note": "The report lists why measured SEER/HSPF fell short of ratings: test conditions (e.g. 80 F return air) do not represent real operation, plus cold-weather use, low-load operation, dry and fan modes, and long defrost periods.",
+          "source": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1085-L1103",
+          "date": "2026-10-18"
+        }
+      ]
+    },
+    {
+      "claim": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+      "stance": "asserts",
+      "quote": "this also changes from year to year with natural gas prices",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/dual-fuel-system-heat-pump-gas",
+      "stance": "asserts",
+      "quote": "you can actually run whatever is most efficient or cheapest to run in a given year in terms of how you stage your equipment",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/inverter-driven-heat-pumps-run-more",
+      "stance": "asserts",
+      "quote": "in general the best types of heat pumps are always going to be inverters",
+      "verdicts": []
+    },
+    {
+      "claim": "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+      "stance": "asserts",
+      "quote": "when this happens you won't get heat coming through your vents during the defrost cycle",
+      "verdicts": []
+    }
+  ]
+}

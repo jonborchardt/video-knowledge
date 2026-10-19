@@ -1,0 +1,303 @@
+{
+  "applicability": {
+    "heat-pumps/heat-pump-pays-itself-through-lower|denies|heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520": {
+      "level": "direct",
+      "reason": "the claim is a general promise to the viewer, not a possibility; at most 55% of modelled homes reach positive unsubsidized NPV even over 16 years, which is incompatible with payback within a few years as the typical outcome"
+    },
+    "heat-pumps/heat-pump-pays-itself-through-lower|denies|heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L570-L574": {
+      "level": "direct",
+      "reason": "only 21% of single-family houses benefit over the equipment's life; the sentence is a general promise, so a national distribution decides it"
+    },
+    "heat-pumps/heat-pump-pays-itself-through-lower|denies|heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L158-L161": {
+      "level": "partial",
+      "reason": "gas retrofits in four modelled cities either cost more to run or save too little to recover the capital; four cities and 2018 prices, so it narrows rather than settles the national promise"
+    },
+    "heat-pumps/most-households-would-see-lower-energy|asserts|heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L362-L366": {
+      "level": "direct",
+      "reason": "bills rise in 39% of homes with the cheapest units and 5% with the best, so a majority see lower bills in every scenario, which is what the sentence says"
+    },
+    "heat-pumps/switching-gas-heat-pump-raises-household|asserts|heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1591-L1597": {
+      "level": "contextual",
+      "reason": "a passing remark in a financing section that points back to Canadian lifetime-cost modelling; it measures no bill change after switching from gas"
+    },
+    "heat-pumps/since-mid-2026-federal-electric-appliance|asserts|heat-pumps/sources/doe-2026-heehr-program-notice-26-2.txt#L145-L155": {
+      "level": "direct",
+      "reason": "the program notice itself removes fuel-switching from the rebate; honoring existing reservations does not change that it no longer pays for new gas-to-heat-pump swaps"
+    },
+    "heat-pumps/heat-pumps-not-work-cold-climates|denies|heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L157-L163": {
+      "level": "partial",
+      "reason": "a count of products rated at 5F on a certification list, not measured operation in homes"
+    },
+    "heat-pumps/heat-pumps-not-work-cold-climates|denies|heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L356-L358": {
+      "level": "contextual",
+      "reason": "background sentence citing a footnote about rated models; RMI did not test cold-weather operation"
+    }
+  },
+  "stories": {
+    "decision:is-it-cheaper-to-run-than-gas": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One question, is a heat pump cheaper to run than a gas furnace, answered by what decides it (price ratio, efficiency), how often it comes out ahead, and the tariff lever. The oil, propane and resistance comparisons are a different question with their own story, and the gas connection fee is a footnote."
+      },
+      "claims": [
+        "heat-pumps/heating-heat-pump-costs-less-natural",
+        "heat-pumps/whether-heat-pump-cheaper-run-gas",
+        "heat-pumps/high-electricity-prices-relative-gas-make",
+        "heat-pumps/heat-pump-beats-gas-running-cost",
+        "heat-pumps/most-households-would-see-lower-energy",
+        "heat-pumps/switching-gas-heat-pump-raises-household",
+        "heat-pumps/switching-heat-pump-cuts-heating-bills",
+        "heat-pumps/time-use-heat-pump-electricity-tariffs"
+      ],
+      "question": "Is a heat pump actually cheaper to run than a gas furnace?",
+      "title": "Is a Heat Pump Really Cheaper to Run Than Gas?",
+      "alternates": [
+        "Heat Pump vs Gas Furnace: Who Gets the Lower Bill?",
+        "The One Ratio That Decides Whether a Heat Pump Beats Gas"
+      ],
+      "whyWatch": "Half the videos promise lower bills and the other half show bills going up, and both can be telling the truth. The national models, state prices and one large measured study show exactly which homes save and which pay more.",
+      "tension": "Advocates say a heat pump is three times as efficient, so it must be cheaper. Skeptics point out that electricity costs three to four times as much as gas per unit of energy. Both numbers are real, and they nearly cancel.",
+      "evidenceNeeded": "Measured or modelled bill changes for gas-heated homes after switching, broken down by equipment efficiency, location and tariff, plus state prices to show the break-even.",
+      "premise": "Running cost against gas comes down to one comparison: the heat pump's seasonal efficiency against the electricity-to-gas price ratio times the furnace's efficiency. At 2024 EIA prices a seasonal efficiency of 2.5 beats a 95% furnace in only 11 states, and 30 states need 3 or more. NREL's national model of 550,000 homes finds bills rise in 39% of homes with minimum-efficiency units and 5% with high-efficiency cold-climate units, so most homes save, but among gas-heated homes with AC the share that saves runs from 38% to 99% depending on the equipment, and is lower for gas homes without AC. These are models at 2021-22 prices. Edwards' county model finds 53% clearly save, 19% pay more and 28% show no clear change. The one large measured study is British: replacing gas boilers raised running costs about 190 pounds a year on a flat tariff, while a heat-pump time-of-use tariff saved about 318 pounds; its authors are linked to the supplier, and UK prices are not US prices. Promises of halving the bill fail for gas homes; RMI's US models find time-of-use rates help only with steep tariffs and smart control.",
+      "arc": {
+        "hook": "Two neighbours install the same heat pump. One's winter bill drops; the other's goes up. Neither is lying.",
+        "conflict": "Efficiency says a heat pump wins by three to one; prices say electricity costs three to four times as much as gas. Which number wins depends on where you live and what you buy.",
+        "evidence": "The break-even equation with real state prices, then the national models' share of homes that save by equipment tier, then the UK measured study and the tariff effect.",
+        "resolution": "Most gas homes save with efficient equipment where electricity is not too expensive; a cheap unit in a high-price state costs more to run. Halving the bill is not a realistic promise against gas.",
+        "takeaway": "Before switching, divide your electricity price by your gas price and compare it with the seasonal efficiency of the unit you are quoted."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:does-the-upfront-cost-eat-the-savings": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question, what a heat pump costs to install against the alternatives and whether that cost wipes out the savings. Geothermal is a different product, the lifespan claim has no study, and quote spread between contractors is not isolated by any document."
+      },
+      "claims": [
+        "heat-pumps/heat-pump-costs-more-buy-install",
+        "heat-pumps/heat-pump-costs-about-same-less",
+        "heat-pumps/heat-pump-costs-about-same-central",
+        "heat-pumps/installed-cost-heat-pump-varies-widely",
+        "heat-pumps/installing-heat-pump-can-require-costly",
+        "heat-pumps/high-installation-costs-keep-heat-pumps"
+      ],
+      "question": "How much more does a heat pump cost to install, and does that wipe out the savings?",
+      "title": "What a Heat Pump Really Costs to Install",
+      "alternates": [
+        "Is a Heat Pump More Expensive Than a Furnace and AC?",
+        "The Hidden Costs of Installing a Heat Pump"
+      ],
+      "whyWatch": "Quotes range from a few thousand dollars to over twenty, and the comparison changes completely depending on whether you count the air conditioner. The cost data show where the money goes and why it so often decides the answer.",
+      "tension": "Against a furnace alone, a heat pump costs more. Against a furnace plus a new air conditioner, it can cost about the same. Panel upgrades can add thousands either way.",
+      "evidenceNeeded": "Installed-cost data for heat pumps, furnaces and central AC at matched sizes, the frequency and cost of electrical upgrades, and lifetime-cost results that net upfront cost against savings.",
+      "premise": "Installed cost is where most heat pump economics are won or lost. LBNL's database of real projects puts heat pumps about $3,000 above fuel-fired heating systems, though the heat pump also cools. Edwards' national medians put a heat pump at about the same as a gas furnace plus central AC ($6,185 against $6,455) but about 30% above an AC alone, while a Canadian model and NREL find that heat pumps sized to carry the full heating load often cost more than furnace plus AC; that comparison is disputed and the video should show both. Electrical work is a real risk: in the DOE cold-climate challenge 38% of installs needed a new panel and electrical work alone ran $3,750 to $8,970. Lifetime studies agree that upfront cost is why many homes do not come out ahead: only 21% of houses benefit at current costs in Deetjen's model, and small cost cuts would raise that sharply.",
+      "arc": {
+        "hook": "Two quotes for the same house: $9,000 and $24,000. What are you actually paying for?",
+        "conflict": "Sellers compare a heat pump with a furnace plus AC; skeptics compare it with a furnace alone. The answer flips with the baseline.",
+        "evidence": "Matched installed-cost medians, the spread in real project costs, how often panel and service upgrades are needed, and lifetime models that show upfront cost deciding the outcome.",
+        "resolution": "Against a furnace alone a heat pump costs more; against replacing both furnace and AC it is close. Electrical upgrades and oversized whole-home systems are what push it out of reach.",
+        "takeaway": "Compare quotes against the system you would otherwise buy, and ask up front whether your panel and service can carry the load."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:what-happens-when-it-gets-cold": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One question, how a heat pump copes with a cold winter and what that does to the bill. The rated-versus-real efficiency claim is about test procedures rather than cold, and the field data on it split."
+      },
+      "claims": [
+        "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+        "heat-pumps/heat-pumps-not-work-cold-climates",
+        "heat-pumps/modern-cold-climate-heat-pumps-keep",
+        "heat-pumps/heat-pump-still-uses-less-energy",
+        "heat-pumps/cold-climate-heat-pumps-often-rely",
+        "heat-pumps/defrost-cycles-reduce-heat-pump-output",
+        "heat-pumps/dual-fuel-system-heat-pump-gas",
+        "heat-pumps/heat-pumps-used-successfully-cold-countries"
+      ],
+      "question": "Do heat pumps still work, and still save money, when it gets really cold?",
+      "title": "What Really Happens to a Heat Pump at 0°F",
+      "alternates": [
+        "Do Heat Pumps Work in a Minnesota Winter?",
+        "Heat Pumps in the Cold: What the Field Tests Found"
+      ],
+      "whyWatch": "\"Heat pumps don't work in the cold\" is the most repeated objection, and the field tests in Minnesota, New England and the northern US answer it with meters, not marketing. They also show the real catch, which is backup heat.",
+      "tension": "Skeptics say heat pumps stop working when it is cold. Advocates say modern units heat at -15F. The meters say both efficiency and capacity fall, the heat keeps coming, and the bill depends on how much the backup runs.",
+      "evidenceNeeded": "Measured efficiency and capacity at low outdoor temperatures in occupied homes, how often and why backup heat runs, and how dual-fuel switching performs.",
+      "premise": "Field studies in occupied homes reject the claim that heat pumps do not work in cold climates: metered New England mini-splits kept an average COP of about 1.5 at -10 to 0F, prototype cold-climate units in the DOE challenge held a median COP of 1.9 at 0-5F, and Minnesota homes cut heating costs 30-56% against propane and electric resistance. Each study monitored a small number of homes, and none used gas as the baseline. Efficiency and capacity do fall, defrost cuts output, and backup resistance heat is the real cost risk: in NREL's 12 homes it used more than 40% as much energy as the heat pump at five sites, mostly undersized or faulty ones, and in the DOE challenge it ran a quarter of the time below 0F. Against gas, a dual-fuel setup can be cheapest, but at Massachusetts prices the older units tested never beat gas, so the switchover point depends on the unit and local prices.",
+      "arc": {
+        "hook": "It's -10F outside. Is the heat pump still heating, or is it just an expensive space heater now?",
+        "conflict": "The myth says heat pumps quit in the cold; the marketing says they work at -15F with no compromise. Neither describes what the meters show.",
+        "evidence": "COP by temperature bin from metered homes, capacity at the coldest readings, defrost and backup runtime, and the sites where backup heat took over.",
+        "resolution": "Modern units keep heating well below 0F at lower efficiency; the bill risk comes from backup heat, which proper sizing and controls keep small.",
+        "takeaway": "In a cold climate, buy a cold-climate unit sized for heating, and watch how often the backup runs."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:replace-a-working-furnace-or-wait": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One question, whether to switch while the furnace still works or wait until something needs replacing. The definitional claim that one system replaces both is background, and its Canadian backup caveat belongs to the cold-weather story."
+      },
+      "claims": [
+        "heat-pumps/replacing-working-gas-furnace-heat-pump",
+        "heat-pumps/heat-pump-makes-most-financial-sense",
+        "heat-pumps/choosing-heat-pump-instead-new-central",
+        "heat-pumps/heat-pump-can-added-alongside-existing",
+        "heat-pumps/you-keeping-working-furnace-new-air",
+        "heat-pumps/payback-should-count-only-heat-pump"
+      ],
+      "question": "Should you replace a gas furnace that still works, or wait until it or the AC dies?",
+      "title": "Should You Rip Out a Working Furnace for a Heat Pump?",
+      "alternates": [
+        "When Is the Right Time to Switch to a Heat Pump?",
+        "Your AC Just Died: Why That Changes the Heat Pump Math"
+      ],
+      "whyWatch": "The same heat pump can pay back in about a year or take decades, and the difference is not the equipment, it is the timing. This is the decision most homeowners actually face.",
+      "tension": "Advocates say switch now; skeptics say a working furnace is free heat you already paid for. The studies say both are right, depending on what else is about to fail.",
+      "evidenceNeeded": "Payback with and without a needed replacement, the cost gap between a heat pump and a central AC, and how a heat pump added beside an existing furnace performs.",
+      "premise": "Payback should count only what a heat pump costs beyond the system you would buy anyway. Replacing a working gas furnace carries the whole cost and rarely pays back on energy alone; lifetime models agree. When the air conditioner needs replacing, the extra cost is the gap between a heat pump and an AC, about $1,500 or 30% at national medians in Edwards' data; NREL finds the wholesale gap is $200 to $500 but whole-home heating sizing raises it. In Minnesota field data, payback was about one year when both furnace and AC needed replacing and 15 to 29 years when nothing did, from a small sample against propane and resistance heat. Adding a heat pump beside a working furnace cuts fuel use, but CEE found integrating with older furnaces was complicated and most needed new ones, and no study here quantifies the fuel saving against gas. If you keep the furnace, a new AC costs less upfront than a heat pump, at least for efficient equipment.",
+      "arc": {
+        "hook": "Your furnace is 12 years old and works fine. A contractor says switch now. Should you?",
+        "conflict": "Switch-now advocates count the whole bill savings; wait-and-see skeptics count the whole installed price. The right comparison is neither.",
+        "evidence": "Payback with and without a needed replacement in the field data, the heat pump versus AC cost gap, and what happens when a heat pump is added beside a working furnace.",
+        "resolution": "Wait for a replacement, ideally the AC: then a heat pump costs little extra and pays back quickly. Tearing out a working furnace rarely pays on energy savings alone.",
+        "takeaway": "Plan the switch now, but buy it when the AC or furnace needs replacing."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:what-incentives-are-left": {
+      "coherence": {
+        "score": 0.9,
+        "reason": "One question, what money is still available toward a heat pump in 2026, told as what ended, what changed and what remains."
+      },
+      "question": "What heat pump tax credits and rebates are actually left in 2026?",
+      "title": "Heat Pump Tax Credits and Rebates: What's Left in 2026",
+      "alternates": [
+        "The $2,000 Heat Pump Credit Is Gone. Now What?",
+        "Which Heat Pump Rebates Survived 2025?"
+      ],
+      "whyWatch": "Many videos still promise a $2,000 federal credit that no longer exists, and a 2026 rule change quietly removed the federal rebate for switching from gas. Anyone pricing a heat pump now needs the current rules.",
+      "tension": "Older videos promise generous federal money; the federal money is mostly gone, while state and utility programs still pay, unevenly.",
+      "evidenceNeeded": "The IRS rules on the 25C credit and its end date, the DOE rebate program notice, state rollout status, and examples of state and utility rebate sizes against installed cost.",
+      "premise": "From 2023 through 2025 the 25C federal credit covered 30% of a qualifying heat pump up to $2,000; the IRS confirms it does not apply to property placed in service after December 31, 2025, so it cannot be claimed for 2026 installs, and it was nonrefundable. The IRA's income-limited rebates depend on state programs that rolled out slowly, and they were never available to most homeowners. DOE Program Notice 26-2, effective May 29, 2026, removed fuel-switching from the electric appliance rebate: it now pays only to replace electric equipment, although reservations already made are honored and states have months to comply. State and utility rebates remain and can be substantial, as in Massachusetts' per-ton rebates, but in LBNL's project data the median rebate covered about a fifth of gross cost, so they reduce the price rather than erase it. Rebates making a heat pump cheaper upfront than furnace plus AC is possible in generous programs but is not the typical case.",
+      "arc": {
+        "hook": "That video promising a $2,000 tax credit? The credit is gone.",
+        "conflict": "The incentive landscape changed twice in a year, and most of what homeowners have heard is out of date.",
+        "evidence": "The IRS end date, the DOE notice text, the state rollout tracker, and real rebate shares from project data.",
+        "resolution": "The federal credit ended after 2025 and the federal rebate no longer pays for gas-to-heat-pump swaps; state and utility programs are what remains.",
+        "takeaway": "Check your state energy office and utility before getting quotes, and ignore any federal credit promised for a 2026 install."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:when-does-it-pay-for-itself": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question, under what conditions a heat pump pays for itself. Carbon is not payback, and oversizing is an installation-quality point covered elsewhere; the fuel being replaced is the biggest condition, so that claim is added. The baseline both national models price against (like-for-like replacement at end of life) is part of what the payback figures mean, so the payback-baseline claim is added; insulation's effect on bills and on lifetime value completes the insulation point, so the bill-share and well-insulated claims are added."
+      },
+      "claims": [
+        "heat-pumps/heat-pump-pays-itself-through-lower",
+        "heat-pumps/payback-heat-pump-varies-widely-climate",
+        "heat-pumps/most-homes-would-save-money-over",
+        "heat-pumps/payback-should-count-only-heat-pump",
+        "heat-pumps/heat-pumps-save-most-money-homes",
+        "heat-pumps/air-sealing-insulation-should-come-before",
+        "heat-pumps/heat-pumps-need-home-well-insulated",
+        "heat-pumps/most-households-would-see-lower-energy"
+      ],
+      "question": "Under what conditions does a heat pump actually pay for itself?",
+      "title": "Does a Heat Pump Ever Pay for Itself?",
+      "alternates": [
+        "Heat Pump Payback: Who Wins and Who Doesn't",
+        "The Truth About Heat Pump Payback Periods"
+      ],
+      "whyWatch": "\"It pays for itself in a few years\" is the most common pitch, and the national lifetime-cost studies show it is true for some homes and badly wrong for others. The conditions are knowable before you buy.",
+      "tension": "Sellers promise a few years; lifetime models find most gas-heated homes do not come out ahead at current costs. Both describe real homes.",
+      "evidenceNeeded": "Lifetime net present value or payback across many homes, broken down by the fuel replaced, climate, equipment tier and envelope upgrades.",
+      "premise": "A heat pump does not reliably pay for itself within a few years. NREL's national model finds at most 55% of homes with positive unsubsidized lifetime value from a single heat pump tier, 59% if every home picked its best option, over 16 years; Deetjen finds 21% of single-family houses benefit at current costs. Both are models with their own price and discount assumptions, and both price the heat pump against replacing the old equipment like for like at the end of its life, so these shares are already the buy-at-replacement case, not the cost of tearing out working equipment. Payback varies with climate, fuel prices and what the heat pump replaces: homes heated with propane or electric resistance, and many with oil, are the clearest winners, though Deetjen finds oil homes often lose over the life once capital is counted. Envelope upgrades cut the share of homes whose bills rise but add enough upfront cost to help mainly in cold climates. Field data from Minnesota put payback at about a year when the old system needed replacing anyway and decades when it did not.",
+      "arc": {
+        "hook": "\"Pays for itself in a few years.\" For how many homes is that true?",
+        "conflict": "The pitch is a single number; the studies show a wide distribution, with many homes never breaking even.",
+        "evidence": "Lifetime-value shares from the national models by fuel, climate and equipment, and the field payback with and without a needed replacement.",
+        "resolution": "Payback is fast for homes leaving propane or resistance heat and for anyone replacing failed equipment; for a working gas system it is often never.",
+        "takeaway": "Your payback depends on the fuel you leave, your prices and your timing, not on the brochure."
+      },
+      "qualificationsAccepted": true
+    },
+    "conflict:heat-pump-costs-less-run-heating": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One claim, one question: is a heat pump always cheaper to run than oil, propane or electric resistance heat."
+      },
+      "question": "Does a heat pump always beat oil, propane and electric baseboard heat on running cost?",
+      "title": "Heat Pump vs Oil, Propane and Baseboard Heat",
+      "alternates": [
+        "Leaving Oil or Propane? What a Heat Pump Saves",
+        "The Homes Where Heat Pumps Save the Most"
+      ],
+      "whyWatch": "The gas debate gets the attention, but millions of homes burn oil or propane or use baseboard heaters, and for them the evidence points much more clearly one way, with one exception worth knowing.",
+      "tension": "Advocates say a heat pump beats every expensive fuel. The meters agree for propane and resistance heat; oil depends on the price and the temperature.",
+      "evidenceNeeded": "Measured or modelled running costs for heat pumps against oil, propane and resistance heat, with the break-even temperature for oil.",
+      "premise": "Against propane and electric resistance heat the evidence is consistent: NREL's model gives lower bills for 95-100% of such homes with AC, Minnesota field tests measured savings of about a third against propane and half against resistance heat, and metered New England mini-splits beat both at every observed temperature. Oil is the exception: the New England meters show heat pumps were cheaper than oil only above a break-even of about 12 to 32F depending on the year's oil price, and Deetjen finds oil-heated homes often lose over the equipment's life once capital is counted. The field studies are small samples; the national model is a model.",
+      "arc": {
+        "hook": "If you heat with propane, oil or baseboards, your heating bill may be twice your neighbour's on gas.",
+        "conflict": "A heat pump should win easily against expensive fuels, but oil prices swing and cold snaps narrow the gap.",
+        "evidence": "Bill-saving shares from the national model, measured savings in Minnesota, and the oil break-even temperatures from New England meters.",
+        "resolution": "Against propane and resistance heat a heat pump wins almost everywhere; against oil it wins most of the season, with the margin set by oil prices.",
+        "takeaway": "If you are not on gas, a heat pump is very likely to cut your running costs; with oil, check the break-even."
+      },
+      "qualificationsAccepted": true
+    },
+    "conflict:heat-pumps-cut-home-carbon-emissions": {
+      "coherence": {
+        "score": 0.75,
+        "reason": "One claim, one question; secondary to the money question but asked in most of the videos."
+      },
+      "question": "Does switching from gas to a heat pump cut carbon emissions on today's grid?",
+      "title": "Do Heat Pumps Cut Emissions on Today's Grid?",
+      "alternates": [
+        "Heat Pump vs Gas: Which Pollutes Less Right Now?",
+        "Is a Heat Pump Greener If Your Power Comes From Coal?"
+      ],
+      "whyWatch": "A common objection is that a heat pump just moves the burning to a power plant. The studies answer it with grid data, and the answer depends on which grid and which years you count.",
+      "tension": "Advocates say heat pumps cut emissions everywhere; skeptics say coal power makes them worse. The modelling says both cases exist, and one is much rarer.",
+      "evidenceNeeded": "Household emissions before and after switching from gas, by grid region, on current and projected grid emission factors.",
+      "premise": "Most evidence supports a cut, with limits the video must state. In the UK, measured consumption on the 2024 grid shows switching from a gas boiler cut household energy emissions by about 36%. In the US, NREL finds lifetime savings positive in every state, but on long-run 2022-2038 grid factors, not today's grid; Deetjen finds emissions rise for about 2% of houses, assuming the grid gets cleaner. On 2016 marginal grid data, RMI found heat pumps raised emissions in coal-heavy Chicago while cutting them in its other three cities, and LBNL notes its biggest carbon savings were in states with clean grids.",
+      "arc": {
+        "hook": "If your electricity comes from a gas or coal plant, is a heat pump really greener?",
+        "conflict": "The power plant objection is real; the question is how often it wins.",
+        "evidence": "Measured UK emissions after switching, NREL's state-by-state lifetime savings, and RMI's Chicago exception on older grid data.",
+        "resolution": "On most grids a heat pump cuts emissions now and more as the grid cleans up; on the dirtiest grids the near-term gain can vanish.",
+        "takeaway": "Emissions savings are large in most places and grow over time; the exceptions are coal-heavy grids."
+      },
+      "qualificationsAccepted": true
+    },
+    "conflict:heating-heat-pump-costs-less-natural": {
+      "reject": "a single-claim chapter of decision:is-it-cheaper-to-run-than-gas, which answers the same question with the price ratio and the share of homes that save"
+    },
+    "conflict:time-use-heat-pump-electricity-tariffs": {
+      "reject": "a chapter of decision:is-it-cheaper-to-run-than-gas; the only measured evidence is one UK supplier's tariff, too thin for a separate US story"
+    },
+    "conflict:heat-pumps-not-work-cold-climates": {
+      "reject": "a single-claim chapter of decision:what-happens-when-it-gets-cold, which carries the same field data together with the backup-heat catch"
+    },
+    "surprise:backup-resistance-heat-strips-rarely-run": {
+      "reject": "how much backup heat runs is the central catch in decision:what-happens-when-it-gets-cold, which carries the same PNNL and NREL field data"
+    },
+    "conflict:heat-pumps-need-home-well-insulated": {
+      "coherence": { "score": 0.8, "reason": "One claim, one question: must a home be insulated first for a heat pump to pay." },
+      "research": "only NREL's model bears on it, and it found envelope upgrades help the economics in cold climates and hurt them in warm ones; measured before-and-after data on uninsulated homes, by climate, would unblock it"
+    },
+    "conflict:contractors-routinely-oversize-heating-cooling-equipment": {
+      "coherence": { "score": 0.75, "reason": "One claim, one question: do installers routinely oversize." },
+      "research": "the only evidence is a dozen NREL field sites, mostly undersized; a large audit comparing installed capacity with Manual J loads would unblock it"
+    },
+    "conflict:real-world-heat-pump-efficiency-lower": {
+      "coherence": { "score": 0.75, "reason": "One claim, one question: do installed heat pumps fall short of their ratings." },
+      "research": "the field studies split (Cadmus measured below rating, CEE within error at one rating point, NREL matched at 7 of 12 sites), all small; a metered study of many installs against rated HSPF2 would unblock it"
+    },
+    "conflict:installing-heat-pump-can-require-costly": {
+      "reject": "a single-claim chapter of decision:does-the-upfront-cost-eat-the-savings, where the panel and service costs sit beside the other installation costs"
+    }
+  }
+}
