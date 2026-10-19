@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { sentences } from '../lib/script';
 import { excerptWindow } from './excerpt';
 import { type AudioStats, type Probe, audioStats, extractFrame, lumaSamples, probe } from './ffmpeg';
-import { ALL_KINDS, SUPPORTED_ASSETS } from './kinds';
+import { ALL_KINDS, unsupportedAssets } from './kinds';
 import { type MixReport, type MusicConfig, musicFingerprint, resolveCues } from './music';
 import type { Segment } from './select';
 import { buildTimeline } from './timeline';
@@ -229,7 +229,7 @@ export function contentChecks(tl: Timeline, seg: Segment): Check[] {
     if (!want.every((l) => got.includes(l)) || citations.length !== want.length) problems.push(`${scene.id} citations`);
     if (scene.visual.chart && JSON.stringify(t?.chart?.points) !== JSON.stringify(scene.visual.chart.points))
       problems.push(`${scene.id} chart data`);
-    if (!(t?.assets ?? []).every((a) => SUPPORTED_ASSETS.has(a))) problems.push(`${scene.id} assets`);
+    if (!t || unsupportedAssets(t.kind, t.assets).length) problems.push(`${scene.id} assets`);
     if (!t?.kind) problems.push(`${scene.id} unsupported`);
     if (scene.visual.excerpt) {
       const ex = t?.excerpt;

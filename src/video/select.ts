@@ -21,10 +21,10 @@ import type { Scene, Storyboard } from '../lib/storyboard';
 import {
   GENERIC,
   type KindRegistry,
-  SUPPORTED_ASSETS,
   type SceneKind,
   bespokeFor,
   kindOf,
+  unsupportedAssets,
   unsupportedWhy,
 } from './kinds';
 import { VIDEO_DIR, VIDEO_FILES } from './files';
@@ -135,10 +135,8 @@ export function checkSegment(
       continue;
     }
     const spec = specs[kind];
-    // a bespoke kind is the scene's own graphic: it draws the assets the storyboard registered for it
-    if (!Object.hasOwn(bespoke, kind))
-      for (const a of scene.visual.assetIds ?? [])
-        if (!SUPPORTED_ASSETS.has(a)) bad(`${scene.id}: asset "${a}" has no renderer`);
+    for (const a of unsupportedAssets(kind, scene.visual.assetIds ?? []))
+      bad(`${scene.id}: asset "${a}" has no renderer`);
     if (scene.visual.category === 'data-chart') {
       const pts = scene.visual.chart?.points ?? [];
       if (!pts.length) bad(`${scene.id}: a chart with no points`);
