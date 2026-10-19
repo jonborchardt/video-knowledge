@@ -41,7 +41,11 @@ export function deepImports(entries: string[]): Set<string> {
  *  imports, and the modules those import in turn (value imports, followed to the end), so editing a chart helper
  *  re-renders the chart scenes and nothing else, however deep the helper sits. */
 export function rendererVersion(kind: TimelineScene['kind']): string {
-  const component = join(REMOTION_DIR, 'scenes', `${ALL_KINDS[kind].component}.tsx`);
+  return componentVersion(ALL_KINDS[kind].component);
+}
+/** The code that draws one component: its file, everything it imports, and the shared Remotion files. */
+export function componentVersion(name: string): string {
+  const component = join(REMOTION_DIR, 'scenes', `${name}.tsx`);
   const direct = importsOf(component);
   const deep = deepImports(direct);
   const files = [

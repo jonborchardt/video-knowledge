@@ -22,7 +22,7 @@ export const scenes = (): StoryboardPlan['scenes'] => [
       category: 'data-chart',
       description: 'bar',
       onScreenText: ['601 people surveyed'],
-      chart: { type: 'stacked-bar', title: 'Outcome', points: POINTS, note: 'Self-reported.' },
+      chart: { type: 'stacked-bar', title: 'Outcome', points: POINTS.map((p) => ({ ...p })), note: 'Self-reported.' },
     },
     citations: [{ label: 'Survey D', cite: DOC_D }],
     pauseSeconds: 1,

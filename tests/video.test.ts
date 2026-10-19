@@ -6,8 +6,12 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'no
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { scriptFingerprint } from '../src/lib/script';
+import { readJson } from '../src/lib/io';
+import { type Script, scriptDir, scriptFingerprint } from '../src/lib/script';
 import type { Storyboard } from '../src/lib/storyboard';
+import { type VisualReview, graphicKey, renderCheck } from '../src/video/check';
+import { draftRenderConfig, initVideo } from '../src/video/init';
+import type { KindRegistry, SceneKind } from '../src/video/kinds';
 import { pointFrames } from '../src/video/chart';
 import { cue, lineFrames, spokenAt } from '../src/video/cues';
 import { excerptWindow, flowPassage } from '../src/video/excerpt';
@@ -27,6 +31,7 @@ import { openaiProvider, speedOf } from '../src/video/tts/openai';
 import type { TimelineScene } from '../src/video/types';
 import { alignLine, findWord, tokens } from '../src/video/words';
 import { DOC_D, pkg, read, scene } from './script-helpers';
+import { copyTopic } from './production-helpers';
 import { POINTS, inputs, manifest, scenes } from './video-helpers';
 
 const MLM = ['get-rich-quick', 'decision:mlm-and-seminars'] as const;
@@ -463,5 +468,78 @@ describe('render cache key', () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe('render config draft and render check', () => {
+  const HP = 'heat-pumps',
+    HPS = 'decision:when-does-it-pay-for-itself';
+
+  it('draftRenderConfig lists every scene, drafts kinds, cues and chapters, and flags diagrams', () => {
+    const dir = scriptDir(HP, HPS);
+    const sb = readJson<Storyboard>(join(dir, 'storyboard.json'))!;
+    const { config, needsGraphics } = draftRenderConfig(sb, readJson<Script>(join(dir, 'script.json'))!);
+    expect(config.scenes).toEqual(sb.scenes.map((s) => s.id));
+    expect(needsGraphics).toEqual(['sc08', 'sc09', 'sc15', 'sc18', 'sc20', 'sc24', 'sc29']);
+    expect(config.kinds).toEqual({ sc16: 'stat-tiles', sc21: 'stat-tiles' });
+    expect(config.cues.sc05).toEqual({ type: { sentence: 's05', word: 'That' } });
+    expect(config.cues.sc32).toEqual({ type: { sentence: 's56', word: 'Whatever' } });
+    expect(config.chapters?.sc01).toBe('Hook');
+  });
+
+  it('initVideo does not overwrite', () => {
+    const c = copyTopic(HP);
+    try {
+      const f = join(c.dir(HPS), 'video', 'render.json');
+      const before = readFileSync(f, 'utf8');
+      expect(initVideo(HP, HPS, { root: c.root }).written).toBe(false);
+      expect(readFileSync(f, 'utf8')).toBe(before);
+      expect(initVideo(HP, HPS, { root: c.root, force: true }).written).toBe(true);
+    } finally {
+      c.cleanup();
+    }
+  });
+
+  it('renderCheck approves a graphic only at its current key', () => {
+    const bespoke: KindRegistry = { 'x-phone': { component: 'Phone', accepts: ['animation'] } };
+    const seg = checkSegment(inputs({ config: { kinds: { sc01: 'x-phone' as SceneKind } } }), bespoke);
+    const unreviewed = renderCheck(seg, null, 'c', bespoke);
+    expect(unreviewed.graphics).toEqual([
+      {
+        scene: 'sc01',
+        kind: 'x-phone',
+        key: graphicKey(seg.scenes[0].scene, 'x-phone' as SceneKind, bespoke),
+        approved: false,
+      },
+    ]);
+    expect(unreviewed.ok).toBe(true); // ok covers renderability; approval is checked by renderCheckProblems
+    const at = (key: string): VisualReview => ({
+      scenes: { sc01: { key, verdict: 'approved', notes: '', reviewer: 'r', date: 'd' } },
+    });
+    expect(renderCheck(seg, at(unreviewed.graphics[0].key), 'c', bespoke).graphics[0].approved).toBe(true);
+    expect(renderCheck(seg, at('stale'), 'c', bespoke).graphics[0].approved).toBe(false);
+  });
+
+  it('a diagram without a renderer needs a graphic, not a problem', () => {
+    const plan = scenes();
+    plan[0] = { ...plan[0], visual: { category: 'diagram', description: 'a flow' } };
+    const rc = renderCheck(checkSegment(inputs({ plan })), null, 'c', {});
+    expect(rc.needsGraphics).toEqual(['sc01']);
+    expect(rc.problems).toEqual([]);
+    expect(rc.ok).toBe(false);
+  });
+
+  it('a bar with dollar points is a problem', () => {
+    const plan = scenes();
+    plan[1] = {
+      ...plan[1],
+      visual: {
+        ...plan[1].visual,
+        chart: { ...plan[1].visual.chart!, type: 'bar', points: [{ ...POINTS[0], unit: 'usd' }] },
+      },
+    };
+    expect(checkSegment(inputs({ plan, config: { cues: {} } })).problems.join('\n')).toContain(
+      'bar draws percent and count points',
+    );
   });
 });
