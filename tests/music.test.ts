@@ -628,5 +628,6 @@ describe('cue sheet draft', () => {
     const u = undertow();
     expect(pickComposition([{ ...u, licence: { ...u.licence, cleared: false } }])).toBeNull();
     expect(pickComposition([u])?.id).toBe('undertow');
+    expect(pickComposition([u], 'undertoe')).toBeNull();
   });
 });

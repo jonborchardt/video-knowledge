@@ -25,6 +25,7 @@ import { validateScript } from '../src/lib/script-validation';
 import { loadTopic } from '../src/lib/topics';
 import {
   type EvidencePackage,
+  type Release,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
@@ -186,6 +187,31 @@ describe('graphics stage', () => {
       const p2 = productionOf(HP, HPS, c.root)!;
       expect(p2.stage).toBe('lock');
       expect(p2.next).toContain('--approved-by "<approver>"');
+    } finally {
+      c.cleanup();
+    }
+  });
+
+  it('a grandfathered release that went stale is re-locked through the graphics stage', () => {
+    const c = copyTopic(HP);
+    try {
+      const f = join(c.dir(HPS), 'release.json');
+      const rel = readJson<Release>(f)!;
+      writeFileSync(f, toJson({ ...rel, fingerprints: { ...rel.fingerprints, storyboard: 'old' } }));
+      expect(productionOf(HP, HPS, c.root)!.halt?.kind).toBe('render-check');
+    } finally {
+      c.cleanup();
+    }
+  });
+
+  it('a render.json changed since the build asks for a new render', () => {
+    const c = copyTopic(HP);
+    try {
+      const f = join(c.dir(HPS), 'video', 'render.json');
+      writeFileSync(f, toJson({ ...readJson<object>(f)!, gapSeconds: 0.5 }));
+      const p = productionOf(HP, HPS, c.root)!;
+      expect(p.halt).toMatchObject({ kind: 'stale', stage: 'video' });
+      expect(p.next).toBe(`npm run video -- spike ${HP} ${HPS}`);
     } finally {
       c.cleanup();
     }

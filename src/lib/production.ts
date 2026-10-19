@@ -7,7 +7,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
-import { fileSha, lf, readJson, toJson, ROOT } from './io';
+import { fileSha, lf, readJson, sha, toJson, ROOT } from './io';
 import {
   RENDER_CHECK,
   type RenderCheckSummary,
@@ -470,7 +470,9 @@ const storyboardStage: BoardStage = ({ topic, storyId, r, read, pkg, script, pla
 // visual review, all at the current script, storyboard and render.json (video/render-check.json, written by
 // `npm run video -- check`). Releases locked before this stage existed (no version) are grandfathered.
 const graphicsStage: BoardStage = ({ topic, storyId, root, p, r, release, live, sb }, s) => {
-  if (!live || !sb || s.stopped || (release && release.version !== 2)) return {};
+  if (!live || !sb || s.stopped) return {};
+  // a release locked before this stage existed stays as it is until it goes stale; re-locking needs a render check
+  if (release && release.version !== 2 && !releaseCheck(release, live, sb).length) return {};
   const check = `npm run video -- check ${topic} ${storyId}`;
   if (!existsSync(p('video/render.json')))
     return {
@@ -570,12 +572,14 @@ const releaseStage: BoardStage = ({ topic, storyId, r, release, live, sb }, s) =
 };
 
 // 8. Video: the committed build report must come from the locked script and storyboard and pass its QA.
-const videoStage: BoardStage = ({ topic, storyId, r, release, vr, sb }, s) => {
+const videoStage: BoardStage = ({ topic, storyId, p, r, release, vr, sb }, s) => {
   if (!vr || !release) return {};
   const total = sb?.scenes.length ?? 0;
+  const config = readJson<unknown>(p('video/render.json'));
   const bound =
     vr.fingerprints.script === release.fingerprints.script &&
-    vr.fingerprints.storyboard === release.fingerprints.storyboard;
+    vr.fingerprints.storyboard === release.fingerprints.storyboard &&
+    (!config || vr.fingerprints.config === sha(JSON.stringify(config)));
   const failed = vr.qa.checks.filter((c) => !c.ok);
   const full = total > 0 && vr.segment.scenes.length >= total;
   const draft = vr.narration.publishable === false; // the voice's terms do not cover a published video
@@ -595,7 +599,7 @@ const videoStage: BoardStage = ({ topic, storyId, r, release, vr, sb }, s) => {
       halt: {
         stage: 'video',
         kind: 'stale',
-        why: 'the video was rendered from fingerprints the lock no longer names',
+        why: 'the video was rendered from a script, storyboard or render.json that has changed since',
         cmd,
       },
     };

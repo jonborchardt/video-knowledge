@@ -37,10 +37,10 @@ const GROUPS: {
   { id: 'ending', sections: ['implications', 'conclusion'], variation: 'pulse', gain: -11, fadeIn: 2, fadeOut: 6 },
 ];
 
-/** The named composition when it exists and is cleared; else the first cleared one by id; null when none is. */
+/** The named composition when it exists and is cleared (null when it is not); unnamed, the first cleared one by id. */
 export function pickComposition(all: Composition[], want?: string): Composition | null {
-  const named = all.find((c) => c.id === want && c.licence.cleared);
-  return named ?? [...all].sort((a, b) => a.id.localeCompare(b.id)).find((c) => c.licence.cleared) ?? null;
+  const cleared = [...all].sort((a, b) => a.id.localeCompare(b.id)).filter((c) => c.licence.cleared);
+  return (want ? cleared.find((c) => c.id === want) : cleared[0]) ?? null;
 }
 
 /** Every composition in music/. */

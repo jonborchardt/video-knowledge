@@ -1,6 +1,13 @@
 // Markdown views of a validated script: script.md for a reader, review.md for the person deciding.
 import type { PassageReader } from './evidence';
-import { type EvidencePackage, type Issue, MAX_REVISIONS, type Script, type ScriptValidation } from './script';
+import {
+  type EvidencePackage,
+  type Issue,
+  MAX_REVISIONS,
+  type Script,
+  type ScriptValidation,
+  revisionsInPass,
+} from './script';
 
 const MARK: Record<string, string> = { verified: 'ok', 'needs-review': 'review', blocked: 'BLOCKED' };
 const mmss = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.round(sec % 60)).padStart(2, '0')}`;
@@ -107,7 +114,7 @@ export function renderReviewMd(
     `| | |`,
     `|---|---|`,
     `| Story | \`${script.story}\` (${script.topic}) |`,
-    `| Revision | ${script.revision} of at most ${MAX_REVISIONS} |`,
+    `| Revision | ${script.revision} (${revisionsInPass(script)} of at most ${MAX_REVISIONS} in this pass) |`,
     `| Validation | **${v.status}** (${v.date.slice(0, 10)}) |`,
     `| Words / runtime | ${v.words} words, about ${v.minutes} min at ${v.wordsPerMinute} wpm |`,
     `| Sentences | ${v.counts.sentences} (${v.counts.factual} factual or attributed) |`,

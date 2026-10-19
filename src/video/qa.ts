@@ -346,7 +346,7 @@ export function blankChecks(samples: Luma, tl: Timeline): Check[] {
   const fps = tl.fps;
   const last = tl.scenes.at(-1)!;
   const sps = TOLERANCE.samplesPerSecond;
-  const maxRun = TOLERANCE.blankRunSeconds * sps;
+  const maxRun = Math.ceil(TOLERANCE.blankRunSeconds * sps);
   let run = 0;
   let worst = 0;
   let where = -1;

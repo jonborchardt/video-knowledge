@@ -937,7 +937,15 @@ describe('revision passes', () => {
 
 describe('lock guards', () => {
   it('approverProblem rejects placeholders', () => {
-    for (const n of [undefined, '', '  ', '<name>', '<approver>', 'by <name>'])
+    for (const n of [
+      undefined,
+      '',
+      '  ',
+      '<name>',
+      '<approver>',
+      'by <name>',
+      'automated: /produce run started by <your name>',
+    ])
       expect(approverProblem(n)).not.toBeNull();
     for (const n of ['jon', 'Jon Borchardt', 'automated: /produce run started by jon'])
       expect(approverProblem(n)).toBeNull();

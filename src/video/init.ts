@@ -2,13 +2,13 @@
 // scene in order, the draft voice, generic kinds where the category alone picks the wrong one, a typing cue on the
 // first spoken word of a question card (otherwise it waits for its own words, spoken late), and chapters from the
 // script's sections. Diagrams and animations are listed, not guessed: they become the run's graphics step.
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, toJson, ROOT } from '../lib/io';
-import { FILES, type Script, scriptDir, sentences } from '../lib/script';
+import { FILES, type Script, scriptDir, sentences, storySlug } from '../lib/script';
 import type { Storyboard } from '../lib/storyboard';
 import { VIDEO_DIR, VIDEO_FILES } from './files';
-import { type SceneKind, kindOf } from './kinds';
+import { type SceneKind, bespokeFor, kindOf } from './kinds';
 import type { RenderConfig } from './types';
 
 const firstWord = (text: string) =>
@@ -72,7 +72,16 @@ export function initVideo(
   if (!sb?.scenes || !script) throw new Error(`no storyboard.json or script.json in ${dir}`);
   const { config, needsGraphics } = draftRenderConfig(sb, script);
   const file = join(dir, VIDEO_DIR, VIDEO_FILES.config);
-  if (existsSync(file) && !opts.force) return { written: false, needsGraphics };
+  const kept = !opts.force ? readJson<RenderConfig>(file) : null;
+  if (kept) {
+    const bespoke = bespokeFor(`${topic}/${storySlug(storyId)}`);
+    const missing = sb.scenes.filter(
+      (s) =>
+        (s.visual.category === 'diagram' || s.visual.category === 'animation') &&
+        !kindOf(s, kept.kinds?.[s.id], bespoke),
+    );
+    return { written: false, needsGraphics: missing.map((s) => s.id) };
+  }
   mkdirSync(join(dir, VIDEO_DIR), { recursive: true });
   writeFileSync(file, toJson(config));
   return { written: true, needsGraphics };

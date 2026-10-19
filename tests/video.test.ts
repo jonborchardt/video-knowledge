@@ -510,7 +510,7 @@ describe('render config draft and render check', () => {
     try {
       const f = join(c.dir(HPS), 'video', 'render.json');
       const before = readFileSync(f, 'utf8');
-      expect(initVideo(HP, HPS, { root: c.root }).written).toBe(false);
+      expect(initVideo(HP, HPS, { root: c.root })).toEqual({ written: false, needsGraphics: [] }); // bespoke kinds kept
       expect(readFileSync(f, 'utf8')).toBe(before);
       expect(initVideo(HP, HPS, { root: c.root, force: true }).written).toBe(true);
     } finally {

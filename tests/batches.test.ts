@@ -84,10 +84,11 @@ describe('study verdicts', () => {
 });
 
 describe('cited verdicts', () => {
-  it('replacedCited flags a new range on a cited claim and document', () => {
+  it('replacedCited flags any new verdict on a cited claim and document', () => {
     const cited = new Map([['t/c1|t/sources/a.txt', 't/sources/a.txt#L10-L20']]);
     expect(replacedCited([{ claim: 't/c1', source: 't/sources/a.txt#L30-L40' }], cited)).toHaveLength(1);
-    expect(replacedCited([{ claim: 't/c1', source: 't/sources/a.txt#L10-L20' }], cited)).toEqual([]);
+    expect(replacedCited([{ claim: 't/c1', source: 't/sources/a.txt#L10-L20' }], cited)).toHaveLength(1);
+    expect(replacedCited([{ claim: 't/c1', source: 't/sources/b.txt#L10-L20' }], cited)).toEqual([]);
     expect(replacedCited([{ claim: 't/c2', source: 't/sources/a.txt#L30-L40' }], cited)).toEqual([]);
   });
 

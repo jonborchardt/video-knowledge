@@ -77,7 +77,10 @@ Route each note to the artifact that owns it, then run the Loop:
 - wording, cuts, order: set `passStartRevision` in `script.json` to its current `revision` (the pass
   gets its own three revisions), then a fresh writer with `agent: scripts/briefs/script.md (notes)`
   and the notes; the board then asks for the re-review, storyboard, render check and lock again.
-- a graphic: a fresh `graphics.md` agent for that scene with the note, then `visual-review.md`.
+- a graphic: a fresh `graphics.md` agent for that scene with the note, then `visual-review.md`. A component edit
+  does not change any fingerprint the build is bound to, so after the graphic is approved run
+  `npm run video -- spike <topic> <story>`, then `qa` and `package` again (the cached chunks of the other scenes are
+  reused).
 - music or pacing: edit `video/music.json` (cues over scene anchors, never seconds) or
   `video/render.json` (cues, options) yourself.
 

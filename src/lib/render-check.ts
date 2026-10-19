@@ -1,9 +1,9 @@
 // The contract of video/render-check.json as the library layer sees it. `npm run video -- check` writes it (the video
 // layer's renderCheck, src/video/check.ts, returns this type), so the lock and the board can require a renderable
 // storyboard with approved graphics without importing from src/video/.
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { sha } from './io';
+import { fileSha } from './io';
 
 export const RENDER_CHECK = 'video/render-check.json';
 export interface RenderCheckSummary {
@@ -19,7 +19,7 @@ type Now = RenderCheckSummary['fingerprints'];
 /** The sha of the story's video/render.json ('' when there is none): what a render check is bound to. */
 export function renderConfigSha(scriptDir: string): string {
   const f = join(scriptDir, 'video', 'render.json');
-  return existsSync(f) ? sha(readFileSync(f, 'utf8')) : '';
+  return existsSync(f) ? fileSha(f) : '';
 }
 /** The check was made for another script, storyboard or render.json (or never made). */
 export const renderCheckStale = (rc: RenderCheckSummary | null, now: Now) =>

@@ -230,9 +230,10 @@ try {
         console.log(`kept existing ${relOut}`);
         break;
       }
-      const c = pickComposition(compositions(), flag('--composition'));
+      const want = flag('--composition');
+      const c = pickComposition(compositions(), want);
       if (!c) {
-        console.error('no cleared composition in music/');
+        console.error(want ? `${want} is not a cleared composition in music/` : 'no cleared composition in music/');
         process.exit(2);
       }
       const script = readJson<Script>(join(sdir, FILES.script));
