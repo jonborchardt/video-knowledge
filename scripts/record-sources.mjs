@@ -4,14 +4,19 @@
 //   [{ "claim": "<topic>/<slug>", "verdict": "partly", "confidence": 0.6, "note": "...", "source": "<topic>/sources/<file>.txt#L10-L24" }]
 // Evidence belongs to the claim, so each verdict is recorded once, on the first source (by id) that makes the claim.
 // To retract a verdict, record the same claim + document again with verdict "unknown" (the latest per document wins).
+// A verdict that would replace one a script cites (same claim and document, another range) is refused unless
+// --replace-cited is passed (src/lib/cited.ts).
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkStudyVerdicts } from '../src/lib/batches.ts';
+import { citedPairs, replacedCited } from '../src/lib/cited.ts';
 import { ROOT, watcher } from './watcher.mjs';
 
-const [topic, ...files] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const replaceCited = args.includes('--replace-cited');
+const [topic, ...files] = args.filter((a) => a !== '--replace-cited');
 if (!topic || !files.length) {
-  console.error('usage: node scripts/record-sources.mjs <topic> <verdicts.json> [...]');
+  console.error('usage: node scripts/record-sources.mjs <topic> <verdicts.json> [...] [--replace-cited]');
   process.exit(1);
 }
 const store = join(topic, 'store'),
@@ -25,6 +30,14 @@ const parsed = files.map((file) => [file, JSON.parse(readFileSync(file, 'utf8'))
 const malformed = parsed.flatMap(([file, x]) => checkStudyVerdicts(x).map((p) => `${file} ${p}`));
 if (malformed.length) {
   console.error(malformed.join('\n'));
+  process.exit(1);
+}
+const replaced = replacedCited(
+  parsed.flatMap(([, x]) => x),
+  citedPairs(topic, ROOT),
+);
+if (replaced.length && !replaceCited) {
+  console.error(replaced.join('\n') + '\nnothing recorded; pass --replace-cited to replace them anyway');
   process.exit(1);
 }
 const by = {},

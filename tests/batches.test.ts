@@ -1,6 +1,7 @@
 // The agent-written research files: extraction batches and study verdicts are checked whole before record writes.
 import { describe, expect, it } from 'vitest';
 import { checkBatches, checkStudyVerdicts } from '../src/lib/batches';
+import { citedPairs, replacedCited } from '../src/lib/cited';
 
 const claims = [{ id: 'demo/old-claim', text: 'An old claim.' }];
 
@@ -79,5 +80,22 @@ describe('study verdicts', () => {
       '[1] demo/old-claim: confidence 1.5 is not a number in [0, 1]',
       '[2] demo/old-claim: "source" is not <topic>/sources/<file>.txt#L<a>-L<b>',
     ]);
+  });
+});
+
+describe('cited verdicts', () => {
+  it('replacedCited flags a new range on a cited claim and document', () => {
+    const cited = new Map([['t/c1|t/sources/a.txt', 't/sources/a.txt#L10-L20']]);
+    expect(replacedCited([{ claim: 't/c1', source: 't/sources/a.txt#L30-L40' }], cited)).toHaveLength(1);
+    expect(replacedCited([{ claim: 't/c1', source: 't/sources/a.txt#L10-L20' }], cited)).toEqual([]);
+    expect(replacedCited([{ claim: 't/c2', source: 't/sources/a.txt#L30-L40' }], cited)).toEqual([]);
+  });
+
+  it('citedPairs reads the committed scripts', () => {
+    expect(
+      citedPairs('heat-pumps').get(
+        'heat-pumps/payback-should-count-only-heat-pump|heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt',
+      ),
+    ).toBe('heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716');
   });
 });
