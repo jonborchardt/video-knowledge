@@ -36,6 +36,7 @@ export type HaltKind =
   | 'revision-limit'
   | 'needs-evidence'
   | 'review-pending'
+  | 'review-findings'
   | 'storyboard-blocked'
   | 'render-check'
   | 'needs-graphics'
@@ -371,6 +372,14 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
   const sameRev = sreview.revision === script.revision;
   const unreviewed = live?.counts.unreviewed ?? 0;
   const health: Health = !bound || !sameRev ? 'stale' : unreviewed ? 'pending' : 'current';
+  // The reviewer has judged the current revision and holds sentences on findings at their current text: those are the
+  // writer's to fix (a warning is not a blocker, so the validation is not blocked), not another review's.
+  const held = (live?.sentences ?? []).filter(
+    (x) =>
+      !x.approved &&
+      sreview.findings.some((f) => f.sentence === x.id && f.fingerprint === x.fingerprint && f.severity !== 'info'),
+  );
+  const writer = health === 'pending' && held.length === unreviewed;
   return {
     checks: [
       {
@@ -384,12 +393,19 @@ const reviewStage: BoardStage = ({ topic, storyId, r, pkg, script, sreview, live
     halt:
       health === 'current'
         ? undefined
-        : {
-            stage: 'review',
-            kind: 'review-pending',
-            why: 'the review does not cover the current script',
-            cmd: `agent: scripts/briefs/script-review.md (re-review), then npm run script -- validate ${topic} ${storyId}`,
-          },
+        : writer
+          ? {
+              stage: 'script',
+              kind: 'review-findings',
+              why: `the reviewer holds ${held.map((x) => x.id).join(', ')} on findings`,
+              cmd: `agent: scripts/briefs/script.md (revise), then npm run script -- validate ${topic} ${storyId}`,
+            }
+          : {
+              stage: 'review',
+              kind: 'review-pending',
+              why: 'the review does not cover the current script',
+              cmd: `agent: scripts/briefs/script-review.md (re-review), then npm run script -- validate ${topic} ${storyId}`,
+            },
   };
 };
 
