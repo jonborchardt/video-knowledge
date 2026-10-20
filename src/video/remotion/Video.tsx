@@ -3,7 +3,7 @@ import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame
 import type { Timeline, TimelineScene } from '../types';
 import { Citation } from './Citation';
 import { SCENES } from './scenes';
-import { easeOut, setBrand, theme } from './theme';
+import { easeOut, theme } from './theme';
 
 const FADE = 8;
 const TOL = 2; // px at full size
@@ -140,10 +140,9 @@ const Backdrop: FC = () => {
   );
 };
 
-/** The whole segment in the timeline's brand: scenes and their narration placed by the timeline's measured frames. The studio plays the
+/** The whole segment: scenes and their narration placed by the timeline's measured frames. The studio plays the
  *  narration from here; the renderer mutes it and lays one continuous track at assembly. */
 export const Video: FC<Timeline> = (tl) => {
-  setBrand(tl.brand);
   return (
     <AbsoluteFill style={{ background: theme.bg }}>
       {theme.motion ? <Backdrop /> : null}

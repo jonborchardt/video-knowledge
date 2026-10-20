@@ -32,7 +32,15 @@ export interface StoryReview {
   research?: string;
   /** Who the script is written for; the evidence package carries it to the writer (a stated default otherwise). */
   audience?: string;
+  /** Follow-up stories this story's video goes on to answer, in order: each answer raises the next question. Each
+   *  keeps its own audit; the video is ready only when every one is. Chains do not nest. */
+  chain?: string[];
+  /** Why each answer leads to the next question (required with a chain). */
+  chainWhy?: string;
 }
+
+/** Questions one video may answer: the story's own plus its chain. */
+export const MAX_QUESTIONS = 3;
 
 export interface ReviewFile {
   /** `${claim}|${stance}|${cite}` -> does that verdict decide a sentence taking that stance on the claim? */

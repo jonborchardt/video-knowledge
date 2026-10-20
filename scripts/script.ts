@@ -27,10 +27,13 @@ import {
   scriptDir,
   sentenceFingerprint,
   sentences,
+  LEGACY_SECTIONS,
+  sectionsFor,
+  WPM_DEFAULT,
 } from '../src/lib/script';
 import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
-import { validateScript } from '../src/lib/script-validation';
-import { loadStories, storiesPath } from '../src/lib/stories';
+import { pacing, validateScript } from '../src/lib/script-validation';
+import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';
 
@@ -65,6 +68,8 @@ function stagePackage(): EvidencePackage {
   if (!file) throw new Error(`no ${storiesPath(topic)}; run npm run stories -- discover ${topic}`);
   const story = file.stories.find((s) => s.id === storyId);
   if (!story) throw new Error(`no story ${storyId} in ${storiesPath(topic)} (rejected stories cannot be scripted)`);
+  if (story.partOf)
+    throw new Error(`${storyId} is a follow-up question in ${story.partOf}; package that story instead`);
   if (story.readiness !== 'ready') console.error(`warning: story is ${story.readiness}: ${story.readinessWhy}`);
   const t = corpusOf(loadTopic(topic));
   const old = readJson<EvidencePackage>(p(FILES.pkg));
@@ -77,6 +82,7 @@ function stagePackage(): EvidencePackage {
     },
     readTranscript: transcriptReader(topic),
     previous: old,
+    chain: chainOf(story, file),
   });
   if (old?.fingerprint === pkg.fingerprint) console.log(`${rel(p(FILES.pkg))} unchanged (${pkg.fingerprint})`);
   else {
@@ -233,6 +239,11 @@ function show() {
     (pkg?.claims ?? []).flatMap((c) => c.statements.map((s) => [`${c.id}|${s.source}`, s] as const)),
   );
   const by = new Map(v.sentences.map((s) => [s.id, s]));
+  // A legacy-layout script carries no pacing warnings; the sheet shows them as hints for the reviewer.
+  const hints =
+    sectionsFor(pkg, script) === LEGACY_SECTIONS
+      ? pacing(sentences(script), script.generation?.wordsPerMinute || WPM_DEFAULT)
+      : new Map();
   const only = args[0];
   for (const s of sentences(script)) {
     if (only && s.id !== only) continue;
@@ -242,6 +253,8 @@ function show() {
     );
     console.log(`  ${s.text}`);
     if (s.note) console.log(`  note: ${s.note}`);
+    // A hint for the reviewer's repetition check (scripts/briefs/script-review.md), not a validation issue.
+    for (const i of hints.get(s.id) ?? []) console.log(`  HINT ${i.category}: ${i.explanation}`);
     for (const i of r.issues) console.log(`  ${i.severity.toUpperCase()} ${i.category} [${i.by}]: ${i.explanation}`);
     for (const a of r.assertions) {
       console.log(`  ${a.id} (${a.kind}, ${a.status}): ${a.text}`);

@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import type { Corpus } from './corpus';
 import { type PassageReader, type Stance, applicabilityOf, judgmentKey } from './evidence';
 import { lf, sha, ROOT } from './io';
-import type { ReviewFile } from './review';
+import { MAX_QUESTIONS, type ReviewFile } from './review';
 import {
   type EvidencePackage,
   type PackageClaim,
@@ -61,6 +61,7 @@ export interface PackageOptions {
   readDoc?: DocReader;
   readTranscript?: TranscriptReader;
   previous?: EvidencePackage | null; // its persisted quote context stands where no transcript is available
+  chain?: Story[]; // the follow-up stories the same video answers (chainOf); their claims join the package
 }
 
 export function buildPackage(
@@ -73,6 +74,7 @@ export function buildPackage(
     readDoc = docReader(),
     readTranscript = () => null,
     previous = null,
+    chain = [],
   }: PackageOptions = {},
 ): EvidencePackage {
   // Without a transcript (a clean checkout), the window persisted by the previous package stands.
@@ -104,11 +106,19 @@ export function buildPackage(
     if (!d.cites.includes(cite)) d.cites.push(cite);
     return d;
   };
-  const claims: PackageClaim[] = story.claims.map((id, i) => {
+  // A chained video's claims are every question's, each with the audit of the first story that has it.
+  const parts = [story, ...chain];
+  if (parts.length > MAX_QUESTIONS)
+    throw new Error(`story ${story.id} chains ${parts.length} questions; a video answers at most ${MAX_QUESTIONS}`);
+  const seen = new Set<string>();
+  const pairs = parts
+    .flatMap((s) => s.claims.map((id, i) => ({ s, id, i })))
+    .filter(({ id }) => !seen.has(id) && seen.add(id));
+  const claims: PackageClaim[] = pairs.map(({ s, id, i }) => {
     const c = byId.get(id);
     if (!c) throw new Error(`story claim ${id} is not in the topic`);
-    const f = story.audit.findings[i];
-    if (!f) throw new Error(`story ${story.id} has no audit for claim ${id}; run discover first`);
+    const f = s.audit.findings[i];
+    if (!f) throw new Error(`story ${s.id} has no audit for claim ${id}; run discover first`);
     const v = f.validation;
     const stance: Stance = c.verdict === 'wrong' ? 'denies' : 'asserts';
     const evidence: PackageEvidence[] = [...v.supporting, ...v.contradicting, ...v.qualifying, ...v.context]
@@ -219,7 +229,15 @@ export function buildPackage(
     },
     claims,
     documents: [...docs.values()].sort((a, b) => (a.file < b.file ? -1 : 1)),
-    gaps: story.gaps,
+    gaps: [...new Set(parts.flatMap((s) => s.gaps))],
+    ...(chain.length && {
+      questions: parts.map((s) => ({
+        story: s.id,
+        question: s.question,
+        claims: s.claims,
+        central: { text: s.audit.central.text, status: s.audit.central.status },
+      })),
+    }),
   };
   return { ...body, fingerprint: sha(JSON.stringify(body)), generatedAt: new Date().toISOString() };
 }

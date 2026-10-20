@@ -29,7 +29,7 @@ import {
   storySlug,
 } from './script';
 import { validateScript } from './script-validation';
-import { discover, loadStories, storiesPath, type Story } from './stories';
+import { chainOf, discover, loadStories, storiesPath, type Story } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from './build-report';
@@ -182,6 +182,7 @@ interface BoardContext {
   t: Corpus;
   review: ReviewFile;
   story: Story | undefined;
+  chain: Story[]; // the follow-up stories the same video answers
   pkg: EvidencePackage | null;
   script: Script | null;
   sreview: ScriptReviewFile | null;
@@ -211,7 +212,7 @@ interface StageResult {
 type BoardStage = (c: BoardContext, s: Readonly<BoardState>) => StageResult;
 
 // 1. Evidence package: rebuild from the story and compare fingerprints (what packages.test.ts does in CI).
-const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, story, pkg }, s) => {
+const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, story, chain, pkg }, s) => {
   if (!pkg)
     return {
       checks: [{ name: 'evidence package', health: 'missing', detail: 'not built', file: r(FILES.pkg) }],
@@ -235,7 +236,13 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
         cmd: `npm run stories -- show ${topic}`,
       },
     };
-  const again = buildPackage(story, t, read, { review, inputs: pkg.inputs, readDoc: docReader(root), previous: pkg });
+  const again = buildPackage(story, t, read, {
+    review,
+    inputs: pkg.inputs,
+    readDoc: docReader(root),
+    previous: pkg,
+    chain,
+  });
   const inputsNow = {
     stories: fileSha(storiesPath(topic, root)),
     review: fileSha(reviewPath(topic, root)),
@@ -709,6 +716,8 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
   const dir = scriptDir(topic, storyId, root);
   if (!existsSync(dir)) return null;
   const p = (f: string) => join(dir, f);
+  const stories = loadStories(topic, root);
+  const story = stories?.stories.find((s) => s.id === storyId);
   const c: BoardContext = {
     topic,
     storyId,
@@ -718,7 +727,8 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     read: passageReader(root),
     t: corpusOf(loadTopic(topic)),
     review: loadReview(topic, root),
-    story: loadStories(topic, root)?.stories.find((s) => s.id === storyId),
+    story,
+    chain: story ? chainOf(story, stories) : [],
     pkg: readJson<EvidencePackage>(p(FILES.pkg)),
     script: readJson<Script>(p(FILES.script)),
     sreview: readJson<ScriptReviewFile>(p(FILES.review)),
@@ -801,14 +811,19 @@ export interface BoardNext {
   done: boolean;
 }
 export function boardNext(topic: string, storyId: string, root = ROOT): BoardNext {
-  const prod = productionOf(topic, storyId, root);
-  const ready = loadStories(topic, root)?.stories.find((s) => s.id === storyId)?.readiness === 'ready';
+  const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
+  // A follow-up question in another story's chain is produced inside that story's video, never on its own.
+  const prod = story?.partOf ? null : productionOf(topic, storyId, root);
+  const ready = story?.readiness === 'ready' && !story.partOf;
+  const why = story?.partOf
+    ? `the story is a follow-up question in ${story.partOf}; produce that story instead`
+    : 'the story is not ready in stories.json';
   const { stage, next, halt } = prod ?? {
     stage: 'package' as const,
-    next: ready ? `npm run script -- package ${topic} ${storyId}` : 'stop: the story is not ready',
+    next: ready ? `npm run script -- package ${topic} ${storyId}` : `stop: ${why}`,
     halt: ready
       ? { kind: 'missing' as const, stage: 'package' as const, why: 'no evidence package' }
-      : { kind: 'story-left' as const, stage: 'package' as const, why: 'the story is not ready in stories.json' },
+      : { kind: 'story-left' as const, stage: 'package' as const, why },
   };
   return { topic, story: storyId, stage, next, steps: stepsOf(next, topic, storyId), halt, done: stage === 'packaged' };
 }
@@ -902,6 +917,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
             ? `; public release blocked: ${production.clearance.why.join('; ')}`
             : ''
         }`;
+      else if (story.partOf) n = `part of ${story.partOf}: answered in that video`;
       else if (production) n = production.next;
       else if (story.readiness === 'ready') n = `npm run script -- package ${name} ${story.id}`;
       else if (story.readiness === 'needs-review')
@@ -909,14 +925,16 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       else n = `research: ${story.blocking[0] ?? story.readinessWhy}`;
       stories.push({ story, decision, production, next: n });
     }
-    const queued = stories.find((s) => s.decision?.decision === 'queued');
+    // A follow-up question is produced inside its chain's video, so it is never the topic's next step.
+    const queued = stories.find((s) => s.decision?.decision === 'queued' && !s.story.partOf);
     const active = stories.find(
       (s) =>
         s.production &&
+        !s.story.partOf &&
         !['locked', 'rendered', 'scored', 'packaged'].includes(s.production.stage) &&
         !['parked', 'reviewing'].includes(s.decision?.decision ?? ''),
     );
-    const ready = stories.find((s) => !s.production && s.story.readiness === 'ready' && !s.decision);
+    const ready = stories.find((s) => !s.production && s.story.readiness === 'ready' && !s.story.partOf && !s.decision);
     next =
       (queued ?? active ?? ready)?.next ??
       checks.find((c) => c.health === 'stale' || c.health === 'pending')?.detail ??

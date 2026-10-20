@@ -111,5 +111,4 @@ export type Timeline = {
   fingerprints: { script: string; storyboard: string; narration: string; config: string };
   narration: { provider: string; voice: string; rate: string; licence: string };
   scenes: TimelineScene[];
-  brand?: string; // the look (src/video/remotion/theme.ts BRANDS); absent is classic. Set by `render --brand`
 };

@@ -22,7 +22,7 @@ import {
   studyVerdicts,
   validate,
 } from './evidence';
-import type { Format, ReviewFile, StoryReview } from './review';
+import { type Format, MAX_QUESTIONS, type ReviewFile, type StoryReview } from './review';
 import { type ClaimView, type Topic, topicNames, VAL } from './topics';
 
 export type { Format } from './review';
@@ -70,6 +70,12 @@ export interface Story {
   blocking: string[]; // what keeps it from ready
   reviewed: boolean;
   audit: { central: Validation; findings: Finding[] };
+  /** The follow-up questions the same video answers (story-review.json `chain`); absent for a one-question video. */
+  chain?: { id: string; question: string }[];
+  /** The story whose video answers this one as a follow-up: it is never produced on its own. */
+  partOf?: string;
+  /** Suggested follow-ups for the reviewer (ready, no shared claims, nearest wording); never applied by code. */
+  chainCandidates?: string[];
 }
 export interface StoriesFile {
   topic: string;
@@ -704,6 +710,9 @@ export function discover(t: StoryInput, readPassage: PassageReader, review: Revi
   }
   kept.sort((a, b) => b.scores.overall - a.scores.overall || (a.id < b.id ? -1 : 1));
   rejected.sort((a, b) => (a.id < b.id ? -1 : 1));
+  const listed = kept.slice(0, MAX_STORIES);
+  for (const s of listed) linkChain(s, review, listed);
+  suggestChains(listed);
   return {
     topic: t.name,
     basis: {
@@ -712,10 +721,64 @@ export function discover(t: StoryInput, readPassage: PassageReader, review: Revi
       studies: new Set(t.claims.flatMap((c) => c.verdicts.map((v) => v.cite?.split('#')[0]).filter(Boolean))).size,
       candidates: all.length,
     },
-    stories: kept.slice(0, MAX_STORIES),
+    stories: listed,
     rejected,
   };
 }
+
+/** Attach the reviewer's chain of follow-up questions; a chain that cannot be produced holds the story at needs-review. */
+function linkChain(s: Story, review: ReviewFile, listed: Story[]) {
+  const r = review.stories?.[s.id];
+  const ids = r?.chain ?? [];
+  if (!ids.length) return;
+  const find = (id: string) => listed.find((x) => x.id === id);
+  s.chain = ids.map((id) => ({ id, question: find(id)?.question ?? '' }));
+  const why: string[] = [];
+  if (ids.length + 1 > MAX_QUESTIONS)
+    why.push(`A video answers at most ${MAX_QUESTIONS} questions; this chain makes ${ids.length + 1}.`);
+  if (!r?.chainWhy) why.push('A chain needs chainWhy: why each answer raises the next question.');
+  ids.forEach((id, i) => {
+    const c = find(id);
+    if (id === s.id || ids.indexOf(id) !== i) why.push(`The chain lists ${id} twice.`);
+    else if (!c) why.push(`Chained story ${id} is not a current candidate.`);
+    // The first story to chain a follow-up claims it; a second video answering the same question is a duplicate.
+    else if (c.partOf) why.push(`Chained story ${id} is already a follow-up in ${c.partOf}.`);
+    else {
+      c.partOf = s.id;
+      if (review.stories?.[id]?.chain?.length)
+        why.push(`Chained story ${id} has a chain of its own; chains do not nest.`);
+      else if (c.readiness !== 'ready') why.push(`Chained story ${id} is ${c.readiness}.`);
+    }
+  });
+  if (!why.length) return;
+  s.blocking.push(...why);
+  s.gaps = uniq([...s.gaps, ...why]);
+  if (s.readiness === 'ready') {
+    s.readiness = 'needs-review';
+    s.readinessWhy = `Usable if a reviewer resolves: ${s.blocking.join(' ')}`;
+  }
+}
+
+/** Suggest follow-ups for ready stories outside any chain. */
+function suggestChains(listed: Story[]) {
+  const free = listed.filter((s) => s.readiness === 'ready' && !s.chain && !s.partOf);
+  const words = (s: Story) => tokens(`${s.question} ${s.premise}`);
+  for (const s of free) {
+    const mine = new Set(s.claims);
+    const near = free
+      .filter((o) => o !== s && !o.claims.some((c) => mine.has(c)))
+      .map((o) => ({ id: o.id, j: jaccard(words(s), words(o)) }))
+      .filter((x) => x.j > 0)
+      .sort((a, b) => b.j - a.j || (a.id < b.id ? -1 : 1))
+      .slice(0, MAX_QUESTIONS - 1)
+      .map((x) => x.id);
+    if (near.length) s.chainCandidates = near;
+  }
+}
+
+/** The chained stories a story's video also answers, in order (those still listed). */
+export const chainOf = (s: Story, file: StoriesFile | null): Story[] =>
+  (s.chain ?? []).flatMap((c) => file?.stories.find((x) => x.id === c.id) ?? []);
 
 export const storiesPath = (topic: string, root = ROOT) => join(root, topic, 'stories.json');
 export function loadStories(topic: string, root = ROOT): StoriesFile | null {

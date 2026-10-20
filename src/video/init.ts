@@ -5,7 +5,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, toJson, ROOT } from '../lib/io';
-import { FILES, type Script, scriptDir, sentences, storySlug } from '../lib/script';
+import { FILES, type Script, scriptDir, sectionTitle, sentences, storySlug } from '../lib/script';
 import type { Storyboard } from '../lib/storyboard';
 import { VIDEO_DIR, VIDEO_FILES } from './files';
 import { type SceneKind, bespokeFor, kindOf } from './kinds';
@@ -43,12 +43,13 @@ export function draftRenderConfig(
   const chapters: Record<string, string> = {};
   for (const sec of script.sections) {
     const at = sec.sentences[0] && sceneOf(sec.sentences[0].id);
-    if (at && !chapters[at]) chapters[at] = sec.name[0].toUpperCase() + sec.name.slice(1);
+    if (at && !chapters[at]) chapters[at] = sectionTitle(sec);
   }
   return {
     config: {
       scenes: storyboard.scenes.map((s) => s.id),
-      voice: { provider: 'edge', voice: 'en-US-AndrewMultilingualNeural', rate: '-10%' },
+      // The voice at its natural pace: slowing it to -10% added about a minute to a twelve-minute video.
+      voice: { provider: 'edge', voice: 'en-US-AndrewMultilingualNeural', rate: '+0%' },
       leadSeconds: 0.6,
       gapSeconds: 0.3,
       cues,

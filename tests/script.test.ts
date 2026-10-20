@@ -9,13 +9,16 @@ import {
   type EvidencePackage,
   type Release,
   type Script,
+  type Section,
+  type Sentence,
   revisionsInPass,
+  sectionsFor,
   scriptDir,
   sentenceFingerprint,
   sentences,
   words,
 } from '../src/lib/script';
-import { evalExpr, validateScript } from '../src/lib/script-validation';
+import { evalExpr, repetitions, validateScript } from '../src/lib/script-validation';
 import { sha } from '../src/lib/io';
 import { spokenWords } from '../src/lib/numbers';
 import {
@@ -108,6 +111,142 @@ describe('evidence package', () => {
     const gone = buildPackage(story(), asTopic(t()), read, { review, readDoc: () => null });
     expect(gone.documents.every((d) => d.lines === 0)).toBe(true);
     expect(docHasher(() => 'one\ntwo')('any')).toBe(sha('one\ntwo'));
+  });
+});
+
+describe('chained questions', () => {
+  const chained = () => buildPackage(story(), asTopic(t()), read, { review, chain: [story()] });
+  const FIGURE = 'In a survey of 601 participants, 47% reported losing money.';
+  const chainScript = (q: EvidencePackage, names: string[]): Script => ({
+    ...script([]),
+    generation: { ...script([]).generation, evidencePackage: q.fingerprint },
+    sections: names.map((name, i) => ({
+      name: name as Section['name'],
+      sentences: [
+        name === 'question-1'
+          ? sentence(`s0${i + 1}`, FIGURE, 'factual', [fact(`s0${i + 1}.a`, FIGURE)])
+          : sentence(`s0${i + 1}`, 'So what comes next?', 'rhetorical'),
+      ],
+    })),
+  });
+
+  it('a one-question package has no questions, so existing packages keep their fingerprint', () => {
+    expect(pkg().questions).toBeUndefined();
+    expect(buildPackage(story(), asTopic(t()), read, { review, chain: [] }).fingerprint).toBe(pkg().fingerprint);
+  });
+
+  it('a chained package lists each question in order and carries each claim once', () => {
+    const q = chained();
+    expect(q.questions!.map((x) => x.story)).toEqual([story().id, story().id]);
+    expect(q.claims.map((c) => c.id)).toEqual(story().claims);
+  });
+
+  it("a package refuses more questions than a video answers, and carries every question's gaps", () => {
+    expect(() => buildPackage(story(), asTopic(t()), read, { review, chain: [story(), story(), story()] })).toThrow(
+      /at most 3/,
+    );
+    const follow = { ...story(), gaps: ['a gap only the follow-up has'] };
+    expect(buildPackage(story(), asTopic(t()), read, { review, chain: [follow] }).gaps).toContain(
+      'a gap only the follow-up has',
+    );
+  });
+
+  it('a chained script needs a section per question that answers it, and a close', () => {
+    const q = chained();
+    const blocking = (names: string[]) =>
+      run(chainScript(q, names), null, q)
+        .issues.filter((i) => i.severity === 'blocking' && i.category === 'structure')
+        .map((i) => i.explanation);
+    expect(blocking(['hook', 'question-1', 'question-2', 'close'])).toEqual([
+      expect.stringMatching(/section "question-2" asserts none of .* is not answered/),
+    ]);
+    expect(blocking(['hook', 'question-1', 'close'])).toEqual([expect.stringMatching(/no "question-2" section/)]);
+    expect(blocking(['hook', 'question-1', 'question-2', 'findings', 'close'])).toContainEqual(
+      expect.stringMatching(/unknown section "findings"/),
+    );
+  });
+});
+
+describe('section layouts', () => {
+  const layout = (names: string[]) => ({ sections: names.map((name) => ({ name })) });
+  it('a new script uses the five sections; one already in the legacy seven keeps them', () => {
+    expect(sectionsFor(null, layout(['hook']))).toEqual(['hook', 'setup', 'investigation', 'answer', 'takeaway']);
+    expect(sectionsFor(null, layout(['hook', 'findings']))).toContain('conclusion');
+    expect(sectionsFor(pkg(), layout(['hook', 'answer']))).not.toContain('findings');
+  });
+});
+
+describe('pacing', () => {
+  const dense = (id: string) => sentence(id, 'Of 601 people surveyed, 47 percent lost money.', 'rhetorical');
+  const long = (id: string) => sentence(id, 'word '.repeat(80).trim() + '.', 'rhetorical');
+  const layout = (sections: [string, Sentence[]][]): Script => ({
+    ...script([]),
+    sections: sections.map(([name, sentences]) => ({ name: name as Section['name'], sentences })),
+  });
+  const warned = (s: Script) =>
+    run(s)
+      .issues.filter((i) => ['number-dense', 'slow-start', 'repetition'].includes(i.category))
+      .map((i) => `${i.sentence} ${i.category}`);
+
+  it('warns on a dense stretch of figures once, at its start, and on a slow start', () => {
+    const s = layout([
+      ['hook', [long('s01')]],
+      ['setup', [long('s02')]],
+      ['investigation', ['s03', 's04', 's05', 's06', 's07'].map(dense)],
+    ]);
+    expect(warned(s)).toEqual(['s03 number-dense', 's03 slow-start']);
+  });
+
+  it('a list of dispositions retires several warnings on one sentence', () => {
+    const s = layout([
+      ['hook', [long('s01')]],
+      ['setup', [long('s02')]],
+      ['investigation', ['s03', 's04', 's05', 's06', 's07'].map(dense)],
+    ]);
+    const fingerprint = sentenceFingerprint(sentences(s).find((x) => x.id === 's03')!);
+    const r = {
+      ...approveAll(s),
+      dispositions: {
+        s03: ['number-dense', 'slow-start'].map((category) => ({ fingerprint, category, reason: 'the test needs it' })),
+      },
+    };
+    expect(
+      run(s, r).issues.filter((i) => ['number-dense', 'slow-start'].includes(i.category) && !i.disposition),
+    ).toEqual([]);
+  });
+
+  it('a legacy seven-section script gets no pacing warnings', () => {
+    const s = layout([
+      ['hook', [long('s01')]],
+      ['setup', [long('s02')]],
+      ['investigation', ['s03', 's04', 's05', 's06', 's07'].map(dense)],
+      ['conclusion', []],
+    ]);
+    expect(warned(s)).toEqual([]);
+  });
+});
+
+describe('repetition', () => {
+  const FIGURE = 'Of 601 people surveyed, 47 percent lost money.';
+  const said = (id: string, text = FIGURE) => sentence(id, text, 'factual', [fact(`${id}.a`, text)]);
+  const filler = (id: string) => sentence(id, 'Why would that be?', 'rhetorical');
+
+  it('flags a sentence that re-reads two earlier figures, not one that unpacks them next', () => {
+    const all = sentences(script([said('s01'), said('s02'), filler('s03'), filler('s04'), said('s05')]));
+    expect([...repetitions(all)]).toEqual([['s05', ['601 (first in s01)', '47 (first in s01)']]]);
+  });
+
+  it('a comma or a currency sign makes a four-digit number a figure, not a year', () => {
+    const money = (id: string) => said(id, 'They paid $1,950 for 2,000 units.');
+    const all = sentences(script([money('s01'), filler('s02'), filler('s03'), filler('s04'), money('s05')]));
+    expect([...repetitions(all).keys()]).toEqual(['s05']);
+  });
+
+  it('one figure reused as context, small counts and years stay quiet', () => {
+    const later = said('s05', 'Of those 601, in 2018, five years on, most lost money.');
+    expect(repetitions(sentences(script([said('s01'), filler('s02'), filler('s03'), filler('s04'), later]))).size).toBe(
+      0,
+    );
   });
 });
 

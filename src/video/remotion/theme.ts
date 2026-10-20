@@ -1,9 +1,10 @@
-// The brands. `classic`, the storyboard's palette: near-black field, off-white type, amber for the pitch, slate for the
-// data, red only for losses, no motion beyond each scene's own. `pulse`: the same roles in saturated colour (pink for
-// losses, cyan for data, lime for gains, gold for the pitch) over a drifting gradient backdrop, with a camera that
-// pushes in, punches on every cue and zooms between scenes (Video.tsx), glowing springy charts. Fonts are system fonts
-// so a render needs no network. ponytail: bundle a webfont when renders must match across machines.
-const classic = {
+// The look: `pulse`, saturated colour for each role (pink for losses, cyan for data, lime for gains, gold for the
+// pitch) over a drifting gradient backdrop, with a camera that pushes in, punches on every cue and zooms between scenes
+// (Video.tsx), glowing springy charts. It is built on `base`, the old classic palette, which is no longer rendered.
+// ponytail: the scenes still branch on `theme.motion` for the retired classic look; those branches are dead and go
+// when each scene is next edited and re-rendered. Fonts are system fonts so a render needs no network; bundle a webfont
+// when renders must match across machines.
+const base = {
   bg: '#111318', // the field colour, and dark ink on coloured shapes
   field: '#111318', // what a scene paints behind itself; transparent where the backdrop shows through
   raised: '#1A1D24',
@@ -19,9 +20,9 @@ const classic = {
   sans: '"Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif',
   motion: false, // backdrop, camera and springy charts
 };
-export type Theme = typeof classic;
+export type Theme = typeof base;
 const pulse: Theme = {
-  ...classic,
+  ...base,
   bg: '#0B0820',
   field: 'transparent',
   raised: 'rgba(255,255,255,0.07)',
@@ -35,18 +36,8 @@ const pulse: Theme = {
   violet: '#8B5CF6',
   motion: true,
 };
-export const BRANDS = { classic, pulse } as const;
-export type Brand = keyof typeof BRANDS;
-export const isBrand = (b: string): b is Brand => Object.hasOwn(BRANDS, b);
-
-// ponytail: one mutable theme per page; a render tab draws one timeline, so one brand. A React context when one page
-// must show two brands at once.
-export const theme: Theme = { ...classic };
-/** Make `brand` the theme every scene reads; called by the composition before any scene draws. */
-export function setBrand(brand: string = 'classic') {
-  if (!isBrand(brand)) throw new Error(`unknown brand ${brand}; known: ${Object.keys(BRANDS).join(', ')}`);
-  Object.assign(theme, BRANDS[brand]);
-}
+/** The theme every scene reads at render time. */
+export const theme: Theme = pulse;
 export const GUTTER = 120;
 
 export const clamp01 = (x: number) => Math.min(1, Math.max(0, x));

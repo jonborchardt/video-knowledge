@@ -16,9 +16,11 @@ import { sha, ROOT } from './io';
 import type { Story } from './stories';
 
 export const WPM_DEFAULT = 150; // narration words per minute; the runtime estimate scales with it
-export const RUNTIME = { min: 8, max: 12 }; // minutes, the long-form target
 export const MAX_REVISIONS = 3;
-export const SECTIONS = [
+/** The answer is given once (`answer`), limits sit beside their figures, and `takeaway` is what the viewer can do. */
+export const SECTIONS = ['hook', 'setup', 'investigation', 'answer', 'takeaway'] as const;
+/** The seven-section layout scripts written before October 2026 use; they still validate against it. */
+export const LEGACY_SECTIONS = [
   'hook',
   'setup',
   'investigation',
@@ -27,7 +29,22 @@ export const SECTIONS = [
   'implications',
   'conclusion',
 ] as const;
-export type SectionName = (typeof SECTIONS)[number];
+/** A video that answers a chain of questions (EvidencePackage.questions): one hook, a block per question, one close. */
+export const CHAIN_SECTIONS = ['hook', 'question-1', 'question-2', 'question-3', 'close'] as const;
+export type SectionName =
+  (typeof SECTIONS)[number] | (typeof LEGACY_SECTIONS)[number] | (typeof CHAIN_SECTIONS)[number];
+const LEGACY_ONLY = LEGACY_SECTIONS.filter((x) => !(SECTIONS as readonly string[]).includes(x));
+/** The sections a script written from this package has, in order: the chain's, the legacy layout when the script
+ *  already uses it, the current one otherwise. */
+export const sectionsFor = (
+  pkg: Pick<EvidencePackage, 'questions'> | null,
+  script?: { sections: { name: string }[] },
+): readonly SectionName[] =>
+  pkg?.questions
+    ? ['hook', ...pkg.questions.map((_, i) => `question-${i + 1}` as SectionName), 'close']
+    : script?.sections.some((x) => (LEGACY_ONLY as string[]).includes(x.name))
+      ? LEGACY_SECTIONS
+      : SECTIONS;
 export type SentenceType = 'factual' | 'attributed' | 'hypothetical' | 'rhetorical' | 'transitional';
 export type Severity = 'blocking' | 'warning' | 'info';
 export type ScriptStatus = 'passed' | 'needs-review' | 'blocked';
@@ -104,6 +121,8 @@ export interface EvidencePackage {
   claims: PackageClaim[];
   documents: PackageDoc[];
   gaps: string[];
+  /** A chained video's questions in order, the first the story's own; absent for a one-question video. */
+  questions?: { story: string; question: string; claims: string[]; central: { text: string; status: string } }[];
 }
 
 export const docOf = (cite: string) => cite.split('#')[0];
@@ -144,6 +163,8 @@ export interface Sentence {
 }
 export interface Section {
   name: SectionName;
+  /** The viewer-facing chapter title (a question section's question); the section name otherwise. */
+  title?: string;
   sentences: Sentence[];
 }
 export interface Script {
@@ -167,6 +188,9 @@ export interface Script {
   };
   sections: Section[];
 }
+/** A section's viewer-facing title: its own (a question section's question), else its name capitalised. */
+export const sectionTitle = (sec: Pick<Section, 'name' | 'title'>) =>
+  sec.title ?? sec.name[0].toUpperCase() + sec.name.slice(1);
 export const revisionsInPass = (s: Script) => s.revision - (s.passStartRevision ?? 0);
 
 export interface Issue {
@@ -185,6 +209,11 @@ export interface Issue {
 export interface ReviewFinding extends Omit<Issue, 'by'> {
   fingerprint: string; // of the sentence as reviewed; a finding whose fingerprint no longer matches is resolved
 }
+export interface Disposition {
+  fingerprint: string;
+  category: string;
+  reason: string;
+}
 export interface ScriptReviewFile {
   reviewer: string;
   model?: string;
@@ -196,8 +225,9 @@ export interface ScriptReviewFile {
   approved: Record<string, string>;
   findings: ReviewFinding[];
   /** assertion id (or sentence id) -> why a deterministic warning there is a false positive or already carried by the
-   *  narration, valid at that sentence fingerprint only. Blocking issues cannot be dispositioned. */
-  dispositions?: Record<string, { fingerprint: string; category: string; reason: string }>;
+   *  narration, valid at that sentence fingerprint only; a list retires several categories on one sentence. Blocking
+   *  issues cannot be dispositioned. */
+  dispositions?: Record<string, Disposition | Disposition[]>;
 }
 
 export interface AssertionResult {

@@ -7,6 +7,7 @@ import {
   type Script,
   type ScriptValidation,
   revisionsInPass,
+  sectionTitle,
 } from './script';
 
 const MARK: Record<string, string> = { verified: 'ok', 'needs-review': 'review', blocked: 'BLOCKED' };
@@ -29,7 +30,7 @@ export function renderScriptMd(script: Script, v: ScriptValidation, read: Passag
     '',
   ];
   for (const sec of script.sections) {
-    out.push(`## ${sec.name[0].toUpperCase()}${sec.name.slice(1)}`, '');
+    out.push(`## ${sectionTitle(sec)}`, '');
     out.push(
       sec.sentences
         .map((s) => {

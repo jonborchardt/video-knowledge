@@ -289,6 +289,62 @@ describe('story discovery', () => {
   });
 });
 
+describe('chained questions', () => {
+  const corpus = () => topic([conflicted(), dayTrading(), popularWrong()]);
+  const ready = () =>
+    discover(corpus(), reader)
+      .stories.filter((s) => s.readiness === 'ready')
+      .map((s) => s.id);
+  const chain = (head: string, ids: string[], extra: ReviewFile['stories'] = {}, chainWhy = 'each answer, next') =>
+    discover(corpus(), reader, { stories: { [head]: { chain: ids, chainWhy }, ...extra } }).stories.find(
+      (s) => s.id === head,
+    )!;
+
+  it('a chain of ready stories stays ready and lists the follow-up questions', () => {
+    const [a, b] = ready();
+    const s = chain(a, [b]);
+    expect(s.readiness).toBe('ready');
+    expect(s.chain).toEqual([{ id: b, question: expect.any(String) }]);
+    const all = discover(corpus(), reader, { stories: { [a]: { chain: [b], chainWhy: 'next' } } }).stories;
+    expect(all.find((x) => x.id === b)!.partOf).toBe(a);
+    expect(all.find((x) => x.id === b)!.chainCandidates).toBeUndefined();
+  });
+
+  it('suggests follow-ups among ready stories that share no claims, without applying them', () => {
+    const all = discover(corpus(), reader).stories;
+    const suggested = all.filter((s) => s.chainCandidates);
+    for (const s of suggested)
+      for (const id of s.chainCandidates!) {
+        const o = all.find((x) => x.id === id)!;
+        expect(o.readiness).toBe('ready');
+        expect(o.claims.some((c) => s.claims.includes(c))).toBe(false);
+      }
+    expect(all.every((s) => !s.chain && !s.partOf)).toBe(true);
+  });
+
+  it('a chain that cannot be produced holds the story at needs-review', () => {
+    const [a, b] = ready();
+    expect(chain(a, ['gap:not-a-story']).blocking.join(' ')).toMatch(/not a current candidate/);
+    expect(chain(a, [b], {}, '').blocking.join(' ')).toMatch(/needs chainWhy/);
+    expect(chain(a, [a]).blocking.join(' ')).toMatch(/twice/);
+    const nested = chain(a, [b], { [b]: { chain: [a], chainWhy: 'x' } });
+    expect(nested.readiness).toBe('needs-review');
+    expect(nested.blocking.join(' ')).toMatch(/chains do not nest/);
+    expect(chain(a, [b, b, b]).blocking.join(' ')).toMatch(/at most 3 questions/);
+  });
+
+  it('a follow-up belongs to one video: a second story chaining it is held', () => {
+    const [a, b, c] = ready();
+    const twice = discover(corpus(), reader, {
+      stories: { [a]: { chain: [b], chainWhy: 'x' }, [c]: { chain: [b], chainWhy: 'x' } },
+    }).stories;
+    expect(twice.find((s) => s.id === b)!.partOf).toBe(a);
+    const second = twice.find((s) => s.id === c)!;
+    expect(second.readiness).toBe('needs-review');
+    expect(second.blocking.join(' ')).toMatch(/already a follow-up in/);
+  });
+});
+
 describe('committed stories', () => {
   it.each(storyTopicNames())('%s/stories.json is valid and current', (name) => {
     const f = loadStories(name)!;

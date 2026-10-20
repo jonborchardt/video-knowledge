@@ -251,7 +251,11 @@
       }
      }
     ]
-   }
+   },
+   "chainCandidates": [
+    "decision:how-much-faster",
+    "decision:who-benefits"
+   ]
   },
   {
    "id": "decision:how-much-faster",
@@ -664,7 +668,11 @@
       }
      }
     ]
-   }
+   },
+   "chainCandidates": [
+    "conflict:developers-overestimate-how-much-tools-speed",
+    "decision:who-benefits"
+   ]
   },
   {
    "id": "decision:quality-and-understanding",
@@ -1059,7 +1067,11 @@
       }
      }
     ]
-   }
+   },
+   "chainCandidates": [
+    "decision:who-benefits",
+    "conflict:developers-overestimate-how-much-tools-speed"
+   ]
   },
   {
    "id": "decision:who-benefits",
@@ -1725,7 +1737,11 @@
       }
      }
     ]
-   }
+   },
+   "chainCandidates": [
+    "decision:how-much-faster",
+    "conflict:developers-overestimate-how-much-tools-speed"
+   ]
   },
   {
    "id": "surprise:assistance-must-reliable-save-experts-time",
@@ -2135,7 +2151,11 @@
       }
      }
     ]
-   }
+   },
+   "chainCandidates": [
+    "decision:how-much-faster",
+    "decision:who-benefits"
+   ]
   },
   {
    "id": "conflict:generated-code-drifts-codebase-established-conventions",
@@ -3278,32 +3298,6 @@
        "ref": {
         "kind": "statement",
         "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "antirez-news-154"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Coding with LLMs in the summer of 2025 (an update) - <antirez>",
-       "verdict": null,
-       "confidence": null,
-       "note": "many were just removed immediately by Gemini / Claude code reviews."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "antirez-news-169"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Control the ideas, not the code - <antirez>",
-       "verdict": null,
-       "confidence": null,
-       "note": "Fable and GPT 5.6 reviews to the sorted sets memory saving are going to spot ways more errors and subtle race conditions"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
         "source": "KpbMfb_6EGs"
        },
        "cited": true,
@@ -3312,19 +3306,6 @@
        "verdict": null,
        "confidence": null,
        "note": "It says that there are open AI key exposed"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "nolanlawson-using-ai-to-write-better-code-more-slowly"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Using AI to write better code more slowly",
-       "verdict": null,
-       "confidence": null,
-       "note": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase."
       },
       {
        "ref": {
@@ -3356,6 +3337,71 @@
        "ref": {
         "kind": "statement",
         "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "T14uF2J89eU"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Codex CLI: Everything You Need in 12 mins",
+       "verdict": null,
+       "confidence": null,
+       "note": "Codex came back with actionable items, and also sorted by priorities"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "XyQ4ZTS5dGw"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Agentic Engineering in Action with Mitchell Hashimoto",
+       "verdict": null,
+       "confidence": null,
+       "note": "oh, I actually forgot to update the code. Um, so it's found bugs that way."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "antirez-news-154"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Coding with LLMs in the summer of 2025 (an update) - <antirez>",
+       "verdict": null,
+       "confidence": null,
+       "note": "many were just removed immediately by Gemini / Claude code reviews."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "antirez-news-169"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Control the ideas, not the code - <antirez>",
+       "verdict": null,
+       "confidence": null,
+       "note": "Fable and GPT 5.6 reviews to the sorted sets memory saving are going to spot ways more errors and subtle race conditions"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
+        "source": "nolanlawson-using-ai-to-write-better-code-more-slowly"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Using AI to write better code more slowly",
+       "verdict": null,
+       "confidence": null,
+       "note": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/code-review-tools-catch-real-bugs",
         "source": "qcYHD3KruPI"
        },
        "cited": true,
@@ -3382,19 +3428,6 @@
        "ref": {
         "kind": "statement",
         "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "T14uF2J89eU"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Codex CLI: Everything You Need in 12 mins",
-       "verdict": null,
-       "confidence": null,
-       "note": "Codex came back with actionable items, and also sorted by priorities"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
         "source": "wcRR5P0S2Us"
        },
        "cited": true,
@@ -3403,19 +3436,6 @@
        "verdict": null,
        "confidence": null,
        "note": "you forgot about what happens if there's no audio"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/code-review-tools-catch-real-bugs",
-        "source": "XyQ4ZTS5dGw"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Agentic Engineering in Action with Mitchell Hashimoto",
-       "verdict": null,
-       "confidence": null,
-       "note": "oh, I actually forgot to update the code. Um, so it's found bugs that way."
       }
      ],
      "problems": [],
@@ -3486,32 +3506,6 @@
          "ref": {
           "kind": "statement",
           "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "antirez-news-154"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Coding with LLMs in the summer of 2025 (an update) - <antirez>",
-         "verdict": null,
-         "confidence": null,
-         "note": "many were just removed immediately by Gemini / Claude code reviews."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "antirez-news-169"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Control the ideas, not the code - <antirez>",
-         "verdict": null,
-         "confidence": null,
-         "note": "Fable and GPT 5.6 reviews to the sorted sets memory saving are going to spot ways more errors and subtle race conditions"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
           "source": "KpbMfb_6EGs"
          },
          "cited": true,
@@ -3520,19 +3514,6 @@
          "verdict": null,
          "confidence": null,
          "note": "It says that there are open AI key exposed"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "nolanlawson-using-ai-to-write-better-code-more-slowly"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Using AI to write better code more slowly",
-         "verdict": null,
-         "confidence": null,
-         "note": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase."
         },
         {
          "ref": {
@@ -3564,6 +3545,71 @@
          "ref": {
           "kind": "statement",
           "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "T14uF2J89eU"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Codex CLI: Everything You Need in 12 mins",
+         "verdict": null,
+         "confidence": null,
+         "note": "Codex came back with actionable items, and also sorted by priorities"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "XyQ4ZTS5dGw"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Agentic Engineering in Action with Mitchell Hashimoto",
+         "verdict": null,
+         "confidence": null,
+         "note": "oh, I actually forgot to update the code. Um, so it's found bugs that way."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "antirez-news-154"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Coding with LLMs in the summer of 2025 (an update) - <antirez>",
+         "verdict": null,
+         "confidence": null,
+         "note": "many were just removed immediately by Gemini / Claude code reviews."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "antirez-news-169"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Control the ideas, not the code - <antirez>",
+         "verdict": null,
+         "confidence": null,
+         "note": "Fable and GPT 5.6 reviews to the sorted sets memory saving are going to spot ways more errors and subtle race conditions"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
+          "source": "nolanlawson-using-ai-to-write-better-code-more-slowly"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Using AI to write better code more slowly",
+         "verdict": null,
+         "confidence": null,
+         "note": "the latest public models from Anthropic and OpenAI are good enough to find plenty of bugs in an unscrutinized codebase."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/code-review-tools-catch-real-bugs",
           "source": "qcYHD3KruPI"
          },
          "cited": true,
@@ -3590,19 +3636,6 @@
          "ref": {
           "kind": "statement",
           "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "T14uF2J89eU"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Codex CLI: Everything You Need in 12 mins",
-         "verdict": null,
-         "confidence": null,
-         "note": "Codex came back with actionable items, and also sorted by priorities"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
           "source": "wcRR5P0S2Us"
          },
          "cited": true,
@@ -3611,19 +3644,6 @@
          "verdict": null,
          "confidence": null,
          "note": "you forgot about what happens if there's no audio"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/code-review-tools-catch-real-bugs",
-          "source": "XyQ4ZTS5dGw"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Agentic Engineering in Action with Mitchell Hashimoto",
-         "verdict": null,
-         "confidence": null,
-         "note": "oh, I actually forgot to update the code. Um, so it's found bugs that way."
         }
        ],
        "problems": [],

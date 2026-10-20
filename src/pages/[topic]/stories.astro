@@ -40,7 +40,7 @@ const READY: Record<Readiness, { label: string; colour: string; help: string }> 
   rejected: { label: 'Rejected', colour: 'text-destructive', help: 'incoherent, redundant or contradicted' },
 };
 const FORMAT: Record<Format, string> = {
-  'long-form': '8 to 12 min',
+  'long-form': 'long-form',
   short: 'short',
   'needs-research': 'no format yet',
 };
@@ -153,6 +153,21 @@ const pct = (x: number | null) => (x == null ? '' : ` ${Math.round(x * 100)}%`);
             <p class:list={[small, 'mt-1']}>
               <strong>Other titles:</strong> {s.alternates.join(' · ')}
             </p>
+            {s.partOf && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Part of:</strong> {s.partOf}, as a follow-up question; not produced on its own.
+              </p>
+            )}
+            {s.chain && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Then answers:</strong> {s.chain.map((c) => c.question || c.id).join(' → ')}
+              </p>
+            )}
+            {s.chainCandidates && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Could chain with:</strong> {s.chainCandidates.join(' · ')}
+              </p>
+            )}
             {s.blocking.length > 0 && (
               <>
                 <h3 class={h3}>What blocks it</h3>

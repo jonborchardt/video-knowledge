@@ -79,7 +79,6 @@ export const sceneKey = (s: TimelineScene, tl: Timeline) =>
       fps: tl.fps,
       w: tl.width,
       h: tl.height,
-      brand: tl.brand ?? 'classic',
       code: rendererVersion(s.kind),
     }),
   );
@@ -105,8 +104,7 @@ export async function renderScenes(
 ): Promise<Chunk[]> {
   mkdirSync(chunksDir, { recursive: true });
   const scenes = tl.scenes.filter((s) => !opts.only || opts.only.includes(s.id));
-  const tag = (id: string) => (tl.brand ? `${id}.${tl.brand}-` : `${id}-`); // brands keep their own chunks
-  const plan = scenes.map((scene) => ({ scene, file: join(chunksDir, `${tag(scene.id)}${sceneKey(scene, tl)}.mp4`) }));
+  const plan = scenes.map((scene) => ({ scene, file: join(chunksDir, `${scene.id}-${sceneKey(scene, tl)}.mp4`) }));
   const todo = plan.filter((p) => opts.force || !existsSync(p.file));
   const out: Chunk[] = plan.map((p) => ({ ...p, cached: !todo.includes(p) }));
   if (!todo.length) return out;
@@ -123,7 +121,7 @@ export async function renderScenes(
     });
     for (const p of todo) {
       for (const f of readdirSync(chunksDir))
-        if (f.startsWith(tag(p.scene.id)) && f.endsWith('.mp4')) unlinkSync(join(chunksDir, f));
+        if (f.startsWith(`${p.scene.id}-`) && f.endsWith('.mp4')) unlinkSync(join(chunksDir, f));
       await renderMedia({
         composition,
         serveUrl,

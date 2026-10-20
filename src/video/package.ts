@@ -6,6 +6,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileSha, sha, toJson } from '../lib/io';
+import { sectionTitle } from '../lib/script';
 import { extractFrame } from './ffmpeg';
 import type { BuildReport } from './report';
 import { VIDEO_FILES } from './files';
@@ -66,8 +67,7 @@ export function chapters(seg: Segment, tl: Timeline): Chapter[] {
     : seg.script.sections.flatMap((sec) => {
         const scene = sec.sentences.map((s) => sceneOf.get(s.id)).find((x): x is string => !!x);
         if (!scene) return [];
-        const title = sec.name.charAt(0).toUpperCase() + sec.name.slice(1);
-        return [{ scene, seconds: start(scene), stamp: '', title }];
+        return [{ scene, seconds: start(scene), stamp: '', title: sectionTitle(sec) }];
       });
   list.sort((a, b) => a.seconds - b.seconds);
   if (list.length) list[0].seconds = 0;

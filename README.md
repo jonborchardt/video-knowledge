@@ -82,7 +82,7 @@ Three layers, kept apart:
   alternates, why watch, the tension, the evidence needed and available, the gaps, and the arc. Kind names never
   appear in titles.
 
-Each story carries a coherence score, a format (`long-form` for 8 to 12 minutes, `short`, or `needs-research`), and
+Each story carries a coherence score, a format (`long-form`, `short`, or `needs-research`; a script runs as long as its story needs, never padded), and
 separate scores: _editorial_ (mean of coherence, relevance, curiosity, stakes, depth, all corpus heuristics, never
 audience data) and _evidence_ (strength of the studies behind the central conclusion, discounted when they only partly
 apply). Overall is 0.6 editorial + 0.4 evidence, scaled by originality against higher-ranked stories. Readiness is
@@ -91,6 +91,12 @@ nothing pending), `needs-review` (usable once a person settles the listed points
 missing), or rejected (incoherent, a variation of another story, a single-claim chapter of a reviewed multi-claim
 story, or contradicted). A disagreement story is ready when the disagreement itself is verified; a story whose
 strongest applicable study is below 0.5 confidence is never ready. Every non-ready story lists what blocks it.
+
+One video can answer a chain of up to three questions. The reviewer sets `chain` (the follow-up story ids, in order)
+and `chainWhy` on the first story; each chained story keeps its own claims and audit, the video is ready only when
+every one is, chains do not nest, and a chained story is marked `partOf` the first and never produced on its own (the
+board refuses it). Discovery suggests `chainCandidates` for each ready story outside a chain (ready stories sharing no
+claims, nearest in wording); the reviewer decides.
 
 The validator (`src/lib/evidence.ts`) takes an assertion (`fact`, `attribution` or `disagreement`), the canonical
 claims it rests on and its evidence references, and returns a status (`supported`, `qualified`, `disputed`,
@@ -138,6 +144,15 @@ npm run script -- storyboard <topic> <story-id>   # fills narration and timing, 
 npm run script -- run <topic> <story-id>          # every stage whose inputs exist, then the next agent step
 npm run script -- lock <topic> <story-id> --approved-by "<name>"   # release.json: the approved fingerprints (passed + ok only)
 ```
+
+A script is as long as its story needs, with no word target, and says each thing once. It has five sections: `hook`,
+`setup`, `investigation` (each limitation beside the figure it limits), `answer` (once) and `takeaway` (what the viewer
+can do). A chained story's package lists its `questions`, and its script is `hook`, `question-1` ... `question-N` and
+`close`, each question section answering its own question once. Scripts written before October 2026 keep the older
+seven-section layout (`findings` to `conclusion`) and still validate. On the current layouts the validator warns on
+pacing: `slow-start` (the evidence starts after the first minute), `number-dense` (ten or more figures inside eight
+sentences) and `repetition` (a sentence re-reading two or more figures the viewer already heard); a legacy script's
+sheet shows them as hints.
 
 The script is sentences with stable ids, each typed `factual`, `attributed`, `hypothetical`, `rhetorical` or
 `transitional`. A factual or attributed sentence carries one assertion per independent claim it makes, with the
