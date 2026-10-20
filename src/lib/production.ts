@@ -944,33 +944,27 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
   return { topic, checks, stories, rejected: file?.rejected.length ?? 0, next };
 }
 
-/** The kanban columns, in lifecycle order: story readiness, then the script stages, then the decisions. */
+/** The board's columns, one card per video, grouped by who acts next: research, a person settling a story, a person
+ *  starting `/produce`, `/produce` itself (every stage from package to scored; the card's strip shows which), a person
+ *  reviewing the private package, then the decisions in production.json. */
 export const COLUMNS = [
   'needs-research',
   'needs-review',
   'ready',
-  'package',
-  'script',
-  'validate',
-  'script-review',
-  'storyboard',
-  'graphics',
-  'lock',
-  'locked',
-  'video',
-  'rendered',
-  'scored',
-  'packaged',
+  'producing',
+  'your-review',
   'reviewing',
   'published',
   'parked',
 ] as const;
 export type Column = (typeof COLUMNS)[number];
-export function columnOf(r: StoryRow): Column {
+/** The card's column, or null for a chain's follow-up question, which is answered on its first question's card. */
+export function columnOf(r: StoryRow): Column | null {
   if (r.decision?.decision === 'published') return 'published';
   if (r.decision?.decision === 'parked') return 'parked';
   if (r.decision?.decision === 'reviewing') return 'reviewing';
-  if (r.production) return r.production.stage === 'review' ? 'script-review' : r.production.stage;
+  if (r.story.partOf) return null;
+  if (r.production) return r.production.stage === 'packaged' ? 'your-review' : 'producing';
   return r.story.readiness === 'rejected' ? 'parked' : r.story.readiness;
 }
 

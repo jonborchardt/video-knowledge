@@ -8,7 +8,9 @@ import { readJson, toJson } from '../src/lib/io';
 import type { RenderCheckSummary } from '../src/lib/render-check';
 import { writeRenderCheck } from '../src/video/check';
 import {
+  type StoryRow,
   board,
+  columnOf,
   boardNext,
   productionOf,
   runPromptOf,
@@ -277,5 +279,19 @@ describe('upload values', () => {
     } finally {
       fx.cleanup();
     }
+  });
+});
+
+describe('board columns', () => {
+  const row = (story: object, production: object | null = null, decision: object | null = null) =>
+    ({ story: { readiness: 'ready', ...story }, production, decision, next: '' }) as unknown as StoryRow;
+  it('one card per video, in the column of whoever acts next', () => {
+    expect(columnOf(row({}))).toBe('ready');
+    expect(columnOf(row({ readiness: 'needs-research' }))).toBe('needs-research');
+    expect(columnOf(row({ partOf: 'decision:first' }))).toBeNull(); // answered on its first question's card
+    expect(columnOf(row({}, { stage: 'storyboard' }))).toBe('producing');
+    expect(columnOf(row({}, { stage: 'packaged' }))).toBe('your-review');
+    expect(columnOf(row({}, { stage: 'packaged' }, { decision: 'reviewing' }))).toBe('reviewing');
+    expect(columnOf(row({ partOf: 'x' }, null, { decision: 'published' }))).toBe('published');
   });
 });
