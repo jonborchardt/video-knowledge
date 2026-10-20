@@ -1,10 +1,10 @@
-// The reviewer's semantic layer for story discovery: <topic>/story-review.json, written by an agent following
-// scripts/briefs/stories.md after reading the candidates in <topic>/stories.json. Discovery merges it on the next run.
+// The reviewer's semantic layer for story discovery: topics/<topic>/story-review.json, written by an agent following
+// scripts/briefs/stories.md after reading the candidates in topics/<topic>/stories.json. Discovery merges it on the next run.
 // Everything here is judgment the code cannot make: whether a verdict decides a sentence, whether a set of claims
 // answers one question, and how to frame the question for a viewer. The file is committed and keeps runs reproducible.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { ROOT } from './io';
+import { topicDir, ROOT } from './io';
 import type { Judgments } from './evidence';
 
 export interface StoryReview {
@@ -46,7 +46,7 @@ export interface ReviewFile {
   stories?: Record<string, StoryReview>;
 }
 
-export const reviewPath = (topic: string, root = ROOT) => join(root, topic, 'story-review.json');
+export const reviewPath = (topic: string, root = ROOT) => join(topicDir(topic, root), 'story-review.json');
 export function loadReview(topic: string, root = ROOT): ReviewFile {
   const p = reviewPath(topic, root);
   return existsSync(p) ? (JSON.parse(readFileSync(p, 'utf8')) as ReviewFile) : {};

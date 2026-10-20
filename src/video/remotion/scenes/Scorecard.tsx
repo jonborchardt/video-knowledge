@@ -68,7 +68,7 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const width = 1920 - 2 * GUTTER;
   const markX = width - rowH / 2 - 10; // the mark's centre inside the card
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       {rows.map((r, i) => {
         const a = ramp(t, r.enter - 8, 14);
         const st = t - r.stamp;

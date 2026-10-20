@@ -26,7 +26,7 @@ export const TrickVsDocument: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const head = (i: number) => ramp(t, at[i], 12);
 
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       {[lh, rh].map((h, i) => (
         <div
           key={h}

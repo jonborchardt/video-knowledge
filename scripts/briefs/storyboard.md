@@ -1,8 +1,8 @@
 # Brief: plan the storyboard
 
 Give an agent this file plus the topic id and story id. The agent reads
-`<topic>/scripts/<slug>/script.json`, `validation.json` (its `scriptFingerprint`) and
-`evidence-package.json`, writes `<topic>/scripts/<slug>/storyboard.json`, and runs
+`topics/<topic>/scripts/<slug>/script.json`, `validation.json` (its `scriptFingerprint`) and
+`evidence-package.json`, writes `topics/<topic>/scripts/<slug>/storyboard.json`, and runs
 `npm run script -- storyboard <topic> <story-id>`, which fills in the narration and timing from the
 script and checks every figure and citation. The script is the only source of words: scenes name
 sentence ids and never carry narration of their own. A storyboard is planned against a script
@@ -13,7 +13,7 @@ that is not `blocked`.
 Cut the narration into scenes of one to four sentences, in script order, every sentence in
 exactly one scene. Pace deliberately: a hook scene can hold one sentence; an investigation scene
 can hold three. Add `pauseSeconds` where the viewer needs a beat (after a reveal, before the
-conclusion). Each scene:
+answer). Each scene:
 
 ```json
 {

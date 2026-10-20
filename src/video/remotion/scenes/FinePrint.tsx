@@ -13,7 +13,7 @@ export const FinePrint: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const [at] = lineFrames(scene);
   const a = ramp(t, at, 12);
   return (
-    <AbsoluteFill style={{ background: theme.field }}>
+    <AbsoluteFill>
       <svg width={1920} height={1080} style={{ transform: `scale(${z})`, transformOrigin: '50% 85%' }}>
         <rect x={560} y={-200} width={800} height={1200} rx={10} fill="#F4F1EA" />
         <BlurLines x={620} y={-150} w={680} rows={60} gap={17} color="rgba(30,30,30,.55)" seed={3} />

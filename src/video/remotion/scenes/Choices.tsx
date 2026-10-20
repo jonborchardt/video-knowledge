@@ -82,10 +82,9 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
     return `M ${node.x} ${node.y} C ${d1.x} ${d1.y} ${d2.x} ${d2.y} ${ex.x} ${ex.y}`;
   };
   const chars = Math.floor(clamp01((t - typeAt) / Math.max(20, q.length * 1.1)) * q.length);
-  const nodeC = theme.violet;
 
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',
@@ -146,7 +145,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
           <circle
             r={92}
             fill="none"
-            stroke={nodeC}
+            stroke={theme.violet}
             strokeWidth={4}
             strokeDasharray="14 12"
             transform={`rotate(${t * 0.8})`}
@@ -154,8 +153,8 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
           />
           <circle
             r={70 * Math.max(0, grow(t, typeAt, 16))}
-            fill={nodeC}
-            stroke={nodeC}
+            fill={theme.violet}
+            stroke={theme.violet}
             strokeWidth={5}
             filter="url(#choices-glow)"
           />

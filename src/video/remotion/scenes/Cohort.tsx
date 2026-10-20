@@ -74,7 +74,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const pop = series ? grow(t, fills[cur], 12) : 1;
   const color = theme.slate;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

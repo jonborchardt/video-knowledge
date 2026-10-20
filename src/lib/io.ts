@@ -19,6 +19,11 @@ export const ROOT = (() => {
   }
 })();
 
+/** Topic folders live under `topics/`. A cite (`<topic>/sources/<file>.txt#L10-L24`) is relative to that folder, so
+ *  the store, reports and approved scripts keep the same cite text wherever the folder sits. */
+export const TOPICS = 'topics';
+export const topicDir = (topic: string, root = ROOT) => join(root, TOPICS, topic);
+
 export const sha = (s: string | Buffer) => createHash('sha1').update(s).digest('hex').slice(0, 10);
 export const lf = (s: string) => s.replace(/\r\n?/g, '\n');
 /** The sha of a text file with its line endings normalised (checkout-independent); 'missing' when it is not there. */

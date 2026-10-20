@@ -13,9 +13,9 @@
 //   init <topic> <story-id> [--force]                draft video/render.json from the storyboard (kept unless --force); lists the scenes needing a graphic
 //   check <topic> <story-id>                         renderability and graphics approval before the lock: writes video/render-check.json
 //   frames <topic> <story-id> --scene <id>           render one scene on its own and write video/frames/<id>-start, -mid, -end.png
-// Inputs: the validated script, storyboard and evidence package in <topic>/scripts/<slug>/ and video/render.json
+// Inputs: the validated script, storyboard and evidence package in topics/<topic>/scripts/<slug>/ and video/render.json
 // (scenes, voice, cues, kinds, options), plus video/music.json (cues over music/<composition>/ assets) when there is a
-// soundtrack. Media is written to <topic>/scripts/<slug>/video/ and is not committed.
+// soundtrack. Media is written to topics/<topic>/scripts/<slug>/video/ and is not committed.
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';

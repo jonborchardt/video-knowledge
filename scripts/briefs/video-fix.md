@@ -1,7 +1,7 @@
 # Brief: fix a failing video check
 
 Give an agent this file plus the topic id and story id. Something the video stage checks failed:
-QA in `<topic>/scripts/<slug>/video/build-report.md` (the failing checks are listed first; the
+QA in `topics/<topic>/scripts/<slug>/video/build-report.md` (the failing checks are listed first; the
 frames named there are in `video/frames/`), or the render check's `problems` in
 `video/render-check.json` (`npm run video -- check <topic> <story-id>` prints them).
 

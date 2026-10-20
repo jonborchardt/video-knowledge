@@ -1,0 +1,40 @@
+// ebb: a documentary bed in A minor at 84 bpm for video-knowledge. Every voice is an oscillator (no sample pack, no
+// soundfont), so nothing in it carries a sample licence. No melody, no build: three loopable variations.
+//   pulse    a low sine drone, a breathy pad, a soft tick on beat three
+//   active   the pulse plus a two-note sine bass and a quiet glass arpeggio
+//   texture  pad and drone only, the tick thinned to once every other bar
+const feel = { timingMs: 10, velocity: .06, correlation: 'bar' };
+const drone = (line, o = {}) => ({
+  pattern: note('<' + line + '>').s('sine').clip(1.02).attack(.4).release(.9),
+  level: .3, space: 0, humanize: feel, ...o,
+});
+const tick = (grid, o = {}) => ({
+  pattern: note('a4').s('sine').struct(grid).attack(.005).decay(.1).sustain(0).release(.05),
+  level: .2, space: .3, position: -.15, humanize: feel, ...o,
+});
+const pad = { patch: 'breath', brightness: .28, weight: .45, articulation: .15, space: .7, width: .6, density: .5, level: .55, humanize: { ...feel, correlation: 'phrase' } };
+const arp = { patch: 'glass', brightness: .35, weight: .3, articulation: .4, space: .6, width: .5, density: .5, register: .6, level: .24, arp: '0 1 2 1', position: .3 };
+const bass = { sound: 'sine', register: .3, weight: .55, brightness: .3, articulation: .55, space: .1, density: .4, level: .85, humanize: feel };
+
+song({ cps: .35, key: 'A:minor', seed: 23, saturate: .35, room: { size: 2.6, fade: .12, damping: 3600 } }, [
+
+  section('pulse', 16, { role: 'establish', progression: 'i@2 VI@2',
+    raw:  { ...drone('a1 a1 f1 f1') },
+    raw2: { ...tick('~ ~ x ~') },
+    pad:  { ...pad, enter: 2 },
+  }),
+
+  section('active', 16, { role: 'develop', progression: 'i iv VI v',
+    raw:  { ...drone('a1 d2 f1 e2') },
+    raw2: { ...tick('~ ~ x [~ x]') },
+    pad:  { ...pad },
+    pad2: { ...arp, enter: 4 },
+    bass: { ...bass, rhythm: 'x...............|................|x.......x.......|................', notes: '0 0 4' },
+  }),
+
+  section('texture', 16, { role: 'develop', progression: 'i@2 iv@2',
+    raw:  { ...drone('a1 a1 d2 d2', { level: .26 }) },
+    raw2: { ...tick('<~ [~ ~ x ~]>', { level: .13 }) },
+    pad:  { ...pad, brightness: .2, density: .35, level: .5 },
+  }),
+])

@@ -27,7 +27,7 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const series = pts.slice(0, 2).map((p) => p.label.split(',')[0]);
   const intro = ramp(t, scene.start + 4, 12);
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div style={{ position: 'absolute', left: GUTTER, top: 150, opacity: intro }}>
         <div style={{ fontSize: 40, color: theme.fg }}>{chart.title}</div>
         {chart.note ? <div style={{ fontSize: 28, color: theme.muted, marginTop: 10 }}>{chart.note}</div> : null}

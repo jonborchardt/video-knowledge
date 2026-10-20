@@ -1,5 +1,5 @@
 // The soundtrack contract: compositions (reusable rendered music assets, in music/<composition>/) and cues
-// (<topic>/scripts/<slug>/video/music.json: which asset plays from which scene to which scene, how loud, how it fades
+// (topics/<topic>/scripts/<slug>/video/music.json: which asset plays from which scene to which scene, how loud, how it fades
 // and ducks). Cues are anchored to scene ids, never to seconds, so a re-narrated or re-timed scene moves the music
 // with it. The composition is produced elsewhere (strudel-bench); this file only validates, places and fingerprints,
 // and src/video/assemble.ts does the mixing.

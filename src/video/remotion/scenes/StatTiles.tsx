@@ -14,7 +14,7 @@ export const StatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const W = (1920 - 2 * GUTTER - (n - 1) * 36) / n;
   const alert = Number(scene.options.alert ?? -1);
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

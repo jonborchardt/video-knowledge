@@ -52,7 +52,7 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const dust = 28;
 
   return (
-    <AbsoluteFill style={{ background: theme.field, overflow: 'hidden' }}>
+    <AbsoluteFill style={{ overflow: 'hidden' }}>
       <div
         style={{
           position: 'absolute',

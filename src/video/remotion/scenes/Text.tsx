@@ -16,7 +16,7 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const o = scene.options;
   if (scene.kind === 'title') {
     return (
-      <AbsoluteFill style={{ background: theme.field, justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
+      <AbsoluteFill style={{ justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
         <div
           style={{
             fontFamily: theme.sans,
@@ -86,7 +86,7 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
     const shown = Math.round(line.length * clamp01((t - from) / Math.max(1, until - from)));
     const blink = Math.floor(t / 15) % 2 === 0;
     return (
-      <AbsoluteFill style={{ background: theme.field, justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
+      <AbsoluteFill style={{ justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
         <div style={{ fontFamily: theme.serif, fontSize: 92, lineHeight: 1.2, color: theme.fg, maxWidth: 1500 }}>
           {line.slice(0, shown)}
           <span style={{ color: theme.amber, opacity: blink ? 1 : 0.15 }}>|</span>
@@ -101,7 +101,7 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
   }
   // list
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       {o.legend ? <Legend t={t} at={scene.start} faint /> : null}
       {o.document ? <Outline t={t} at={scene.start + 6} /> : null}
       <div

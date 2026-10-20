@@ -408,9 +408,9 @@ describe('evidence validator', () => {
 describe('line endings', () => {
   it('passageReader returns the same text for an LF and a CRLF checkout', () => {
     const dir = mkdtempSync(join(tmpdir(), 'vk-eol-'));
-    mkdirSync(join(dir, 'demo', 'sources'), { recursive: true });
-    writeFileSync(join(dir, 'demo', 'sources', 'lf.txt'), 'one\ntwo\nthree\n');
-    writeFileSync(join(dir, 'demo', 'sources', 'crlf.txt'), 'one\r\ntwo\r\nthree\r\n');
+    mkdirSync(join(dir, 'topics', 'demo', 'sources'), { recursive: true });
+    writeFileSync(join(dir, 'topics', 'demo', 'sources', 'lf.txt'), 'one\ntwo\nthree\n');
+    writeFileSync(join(dir, 'topics', 'demo', 'sources', 'crlf.txt'), 'one\r\ntwo\r\nthree\r\n');
     expect(passageReader(dir)('demo/sources/crlf.txt#L1-L2')).toBe(passageReader(dir)('demo/sources/lf.txt#L1-L2'));
     expect(passageReader(dir)('demo/sources/crlf.txt#L2')).toBe('two');
   });

@@ -42,9 +42,8 @@ export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const title = ramp(t, fills[0] - 10, 10);
   let x = 0;
   const note = (chart.note ?? '').split(/(?<=\.)\s/)[0];
-  const top = 500;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans, padding: `0 ${GUTTER}px` }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans, padding: `0 ${GUTTER}px` }}>
       {shown !== null ? (
         <div style={{ position: 'absolute', top: 120, left: GUTTER, opacity: ramp(t, count, 8) }}>
           <div
@@ -62,7 +61,7 @@ export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
           <div style={{ fontSize: 38, color: theme.muted, marginTop: 8 }}>{rest.join(' ')}</div>
         </div>
       ) : null}
-      <div style={{ position: 'absolute', top, left: GUTTER, width: W }}>
+      <div style={{ position: 'absolute', top: 500, left: GUTTER, width: W }}>
         <div style={{ fontSize: 36, color: theme.fg, marginBottom: 26, opacity: title }}>{chart.title}</div>
         <div
           style={{

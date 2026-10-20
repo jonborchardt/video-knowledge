@@ -131,7 +131,7 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const spot = corners.reduce((a, c) => (score(c) < score(a) ? c : a));
 
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

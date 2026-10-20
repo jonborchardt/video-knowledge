@@ -23,7 +23,7 @@ it, and record a verdict; you change no code.
 
 ## Output
 
-`<topic>/scripts/<slug>/video/visual-review.json` (merge with what is there; keep other scenes'
+`topics/<topic>/scripts/<slug>/video/visual-review.json` (merge with what is there; keep other scenes'
 entries):
 
 ```json

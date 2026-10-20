@@ -66,7 +66,7 @@ export function misfit(root: HTMLElement): string | null {
   return null;
 }
 
-/** The pulse camera, a scale about a point a little above centre: a slow push over the scene, a punch on each cue
+/** The camera, a scale about a point a little above centre: a slow push over the scene, a punch on each cue
  *  (in over 5 frames, back over 19), a zoom through on entry and a pull back on exit. Capped near 1.06 so the gutter
  *  and the citation stay on screen; the fit check judges the layout inside it. */
 function camera(scene: TimelineScene, frame: number): number {
@@ -82,7 +82,7 @@ function camera(scene: TimelineScene, frame: number): number {
 }
 
 /** One scene in its own time: a short fade in and out over the background, the citation overlay on top (a quote
- *  scene with one citation per line places its own); under pulse, the camera moves both. Every frame is checked for
+ *  scene with one citation per line places its own); the camera moves both. Every frame is checked for
  *  text that does not fit, and a misfit fails the render: what is drawn must fit on the screen, the citation
  *  included. */
 const SceneView: FC<{ scene: TimelineScene }> = ({ scene }) => {

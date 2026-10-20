@@ -1,21 +1,21 @@
 # Brief: extract claims from sources
 
 Give an agent this file plus: the topic id, its group number N, and the list file
-`<topic>/work/grpN.txt` (tab-separated: source id, transcript path, title). The agent
+`topics/<topic>/work/grpN.txt` (tab-separated: source id, transcript path, title). The agent
 writes one JSON file and runs nothing else.
 
 Make the inputs first:
 
 ```
-npm run watcher -- claims list --topic <topic> --store <topic>/store > <topic>/work/claims.txt
-npm run watcher -- next --json --store <topic>/store     # "extract" entries → split into grpN.txt files
+npm run watcher -- claims list --topic <topic> --store topics/<topic>/store > topics/<topic>/work/claims.txt
+npm run watcher -- next --json --store topics/<topic>/store     # "extract" entries → split into grpN.txt files
 ```
 
 ## Inputs
 
-- Your list: `<topic>/work/grpN.txt`. Sources are YouTube transcripts or blog/article
+- Your list: `topics/<topic>/work/grpN.txt`. Sources are YouTube transcripts or blog/article
   text (ids that are kebab slugs); treat article text as the transcript.
-- Existing canonical claims: `<topic>/work/claims.txt` (`<topic>/<slug> — <text>`). Read it fully first.
+- Existing canonical claims: `topics/<topic>/work/claims.txt` (`<topic>/<slug> — <text>`). Read it fully first.
 
 ## Per source
 
@@ -54,7 +54,7 @@ npm run watcher -- next --json --store <topic>/store     # "extract" entries →
 
 ## Output
 
-Write `<topic>/work/hN.json`:
+Write `topics/<topic>/work/hN.json`:
 
 ```json
 [

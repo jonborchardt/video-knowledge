@@ -1,6 +1,6 @@
 // Script stage: one reviewed story -> evidence package -> narration script with sentence-level provenance -> validation.
 //
-// Artifacts live in <topic>/scripts/<story slug>/ (scriptDir). The code is deterministic; the writing and the semantic
+// Artifacts live in topics/<topic>/scripts/<story slug>/ (scriptDir). The code is deterministic; the writing and the semantic
 // review are agent work driven by scripts/briefs/script.md and scripts/briefs/script-review.md:
 //   evidence-package.json  built from stories.json, the report and the store (evidence-package.ts, buildPackage)
 //   script.json            written by the writer agent (Script)
@@ -12,7 +12,7 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Applicability, Assertion, EvidenceRef, Stance, Validation } from './evidence';
-import { sha, ROOT } from './io';
+import { sha, topicDir, TOPICS, ROOT } from './io';
 import type { Story } from './stories';
 
 export const WPM_DEFAULT = 150; // narration words per minute; the runtime estimate scales with it
@@ -34,7 +34,7 @@ export type ScriptStatus = 'passed' | 'needs-review' | 'blocked';
 export type EvidenceRole = 'supports' | 'contradicts' | 'qualifies' | 'context';
 export interface PackageEvidence {
   cite: string;
-  doc: string; // '<topic>/sources/<file>.txt'
+  doc: string; // 'topics/<topic>/sources/<file>.txt'
   by: string; // the document's display name
   verdict: string | null;
   confidence: number | null;
@@ -299,8 +299,6 @@ export const norm = (s: string) =>
 
 /** Written by `npm run script -- lock` once validation passed and the storyboard is ok: the fingerprints approved. */
 export interface Release {
-  /** 2: locked after a current render check (graphics approved). Absent: an older release, grandfathered. */
-  version?: 2;
   topic: string;
   story: string;
   approvedBy: string; // a person, or "automated: ..." so a reader knows nobody signed off
@@ -318,7 +316,7 @@ export interface Release {
 
 export const storySlug = (storyId: string) => storyId.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
 export const scriptDir = (topic: string, storyId: string, root = ROOT) =>
-  join(root, topic, 'scripts', storySlug(storyId));
+  join(topicDir(topic, root), 'scripts', storySlug(storyId));
 export const FILES = {
   pkg: 'evidence-package.json',
   script: 'script.json',
@@ -330,11 +328,13 @@ export const FILES = {
   reviewMd: 'review.md',
   release: 'release.json',
 } as const;
-/** Every <topic>/scripts/<slug> with a script.json, for the site and the tests. */
+/** Every topics/<topic>/scripts/<slug> with a script.json, for the site and the tests. */
 export function scriptDirs(root = ROOT): { topic: string; slug: string; dir: string }[] {
-  const topics = readdirSync(root, { withFileTypes: true }).filter((d) => d.isDirectory() && !d.name.startsWith('.'));
+  const topics = readdirSync(join(root, TOPICS), { withFileTypes: true }).filter(
+    (d) => d.isDirectory() && !d.name.startsWith('.'),
+  );
   return topics.flatMap(({ name: topic }) => {
-    const base = join(root, topic, 'scripts');
+    const base = join(topicDir(topic, root), 'scripts');
     if (!existsSync(base)) return [];
     return readdirSync(base, { withFileTypes: true })
       .filter((d) => d.isDirectory() && existsSync(join(base, d.name, FILES.script)))

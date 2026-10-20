@@ -2,7 +2,7 @@
 
 Give an agent this file plus the topic id, story id and the scenes (`Scenes: sc18,sc20`). Each
 listed scene is a `diagram` or `animation` (or a chart no generic kind draws faithfully) in
-`<topic>/scripts/<slug>/storyboard.json`. Build a real graphic for it: a Remotion component that
+`topics/<topic>/scripts/<slug>/storyboard.json`. Build a real graphic for it: a Remotion component that
 draws what the storyboard describes. Labelled text is a last resort, used only when a component
 still fails its visual review after three revisions; say so in your reply when you fall back.
 
@@ -24,7 +24,9 @@ still fails its visual review after three revisions; say so in your reply when y
 3. Add the component to `COMPONENTS` in `src/video/remotion/scenes/index.ts` (keyed by its file name).
 4. Before drawing, check git history: the purged videos' one-off graphics (courtroom, gold-fringe flag, District
    tiers, UCC ticket signature, courts evidence, toolkit cards, protest strip, MLM pyramid, branch closing) are at
-   commit `d692140` under `src/video/remotion/scenes/` and `src/video/bespoke/`; restore one rather than redraw it.
+   commit `d692140` under `src/video/remotion/scenes/` and `src/video/bespoke/`; restore one rather than redraw it, then port it: those files predate the one theme, so resolve every
+   `theme.motion ? A : B` to `A`, drop `background: theme.field` (the field is the backdrop now), and register its kind
+   under a name no generic kind uses (`fine-print` and `waterfall` are generic now).
    Register a bespoke kind in `src/video/bespoke/<story slug>.ts` (create it, and add it to
    `src/video/bespoke/index.ts` under `<topic>/<story slug>`): `{ component, accepts: [<category>] }`.
    Kind names are unique across videos: prefix them (`hp-`, `mlm-`).

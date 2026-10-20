@@ -19,7 +19,7 @@ export const PersonGrid: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const ox = GUTTER + 40;
   const oy = 220;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <svg width={1920} height={1080}>
         <rect
           x={ox - 30}

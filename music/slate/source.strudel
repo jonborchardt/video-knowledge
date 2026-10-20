@@ -1,0 +1,44 @@
+// slate: a documentary bed in C minor at 84 bpm for video-knowledge. Every voice is an oscillator (no sample pack,
+// no soundfont), so nothing in it carries a sample licence. No melody, no build: three loopable variations.
+//   pulse    a root-and-fifth sine drone, a dark detuned pad, a tick on two and four
+//   active   the pulse plus a sparse sine bass and a soft hollow arpeggio
+//   texture  drone and pad only, darker, the tick on four alone
+const feel = { timingMs: 10, velocity: .06, correlation: 'bar' };
+const drone = (line, o = {}) => ({
+  pattern: note('<' + line + '>').s('sine').clip(1.02).attack(.35).release(.9),
+  level: .26, space: 0, humanize: feel, ...o,
+});
+const fifth = (line, o = {}) => ({ ...drone(line), level: .14, position: .2, ...o });
+const tick = (grid, o = {}) => ({
+  pattern: note('g4').s('sine').struct(grid).attack(.005).decay(.12).sustain(0).release(.05),
+  level: .2, space: .25, position: .15, humanize: feel, ...o,
+});
+const pad = { patch: 'reese', brightness: .25, weight: .45, articulation: .15, space: .7, width: .6, density: .5, level: .5, humanize: { ...feel, correlation: 'phrase' } };
+const arp = { patch: 'hollow', brightness: .32, weight: .3, articulation: .45, space: .6, width: .5, density: .5, register: .55, level: .24, arp: '0 2 1 0', position: -.3 };
+const bass = { sound: 'sine', register: .3, weight: .55, brightness: .3, articulation: .55, space: .1, density: .4, level: .85, humanize: feel };
+
+song({ cps: .35, key: 'C:minor', seed: 37, saturate: .35, room: { size: 2.4, fade: .12, damping: 3400 } }, [
+
+  section('pulse', 16, { role: 'establish', progression: 'i@2 VII@2',
+    raw:  { ...drone('c2 c2 bb1 bb1') },
+    raw2: { ...fifth('g2 g2 f2 f2') },
+    raw3: { ...tick('~ x ~ x') },
+    pad:  { ...pad, enter: 2 },
+  }),
+
+  section('active', 16, { role: 'develop', progression: 'i VI VII iv',
+    raw:  { ...drone('c2 ab1 bb1 f1') },
+    raw2: { ...fifth('g2 eb2 f2 c2') },
+    raw3: { ...tick('~ x ~ [x ~ x ~]') },
+    pad:  { ...pad },
+    pad2: { ...arp, enter: 4 },
+    bass: { ...bass, rhythm: 'x...............|................|....x...........|................', notes: '0 -2' },
+  }),
+
+  section('texture', 16, { role: 'develop', progression: 'i@2 VI@2',
+    raw:  { ...drone('c2 c2 ab1 ab1', { level: .22 }) },
+    raw2: { ...fifth('g2 g2 eb2 eb2', { level: .1 }) },
+    raw3: { ...tick('~ ~ ~ x', { level: .12 }) },
+    pad:  { ...pad, brightness: .18, density: .35, level: .46 },
+  }),
+])

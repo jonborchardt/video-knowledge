@@ -5,7 +5,6 @@
 /** The theme every scene reads at render time (never copied into a module-level constant). */
 export const theme = {
   bg: '#0B0820', // the deepest field colour, and dark ink on coloured shapes
-  field: 'transparent', // what a scene paints behind itself: the backdrop shows through
   raised: 'rgba(255,255,255,0.07)',
   line: 'rgba(255,255,255,0.16)',
   fg: '#F7F4FF',
@@ -18,7 +17,6 @@ export const theme = {
   serif: 'Georgia, "Times New Roman", Times, serif',
   sans: '"Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif',
 };
-export type Theme = typeof theme;
 export const GUTTER = 120;
 
 export const clamp01 = (x: number) => Math.min(1, Math.max(0, x));

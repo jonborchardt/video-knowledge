@@ -29,7 +29,6 @@ const Picto: FC<{ pace: Pace; d: number; t: number; color: string; x: number; y:
     return `${(u * W).toFixed(1)},${(at(u) * H).toFixed(1)}`;
   });
   const tipU = n / steps;
-  const glow = 'url(#vs-glow)';
   const spin = pace === 'fast' ? t * 14 : t * 0.8; // degrees per frame
   const page = Math.floor(t / 45) % 4; // calendar flips a page every 1.5s
   const flip = (t % 45) / 45;
@@ -40,7 +39,7 @@ const Picto: FC<{ pace: Pace; d: number; t: number; color: string; x: number; y:
         {pace === 'fast' ? (
           <g>
             <rect x={-12} y={-92} width={24} height={16} rx={4} fill={color} />
-            <circle r={72} fill={theme.raised} stroke={color} strokeWidth={8} filter={glow} />
+            <circle r={72} fill={theme.raised} stroke={color} strokeWidth={8} filter="url(#vs-glow)" />
             {Array.from({ length: 12 }, (_, i) => (
               <line
                 key={i}
@@ -108,9 +107,9 @@ const Picto: FC<{ pace: Pace; d: number; t: number; color: string; x: number; y:
         strokeWidth={9}
         strokeLinecap="round"
         strokeLinejoin="round"
-        filter={glow}
+        filter="url(#vs-glow)"
       />
-      <circle cx={tipU * W} cy={at(tipU) * H} r={13 + 4 * Math.sin(t / 6)} fill={color} filter={glow} />
+      <circle cx={tipU * W} cy={at(tipU) * H} r={13 + 4 * Math.sin(t / 6)} fill={color} filter="url(#vs-glow)" />
     </g>
   );
 };
@@ -145,7 +144,7 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const textTop = 470;
   const textH = Math.min(330, bottom - 40 - textTop);
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans, overflow: 'hidden' }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans, overflow: 'hidden' }}>
       <div style={{ position: 'absolute', inset: 0, transform: `translate(${shake}px, ${shake * 0.4}px)` }}>
         <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
           <defs>

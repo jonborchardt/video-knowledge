@@ -13,7 +13,7 @@ export const Transition: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const a = ramp(t, scene.start, 10);
   const half = 960 * (1 - wipe);
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

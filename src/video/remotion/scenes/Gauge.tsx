@@ -43,7 +43,7 @@ export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const capAt = lines[0] ?? Infinity;
   const ink = claim ? theme.amber : theme.fg;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

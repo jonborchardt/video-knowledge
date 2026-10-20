@@ -4,7 +4,7 @@
 // through node's type stripping.
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, ROOT } from './io.ts';
+import { readJson, topicDir, ROOT } from './io.ts';
 
 interface CitingScript {
   sections: { sentences: { assertions?: { evidence: { kind: string; claim?: string; cite?: string }[] }[] }[] }[];
@@ -14,7 +14,7 @@ const docOf = (cite: string) => cite.split('#')[0];
 /** "<claim>|<document file>" -> the cite, for every study evidence entry of every assertion in the topic's scripts. */
 export function citedPairs(topic: string, root = ROOT): Map<string, string> {
   const out = new Map<string, string>();
-  const base = join(root, topic, 'scripts');
+  const base = join(topicDir(topic, root), 'scripts');
   if (!existsSync(base)) return out;
   for (const d of readdirSync(base)) {
     const s = readJson<CitingScript>(join(base, d, 'script.json'));

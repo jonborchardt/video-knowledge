@@ -44,7 +44,7 @@ const Node: FC<{ x: number; y: number; r: number; s: number; color: string; labe
   label,
 }) => (
   <g transform={`translate(${x} ${y}) scale(${s})`}>
-    <circle r={r} fill={theme.raised} stroke={color} strokeWidth={r > 40 ? 5 : 3} />
+    <circle r={r} fill={theme.raised} stroke={color} strokeWidth={5} />
     {label ? (
       <text textAnchor="middle" dominantBaseline="central" fill={theme.fg} fontSize={r * 0.55} fontWeight={600}>
         {label}
@@ -72,7 +72,7 @@ export const Tree: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const [sellLabel, tierLabel] = scene.onScreenText;
   const below = [520, 813, 1107, 1400];
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <svg width={1920} height={1080}>
         <g opacity={ramp(t, scene.start, 10) * (1 - 0.7 * ramp(t, sell, 15))} transform="translate(700 120)">
           <rect width={520} height={110} rx={28} fill={theme.raised} stroke={theme.line} strokeWidth={2} />

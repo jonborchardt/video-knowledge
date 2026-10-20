@@ -4,7 +4,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Corpus } from './corpus';
 import { type PassageReader, type Stance, applicabilityOf, judgmentKey } from './evidence';
-import { lf, sha, ROOT } from './io';
+import { lf, sha, topicDir, TOPICS, ROOT } from './io';
 import { MAX_QUESTIONS, type ReviewFile } from './review';
 import {
   type EvidencePackage,
@@ -21,11 +21,11 @@ const DEFAULT_AUDIENCE =
   'General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).';
 const fileOf = (cite: string) => docOf(cite).split('/').pop()!;
 
-/** Reads a repo-relative document (`<topic>/sources/<file>.txt`) with normalised line endings; null when it is gone. */
+/** Reads a document by its cite path (`<topic>/sources/<file>.txt`, under topics/) with normalised line endings; null when it is gone. */
 export type DocReader = (file: string) => string | null;
 export function docReader(root = ROOT): DocReader {
   return (file) => {
-    const p = join(root, file);
+    const p = join(root, TOPICS, file);
     return existsSync(p) ? lf(readFileSync(p, 'utf8')) : null;
   };
 }
@@ -38,10 +38,10 @@ export function docHasher(r: DocReader = docReader()): DocHasher {
   };
 }
 export type TranscriptReader = (sourceId: string) => string | null;
-/** Reads `<root>/<topic>/store/transcripts/<source id>.txt` (a gitignored cache); null when it is not there. */
+/** Reads `<root>/topics/<topic>/store/transcripts/<source id>.txt` (a gitignored cache); null when it is not there. */
 export function transcriptReader(topic: string, root = ROOT): TranscriptReader {
   return (id) => {
-    const p = join(root, topic, 'store', 'transcripts', `${id}.txt`);
+    const p = join(topicDir(topic, root), 'store', 'transcripts', `${id}.txt`);
     return existsSync(p) ? readFileSync(p, 'utf8') : null;
   };
 }

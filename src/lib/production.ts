@@ -7,7 +7,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
-import { fileSha, lf, readJson, sha, toJson, ROOT } from './io';
+import { fileSha, lf, readJson, sha, toJson, topicDir, ROOT } from './io';
 import {
   RENDER_CHECK,
   type RenderCheckSummary,
@@ -246,7 +246,7 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
   const inputsNow = {
     stories: fileSha(storiesPath(topic, root)),
     review: fileSha(reviewPath(topic, root)),
-    report: fileSha(join(root, topic, 'report.json')),
+    report: fileSha(join(topicDir(topic, root), 'report.json')),
   };
   const drift = Object.entries(inputsNow)
     .filter(([k, sha]) => pkg.inputs[k] !== sha)
@@ -835,7 +835,7 @@ interface StoreVideo {
 
 /** The research pipeline for one topic, as the store records it, then every story with its production (if any). */
 export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(root)): TopicBoard {
-  const dir = join(root, name);
+  const dir = topicDir(name, root);
   const topic = loadTopic(name);
   const checks: Check[] = [];
   const listed = nonBlank(join(dir, 'videos.txt')) + nonBlank(join(dir, 'blogs.txt'));
@@ -846,8 +846,8 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
   checks.push({
     name: 'sources',
     health: unfetched ? 'pending' : 'current',
-    detail: `${listed} listed, ${recs.length} in the store${unfetched ? `; ${unfetched} not fetched (npm run watcher -- fetch ${name}/videos.txt --store ${name}/store)` : ''}`,
-    file: `${name}/videos.txt`,
+    detail: `${listed} listed, ${recs.length} in the store${unfetched ? `; ${unfetched} not fetched (npm run watcher -- fetch topics/${name}/videos.txt --store topics/${name}/store)` : ''}`,
+    file: `topics/${name}/videos.txt`,
   });
   const raw = recs.filter((v) => !v.assertions && v.transcript !== 'none');
   const noCaptions = recs.filter((v) => v.transcript === 'none' && !v.assertions).length;
@@ -855,7 +855,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
     name: 'claims',
     health: raw.length ? 'pending' : 'current',
     detail: `${topic.claims.length} claims from ${recs.length - raw.length - noCaptions} sources${raw.length ? `; ${raw.length} fetched but not extracted (scripts/briefs/extract.md)` : ''}${noCaptions ? `; ${noCaptions} without captions` : ''}`,
-    file: `${name}/store/topics.json`,
+    file: `topics/${name}/store/topics.json`,
   });
   const docs = existsSync(join(dir, 'sources'))
     ? readdirSync(join(dir, 'sources')).filter((f) => f.endsWith('.txt')).length
@@ -865,7 +865,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
     name: 'studies',
     health: docs ? (unjudged > 0 ? 'pending' : 'current') : 'missing',
     detail: `${docs} documents, ${topic.studies} with verdicts, ${topic.decided}/${topic.claims.length} claims decided by a study${unjudged > 0 ? `; ${unjudged} documents without a recorded verdict (scripts/briefs/sources.md)` : ''}`,
-    file: `${name}/sources/`,
+    file: `topics/${name}/sources/`,
   });
   const storeClaims = (
     readJson<{ topics: { claims: unknown[] }[] }>(join(dir, 'store', 'topics.json'))?.topics[0]?.claims ?? []
@@ -877,14 +877,14 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       storeClaims === topic.claims.length
         ? `${topic.claims.length} claims, ${topic.counted} sources counted`
         : `report has ${topic.claims.length} claims, the store ${storeClaims} (npm run report)`,
-    file: `${name}/report.json`,
+    file: `topics/${name}/report.json`,
   });
   const review = loadReview(name, root);
   const file = loadStories(name, root);
   const stories: StoryRow[] = [];
   let next: string;
   if (!file) {
-    checks.push({ name: 'stories', health: 'missing', detail: 'not discovered', file: `${name}/stories.json` });
+    checks.push({ name: 'stories', health: 'missing', detail: 'not discovered', file: `topics/${name}/stories.json` });
     next = `npm run stories -- discover ${name}`;
   } else {
     const again = toJson(discover(topic, passageReader(root), review));
@@ -893,14 +893,14 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       name: 'stories',
       health: current ? 'current' : 'stale',
       detail: `${file.stories.length} candidates, ${file.rejected.length} rejected, from ${file.basis.claims} claims${current ? '' : `; a re-run differs (npm run stories -- discover ${name})`}`,
-      file: `${name}/stories.json`,
+      file: `topics/${name}/stories.json`,
     });
     const reviewed = file.stories.filter((s) => s.reviewed).length;
     checks.push({
       name: 'story review',
       health: !existsSync(reviewPath(name, root)) ? 'missing' : reviewed < file.stories.length ? 'pending' : 'current',
       detail: `${reviewed}/${file.stories.length} candidates reviewed, ${Object.keys(review.applicability ?? {}).length} applicability judgments${reviewed < file.stories.length ? ' (scripts/briefs/stories.md)' : ''}`,
-      file: `${name}/story-review.json`,
+      file: `topics/${name}/story-review.json`,
     });
     for (const story of file.stories) {
       const key = `${name}/${story.id}`;
@@ -940,7 +940,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
   }
   for (const key of Object.keys(decisions))
     if (key.startsWith(`${name}/`) && !file?.stories.some((s) => `${name}/${s.id}` === key))
-      throw new Error(`${DECISIONS_FILE}: ${key} is not a story in ${name}/stories.json`);
+      throw new Error(`${DECISIONS_FILE}: ${key} is not a story in topics/${name}/stories.json`);
   return { topic, checks, stories, rejected: file?.rejected.length ?? 0, next };
 }
 
@@ -1028,7 +1028,7 @@ export function stepsOf(next: string, topic: string, story?: string): Step[] {
       return [
         {
           kind: 'prompt',
-          text: promptOf('stories.md', topic, undefined, undefined, `${topic}/story-review.json`, settle[1]),
+          text: promptOf('stories.md', topic, undefined, undefined, `topics/${topic}/story-review.json`, settle[1]),
         },
       ];
     const research = /^research: (.*)$/s.exec(part);
@@ -1039,7 +1039,7 @@ export function stepsOf(next: string, topic: string, story?: string): Step[] {
           text: [
             `Find studies or public data that would decide this gap in topic ${topic}${story ? `, story ${story}` : ''}:`,
             research[1],
-            `Save each document to ${topic}/sources/ as text (pdftotext -layout for PDFs), then follow scripts/briefs/sources.md for the new documents against every claim and record with npm run record-sources -- ${topic} ${topic}/work/sv_*.json.`,
+            `Save each document to topics/${topic}/sources/ as text (pdftotext -layout for PDFs), then follow scripts/briefs/sources.md for the new documents against every claim and record with npm run record-sources -- ${topic} topics/${topic}/work/sv_*.json.`,
             `Then run npm run report and npm run stories -- discover ${topic}. If nothing decides it, say so and stop.`,
           ].join('\n'),
         },

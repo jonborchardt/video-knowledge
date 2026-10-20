@@ -573,7 +573,6 @@ describe('StackedBar', () => {
 
 describe('look', () => {
   it('renders the one look: scenes read the theme at render time', () => {
-    expect(theme.field).toBe('transparent'); // the backdrop shows through every scene
     expect(segmentColors('red')).toEqual([theme.red]);
   });
   it('counts a figure up in its own format and lands on the display exactly', () => {
