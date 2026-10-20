@@ -722,9 +722,11 @@
      }
     ]
    },
-   "chainCandidates": [
-    "contradicted:filing-ucc-financing-statement-gives-you",
-    "decision:who-pays-who-profits"
+   "chain": [
+    {
+     "id": "contradicted:since-1933-gold-suspension-money-credit",
+     "question": "But since the US left gold in 1933, isn't money just credit, so a debt can only be discharged, never paid?"
+    }
    ]
   },
   {
@@ -1445,9 +1447,11 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:driving-and-police-stops",
-    "decision:status-and-land"
+   "chain": [
+    {
+     "id": "decision:status-and-land",
+     "question": "Can declaring a different status, as a state national, a Moor or a free man, put me outside the law?"
+    }
    ]
   },
   {
@@ -1964,8 +1968,8 @@
     ]
    },
    "chainCandidates": [
-    "decision:courts-and-jurisdiction",
-    "decision:status-and-land"
+    "decision:who-pays-who-profits",
+    "contradicted:land-patent-gives-owner-allodial-title"
    ]
   },
   {
@@ -2522,8 +2526,8 @@
     ]
    },
    "chainCandidates": [
-    "contradicted:ordinary-wages-not-taxable-income-under",
-    "decision:money-debt-and-taxes"
+    "decision:driving-and-police-stops",
+    "contradicted:land-patent-gives-owner-allodial-title"
    ]
   },
   {
@@ -2861,43 +2865,40 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:driving-and-police-stops",
-    "decision:courts-and-jurisdiction"
-   ]
+   "partOf": "decision:courts-and-jurisdiction"
   },
   {
    "id": "contradicted:ordinary-wages-not-taxable-income-under",
    "kind": "contradicted",
-   "title": "Is it true that ordinary wages are not taxable income under federal law?",
+   "title": "Are Your Wages Really Not Income?",
    "alternates": [
-    "3 sources say ordinary wages are not taxable income under federal law. Does it hold up?",
-    "What the research says about ordinary wages are not taxable income under federal law"
+    "The 'wages are not income' argument, in court",
+    "Is a paycheck an even exchange, not a gain?"
    ],
-   "question": "Is it true that ordinary wages are not taxable income under federal law?",
-   "whyWatch": "3 sources across 4 channels repeat it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.",
-   "tension": "What gets repeated against what was measured. IRS: Truth About Frivolous Tax Arguments: IRC 61 defines gross income to include compensation for services, and appellate courts (e.g. 3d Cir. Connor: every court has unequivocally rejected the argument that wages are not income) sanction the contrary argument.",
-   "evidenceNeeded": "A measurement of whether ordinary wages are not taxable income under federal law, on the population and under the conditions the claim describes.",
+   "question": "Then are my ordinary wages even 'income' the tax applies to?",
+   "whyWatch": "The argument turns on what 'income' means; the statute defines it in one line, and the courts have answered it many times.",
+   "tension": "The argument sounds like careful reading of the tax code, yet the code's own definition names compensation for services.",
+   "evidenceNeeded": "The statutory definition of gross income and appellate rulings on the wages-are-not-income argument.",
    "evidenceAvailable": [
     "IRS: Truth About Frivolous Tax Arguments: wrong (0.9, direct)"
    ],
    "gaps": [],
-   "premise": "3 sources assert \"Ordinary wages are not taxable income under federal law\". IRS: Truth About Frivolous Tax Arguments: IRC 61 defines gross income to include compensation for services, and appellate courts (e.g. 3d Cir. Connor: every court has unequivocally rejected the argument that wages are not income) sanction the contrary argument. The gap between what gets repeated and what the data shows is the story.",
+   "premise": "The claim says a wage is an even swap of labour for money, so it is not income. Section 61 of the Internal Revenue Code defines gross income as all income from whatever source, including compensation for services, and appellate courts have rejected the contrary argument and sanctioned those who made it.",
    "claims": [
     "sovereign-citizens/ordinary-wages-not-taxable-income-under"
    ],
    "related": [],
    "arc": {
-    "hook": "Open on the claim in the sources' own words.",
+    "hook": "A taxpayer files a return reporting zero income, saying wages are an exchange, not a gain.",
     "conflict": "Then the study that checked it: IRS: Truth About Frivolous Tax Arguments: IRC 61 defines gross income to include compensation for services, and appellate courts (e.g. 3d Cir. Connor: every court has unequivocally rejected the argument that wages are not income) sanction the contrary argument.",
     "evidence": "Walk through IRS: Truth About Frivolous Tax Arguments: what was measured, on whom, and the caveats.",
-    "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
+    "resolution": "The code names compensation for services as income, and every court cited has rejected the argument.",
     "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
    },
    "coherence": {
     "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
+    "basis": "review",
+    "explanation": "one claim, one question: are wages taxable income under federal law"
    },
    "format": "short",
    "formatWhy": "1 study bear directly or partly on the question, 4 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
@@ -2911,12 +2912,12 @@
     "evidence": 0.9,
     "editorial": 0.71,
     "overall": 0.79,
-    "explanation": "editorial 0.71 = mean of coherence 0.8 (heuristic), relevance 0.53 (4 sources, 4 channels), curiosity 1 (contradicted), stakes 0.7 (lean: pro), depth 0.53 (1 study, 1 claim, tension); evidence 0.9 = strongest IRS: Truth About Frivolous Tax Arguments at 0.9 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.71 = mean of coherence 0.8 (review), relevance 0.53 (4 sources, 4 channels), curiosity 1 (contradicted), stakes 0.7 (lean: pro), depth 0.53 (1 study, 1 claim, tension); evidence 0.9 = strongest IRS: Truth About Frivolous Tax Arguments at 0.9 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.8), central conclusion supported, 1 essential finding verified, no pending review.",
    "blocking": [],
-   "reviewed": false,
+   "reviewed": true,
    "audit": {
     "central": {
      "id": "central",
@@ -2998,45 +2999,42 @@
      }
     ]
    },
-   "chainCandidates": [
-    "contradicted:federal-government-private-corporation-rather-lawful",
-    "contradicted:filing-ucc-financing-statement-gives-you"
-   ]
+   "partOf": "conflict:paying-income-tax-voluntary"
   },
   {
    "id": "conflict:paying-income-tax-voluntary",
    "kind": "conflict",
-   "title": "Is it true that paying income tax is voluntary?",
+   "title": "Is Paying Income Tax Voluntary?",
    "alternates": [
-    "Sources disagree: Paying income tax is voluntary",
-    "Is it true that paying income tax is voluntary?"
+    "The IRS says the system is 'voluntary'. What does that mean?",
+    "Can you opt out of income tax?"
    ],
-   "question": "Is it true that paying income tax is voluntary?",
-   "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
-   "tension": "The sources split: IRS: Truth About Frivolous Tax Arguments says wrong.",
-   "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
+   "question": "Is paying federal income tax actually voluntary?",
+   "whyWatch": "The 'voluntary' line is quoted from real court opinions and IRS material; what the word means there decides whether you owe.",
+   "tension": "The word 'voluntary' really does appear in a Supreme Court opinion about the tax system.",
+   "evidenceNeeded": "The code sections that impose and require payment of the tax, and the rulings on the voluntary-payment argument.",
    "evidenceAvailable": [
     "IRS: Truth About Frivolous Tax Arguments: wrong (0.9, direct)"
    ],
    "gaps": [
     "What explains the split between IRS: Truth About Frivolous Tax Arguments?"
    ],
-   "premise": "The sources split on \"Paying income tax is voluntary\": IRS: Truth About Frivolous Tax Arguments says wrong. The reasons they differ are the useful part.",
+   "premise": "The claim takes 'voluntary' literally. Section 1 of the Internal Revenue Code imposes the tax and section 6151 requires payment; 'voluntary' in the case law refers to people assessing their own tax on a return, and federal circuits have rejected the voluntary-payment argument as frivolous and sanctioned those who made it.",
    "claims": [
     "sovereign-citizens/paying-income-tax-voluntary"
    ],
    "related": [],
    "arc": {
-    "hook": "Two confident, opposite answers to the same question: \"Paying income tax is voluntary\".",
+    "hook": "A video quotes a court calling the income tax system 'voluntary' and tells viewers they can stop paying.",
     "conflict": "The sources do not agree, and both sides have a case.",
     "evidence": "Lay the studies side by side (IRS: Truth About Frivolous Tax Arguments): design, sample, what was measured.",
-    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "resolution": "The tax is imposed by statute and payment is required; 'voluntary' means self-assessed, and courts sanction the opposite reading.",
     "takeaway": "The conditions under which the claim holds, instead of a yes or no."
    },
    "coherence": {
     "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
+    "basis": "review",
+    "explanation": "one claim, one question: is paying federal income tax optional"
    },
    "format": "short",
    "formatWhy": "1 study bear directly or partly on the question, 4 sources voice the belief, without a contradiction or qualification to explore, across 1 claim.",
@@ -3050,12 +3048,12 @@
     "evidence": 0.9,
     "editorial": 0.68,
     "overall": 0.77,
-    "explanation": "editorial 0.68 = mean of coherence 0.8 (heuristic), relevance 0.53 (4 sources, 4 channels), curiosity 1 (conflict), stakes 0.7 (lean: pro), depth 0.38 (1 study, 1 claim); evidence 0.9 = strongest IRS: Truth About Frivolous Tax Arguments at 0.9 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.68 = mean of coherence 0.8 (review), relevance 0.53 (4 sources, 4 channels), curiosity 1 (conflict), stakes 0.7 (lean: pro), depth 0.38 (1 study, 1 claim); evidence 0.9 = strongest IRS: Truth About Frivolous Tax Arguments at 0.9 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.8), central conclusion supported, 1 essential finding verified, no pending review.",
    "blocking": [],
-   "reviewed": false,
+   "reviewed": true,
    "audit": {
     "central": {
      "id": "central",
@@ -3137,23 +3135,25 @@
      }
     ]
    },
-   "chainCandidates": [
-    "contradicted:ordinary-wages-not-taxable-income-under",
-    "contradicted:filing-ucc-financing-statement-gives-you"
+   "chain": [
+    {
+     "id": "contradicted:ordinary-wages-not-taxable-income-under",
+     "question": "Then are my ordinary wages even 'income' the tax applies to?"
+    }
    ]
   },
   {
    "id": "contradicted:since-1933-gold-suspension-money-credit",
    "kind": "contradicted",
-   "title": "Is it true that since the 1933 gold suspension, money is credit and debts cannot be lawfully paid, only discharged?",
+   "title": "Did Leaving Gold in 1933 Make Debts Unpayable?",
    "alternates": [
-    "6 sources say since the 1933 gold suspension, money is credit and debts cannot be…. Does it hold up?",
-    "What the research says about since the 1933 gold suspension, money is credit and debts cannot be…"
+    "Is a dollar really just an IOU that can't pay a debt?",
+    "What House Joint Resolution 192 actually says"
    ],
-   "question": "Is it true that since the 1933 gold suspension, money is credit and debts cannot be lawfully paid, only discharged?",
-   "whyWatch": "6 sources across 7 channels repeat it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.",
-   "tension": "What gets repeated against what was measured. Bryant v. Washington Mutual (W.D. Va. 2007): HJR 192 declares US currency legal tender for all debts and measures obligations in dollars; the court says it addresses only the move off gold and supports no theory of discharge rather than payment.",
-   "evidenceNeeded": "A measurement of whether since the 1933 gold suspension, money is credit and debts cannot be lawfully paid, only discharged, on the population and under the conditions the claim describes.",
+   "question": "But since the US left gold in 1933, isn't money just credit, so a debt can only be discharged, never paid?",
+   "whyWatch": "The 1933 story is the foundation the redemption kits stand on; reading the resolution itself shows what it did and did not do.",
+   "tension": "The claim cites a real 1933 law, and the US really did leave the gold standard, yet the law says the opposite of what the claim needs.",
+   "evidenceNeeded": "The text of House Joint Resolution 192, a court reading it, and the statute and rulings on whether Federal Reserve Notes are legal tender.",
    "evidenceAvailable": [
     "Bryant v. Washington Mutual (W.D. Va. 2007): wrong (0.6, direct)",
     "IRS: Truth About Frivolous Tax Arguments: wrong (0.5, direct)"
@@ -3165,11 +3165,11 @@
    ],
    "related": [],
    "arc": {
-    "hook": "Open on the claim in the sources' own words.",
-    "conflict": "Then the study that checked it: Bryant v. Washington Mutual (W.D. Va. 2007): HJR 192 declares US currency legal tender for all debts and measures obligations in dollars; the court says it addresses only the move off gold and supports no theory of discharge rather than payment.",
-    "evidence": "Walk through Bryant v. Washington Mutual (W.D. Va. 2007), IRS: Truth About Frivolous Tax Arguments: what was measured, on whom, and the caveats.",
-    "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
-    "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
+    "hook": "The redemption kits all start in 1933, when the US stopped paying in gold.",
+    "conflict": "The claim says that from then on money is only credit, so a debt can be discharged but never paid.",
+    "evidence": "House Joint Resolution 192 as Bryant v. Washington Mutual reads it; 31 USC 5103 and the circuit rulings the IRS collects on Federal Reserve Notes.",
+    "resolution": "The resolution made US currency legal tender for all debts, dollar for dollar; paying in Federal Reserve Notes is lawful payment.",
+    "takeaway": "Leaving gold changed what a dollar is backed by, not whether it pays a debt."
    },
    "coherence": {
     "score": 0.8,
@@ -3307,43 +3307,40 @@
      }
     ]
    },
-   "chainCandidates": [
-    "contradicted:federal-government-private-corporation-rather-lawful",
-    "contradicted:ordinary-wages-not-taxable-income-under"
-   ]
+   "partOf": "decision:money-debt-and-taxes"
   },
   {
    "id": "contradicted:land-patent-gives-owner-allodial-title",
    "kind": "contradicted",
-   "title": "Is it true that A land patent gives an owner allodial title that protects the property from taxes and foreclosure?",
+   "title": "Can a Land Patent Stop a Foreclosure?",
    "alternates": [
-    "5 sources say A land patent gives an owner allodial title that protects the…. Does it hold up?",
-    "What the research says about A land patent gives an owner allodial title that protects the…"
+    "Does 'allodial title' mean the bank can't take your house?",
+    "The land patent trick, tested in court"
    ],
-   "question": "Is it true that A land patent gives an owner allodial title that protects the property from taxes and foreclosure?",
-   "whyWatch": "5 sources across 4 channels repeat it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.",
-   "tension": "What gets repeated against what was measured. Hilgeford v. Peoples Bank (7th Cir. 1985): The Seventh Circuit called a self-drafted 'land patent' recorded to defeat a mortgage a blatant attempt to improve title by personal fiat; it did not improve title, foreclosure stood, and the court imposed sanctions for a frivolous appeal.",
-   "evidenceNeeded": "A measurement of whether A land patent gives an owner allodial title that protects the property from taxes and foreclosure, on the population and under the conditions the claim describes.",
+   "question": "Can filing a land patent protect my house from foreclosure or property tax?",
+   "whyWatch": "Homeowners facing foreclosure are sold land patent filings as a shield; one appeals court shows what happened when a couple tried it.",
+   "tension": "Land patents are real historical documents, the original federal grants of land, so recording one sounds like strengthening your title.",
+   "evidenceNeeded": "A ruling on a land patent recorded against a mortgage, and, for the tax half of the claim, a ruling on a land patent used against property tax.",
    "evidenceAvailable": [
     "Hilgeford v. Peoples Bank (7th Cir. 1985): wrong (0.7, direct)"
    ],
    "gaps": [],
-   "premise": "5 sources assert \"A land patent gives an owner allodial title that protects the property from taxes and foreclosure\". Hilgeford v. Peoples Bank (7th Cir. 1985): The Seventh Circuit called a self-drafted 'land patent' recorded to defeat a mortgage a blatant attempt to improve title by personal fiat; it did not improve title, foreclosure stood, and the court imposed sanctions for a frivolous appeal. The gap between what gets repeated and what the data shows is the story.",
+   "premise": "The claim says recording a land patent gives you allodial title the bank and the tax collector cannot touch. The Seventh Circuit, in Hilgeford v. Peoples Bank, called a self-drafted land patent recorded to defeat a mortgage a blatant attempt to improve title by personal fiat: it did not improve title, and the court awarded the bank damages against the couple for a frivolous appeal. The ruling is about a mortgage; the sources here do not test the claim against property tax.",
    "claims": [
     "sovereign-citizens/land-patent-gives-owner-allodial-title"
    ],
    "related": [],
    "arc": {
-    "hook": "Open on the claim in the sources' own words.",
+    "hook": "A couple with a mortgage draft their own 'Declaration of Land Patent', record it, and sue the bank claiming a title above its mortgage.",
     "conflict": "Then the study that checked it: Hilgeford v. Peoples Bank (7th Cir. 1985): The Seventh Circuit called a self-drafted 'land patent' recorded to defeat a mortgage a blatant attempt to improve title by personal fiat; it did not improve title, foreclosure stood, and the court imposed sanctions for a frivolous appeal.",
     "evidence": "Walk through Hilgeford v. Peoples Bank (7th Cir. 1985): what was measured, on whom, and the caveats.",
-    "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
+    "resolution": "The patent did not improve their title, the bank kept its mortgage and the appeal cost them $500 in damages to the bank for a frivolous appeal; the tax half of the claim is not tested in this ruling.",
     "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
    },
    "coherence": {
     "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
+    "basis": "review",
+    "explanation": "one claim, one question: does recording a land patent shield your house from foreclosure"
    },
    "format": "short",
    "formatWhy": "1 study bear directly or partly on the question, 6 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
@@ -3357,12 +3354,12 @@
     "evidence": 0.7,
     "editorial": 0.75,
     "overall": 0.73,
-    "explanation": "editorial 0.75 = mean of coherence 0.8 (heuristic), relevance 0.64 (6 sources, 4 channels), curiosity 1 (contradicted), stakes 0.7 (lean: pro), depth 0.63 (1 study, 1 claim, tension); evidence 0.7 = strongest Hilgeford v. Peoples Bank (7th Cir. 1985) at 0.7 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.75 = mean of coherence 0.8 (review), relevance 0.64 (6 sources, 4 channels), curiosity 1 (contradicted), stakes 0.7 (lean: pro), depth 0.63 (1 study, 1 claim, tension); evidence 0.7 = strongest Hilgeford v. Peoples Bank (7th Cir. 1985) at 0.7 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.8), central conclusion supported, 1 essential finding verified, no pending review.",
    "blocking": [],
-   "reviewed": false,
+   "reviewed": true,
    "audit": {
     "central": {
      "id": "central",
@@ -3445,494 +3442,8 @@
     ]
    },
    "chainCandidates": [
-    "contradicted:federal-government-private-corporation-rather-lawful",
-    "contradicted:filing-ucc-financing-statement-gives-you"
-   ]
-  },
-  {
-   "id": "contradicted:federal-government-private-corporation-rather-lawful",
-   "kind": "contradicted",
-   "title": "Is it true that the US federal government is a private corporation rather than a lawful sovereign government?",
-   "alternates": [
-    "4 sources say the US federal government is a private corporation rather than a…. Does it hold up?",
-    "What the research says about the US federal government is a private corporation rather than a…"
-   ],
-   "question": "Is it true that the US federal government is a private corporation rather than a lawful sovereign government?",
-   "whyWatch": "4 sources across 5 channels repeat it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.",
-   "tension": "What gets repeated against what was measured. IRS: Truth About Frivolous Tax Arguments: A district court held the United States is a sovereign, not a corporation, and called contrary arguments wholly frivolous; the Tax Court sanctioned a taxpayer arguing 'the United States is a corporation'; trial-level rulings.",
-   "evidenceNeeded": "A measurement of whether the US federal government is a private corporation rather than a lawful sovereign government, on the population and under the conditions the claim describes.",
-   "evidenceAvailable": [
-    "IRS: Truth About Frivolous Tax Arguments: wrong (0.5, direct)",
-    "Metropolitan R. Co. v. D.C. (U.S. 1889): wrong (0.45, direct)"
-   ],
-   "gaps": [],
-   "premise": "4 sources assert \"The US federal government is a private corporation rather than a lawful sovereign government\". IRS: Truth About Frivolous Tax Arguments: A district court held the United States is a sovereign, not a corporation, and called contrary arguments wholly frivolous; the Tax Court sanctioned a taxpayer arguing 'the United States is a corporation'; trial-level rulings. The gap between what gets repeated and what the data shows is the story.",
-   "claims": [
-    "sovereign-citizens/federal-government-private-corporation-rather-lawful"
-   ],
-   "related": [
-    "sovereign-citizens/federal-reserve-private-corporation-owns-currency",
-    "sovereign-citizens/private-ucc-filings-have-seized-dissolved",
-    "sovereign-citizens/federal-income-tax-paid-irs-goes"
-   ],
-   "arc": {
-    "hook": "Open on the claim in the sources' own words.",
-    "conflict": "Then the study that checked it: IRS: Truth About Frivolous Tax Arguments: A district court held the United States is a sovereign, not a corporation, and called contrary arguments wholly frivolous; the Tax Court sanctioned a taxpayer arguing 'the United States is a corporation'; trial-level rulings.",
-    "evidence": "Walk through IRS: Truth About Frivolous Tax Arguments, Metropolitan R. Co. v. D.C. (U.S. 1889): what was measured, on whom, and the caveats.",
-    "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
-    "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
-   },
-   "format": "long-form",
-   "formatWhy": "2 studies bear directly or partly on the question, 5 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.59,
-    "curiosity": 1,
-    "stakes": 0.7,
-    "depth": 0.72,
-    "originality": 1,
-    "evidence": 0.57,
-    "editorial": 0.76,
-    "overall": 0.68,
-    "explanation": "editorial 0.76 = mean of coherence 0.8 (heuristic), relevance 0.59 (5 sources, 5 channels), curiosity 1 (contradicted), stakes 0.7 (lean: pro), depth 0.72 (2 studies, 1 claim, tension); evidence 0.57 = strongest IRS: Truth About Frivolous Tax Arguments at 0.5 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.8), central conclusion supported, 1 essential finding verified, no pending review.",
-   "blocking": [],
-   "reviewed": false,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Contrary to the sources that repeat it, the evidence does not support \"The US federal government is a private corporation rather than a lawful sovereign government\"",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0.5,
-     "independent": 2,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "sovereign-citizens/federal-government-private-corporation-rather-lawful",
-        "cite": "sovereign-citizens/sources/irs-truth-about-frivolous-tax-arguments.txt#L1781-L1784"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "IRS: Truth About Frivolous Tax Arguments",
-       "verdict": "wrong",
-       "confidence": 0.5,
-       "note": "A district court held the United States is a sovereign, not a corporation, and called contrary arguments wholly frivolous; the Tax Court sanctioned a taxpayer arguing 'the United States is a corporation'; trial-level rulings.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "sovereign-citizens/federal-government-private-corporation-rather-lawful",
-        "cite": "sovereign-citizens/sources/metropolitan-r-co-v-district-of-columbia-1889.txt#L34-L34"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "Metropolitan R. Co. v. D.C. (U.S. 1889)",
-       "verdict": "wrong",
-       "confidence": 0.45,
-       "note": "The Supreme Court distinguishes the District's municipal corporation from the sovereign US government, in which the District's sovereign power is lodged; it does not treat the federal government as a corporation.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.5)."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "The evidence does not support \"The US federal government is a private corporation rather than a lawful sovereign government\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.5,
-       "independent": 2,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "sovereign-citizens/federal-government-private-corporation-rather-lawful",
-          "cite": "sovereign-citizens/sources/irs-truth-about-frivolous-tax-arguments.txt#L1781-L1784"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "IRS: Truth About Frivolous Tax Arguments",
-         "verdict": "wrong",
-         "confidence": 0.5,
-         "note": "A district court held the United States is a sovereign, not a corporation, and called contrary arguments wholly frivolous; the Tax Court sanctioned a taxpayer arguing 'the United States is a corporation'; trial-level rulings.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "sovereign-citizens/federal-government-private-corporation-rather-lawful",
-          "cite": "sovereign-citizens/sources/metropolitan-r-co-v-district-of-columbia-1889.txt#L34-L34"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Metropolitan R. Co. v. D.C. (U.S. 1889)",
-         "verdict": "wrong",
-         "confidence": 0.45,
-         "note": "The Supreme Court distinguishes the District's municipal corporation from the sovereign US government, in which the District's sovereign power is lodged; it does not treat the federal government as a corporation.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.5)."
-      }
-     }
-    ]
-   },
-   "chainCandidates": [
-    "contradicted:ordinary-wages-not-taxable-income-under",
-    "contradicted:filing-ucc-financing-statement-gives-you"
-   ]
-  },
-  {
-   "id": "contradicted:filing-ucc-financing-statement-gives-you",
-   "kind": "contradicted",
-   "title": "Is it true that filing a UCC-1 financing statement gives you ownership and control of your strawman?",
-   "alternates": [
-    "3 sources say filing a UCC-1 financing statement gives you ownership and control of…. Does it hold up?",
-    "What the research says about filing a UCC-1 financing statement gives you ownership and control of…"
-   ],
-   "question": "Is it true that filing a UCC-1 financing statement gives you ownership and control of your strawman?",
-   "whyWatch": "3 sources across 3 channels repeat it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.",
-   "tension": "What gets repeated against what was measured. IRS: Truth About Frivolous Tax Arguments: Filing UCC-1 statements with birth certificates to 'redeem' the straw man is a frivolous redemption theory that courts call implausible and clearly nonsense.",
-   "evidenceNeeded": "A measurement of whether filing a UCC-1 financing statement gives you ownership and control of your strawman, on the population and under the conditions the claim describes.",
-   "evidenceAvailable": [
-    "Bryant v. Washington Mutual (W.D. Va. 2007): wrong (0.55, direct)",
-    "IRS: Truth About Frivolous Tax Arguments: wrong (0.55, direct)"
-   ],
-   "gaps": [],
-   "premise": "3 sources assert \"Filing a UCC-1 financing statement gives you ownership and control of your strawman\". IRS: Truth About Frivolous Tax Arguments: Filing UCC-1 statements with birth certificates to 'redeem' the straw man is a frivolous redemption theory that courts call implausible and clearly nonsense. The gap between what gets repeated and what the data shows is the story.",
-   "claims": [
-    "sovereign-citizens/filing-ucc-financing-statement-gives-you"
-   ],
-   "related": [
-    "sovereign-citizens/filing-ucc-financing-statement-your-strawman"
-   ],
-   "arc": {
-    "hook": "Open on the claim in the sources' own words.",
-    "conflict": "Then the study that checked it: IRS: Truth About Frivolous Tax Arguments: Filing UCC-1 statements with birth certificates to 'redeem' the straw man is a frivolous redemption theory that courts call implausible and clearly nonsense.",
-    "evidence": "Walk through Bryant v. Washington Mutual (W.D. Va. 2007), IRS: Truth About Frivolous Tax Arguments: what was measured, on whom, and the caveats.",
-    "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
-    "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
-   },
-   "format": "long-form",
-   "formatWhy": "2 studies bear directly or partly on the question, 3 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.46,
-    "curiosity": 1,
-    "stakes": 0.7,
-    "depth": 0.62,
-    "originality": 1,
-    "evidence": 0.63,
-    "editorial": 0.72,
-    "overall": 0.68,
-    "explanation": "editorial 0.72 = mean of coherence 0.8 (heuristic), relevance 0.46 (3 sources, 3 channels), curiosity 1 (contradicted), stakes 0.7 (lean: pro), depth 0.62 (2 studies, 1 claim, tension); evidence 0.63 = strongest Bryant v. Washington Mutual (W.D. Va. 2007) at 0.55 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.8), central conclusion supported, 1 essential finding verified, no pending review.",
-   "blocking": [],
-   "reviewed": false,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Contrary to the sources that repeat it, the evidence does not support \"Filing a UCC-1 financing statement gives you ownership and control of your strawman\"",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0.55,
-     "independent": 2,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "sovereign-citizens/filing-ucc-financing-statement-gives-you",
-        "cite": "sovereign-citizens/sources/bryant-v-washington-mutual-wdva-2007.txt#L30-L33"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "Bryant v. Washington Mutual (W.D. Va. 2007)",
-       "verdict": "wrong",
-       "confidence": 0.55,
-       "note": "The court calls the strawman and redemption theory behind such UCC filings 'equal parts revisionist legal history and conspiracy theory' and 'clearly nonsense in almost every detail'.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "sovereign-citizens/filing-ucc-financing-statement-gives-you",
-        "cite": "sovereign-citizens/sources/irs-truth-about-frivolous-tax-arguments.txt#L2227-L2239"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "IRS: Truth About Frivolous Tax Arguments",
-       "verdict": "wrong",
-       "confidence": 0.55,
-       "note": "Filing UCC-1 statements with birth certificates to 'redeem' the straw man is a frivolous redemption theory that courts call implausible and clearly nonsense.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.55)."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "The evidence does not support \"Filing a UCC-1 financing statement gives you ownership and control of your strawman\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.55,
-       "independent": 2,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "sovereign-citizens/filing-ucc-financing-statement-gives-you",
-          "cite": "sovereign-citizens/sources/bryant-v-washington-mutual-wdva-2007.txt#L30-L33"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Bryant v. Washington Mutual (W.D. Va. 2007)",
-         "verdict": "wrong",
-         "confidence": 0.55,
-         "note": "The court calls the strawman and redemption theory behind such UCC filings 'equal parts revisionist legal history and conspiracy theory' and 'clearly nonsense in almost every detail'.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "sovereign-citizens/filing-ucc-financing-statement-gives-you",
-          "cite": "sovereign-citizens/sources/irs-truth-about-frivolous-tax-arguments.txt#L2227-L2239"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "IRS: Truth About Frivolous Tax Arguments",
-         "verdict": "wrong",
-         "confidence": 0.55,
-         "note": "Filing UCC-1 statements with birth certificates to 'redeem' the straw man is a frivolous redemption theory that courts call implausible and clearly nonsense.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.55)."
-      }
-     }
-    ]
-   },
-   "chainCandidates": [
-    "contradicted:ordinary-wages-not-taxable-income-under",
-    "contradicted:federal-government-private-corporation-rather-lawful"
-   ]
-  },
-  {
-   "id": "contradicted:government-pledged-citizens-their-property-collateral",
-   "kind": "contradicted",
-   "title": "Is it true that the government pledged its citizens and their property as collateral for its debts to bankers?",
-   "alternates": [
-    "6 sources say the government pledged its citizens and their property as collateral…. Does it hold up?",
-    "What the research says about the government pledged its citizens and their property as collateral…"
-   ],
-   "question": "Is it true that the government pledged its citizens and their property as collateral for its debts to bankers?",
-   "whyWatch": "6 sources across 6 channels repeat it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.",
-   "tension": "What gets repeated against what was measured. Bryant v. Washington Mutual (W.D. Va. 2007): The court sets out the theory that citizens are pledged as security for the national debt and rejects it as revisionist history and conspiracy theory; the authorities cited only concern leaving the gold standard.",
-   "evidenceNeeded": "A measurement of whether the government pledged its citizens and their property as collateral for its debts to bankers, on the population and under the conditions the claim describes.",
-   "evidenceAvailable": [
-    "Bryant v. Washington Mutual (W.D. Va. 2007): wrong (0.55, direct)"
-   ],
-   "gaps": [],
-   "premise": "6 sources assert \"The government pledged its citizens and their property as collateral for its debts to bankers\". Bryant v. Washington Mutual (W.D. Va. 2007): The court sets out the theory that citizens are pledged as security for the national debt and rejects it as revisionist history and conspiracy theory; the authorities cited only concern leaving the gold standard. The gap between what gets repeated and what the data shows is the story.",
-   "claims": [
-    "sovereign-citizens/government-pledged-citizens-their-property-collateral"
-   ],
-   "related": [
-    "sovereign-citizens/government-went-bankrupt-1933-pledged-citizens",
-    "sovereign-citizens/citizens-creditors-government-can-use-debt"
-   ],
-   "arc": {
-    "hook": "Open on the claim in the sources' own words.",
-    "conflict": "Then the study that checked it: Bryant v. Washington Mutual (W.D. Va. 2007): The court sets out the theory that citizens are pledged as security for the national debt and rejects it as revisionist history and conspiracy theory; the authorities cited only concern leaving the gold standard.",
-    "evidence": "Walk through Bryant v. Washington Mutual (W.D. Va. 2007): what was measured, on whom, and the caveats.",
-    "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
-    "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
-   },
-   "format": "short",
-   "formatWhy": "1 study bear directly or partly on the question, 6 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.64,
-    "curiosity": 1,
-    "stakes": 0.7,
-    "depth": 0.63,
-    "originality": 1,
-    "evidence": 0.55,
-    "editorial": 0.75,
-    "overall": 0.67,
-    "explanation": "editorial 0.75 = mean of coherence 0.8 (heuristic), relevance 0.64 (6 sources, 6 channels), curiosity 1 (contradicted), stakes 0.7 (lean: pro), depth 0.63 (1 study, 1 claim, tension); evidence 0.55 = strongest Bryant v. Washington Mutual (W.D. Va. 2007) at 0.55 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.8), central conclusion supported, 1 essential finding verified, no pending review.",
-   "blocking": [],
-   "reviewed": false,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Contrary to the sources that repeat it, the evidence does not support \"The government pledged its citizens and their property as collateral for its debts to bankers\"",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0.55,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "sovereign-citizens/government-pledged-citizens-their-property-collateral",
-        "cite": "sovereign-citizens/sources/bryant-v-washington-mutual-wdva-2007.txt#L30-L33"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "Bryant v. Washington Mutual (W.D. Va. 2007)",
-       "verdict": "wrong",
-       "confidence": 0.55,
-       "note": "The court sets out the theory that citizens are pledged as security for the national debt and rejects it as revisionist history and conspiracy theory; the authorities cited only concern leaving the gold standard.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.55)."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "The evidence does not support \"The government pledged its citizens and their property as collateral for its debts to bankers\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.55,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "sovereign-citizens/government-pledged-citizens-their-property-collateral",
-          "cite": "sovereign-citizens/sources/bryant-v-washington-mutual-wdva-2007.txt#L30-L33"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Bryant v. Washington Mutual (W.D. Va. 2007)",
-         "verdict": "wrong",
-         "confidence": 0.55,
-         "note": "The court sets out the theory that citizens are pledged as security for the national debt and rejects it as revisionist history and conspiracy theory; the authorities cited only concern leaving the gold standard.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.55)."
-      }
-     }
-    ]
-   },
-   "chainCandidates": [
-    "contradicted:federal-government-private-corporation-rather-lawful",
-    "contradicted:filing-ucc-financing-statement-gives-you"
+    "decision:who-pays-who-profits",
+    "decision:driving-and-police-stops"
    ]
   }
  ],
@@ -4023,9 +3534,29 @@
    "reason": "subsumed by decision:status-and-land"
   },
   {
+   "id": "contradicted:federal-government-private-corporation-rather-lawful",
+   "title": "Is it true that the US federal government is a private corporation rather than a lawful sovereign government?",
+   "reason": "a duplicate of the 1871 Act chapter of decision:courts-and-jurisdiction, which reads Metropolitan Railroad (one of this story's two passages) to the same conclusion; a viewer would hear it twice"
+  },
+  {
+   "id": "contradicted:filing-ucc-financing-statement-gives-you",
+   "title": "Is it true that filing a UCC-1 financing statement gives you ownership and control of your strawman?",
+   "reason": "a step of the redemption scheme decision:money-debt-and-taxes already tells; its passages (Bryant L30-33, the IRS straw-man section) are the ones that story uses, so it would repeat that video's conclusion"
+  },
+  {
    "id": "contradicted:government-creates-separate-corporate-entity-strawman",
    "title": "Is it true that the government creates a separate corporate entity, the strawman, in your all-caps name?",
    "reason": "subsumed by decision:money-debt-and-taxes"
+  },
+  {
+   "id": "contradicted:government-pledged-citizens-their-property-collateral",
+   "title": "Is it true that the government pledged its citizens and their property as collateral for its debts to bankers?",
+   "reason": "the origin myth of the redemption scheme decision:money-debt-and-taxes already tells; its only passage is the Bryant summary that story uses, so it would repeat that video's conclusion"
+  },
+  {
+   "id": "contradicted:person-can-ignore-licensing-law-restricts",
+   "title": "Is it true that A person can ignore a licensing law that restricts a constitutional right and act with impunity?",
+   "reason": "a duplicate of decision:driving-and-police-stops: its only passage is the State v. Smith ruling on licensing and the right to travel that carries that story"
   },
   {
    "id": "contradicted:refusing-show-license-identify-yourself-traffic",
@@ -4043,6 +3574,11 @@
    "reason": "subsumed by decision:courts-and-jurisdiction"
   },
   {
+   "id": "contradicted:traffic-ticket-offer-contract-you-can",
+   "title": "Is it true that A traffic ticket is an offer to contract that you can refuse?",
+   "reason": "the contract theory of law that decision:courts-and-jurisdiction already answers (statutes as contracts binding only by consent); its only evidence is an Ohio footnote that the ticket is the complaint and summons, too thin to stand alone"
+  },
+  {
    "id": "contradicted:united-states-became-private-corporation-under",
    "title": "Is it true that the United States became a private corporation under the District of Columbia Act of 1871?",
    "reason": "subsumed by decision:courts-and-jurisdiction"
@@ -4055,7 +3591,12 @@
   {
    "id": "surprise:person-can-ignore-licensing-law-restricts",
    "title": "Is it really true that A person can ignore a licensing law that restricts a constitutional right and act with impunity?",
-   "reason": "a variation of contradicted:person-can-ignore-licensing-law-restricts (claims overlap 1)"
+   "reason": "a duplicate of decision:driving-and-police-stops: its only passage is the State v. Smith ruling on licensing and the right to travel that carries that story"
+  },
+  {
+   "id": "surprise:ucc-rights-reservation-section-renumbered-207",
+   "title": "Is it really true that the UCC rights-reservation section was renumbered from 1-207 to 1-308 to stop people using it?",
+   "reason": "trivia within the UCC 1-308 chapter of decision:courts-and-jurisdiction: the official comment shows the text is identical to former 1-207, which that chapter can mention; the motive claim has no evidence either way and is not a video question"
   }
  ]
 }

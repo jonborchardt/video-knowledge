@@ -25,8 +25,12 @@
    "reason": "a toy agent-based model, not data on real fortunes; it supports the mechanism, not the measured share of luck"
   },
   "get-rich-quick/commission-free-brokers-sell-order-flow|asserts|get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136": {
-   "level": "direct",
-   "reason": "the passage documents payment for order flow and measures the spread cost retail pays; 'indirect' describes the cost, not a limit on the study"
+   "level": "partial",
+   "reason": "the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines"
+  },
+  "get-rich-quick/leverage-lets-small-account-take-large|denies|get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119": {
+   "level": "partial",
+   "reason": "a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)"
   },
   "get-rich-quick/retail-trading-bots-not-beat-market|asserts|get-rich-quick/sources/ftc-dk-automation-press-release.txt#L37-L37": {
    "level": "contextual",
@@ -200,7 +204,7 @@
    "whyWatch": "Most retail traders use a zero-commission app. The paper on retail options trading puts a number on what they pay instead, and it is larger than the commissions were.",
    "tension": "'Free' on the screen; a 12.3% average quoted spread on the weekly options retail prefers, paid for by order flow.",
    "evidenceNeeded": "Measured payment for order flow and effective spreads paid by retail, and evidence on whether removing commissions changed how much people trade.",
-   "premise": "Bryzgalova and colleagues document that zero-commission brokers are paid for order flow by wholesalers and that the true cost sits in spreads: 17.2% average quoted spread on S&P 500 stock options against 3.55 basis points on the stocks, 12.3% on the sub-week options retail favours, with indirect spread costs of $4.13bn dwarfing $0.8bn of commissions. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one measure of trading intensity after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
+   "premise": "Bryzgalova and colleagues, studying US retail options trades routed to wholesalers, say the true trading costs are masked by zero commissions: the average quoted spread on S&P 500 stock options is 17.2%, and half the wholesaler trades in their sample are options with under a week to expiry at a 12.3% average spread. The cited passages establish the hidden cost; the sale of order flow and the paper's dollar totals ($4.13bn of spread costs against about $800m of commissions) sit in lines no verdict cites yet, so the script either asks for them through record-sources or leaves them out. The evidence is US options, not stock trades generally. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one narrow measure of trading behaviour after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
    "arc": {
     "hook": "Your trade cost nothing. Someone paid your broker for it. What did you pay?",
     "conflict": "Free trading was sold as democratising markets; the paper says the cost moved rather than vanished, and moved most for the products retail likes best.",
@@ -208,7 +212,8 @@
     "resolution": "Free is a pricing model: commissions became spreads and order-flow payments, heaviest on short-dated options.",
     "takeaway": "Count the spread, not the commission, and be most careful with the products the app makes easiest to trade."
    },
-   "qualificationsAccepted": true
+   "qualificationsAccepted": true,
+   "research": "The central sentence is that brokers sell order flow, but the only cited passage (Bryzgalova L123-L136) shows the masked spread cost, not the payment for order flow. A verdict citing the paper's own PFOF lines (bryzgalova-retail-options.txt L46-L56, brokerages' PFOF in stocks and options, Q2 2021) or the cost totals (L171 or L956, $4.13bn of spread costs against about $800m of commissions) would unblock it; then chain it after decision:trading-and-betting, whose net-of-fees losses raise the question whether zero-commission apps removed the cost."
   },
   "decision:who-makes-the-money": {
    "coherence": {
@@ -232,11 +237,11 @@
    "whyWatch": "Twenty-five sources in the corpus say the seller earns more from the course than from the method. Three FTC cases open the books on how that works, from the free seminar to the credit-card application.",
    "tension": "The pitch shows the method's income; the complaints show the sellers' income came from the pitch.",
    "evidenceNeeded": "Sellers' revenue by source, buyers' net outcomes, and how advertised figures relate to net earnings.",
-   "premise": "The evidence is three FTC enforcement actions (Automators/Empire, DK Automation, Nudge), which are allegations and settlements about three firms, not a survey of courses in general; the video must say so in those words. Within that limit the pattern is consistent: over $7 million of buyer payments flowed to Empire's founders, whose documented income came from selling the opportunity; most buyers did not recoup their fees and virtually none earned the advertised amounts; advertised figures were gross sales while clients lost money net of fees, inventory and interest; the founder's results were conceded in fine print to be atypical; buyers were steered into $15,000 to $80,000 of business credit; and Nudge's free seminar was a pitch for a $1,100 workshop that pitched $40,000 training.",
+   "premise": "The evidence is two FTC enforcement actions (Automators/Empire and Nudge), which are allegations and settlements about two firms, not a survey of courses in general, plus the FTC's review of MLM income disclosures for the gross-not-net pattern; the video must say so in those words. Within that limit the pattern is consistent: over $7 million of buyer payments flowed to Empire's founders, whose documented income came from selling the opportunity; most buyers did not recoup their fees and virtually none earned the advertised amounts; advertised figures were gross sales while clients lost money net of fees, inventory and interest; the founder's results were conceded in fine print to be atypical; buyers were steered into $15,000 to $80,000 of business credit for working capital (inventory, not the package fee); and Nudge's free seminar was a pitch for a $1,100 workshop that pitched $40,000 training. Nothing here shows edited screenshots.",
    "arc": {
     "hook": "The free seminar, the $1,100 workshop, the $40,000 'advanced training': walk through one funnel the FTC documented.",
     "conflict": "Buyers were shown the method's income; the complaints trace where the money actually went.",
-    "evidence": "The Automators complaint (founders' income, buyers' outcomes, gross-versus-net figures, fine print, financing), the DK Automation case and the Nudge funnel.",
+    "evidence": "The Automators complaint (founders' income, buyers' outcomes, gross-versus-net figures, fine print, financing), the Nudge funnel, and the FTC's finding that no MLM income disclosure nets out expenses.",
     "resolution": "In the documented cases the course was the business and the buyers were the revenue; whether that generalises is the open question.",
     "takeaway": "Ask what the seller's income is from, insist on net figures for typical buyers, and never finance a course on credit."
    },
@@ -268,7 +273,9 @@
    },
    "qualificationsAccepted": true,
    "format": "short",
-   "formatWhy": "One table and one correction; a segment, not a film."
+   "formatWhy": "One table and one correction; a segment, not a film.",
+   "chain": ["decision:mlm-and-seminars"],
+   "chainWhy": "Ordinary businesses survive far better than the 90-95% failure rate MLM promoters quote to make their opportunity look like the safer way to own a business (Taylor), so the next question is what MLM participants actually make."
   },
   "surprise:leverage-lets-small-account-take-large": {
    "coherence": {
@@ -283,7 +290,9 @@
    ],
    "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped; the EU regulator's finding is the opposite.",
    "tension": "Fixed risk in the pitch; margin calls and losses beyond the deposit in the regulator's data.",
-   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients."
+   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients.",
+   "research": "The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops.",
+   "format": "needs-research"
   },
   "decision:what-the-evidence-favours": {
    "reject": "a list of consolation morals, not a question: compounding, passive income, luck, survivorship and equity each need their own evidence"

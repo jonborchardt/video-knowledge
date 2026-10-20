@@ -397,8 +397,7 @@
     ]
    },
    "chainCandidates": [
-    "surprise:commission-free-brokers-sell-order-flow",
-    "decision:mlm-and-seminars"
+    "decision:who-makes-the-money"
    ]
   },
   {
@@ -863,10 +862,7 @@
      }
     ]
    },
-   "chainCandidates": [
-    "surprise:commission-free-brokers-sell-order-flow",
-    "decision:trading-and-betting"
-   ]
+   "partOf": "surprise:most-new-businesses-including-online-stores"
   },
   {
    "id": "surprise:most-new-businesses-including-online-stores",
@@ -1150,271 +1146,11 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:who-makes-the-money",
-    "decision:mlm-and-seminars"
-   ]
-  },
-  {
-   "id": "surprise:commission-free-brokers-sell-order-flow",
-   "kind": "surprise",
-   "title": "Is 'Commission-Free' Trading Actually Free?",
-   "alternates": [
-    "Who Pays When Your Broker Charges Nothing?",
-    "The Hidden Cost Inside Zero-Commission Trades"
-   ],
-   "question": "Is commission-free trading actually free?",
-   "whyWatch": "Most retail traders use a zero-commission app. The paper on retail options trading puts a number on what they pay instead, and it is larger than the commissions were.",
-   "tension": "'Free' on the screen; a 12.3% average quoted spread on the weekly options retail prefers, paid for by order flow.",
-   "evidenceNeeded": "Measured payment for order flow and effective spreads paid by retail, and evidence on whether removing commissions changed how much people trade.",
-   "evidenceAvailable": [
-    "Retail options study (Bryzgalova et al.): right (0.65, direct)",
-    "Retail options study (Bryzgalova et al.): right (0.7, direct)",
-    "Retail options study (Bryzgalova et al.): right (0.5, direct)",
-    "Brazil day-trader study (Chague et al.): right (0.4, direct)",
-    "eToro crypto retail study (Kogan et al.): wrong (0.25, partial)"
-   ],
-   "gaps": [],
-   "premise": "Bryzgalova and colleagues document that zero-commission brokers are paid for order flow by wholesalers and that the true cost sits in spreads: 17.2% average quoted spread on S&P 500 stock options against 3.55 basis points on the stocks, 12.3% on the sub-week options retail favours, with indirect spread costs of $4.13bn dwarfing $0.8bn of commissions. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one measure of trading intensity after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
-   "claims": [
-    "get-rich-quick/commission-free-brokers-sell-order-flow",
-    "get-rich-quick/options-have-wider-spreads-higher-trading",
-    "get-rich-quick/commission-free-brokerage-increased-retail-trading"
-   ],
-   "related": [
-    "get-rich-quick/retail-options-trading-has-grown-many"
-   ],
-   "arc": {
-    "hook": "Your trade cost nothing. Someone paid your broker for it. What did you pay?",
-    "conflict": "Free trading was sold as democratising markets; the paper says the cost moved rather than vanished, and moved most for the products retail likes best.",
-    "evidence": "Payment for order flow, quoted spreads on options versus stocks, the dollar totals, and the post-2019 surge in retail and options volume, with the eToro null result as the caveat.",
-    "resolution": "Free is a pricing model: commissions became spreads and order-flow payments, heaviest on short-dated options.",
-    "takeaway": "Count the spread, not the commission, and be most careful with the products the app makes easiest to trade."
-   },
-   "coherence": {
-    "score": 0.85,
-    "basis": "review",
-    "explanation": "One question, whether zero-commission trading is free, answered by who pays the broker (order flow), where the cost reappears (spreads, especially on options) and what free trading did to trading volume."
-   },
-   "format": "long-form",
-   "formatWhy": "3 studies bear directly or partly on the question, 7 sources voice the belief, with a contradiction or qualification to explore, across 3 claims.",
-   "scores": {
-    "coherence": 0.85,
-    "relevance": 0.68,
-    "curiosity": 0.8,
-    "stakes": 0.5,
-    "depth": 1,
-    "originality": 1,
-    "evidence": 0.65,
-    "editorial": 0.77,
-    "overall": 0.72,
-    "explanation": "editorial 0.77 = mean of coherence 0.85 (review), relevance 0.68 (7 sources, 7 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 1 (3 studies, 3 claims, tension); evidence 0.65 = strongest Retail options study (Bryzgalova et al.) at 0.65 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.85), central conclusion supported, 3 essential findings verified, no pending review.",
-   "blocking": [],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Commission-free brokers sell order flow to market makers, so retail trades still carry a hidden cost.",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0.65,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
-        "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "Retail options study (Bryzgalova et al.)",
-       "verdict": "right",
-       "confidence": 0.65,
-       "note": "Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions.",
-       "applicability": "direct",
-       "basis": "review",
-       "why": "the passage documents payment for order flow and measures the spread cost retail pays; 'indirect' describes the cost, not a limit on the study"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.65)."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "Commission-free brokers sell order flow to market makers, so retail trades still carry a hidden cost.",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.65,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
-          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Retail options study (Bryzgalova et al.)",
-         "verdict": "right",
-         "confidence": 0.65,
-         "note": "Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions.",
-         "applicability": "direct",
-         "basis": "review",
-         "why": "the passage documents payment for order flow and measures the spread cost retail pays; 'indirect' describes the cost, not a limit on the study"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.65)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f1",
-       "text": "Options have wider spreads and higher trading costs than stocks",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.7,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/options-have-wider-spreads-higher-trading",
-          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L125-L136"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Retail options study (Bryzgalova et al.)",
-         "verdict": "right",
-         "confidence": 0.7,
-         "note": "Average quoted bid-ask spread of S&P 500 stock options is 17.2% versus 3.55 bps for the stocks; retail's preferred sub-week options carry a 12.3% spread and PFOF for options is about double that for stocks.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.7)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f2",
-       "text": "Commission-free brokerage increased retail trading frequency and volume.",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0.5,
-       "independent": 2,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
-          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L393-L396"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Retail options study (Bryzgalova et al.)",
-         "verdict": "right",
-         "confidence": 0.5,
-         "note": "Elimination of commissions fuelled a retail participation boom and rise in day trading; retail options volume grew 143-224% from Nov 2019 to Jul 2021 (descriptive, not a causal test).",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
-          "cite": "get-rich-quick/sources/chague-day-trading-for-a-living.txt#L475-L476"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Brazil day-trader study (Chague et al.)",
-         "verdict": "right",
-         "confidence": 0.4,
-         "note": "A strong late-2018 increase in Brazilian day traders is explained in part by retail brokerages zeroing fees for day traders to lure new investors.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
-          "cite": "get-rich-quick/sources/kogan-are-cryptos-different.txt#L948-L961"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "eToro crypto retail study (Kogan et al.)",
-         "verdict": "wrong",
-         "confidence": 0.25,
-         "note": "After eToro removed commissions on unlevered stock trades in 18 countries in Apr-May 2019, active investors showed no increase in rebalancing in response to returns (Table A4); a narrow test of trading intensity, not of volume or frequency overall, so only weak evidence against.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"narrow\")"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "eToro crypto retail study (Kogan et al.): After eToro removed commissions on unlevered stock trades in 18 countries in Apr-May 2019, active investors showed no increase in rebalancing in response to returns (Table A4); a narrow test of trading intensity, not of volume or frequency overall, so only weak evidence against. [partial: the verdict note limits its own scope (\"narrow\")]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.5), 1 qualifying."
-      }
-     }
-    ]
-   },
-   "chainCandidates": [
-    "decision:mlm-and-seminars",
-    "decision:trading-and-betting"
+   "chain": [
+    {
+     "id": "decision:mlm-and-seminars",
+     "question": "How much money do MLM participants actually make?"
+    }
    ]
   },
   {
@@ -1444,7 +1180,7 @@
     "No study strong enough to decide: \"A guru's documented profits do not predict the results of students who copy the strategy\"",
     "No study strong enough to decide: \"Guru pitches push buyers to take on credit-card debt to pay for the course\""
    ],
-   "premise": "The evidence is three FTC enforcement actions (Automators/Empire, DK Automation, Nudge), which are allegations and settlements about three firms, not a survey of courses in general; the video must say so in those words. Within that limit the pattern is consistent: over $7 million of buyer payments flowed to Empire's founders, whose documented income came from selling the opportunity; most buyers did not recoup their fees and virtually none earned the advertised amounts; advertised figures were gross sales while clients lost money net of fees, inventory and interest; the founder's results were conceded in fine print to be atypical; buyers were steered into $15,000 to $80,000 of business credit; and Nudge's free seminar was a pitch for a $1,100 workshop that pitched $40,000 training.",
+   "premise": "The evidence is two FTC enforcement actions (Automators/Empire and Nudge), which are allegations and settlements about two firms, not a survey of courses in general, plus the FTC's review of MLM income disclosures for the gross-not-net pattern; the video must say so in those words. Within that limit the pattern is consistent: over $7 million of buyer payments flowed to Empire's founders, whose documented income came from selling the opportunity; most buyers did not recoup their fees and virtually none earned the advertised amounts; advertised figures were gross sales while clients lost money net of fees, inventory and interest; the founder's results were conceded in fine print to be atypical; buyers were steered into $15,000 to $80,000 of business credit for working capital (inventory, not the package fee); and Nudge's free seminar was a pitch for a $1,100 workshop that pitched $40,000 training. Nothing here shows edited screenshots.",
    "claims": [
     "get-rich-quick/people-selling-courses-about-money-making",
     "get-rich-quick/typical-buyer-passive-income-course-ends",
@@ -1459,7 +1195,7 @@
    "arc": {
     "hook": "The free seminar, the $1,100 workshop, the $40,000 'advanced training': walk through one funnel the FTC documented.",
     "conflict": "Buyers were shown the method's income; the complaints trace where the money actually went.",
-    "evidence": "The Automators complaint (founders' income, buyers' outcomes, gross-versus-net figures, fine print, financing), the DK Automation case and the Nudge funnel.",
+    "evidence": "The Automators complaint (founders' income, buyers' outcomes, gross-versus-net figures, fine print, financing), the Nudge funnel, and the FTC's finding that no MLM income disclosure nets out expenses.",
     "resolution": "In the documented cases the course was the business and the buyers were the revenue; whether that generalises is the open question.",
     "takeaway": "Ask what the seller's income is from, insist on net figures for typical buyers, and never finance a course on credit."
    },
@@ -1805,8 +1541,7 @@
     ]
    },
    "chainCandidates": [
-    "decision:mlm-and-seminars",
-    "surprise:commission-free-brokers-sell-order-flow"
+    "decision:trading-and-betting"
    ]
   },
   {
@@ -2026,121 +1761,181 @@
    }
   },
   {
-   "id": "surprise:leverage-lets-small-account-take-large",
+   "id": "surprise:commission-free-brokers-sell-order-flow",
    "kind": "surprise",
-   "title": "Does Leverage Really Keep Your Risk Fixed?",
+   "title": "Is 'Commission-Free' Trading Actually Free?",
    "alternates": [
-    "What Leverage Does to a Small Trading Account",
-    "Why 'Only Risk What You Put In' Isn't How Margin Works"
+    "Who Pays When Your Broker Charges Nothing?",
+    "The Hidden Cost Inside Zero-Commission Trades"
    ],
-   "question": "Does leverage really let you take a big position while keeping your risk fixed?",
-   "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped; the EU regulator's finding is the opposite.",
-   "tension": "Fixed risk in the pitch; margin calls and losses beyond the deposit in the regulator's data.",
-   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients.",
+   "question": "Is commission-free trading actually free?",
+   "whyWatch": "Most retail traders use a zero-commission app. The paper on retail options trading puts a number on what they pay instead, and it is larger than the commissions were.",
+   "tension": "'Free' on the screen; a 12.3% average quoted spread on the weekly options retail prefers, paid for by order flow.",
+   "evidenceNeeded": "Measured payment for order flow and effective spreads paid by retail, and evidence on whether removing commissions changed how much people trade.",
    "evidenceAvailable": [
-    "ESMA CFD intervention 2018: wrong (0.5, direct)"
+    "Retail options study (Bryzgalova et al.): right (0.65, partial)",
+    "Retail options study (Bryzgalova et al.): right (0.7, direct)",
+    "Retail options study (Bryzgalova et al.): right (0.5, direct)",
+    "Brazil day-trader study (Chague et al.): right (0.4, direct)",
+    "eToro crypto retail study (Kogan et al.): wrong (0.25, partial)"
    ],
-   "gaps": [],
-   "premise": "Before checking, the best guess was \"partly\": Mechanically true for the stop-loss case, but gaps, slippage, funding costs and liquidation mean losses are not actually capped at the planned amount. ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed. 2 sources take a position on it.",
+   "gaps": [
+    "Reviewer: The central sentence is that brokers sell order flow, but the only cited passage (Bryzgalova L123-L136) shows the masked spread cost, not the payment for order flow. A verdict citing the paper's own PFOF lines (bryzgalova-retail-options.txt L46-L56, brokerages' PFOF in stocks and options, Q2 2021) or the cost totals (L171 or L956, $4.13bn of spread costs against about $800m of commissions) would unblock it; then chain it after decision:trading-and-betting, whose net-of-fees losses raise the question whether zero-commission apps removed the cost."
+   ],
+   "premise": "Bryzgalova and colleagues, studying US retail options trades routed to wholesalers, say the true trading costs are masked by zero commissions: the average quoted spread on S&P 500 stock options is 17.2%, and half the wholesaler trades in their sample are options with under a week to expiry at a 12.3% average spread. The cited passages establish the hidden cost; the sale of order flow and the paper's dollar totals ($4.13bn of spread costs against about $800m of commissions) sit in lines no verdict cites yet, so the script either asks for them through record-sources or leaves them out. The evidence is US options, not stock trades generally. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one narrow measure of trading behaviour after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
    "claims": [
-    "get-rich-quick/leverage-lets-small-account-take-large"
+    "get-rich-quick/commission-free-brokers-sell-order-flow",
+    "get-rich-quick/options-have-wider-spreads-higher-trading",
+    "get-rich-quick/commission-free-brokerage-increased-retail-trading"
    ],
-   "related": [],
+   "related": [
+    "get-rich-quick/retail-options-trading-has-grown-many"
+   ],
    "arc": {
-    "hook": "State the expectation everyone shares, with the sources that voice it.",
-    "conflict": "A study checked it and found something else.",
-    "evidence": "ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
-    "resolution": "Why the expectation was wrong, or what the sources were missing.",
-    "takeaway": "The corrected belief, with its limits."
+    "hook": "Your trade cost nothing. Someone paid your broker for it. What did you pay?",
+    "conflict": "Free trading was sold as democratising markets; the paper says the cost moved rather than vanished, and moved most for the products retail likes best.",
+    "evidence": "Payment for order flow, quoted spreads on options versus stocks, the dollar totals, and the post-2019 surge in retail and options volume, with the eToro null result as the caveat.",
+    "resolution": "Free is a pricing model: commissions became spreads and order-flow payments, heaviest on short-dated options.",
+    "takeaway": "Count the spread, not the commission, and be most careful with the products the app makes easiest to trade."
    },
    "coherence": {
-    "score": 0.8,
+    "score": 0.85,
     "basis": "review",
-    "explanation": "One mechanism, one regulator's finding."
+    "explanation": "One question, whether zero-commission trading is free, answered by who pays the broker (order flow), where the cost reappears (spreads, especially on options) and what free trading did to trading volume."
    },
-   "format": "short",
-   "formatWhy": "1 study bear directly or partly on the question, 2 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
+   "format": "long-form",
+   "formatWhy": "3 studies bear directly or partly on the question, 7 sources voice the belief, with a contradiction or qualification to explore, across 3 claims.",
    "scores": {
-    "coherence": 0.8,
-    "relevance": 0.36,
+    "coherence": 0.85,
+    "relevance": 0.68,
     "curiosity": 0.8,
-    "stakes": 0.7,
-    "depth": 0.43,
+    "stakes": 0.5,
+    "depth": 1,
     "originality": 1,
-    "evidence": 0.5,
-    "editorial": 0.62,
-    "overall": 0.57,
-    "explanation": "editorial 0.62 = mean of coherence 0.8 (review), relevance 0.36 (2 sources, 2 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.43 (1 study, 1 claim, tension); evidence 0.5 = strongest ESMA CFD intervention 2018 at 0.5 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "evidence": 0.39,
+    "editorial": 0.77,
+    "overall": 0.62,
+    "explanation": "editorial 0.77 = mean of coherence 0.85 (review), relevance 0.68 (7 sources, 7 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 1 (3 studies, 3 claims, tension); evidence 0.39 = strongest Retail options study (Bryzgalova et al.) at 0.65 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.8), central conclusion supported, 1 essential finding verified, no pending review.",
-   "blocking": [],
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: The central sentence is that brokers sell order flow, but the only cited passage (Bryzgalova L123-L136) shows the masked spread cost, not the payment for order flow. A verdict citing the paper's own PFOF lines (bryzgalova-retail-options.txt L46-L56, brokerages' PFOF in stocks and options, Q2 2021) or the cost totals (L171 or L956, $4.13bn of spread costs against about $800m of commissions) would unblock it; then chain it after decision:trading-and-betting, whose net-of-fees losses raise the question whether zero-commission apps removed the cost.",
+   "blocking": [
+    "Reviewer: The central sentence is that brokers sell order flow, but the only cited passage (Bryzgalova L123-L136) shows the masked spread cost, not the payment for order flow. A verdict citing the paper's own PFOF lines (bryzgalova-retail-options.txt L46-L56, brokerages' PFOF in stocks and options, Q2 2021) or the cost totals (L171 or L956, $4.13bn of spread costs against about $800m of commissions) would unblock it; then chain it after decision:trading-and-betting, whose net-of-fees losses raise the question whether zero-commission apps removed the cost."
+   ],
    "reviewed": true,
    "audit": {
     "central": {
      "id": "central",
-     "text": "The evidence does not support \"Leverage lets a small account take large positions while keeping the dollar amount at risk fixed\"",
+     "text": "Commission-free brokers sell order flow to market makers, so retail trades still carry a hidden cost.",
      "kind": "fact",
      "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
      "verbatim": true,
-     "strength": 0.5,
-     "independent": 1,
-     "supporting": [
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
       {
        "ref": {
         "kind": "study",
-        "claim": "get-rich-quick/leverage-lets-small-account-take-large",
-        "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119"
+        "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
+        "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136"
        },
        "cited": true,
-       "role": "supports",
-       "by": "ESMA CFD intervention 2018",
-       "verdict": "wrong",
-       "confidence": 0.5,
-       "note": "ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
+       "role": "qualifies",
+       "by": "Retail options study (Bryzgalova et al.)",
+       "verdict": "right",
+       "confidence": 0.65,
+       "note": "Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines"
       }
      ],
-     "contradicting": [],
-     "qualifying": [],
      "context": [],
      "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.5)."
+     "limitations": [
+      "Retail options study (Bryzgalova et al.): Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions. [partial: the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 1 qualifying."
     },
     "findings": [
      {
       "role": "evidence",
       "validation": {
        "id": "f0",
-       "text": "The evidence does not support \"Leverage lets a small account take large positions while keeping the dollar amount at risk fixed\"",
+       "text": "Commission-free brokers sell order flow to market makers, so retail trades still carry a hidden cost.",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
+          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Retail options study (Bryzgalova et al.)",
+         "verdict": "right",
+         "confidence": 0.65,
+         "note": "Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Retail options study (Bryzgalova et al.): Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions. [partial: the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "Options have wider spreads and higher trading costs than stocks",
        "kind": "fact",
        "modality": "plain",
        "status": "supported",
        "decision": "approved",
        "review": false,
        "verbatim": true,
-       "strength": 0.5,
+       "strength": 0.7,
        "independent": 1,
        "supporting": [
         {
          "ref": {
           "kind": "study",
-          "claim": "get-rich-quick/leverage-lets-small-account-take-large",
-          "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119"
+          "claim": "get-rich-quick/options-have-wider-spreads-higher-trading",
+          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L125-L136"
          },
          "cited": true,
          "role": "supports",
-         "by": "ESMA CFD intervention 2018",
-         "verdict": "wrong",
-         "confidence": 0.5,
-         "note": "ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
+         "by": "Retail options study (Bryzgalova et al.)",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "Average quoted bid-ask spread of S&P 500 stock options is 17.2% versus 3.55 bps for the stocks; retail's preferred sub-week options carry a 12.3% spread and PFOF for options is about double that for stocks.",
          "applicability": "direct",
          "basis": "heuristic",
          "why": "the verdict bears on the claim as worded"
@@ -2152,15 +1947,88 @@
        "problems": [],
        "limitations": [],
        "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.5)."
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.7)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Commission-free brokerage increased retail trading frequency and volume.",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.5,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
+          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L393-L396"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Retail options study (Bryzgalova et al.)",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "Elimination of commissions fuelled a retail participation boom and rise in day trading; retail options volume grew 143-224% from Nov 2019 to Jul 2021 (descriptive, not a causal test).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
+          "cite": "get-rich-quick/sources/chague-day-trading-for-a-living.txt#L475-L476"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Brazil day-trader study (Chague et al.)",
+         "verdict": "right",
+         "confidence": 0.4,
+         "note": "A strong late-2018 increase in Brazilian day traders is explained in part by retail brokerages zeroing fees for day traders to lure new investors.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
+          "cite": "get-rich-quick/sources/kogan-are-cryptos-different.txt#L948-L961"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "eToro crypto retail study (Kogan et al.)",
+         "verdict": "wrong",
+         "confidence": 0.25,
+         "note": "After eToro removed commissions on unlevered stock trades in 18 countries in Apr-May 2019, active investors showed no increase in rebalancing in response to returns (Table A4); a narrow test of trading intensity, not of volume or frequency overall, so only weak evidence against.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"narrow\")"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "eToro crypto retail study (Kogan et al.): After eToro removed commissions on unlevered stock trades in 18 countries in Apr-May 2019, active investors showed no increase in rebalancing in response to returns (Table A4); a narrow test of trading intensity, not of volume or frequency overall, so only weak evidence against. [partial: the verdict note limits its own scope (\"narrow\")]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.5), 1 qualifying."
       }
      }
     ]
-   },
-   "chainCandidates": [
-    "surprise:commission-free-brokers-sell-order-flow",
-    "decision:mlm-and-seminars"
-   ]
+   }
   },
   {
    "id": "conflict:demeaning-salaried-jobs-college-sales-tactic",
@@ -2299,6 +2167,151 @@
        "problems": [],
        "limitations": [
         "Who becomes an entrepreneur (Levine & Rubinstein): The highest-earning business owners are the best educated: 46% of incorporated self-employed hold a college degree versus 32% of salaried workers, while the unincorporated (who earn ~30% less than employees) are less educated than salaried workers, and entrepreneurs are drawn from the comparatively high-paid, high-educated salaried workers; consistent with college and salaried success improving outcomes, though the paper does not test the sales-tactic part. [partial: the verdict note limits its own scope (\"though\")]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "surprise:leverage-lets-small-account-take-large",
+   "kind": "surprise",
+   "title": "Does Leverage Really Keep Your Risk Fixed?",
+   "alternates": [
+    "What Leverage Does to a Small Trading Account",
+    "Why 'Only Risk What You Put In' Isn't How Margin Works"
+   ],
+   "question": "Does leverage really let you take a big position while keeping your risk fixed?",
+   "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped; the EU regulator's finding is the opposite.",
+   "tension": "Fixed risk in the pitch; margin calls and losses beyond the deposit in the regulator's data.",
+   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients.",
+   "evidenceAvailable": [
+    "ESMA CFD intervention 2018: wrong (0.5, partial)"
+   ],
+   "gaps": [
+    "Reviewer: The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops."
+   ],
+   "premise": "Before checking, the best guess was \"partly\": Mechanically true for the stop-loss case, but gaps, slippage, funding costs and liquidation mean losses are not actually capped at the planned amount. ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed. 2 sources take a position on it.",
+   "claims": [
+    "get-rich-quick/leverage-lets-small-account-take-large"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "State the expectation everyone shares, with the sources that voice it.",
+    "conflict": "A study checked it and found something else.",
+    "evidence": "ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
+    "resolution": "Why the expectation was wrong, or what the sources were missing.",
+    "takeaway": "The corrected belief, with its limits."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One mechanism, one regulator's finding."
+   },
+   "format": "needs-research",
+   "formatWhy": "1 study bear directly or partly on the question, 2 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.36,
+    "curiosity": 0.8,
+    "stakes": 0.7,
+    "depth": 0.43,
+    "originality": 1,
+    "evidence": 0.3,
+    "editorial": 0.62,
+    "overall": 0.49,
+    "explanation": "editorial 0.62 = mean of coherence 0.8 (review), relevance 0.36 (2 sources, 2 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.43 (1 study, 1 claim, tension); evidence 0.3 = strongest ESMA CFD intervention 2018 at 0.5 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops.",
+   "blocking": [
+    "Reviewer: The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "The evidence does not support \"Leverage lets a small account take large positions while keeping the dollar amount at risk fixed\"",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/leverage-lets-small-account-take-large",
+        "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "ESMA CFD intervention 2018",
+       "verdict": "wrong",
+       "confidence": 0.5,
+       "note": "ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed. [partial: a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 1 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The evidence does not support \"Leverage lets a small account take large positions while keeping the dollar amount at risk fixed\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/leverage-lets-small-account-take-large",
+          "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "ESMA CFD intervention 2018",
+         "verdict": "wrong",
+         "confidence": 0.5,
+         "note": "ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed. [partial: a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)]"
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."

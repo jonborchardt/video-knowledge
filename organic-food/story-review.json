@@ -1,0 +1,318 @@
+{
+  "applicability": {
+    "organic-food/organic-farming-bans-all-synthetic-pesticides|denies|organic-food/sources/baranski-2014-crops.txt#L40-L43": {
+      "level": "contextual",
+      "reason": "a one-line background paraphrase of organic standards in the introduction of a crop-composition meta-analysis; it does not examine the rules, and the regulation's own list of allowed synthetics (7 CFR 205.601) decides whether every synthetic pesticide is banned"
+    }
+  },
+  "stories": {
+    "conflict:organic-farming-uses-pesticides": {
+      "coherence": {
+        "score": 0.9,
+        "reason": "One question, what does organic farming spray: the rule that organic farms may apply approved substances when prevention fails, the fact that the approved list includes some synthetics, and how hazardous that list is. Shoppers who believe organic means pesticide-free are asking whether it is safe, so the hazard comparison is part of the same answer."
+      },
+      "claims": [
+        "organic-food/organic-farming-uses-pesticides",
+        "organic-food/organic-farming-bans-all-synthetic-pesticides",
+        "organic-food/pesticides-allowed-organic-farming-not-necessarily"
+      ],
+      "question": "Does organic farming really mean no pesticides, and are the ones it uses safer?",
+      "title": "Does Organic Mean No Pesticides?",
+      "alternates": ["What Organic Farmers Are Allowed to Spray", "Organic Pesticides: Fewer, Mostly Milder, Not All Harmless"],
+      "whyWatch": "Many shoppers pay for organic believing nothing was sprayed. The organic rulebook says otherwise, and the EU's hazard classifications show how the pesticides organic farms may use compare with the rest.",
+      "tension": "Dozens of videos say organic means pesticide-free; sceptics answer that organic pesticides are no safer than synthetic ones. The rules show organic farms do spray, and the hazard data show the organic list is mostly milder, with two real exceptions.",
+      "evidenceNeeded": "The organic regulation's own rules on pest control and its list of allowed synthetic substances, the EU count of pesticides approved for organic use, and their hazard classifications against all approved pesticides.",
+      "premise": "Organic farming does use pesticides. US rules (7 CFR 205.206) let organic producers apply biological, botanical or National List substances when preventive practices fail, and 7 CFR 205.601 lists synthetic ones among them, such as insecticidal soaps, horticultural oils, lime sulfur and copper fungicides. In the EU, 26 of 385 authorised pesticide substances are also approved for organic farming, plus two synthetic pyrethroids allowed only in insect traps. That list is mostly of low concern: 10 of the 26 have any identified toxicity, against 340 of all 385, and none is classed as a suspected carcinogen or reproductive toxicant (27 and 26 among all approved). The exceptions are real: pyrethrins act like synthetic pyrethroids, and copper is toxic at high intakes and harmful to aquatic life. These are EU hazard classes, not measured exposure or harm, and the US list differs.",
+      "arc": {
+        "hook": "Ask what the viewer thinks organic farmers spray, then read the rule that says when they may.",
+        "resolution": "Organic is a short list of pesticides used after prevention, mostly natural and mostly of low concern, with a few synthetic exceptions and two natural ones, pyrethrins and copper, that are not harmless; it is not pesticide-free farming."
+      },
+      "qualificationsAccepted": true,
+      "chain": ["decision:pesticides-on-your-plate"],
+      "chainWhy": "Once the viewer learns organic farms do spray, they ask whether eating organic still lowers the pesticides they take in, which residue monitoring and diet-switch trials answer."
+    },
+    "conflict:organic-farming-bans-all-synthetic-pesticides": {
+      "reject": "a duplicate of conflict:organic-farming-uses-pesticides: the same conclusion (organic farming uses approved pesticides, a few of them synthetic), so its claim was moved there; the only dissent is a background sentence in a crop review, not a reading of the rules"
+    },
+    "conflict:pesticides-allowed-organic-farming-not-necessarily": {
+      "reject": "a chapter of conflict:organic-farming-uses-pesticides, which now carries this claim: whether organic pesticides are safer is the second half of the same answer, and alone it is a one-table story"
+    },
+    "decision:pesticides-on-your-plate": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "Pruned to one question, does eating organic lower the pesticides you take in: residues on organic versus conventional produce, and what happens to urinary pesticide levels when people switch. Whether conventional residues harm health, the Dirty Dozen and washing are separate questions with their own candidates, and the pesticide-use claims belong to the organic-farming story."
+      },
+      "claims": ["organic-food/switching-organic-diet-quickly-lowers-pesticide", "organic-food/organic-produce-carries-lower-pesticide-residues"],
+      "question": "Does eating organic actually lower the pesticides you take in?",
+      "title": "Does Eating Organic Cut Your Pesticide Intake?",
+      "alternates": ["What Happens to Pesticide Levels When You Switch to Organic", "Organic Produce Has Fewer Residues, but Not Zero"],
+      "whyWatch": "Lower pesticide exposure is the most common reason people buy organic. Food monitoring and diet-switch trials measure it directly, and the effect is large and fast, while the health payoff is a separate, open question.",
+      "tension": "Organic produce is sold as residue-free, and sceptics say the difference is trivial. Monitoring finds residues on organic food too, yet people's urinary pesticide levels drop sharply within days of switching.",
+      "evidenceNeeded": "Residue monitoring that compares organic and conventional samples, and diet intervention trials that measure pesticide metabolites in urine before and after switching.",
+      "premise": "Yes, by a lot, though not to zero. EU monitoring found quantifiable residues in 43.7% of all samples against 13.8% of organic ones, and a meta-analysis found detectable residues on 46% of conventional and 11% of organic crops, though few studies compared concentrations; US monitoring summarised by Winter and Katz still found residues on 23% of organic samples. Whole-diet switch trials in children and adults cut urinary pesticide metabolites, by up to 90%, within a few days. These are exposure measures; whether the lower exposure improves health is not established here.",
+      "arc": {
+        "hook": "Swap a family's food to organic for a week and measure what comes out in their urine.",
+        "resolution": "Eating organic sharply lowers pesticide residues on your food and in your body, but organic food is not residue-free, and less exposure is not the same as a proven health benefit."
+      },
+      "qualificationsAccepted": true
+    },
+    "conflict:pesticide-residues-conventional-produce-too-low": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question, do the residues on conventional produce harm health, with a risk model and tolerance compliance on one side and birth-cohort evidence on organophosphates on the other."
+      },
+      "question": "Are the pesticide residues on conventional produce too low to hurt you?",
+      "title": "Are Pesticide Residues on Produce Too Low to Matter?",
+      "alternates": ["Safe Limits Versus Birth Studies: The Pesticide Residue Question", "How Much Pesticide Residue Is Too Much?"],
+      "research": "The corpus answers this only indirectly: a 2011 risk model of mean exposure to the ten most detected pesticides on 2010 Dirty Dozen crops, a USDA summary of tolerance compliance that measures no health outcome, and a review's summary of organophosphate birth cohorts mostly from farmworker and inner-city settings. Unblocking it needs a direct study of health outcomes against dietary residue exposure in the general population (a cohort linking measured dietary or urinary residues to outcomes, or a current cumulative dietary risk assessment that includes high-end consumers and pregnancy)."
+    },
+    "conflict:dirty-dozen-list-reliable-guide-which": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question, should you use the Dirty Dozen to decide what to buy organic, set against a risk assessment of the list and EWG's own methodology."
+      },
+      "question": "Should you use the Dirty Dozen to decide what to buy organic?",
+      "title": "Is the Dirty Dozen a Good Guide to Buying Organic?",
+      "alternates": ["What the Dirty Dozen Ranks, and What It Leaves Out", "The Dirty Dozen List, Checked"],
+      "research": "The only critique in the corpus (Winter and Katz 2011) assessed the 2010 list and the old six-indicator method; EWG changed its method in 2025 to add a toxicity factor. Unblocking it needs a current, independent assessment of the 2025-2026 list that weights residues by how much of each food people eat and compares the exposure to health thresholds, showing whether the ranking separates high-risk from low-risk produce."
+    },
+    "conflict:washing-produce-removes-most-pesticide-residue": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question, does rinsing produce remove most pesticide residue."
+      },
+      "question": "Does washing produce remove most pesticide residue?",
+      "title": "Does Washing Produce Get the Pesticides Off?",
+      "alternates": ["Rinse, Soak or Peel: What Removes Pesticide Residue", "How Much Pesticide Does Washing Remove?"],
+      "research": "The corpus only shows that 57.7% of USDA samples still carried detectable residue after a 15-20 second cold rinse; it never measures how much the rinse removed. Unblocking it needs a study that measures residue before and after household washing methods (rinsing, soaking, baking-soda solutions, peeling) for common pesticides and crops."
+    },
+    "conflict:eating-organic-food-has-proven-health": {
+      "coherence": {
+        "score": 0.9,
+        "reason": "One question, does eating organic make people healthier, answered by systematic reviews of human studies and the meta-analyses' own statements about what they could not show."
+      },
+      "question": "Does eating organic food actually make you healthier?",
+      "title": "Does Eating Organic Make You Healthier?",
+      "alternates": ["What the Studies Show About Organic Food and Your Health", "Organic Food's Health Benefits: Proven or Assumed?"],
+      "whyWatch": "Health is the main reason people pay more for organic. Several systematic reviews looked for the benefit in people, not in the food, and agree on what is and is not known.",
+      "tension": "Organic eaters do show lower rates of obesity, allergies and some cancers in observational studies, and many videos treat that as proof. The reviews say those people also eat and live differently, and the few trials are short and measure surrogate markers.",
+      "evidenceNeeded": "Systematic reviews of human studies on organic diets and health outcomes, with their assessment of confounding and trial quality.",
+      "premise": "No health benefit of eating organic is proven. A 2019 systematic review of 35 studies found observational links with lower metabolic syndrome, obesity, non-Hodgkin lymphoma and other outcomes, but organic eaters also eat more plants and live healthier lives, trials were short and measured surrogate markers, and the evidence does not allow a definitive statement of long-term benefit. A 2017 review reached the same conclusion, the Stanford review found only 3 of 17 human studies examined clinical outcomes, with no differences, and the American Academy of Pediatrics found no well-powered human study showing benefit. Not proven is not the same as shown to be absent: the one consistent finding is lower pesticide levels in urine.",
+      "arc": {
+        "hook": "Organic eaters are healthier. The question is whether organic food is the reason.",
+        "resolution": "The benefit is not proven: the associations are real but tangled with healthier lifestyles, and no trial has run long enough to measure a health outcome."
+      },
+      "qualificationsAccepted": true,
+      "chain": ["conflict:eating-organic-food-lowers-cancer-risk"],
+      "chainWhy": "A viewer told no health benefit is proven will immediately recall the widely reported French study that linked organic eating to 25% less cancer, so the next question is whether that finding changes the answer."
+    },
+    "conflict:eating-organic-food-lowers-cancer-risk": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One question, does organic food lower cancer risk, answered by the two large cohorts and the confounding that limits both; the confounding claim is the explanation the question needs."
+      },
+      "claims": ["organic-food/eating-organic-food-lowers-cancer-risk", "organic-food/organic-buyers-wealthier-healthier-which-confounds"],
+      "question": "Does eating organic food lower your risk of cancer?",
+      "title": "Does Organic Food Lower Your Cancer Risk?",
+      "alternates": ["Two Big Studies, Two Answers on Organic Food and Cancer", "The 25% Cancer Headline, Read Closely"],
+      "whyWatch": "A 2018 French study made headlines with 25% fewer cancers among organic eaters, while a far larger UK study found no overall effect. Putting them side by side shows what an observational study can and cannot tell you.",
+      "tension": "NutriNet-Sante found a 25% lower cancer hazard in its most organic quartile; the Million Women Study, with nine times the participants and twice the follow-up, found none overall. Both agree on one cancer, and both studied people whose habits differ in other ways.",
+      "evidenceNeeded": "The two large prospective cohorts compared on size, follow-up and adjustment, a systematic review placing them together, and data on how organic eaters differ from other people.",
+      "premise": "The evidence does not show that organic food lowers cancer risk. In 623,080 UK women followed 9.3 years, usually or always eating organic was not linked to lower total cancer (RR 1.03) and breast cancer was slightly higher; only non-Hodgkin lymphoma was lower, which the authors say may be chance. In 68,946 French adults followed 4.6 years, the most organic quartile had a 25% lower hazard of any cancer, an absolute difference of 0.6%, mainly for lymphomas and postmenopausal breast cancer. Both are observational: the French organic eaters were more often higher-income, educated, active and plant-eating, and the UK ones exercised more and smoked less, though income differed little there. Residual confounding is the likeliest reading of the split; lymphoma is the one signal both share.",
+      "arc": {
+        "hook": "Open on the 25% headline, then the bigger study that found nothing.",
+        "resolution": "Not shown: one large cohort finds no overall effect, the other a small absolute difference in people who also live healthier lives; the shared lymphoma signal is worth watching, not a reason to buy."
+      },
+      "qualificationsAccepted": true
+    },
+    "conflict:organic-food-costs-substantially-more-conventional": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One question, how much more does organic cost, answered by a USDA price study that controls for brand, store and package."
+      },
+      "question": "How much more does organic food really cost?",
+      "title": "How Much More Does Organic Really Cost?",
+      "alternates": ["The Organic Price Premium, Product by Product", "Is Organic Always the Expensive Option?"],
+      "whyWatch": "Everyone knows organic costs more, but the size of the premium swings from a few percent to nearly double depending on what you buy. A USDA study of real purchases shows where the premium is small and where it is steep.",
+      "tension": "Some videos say organic is barely more expensive once you shop smart; others treat it as a luxury. Measured purchase data shows a premium on every product studied, from 7% for spinach to 82% for eggs in 2010.",
+      "evidenceNeeded": "Retail price premiums from purchase data that compares like with like, by product.",
+      "premise": "Organic food does cost substantially more. A USDA Economic Research Service analysis of 2004-2010 household purchase data, controlling for package size, brand, store and market, found a positive premium for all 17 products studied and above 20% for 16 of them; in 2010 it ran from 7% for spinach to 82% for eggs. Meat and poultry were not covered, and the data predate the 2020s, so the figures show the pattern, not today's shelf price.",
+      "arc": {
+        "hook": "Same product, two labels, two prices: how wide is the gap?",
+        "resolution": "The premium is real on every product studied and usually above 20%, but it varies widely by product, so the cost of going organic depends on what you switch."
+      },
+      "chain": ["decision:is-organic-food-healthier"],
+      "chainWhy": "Once the viewer sees premiums of 20% to 80%, the next question is what the extra money buys in the food itself: is organic food more nutritious?"
+    },
+    "decision:is-organic-food-healthier": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "Pruned to one question, is organic food more nutritious, answered by the two composition differences the meta-analyses establish (polyphenols in crops, omega-3 in milk and meat). Health outcomes, cancer and confounding are their own chained story; the blanket 'more nutritious' claim is contradicted and stays out, and the fruit-and-vegetables claim has no deciding study."
+      },
+      "claims": ["organic-food/organic-milk-meat-contain-more-omega", "organic-food/organic-crops-contain-more-antioxidants-polyphenols"],
+      "question": "Is organic food more nutritious than conventional food?",
+      "title": "Is Organic Food More Nutritious?",
+      "alternates": ["What Is Actually Different Inside Organic Food", "More Omega-3, More Polyphenols: What Organic Food Contains"],
+      "whyWatch": "Videos either say organic is packed with more nutrients or that it is identical. Large meta-analyses find something more specific: a few real differences, in particular compounds, with no proven effect on health.",
+      "tension": "Sceptics cite reviews finding no meaningful nutritional difference; advocates cite meta-analyses finding far more antioxidants and omega-3. Both are right about different things.",
+      "evidenceNeeded": "Meta-analyses of composition differences in organic crops, milk and meat, with their reliability ratings and what the authors say about health relevance.",
+      "premise": "Organic food differs in a few specific compounds, not across the board. A meta-analysis of 170 studies found about 56% more omega-3 fatty acids in organic milk, holding across seasons, and one of 67 studies found 47% more in organic meat, with very high heterogeneity and low reliability. Organic crops carry modestly more phenolic compounds, 14 to 26% for total phenolics in published meta-analyses and more for some subgroups, though subgroup estimates are less reliable. The reviewers say these differences are not a sufficient basis for conclusions about health, and dairy and meat are a minor source of omega-3 in most diets.",
+      "arc": {
+        "hook": "Put organic and conventional milk side by side and ask what is actually different inside.",
+        "resolution": "Organic milk has clearly more omega-3, organic crops modestly more polyphenols; whether that changes anyone's health is not shown."
+      },
+      "qualificationsAccepted": true
+    },
+    "conflict:organic-food-more-nutritious-conventional": {
+      "reject": "the blanket claim is contradicted by the evidence, and the real question (what differs inside organic food) is answered by decision:is-organic-food-healthier"
+    },
+    "conflict:organic-farming-yields-less-food-per": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One question, does organic farming grow less food per acre, answered by a large hierarchical meta-analysis and set against a pediatric report's one-line dissent."
+      },
+      "question": "Does organic farming really grow less food?",
+      "title": "Does Organic Farming Grow Less Food?",
+      "alternates": ["The Organic Yield Gap, Measured", "How Much Less Does an Organic Field Produce?"],
+      "whyWatch": "Whether organic can feed the world turns on one number, how much less an organic field yields. A meta-analysis of more than a thousand comparisons puts a figure on it, and explains why some reports call the yields comparable.",
+      "tension": "A pediatric clinical report says well-designed studies show organic yields comparable to conventional; a meta-analysis of 115 studies across 38 countries finds a consistent gap for every crop type.",
+      "evidenceNeeded": "Meta-analyses of side-by-side organic and conventional yields, with their confidence intervals and the reasons the gap varies.",
+      "premise": "The weight of evidence says organic yields less, by less than often claimed. Ponisio and colleagues pooled 1,071 comparisons from 115 studies in 38 countries and found organic yields 19.2% lower (95% credible interval 15.5 to 22.9%), with conventional ahead for every crop type, a smaller gap than earlier meta-analyses, and they note publication bias may overstate it. A 2017 review adds that organic yields are typically limited by nitrogen. The dissent is a one-sentence summary in the American Academy of Pediatrics abstract that well-designed studies show comparable yields, not a yield analysis of its own.",
+      "arc": {
+        "hook": "Same crop, same region, one field organic: how much less comes off it?",
+        "resolution": "About a fifth less on average, consistently across crops; the comparable-yield claim rests on a single summary sentence, not on the pooled data."
+      },
+      "chain": ["decision:price-and-the-planet"],
+      "chainWhy": "If organic fields yield about a fifth less, the viewer asks the obvious follow-up: does organic still come out better for the environment once it needs more land for the same food?"
+    },
+    "decision:price-and-the-planet": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "Pruned to one question, is organic farming better for the environment, answered by one life-cycle meta-analysis per unit of food (land, greenhouse gases, the overall claim) and its finding that what you eat matters more. Price is its own story, and the health-premium claim has no deciding study."
+      },
+      "claims": [
+        "organic-food/organic-farming-needs-more-land-produce",
+        "organic-food/organic-conventional-farming-have-similar-greenhouse",
+        "organic-food/organic-farming-better-environment-conventional",
+        "organic-food/what-you-eat-matters-more-your"
+      ],
+      "question": "Is organic farming actually better for the planet?",
+      "title": "Is Organic Farming Better for the Planet?",
+      "alternates": ["Organic Food's Environmental Footprint, Per Kilogram", "Land, Emissions and Runoff: Organic Versus Conventional"],
+      "whyWatch": "Many people buy organic for the environment. Measured per kilogram of food, organic wins on some impacts and loses on others, and the choice of food turns out to matter far more than the label.",
+      "tension": "Organic avoids synthetic fertiliser and most synthetic pesticides, so it must be greener; but it needs more land for the same harvest. A meta-analysis of life-cycle studies finds both effects, and the authors refuse to call either system more sustainable.",
+      "evidenceNeeded": "Life-cycle comparisons of organic and conventional systems per unit of food across several environmental indicators, and the size of those differences against differences between foods.",
+      "premise": "Not clearly, per unit of food. In Clark and Tilman's meta-analysis of paired life-cycle studies, mostly from high-input farming in Europe and North America, organic systems needed 25 to 110% more land, used 15% less energy, had 37% higher eutrophication potential and similar greenhouse gas emissions, because manure releases nitrous oxide that offsets the savings from skipping synthetic fertiliser. The authors say this does not make conventional farming more sustainable, since they could not measure pesticide and other impacts, and organic may have benefits outside their data. What dwarfs both is the food itself: ruminant meat has 20 to 100 times the impacts of plant foods, while the two systems differ by tens of percent.",
+      "arc": {
+        "hook": "Per field, organic looks greener; per kilogram of food, the picture changes.",
+        "resolution": "Organic trades less energy and fewer synthetic inputs for more land and more nutrient runoff, with similar emissions; for the planet, what you eat matters far more than whether it is organic."
+      },
+      "qualificationsAccepted": true
+    },
+    "conflict:organic-farming-better-environment-conventional": {
+      "reject": "a duplicate of decision:price-and-the-planet, which asks the same question and carries this claim alongside the land, emissions and diet findings that answer it"
+    },
+    "decision:what-the-seal-actually-requires": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "Pruned to one question, what does the USDA organic seal guarantee: the 95% and 70% tiers, the genetic-engineering ban, the antibiotics and hormones rule, the grain-feeding allowance, and whether imports carrying the seal meet the same rule. The 'natural' and poultry-hormone claims are about other labels, and the residue tolerance belongs with the pesticide stories."
+      },
+      "claims": [
+        "organic-food/usda-organic-seal-requires-least-percent",
+        "organic-food/products-labelled-made-organic-ingredients-need",
+        "organic-food/usda-organic-prohibits-genetically-engineered-ingredients",
+        "organic-food/organic-livestock-cannot-given-antibiotics-added",
+        "organic-food/organic-beef-dairy-can-come-grain",
+        "organic-food/imported-organic-products-must-meet-same"
+      ],
+      "question": "What does the USDA organic seal actually guarantee?",
+      "title": "What the USDA Organic Seal Actually Guarantees",
+      "alternates": ["Organic, 100% Organic, Made With Organic: What Each Label Means", "Reading the Organic Label: Ingredients, GMOs, Antibiotics, Grass and Imports"],
+      "whyWatch": "The organic seal is one of the few food labels backed by a detailed federal rule. Reading that rule answers what shoppers argue about: how much of the product is organic, whether GMOs and antibiotics are allowed, whether organic beef is grass-fed, and whether imported organic follows the same rule.",
+      "tension": "Shoppers assume organic means 100% organic, grass-fed and the same rule everywhere. The rule sets a 95% floor for the seal and a 70% floor for 'made with organic', lets organic cattle be finished on grain, and accepts some imports under foreign standards judged equivalent.",
+      "evidenceNeeded": "The text of the federal organic regulation on product composition, excluded methods, livestock health care and feeding, the USDA's own summary, and the Inspector General's audit of import equivalence arrangements.",
+      "premise": "The seal guarantees specific, checkable things. A product labelled organic must contain at least 95% organic ingredients by weight, excluding water and salt; 'made with organic' needs only 70% and may not carry the seal. Organic products must be made without genetic engineering, and no animal treated with antibiotics, nor its milk or meat, may be sold as organic, nor may hormones be given for growth (a sick animal must still be treated, and then loses organic status). The seal does not mean grass-fed: organic ruminants must graze in the grazing season, but slaughter stock are typically grain finished, in feedlots for up to a fifth of their life or 120 days, and EU organic diets may include up to 40% concentrate. Imports are certified either to the USDA rule or under equivalence arrangements with partners such as Canada, the EU and Japan, which need be equivalent, not identical: the Inspector General's 2017 audit counted dozens of procedural and technical differences in two arrangements without documented resolution of all of them. That audit predates the 2023 enforcement rule and measured no fraud rate.",
+      "arc": {
+        "hook": "Pick up three boxes labelled 100% organic, organic and made with organic, and ask what each promises.",
+        "resolution": "The seal is a real rule: 95% organic content, no genetic engineering, no antibiotics or growth hormones; it is not a promise of grass-fed beef, and an imported product may meet an equivalent foreign standard rather than the identical US one."
+      },
+      "qualificationsAccepted": true
+    },
+    "surprise:imported-organic-products-must-meet-same": {
+      "reject": "a chapter of decision:what-the-seal-actually-requires, which now carries this claim: whether imports meet the same rule is part of what the seal guarantees, and alone it rests on one audit with a single source voicing the belief"
+    },
+    "decision:can-you-trust-the-label": {
+      "coherence": {
+        "score": 0.7,
+        "reason": "Pruned to one question, how often is organic food not what it says, with the fraud, imports, testing and enforcement claims that bear on it; the 'mainly marketing' claim is about price and has its own candidate."
+      },
+      "claims": [
+        "organic-food/significant-share-food-sold-organic-not",
+        "organic-food/some-sellers-have-passed-off-conventional",
+        "organic-food/imported-organic-food-less-trustworthy-domestic",
+        "organic-food/organic-certifiers-rarely-test-soil-produce",
+        "organic-food/strengthening-organic-enforcement-rule-closes-supply"
+      ],
+      "question": "How often is food sold as organic not really organic?",
+      "title": "How Common Is Organic Food Fraud?",
+      "alternates": ["Can You Trust the Organic Label?", "Organic Fraud: What Is Known and What Is Not"],
+      "research": "Every source on this question is the agency describing its own rules or its auditor describing control gaps: documented fraud cases exist, certifiers must test only 5% of operations a year, and the 2017 audit found weak import checks, but nothing in the corpus measures how much organic food is mislabelled or whether the 2023 enforcement rule reduced it. Unblocking it needs a measured rate: residue or isotope testing of retail organic samples, NOP enforcement and residue-testing results over time, or an independent analysis of import volumes against certified production before and after the rule."
+    },
+    "gap:significant-share-food-sold-organic-not": {
+      "reject": "a chapter of decision:can-you-trust-the-label, which holds this claim and the rest of the fraud evidence under the same question"
+    },
+    "conflict:imported-organic-food-less-trustworthy-domestic": {
+      "reject": "a chapter of decision:can-you-trust-the-label (the same fraud-rate question, the same single audit); the rules side of imports is answered by decision:what-the-seal-actually-requires"
+    },
+    "conflict:organic-labelling-mainly-marketing-tool-charge": {
+      "coherence": {
+        "score": 0.75,
+        "reason": "One question, is the organic premium mostly a marketing markup or the cost of producing to the standard."
+      },
+      "question": "Is the organic premium mostly marketing, or does it pay for real costs?",
+      "title": "Is Organic Just a Label to Charge More?",
+      "alternates": ["Where the Organic Price Premium Goes", "Organic: Real Costs or Marketing Markup?"],
+      "research": "The only evidence is the USDA ERS report's description of the certification, segregation, feed and transition costs behind the premium, which notes that willingness to pay also feeds it; it does not measure how much of the premium is cost and how much is margin. Unblocking it needs a cost study that decomposes organic retail premiums into production, handling and certification costs versus retail and brand margins."
+    },
+    "decision:glyphosate": {
+      "coherence": {
+        "score": 0.7,
+        "reason": "Pruned to one consumer question, should you buy organic to avoid glyphosate: whether dietary residues harm health, whether organic can still carry them, and whether organic is the best way to cut exposure. Farm-worker exposure and cancer is a different question with its own candidate, and the gut-microbiome claim is unchecked."
+      },
+      "claims": [
+        "organic-food/glyphosate-residues-food-harm-human-health",
+        "organic-food/organic-food-can-still-contain-glyphosate",
+        "organic-food/buying-organic-most-reliable-way-avoid"
+      ],
+      "question": "Should you buy organic to avoid glyphosate?",
+      "title": "Should You Buy Organic to Avoid Glyphosate?",
+      "alternates": ["Glyphosate in Food: What the Evidence Says", "Does Organic Food Keep Glyphosate Off Your Plate?"],
+      "research": "The harm question rests on one regulator's 2017 dietary assessment, whose human-health decision was vacated in 2022 and is being redone, and the exposure question on a review noting that organic diets cut urinary glyphosate in a few studies, with no comparison to other ways of lowering it. Unblocking it needs an independent dietary risk assessment or biomonitoring study for glyphosate at general-population levels (or EPA's re-evaluation once published) and residue data on how often organic and conventional foods carry glyphosate."
+    },
+    "contradicted:heavy-glyphosate-exposure-raises-risk-non": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question, does heavy (occupational) glyphosate exposure raise non-Hodgkin lymphoma risk."
+      },
+      "question": "Does heavy glyphosate exposure raise the risk of lymphoma?",
+      "title": "Does Glyphosate Cause Lymphoma in Heavy Users?",
+      "alternates": ["Glyphosate and Non-Hodgkin Lymphoma: IARC Versus EPA", "What the Farmworker Studies Say About Glyphosate"],
+      "research": "The only source is a summary of the EPA and IARC positions: IARC's pooled case-control analysis found an association, the large Agricultural Health Study cohort found none, and IARC rates the human evidence 'limited'. Unblocking it needs the primary epidemiology itself, such as the Agricultural Health Study cohort results and a meta-analysis of highly exposed groups, so the split can be explained by design and exposure level rather than by two agencies' summaries."
+    },
+    "gap:regenerative-organic-certified-sets-stricter-standards": {
+      "research": "No source in the corpus has been checked against this claim. Unblocking it needs the Regenerative Organic Certified standard itself compared line by line with 7 CFR 205 on soil health, animal welfare and labour, recorded as verdicts through record-sources."
+    },
+    "gap:cage-free-range-labels-say-little": {
+      "research": "No study bears on it. Unblocking it needs the USDA definitions of cage-free and free-range (space, outdoor access, duration) and a measurement of how hens on farms with those labels actually live, such as audit or welfare-outcome data."
+    },
+    "gap:much-organic-meat-dairy-comes-large": {
+      "research": "No study bears on it. Unblocking it needs USDA census or Organic Integrity Database data on the size distribution of certified organic dairy, egg and meat operations, showing what share of output comes from large operations."
+    },
+    "gap:organic-processed-foods-healthier-their-conventional": {
+      "research": "No study bears on it. Unblocking it needs a nutrient-profile comparison of organic and conventional processed foods (sugar, salt, fat, energy) in the same categories, or a study of health outcomes from organic packaged foods."
+    },
+    "gap:small-farms-can-organic-practice-without": {
+      "research": "No study bears on it. Unblocking it needs the regulation's small-operation exemption (7 CFR 205.101) recorded as a verdict, plus survey data on how uncertified small growers actually farm."
+    }
+  }
+}

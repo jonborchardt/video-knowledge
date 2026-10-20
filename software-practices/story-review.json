@@ -1,0 +1,308 @@
+{
+  "applicability": {
+    "software-practices/organisational-structure-metrics-predict-defect-prone|asserts|software-practices/sources/bird2011-ownership.txt#L283-L287": {
+      "level": "partial",
+      "reason": "one organisational metric (minor contributors) correlating with failures more strongly than any other metric Microsoft collects, in Microsoft products only; it narrows the claim to ownership rather than establishing organisational structure in general"
+    },
+    "software-practices/organisational-structure-metrics-predict-defect-prone|asserts|software-practices/sources/mcintosh2014-code-review-coverage.txt#L669-L673": {
+      "level": "partial",
+      "reason": "ownership metrics add explanatory power to defect models in three open-source systems; explanatory power in a regression is not a head-to-head prediction comparison against code metrics"
+    },
+    "software-practices/small-pull-requests-picked-merged-faster|asserts|software-practices/sources/sadowski2018-code-review-google.txt#L358-L362": {
+      "level": "partial",
+      "reason": "establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company"
+    },
+    "software-practices/smaller-changes-mean-less-rework-fewer|asserts|software-practices/sources/dora2019-state-of-devops.txt#L1272-L1283": {
+      "level": "partial",
+      "reason": "a survey finding that extra approvals go with larger, less frequent batches and higher change failure; batch size is inferred through the approval process, and rework and restoration are not tied to change size"
+    },
+    "software-practices/editor-type-errors-give-faster-feedback|asserts|software-practices/sources/kleinschmager2012-static-types-maintainability.txt#L455-L458": {
+      "level": "partial",
+      "reason": "measures a compile error against a run-time failure, which is the comparison the sentence makes, but with a compiler run by hand rather than an in-editor checker"
+    },
+    "software-practices/editor-type-errors-give-faster-feedback|asserts|software-practices/sources/hanenberg2014-static-types-emse.txt#L1343-L1371": {
+      "level": "partial",
+      "reason": "the feedback came from a compiler used with a plain text editor; the in-editor form of the sentence is an extrapolation the verdict note itself flags"
+    },
+    "software-practices/static-typing-catches-type-errors-compile|asserts|software-practices/sources/ray2014-languages-github.txt#L600-L605": {
+      "level": "contextual",
+      "reason": "observational bug-fix counts from a corpus whose TypeScript sample Berger et al. later showed was mislabelled; it cannot decide what a compiler catches"
+    }
+  },
+  "stories": {
+    "surprise:test-driven-development-produces-better-quality": {
+      "coherence": {
+        "score": 0.9,
+        "reason": "One question: does writing the test first produce better code or faster work than testing in small steps afterwards? Three independent studies answer it."
+      },
+      "claims": ["software-practices/test-driven-development-produces-better-quality"],
+      "question": "Does writing tests first actually give you better code than writing them right after?",
+      "title": "Does Test-Driven Development Actually Make Better Code?",
+      "alternates": ["Test First or Test After: Does the Order Matter?", "What Happened When Researchers Put TDD to the Test"],
+      "whyWatch": "TDD is sold as the discipline that makes code better, and plenty of teams require it. Controlled experiments with students and professionals checked whether the test-first order is what makes the difference.",
+      "tension": "Advocates say test-first forces better design and fewer bugs. The experiments compared it with writing tests in small steps straight after the code and could not tell the two apart.",
+      "evidenceNeeded": "Controlled comparisons of TDD against a disciplined test-last practice on quality and productivity, plus a review of the wider literature.",
+      "premise": "Fucci et al. 2016 ran a blind-analysis crossover replication with 21 graduate students and found no difference between TDD and incremental test-last in tests written, external quality or productivity, with negligible effect sizes. Fucci et al. 2017 analysed 82 task sessions by 39 professionals and found that the test-first order dropped out of both the quality and the productivity models; the authors conclude test-first and test-last could be equally effective when done in equally small, steady cycles. Karac and Turhan's 2018 review of 15 years of studies finds no convincing evidence that TDD consistently beats other iterative methods. The limits: the comparison is with a disciplined test-last practice, not with writing no tests; the tasks were short; and long-term maintenance was not measured.",
+      "arc": {
+        "hook": "Many teams treat writing the test first as the rule that separates good engineers from the rest.",
+        "conflict": "If test-first is what makes code better, an experiment that changes only the order should show it.",
+        "evidence": "The 2016 replication with graduate students, the 2017 study of professionals where order dropped out of the models, and the 2018 review of 15 years of results.",
+        "resolution": "Against testing in small steps right after the code, test-first made no measurable difference to quality or productivity; the short cycle, not the order, is what the studies point to.",
+        "takeaway": "Write tests in small, steady steps; whether each test comes first or second is a matter of taste, not quality."
+      },
+      "qualificationsAccepted": true,
+      "chain": ["decision:testing-and-tdd"],
+      "chainWhy": "Once the order of writing tests turns out not to matter, the viewer asks what does make a test suite worth having, and whether the coverage number most teams track tells them."
+    },
+    "decision:testing-and-tdd": {
+      "coherence": {
+        "score": 0.7,
+        "reason": "Pruned to one question, can you trust a test suite because of its coverage number: coverage against fault-finding, what a trusted suite buys, and one way suites lose trust. The TDD claims are their own story (chained ahead of this one) and the two test-first beliefs are unchecked."
+      },
+      "claims": [
+        "software-practices/line-coverage-shows-code-executed-not",
+        "software-practices/trustworthy-automated-test-suite-lets-developers",
+        "software-practices/writing-test-per-method-mocking-every"
+      ],
+      "question": "Does high test coverage mean your tests will catch your bugs?",
+      "title": "Does High Test Coverage Mean Your Tests Work?",
+      "alternates": ["Why 90% Coverage Can Still Miss Your Bugs", "What Makes a Test Suite Worth Trusting?"],
+      "whyWatch": "Coverage is the number teams put on dashboards and gate merges on. A large experiment checked whether a higher number means a suite actually catches more faults.",
+      "tension": "Coverage feels like a measure of safety, but it only counts lines that ran, not whether any test would notice them being wrong.",
+      "evidenceNeeded": "A controlled measure of coverage against fault detection with suite size held fixed, and evidence on what a trusted suite does for delivery.",
+      "premise": "Inozemtseva and Holmes generated 31,000 test suites for five large Java systems and measured how many mutants (artificially injected faults) each suite caught. Once suite size was controlled, coverage correlated only low to moderately with that effectiveness, and the strength varied between systems, so a high coverage number does not tell you a suite is effective. What a trusted suite is for is less well measured: DORA's 2019 survey finds automated testing predicts continuous integration, which predicts continuous delivery, and describes developers trusting a passing suite, but it measures neither fear nor confidence and rests on self-reports. The claim that a test per method with every dependency mocked makes refactoring break the tests is made by two sources and checked by no study in the corpus; present it as practitioner experience.",
+      "arc": {
+        "hook": "Your dashboard says 90% coverage. Would your tests notice if half those lines were wrong?",
+        "conflict": "Coverage counts lines that ran; it says nothing about whether a test checked what they did.",
+        "evidence": "The 31,000-suite experiment with size held fixed, then DORA's survey link from automated testing to delivery, then the practitioner warning about over-mocked tests.",
+        "resolution": "Coverage is a weak signal of fault-finding once you account for how many tests there are; a suite earns trust by checking behaviour, and the confidence it gives is claimed more than measured.",
+        "takeaway": "Treat low coverage as a warning and high coverage as no guarantee; judge tests by whether they would fail when the behaviour breaks."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:static-vs-dynamic-typing": {
+      "coherence": {
+        "score": 0.75,
+        "reason": "One question, do static types pay off: errors caught before running, how much faster the fix is, the repository-scale bug claims that fell apart, and the prototyping speed argued for dynamic typing. The runtime performance claim is a separate question with only a qualified, implementation-bound verdict, so it is pruned; the in-editor feedback claim is folded in from its own candidate."
+      },
+      "claims": [
+        "software-practices/static-typing-catches-type-errors-compile",
+        "software-practices/editor-type-errors-give-faster-feedback",
+        "software-practices/large-scale-repository-studies-claiming-some",
+        "software-practices/dynamic-typing-faster-prototyping-rapid-iteration"
+      ],
+      "question": "Do static types actually save you time and bugs?",
+      "title": "Do Static Types Really Prevent Bugs?",
+      "alternates": ["Static vs Dynamic Typing: What the Experiments Show", "The Language-Bug Study That Fell Apart"],
+      "whyWatch": "The typing argument is usually settled by taste. Controlled experiments, a check of real JavaScript bugs, and a failed replication of the most cited repository study show what types do and do not buy.",
+      "tension": "Fans say types catch bugs before users do; skeptics say most bugs are not type errors and dynamic languages are faster to write. Both have some evidence.",
+      "evidenceNeeded": "Controlled experiments on type-error fixing, a measure of how many real bugs a type checker would catch, the replication of the repository-scale study, and development-time comparisons.",
+      "premise": "In Kleinschmager et al.'s controlled experiment the Java version of a type-error task failed to compile while the Groovy version only failed at run time, and the static side won on time: 78 against 149 seconds and 44 against 246 seconds on the two type-error tasks. Hanenberg et al.'s journal version found every indicator favoured static types on those tasks because the compiler names the location while a run-time failure can appear far from the cause. Those experiments used a compiler, not an in-editor checker; an editor shows the same message sooner, but that was not what was tested. Gao, Bird and Barr annotated 400 fixed public JavaScript bugs and the type checker flagged 15% of them, so most bugs are not type errors. Ray et al.'s 729-project GitHub study, which linked languages to defect rates, did not survive Berger et al.'s reanalysis: mislabelled files, duplicated projects, 36% false-positive bug labels and no multiple-testing correction left 4 of 11 associations with very small effects. On prototyping, Prechelt's scripts took a median 3.1 hours against 10.0 for C, C++ and Java, but on one problem, with self-reported script times, and the author credits built-in associative arrays rather than typing; Hanenberg's own series has tasks going each way.",
+      "arc": {
+        "hook": "Every few months the static-versus-dynamic argument flares up again, usually citing a big study that says language choice changes your bug rate.",
+        "conflict": "Types clearly catch some errors earlier, but how many bugs are type errors, and does the extra ceremony slow you down?",
+        "evidence": "The type-error experiments and their timings, the 15% of real JavaScript bugs a checker would have flagged, the failed replication of the GitHub study, and the prototyping comparison with its caveats.",
+        "resolution": "Static types find type errors sooner and point at them, which makes those fixes faster; they catch a minority of real bugs; the repository-scale claims about whole languages did not hold up; and the speed advantage for dynamic languages is narrow and confounded.",
+        "takeaway": "Choose static types for the faster, located feedback on type errors, not for a promise of fewer bugs overall."
+      },
+      "qualificationsAccepted": true
+    },
+    "surprise:editor-type-errors-give-faster-feedback": {
+      "reject": "duplicate of decision:static-vs-dynamic-typing, which asks the broader question with the same experiments (Kleinschmager 2012, Hanenberg 2014) and now carries this claim; two videos would tell the viewer the same conclusion"
+    },
+    "decision:10x-developers-and-productivity": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question, are 10x programmers real: the spread between programmers, whether 10x is the typical gap, and where the 28:1 legend came from. The hiring claim is a management prescription no study here checks, and its wording is flagged, so it is pruned."
+      },
+      "claims": [
+        "software-practices/some-programmers-vastly-more-productive-their",
+        "software-practices/10x-spread-between-fastest-slowest-programmers",
+        "software-practices/many-widely-repeated-software-engineering-facts"
+      ],
+      "question": "Are 10x programmers real, or is that number a myth?",
+      "title": "Are 10x Programmers Real?",
+      "alternates": ["Where the 10x Programmer Number Really Comes From", "How Much Faster Is the Fastest Programmer, Really?"],
+      "whyWatch": "The 10x programmer shapes hiring, pay and how people judge themselves. A reanalysis of 61 experiments traces the famous figure to its source and measures the typical gap.",
+      "tension": "Everyone has met a programmer who seems ten times faster, and the 28:1 figure is quoted as proof. The data behind it are thin, and the typical gap is far smaller.",
+      "evidenceNeeded": "Work-time distributions from many controlled programming experiments, the original source of the 28:1 figure, and other examples of repeated figures that did not hold up.",
+      "premise": "Prechelt's 1999 reanalysis of 61 experiments with 614 subjects finds that the slowest quarter of programmers typically takes 2 to 3 times as long as the fastest quarter, rarely more than 4, and that best-against-worst ratios above 10 are rare. So differences between people are real and larger than most experimental effects, but ten times is the extreme pairing, not the typical gap. The famous 28:1 came from Grant and Sackman's debugging experiment (170 hours against 6); Prechelt's notes put it at 14:1 once two methodological mistakes are corrected, from 12 subjects, and it kept being quoted after it was debunked in 1981. Prechelt's 2000 study shows the same picture on one task: bad-to-good work-time ratios of 1.5 to 3.2 within a language, with a few outliers far above the median. The claim that the spread is mostly a person's own task-to-task noise is not measured in these studies; they show the spread is smaller than the legend, not why. The subjects were mostly students, which may understate the range among professionals. Berger et al.'s reanalysis of the language-and-defects study is a second example of a widely cited figure that did not survive checking; two examples show it happens, not how often.",
+      "arc": {
+        "hook": "The 10x programmer is quoted in hiring posts and conference talks as settled science.",
+        "conflict": "If the gap were ten to one, experiments would show it routinely. Where did the number come from?",
+        "evidence": "The 61-experiment reanalysis and its typical quarter-to-quarter ratio, the 1960s 28:1 figure and its correction, the within-language spread from a second study, and the language-defect study as another legend that fell apart.",
+        "resolution": "Some programmers are several times faster than others on a given task; ten times is the best against the worst, and the 28:1 that made the idea famous was a flawed figure from 12 people.",
+        "takeaway": "Expect a two-to-three-fold spread between typical fast and slow programmers, and ask for the source when someone quotes a bigger number."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:hours-interruptions-and-offices": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "The group mixed three questions (crunch hours, meetings and focus blocks, open offices); pruned to the one with a direct study, do open-plan offices get people talking. Crunch and meeting claims rest on qualified evidence below 0.5 and the sleep belief has a wording flag."
+      },
+      "claims": [
+        "software-practices/moving-open-plan-offices-reduces-face",
+        "software-practices/open-plan-offices-increase-noise-visual"
+      ],
+      "question": "Do open-plan offices actually get people talking more?",
+      "title": "Do Open-Plan Offices Make People Talk More?",
+      "alternates": ["What Happened When Two Companies Tore Down Their Cubicles", "The Open Office Was Meant to Bring People Together. Did It?"],
+      "whyWatch": "Companies tear down walls to get people collaborating, and developers pay for it in focus. Two headquarters measured with sensor badges what actually happened to face-to-face contact.",
+      "tension": "The open office is sold as a trade: less quiet, more collaboration. The measurements suggest you can lose the collaboration as well.",
+      "evidenceNeeded": "Measured face-to-face and electronic interaction before and after a move to open plan, and evidence on distraction and focus.",
+      "premise": "Bernstein and Turban followed two Fortune 500 headquarters that moved from cubicles to open floors. Sociometric badges and server logs showed face-to-face time fell 72% at the first firm (from about 5.8 to 1.7 hours per person per day) and 67 to 71% at the second, while email sent rose 56% and instant messages 67%. It is a quasi-experiment without a control group, with 52 and 100 participants, in corporate offices rather than software teams. The noise and distraction complaint is not measured there: the paper cites earlier workplace research, mixed in its findings, that open offices reduce focus and privacy, and notes employees isolating themselves with large headphones, so that part is second-hand.",
+      "arc": {
+        "hook": "The walls come down so the team will talk more. Then everyone puts on headphones.",
+        "conflict": "Open plan is supposed to trade quiet for collaboration. Does the collaboration actually happen?",
+        "evidence": "Badge data from the two headquarters before and after the move, the rise in email and messaging, and what the paper says about focus.",
+        "resolution": "At both firms face-to-face contact fell by about two thirds or more and electronic messages rose; the cost to focus is widely reported but was not measured here.",
+        "takeaway": "Do not expect an open floor to create conversation; if you want people to talk, design for that directly."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:clean-code-and-technical-debt": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "The group mixed four questions (switch-versus-polymorphism speed, code health, modular design, rewrites); pruned to the only one a study checks, does unhealthy code cost more in defects and change time. The other claims are unchecked beliefs, two with wording flags."
+      },
+      "claims": ["software-practices/code-unhealthy-files-has-many-times"],
+      "question": "Does messy code really cause more bugs and slower changes?",
+      "title": "Does Messy Code Really Cost You?",
+      "alternates": ["How Much Do Bad Files Actually Slow You Down?", "Technical Debt, Measured"],
+      "whyWatch": "Every team argues about whether cleaning up code is worth the time. A study of 39 codebases put numbers on how much more trouble the worst files cause.",
+      "tension": "Clean-code advocates say messy code is where bugs and delays live; skeptics say it is aesthetics. The data back the defect half strongly and the time half more modestly.",
+      "evidenceNeeded": "Defect counts and task times for files graded by code quality across many codebases, and an independent check of the defect link.",
+      "premise": "Tornhill and Borg's 2022 study of 30,737 files in 39 proprietary codebases found that files graded Alert (low code health) had 15 times the reported defects of Healthy files, and tasks in them took 124% longer on average, about 2.2 times, so many times more defects holds but several times longer overstates the average time cost. It is observational, drawn from CodeScene customers and written by the vendor, and the authors leave the direction of cause open. Buse and Weimer's 2010 study of 15 open-source Java projects independently found that functions scored less readable were more likely to carry static-analysis warnings, change in the next release and be touched by bug fixes; it measures nothing about time.",
+      "arc": {
+        "hook": "Your manager asks why the team needs a sprint to clean up code that already works.",
+        "conflict": "Is messy code an engineering cost or a matter of taste?",
+        "evidence": "Defects and task times by code-health grade across 39 codebases, then the readability study's link between hard-to-read functions and bug fixes.",
+        "resolution": "The worst files carry many times the defects and take about twice as long to change; that is a correlation from vendor data, but an independent study points the same way on defects.",
+        "takeaway": "Spend clean-up effort on the unhealthy files you change most often, where the defect and time cost concentrates."
+      },
+      "qualificationsAccepted": true,
+      "chain": ["surprise:organisational-structure-metrics-predict-defect-prone"],
+      "chainWhy": "Once messy files are shown to carry many times the defects, the viewer asks whether the code itself is the best place to look for where bugs will be, and the Windows data say the organisation around the code predicts them better."
+    },
+    "surprise:organisational-structure-metrics-predict-defect-prone": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One question: does who works on the code predict its defects better than measures of the code itself?"
+      },
+      "claims": ["software-practices/organisational-structure-metrics-predict-defect-prone"],
+      "question": "Does the way a team is organised predict bugs better than the code itself?",
+      "title": "Your Org Chart Predicts Your Bugs",
+      "alternates": ["Why Too Many Cooks Means More Bugs", "The Best Bug Predictor at Microsoft Was Not in the Code"],
+      "whyWatch": "Teams hunt bugs with complexity metrics, coverage and churn. Microsoft's own data found that measures of who worked on the code predicted failures better than any of them.",
+      "tension": "You would expect the code to be the best guide to where its bugs are. In Windows, the organisation behind the code was a better one.",
+      "evidenceNeeded": "Head-to-head prediction of defect-prone components from organisational and code metrics, and replications outside one company.",
+      "premise": "Nagappan et al. built defect predictors for 3,404 Windows Vista binaries. Eight organisational metrics, such as how many engineers and teams touched a binary, predicted failure-prone binaries with 86.2% precision and 84.0% recall, against 78.6 and 79.9 for churn, 79.3 and 66.0 for complexity, 74.4 and 69.9 for dependencies, 83.8 and 54.4 for coverage, and 73.8 and 62.9 for pre-release bugs. That is one system at one company. Bird et al. found that in Vista and Windows 7 the number of minor contributors to a binary correlated with failures more strongly than any other metric Microsoft collects. McIntosh et al. found the same ownership measures added explanatory power to every defect model in three open-source systems, Qt, VTK and ITK, while size mattered in two and complexity in none. These are predictions and correlations; they show where bugs concentrate, not that reorganising removes them.",
+      "arc": {
+        "hook": "If you had to guess which part of a huge codebase would break next, you would look at the code.",
+        "conflict": "Microsoft tested that instinct against a different signal: who had worked on each part.",
+        "evidence": "The Vista prediction results side by side, the minor-contributor finding in Vista and Windows 7, and the open-source check in Qt, VTK and ITK.",
+        "resolution": "Organisational measures predicted failure-prone parts better than code measures in Windows, and ownership mattered in open-source projects too; the evidence is strongest at one company and shows prediction, not cause.",
+        "takeaway": "When choosing where to review and test hardest, look at code many people touch and few own."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:pairing-and-code-review": {
+      "coherence": {
+        "score": 0.75,
+        "reason": "The group mixed pairing and mobbing beliefs with change size; pruned to one question, should you keep changes small for review. The pairing and mob claims are unchecked beliefs and the pair-review claim rests on a 0.25 recommendation."
+      },
+      "claims": [
+        "software-practices/small-pull-requests-picked-merged-faster",
+        "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+        "software-practices/smaller-changes-mean-less-rework-fewer"
+      ],
+      "question": "Do small pull requests really get reviewed faster and break less?",
+      "title": "Are Small Pull Requests Really Better?",
+      "alternates": ["How Big Should a Pull Request Be?", "What Google's Review Data Say About Change Size"],
+      "whyWatch": "Keep your PRs small is the most repeated code-review advice. The data show part of it and leave the rest unmeasured.",
+      "tension": "Small changes are said to be reviewed faster, reviewed better and to break less; the evidence here shows the first only partly and the others indirectly.",
+      "evidenceNeeded": "Review-to-merge time by change size, defect-finding by review size, and incident rates by change size.",
+      "research": "Sadowski et al. show only that small changes get first feedback sooner at Google, not that they merge faster; McIntosh et al. measure review rate, not review size; DORA ties batch size to failures only through approvals. Unblock with review-to-merge latency broken down by change size (for example Rigby and Bird's cross-project review data), a measured link between lines under review and defects found (for example the Cisco review study), and change size against change failure or restore time."
+    },
+    "surprise:relative-size-estimation-more-accurate-time": {
+      "coherence": {
+        "score": 0.9,
+        "reason": "One question: are relative-size estimates such as story points more accurate than estimates in hours?"
+      },
+      "claims": ["software-practices/relative-size-estimation-more-accurate-time"],
+      "question": "Are story points actually more accurate than estimating in hours?",
+      "title": "Are Story Points More Accurate Than Hours?",
+      "alternates": ["Story Points vs Hours: What the Research Says", "Does Estimating in Points Make You More Accurate?"],
+      "whyWatch": "Teams switch to story points because hours estimates keep failing. The research on relative estimation says whether points fix the accuracy problem.",
+      "tension": "Points are pitched as the honest way to estimate uncertain work. The studies find no general accuracy gain, and a specific bias when tasks differ a lot in size.",
+      "evidenceNeeded": "Comparisons of relative and absolute time predictions on accuracy, and evidence on when relative estimates go wrong.",
+      "premise": "Halkjelsvik and Jørgensen's 2018 review of time-prediction research finds few studies comparing relative and absolute methods: relative predictions improved accuracy in some contexts and worsened it in others, and in general they do not seem more accurate. When tasks differ a lot in size, people judge them more similar than they are, so a task ten times larger than the reference tends to be underestimated more with relative methods. Relative methods may still simplify estimating and reduce the need to know who will do the work. The evidence base is thin and the review does not single out complex or uncertain work, so the honest statement is that the evidence does not show points to be more accurate, not that they are worse.",
+      "arc": {
+        "hook": "Your team stopped estimating in hours because the hours were always wrong. Are the points any better?",
+        "conflict": "Relative sizing is supposed to suit uncertain work; does it actually land closer to reality?",
+        "evidence": "The review's summary of the relative-versus-absolute studies, and the size-assimilation bias it describes.",
+        "resolution": "Relative estimates are not generally more accurate than hours, and they skew when a task is much bigger or smaller than the reference.",
+        "takeaway": "Use points for convenience if you like, but do not expect them to fix accuracy, and compare tasks of similar size."
+      },
+      "qualificationsAccepted": true,
+      "chain": ["surprise:estimation-learnable-skill-recording-estimates-comparing"],
+      "chainWhy": "If switching to points does not make estimates more accurate, the viewer asks whether they can at least get better by tracking their estimates against what actually happened."
+    },
+    "surprise:estimation-learnable-skill-recording-estimates-comparing": {
+      "coherence": {
+        "score": 0.9,
+        "reason": "One question: does recording estimates and comparing them with actuals make your future estimates more accurate?"
+      },
+      "claims": ["software-practices/estimation-learnable-skill-recording-estimates-comparing"],
+      "question": "Does tracking your estimates against actuals make you a better estimator?",
+      "title": "Does Tracking Your Estimates Make You Better at Estimating?",
+      "alternates": ["Why Estimate-vs-Actual Reviews Do Not Fix Your Estimates", "Can You Train Yourself to Estimate Better?"],
+      "whyWatch": "Logging estimates against actuals is the standard advice for getting better at estimating. Studies of training programmes built on exactly that measured whether accuracy improved.",
+      "tension": "Feedback improves most skills, so comparing your guesses with outcomes should calibrate you. For time estimates, the programmes that did this found no gain in accuracy.",
+      "evidenceNeeded": "Evaluations of estimation training that uses outcome feedback, with untrained controls, and evidence on what feedback does improve.",
+      "premise": "Halkjelsvik and Jørgensen's 2018 review reports that independent evaluations of the Personal Software Process, which has people record time predictions, compare them with actual time and analyse the deviations, found no improvement in prediction accuracy, and that a feedback-and-lessons-learned programme likewise did no better than untrained controls. Jørgensen's 2004 review finds the only software study of outcome feedback showed no accuracy gain either, consistent with other fields, though such feedback does improve how well people judge the uncertainty of their estimates, and feedback about how tasks relate is what is needed for accuracy. The same 2018 review notes that more experience doing a task generally does make predictions more accurate. So estimating can improve, but recording estimate against actual is not the route the evidence supports for accuracy.",
+      "arc": {
+        "hook": "Every retrospective compares what you estimated with what it took. Is that making anyone better at estimating?",
+        "conflict": "If estimation is a skill, feedback should train it; the training programmes built on that idea were measured.",
+        "evidence": "The Personal Software Process evaluations, the lessons-learned programme against controls, and the 2004 review's finding on outcome feedback and uncertainty.",
+        "resolution": "Comparing estimates with actuals did not improve accuracy in these studies, though it can sharpen how uncertain you say you are; experience with the task is what improved accuracy.",
+        "takeaway": "Keep the log if it helps you set ranges, but do not expect it to make point estimates more accurate."
+      },
+      "qualificationsAccepted": true
+    },
+    "surprise:per-change-pull-request-gates-break": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question: can mandatory review of every change keep up with continuous delivery? Distinct from decision:pairing-and-code-review, which asks about change size."
+      },
+      "claims": ["software-practices/per-change-pull-request-gates-break"],
+      "question": "Can reviewing every change keep up when you deploy many times a day?",
+      "title": "Can Code Review Keep Up With Continuous Delivery?",
+      "alternates": ["Does Mandatory Review Slow Down Fast-Shipping Teams?", "How Google Reviews 20,000 Changes a Day"],
+      "whyWatch": "Teams moving to continuous delivery are told review gates will become the bottleneck. One company runs mandatory review on every change at enormous scale.",
+      "tension": "Critics say per-change gates cannot survive many deploys a day; Google does it, but Google is not a typical team.",
+      "evidenceNeeded": "Delivery throughput or lead time measured against per-change peer review in continuous-delivery teams, beyond one company.",
+      "research": "The only counter-evidence is Sadowski et al.'s description of Google (0.4: one highly tuned company and its own tooling, not a pull-request workflow, with no throughput comparison), and DORA 2019 says per-change approval breaks down only for external boards, not teammate review. Unblock with a study measuring lead time or deployment frequency against mandatory per-change peer review across several continuous-delivery organisations, for example DORA data split by review practice."
+    },
+    "decision:microservices-vs-monolith": {
+      "coherence": {
+        "score": 0.7,
+        "reason": "One question, should a new system start as microservices or a monolith: cost, coordination, boundary mistakes and the modular-monolith alternative. The hype claim is a motive, not part of the answer, so it is pruned."
+      },
+      "claims": [
+        "software-practices/microservices-cost-more-short-term-rarely",
+        "software-practices/coordination-cost-grows-faster-linearly-team",
+        "software-practices/keeping-modules-one-process-enforced-boundaries",
+        "software-practices/service-boundaries-usually-wrong-first-attempt"
+      ],
+      "question": "Should a new project start as microservices or as a monolith?",
+      "title": "Microservices or a Monolith: Which Should You Start With?",
+      "alternates": ["Do Microservices Pay Off for a New Project?", "Why So Many Teams Regret Starting with Microservices"],
+      "whyWatch": "The choice shapes a system for years and is usually made on conference talks. The evidence on outcomes is much thinner than the advice.",
+      "tension": "Microservices promise team independence; critics say they cost more and the boundaries are wrong at first. The studies here catalogue pains but do not measure outcomes.",
+      "evidenceNeeded": "Measured cost, delivery or failure outcomes for comparable systems built as microservices and as monoliths, ideally greenfield against monolith-first.",
+      "research": "The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, and coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries. Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones."
+    }
+  }
+}

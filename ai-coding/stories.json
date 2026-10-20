@@ -252,10 +252,7 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:how-much-faster",
-    "decision:who-benefits"
-   ]
+   "partOf": "decision:how-much-faster"
   },
   {
    "id": "decision:how-much-faster",
@@ -669,9 +666,11 @@
      }
     ]
    },
-   "chainCandidates": [
-    "conflict:developers-overestimate-how-much-tools-speed",
-    "decision:who-benefits"
+   "chain": [
+    {
+     "id": "conflict:developers-overestimate-how-much-tools-speed",
+     "question": "Do developers know whether AI is actually making them faster?"
+    }
    ]
   },
   {
@@ -1067,11 +1066,7 @@
       }
      }
     ]
-   },
-   "chainCandidates": [
-    "decision:who-benefits",
-    "conflict:developers-overestimate-how-much-tools-speed"
-   ]
+   }
   },
   {
    "id": "decision:who-benefits",
@@ -1738,9 +1733,11 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:how-much-faster",
-    "conflict:developers-overestimate-how-much-tools-speed"
+   "chain": [
+    {
+     "id": "surprise:assistance-must-reliable-save-experts-time",
+     "question": "Why can AI assistance cost expert programmers more time than it saves?"
+    }
    ]
   },
   {
@@ -2152,10 +2149,7 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:how-much-faster",
-    "decision:who-benefits"
-   ]
+   "partOf": "decision:who-benefits"
   },
   {
    "id": "conflict:generated-code-drifts-codebase-established-conventions",
@@ -2577,7 +2571,7 @@
     "Code-ownership experiment (Martin-Lopez): partly (0.3, direct)"
    ],
    "gaps": [
-    "Reviewer: The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one.",
+    "Reviewer: The code-ownership experiment shows authors understand AI-assisted code less and the vibe-coding review only recommends reading code before committing; nothing measures a spec-only workflow (the spec as source of truth, generated code unread) against a reviewed one on defects, incidents or later change cost.",
     "What explains the split between Vibe-coding literature review, Code-ownership experiment (Martin-Lopez)?",
     "Vibe-coding literature review: The review recommends reviewing generated code before committing rather than integrating unread output, and warns that deferred understanding (cognitive debt) raises later maintenance costs; this is recommendation-level evidence.",
     "Code-ownership experiment (Martin-Lopez): The authors warn that a loss of understanding may hurt review, debugging and maintenance. They also concede that future workflows handing those jobs to agents might make low-level comprehension matter less. So the paper backs the concern only speculatively."
@@ -2614,9 +2608,9 @@
     "explanation": "editorial 0.73 = mean of coherence 0.8 (review), relevance 0.79 (10 sources, 10 channels), curiosity 1 (conflict), stakes 0.3 (lean: neutral), depth 0.77 (2 studies, 1 claim, tension); evidence 0.35 = strongest Code-ownership experiment (Martin-Lopez) at 0.3 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one.",
+   "readinessWhy": "Essential evidence is missing: Reviewer: The code-ownership experiment shows authors understand AI-assisted code less and the vibe-coding review only recommends reading code before committing; nothing measures a spec-only workflow (the spec as source of truth, generated code unread) against a reviewed one on defects, incidents or later change cost.",
    "blocking": [
-    "Reviewer: The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one."
+    "Reviewer: The code-ownership experiment shows authors understand AI-assisted code less and the vibe-coding review only recommends reading code before committing; nothing measures a spec-only workflow (the spec as source of truth, generated code unread) against a reviewed one on defects, incidents or later change cost."
    ],
    "reviewed": true,
    "audit": {
@@ -2904,7 +2898,7 @@
     "Airbnb migration: partly (0.45, partial)"
    ],
    "gaps": [
-    "Reviewer: Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands.",
+    "Reviewer: Only Airbnb's bespoke retry pipeline (75% of 3.5K test files on the first bulk run, with a retry cap); needs a measured study of generic goal or loop commands, or background agents assigned routine issues, on real backlogs: share of pull requests merged without rework, human review time per merged change, and regressions introduced.",
     "What explains the split between Airbnb migration?",
     "Airbnb migration: Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command."
    ],
@@ -2940,9 +2934,9 @@
     "explanation": "editorial 0.77 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 1 (conflict), stakes 0.7 (lean: pro), depth 0.63 (1 study, 1 claim, tension); evidence 0.27 = strongest Airbnb migration at 0.45 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands.",
+   "readinessWhy": "Essential evidence is missing: Reviewer: Only Airbnb's bespoke retry pipeline (75% of 3.5K test files on the first bulk run, with a retry cap); needs a measured study of generic goal or loop commands, or background agents assigned routine issues, on real backlogs: share of pull requests merged without rework, human review time per merged change, and regressions introduced.",
    "blocking": [
-    "Reviewer: Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands."
+    "Reviewer: Only Airbnb's bespoke retry pipeline (75% of 3.5K test files on the first bulk run, with a retry cap); needs a measured study of generic goal or loop commands, or background agents assigned routine issues, on real backlogs: share of pull requests merged without rework, human review time per merged change, and regressions introduced."
    ],
    "reviewed": true,
    "audit": {
@@ -3036,164 +3030,17 @@
    }
   },
   {
-   "id": "conflict:assisted-development-specification-not-code-should",
-   "kind": "conflict",
-   "title": "Is it true that in AI-assisted development the specification, not the code, should be the authoritative source of truth?",
-   "alternates": [
-    "Sources disagree: In AI-assisted development the specification, not the code, should be…",
-    "Is it true that in AI-assisted development the specification, not the code, should be the authoritative source of truth?"
-   ],
-   "question": "Is it true that in AI-assisted development the specification, not the code, should be the authoritative source of truth?",
-   "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
-   "tension": "The sources split: Vibe-coding literature review says partly.",
-   "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
-   "evidenceAvailable": [
-    "Vibe-coding literature review: partly (0.25, direct)"
-   ],
-   "gaps": [
-    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.25 after applicability); it cannot carry a narrative.",
-    "What explains the split between Vibe-coding literature review?",
-    "Vibe-coding literature review: The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth."
-   ],
-   "premise": "The sources split on \"In AI-assisted development the specification, not the code, should be the authoritative source of truth\": Vibe-coding literature review says partly. The reasons they differ are the useful part.",
-   "claims": [
-    "ai-coding/assisted-development-specification-not-code-should"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "Two confident, opposite answers to the same question: \"In AI-assisted development the specification, not the code, should be the authoritative source of truth\".",
-    "conflict": "The sources do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (Vibe-coding literature review): design, sample, what was measured.",
-    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
-    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
-   },
-   "format": "short",
-   "formatWhy": "1 study bear directly or partly on the question, 7 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.68,
-    "curiosity": 1,
-    "stakes": 0.3,
-    "depth": 0.63,
-    "originality": 1,
-    "evidence": 0.25,
-    "editorial": 0.68,
-    "overall": 0.51,
-    "explanation": "editorial 0.68 = mean of coherence 0.8 (heuristic), relevance 0.68 (7 sources, 7 channels), curiosity 1 (conflict), stakes 0.3 (lean: neutral), depth 0.63 (1 study, 1 claim, tension); evidence 0.25 = strongest Vibe-coding literature review at 0.25 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: The strongest study that bears on the central conclusion is weaker than 0.5 (0.25 after applicability); it cannot carry a narrative.",
-   "blocking": [
-    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.25 after applicability); it cannot carry a narrative."
-   ],
-   "reviewed": false,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "In AI-assisted development the specification, not the code, should be the authoritative source of truth",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/assisted-development-specification-not-code-should",
-        "cite": "ai-coding/sources/2607.21652v1.txt#L1924-L1928"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Vibe-coding literature review",
-       "verdict": "partly",
-       "confidence": 0.25,
-       "note": "The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "Vibe-coding literature review: The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth."
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): no direct support, 1 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "In AI-assisted development the specification, not the code, should be the authoritative source of truth",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/assisted-development-specification-not-code-should",
-          "cite": "ai-coding/sources/2607.21652v1.txt#L1924-L1928"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Vibe-coding literature review",
-         "verdict": "partly",
-         "confidence": 0.25,
-         "note": "The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Vibe-coding literature review: The discussion says the developer's 'unit of work moves from the line of code toward the specification and the acceptance decision'; it also recommends reviewing code before committing, so it does not make the spec the sole source of truth."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
-      }
-     }
-    ]
-   }
-  },
-  {
    "id": "gap:code-review-tools-catch-real-bugs",
    "kind": "gap",
-   "title": "What is the evidence that AI code review tools catch real bugs that human reviewers miss?",
+   "title": "Do AI Code Reviewers Catch Bugs Humans Miss?",
    "alternates": [
-    "12 sources say AI code review tools catch real bugs that human reviewers miss. Where is the proof?",
-    "An unchecked claim: AI code review tools catch real bugs that human reviewers miss"
+    "Twelve Testimonials and No Measurement: AI Code Review",
+    "What Would It Take to Prove an AI Reviewer Works?"
    ],
-   "question": "What is the evidence that AI code review tools catch real bugs that human reviewers miss?",
-   "whyWatch": "12 sources across 13 channels assert it and nobody shows a measurement. Asking for the evidence on camera is the story, and the claim sells something.",
-   "tension": "Confidence without a check. The AI guess leans \"right\" (AI reviewers do catch real defects missed by humans, though with notable false-positive rates; complement, not replacement.), which is a guess, not a finding.",
-   "evidenceNeeded": "Any study or dataset that tests whether AI code review tools catch real bugs that human reviewers miss.",
+   "question": "Do AI code review tools catch real bugs that human reviewers miss?",
+   "whyWatch": "Twelve sources, among them a long-time open-source maintainer, report real bugs found by AI reviewers; none reports how many it missed or how many of its flags were wrong, which is what a team deciding to adopt one needs.",
+   "tension": "Vivid anecdotes of caught bugs against no measured hit rate, miss rate or false-positive rate.",
+   "evidenceNeeded": "A study running AI reviewers over pull requests that human review approved, counting confirmed defects found (for example against later bug-fix commits), with the false-positive rate.",
    "evidenceAvailable": [],
    "gaps": [
     "No study in the corpus checks the claim; the story is the search for evidence.",
@@ -3216,8 +3063,8 @@
    },
    "coherence": {
     "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
+    "basis": "review",
+    "explanation": "One question about one practice: do AI reviewers find real defects that human review let through?"
    },
    "format": "needs-research",
    "formatWhy": "0 studies bear directly or partly on the question, 14 sources voice the belief, without a contradiction or qualification to explore, across 1 claim.",
@@ -3231,14 +3078,14 @@
     "evidence": 0,
     "editorial": 0.65,
     "overall": 0.39,
-    "explanation": "editorial 0.65 = mean of coherence 0.8 (heuristic), relevance 0.89 (14 sources, 13 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.65 = mean of coherence 0.8 (review), relevance 0.89 (14 sources, 13 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "needs-research",
    "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
    "blocking": [
     "No study in the corpus checks the claim; the story is the search for evidence."
    ],
-   "reviewed": false,
+   "reviewed": true,
    "audit": {
     "central": {
      "id": "central",
@@ -3656,6 +3503,297 @@
      }
     ]
    }
+  },
+  {
+   "id": "gap:length-tasks-agents-can-complete-autonomously",
+   "kind": "gap",
+   "title": "Are AI Agents Really Doubling Every Seven Months?",
+   "alternates": [
+    "The Seven-Month Doubling Curve, Checked",
+    "What 'Task Horizon' Measures and What It Doesn't"
+   ],
+   "question": "Is the length of task an AI agent can finish on its own really doubling every seven months?",
+   "whyWatch": "Seven sources quote the doubling curve as if it settled where agents are headed; what it measures (a 50%-success time on a fixed task suite) is narrower than how it gets used.",
+   "tension": "A widely quoted trend line whose source study is not in the corpus.",
+   "evidenceNeeded": "METR's time-horizon measurements: the task suite, the 50% and 80% success horizons by model release date, and the fitted doubling time with its error bars.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether the length of tasks AI agents can complete autonomously has been doubling roughly every seven months?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "7 sources assert \"The length of tasks AI agents can complete autonomously has been doubling roughly every seven months\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "ai-coding/length-tasks-agents-can-complete-autonomously"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question about one measured trend."
+   },
+   "format": "needs-research",
+   "formatWhy": "0 studies bear directly or partly on the question, 7 sources voice the belief, without a contradiction or qualification to explore, across 1 claim.",
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.68,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.35,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.61,
+    "overall": 0.37,
+    "explanation": "editorial 0.61 = mean of coherence 0.8 (review), relevance 0.68 (7 sources, 6 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "7 sources claim \"The length of tasks AI agents can complete autonomously has been doubling roughly every seven months\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "universal",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+        "source": "43xzqv9Tw-Q"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "AI Agent Capabilities Are Doubling Every Three Months",
+       "verdict": null,
+       "confidence": null,
+       "note": "The length of tasks that AI can do is doubling about every 7 months"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+        "source": "RhfqQKe22ZA"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Why Agent Hype can fall short of reality – Joel Becker, METR",
+       "verdict": null,
+       "confidence": null,
+       "note": "the time horizon of models is doubling every something like six to seven months"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+        "source": "Sf9vENm2GnE"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
+       "verdict": null,
+       "confidence": null,
+       "note": "plotted with log log scaled y- axis, it looks remarkably steady um in its exponential pattern."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+        "source": "XFCkrYHHfpQ"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "How Agents Use Context Engineering",
+       "verdict": null,
+       "confidence": null,
+       "note": "the task length is doubling around every seven months"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+        "source": "fuRmxFZ-umE"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "AI Safety (CS 2881) Lecture 7: Lab vs Field: Guest lecture by Joel Becker",
+       "verdict": null,
+       "confidence": null,
+       "note": "if you plot that over calendar time you see something that kind of looks exponential."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+        "source": "k1t2xyWMUdY"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "How METR measures Long Tasks and Experienced Open Source Dev Productivity - Joel Becker, METR",
+       "verdict": null,
+       "confidence": null,
+       "note": "if capabilities are measured by time horizon keep keep doubling, it does seem very very challenging to keep up with that."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+        "source": "ujkD4SxPKOI"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "AI Just Crossed the Terrifying Line - Now What?",
+       "verdict": null,
+       "confidence": null,
+       "note": "largely invisible to the public, their capabilities have increased exponentially"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 7 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "7 sources claim \"The length of tasks AI agents can complete autonomously has been doubling roughly every seven months\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "universal",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+          "source": "43xzqv9Tw-Q"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "AI Agent Capabilities Are Doubling Every Three Months",
+         "verdict": null,
+         "confidence": null,
+         "note": "The length of tasks that AI can do is doubling about every 7 months"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+          "source": "RhfqQKe22ZA"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Why Agent Hype can fall short of reality – Joel Becker, METR",
+         "verdict": null,
+         "confidence": null,
+         "note": "the time horizon of models is doubling every something like six to seven months"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+          "source": "Sf9vENm2GnE"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
+         "verdict": null,
+         "confidence": null,
+         "note": "plotted with log log scaled y- axis, it looks remarkably steady um in its exponential pattern."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+          "source": "XFCkrYHHfpQ"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "How Agents Use Context Engineering",
+         "verdict": null,
+         "confidence": null,
+         "note": "the task length is doubling around every seven months"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+          "source": "fuRmxFZ-umE"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "AI Safety (CS 2881) Lecture 7: Lab vs Field: Guest lecture by Joel Becker",
+         "verdict": null,
+         "confidence": null,
+         "note": "if you plot that over calendar time you see something that kind of looks exponential."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+          "source": "k1t2xyWMUdY"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "How METR measures Long Tasks and Experienced Open Source Dev Productivity - Joel Becker, METR",
+         "verdict": null,
+         "confidence": null,
+         "note": "if capabilities are measured by time horizon keep keep doubling, it does seem very very challenging to keep up with that."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
+          "source": "ujkD4SxPKOI"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "AI Just Crossed the Terrifying Line - Now What?",
+         "verdict": null,
+         "confidence": null,
+         "note": "largely invisible to the public, their capabilities have increased exponentially"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 7 source statements."
+      }
+     }
+    ]
+   }
   }
  ],
  "rejected": [
@@ -3663,6 +3801,11 @@
    "id": "conflict:assisted-code-harder-later-developers-maintain",
    "title": "Why do studies disagree about whether AI-assisted code is no harder for later developers to maintain than unassisted code?",
    "reason": "folded into decision:quality-and-understanding"
+  },
+  {
+   "id": "conflict:assisted-development-specification-not-code-should",
+   "title": "Is it true that in AI-assisted development the specification, not the code, should be the authoritative source of truth?",
+   "reason": "duplicate of conflict:specs-code-workflows-ignore-generated-not: 'the spec, not the code, is the source of truth' and 'can you ignore the code if the spec is good?' are the same question, and the latter has more sources and evidence"
   },
   {
    "id": "conflict:coding-productivity-gains-appear-only-after",
@@ -3698,6 +3841,11 @@
    "id": "decision:where-the-bottleneck-moves",
    "title": "Where the bottleneck moves: what should you do?",
    "reason": "folded into surprise:assistance-must-reliable-save-experts-time (review as the bottleneck); the production claim is its own story"
+  },
+  {
+   "id": "gap:background-coding-agents-assigned-routine-issues",
+   "title": "What is the evidence that background coding agents assigned routine issues can deliver mostly mergeable pull requests?",
+   "reason": "duplicate of conflict:goal-loop-commands-prompt-agent-until: 'can background agents deliver mergeable PRs on routine issues?' and 'can you leave an agent running on your backlog?' ask the viewer the same thing, and the latter has the one documented case"
   },
   {
    "id": "surprise:coding-tools-amplify-experienced-engineers-far",

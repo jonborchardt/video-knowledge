@@ -98,7 +98,9 @@
    },
    "qualificationsAccepted": true,
    "format": "long-form",
-   "formatWhy": "Six trials with a consistent split and one exception to explain, nine sources voicing the belief and two denying it."
+   "formatWhy": "Six trials with a consistent split and one exception to explain, nine sources voicing the belief and two denying it.",
+   "chain": ["surprise:assistance-must-reliable-save-experts-time"],
+   "chainWhy": "The answer is that experts on code they know gain least and were even slowed, which raises why help from the tool can cost an expert more time than it saves."
   },
   "conflict:productivity-gains-concentrate-among-developers-new": {
    "reject": "folded into decision:who-benefits: the same question from the other side"
@@ -173,7 +175,9 @@
    },
    "qualificationsAccepted": true,
    "format": "long-form",
-   "formatWhy": "Five trials and reports with a coherent spread of results, a claim to bound, a time dimension, and thirty-plus sources voicing the beliefs."
+   "formatWhy": "Five trials and reports with a coherent spread of results, a claim to bound, a time dimension, and thirty-plus sources voicing the beliefs.",
+   "chain": ["conflict:developers-overestimate-how-much-tools-speed"],
+   "chainWhy": "The answer ends on METR's maintainers, who were 19% slower while believing they were faster, which raises the next question: can developers tell at all whether the tool is speeding them up?"
   },
   "surprise:assistance-must-reliable-save-experts-time": {
    "coherence": {
@@ -234,7 +238,7 @@
    "whyWatch": "Eight sources say spec-to-code without reading the output fails, two say it works; the corpus has the understanding-loss experiment and little else.",
    "tension": "A workflow argument with one adjacent experiment.",
    "evidenceNeeded": "Outcomes of teams that ship generated code unread versus teams that review it, on defects and later change cost.",
-   "research": "The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one.",
+   "research": "The code-ownership experiment shows authors understand AI-assisted code less and the vibe-coding review only recommends reading code before committing; nothing measures a spec-only workflow (the spec as source of truth, generated code unread) against a reviewed one on defects, incidents or later change cost.",
    "format": "short"
   },
   "conflict:generated-code-drifts-codebase-established-conventions": {
@@ -276,8 +280,36 @@
    "whyWatch": "Six sources sell the loop; the one documented case is a bespoke pipeline with a retry cap and a 75% first-pass rate.",
    "tension": "A generic promise and one specific case.",
    "evidenceNeeded": "Outcomes of generic agent loop commands on real backlogs: completion rate, review burden, regressions.",
-   "research": "Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands.",
+   "research": "Only Airbnb's bespoke retry pipeline (75% of 3.5K test files on the first bulk run, with a retry cap); needs a measured study of generic goal or loop commands, or background agents assigned routine issues, on real backlogs: share of pull requests merged without rework, human review time per merged change, and regressions introduced.",
    "format": "short"
+  },
+  "conflict:assisted-development-specification-not-code-should": {
+   "reject": "duplicate of conflict:specs-code-workflows-ignore-generated-not: 'the spec, not the code, is the source of truth' and 'can you ignore the code if the spec is good?' are the same question, and the latter has more sources and evidence"
+  },
+  "gap:background-coding-agents-assigned-routine-issues": {
+    "reject": "duplicate of conflict:goal-loop-commands-prompt-agent-until: 'can background agents deliver mergeable PRs on routine issues?' and 'can you leave an agent running on your backlog?' ask the viewer the same thing, and the latter has the one documented case"
+  },
+  "gap:length-tasks-agents-can-complete-autonomously": {
+    "coherence": { "score": 0.8, "reason": "One question about one measured trend." },
+    "question": "Is the length of task an AI agent can finish on its own really doubling every seven months?",
+    "title": "Are AI Agents Really Doubling Every Seven Months?",
+    "alternates": ["The Seven-Month Doubling Curve, Checked", "What 'Task Horizon' Measures and What It Doesn't"],
+    "whyWatch": "Seven sources quote the doubling curve as if it settled where agents are headed; what it measures (a 50%-success time on a fixed task suite) is narrower than how it gets used.",
+    "tension": "A widely quoted trend line whose source study is not in the corpus.",
+    "evidenceNeeded": "METR's time-horizon measurements: the task suite, the 50% and 80% success horizons by model release date, and the fitted doubling time with its error bars.",
+    "research": "No study in the corpus; the verdicts are AI guesses citing METR. Needs METR's 2025 time-horizon paper (Measuring AI Ability to Complete Long Tasks) and its later updates recorded as sources with verdicts on this claim and on the 80%-versus-50% horizon claim.",
+    "format": "needs-research"
+  },
+  "gap:code-review-tools-catch-real-bugs": {
+   "coherence": { "score": 0.8, "reason": "One question about one practice: do AI reviewers find real defects that human review let through?" },
+   "question": "Do AI code review tools catch real bugs that human reviewers miss?",
+   "title": "Do AI Code Reviewers Catch Bugs Humans Miss?",
+   "alternates": ["Twelve Testimonials and No Measurement: AI Code Review", "What Would It Take to Prove an AI Reviewer Works?"],
+   "whyWatch": "Twelve sources, among them a long-time open-source maintainer, report real bugs found by AI reviewers; none reports how many it missed or how many of its flags were wrong, which is what a team deciding to adopt one needs.",
+   "tension": "Vivid anecdotes of caught bugs against no measured hit rate, miss rate or false-positive rate.",
+   "evidenceNeeded": "A study running AI reviewers over pull requests that human review approved, counting confirmed defects found (for example against later bug-fix commits), with the false-positive rate.",
+   "research": "No study in the corpus measures it; the related precision-and-recall claim rests on an AI guess about vendor benchmarks. Needs an independent evaluation of AI review tools on human-approved pull requests with ground-truth defects (later bug-fix commits or seeded bugs), reporting recall on bugs humans missed and precision.",
+   "format": "needs-research"
   }
  }
 }
