@@ -2,7 +2,7 @@
 // synthetic production in it built by the library code itself, so the board tests depend on no committed video.
 import { cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import type { BuildSummary } from '../src/lib/build-report';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
@@ -30,16 +30,18 @@ import { loadTopic } from '../src/lib/topics';
 import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
 
-const SKIP = ['store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames'];
+// Matched against the path inside the topic, never the checkout's own path (CI checks out under .../work/...).
+const SKIP = ['/store/transcripts', '/work', '/video/scenes', '/video/narration', '/video/frames'];
 const SKIP_EXT = ['.pdf', '.mp4', '.wav', '.png'];
 
 export function copyTopic(topic: string): { root: string; dir: (storyId: string) => string; cleanup: () => void } {
   const root = mkdtempSync(join(tmpdir(), 'vk-topic-'));
-  cpSync(join(ROOT, topic), join(root, topic), {
+  const from = join(ROOT, topic);
+  cpSync(from, join(root, topic), {
     recursive: true,
     filter: (src) => {
-      const f = src.replaceAll('\\', '/');
-      return !SKIP.some((s) => f.includes(s)) && !SKIP_EXT.some((e) => f.endsWith(e));
+      const f = '/' + relative(from, src).replaceAll('\\', '/');
+      return !SKIP.some((s) => f.endsWith(s) || f.includes(`${s}/`)) && !SKIP_EXT.some((e) => f.endsWith(e));
     },
   });
   return {
