@@ -19,7 +19,7 @@ import {
 } from '../src/lib/script';
 import { validateScript } from '../src/lib/script-validation';
 import { readJson, toJson } from '../src/lib/io';
-import { loadStories } from '../src/lib/stories';
+import { chainOf, loadStories } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';
 
@@ -43,8 +43,14 @@ describe.skipIf(!dirs.length)('committed script packages', () => {
       });
 
     it('the package rebuilds byte-for-byte without transcripts', () => {
-      const story = loadStories(topic)!.stories.find((s) => s.id === script.story)!;
-      const again = buildPackage(story, t, read, { review: loadReview(topic), inputs: pkg.inputs, previous: pkg });
+      const file = loadStories(topic);
+      const story = file!.stories.find((s) => s.id === script.story)!;
+      const again = buildPackage(story, t, read, {
+        review: loadReview(topic),
+        inputs: pkg.inputs,
+        previous: pkg,
+        chain: chainOf(story, file),
+      });
       // Compare the persisted body first so a mismatch names the field, then the fingerprint (which also covers passages).
       const persisted = (p: EvidencePackage) => {
         const { fingerprint: _f, generatedAt: _g, ...body } = JSON.parse(toJson(p)) as EvidencePackage;

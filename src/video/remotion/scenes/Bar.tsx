@@ -2,19 +2,24 @@ import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { pointFrames } from '../../chart';
 import { cue, lineFrames } from '../../cues';
+import { citationTop } from '../Citation';
 import type { TimelineScene } from '../../types';
-import { GUTTER, ramp, theme } from '../theme';
+import { GUTTER, countUp, grow, ramp, theme } from '../theme';
 
-const COLOR: Record<string, string> = { red: theme.red, green: theme.green, slate: theme.slate, amber: theme.amber };
+const COLORS = ['red', 'green', 'slate', 'amber'] as const;
+const named = (c: string) =>
+  (COLORS as readonly string[]).includes(c) ? theme[c as (typeof COLORS)[number]] : theme.slate;
 
 /** Horizontal bars for the percent points: the labelled tracks appear with the chart, each bar fills on its
  *  `point:<label>` cue, drawn against options.max (so two charts can share a scale); a count point is drawn as that
  *  many dots, not a bar. options.caption names the on-screen line shown first; options.stamp names the line stamped
- *  across the chart on the `stamp` cue. */
+ *  across the chart on the `stamp` cue. Rows that would not fit above the citation stacked (label over bar) are laid
+ *  out inline (label beside bar) and shrunk to fit, so a long series never runs off the screen. Bars spring in with a
+ *  gradient and glow, the value counts up with the fill, and the newest bar glows brightest. */
 export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const chart = scene.chart!;
-  const color = COLOR[String(scene.options.color ?? 'slate')] ?? theme.slate;
+  const color = named(String(scene.options.color ?? 'slate'));
   const bars = chart.points.filter((p) => p.unit === 'percent');
   const dots = chart.points.filter((p) => p.unit === 'count');
   const max = Number(scene.options.max ?? Math.max(...bars.map((p) => p.value)) * 1.25);
@@ -25,11 +30,17 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const captionAt = captionIdx >= 0 ? lines[captionIdx] : -1;
   const chartAt = captionIdx >= 0 ? Math.max(scene.start, Math.min(fills[0] - 20, captionAt + 60)) : scene.start + 6;
   const W = 1000;
-  const rowH = 96;
   const top = 300;
+  const rows = bars.length + (dots.length ? 1 : 0);
+  const room = citationTop(scene) - top;
+  const inline = rows * 96 > room;
+  const rowH = inline ? Math.min(72, room / rows) : 96;
+  const k = inline ? Math.min(1, rowH / 72) : 1; // type and bar scale
+  // label column, sized to the longest label (about half an em a character), capped
+  const LW = inline ? Math.min(520, Math.max(...bars.map((p) => p.label.length)) * 30 * k * 0.55 + 48) : 0;
   const stampAt = stampIdx >= 0 ? cue(scene, 'stamp', lines[stampIdx]) : Infinity;
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
       {captionIdx >= 0 ? (
         <div
           style={{
@@ -58,7 +69,8 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
       </div>
       {bars.map((p, i) => {
         const f = ramp(t, fills[i], 18);
-        const w = Math.max(0, (p.value / max) * W * f);
+        const w = Math.max(0, (p.value / max) * W * grow(t, fills[i], 18));
+        const newest = t >= fills[i] && !fills.some((g, j) => j !== i && g > fills[i] && t >= g);
         return (
           <div
             key={p.label}
@@ -70,32 +82,56 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
               opacity: ramp(t, chartAt + 6 + i * 6, 10),
             }}
           >
-            <div style={{ fontSize: 30, color: theme.muted, marginBottom: 8 }}>{p.label}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
-              <div style={{ position: 'relative', width: W, height: 40 }}>
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    borderRadius: 6,
-                    background: theme.raised,
-                    border: `1px solid ${theme.line}`,
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    width: w,
-                    borderRadius: 6,
-                    background: color,
-                  }}
-                />
+            <div style={{ display: inline ? 'flex' : 'block', alignItems: 'center' }}>
+              <div
+                style={{
+                  fontSize: 30 * k,
+                  color: theme.muted,
+                  marginBottom: inline ? 0 : 8,
+                  width: inline ? LW : undefined,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {p.label}
               </div>
-              <div style={{ fontSize: 40, fontWeight: 700, color, opacity: ramp(t, fills[i] + 12, 8) }}>
-                {p.display}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
+                <div style={{ position: 'relative', width: W, height: 40 * k }}>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      borderRadius: 6,
+                      background: theme.raised,
+                      border: `1px solid ${theme.line}`,
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      width: w,
+                      borderRadius: 6,
+                      background: `linear-gradient(90deg, ${theme.violet}, ${color})`,
+                      boxShadow: `0 0 ${newest ? 34 : 12}px ${color}${newest ? 'AA' : '55'}`,
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    fontSize: 40 * k,
+                    fontWeight: 700,
+                    color,
+                    opacity: ramp(t, fills[i], 6),
+                    textShadow: newest ? `0 0 18px ${color}` : undefined,
+                    fontVariantNumeric: 'tabular-nums',
+                  }}
+                >
+                  {countUp(p.display, p.value, f)}
+                </div>
               </div>
             </div>
           </div>
@@ -111,19 +147,26 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
             style={{
               position: 'absolute',
               left: GUTTER,
-              top: top + i * rowH + 20,
+              top: top + i * rowH + (inline ? 0 : 20),
               display: 'flex',
               alignItems: 'center',
               gap: 26,
               opacity: a,
             }}
           >
-            <svg width={p.value * 44} height={44}>
-              {Array.from({ length: p.value }, (_, k) => (
-                <circle key={k} cx={22 + k * 44} cy={22} r={16} fill={theme.amber} opacity={ramp(t, at + k * 8, 8)} />
+            <svg width={p.value * 44 * k} height={44 * k}>
+              {Array.from({ length: p.value }, (_, j) => (
+                <circle
+                  key={j}
+                  cx={(22 + j * 44) * k}
+                  cy={22 * k}
+                  r={16 * k}
+                  fill={theme.amber}
+                  opacity={ramp(t, at + j * 8, 8)}
+                />
               ))}
             </svg>
-            <div style={{ fontSize: 38, color: theme.amber }}>
+            <div style={{ fontSize: 38 * k, color: theme.amber }}>
               <span style={{ fontWeight: 700 }}>{p.display}</span> {p.label}
             </div>
           </div>

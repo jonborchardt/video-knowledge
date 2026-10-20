@@ -1,15 +1,16 @@
-// The production board derives every stage from the committed artifacts; the locked MLM package must read as locked
-// with no blockers, and every topic must derive without throwing.
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+// The production board derives every stage from the persisted artifacts. Every topic must derive without throwing; the
+// stage tests run on a synthetic production (production-helpers.ts) built by the library code, not a committed video.
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { readJson, sha, toJson } from '../src/lib/io';
-import { storyboardFingerprint } from '../src/lib/release';
+import { readJson, toJson } from '../src/lib/io';
 import type { RenderCheckSummary } from '../src/lib/render-check';
-import type { Storyboard } from '../src/lib/storyboard';
+import { writeRenderCheck } from '../src/video/check';
 import {
+  type StoryRow,
   board,
+  columnOf,
   boardNext,
   productionOf,
   runPromptOf,
@@ -25,15 +26,12 @@ import { validateScript } from '../src/lib/script-validation';
 import { loadTopic } from '../src/lib/topics';
 import {
   type EvidencePackage,
-  type Release,
   type Script,
   type ScriptReviewFile,
   type ScriptValidation,
   scriptDir,
-  scriptDirs,
-  scriptFingerprint,
 } from '../src/lib/script';
-import { copyTopic } from './production-helpers';
+import { type Fixture, syntheticProduction } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
 describe('production board', () => {
@@ -48,20 +46,28 @@ describe('production board', () => {
     }
   });
 
-  it.each(scriptDirs())('$topic/scripts/$slug reads as its lock says', ({ topic, dir }) => {
-    const prod = topics
-      .flatMap((t) => t.stories)
-      .find((s) => s.production?.dir.endsWith(dir.split(/[\\/]/).pop()!))!.production!;
-    const names = prod.checks.map((c) => c.name).filter((n) => n !== 'graphics');
-    expect(names.slice(0, 6)).toEqual(['evidence package', 'script', 'validation', 'review', 'storyboard', 'release']);
-    const locked = prod.checks.find((c) => c.name === 'release')!.health === 'done';
-    if (locked) {
-      expect(['locked', 'video', 'rendered', 'scored', 'packaged']).toContain(prod.stage);
-      expect(names.includes('video')).toBe(prod.stage !== 'locked' || prod.checks.some((c) => c.name === 'video'));
+  it('a locked production reads as its lock says', () => {
+    const f = syntheticProduction('locked');
+    try {
+      const prod = productionOf(f.topic, f.story, f.root)!;
+      expect(prod.checks.map((c) => c.name)).toEqual([
+        'evidence package',
+        'script',
+        'validation',
+        'review',
+        'storyboard',
+        'graphics',
+        'release',
+      ]);
+      expect(prod.checks.every((c) => c.health === 'current' || c.health === 'done')).toBe(true);
+      expect(prod.stage).toBe('locked');
+      expect(prod.next).toBe(`npm run video -- spike ${f.topic} ${f.story}`);
       expect(prod.blockers).toEqual([]);
+      expect(prod.halt).toBeNull();
       expect(prod.versions.some((v) => v.locked)).toBe(true);
-    } else expect(prod.stage).not.toBe('locked');
-    expect(productionOf(topic, prod.story)?.stage).toBe(prod.stage);
+    } finally {
+      f.cleanup();
+    }
   });
 
   it('a story without a scripts directory has no production', () => {
@@ -90,130 +96,101 @@ describe('halt kinds', () => {
   });
 
   it('a script asking for evidence halts with needs-evidence', () => {
-    const c = copyTopic('heat-pumps');
+    const fx = syntheticProduction('graphics');
     try {
-      const story = 'decision:when-does-it-pay-for-itself';
-      const f = join(c.dir(story), 'script.json');
+      const f = join(fx.dir, 'script.json');
       const s = readJson<Script>(f)!;
-      s.generation.needsEvidence = [{ claim: 'heat-pumps/heat-pump-pays-itself-through-lower', why: 'baseline' }];
+      s.generation.needsEvidence = [{ claim: 'heat-pumps/some-claim', why: 'baseline' }];
       writeFileSync(f, toJson(s));
-      const prod = productionOf('heat-pumps', story, c.root)!;
-      expect(prod.halt?.kind).toBe('needs-evidence');
+      const prod = productionOf(fx.topic, fx.story, fx.root)!;
+      expect(prod.halt).toMatchObject({ kind: 'needs-evidence', stage: 'script' });
       expect(prod.next.startsWith('agent: scripts/briefs/evidence.md')).toBe(true);
     } finally {
-      c.cleanup();
+      fx.cleanup();
     }
   });
 });
 
 describe('review findings', () => {
   it('a sentence the reviewer holds on a warning goes back to the writer, not to another review', () => {
-    const c = copyTopic('get-rich-quick');
+    const fx = syntheticProduction('graphics');
     try {
-      const story = 'decision:mlm-and-seminars';
-      const f = join(c.dir(story), 'script-review.json');
+      const { dir, topic, story, root } = fx;
+      const f = join(dir, 'script-review.json');
       const r = readJson<ScriptReviewFile>(f)!;
       const [id, fingerprint] = Object.entries(r.approved)[0];
       delete r.approved[id];
       r.findings.push({ sentence: id, fingerprint, category: 'x', severity: 'warning', explanation: 'imprecise' });
       writeFileSync(f, toJson(r));
-      const dir = c.dir(story);
       const v = validateScript(
         readJson<Script>(join(dir, 'script.json'))!,
-        corpusOf(loadTopic('get-rich-quick')),
-        passageReader(c.root),
+        corpusOf(loadTopic(topic)),
+        passageReader(root),
         {
           review: r,
-          judgments: loadReview('get-rich-quick', c.root).applicability,
+          judgments: loadReview(topic, root).applicability,
           previous: readJson<ScriptValidation>(join(dir, 'validation.json')),
           pkg: readJson<EvidencePackage>(join(dir, 'evidence-package.json'))!,
-          hashDoc: docHasher(docReader(c.root)),
+          hashDoc: docHasher(docReader(root)),
         },
       );
+      expect(v.status).toBe('needs-review');
       writeFileSync(join(dir, 'validation.json'), toJson(v));
-      const prod = productionOf('get-rich-quick', story, c.root)!;
+      const prod = productionOf(topic, story, root)!;
       expect(prod.halt).toMatchObject({ kind: 'review-findings', stage: 'script' });
       expect(prod.next).toContain('agent: scripts/briefs/script.md (revise)');
     } finally {
-      c.cleanup();
+      fx.cleanup();
     }
   });
 });
 
 describe('graphics stage', () => {
-  const HP = 'heat-pumps',
-    HPS = 'decision:when-does-it-pay-for-itself';
-  const writeCheck = (dir: string, over: Partial<RenderCheckSummary>) => {
-    const script = readJson<Script>(join(dir, 'script.json'))!;
-    const sb = readJson<Storyboard>(join(dir, 'storyboard.json'))!;
-    const rc: RenderCheckSummary = {
-      generatedAt: 'd',
-      fingerprints: {
-        script: scriptFingerprint(script),
-        storyboard: storyboardFingerprint(sb),
-        config: sha(readFileSync(join(dir, 'video', 'render.json'), 'utf8')),
-      },
-      ok: true,
-      problems: [],
-      graphics: [],
-      needsGraphics: [],
-      ...over,
-    };
-    writeFileSync(join(dir, 'video', 'render-check.json'), toJson(rc));
+  // The real check (npm run video -- check) with the verdicts a test needs laid over it.
+  const writeCheck = (fx: Fixture, over: Partial<RenderCheckSummary>) => {
+    const rc = writeRenderCheck(fx.topic, fx.story, fx.root);
+    writeFileSync(join(fx.dir, 'video', 'render-check.json'), toJson({ ...rc, ...over }));
   };
 
-  it('grandfathered release skips graphics', () => {
-    const c = copyTopic(HP);
-    try {
-      expect(productionOf(HP, HPS, c.root)!.stage).toBe('packaged');
-    } finally {
-      c.cleanup();
-    }
-  });
-
   it('without a release the graphics stage gates the lock', () => {
-    const c = copyTopic(HP);
+    const fx = syntheticProduction('graphics');
     try {
-      const dir = c.dir(HPS);
-      rmSync(join(dir, 'release.json'));
-      expect(productionOf(HP, HPS, c.root)!.halt?.kind).toBe('render-check');
-      writeCheck(dir, { ok: false, needsGraphics: ['sc18'] });
-      const p1 = productionOf(HP, HPS, c.root)!;
+      const { topic, story, root } = fx;
+      const p0 = productionOf(topic, story, root)!;
+      expect(p0.halt).toMatchObject({ kind: 'render-check', stage: 'graphics' });
+      expect(p0.next).toBe(`npm run video -- check ${topic} ${story}`);
+      writeCheck(fx, { ok: false, needsGraphics: ['sc3'] });
+      const p1 = productionOf(topic, story, root)!;
       expect(p1.halt?.kind).toBe('needs-graphics');
-      expect(p1.next).toContain('agent: scripts/briefs/graphics.md (sc18)');
-      writeCheck(dir, { graphics: [{ scene: 'sc18', kind: 'hp-labels', key: 'k', approved: false }] });
-      expect(productionOf(HP, HPS, c.root)!.halt?.kind).toBe('graphics-review');
-      writeCheck(dir, { graphics: [{ scene: 'sc18', kind: 'hp-labels', key: 'k', approved: true }] });
-      const p2 = productionOf(HP, HPS, c.root)!;
-      expect(p2.stage).toBe('lock');
-      expect(p2.next).toContain('--approved-by "<approver>"');
+      expect(p1.next).toContain('agent: scripts/briefs/graphics.md (sc3)');
+      writeCheck(fx, { graphics: [{ scene: 'sc3', kind: 'hp-labels', key: 'k', approved: false }] });
+      const p2 = productionOf(topic, story, root)!;
+      expect(p2.halt?.kind).toBe('graphics-review');
+      expect(p2.next).toContain('agent: scripts/briefs/visual-review.md (sc3)');
+      writeCheck(fx, { graphics: [{ scene: 'sc3', kind: 'hp-labels', key: 'k', approved: true }] });
+      const p3 = productionOf(topic, story, root)!;
+      expect(p3.stage).toBe('lock');
+      expect(p3.halt?.kind).toBe('lock');
+      expect(p3.next).toContain('--approved-by "<approver>"');
     } finally {
-      c.cleanup();
-    }
-  });
-
-  it('a grandfathered release that went stale is re-locked through the graphics stage', () => {
-    const c = copyTopic(HP);
-    try {
-      const f = join(c.dir(HPS), 'release.json');
-      const rel = readJson<Release>(f)!;
-      writeFileSync(f, toJson({ ...rel, fingerprints: { ...rel.fingerprints, storyboard: 'old' } }));
-      expect(productionOf(HP, HPS, c.root)!.halt?.kind).toBe('render-check');
-    } finally {
-      c.cleanup();
+      fx.cleanup();
     }
   });
 
   it('a render.json changed since the build asks for a new render', () => {
-    const c = copyTopic(HP);
+    const fx = syntheticProduction('packaged');
     try {
-      const f = join(c.dir(HPS), 'video', 'render.json');
+      const { topic, story, root } = fx;
+      const f = join(fx.dir, 'video', 'render.json');
       writeFileSync(f, toJson({ ...readJson<object>(f)!, gapSeconds: 0.5 }));
-      const p = productionOf(HP, HPS, c.root)!;
+      // the change asks for a new render check first; once it passes, the build is what is stale
+      expect(productionOf(topic, story, root)!.halt).toMatchObject({ kind: 'render-check', stage: 'graphics' });
+      writeRenderCheck(topic, story, root);
+      const p = productionOf(topic, story, root)!;
       expect(p.halt).toMatchObject({ kind: 'stale', stage: 'video' });
-      expect(p.next).toBe(`npm run video -- spike ${HP} ${HPS}`);
+      expect(p.next).toBe(`npm run video -- spike ${topic} ${story}`);
     } finally {
-      c.cleanup();
+      fx.cleanup();
     }
   });
 
@@ -237,7 +214,15 @@ describe('board next', () => {
   });
 
   it('boardNext of a packaged story is done', () => {
-    expect(boardNext('get-rich-quick', 'decision:mlm-and-seminars').done).toBe(true);
+    const fx = syntheticProduction('packaged');
+    try {
+      const n = boardNext(fx.topic, fx.story, fx.root);
+      expect(n.stage).toBe('packaged');
+      expect(n.halt).toBeNull();
+      expect(n.done).toBe(true);
+    } finally {
+      fx.cleanup();
+    }
   });
 });
 
@@ -278,11 +263,35 @@ describe('next steps', () => {
 });
 
 describe('upload values', () => {
-  it('gives the packaged MLM video the YouTube form values from its review package', () => {
-    const p = productionOf('get-rich-quick', 'decision:mlm-and-seminars');
-    if (p?.stage !== 'packaged') return; // only once the review package is current
-    expect(p.upload?.file).toMatch(/video\/review\/.+\.mp4$/);
-    expect(p.upload?.title).toContain('MLM');
-    expect(p.upload?.description).toContain('Chapters');
+  it('gives a packaged video the YouTube form values from its review package', () => {
+    const fx = syntheticProduction('packaged');
+    try {
+      const p = productionOf(fx.topic, fx.story, fx.root)!;
+      expect(p.stage).toBe('packaged');
+      expect(p.next).toContain('public release is blocked: draft voice');
+      const title = readJson<Script>(join(fx.dir, 'script.json'))!.title;
+      expect(p.upload).toEqual({
+        file: `${p.dir}/video/review/fixture.mp4`,
+        title,
+        description: `${title}\n\nChapters\n0:00 Hook`,
+        thumbnail: null,
+      });
+    } finally {
+      fx.cleanup();
+    }
+  });
+});
+
+describe('board columns', () => {
+  const row = (story: object, production: object | null = null, decision: object | null = null) =>
+    ({ story: { readiness: 'ready', ...story }, production, decision, next: '' }) as unknown as StoryRow;
+  it('one card per video, in the column of whoever acts next', () => {
+    expect(columnOf(row({}))).toBe('ready');
+    expect(columnOf(row({ readiness: 'needs-research' }))).toBe('needs-research');
+    expect(columnOf(row({ partOf: 'decision:first' }))).toBeNull(); // answered on its first question's card
+    expect(columnOf(row({}, { stage: 'storyboard' }))).toBe('producing');
+    expect(columnOf(row({}, { stage: 'packaged' }))).toBe('your-review');
+    expect(columnOf(row({}, { stage: 'packaged' }, { decision: 'reviewing' }))).toBe('reviewing');
+    expect(columnOf(row({ partOf: 'x' }, null, { decision: 'published' }))).toBe('published');
   });
 });

@@ -30,7 +30,7 @@ import {
 } from '../src/lib/script';
 import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
 import { validateScript } from '../src/lib/script-validation';
-import { loadStories, storiesPath } from '../src/lib/stories';
+import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
 import { loadTopic } from '../src/lib/topics';
 
@@ -65,6 +65,8 @@ function stagePackage(): EvidencePackage {
   if (!file) throw new Error(`no ${storiesPath(topic)}; run npm run stories -- discover ${topic}`);
   const story = file.stories.find((s) => s.id === storyId);
   if (!story) throw new Error(`no story ${storyId} in ${storiesPath(topic)} (rejected stories cannot be scripted)`);
+  if (story.partOf)
+    throw new Error(`${storyId} is a follow-up question in ${story.partOf}; package that story instead`);
   if (story.readiness !== 'ready') console.error(`warning: story is ${story.readiness}: ${story.readinessWhy}`);
   const t = corpusOf(loadTopic(topic));
   const old = readJson<EvidencePackage>(p(FILES.pkg));
@@ -77,6 +79,7 @@ function stagePackage(): EvidencePackage {
     },
     readTranscript: transcriptReader(topic),
     previous: old,
+    chain: chainOf(story, file),
   });
   if (old?.fingerprint === pkg.fingerprint) console.log(`${rel(p(FILES.pkg))} unchanged (${pkg.fingerprint})`);
   else {

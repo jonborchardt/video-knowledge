@@ -1,12 +1,12 @@
 ---
 // Story ideas for a topic: the ranked candidates in <topic>/stories.json, for someone choosing the next video. Each
-// card shows the question, readiness and format, why it ranks where it does, what blocks it, and the evidence audit.
+// card shows the question, readiness, why it ranks where it does, what blocks it, and the evidence audit.
 // Static, no client script: each story is a <details> card.
 import Base from '../../layouts/Base.astro';
 import { site } from '../../config/site';
 import type { EvidenceItem, Validation } from '../../lib/evidence';
 import { scriptDirs, storySlug } from '../../lib/script';
-import { loadStories, storyTopicNames, type Format, type Readiness, type StoriesFile } from '../../lib/stories';
+import { loadStories, storyTopicNames, type Readiness, type StoriesFile } from '../../lib/stories';
 import { loadTopic, type Topic } from '../../lib/topics';
 import { href } from '../../lib/url';
 
@@ -38,11 +38,6 @@ const READY: Record<Readiness, { label: string; colour: string; help: string }> 
     help: 'a good question with essential evidence missing',
   },
   rejected: { label: 'Rejected', colour: 'text-destructive', help: 'incoherent, redundant or contradicted' },
-};
-const FORMAT: Record<Format, string> = {
-  'long-form': '8 to 12 min',
-  short: 'short',
-  'needs-research': 'no format yet',
 };
 const STATUS: Record<Validation['status'], string> = {
   supported: 'text-success',
@@ -96,7 +91,7 @@ const pct = (x: number | null) => (x == null ? '' : ` ${Math.round(x * 100)}%`);
         sources and {f.basis.studies} studies; {f.stories.filter((s) => s.reviewed).length} have been through editorial review.
         The editorial score is a heuristic from coherence, how widely a claim is repeated, curiosity, stakes and depth; it
         is not audience data. The evidence score is the strength of the studies behind the central conclusion, discounted
-        when they only partly apply. Readiness and format come from the audit and the review, never from the scores.
+        when they only partly apply. Readiness comes from the audit and the review, never from the scores.
       </p>
     </div>
     <ul class="grid list-none grid-cols-3 gap-3 p-0" aria-label="Readiness">
@@ -135,8 +130,8 @@ const pct = (x: number | null) => (x == null ? '' : ` ${Math.round(x * 100)}%`);
             </div>
             <p class:list={[small, 'ml-[1.4em]']}>{s.question}</p>
             <span class="ml-[1.4em] font-mono text-xs text-muted-foreground tabular-nums">
-              {FORMAT[s.format]} · overall {s.scores.overall.toFixed(2)} · editorial {s.scores.editorial.toFixed(2)} ·
-              evidence {s.scores.evidence.toFixed(2)} · coherence {s.scores.coherence.toFixed(2)}
+              overall {s.scores.overall.toFixed(2)} · editorial {s.scores.editorial.toFixed(2)} · evidence{' '}
+              {s.scores.evidence.toFixed(2)} · coherence {s.scores.coherence.toFixed(2)}
               {s.reviewed ? ' · reviewed' : ''}
             </span>
           </summary>
@@ -153,6 +148,21 @@ const pct = (x: number | null) => (x == null ? '' : ` ${Math.round(x * 100)}%`);
             <p class:list={[small, 'mt-1']}>
               <strong>Other titles:</strong> {s.alternates.join(' · ')}
             </p>
+            {s.partOf && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Part of:</strong> {s.partOf}, as a follow-up question; not produced on its own.
+              </p>
+            )}
+            {s.chain && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Then answers:</strong> {s.chain.map((c) => c.question || c.id).join(' → ')}
+              </p>
+            )}
+            {s.chainCandidates && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Could chain with:</strong> {s.chainCandidates.join(' · ')}
+              </p>
+            )}
             {s.blocking.length > 0 && (
               <>
                 <h3 class={h3}>What blocks it</h3>
@@ -163,12 +173,9 @@ const pct = (x: number | null) => (x == null ? '' : ` ${Math.round(x * 100)}%`);
                 </ul>
               </>
             )}
-            <h3 class={h3}>Readiness and format</h3>
+            <h3 class={h3}>Readiness</h3>
             <p class={small}>
               <span class:list={[badge, READY[s.readiness].colour]}>{READY[s.readiness].label}</span> {s.readinessWhy}
-            </p>
-            <p class:list={[small, 'mt-1']}>
-              <span class={badge}>{s.format}</span> {s.formatWhy}
             </p>
             <h3 class={h3}>Coherence</h3>
             <p class={small}>

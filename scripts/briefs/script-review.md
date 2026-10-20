@@ -37,6 +37,20 @@ sentence the passages do not establish is a finding, however likely it sounds.
 6. **Numbers.** The code checked that each figure appears in a passage. Check that it means what
    the sentence says it means (percent of whom, dollars of what, over what period) and that a
    calculation's inputs are the right inputs.
+7. **Chain.** When the package has `questions`: each question section answers its own question
+   with that story's evidence (an answer that leans on another question's claims is
+   `overgeneralization`), the end of each section makes the next question follow, and the `close`
+   does not answer a question again.
+8. **Repetition.** Does the sentence tell the viewer something they have already heard: a figure
+   read again, an answer given again in the `answer` or `takeaway`, a limitation repeated after it was stated beside its figure, a hook that lays out
+   the numbers the investigation then gives? A `repetition` warning marks a sentence that re-reads two or more earlier figures; read it and the
+   sentences it names. The `slow-start` and `number-dense` warnings work the same way: retire one
+   with a disposition only when the script needs it (a hook that cannot be shorter, a comparison
+   that needs every figure), otherwise make it a finding. A restatement that adds
+   nothing is a blocking `repetition` finding (the suggestion names what to cut or how to point
+   back in words instead); a short callback that carries the argument forward ("that 47 percent")
+   is fine. Read the script end to end once for this before judging single sentences: a
+   paraphrase of an earlier point has no figures for the sheet to mark.
 
 Approve a sentence only when every check passes. Approval is by fingerprint: copy the `fp=` value
 the sheet prints; a later edit changes it and the approval lapses.
@@ -74,7 +88,8 @@ the sheet prints; a later edit changes it and the approval lapses.
   by the assertion id (or the sentence id for a sentence-level warning) with the sentence fingerprint,
   the warning's category and a one-sentence reason:
   `"dispositions": { "s23.a": { "fingerprint": "<fp>", "category": "needs-qualification", "reason": "s51 says the figures are self-reported" } }`.
-  A disposition retires only that category at that fingerprint, and only while the review is bound
+  To retire two categories on one sentence (say `repetition` and `number-dense`), give a list of
+  them under its id. A disposition retires only that category at that fingerprint, and only while the review is bound
   to the current package. A warning you judge real becomes a finding instead. Blocking issues cannot
   be dispositioned. Only the reviewer writes dispositions.
 - Severity: `blocking` (a viewer would come away believing something the evidence does not

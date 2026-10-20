@@ -65,9 +65,7 @@
     "resolution": "Perception tracks effort saved on the parts AI does, not time spent on the parts it creates; which dominates depends on task familiarity and codebase maturity (a hypothesis both papers gesture at).",
     "takeaway": "Measure, don't ask: time a week of comparable tasks with and without the tool."
    },
-   "qualificationsAccepted": true,
-   "format": "long-form",
-   "formatWhy": "Two trials with contrasting designs, a third document on why self-reports fail, and twenty-one sources repeating the belief."
+   "qualificationsAccepted": true
   },
   "decision:who-benefits": {
    "coherence": {
@@ -97,8 +95,8 @@
     "takeaway": "Point the tools at unfamiliar work, expect less on code you know by heart, and treat '10x for experts' as marketing."
    },
    "qualificationsAccepted": true,
-   "format": "long-form",
-   "formatWhy": "Six trials with a consistent split and one exception to explain, nine sources voicing the belief and two denying it."
+   "chain": ["surprise:assistance-must-reliable-save-experts-time"],
+   "chainWhy": "The answer is that experts on code they know gain least and were even slowed, which raises why help from the tool can cost an expert more time than it saves."
   },
   "conflict:productivity-gains-concentrate-among-developers-new": {
    "reject": "folded into decision:who-benefits: the same question from the other side"
@@ -133,9 +131,7 @@
     "resolution": "No measured maintainability penalty yet, within the limits of one small trial; a measured understanding penalty for the author; and issue counts that need a baseline before they mean 'more'.",
     "takeaway": "Review for understanding, not just correctness: the one measured harm is that authors know their AI-assisted code less well."
    },
-   "qualificationsAccepted": true,
-   "format": "long-form",
-   "formatWhy": "A preregistered trial, a large commit study, a survey, a review and an experiment on understanding, with eight sources voicing the fear."
+   "qualificationsAccepted": true
   },
   "conflict:assisted-code-harder-later-developers-maintain": {
    "reject": "folded into decision:quality-and-understanding"
@@ -172,8 +168,8 @@
     "takeaway": "Expect a quarter, not a multiple, and expect less on the code you know best."
    },
    "qualificationsAccepted": true,
-   "format": "long-form",
-   "formatWhy": "Five trials and reports with a coherent spread of results, a claim to bound, a time dimension, and thirty-plus sources voicing the beliefs."
+   "chain": ["conflict:developers-overestimate-how-much-tools-speed"],
+   "chainWhy": "The answer ends on METR's maintainers, who were 19% slower while believing they were faster, which raises the next question: can developers tell at all whether the tool is speeding them up?"
   },
   "surprise:assistance-must-reliable-save-experts-time": {
    "coherence": {
@@ -202,9 +198,7 @@
     "resolution": "AI help pays when the check is cheaper than the work it replaces; for experts on familiar code it often is not, and the skill to check cannot be outsourced.",
     "takeaway": "Measure your acceptance rate; if you delete most of what the tool writes, use it for the work you cannot already do."
    },
-   "qualificationsAccepted": true,
-   "format": "long-form",
-   "formatWhy": "A trial result with a mechanism, a company report, a review and an internal study, across three claims."
+   "qualificationsAccepted": true
   },
   "decision:where-the-bottleneck-moves": {
    "reject": "folded into surprise:assistance-must-reliable-save-experts-time (review as the bottleneck); the production claim is its own story"
@@ -220,8 +214,7 @@
    "whyWatch": "Eighteen sources say it and three deny it; the two reports that touch it both found review and rollout, not typing, set the pace.",
    "tension": "A plausible systems argument with only indirect measurements.",
    "evidenceNeeded": "End-to-end delivery time with and without AI tools, decomposed by phase.",
-   "research": "Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement.",
-   "format": "short"
+   "research": "Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement."
   },
   "conflict:specs-code-workflows-ignore-generated-not": {
    "coherence": { "score": 0.8, "reason": "One question about one workflow." },
@@ -234,8 +227,7 @@
    "whyWatch": "Eight sources say spec-to-code without reading the output fails, two say it works; the corpus has the understanding-loss experiment and little else.",
    "tension": "A workflow argument with one adjacent experiment.",
    "evidenceNeeded": "Outcomes of teams that ship generated code unread versus teams that review it, on defects and later change cost.",
-   "research": "The code-ownership experiment shows authors understand AI-assisted code less; nothing measures a spec-only workflow against a reviewed one.",
-   "format": "short"
+   "research": "The code-ownership experiment shows authors understand AI-assisted code less and the vibe-coding review only recommends reading code before committing; nothing measures a spec-only workflow (the spec as source of truth, generated code unread) against a reviewed one on defects, incidents or later change cost."
   },
   "conflict:generated-code-drifts-codebase-established-conventions": {
    "coherence": { "score": 0.8, "reason": "One question about one failure mode." },
@@ -248,8 +240,7 @@
    "whyWatch": "Every team that adopts the tools reports the cleanup; nobody has measured it.",
    "tension": "A universal complaint and no number.",
    "evidenceNeeded": "A measured rate of convention violations in AI commits against a human baseline.",
-   "research": "Only qualitative reports from 16 METR developers and a note on context consistency in the commit study; no measured drift rate against a human baseline.",
-   "format": "short"
+   "research": "Only qualitative reports from 16 METR developers and a note on context consistency in the commit study; no measured drift rate against a human baseline."
   },
   "surprise:vibe-coded-apps-work-prototypes-but": {
    "coherence": { "score": 0.8, "reason": "One claim with two halves, only one of them studied." },
@@ -262,8 +253,7 @@
    "whyWatch": "Sixteen sources say vibe-coded apps break in production. The review says the prototype half is well supported and the break-down half is mostly unstudied.",
    "tension": "A widely shared belief whose interesting half has no evidence.",
    "evidenceNeeded": "Case series or longitudinal data on vibe-coded apps taken to production.",
-   "research": "The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data.",
-   "format": "needs-research"
+   "research": "The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data."
   },
   "conflict:goal-loop-commands-prompt-agent-until": {
    "coherence": { "score": 0.8, "reason": "One question about one practice." },
@@ -276,8 +266,53 @@
    "whyWatch": "Six sources sell the loop; the one documented case is a bespoke pipeline with a retry cap and a 75% first-pass rate.",
    "tension": "A generic promise and one specific case.",
    "evidenceNeeded": "Outcomes of generic agent loop commands on real backlogs: completion rate, review burden, regressions.",
-   "research": "Only Airbnb's bespoke retry pipeline; no evidence on generic agent loop commands.",
-   "format": "short"
+   "research": "Only Airbnb's bespoke retry pipeline (75% of 3.5K test files on the first bulk run, with a retry cap); needs a measured study of generic goal or loop commands, or background agents assigned routine issues, on real backlogs: share of pull requests merged without rework, human review time per merged change, and regressions introduced."
+  },
+  "conflict:assisted-development-specification-not-code-should": {
+   "reject": "duplicate of conflict:specs-code-workflows-ignore-generated-not: 'the spec, not the code, is the source of truth' and 'can you ignore the code if the spec is good?' are the same question, and the latter has more sources and evidence"
+  },
+  "gap:background-coding-agents-assigned-routine-issues": {
+    "reject": "duplicate of conflict:goal-loop-commands-prompt-agent-until: 'can background agents deliver mergeable PRs on routine issues?' and 'can you leave an agent running on your backlog?' ask the viewer the same thing, and the latter has the one documented case"
+  },
+  "gap:length-tasks-agents-can-complete-autonomously": {
+    "coherence": { "score": 0.8, "reason": "One question about one measured trend." },
+    "question": "Is the length of task an AI agent can finish on its own really doubling every seven months?",
+    "title": "Are AI Agents Really Doubling Every Seven Months?",
+    "alternates": ["The Seven-Month Doubling Curve, Checked", "What 'Task Horizon' Measures and What It Doesn't"],
+    "whyWatch": "Seven sources quote the doubling curve as if it settled where agents are headed; what it measures (a 50%-success time on a fixed task suite) is narrower than how it gets used.",
+    "tension": "A widely quoted trend line whose source study is not in the corpus.",
+    "evidenceNeeded": "METR's time-horizon measurements: the task suite, the 50% and 80% success horizons by model release date, and the fitted doubling time with its error bars.",
+    "research": "No study in the corpus; the verdicts are AI guesses citing METR. Needs METR's 2025 time-horizon paper (Measuring AI Ability to Complete Long Tasks) and its later updates recorded as sources with verdicts on this claim and on the 80%-versus-50% horizon claim."
+  },
+  "gap:code-review-tools-catch-real-bugs": {
+   "coherence": { "score": 0.8, "reason": "One question about one practice: do AI reviewers find real defects that human review let through?" },
+   "question": "Do AI code review tools catch real bugs that human reviewers miss?",
+   "title": "Do AI Code Reviewers Catch Bugs Humans Miss?",
+   "alternates": ["Twelve Testimonials and No Measurement: AI Code Review", "What Would It Take to Prove an AI Reviewer Works?"],
+   "whyWatch": "Twelve sources, among them a long-time open-source maintainer, report real bugs found by AI reviewers; none reports how many it missed or how many of its flags were wrong, which is what a team deciding to adopt one needs.",
+   "tension": "Vivid anecdotes of caught bugs against no measured hit rate, miss rate or false-positive rate.",
+   "evidenceNeeded": "A study running AI reviewers over pull requests that human review approved, counting confirmed defects found (for example against later bug-fix commits), with the false-positive rate.",
+   "research": "No study in the corpus measures it; the related precision-and-recall claim rests on an AI guess about vendor benchmarks. Needs an independent evaluation of AI review tools on human-approved pull requests with ground-truth defects (later bug-fix commits or seeded bugs), reporting recall on bugs humans missed and precision."
+  },
+  "gap:open-weight-coding-models-now-handle": {
+   "coherence": { "score": 0.8, "reason": "One question: can a free, self-hostable model do everyday coding work, and how far behind the best closed models is it?" },
+   "question": "Are free open-weight models now good enough for everyday coding?",
+   "title": "Can a Free Open Model Do Your Everyday Coding?",
+   "alternates": ["Open-Weight vs Closed Coding Models: How Big Is the Gap?", "Do You Still Need to Pay for the Best Coding Model?"],
+   "whyWatch": "Five sources say open-weight models now handle routine coding and only trail at the top, which decides whether a team can self-host instead of paying per token; none shows a measurement, and vendor leaderboard posts are the only numbers in circulation.",
+   "tension": "Benchmark announcements say the gap has nearly closed; the sources who say so offer impressions, and nothing in the corpus tests either model family on real work.",
+   "evidenceNeeded": "An independent evaluation running open-weight and closed models on the same realistic coding tasks, with contamination controls, reporting success rates on routine tasks and the gap at the hardest ones.",
+   "research": "No study in the corpus compares open-weight and closed models on coding tasks; the only lean is an AI guess about 2025 vendor benchmark posts. Needs an independent, contamination-controlled benchmark (for example SWE-bench Verified or Terminal-Bench run by a third party) or a field study scoring both families on the same everyday tasks."
+  },
+  "gap:coding-agents-run-tools-loop-step": {
+   "coherence": { "score": 0.8, "reason": "One question: does letting the model run tools in a loop make it far more useful than chatting with it? Distinct from decision:how-much-faster (overall speed-up from any AI tool) and conflict:goal-loop-commands-prompt-agent-until (leaving an agent unattended on a backlog)." },
+   "question": "Are coding agents that run tools themselves really a leap beyond chatting with an AI?",
+   "title": "Are Coding Agents a Leap Beyond Chatbots?",
+   "alternates": ["Agent or Chat Window: Which Actually Gets More Done?", "Why Everyone Says Agents Changed AI Coding"],
+   "whyWatch": "Six sources describe agents that edit, run and test code in a loop as a step change over copy-pasting from a chat, and that belief drives which tools teams buy; nobody in the corpus has put the two side by side.",
+   "tension": "Practitioners report the agent shift as obvious from experience; the trials in the corpus measure AI assistance in general and never compare an agent with a chat assistant on the same tasks.",
+   "evidenceNeeded": "A controlled comparison of the same developers on the same tasks with an agentic tool against a chat assistant, measuring completion time, success and rework.",
+   "research": "No study in the corpus separates agentic tools from chat assistance; the productivity trials (METR, the field experiments) measure AI help as a whole. Needs a randomized or within-subject comparison of an agent that runs tools in a loop against chat-based assistance on matched real tasks, reporting time, success and defects."
   }
  }
 }

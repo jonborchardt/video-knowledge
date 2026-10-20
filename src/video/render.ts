@@ -74,7 +74,13 @@ export function relativeScene(s: TimelineScene): TimelineScene {
 }
 export const sceneKey = (s: TimelineScene, tl: Timeline) =>
   sha(
-    JSON.stringify({ scene: relativeScene(s), fps: tl.fps, w: tl.width, h: tl.height, code: rendererVersion(s.kind) }),
+    JSON.stringify({
+      scene: relativeScene(s),
+      fps: tl.fps,
+      w: tl.width,
+      h: tl.height,
+      code: rendererVersion(s.kind),
+    }),
   );
 
 export interface Chunk {
@@ -115,7 +121,7 @@ export async function renderScenes(
     });
     for (const p of todo) {
       for (const f of readdirSync(chunksDir))
-        if (f.startsWith(p.scene.id + '-') && f.endsWith('.mp4')) unlinkSync(join(chunksDir, f));
+        if (f.startsWith(`${p.scene.id}-`) && f.endsWith('.mp4')) unlinkSync(join(chunksDir, f));
       await renderMedia({
         composition,
         serveUrl,

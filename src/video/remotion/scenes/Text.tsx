@@ -1,21 +1,22 @@
 import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
-import { cue, lastWord, lineFrames, spokenAt } from '../../cues';
+import { cue, lineFrames, spokenAt } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { DocStack, PeopleGrid, Snowball, Spreadsheet } from '../glyphs';
-import { GUTTER, clamp01, ramp, theme } from '../theme';
+import { GUTTER, clamp01, grow, ramp, theme } from '../theme';
 
 /** Typography scenes: `title` (one line, rule, optional subtitle), `question` (typed on, cursor), `list` (lines build
- *  on their cues or as spoken; `document` option draws a statement outline with callouts), `pair` (two words, arrow). */
+ *  on their cues or as spoken; `document` option draws a statement outline with callouts).
+ *  A title pops in word by word in a gradient, and list lines slide in, each in its own accent, the newest bright and
+ *  the earlier ones dimmed. */
 export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const lines = scene.onScreenText;
   const frames = lineFrames(scene);
   const o = scene.options;
   if (scene.kind === 'title') {
-    const a = ramp(t, scene.start + 4, 14);
     return (
-      <AbsoluteFill style={{ background: theme.bg, justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
+      <AbsoluteFill style={{ background: theme.field, justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
         <div
           style={{
             fontFamily: theme.sans,
@@ -24,14 +25,39 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
             lineHeight: 1.15,
             color: theme.fg,
             maxWidth: 1500,
-            opacity: a,
-            transform: `translateY(${(1 - a) * 20}px)`,
           }}
         >
-          {lines[0]}
+          {(lines[0] ?? '').split(' ').map((w, k) => {
+            const g = grow(t, scene.start + 4 + k * 3, 10);
+            return (
+              <span
+                key={k}
+                style={{
+                  display: 'inline-block',
+                  marginRight: '0.25em',
+                  opacity: ramp(t, scene.start + 4 + k * 3, 6),
+                  transform: `translateY(${(1 - g) * 40}px) scale(${0.85 + 0.15 * g})`,
+                  backgroundImage: `linear-gradient(90deg, ${theme.fg}, ${theme.slate} 60%, ${theme.red})`,
+                  backgroundSize: '1500px 100%',
+                  backgroundPosition: `${-k * 140}px 0`,
+                  WebkitBackgroundClip: 'text',
+                  color: 'transparent',
+                }}
+              >
+                {w}
+              </span>
+            );
+          })}
         </div>
         <div
-          style={{ width: 160 * ramp(t, scene.start + 16, 14), height: 4, background: theme.slate, marginTop: 36 }}
+          style={{
+            width: 420 * ramp(t, scene.start + 16, 14),
+            height: 8,
+            borderRadius: 4,
+            background: `linear-gradient(90deg, ${theme.slate}, ${theme.violet}, ${theme.red})`,
+            boxShadow: `0 0 24px ${theme.violet}`,
+            marginTop: 36,
+          }}
         />
         {o.subtitle ? (
           <div
@@ -60,7 +86,7 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
     const shown = Math.round(line.length * clamp01((t - from) / Math.max(1, until - from)));
     const blink = Math.floor(t / 15) % 2 === 0;
     return (
-      <AbsoluteFill style={{ background: theme.bg, justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
+      <AbsoluteFill style={{ background: theme.field, justifyContent: 'center', padding: `0 ${GUTTER + 40}px` }}>
         <div style={{ fontFamily: theme.serif, fontSize: 92, lineHeight: 1.2, color: theme.fg, maxWidth: 1500 }}>
           {line.slice(0, shown)}
           <span style={{ color: theme.amber, opacity: blink ? 1 : 0.15 }}>|</span>
@@ -73,53 +99,9 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
       </AbsoluteFill>
     );
   }
-  if (scene.kind === 'pair') {
-    const dim = cue(scene, 'dim', lastWord(scene) - 30);
-    const d = 1 - 0.7 * ramp(t, dim, 12);
-    return (
-      <AbsoluteFill
-        style={{ background: theme.bg, fontFamily: theme.sans, justifyContent: 'center', alignItems: 'center' }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            right: 1080,
-            top: 470,
-            fontSize: 96,
-            color: theme.slate,
-            opacity: ramp(t, Math.min(frames[0], scene.start + 6), 10) * d,
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {lines[0]}
-        </div>
-        <svg
-          width={200}
-          height={40}
-          style={{ position: 'absolute', left: 860, top: 505, opacity: ramp(t, frames[1] - 6, 10) }}
-        >
-          <line x1={0} y1={20} x2={170} y2={20} stroke={theme.muted} strokeWidth={4} />
-          <polygon points="170,8 196,20 170,32" fill={theme.muted} />
-        </svg>
-        <div
-          style={{
-            position: 'absolute',
-            left: 1100,
-            top: 470,
-            fontSize: 96,
-            color: theme.amber,
-            opacity: ramp(t, frames[1], 10),
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {lines[1]}
-        </div>
-      </AbsoluteFill>
-    );
-  }
   // list
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
       {o.legend ? <Legend t={t} at={scene.start} faint /> : null}
       {o.document ? <Outline t={t} at={scene.start + 6} /> : null}
       <div
@@ -135,6 +117,8 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
       >
         {lines.map((l, i) => {
           const a = ramp(t, frames[i], 10);
+          const accent = [theme.slate, theme.amber, theme.green, theme.red][i % 4];
+          const later = i < lines.length - 1 ? ramp(t, frames[i + 1], 10) : 0;
           return (
             <div
               key={i}
@@ -142,16 +126,17 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 display: 'flex',
                 alignItems: 'baseline',
                 gap: 26,
-                opacity: a,
-                transform: `translateY(${(1 - a) * 16}px)`,
+                opacity: a * (1 - 0.45 * later),
+                transform: `translateX(${(1 - grow(t, frames[i], 12)) * -80}px)`,
               }}
             >
               <div
                 style={{
-                  width: 14,
+                  width: 22,
                   height: 14,
                   borderRadius: 7,
-                  background: theme.amber,
+                  background: accent,
+                  boxShadow: `0 0 18px ${accent}`,
                   flexShrink: 0,
                   position: 'relative',
                   top: -4,

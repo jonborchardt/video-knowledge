@@ -2,7 +2,7 @@
 //
 // Stage 1 drafts candidates from the corpus (deterministic): a popular claim a study contradicts, studies or sources
 // that disagree, a study that overturned the AI guess, a widely repeated claim nobody checked, and the decision
-// groups in site.json. Stage 2 evaluates each: the evidence audit (src/lib/evidence.ts), coherence, depth and format,
+// groups in site.json. Stage 2 evaluates each: the evidence audit (src/lib/evidence.ts), coherence, depth,
 // the ranking dimensions, and readiness with explicit blocking reasons. The reviewer's file (src/lib/review.ts)
 // supplies what code cannot judge: whether a verdict decides a sentence, whether claims answer one question, and the
 // viewer-facing framing. Without it, multi-claim stories cap at needs-review and titles are plain questions.
@@ -22,10 +22,9 @@ import {
   studyVerdicts,
   validate,
 } from './evidence';
-import type { Format, ReviewFile, StoryReview } from './review';
+import { MAX_CHAIN_CLAIMS, MAX_QUESTIONS, type ReviewFile, type StoryReview } from './review';
 import { type ClaimView, type Topic, topicNames, VAL } from './topics';
 
-export type { Format } from './review';
 export type StoryKind = 'contradicted' | 'conflict' | 'surprise' | 'gap' | 'decision';
 export type Readiness = 'ready' | 'needs-review' | 'needs-research' | 'rejected';
 export type StoryInput = Pick<Topic, 'name' | 'label' | 'claims' | 'recap'> & { sameStudy?: Record<string, string> };
@@ -51,8 +50,6 @@ export interface Story {
   related: string[]; // nearby claims left out of the narrative, by wording overlap
   arc: Arc;
   coherence: { score: number; basis: 'review' | 'heuristic'; explanation: string };
-  format: Format;
-  formatWhy: string;
   scores: {
     coherence: number;
     relevance: number;
@@ -70,6 +67,12 @@ export interface Story {
   blocking: string[]; // what keeps it from ready
   reviewed: boolean;
   audit: { central: Validation; findings: Finding[] };
+  /** The follow-up questions the same video answers (story-review.json `chain`); absent for a one-question video. */
+  chain?: { id: string; question: string }[];
+  /** The story whose video answers this one as a follow-up: it is never produced on its own. */
+  partOf?: string;
+  /** Suggested follow-ups for the reviewer (ready, no shared claims, nearest wording); never applied by code. */
+  chainCandidates?: string[];
 }
 export interface StoriesFile {
   topic: string;
@@ -80,7 +83,7 @@ export interface StoriesFile {
 
 const CURIOSITY: Record<StoryKind, number> = { contradicted: 1, conflict: 1, surprise: 0.8, decision: 0.5, gap: 0.5 };
 const STAKES: Record<string, number> = { 'pro-hype': 1, pro: 0.7, skeptic: 0.5, calibrating: 0.4 };
-const MAX_STORIES = 12;
+const MAX_VIDEOS = 12; // a topic lists at most this many videos; a chain's follow-ups ride on their first question
 const MIN_REPEATED = 3; // sources repeating a claim before it counts as popular
 const MIN_GAP = 5; // sources repeating an unchecked claim before the gap is a story
 const round = (n: number) => Math.round(n * 100) / 100;
@@ -420,7 +423,7 @@ function audit(d: Draft, t: StoryInput, review: ReviewFile, readPassage: Passage
   return { r, reviewed, claims, core, central, findings, same };
 }
 
-/** Coherence, depth, format, evidence strength and the editorial dimensions, each from corpus counts and the audit. */
+/** Coherence, depth, evidence strength and the editorial dimensions, each from corpus counts and the audit. */
 interface Scoring {
   coherence: Story['coherence'];
   decisive: EvidenceItem[];
@@ -430,8 +433,6 @@ interface Scoring {
   flipped: boolean;
   tension: boolean;
   depth: number;
-  format: Format;
-  formatWhy: string;
   strength: number;
   strongest: EvidenceItem | undefined;
   independent: number;
@@ -457,7 +458,7 @@ function score(d: Draft, { r, claims, core, central, findings, same }: Audit): S
           } Unreviewed.`,
         };
 
-  // Depth and format: what there is to explore.
+  // Depth: what there is to explore.
   const decisive = [central, ...findings.filter((f) => f.role === 'evidence').map((f) => f.validation)].flatMap((v) =>
     [...v.supporting, ...v.contradicting, ...v.qualifying].filter((x) => x.applicability !== 'contextual'),
   );
@@ -478,18 +479,6 @@ function score(d: Draft, { r, claims, core, central, findings, same }: Audit): S
       (tension ? 0.15 : 0) +
       0.15 * (Math.min(claims.length, 3) / 3),
   );
-  const format: Format =
-    r.format ??
-    (docs === 0
-      ? 'needs-research'
-      : docs >= 2 && sources.size >= 3 && (claims.length >= 2 || tension)
-        ? 'long-form'
-        : 'short');
-  const formatWhy =
-    r.formatWhy ??
-    `${n(docs, 'study')} bear directly or partly on the question, ${n(sources.size, 'source')} voice the belief, ${
-      tension ? 'with' : 'without'
-    } a contradiction or qualification to explore, across ${n(claims.length, 'claim')}.`;
 
   // Evidence: what stands behind the central conclusion, discounted for partial applicability.
   const sides = [
@@ -521,8 +510,6 @@ function score(d: Draft, { r, claims, core, central, findings, same }: Audit): S
     flipped,
     tension,
     depth,
-    format,
-    formatWhy,
     strength,
     strongest,
     independent,
@@ -629,8 +616,6 @@ function frame(
     related: uniq(core.flatMap((c) => related(c, t.claims, new Set(claims)))).slice(0, 5),
     arc: { ...d.arc, ...(r.arc ?? {}) },
     coherence,
-    format: s.format,
-    formatWhy: s.formatWhy,
     scores: {
       coherence: coherence.score,
       relevance: s.relevance,
@@ -665,6 +650,12 @@ function evaluate(d: Draft, t: StoryInput, review: ReviewFile, readPassage: Pass
 }
 
 /** Discover, audit, evaluate, deduplicate and rank. Deterministic for a given corpus and review file. */
+/** Review entries keyed to a story id the corpus no longer drafts: they judge nothing and should be removed. */
+export const staleReviewIds = (t: StoryInput, review: ReviewFile): string[] => {
+  const ids = new Set(drafts(t).map((d) => d.id));
+  return Object.keys(review.stories ?? {}).filter((id) => !ids.has(id));
+};
+
 export function discover(t: StoryInput, readPassage: PassageReader, review: ReviewFile = {}): StoriesFile {
   const all = drafts(t);
   const rejected: StoriesFile['rejected'] = [];
@@ -704,6 +695,12 @@ export function discover(t: StoryInput, readPassage: PassageReader, review: Revi
   }
   kept.sort((a, b) => b.scores.overall - a.scores.overall || (a.id < b.id ? -1 : 1));
   rejected.sort((a, b) => (a.id < b.id ? -1 : 1));
+  // Chains link across the whole ranked list, so the cap counts videos: a follow-up takes no slot and is listed exactly
+  // when its first question is.
+  for (const s of kept) linkChain(s, review, kept);
+  const heads = kept.filter((s) => !s.partOf).slice(0, MAX_VIDEOS);
+  const listed = kept.filter((s) => heads.includes(s) || (s.partOf && heads.some((h) => h.id === s.partOf)));
+  suggestChains(listed);
   return {
     topic: t.name,
     basis: {
@@ -712,10 +709,70 @@ export function discover(t: StoryInput, readPassage: PassageReader, review: Revi
       studies: new Set(t.claims.flatMap((c) => c.verdicts.map((v) => v.cite?.split('#')[0]).filter(Boolean))).size,
       candidates: all.length,
     },
-    stories: kept.slice(0, MAX_STORIES),
+    stories: listed,
     rejected,
   };
 }
+
+/** Attach the reviewer's chain of follow-up questions; a chain that cannot be produced holds the story at needs-review. */
+function linkChain(s: Story, review: ReviewFile, listed: Story[]) {
+  const r = review.stories?.[s.id];
+  const ids = r?.chain ?? [];
+  if (!ids.length) return;
+  const find = (id: string) => listed.find((x) => x.id === id);
+  s.chain = ids.map((id) => ({ id, question: find(id)?.question ?? '' }));
+  const why: string[] = [];
+  if (ids.length + 1 > MAX_QUESTIONS)
+    why.push(`A video answers at most ${MAX_QUESTIONS} questions; this chain makes ${ids.length + 1}.`);
+  if (!r?.chainWhy) why.push('A chain needs chainWhy: why each answer raises the next question.');
+  const carried = new Set([...s.claims, ...ids.flatMap((id) => find(id)?.claims ?? [])]).size;
+  if (carried > MAX_CHAIN_CLAIMS)
+    why.push(
+      `A chained video carries at most ${MAX_CHAIN_CLAIMS} claims; this one carries ${carried}: prune claims or split the chain.`,
+    );
+  ids.forEach((id, i) => {
+    const c = find(id);
+    if (id === s.id || ids.indexOf(id) !== i) why.push(`The chain lists ${id} twice.`);
+    else if (!c) why.push(`Chained story ${id} is not a current candidate.`);
+    // The first story to chain a follow-up claims it; a second video answering the same question is a duplicate.
+    else if (c.partOf) why.push(`Chained story ${id} is already a follow-up in ${c.partOf}.`);
+    // A story with a chain of its own stays a first question, so the two cannot claim each other.
+    else if (review.stories?.[id]?.chain?.length)
+      why.push(`Chained story ${id} has a chain of its own; chains do not nest.`);
+    else {
+      c.partOf = s.id;
+      if (c.readiness !== 'ready') why.push(`Chained story ${id} is ${c.readiness}.`);
+    }
+  });
+  if (!why.length) return;
+  s.blocking.push(...why);
+  s.gaps = uniq([...s.gaps, ...why]);
+  if (s.readiness === 'ready') {
+    s.readiness = 'needs-review';
+    s.readinessWhy = `Usable if a reviewer resolves: ${s.blocking.join(' ')}`;
+  }
+}
+
+/** Suggest follow-ups for ready stories outside any chain. */
+function suggestChains(listed: Story[]) {
+  const free = listed.filter((s) => s.readiness === 'ready' && !s.chain && !s.partOf);
+  const words = (s: Story) => tokens(`${s.question} ${s.premise}`);
+  for (const s of free) {
+    const mine = new Set(s.claims);
+    const near = free
+      .filter((o) => o !== s && !o.claims.some((c) => mine.has(c)))
+      .map((o) => ({ id: o.id, j: jaccard(words(s), words(o)) }))
+      .filter((x) => x.j > 0)
+      .sort((a, b) => b.j - a.j || (a.id < b.id ? -1 : 1))
+      .slice(0, MAX_QUESTIONS - 1)
+      .map((x) => x.id);
+    if (near.length) s.chainCandidates = near;
+  }
+}
+
+/** The chained stories a story's video also answers, in order (those still listed). */
+export const chainOf = (s: Story, file: StoriesFile | null): Story[] =>
+  (s.chain ?? []).flatMap((c) => file?.stories.find((x) => x.id === c.id) ?? []);
 
 export const storiesPath = (topic: string, root = ROOT) => join(root, topic, 'stories.json');
 export function loadStories(topic: string, root = ROOT): StoriesFile | null {

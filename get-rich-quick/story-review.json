@@ -25,8 +25,12 @@
    "reason": "a toy agent-based model, not data on real fortunes; it supports the mechanism, not the measured share of luck"
   },
   "get-rich-quick/commission-free-brokers-sell-order-flow|asserts|get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136": {
-   "level": "direct",
-   "reason": "the passage documents payment for order flow and measures the spread cost retail pays; 'indirect' describes the cost, not a limit on the study"
+   "level": "partial",
+   "reason": "the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines"
+  },
+  "get-rich-quick/leverage-lets-small-account-take-large|denies|get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119": {
+   "level": "partial",
+   "reason": "a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)"
   },
   "get-rich-quick/retail-trading-bots-not-beat-market|asserts|get-rich-quick/sources/ftc-dk-automation-press-release.txt#L37-L37": {
    "level": "contextual",
@@ -87,8 +91,6 @@
     "takeaway": "Ask for the income disclosure before joining, read the expense fine print, and treat 'leveraged income' as the company's revenue model rather than yours."
    },
    "qualificationsAccepted": true,
-   "format": "long-form",
-   "formatWhy": "Four documents from three kinds of source (survey, regulator, independent analyst), five to six sources repeating the pitch, and a structural argument to explain; enough for three acts.",
    "audience": "General YouTube viewers who have been pitched an MLM by a friend or seen one promoted online; no knowledge of compensation plans, surveys or regulators assumed."
   },
   "surprise:recruiting-downline-gives-mlm-participants-leverage": {
@@ -108,9 +110,7 @@
    "whyWatch": "Every MLM sells training on the premise that success is learnable. If position in the chain decides outcomes, the training is a fee for a lottery ticket.",
    "tension": "The industry says skill; the one court finding in the corpus says seniority.",
    "evidenceNeeded": "Earnings related to join date and to training received, within the same company.",
-   "research": "Only the UK Amway judgment quoted by Taylor bears on skill versus position, and it is one company; the talent-versus-luck simulation is generic. A study relating MLM earnings to join date or training would settle it.",
-   "format": "short",
-   "formatWhy": "One court finding and one generic simulation: a segment inside the MLM video, not a film of its own."
+   "research": "Only the UK Amway judgment quoted by Taylor bears on skill versus position, and it is one company; the talent-versus-luck simulation is generic. A study relating MLM earnings to join date or training would settle it."
   },
   "decision:trading-and-betting": {
    "coherence": {
@@ -140,9 +140,7 @@
     "resolution": "Day trading is possible to win at and overwhelmingly lost at; frequency and fees erode results, and retail traders face algorithms with a structural edge. The evidence does not touch the exceptional-month story, so say so.",
     "takeaway": "Treat day trading as an expensive hobby with a small chance of being in the 3%, and treat any strategy sold as consistent as a claim its seller must prove with audited records."
    },
-   "qualificationsAccepted": true,
-   "format": "long-form",
-   "formatWhy": "Two complete-population datasets, a regulator's intervention, a mechanism (HFT) and a dose-response finding (days traded), with sixteen sources voicing the belief."
+   "qualificationsAccepted": true
   },
   "contradicted:experienced-day-trader-can-multiply-small": {
    "coherence": {
@@ -158,8 +156,7 @@
    "whyWatch": "This is the specific promise in the pitch videos, and it is the one the base-rate studies cannot answer directly.",
    "tension": "A possibility claim against population data: the data show how rare large gains were, not that they are impossible.",
    "evidenceNeeded": "Audited account histories of momentum-stock day traders, or the distribution of monthly account growth across a population of them.",
-   "research": "The corpus has base-rate studies of futures and stock day traders, which cannot rule out an individual momentum trader's month. It needs audited records of momentum traders or a study of account-growth distributions.",
-   "format": "needs-research"
+   "research": "The corpus has base-rate studies of futures and stock day traders, which cannot rule out an individual momentum trader's month. It needs audited records of momentum traders or a study of account-growth distributions."
   },
   "contradicted:beginners-experience-can-make-real-money": {
    "coherence": {
@@ -175,8 +172,7 @@
    "whyWatch": "Six sources make the promise; the only evidence is what happened to the buyers of one company's AI-run stores.",
    "tension": "A possibility claim against one enforcement case.",
    "evidenceNeeded": "Outcomes for a sample of beginners across AI side hustles, not one firm's customers.",
-   "research": "The only evidence is an FTC complaint about one firm's 'AI' store buyers; nothing measures beginners' results across AI side hustles.",
-   "format": "needs-research"
+   "research": "The only evidence is an FTC complaint about one firm's 'AI' store buyers; nothing measures beginners' results across AI side hustles."
   },
   "conflict:commission-free-brokerage-increased-retail-trading": {
    "reject": "folded into surprise:commission-free-brokers-sell-order-flow: the trading boom is the second act of the commission-free story"
@@ -200,7 +196,7 @@
    "whyWatch": "Most retail traders use a zero-commission app. The paper on retail options trading puts a number on what they pay instead, and it is larger than the commissions were.",
    "tension": "'Free' on the screen; a 12.3% average quoted spread on the weekly options retail prefers, paid for by order flow.",
    "evidenceNeeded": "Measured payment for order flow and effective spreads paid by retail, and evidence on whether removing commissions changed how much people trade.",
-   "premise": "Bryzgalova and colleagues document that zero-commission brokers are paid for order flow by wholesalers and that the true cost sits in spreads: 17.2% average quoted spread on S&P 500 stock options against 3.55 basis points on the stocks, 12.3% on the sub-week options retail favours, with indirect spread costs of $4.13bn dwarfing $0.8bn of commissions. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one measure of trading intensity after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
+   "premise": "Bryzgalova and colleagues, studying US retail options trades routed to wholesalers, say the true trading costs are masked by zero commissions: the average quoted spread on S&P 500 stock options is 17.2%, and half the wholesaler trades in their sample are options with under a week to expiry at a 12.3% average spread. The cited passages establish the hidden cost; the sale of order flow and the paper's dollar totals ($4.13bn of spread costs against about $800m of commissions) sit in lines no verdict cites yet, so the script either asks for them through record-sources or leaves them out. The evidence is US options, not stock trades generally. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one narrow measure of trading behaviour after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
    "arc": {
     "hook": "Your trade cost nothing. Someone paid your broker for it. What did you pay?",
     "conflict": "Free trading was sold as democratising markets; the paper says the cost moved rather than vanished, and moved most for the products retail likes best.",
@@ -208,7 +204,8 @@
     "resolution": "Free is a pricing model: commissions became spreads and order-flow payments, heaviest on short-dated options.",
     "takeaway": "Count the spread, not the commission, and be most careful with the products the app makes easiest to trade."
    },
-   "qualificationsAccepted": true
+   "qualificationsAccepted": true,
+   "research": "The central sentence is that brokers sell order flow, but the only cited passage (Bryzgalova L123-L136) shows the masked spread cost, not the payment for order flow. A verdict citing the paper's own PFOF lines (bryzgalova-retail-options.txt L46-L56, brokerages' PFOF in stocks and options, Q2 2021) or the cost totals (L171 or L956, $4.13bn of spread costs against about $800m of commissions) would unblock it; then chain it after decision:trading-and-betting, whose net-of-fees losses raise the question whether zero-commission apps removed the cost."
   },
   "decision:who-makes-the-money": {
    "coherence": {
@@ -232,17 +229,15 @@
    "whyWatch": "Twenty-five sources in the corpus say the seller earns more from the course than from the method. Three FTC cases open the books on how that works, from the free seminar to the credit-card application.",
    "tension": "The pitch shows the method's income; the complaints show the sellers' income came from the pitch.",
    "evidenceNeeded": "Sellers' revenue by source, buyers' net outcomes, and how advertised figures relate to net earnings.",
-   "premise": "The evidence is three FTC enforcement actions (Automators/Empire, DK Automation, Nudge), which are allegations and settlements about three firms, not a survey of courses in general; the video must say so in those words. Within that limit the pattern is consistent: over $7 million of buyer payments flowed to Empire's founders, whose documented income came from selling the opportunity; most buyers did not recoup their fees and virtually none earned the advertised amounts; advertised figures were gross sales while clients lost money net of fees, inventory and interest; the founder's results were conceded in fine print to be atypical; buyers were steered into $15,000 to $80,000 of business credit; and Nudge's free seminar was a pitch for a $1,100 workshop that pitched $40,000 training.",
+   "premise": "The evidence is two FTC enforcement actions (Automators/Empire and Nudge), which are allegations and settlements about two firms, not a survey of courses in general, plus the FTC's review of MLM income disclosures for the gross-not-net pattern; the video must say so in those words. Within that limit the pattern is consistent: over $7 million of buyer payments flowed to Empire's founders, whose documented income came from selling the opportunity; most buyers did not recoup their fees and virtually none earned the advertised amounts; advertised figures were gross sales while clients lost money net of fees, inventory and interest; the founder's results were conceded in fine print to be atypical; buyers were steered into $15,000 to $80,000 of business credit for working capital (inventory, not the package fee); and Nudge's free seminar was a pitch for a $1,100 workshop that pitched $40,000 training. Nothing here shows edited screenshots.",
    "arc": {
     "hook": "The free seminar, the $1,100 workshop, the $40,000 'advanced training': walk through one funnel the FTC documented.",
     "conflict": "Buyers were shown the method's income; the complaints trace where the money actually went.",
-    "evidence": "The Automators complaint (founders' income, buyers' outcomes, gross-versus-net figures, fine print, financing), the DK Automation case and the Nudge funnel.",
+    "evidence": "The Automators complaint (founders' income, buyers' outcomes, gross-versus-net figures, fine print, financing), the Nudge funnel, and the FTC's finding that no MLM income disclosure nets out expenses.",
     "resolution": "In the documented cases the course was the business and the buyers were the revenue; whether that generalises is the open question.",
     "takeaway": "Ask what the seller's income is from, insist on net figures for typical buyers, and never finance a course on credit."
    },
-   "qualificationsAccepted": true,
-   "format": "long-form",
-   "formatWhy": "Three enforcement cases with distinct acts (funnel, figures, financing, outcomes) and twenty-five sources repeating the belief."
+   "qualificationsAccepted": true
   },
   "surprise:most-new-businesses-including-online-stores": {
    "coherence": {
@@ -267,8 +262,8 @@
     "takeaway": "Quote the curve, not the slogan."
    },
    "qualificationsAccepted": true,
-   "format": "short",
-   "formatWhy": "One table and one correction; a segment, not a film."
+   "chain": ["decision:mlm-and-seminars"],
+   "chainWhy": "Ordinary businesses survive far better than the 90-95% failure rate MLM promoters quote to make their opportunity look like the safer way to own a business (Taylor), so the next question is what MLM participants actually make."
   },
   "surprise:leverage-lets-small-account-take-large": {
    "coherence": {
@@ -283,7 +278,8 @@
    ],
    "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped; the EU regulator's finding is the opposite.",
    "tension": "Fixed risk in the pitch; margin calls and losses beyond the deposit in the regulator's data.",
-   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients."
+   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients.",
+   "research": "The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops."
   },
   "decision:what-the-evidence-favours": {
    "reject": "a list of consolation morals, not a question: compounding, passive income, luck, survivorship and equity each need their own evidence"
@@ -306,8 +302,7 @@
    "whyWatch": "Thirteen sources make the survivorship argument and it is persuasive; the honest version is that the corpus has a model of the mechanism and no data on the advice.",
    "tension": "A compelling argument with a simulation behind it and no measurement.",
    "evidenceNeeded": "Outcomes for people who followed advice from the quickly rich, or a base-rate study of how fortunes are made.",
-   "research": "The only study is an agent-based toy model of talent versus luck; it supplies the mechanism, not evidence about advice from people who got rich quickly.",
-   "format": "needs-research"
+   "research": "The only study is an agent-based toy model of talent versus luck; it supplies the mechanism, not evidence about advice from people who got rich quickly."
   },
   "conflict:demeaning-salaried-jobs-college-sales-tactic": {
    "coherence": {
@@ -323,8 +318,7 @@
    "whyWatch": "The move opens half the pitches in the corpus; the counter-evidence on what jobs and degrees pay is a separate literature the corpus barely touches.",
    "tension": "A rhetorical pattern everyone recognises, with thin evidence either way in this corpus.",
    "evidenceNeeded": "Earnings data by employment type and education, and evidence that the framing precedes an upsell.",
-   "research": "The corpus has one weak study on business owners' earnings versus salaried workers and nothing on degrees; both halves of the claim need their own evidence.",
-   "format": "short"
+   "research": "The corpus has one weak study on business owners' earnings versus salaried workers and nothing on degrees; both halves of the claim need their own evidence."
   },
   "decision:selling-online": {
    "coherence": {
@@ -340,8 +334,7 @@
    "whyWatch": "The most-pitched schemes in the corpus, with a plausible mechanism (crowding) and no measurement of outcomes for people who try.",
    "tension": "A crowding argument everyone makes and no outcome data.",
    "evidenceNeeded": "Outcome data for a cohort of new dropshipping stores or faceless channels: survival, revenue, net of ad spend.",
-   "research": "No study in the corpus bears on any claim in this group; the crowding mechanism and the failure rates are AI guesses and source assertions only.",
-   "format": "needs-research"
+   "research": "No study in the corpus bears on any claim in this group; the crowding mechanism and the failure rates are AI guesses and source assertions only."
   },
   "conflict:retail-trading-bots-not-beat-market": {
    "coherence": {
@@ -357,8 +350,17 @@
    "whyWatch": "Bots are the current form of the automatic-income promise and nobody in the corpus has measured one.",
    "tension": "Sold as systematic; the only record is an enforcement allegation.",
    "evidenceNeeded": "Audited performance of retail bots against a benchmark over a market cycle.",
-   "research": "One FTC allegation about one firm's customers; no performance measurement of retail bots against a benchmark exists in the corpus.",
-   "format": "needs-research"
+   "research": "One FTC allegation about one firm's customers; no performance measurement of retail bots against a benchmark exists in the corpus."
+  },
+  "gap:technical-patterns-such-fibonacci-retracements-fair": {
+   "coherence": { "score": 0.8, "reason": "One question: do chart patterns such as Fibonacci levels and fair value gaps predict where price turns?" },
+   "question": "Do Fibonacci levels and fair value gaps really predict where price will turn?",
+   "title": "Do Fibonacci Levels Actually Predict the Market?",
+   "alternates": ["Fair Value Gaps and Fibonacci Lines, Put to the Test", "Why Trading Courses Teach Chart Patterns"],
+   "whyWatch": "Eight sources teach these patterns as the edge that makes trading work, and the courses that sell them depend on it; nothing in the corpus tests whether price respects the lines more than chance.",
+   "tension": "Chart examples always show price bouncing off the line; a fair test has to count the times it did not, and nobody here has.",
+   "evidenceNeeded": "A backtest or study measuring whether price reacts at Fibonacci retracement levels or fair value gaps more often than at random levels, out of sample and after trading costs.",
+   "research": "No study in the corpus tests technical patterns; the day-trader studies (Barber and Odean, Chague) measure traders' outcomes, not whether a pattern predicts price. Needs an out-of-sample test of Fibonacci retracements or fair value gaps against randomly placed levels, net of costs, or a published review of technical-analysis profitability (for example Park and Irwin's survey)."
   }
  }
 }

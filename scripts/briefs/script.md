@@ -35,15 +35,49 @@ If the gap could not be closed, say in the sentence that the evidence cannot ans
 
 ## What to write
 
-A faceless, research-based YouTube narration of 8 to 12 minutes (1,200 to 1,800 words at the
-default 150 words per minute). Storytelling first: a hook that opens on the tension, a setup that
-states the popular belief in the sources' own words, an investigation that introduces evidence
-one piece at a time as the answer to a question the viewer now has, findings, qualifications that
-belong to the story rather than interrupting it, implications for an ordinary viewer, and a
-conclusion that answers the opening question as precisely as the evidence allows. Vary sentence
+A faceless, research-based YouTube narration as long as the story needs and no longer. There is
+no word target: never pad to reach a length, add no fluff, and never restate something the viewer
+has already heard. Storytelling first, in five sections:
+
+- `hook`: opens on the tension. It may tease the answer but never lays out the figures the
+  investigation will give.
+- `setup`: the popular belief in the sources' own words. It does not end by listing again what it
+  just quoted.
+- `investigation`: evidence one piece at a time, each as the answer to a question the viewer now
+  has. Each limitation goes beside the figure it limits (self-report, before expenses, one
+  analyst's assumptions), so the viewer hears both together; there is no separate section of
+  caveats to repeat them in.
+- `answer`: answers the opening question once, as precisely as the evidence allows, in a few
+  sentences. It points back to figures in words rather than reading them again, and adds only the
+  limits that apply to the whole answer (what the evidence cannot say).
+- `takeaway`: what an ordinary viewer can do with it: a question to ask, a moment to act, a check
+  to make. No new figures and no second answer. Its last line closes the video.
+
+When the package has `questions`, the video answers a chain of them instead: one `hook` that opens
+on the first question, then a `question-1`, `question-2`, ... section per question in the
+package's order, then a short `close`. Each question section asks its question in the viewer's
+words, brings in its evidence, carries its qualifications in place, answers it once, and ends on
+what that answer leaves open, which is the next question. Each entry in `questions` carries that question's own
+`premise`, `tension`, `whyWatch` and `arc`: frame each section from its own entry, not the first story's. The
+package's `chainWhy` is why each answer raises the next question; the end of each section should make that turn. Give each question section a `title`
+(the question as a chapter title). The `close` ties the answers together in a few sentences and
+does not answer any question again. Each question section must assert at least one claim from
+that question's `claims`; the validator blocks one that does not. Vary sentence
 length. Use concrete examples, analogies and rhetorical questions. Do not open every study the
 same way, do not read numbers in a list, and do not write the phrases an AI writes ("delve",
 "it's important to note", "in conclusion", "a testament to").
+
+Say each thing once. A figure is read where it is first needed and not read again: a later section
+that needs it points back in words ("that 47 percent", "the half that closed") and never re-reads
+a list of figures the viewer has heard. The `answer` and `takeaway` add what the evidence means
+and what to do; they do not summarise what was just said.
+
+Pace it for someone who can click away. The evidence starts within the first minute: a short hook,
+the one or two quotes that state the belief best, then the first study. Keep the figures the
+argument needs and let the chart carry the rest; ten figures inside eight sentences is a table read
+aloud. The validator warns on each of these (`slow-start`, `number-dense`, `repetition`, a sentence
+that re-reads two or more earlier figures); fix the script rather than asking the reviewer to
+excuse it.
 
 The evidence package distinguishes five things and so must the script:
 
@@ -105,8 +139,9 @@ no figure the evidence does not; an invented typical income is not.
 }
 ```
 
-- Sections, in order: `hook`, `setup`, `investigation`, `findings`, `qualifications`, `implications`,
-  `conclusion`. Sentence ids `s01`, `s02`, ... stay stable across revisions; a deleted sentence's id
+- Sections, in order: `hook`, `setup`, `investigation`, `answer`, `takeaway`; for a package with
+  `questions`, `hook`, `question-1` ... `question-N`, `close`.
+  Sentence ids `s01`, `s02`, ... stay stable across revisions; a deleted sentence's id
   is not reused.
 - `type`: `factual` (offered as true), `attributed` (reports what a source said), `hypothetical`,
   `rhetorical`, `transitional`. A factual or attributed sentence needs at least one assertion; the

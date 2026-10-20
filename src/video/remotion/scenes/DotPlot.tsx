@@ -4,7 +4,7 @@ import { pointFrames } from '../../chart';
 import type { TimelineScene } from '../../types';
 import { GUTTER, ramp, theme } from '../theme';
 
-const COLORS = [theme.red, theme.slate, theme.green];
+const color3 = (i: number) => [theme.red, theme.slate, theme.green][i % 3];
 
 /** sc20: one dot per surveyed person (the count is the leading number of the first on-screen line); the dots recolour
  *  by group on each `point:<label>` cue, round(share x n) at a time; dots outside the stated groups stay neutral. */
@@ -27,7 +27,7 @@ export const DotPlot: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const x0 = GUTTER;
   const y0 = 300;
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',
@@ -59,7 +59,7 @@ export const DotPlot: FC<{ scene: TimelineScene }> = ({ scene }) => {
           const within = g >= 0 ? (i - counts.slice(0, g).reduce((a, b) => a + b, 0)) / counts[g] : 0;
           const c = ramp(t, start + within * 24, 6);
           const base = ramp(t, scene.start + 4 + (i / n) * 30, 6);
-          const color = g >= 0 ? COLORS[g % COLORS.length] : theme.line;
+          const color = g >= 0 ? color3(g) : theme.line;
           return (
             <circle
               key={i}
@@ -75,9 +75,7 @@ export const DotPlot: FC<{ scene: TimelineScene }> = ({ scene }) => {
       <div style={{ position: 'absolute', left: 1500, top: 320, display: 'flex', flexDirection: 'column', gap: 40 }}>
         {chart.points.map((p, i) => (
           <div key={p.label} style={{ opacity: ramp(t, fills[i] + 6, 10) }}>
-            <div style={{ fontSize: 72, fontWeight: 700, color: COLORS[i % COLORS.length], lineHeight: 1 }}>
-              {p.display}
-            </div>
+            <div style={{ fontSize: 72, fontWeight: 700, color: color3(i), lineHeight: 1 }}>{p.display}</div>
             <div style={{ fontSize: 30, color: theme.muted, marginTop: 6 }}>{p.label}</div>
           </div>
         ))}

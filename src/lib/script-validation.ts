@@ -17,13 +17,12 @@ import {
   MAX_REVISIONS,
   revisionsInPass,
   type ReviewFinding,
-  RUNTIME,
   type Script,
   type ScriptAssertion,
   type ScriptReviewFile,
   type ScriptStatus,
   type ScriptValidation,
-  SECTIONS,
+  sectionsFor,
   type SentenceResult,
   type Severity,
   WPM_DEFAULT,
@@ -39,6 +38,85 @@ import {
 import type { CorpusClaim } from './corpus';
 
 const NUMBERISH = /\d|\$|\bper ?cent\b|\bpercent\b/i;
+
+// A numbers recap: a sentence that re-reads two or more figures from documents the viewer already heard them from.
+// The next sentence or two may unpack a figure; past that it is a repeat. One figure reused as context ("of the 70
+// statements"), counts up to ten ("five years") and years stay quiet. ponytail: figures only; a restated point
+// without numbers is the reviewer's to find (scripts/briefs/script-review.md, repetition).
+const NEAR = 2;
+const YEAR = /^(1[6-9]|20)\d\d$/;
+/** The figures a viewer would notice: not counts up to ten, not years (a bare 1600-2099; "$1,950" and "2,000 people"
+ *  are figures). */
+const figuresIn = (text: string) =>
+  [...wordsToDigits(text).matchAll(/(\$?)(\d[\d,]*(?:\.\d+)?)/g)]
+    .filter(([, currency, n]) => currency || n.includes(',') || !YEAR.test(n))
+    .map(([, , n]) => n.replaceAll(',', ''))
+    .filter((n) => Number(n) > 10 || n.includes('.'));
+/** Sentence id -> the earlier figures it re-reads, each with the sentence that first gave it. */
+export function repetitions(
+  all: { id: string; text: string; assertions?: ScriptAssertion[] }[],
+): Map<string, string[]> {
+  const first = new Map<string, number>(); // `${doc}|${figure}` -> index of the sentence that first spoke it
+  const out = new Map<string, string[]>();
+  all.forEach((s, i) => {
+    const docs = new Set((s.assertions ?? []).flatMap((a) => a.evidence.filter(isStudyRef).map((e) => docOf(e.cite))));
+    const again = new Map<string, string>(); // figure -> where it was first said
+    for (const n of new Set(figuresIn(s.text)))
+      for (const d of docs) {
+        const at = first.get(`${d}|${n}`);
+        if (at === undefined) first.set(`${d}|${n}`, i);
+        else if (i - at > NEAR && !again.has(n)) again.set(n, all[at].id);
+      }
+    if (again.size >= 2)
+      out.set(
+        s.id,
+        [...again].map(([n, id]) => `${n} (first in ${id})`),
+      );
+  });
+  return out;
+}
+
+// Pacing, calibrated on the first four scripts: ten or more figures inside eight sentences is a stretch of numbers a
+// viewer cannot hold (keep what the argument needs, chart the rest), and the evidence should start within a minute.
+const DENSE = { window: 8, figures: 10 };
+const START_SECONDS = 60;
+/** Sentence id -> pacing warnings: a numbers recap, the start of a dense stretch of figures, a slow start. */
+export function pacing(all: ReturnType<typeof sentences>, wpm: number): Map<string, Issue[]> {
+  const out = new Map<string, Issue[]>();
+  const add = (id: string, category: string, explanation: string) =>
+    out.set(id, [...(out.get(id) ?? []), issue(id, category, 'warning', explanation)]);
+  for (const [id, what] of repetitions(all))
+    add(id, 'repetition', `re-reads figures the viewer already heard: ${what.join(', ')}`);
+  const per = all.map((s) => figuresIn(s.text).length);
+  const sum = (i: number) => per.slice(i, i + DENSE.window).reduce((a, b) => a + b, 0);
+  for (let i = 0; i < all.length; i++) {
+    if (sum(i) < DENSE.figures) continue;
+    let end = i;
+    while (end + 1 < all.length && sum(end + 1) >= DENSE.figures) end++;
+    // The stretch runs from its first sentence with a figure to its last.
+    let last = Math.min(end + DENSE.window, all.length) - 1;
+    while (!per[i]) i++;
+    while (!per[last]) last--;
+    const n = per.slice(i, last + 1).reduce((a, b) => a + b, 0);
+    add(
+      all[i].id,
+      'number-dense',
+      `${n} figures from ${all[i].id} to ${all[last].id}: keep the ones the argument needs, chart the rest and say the point in words`,
+    );
+    i = last;
+  }
+  const start = all.findIndex((s) => s.section !== 'hook' && s.section !== 'setup');
+  const seconds = Math.round(
+    (all.slice(0, Math.max(start, 0)).reduce((w, s) => w + spokenWords(s.text), 0) / wpm) * 60,
+  );
+  if (start > 0 && seconds > START_SECONDS)
+    add(
+      all[start].id,
+      'slow-start',
+      `the evidence starts about ${seconds} seconds in; reach it within ${START_SECONDS}`,
+    );
+  return out;
+}
 /** Quoted spans in a sentence: straight or curly double quotes, the words inside. */
 const quotedSpans = (text: string) => [...text.matchAll(/["“]([^"”]+)["”]/g)].map((m) => m[1]);
 /** A name or role appears as whole words (never a bare substring: "a" is not a speaker), at least three characters. */
@@ -87,12 +165,28 @@ function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackag
     if (seen.has(s.id)) top.push(issue(s.id, 'structure', 'blocking', `duplicate sentence id ${s.id}`));
     seen.add(s.id);
   }
-  for (const name of SECTIONS)
+  const names = sectionsFor(pkg);
+  for (const name of names)
     if (!script.sections.some((x) => x.name === name))
-      top.push(issue('-', 'structure', 'warning', `no "${name}" section`));
+      top.push(issue('-', 'structure', pkg?.questions ? 'blocking' : 'warning', `no "${name}" section`));
   for (const x of script.sections)
-    if (!(SECTIONS as readonly string[]).includes(x.name))
-      top.push(issue('-', 'structure', 'blocking', `unknown section "${x.name}"`));
+    if (!names.includes(x.name)) top.push(issue('-', 'structure', 'blocking', `unknown section "${x.name}"`));
+  // A chained video answers each question in its own block: the block asserts at least one of that story's claims.
+  pkg?.questions?.forEach((q, i) => {
+    const sec = script.sections.find((x) => x.name === `question-${i + 1}`);
+    const asserted = new Set(
+      sec?.sentences.flatMap((y) => (y.assertions ?? []).flatMap((a) => a.claims.map((c) => c.id))),
+    );
+    if (sec && !q.claims.some((c) => asserted.has(c)))
+      top.push(
+        issue(
+          '-',
+          'structure',
+          'blocking',
+          `section "${sec.name}" asserts none of ${q.story}'s claims: "${q.question}" is not answered`,
+        ),
+      );
+  });
   if (pkg && script.generation?.evidencePackage !== pkg.fingerprint)
     top.push(
       issue(
@@ -463,15 +557,8 @@ function judgeSentence(
   issues.push(...m.open.filter((f) => f.sentence === s.id).map<Issue>((f) => ({ ...f, by: 'review' })));
   // A reviewer may retire a deterministic warning (never a blocking issue) at this exact fingerprint.
   for (const i of [...issues, ...ar.flatMap((a) => a.issues)]) {
-    const d = review?.dispositions?.[i.assertion ?? s.id];
-    if (
-      m.current &&
-      i.by === 'deterministic' &&
-      i.severity === 'warning' &&
-      d &&
-      d.fingerprint === fp &&
-      d.category === i.category
-    )
+    const d = [review?.dispositions?.[i.assertion ?? s.id] ?? []].flat().find((x) => x.category === i.category);
+    if (m.current && i.by === 'deterministic' && i.severity === 'warning' && d && d.fingerprint === fp)
       i.disposition = d.reason;
   }
   const approved = m.current && review!.approved?.[s.id] === fp;
@@ -510,28 +597,20 @@ export function validateScript(
   const top = scriptIssues(script, all, pkg, hashDoc);
   const merge = mergeReview(script, all, review, pkg, previous);
   top.push(...merge.issues);
+  const paced = pacing(all, wpm);
   const results = all.map((s) =>
     judgeSentence(
       s,
-      sentenceIssues(s),
+      [...sentenceIssues(s), ...(paced.get(s.id) ?? [])],
       (s.assertions ?? []).map((a) => checkAssertion(a, s, ctx)),
       merge,
       review,
     ),
   );
-
+  // Runtime is reported, never targeted: a script is as long as its story needs (scripts/briefs/script.md).
   const w = results.reduce((n, s) => n + s.words, 0);
   const sw = results.reduce((n, s) => n + spokenWords(s.text), 0);
   const mins = minutes(sw, wpm);
-  if (mins < RUNTIME.min || mins > RUNTIME.max)
-    top.push(
-      issue(
-        '-',
-        'runtime',
-        'warning',
-        `${w} words (${sw} as spoken) is about ${mins} minutes at ${wpm} wpm; the target is ${RUNTIME.min} to ${RUNTIME.max}`,
-      ),
-    );
   const issues = [...top, ...results.flatMap((s) => [...s.issues, ...s.assertions.flatMap((a) => a.issues)])].sort(
     (a, b) => ['blocking', 'warning', 'info'].indexOf(a.severity) - ['blocking', 'warning', 'info'].indexOf(b.severity),
   );

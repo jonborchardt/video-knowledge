@@ -30,11 +30,11 @@ const pad = (s: string | number, w: number) => String(s).padEnd(w);
 
 function list(stories: Story[]) {
   console.log(
-    `${pad('#', 3)}${pad('overall', 8)}${pad('edit.', 6)}${pad('evid.', 6)}${pad('readiness', 15)}${pad('format', 15)}${pad('id', 58)}title`,
+    `${pad('#', 3)}${pad('overall', 8)}${pad('edit.', 6)}${pad('evid.', 6)}${pad('readiness', 15)}${pad('id', 58)}title`,
   );
   stories.forEach((s, i) =>
     console.log(
-      `${pad(i + 1, 3)}${pad(s.scores.overall.toFixed(2), 8)}${pad(s.scores.editorial.toFixed(2), 6)}${pad(s.scores.evidence.toFixed(2), 6)}${pad(s.readiness, 15)}${pad(s.format, 15)}${pad(s.id, 58)}${s.title}`,
+      `${pad(i + 1, 3)}${pad(s.scores.overall.toFixed(2), 8)}${pad(s.scores.editorial.toFixed(2), 6)}${pad(s.scores.evidence.toFixed(2), 6)}${pad(s.readiness, 15)}${pad(s.id, 58)}${s.title}`,
     ),
   );
 }
@@ -71,14 +71,13 @@ function printValidation(v: Validation, indent = '  ') {
 }
 function printStory(s: Story, rank: number) {
   console.log(
-    `#${rank} ${s.title}  [${s.readiness}, ${s.format}]  overall ${s.scores.overall} (editorial ${s.scores.editorial}, evidence ${s.scores.evidence})`,
+    `#${rank} ${s.title}  [${s.readiness}]  overall ${s.scores.overall} (editorial ${s.scores.editorial}, evidence ${s.scores.evidence})`,
   );
   console.log(`id: ${s.id} (${s.kind}${s.reviewed ? ', reviewed' : ', unreviewed'})`);
   console.log(`question: ${s.question}`);
   console.log(`alternates: ${s.alternates.join(' | ')}`);
   console.log(`why watch: ${s.whyWatch}\ntension: ${s.tension}\npremise: ${s.premise}`);
   console.log(`coherence: ${s.coherence.score} (${s.coherence.basis}) ${s.coherence.explanation}`);
-  console.log(`format: ${s.format}: ${s.formatWhy}`);
   console.log(`ranking: ${s.scores.explanation}`);
   console.log(`readiness: ${s.readinessWhy}`);
   for (const b of s.blocking) console.log(`blocking: ${b}`);

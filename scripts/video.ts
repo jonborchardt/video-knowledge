@@ -45,7 +45,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 17)
+      .slice(0, 18)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );

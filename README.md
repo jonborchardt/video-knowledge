@@ -82,8 +82,7 @@ Three layers, kept apart:
   alternates, why watch, the tension, the evidence needed and available, the gaps, and the arc. Kind names never
   appear in titles.
 
-Each story carries a coherence score, a format (`long-form` for 8 to 12 minutes, `short`, or `needs-research`), and
-separate scores: _editorial_ (mean of coherence, relevance, curiosity, stakes, depth, all corpus heuristics, never
+Each story carries a coherence score and separate scores (a script runs as long as its story needs, never padded): _editorial_ (mean of coherence, relevance, curiosity, stakes, depth, all corpus heuristics, never
 audience data) and _evidence_ (strength of the studies behind the central conclusion, discounted when they only partly
 apply). Overall is 0.6 editorial + 0.4 evidence, scaled by originality against higher-ranked stories. Readiness is
 decided from the central conclusion and the essential findings, never from the scores: `ready` (coherent, verified,
@@ -91,6 +90,12 @@ nothing pending), `needs-review` (usable once a person settles the listed points
 missing), or rejected (incoherent, a variation of another story, a single-claim chapter of a reviewed multi-claim
 story, or contradicted). A disagreement story is ready when the disagreement itself is verified; a story whose
 strongest applicable study is below 0.5 confidence is never ready. Every non-ready story lists what blocks it.
+
+One video can answer a chain of up to three questions. The reviewer sets `chain` (the follow-up story ids, in order)
+and `chainWhy` on the first story; each chained story keeps its own claims and audit, the video is ready only when
+every one is, chains do not nest, and a chained story is marked `partOf` the first and never produced on its own (the
+board refuses it). Discovery suggests `chainCandidates` for each ready story outside a chain (ready stories sharing no
+claims, nearest in wording); the reviewer decides.
 
 The validator (`src/lib/evidence.ts`) takes an assertion (`fact`, `attribution` or `disagreement`), the canonical
 claims it rests on and its evidence references, and returns a status (`supported`, `qualified`, `disputed`,
@@ -138,6 +143,13 @@ npm run script -- storyboard <topic> <story-id>   # fills narration and timing, 
 npm run script -- run <topic> <story-id>          # every stage whose inputs exist, then the next agent step
 npm run script -- lock <topic> <story-id> --approved-by "<name>"   # release.json: the approved fingerprints (passed + ok only)
 ```
+
+A script is as long as its story needs, with no word target, and says each thing once. It has five sections: `hook`,
+`setup`, `investigation` (each limitation beside the figure it limits), `answer` (once) and `takeaway` (what the viewer
+can do). A chained story's package lists its `questions`, and its script is `hook`, `question-1` ... `question-N` and
+`close`, each question section answering its own question once. The validator warns on pacing: `slow-start` (the
+evidence starts after the first minute), `number-dense` (ten or more figures inside eight sentences) and
+`repetition` (a sentence re-reading two or more figures the viewer already heard).
 
 The script is sentences with stable ids, each typed `factual`, `attributed`, `hypothetical`, `rhetorical` or
 `transitional`. A factual or attributed sentence carries one assertion per independent claim it makes, with the
@@ -199,9 +211,6 @@ them keeps the persisted contexts and the same fingerprint. The reviewer may ret
 `dispositions` entry (reason plus sentence fingerprint); it lapses when the sentence changes. `lock` records the
 approved script, package, validation and storyboard fingerprints in `release.json` (refused unless validation is
 `passed` and the storyboard `ok`); a later `validate` or `storyboard` run that drifts from them warns `release-stale`.
-
-Baseline: `mlm-script-v1` is the first locked package (`get-rich-quick/scripts/decision-mlm-and-seminars/release.json`);
-rendering work starts from it.
 
 ### Soundtrack
 
@@ -325,9 +334,9 @@ artifact that owns it (wording to the script, a graphic to its component, pacing
 `render.json`, so a pacing note re-renders by itself; a revised graphic is re-rendered by the run after its visual
 review (only the changed scene chunk renders again).
 
-## Reproducing the MLM video
+## Reproducing a video
 
-A fresh checkout plus these makes `get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4` again:
+A fresh checkout plus these makes a story's `<topic>/scripts/<slug>/video/segment.mp4` again:
 
 - **Node 22+** (`npm ci`); Remotion downloads Chrome on the first render. The ffmpeg and ffprobe used everywhere
   are the ones in Remotion's compositor package; `FFMPEG_DIR` overrides the directory.
@@ -339,12 +348,12 @@ A fresh checkout plus these makes `get-rich-quick/scripts/decision-mlm-and-semin
   The watcher checkout (`../retire-sim/watcher`) is not needed for any video step.
 
 ```
-npm run video -- narrate get-rich-quick decision:mlm-and-seminars     # cached per sentence; --regenerate to redo
-npm run video -- timeline get-rich-quick decision:mlm-and-seminars
-npm run video -- render get-rich-quick decision:mlm-and-seminars [--scene sc17 | --from sc10 --to sc20] [--force]
-npm run video -- qa get-rich-quick decision:mlm-and-seminars
-npm run video -- spike get-rich-quick decision:mlm-and-seminars       # the four above
-npm run video -- package get-rich-quick decision:mlm-and-seminars     # video/review/
+npm run video -- narrate <topic> <story-id>                           # cached per sentence; --regenerate to redo
+npm run video -- timeline <topic> <story-id>
+npm run video -- render <topic> <story-id>                       [--scene sc17 | --from sc10 --to sc20] [--force]
+npm run video -- qa <topic> <story-id>
+npm run video -- spike <topic> <story-id>                             # the four above
+npm run video -- package <topic> <story-id>                           # video/review/
 npm run validate                                                      # typecheck, lint, format, build, tests
 ```
 

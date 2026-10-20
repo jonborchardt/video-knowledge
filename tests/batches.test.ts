@@ -1,4 +1,7 @@
 // The agent-written research files: extraction batches and study verdicts are checked whole before record writes.
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { checkBatches, checkStudyVerdicts } from '../src/lib/batches';
 import { citedPairs, replacedCited } from '../src/lib/cited';
@@ -92,11 +95,23 @@ describe('cited verdicts', () => {
     expect(replacedCited([{ claim: 't/c2', source: 't/sources/a.txt#L30-L40' }], cited)).toEqual([]);
   });
 
-  it('citedPairs reads the committed scripts', () => {
-    expect(
-      citedPairs('heat-pumps').get(
-        'heat-pumps/payback-should-count-only-heat-pump|heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt',
-      ),
-    ).toBe('heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716');
+  it("citedPairs reads every script's study evidence in a topic", () => {
+    const root = mkdtempSync(join(tmpdir(), 'vk-cited-'));
+    try {
+      const cite = 't/sources/a.txt#L1-L2';
+      const evidence = [
+        { kind: 'study', claim: 't/c', cite },
+        { kind: 'statement', claim: 't/c' },
+      ];
+      mkdirSync(join(root, 't', 'scripts', 's'), { recursive: true });
+      writeFileSync(
+        join(root, 't', 'scripts', 's', 'script.json'),
+        JSON.stringify({ sections: [{ sentences: [{ assertions: [{ evidence }] }] }] }),
+      );
+      expect([...citedPairs('t', root)]).toEqual([['t/c|t/sources/a.txt', cite]]);
+      expect(citedPairs('none', root).size).toBe(0);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

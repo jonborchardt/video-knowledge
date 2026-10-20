@@ -1,13 +1,11 @@
 // The video stage: segment selection against the validated script, narration caching, the timeline from measured
 // audio, cue resolution, chart timing, excerpt extraction, the render cache key, assembly contiguity, the ffmpeg
-// wrapper and the providers. The synthetic fixture needs no TTS; the tests on the real MLM storyboard read the
-// committed artifacts (the opening four scenes are the spike's regression fixture).
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+// wrapper and the providers. Every test runs on the synthetic fixture (tests/video-helpers.ts) and needs no TTS.
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson } from '../src/lib/io';
-import { type Script, scriptDir, scriptFingerprint } from '../src/lib/script';
+import { scriptDir, scriptFingerprint } from '../src/lib/script';
 import type { Storyboard } from '../src/lib/storyboard';
 import { type VisualReview, graphicKey, renderCheck } from '../src/video/check';
 import { draftRenderConfig, initVideo } from '../src/video/init';
@@ -17,15 +15,15 @@ import { cue, lineFrames, spokenAt } from '../src/video/cues';
 import { excerptWindow, flowPassage } from '../src/video/excerpt';
 import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
 import { BESPOKE } from '../src/video/bespoke';
-import { ALL_KINDS, GENERIC, bespokeFor, kindOf, unsupportedWhy } from '../src/video/kinds';
+import { ALL_KINDS, GENERIC, kindOf, unsupportedWhy } from '../src/video/kinds';
 import { COMPONENTS } from '../src/video/remotion/scenes';
 import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
-import { theme } from '../src/video/remotion/theme';
+import { countUp, theme } from '../src/video/remotion/theme';
 import { narrate } from '../src/video/narration';
 import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
 import { deepImports, relativeScene, sceneKey } from '../src/video/render';
-import { checkSegment, citationDetail, loadSegment } from '../src/video/select';
+import { checkSegment, citationDetail } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import { type TtsProvider, provider, providerLimitations } from '../src/video/tts';
 import { RENDERER_LIMITATIONS } from '../src/video/remotion/limitations';
@@ -33,10 +31,7 @@ import { openaiProvider, speedOf } from '../src/video/tts/openai';
 import type { TimelineScene } from '../src/video/types';
 import { alignLine, findWord, tokens } from '../src/video/words';
 import { DOC_D, pkg, read, scene } from './script-helpers';
-import { copyTopic } from './production-helpers';
 import { POINTS, inputs, manifest, scenes } from './video-helpers';
-
-const MLM = ['get-rich-quick', 'decision:mlm-and-seminars'] as const;
 
 describe('segment selection', () => {
   it('accepts the fixture: kinds, sentences, citations', () => {
@@ -46,15 +41,6 @@ describe('segment selection', () => {
     expect(seg.sentences.map((s) => s.id)).toEqual(['s01', 's02', 's03']);
     expect(seg.scenes[1].citations[0]).toMatchObject({ label: 'Survey D' });
     expect(seg.scenes[1].citations[0].detail).toMatch(/survey-d\.txt, lines 1-2/);
-  });
-  it('loads the whole MLM storyboard with a kind for every scene', () => {
-    const seg = loadSegment(...MLM);
-    expect(seg.scenes.length).toBe(seg.storyboard.scenes.length);
-    expect(seg.scenes.slice(0, 4).map((s) => s.kind)).toEqual(['phone', 'tree', 'quote', 'stacked-bar']); // the spike
-    expect(seg.sentences.slice(0, 5).map((s) => s.id)).toEqual(['s01', 's02', 's03', 's04', 's05']);
-    expect(seg.scenes[3].scene.visual.chart?.points.map((p) => p.value)).toEqual([47, 27, 25]);
-    expect(seg.scenes[3].citations[0].detail).toContain('lines 135-139');
-    expect(new Set(seg.scenes.map((s) => s.kind)).size).toBeGreaterThan(20);
   });
   it('rejects unknown, non-contiguous and reordered scenes', () => {
     expect(checkSegment(inputs({ config: { scenes: ['sc01', 'sc03'] } })).problems.join()).toMatch(/contiguous/);
@@ -80,12 +66,13 @@ describe('segment selection', () => {
   it('takes a bespoke kind from render.json only when it draws the category', () => {
     const p = scenes();
     p[0] = scene('sc01', ['s01'], { visual: { category: 'animation', description: 'push in' } });
-    const mine = bespokeFor('get-rich-quick/decision-mlm-and-seminars');
-    const ok = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }), mine);
+    const mine: KindRegistry = { 'push-in': { component: 'FinePrint', accepts: ['animation'] } };
+    const kind = 'push-in' as SceneKind; // a bespoke name, registered only in `mine`
+    const ok = checkSegment(inputs({ plan: p, config: { kinds: { sc01: kind } } }), mine);
     expect(ok.problems).toEqual([]);
-    expect(ok.scenes[0].kind).toBe('fine-print');
+    expect(ok.scenes[0].kind).toBe(kind);
     // Another video's bespoke kind is unknown here: the fixture's video registers none.
-    const elsewhere = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'fine-print' } } }));
+    const elsewhere = checkSegment(inputs({ plan: p, config: { kinds: { sc01: kind } } }));
     expect(elsewhere.problems.join()).toMatch(/unknown to this video/);
     const wrong = checkSegment(inputs({ plan: p, config: { kinds: { sc01: 'waffle' } } }), mine);
     expect(wrong.problems.join()).toMatch(/does not draw animation/);
@@ -93,7 +80,7 @@ describe('segment selection', () => {
     expect(unknown.problems.join()).toMatch(/unknown/);
   });
   it('one record per kind: a known component, a category, and names unique across videos', () => {
-    const names = [GENERIC, ...Object.values(BESPOKE)].flatMap((r) => Object.keys(r));
+    const names = [GENERIC, ...Object.values(BESPOKE as Record<string, object>)].flatMap((r) => Object.keys(r));
     expect(new Set(names).size).toBe(names.length);
     for (const [k, spec] of Object.entries(ALL_KINDS)) {
       expect(spec.accepts.length, k).toBeGreaterThan(0);
@@ -455,16 +442,8 @@ describe('narration and ffmpeg', () => {
 
 describe('build report limitations', () => {
   it('come from the provider and the renderer in use', () => {
-    const committed = JSON.parse(
-      readFileSync(
-        join(...MLM.slice(0, 1), 'scripts', 'decision-mlm-and-seminars', 'video', 'build-report.json'),
-        'utf8',
-      ),
-    ) as { narration: { provider: string }; limitations: string[] };
-    expect(committed.limitations.slice(1, 4)).toEqual([
-      ...providerLimitations(committed.narration.provider),
-      ...RENDERER_LIMITATIONS,
-    ]);
+    expect(providerLimitations('edge').length).toBeGreaterThan(0);
+    expect(RENDERER_LIMITATIONS.length).toBeGreaterThan(0);
     expect(providerLimitations('openai').join()).not.toMatch(/edge-tts/);
     expect(providerLimitations('fake')).toEqual([]);
   });
@@ -490,31 +469,42 @@ describe('render cache key', () => {
 });
 
 describe('render config draft and render check', () => {
-  const HP = 'heat-pumps',
-    HPS = 'decision:when-does-it-pay-for-itself';
+  // The fixture with its question turned into a diagram, which no generic kind can draw (sc01's phone is inferred).
+  const withDiagram = () => {
+    const p = scenes();
+    p[2] = scene('sc03', ['s03'], { visual: { category: 'diagram', description: 'a flow of money' } });
+    return inputs({ plan: p });
+  };
 
-  it('draftRenderConfig lists every scene, drafts kinds, cues and chapters, and flags diagrams', () => {
-    const dir = scriptDir(HP, HPS);
-    const sb = readJson<Storyboard>(join(dir, 'storyboard.json'))!;
-    const { config, needsGraphics } = draftRenderConfig(sb, readJson<Script>(join(dir, 'script.json'))!);
-    expect(config.scenes).toEqual(sb.scenes.map((s) => s.id));
-    expect(needsGraphics).toEqual(['sc08', 'sc09', 'sc15', 'sc18', 'sc20', 'sc24', 'sc29']);
-    expect(config.kinds).toEqual({ sc16: 'stat-tiles', sc21: 'stat-tiles' });
-    expect(config.cues.sc05).toEqual({ type: { sentence: 's05', word: 'That' } });
-    expect(config.cues.sc32).toEqual({ type: { sentence: 's56', word: 'Whatever' } });
+  it('draftRenderConfig lists every scene, drafts the voice and chapters, and flags diagrams', () => {
+    const { storyboard, script } = withDiagram();
+    const { config, needsGraphics } = draftRenderConfig(storyboard, script);
+    expect(config.scenes).toEqual(storyboard.scenes.map((s) => s.id));
+    expect(needsGraphics).toEqual(['sc01', 'sc03']); // every animation and diagram is listed, never guessed
+    expect(config.voice.rate).toBe('+0%');
     expect(config.chapters?.sc01).toBe('Hook');
   });
 
-  it('initVideo does not overwrite', () => {
-    const c = copyTopic(HP);
+  it('initVideo writes a draft once and keeps it unless forced', () => {
+    const root = mkdtempSync(join(tmpdir(), 'vk-init-'));
     try {
-      const f = join(c.dir(HPS), 'video', 'render.json');
-      const before = readFileSync(f, 'utf8');
-      expect(initVideo(HP, HPS, { root: c.root })).toEqual({ written: false, needsGraphics: [] }); // bespoke kinds kept
-      expect(readFileSync(f, 'utf8')).toBe(before);
-      expect(initVideo(HP, HPS, { root: c.root, force: true }).written).toBe(true);
+      const { storyboard, script } = withDiagram();
+      const dir = scriptDir(script.topic, script.story, root);
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(join(dir, 'storyboard.json'), JSON.stringify(storyboard));
+      writeFileSync(join(dir, 'script.json'), JSON.stringify(script));
+      expect(initVideo(script.topic, script.story, { root })).toEqual({
+        written: true,
+        needsGraphics: ['sc01', 'sc03'],
+      });
+      const f = join(dir, 'video', 'render.json');
+      writeFileSync(f, readFileSync(f, 'utf8').replace('"+0%"', '"+5%"')); // a tuned config
+      expect(initVideo(script.topic, script.story, { root })).toEqual({ written: false, needsGraphics: ['sc03'] });
+      expect(readFileSync(f, 'utf8')).toContain('"+5%"');
+      expect(initVideo(script.topic, script.story, { root, force: true }).written).toBe(true);
+      expect(readFileSync(f, 'utf8')).toContain('"+0%"');
     } finally {
-      c.cleanup();
+      rmSync(root, { recursive: true, force: true });
     }
   });
 
@@ -578,5 +568,21 @@ describe('StackedBar', () => {
     expect(segmentColors('slate,red,muted')).toEqual([theme.slate, theme.red, theme.muted]);
     expect(segmentColors('slate,purple')).toEqual([theme.slate, theme.muted]);
     expect(segmentColors(undefined)).toEqual([theme.red, theme.slate, theme.green]);
+  });
+});
+
+describe('look', () => {
+  it('renders the one look: scenes read the theme at render time', () => {
+    expect(theme.field).toBe('transparent'); // the backdrop shows through every scene
+    expect(segmentColors('red')).toEqual([theme.red]);
+  });
+  it('counts a figure up in its own format and lands on the display exactly', () => {
+    expect(countUp('79.6', 79.6, 0.5)).toBe('39.8');
+    expect(countUp('44%', 44, 0.5)).toBe('22%');
+    expect(countUp('677,876', 677876, 0.5)).toBe('338,938');
+    expect(countUp('$9,450', 9450, 0)).toBe('$0');
+    expect(countUp('79.6', 79.6, 1)).toBe('79.6');
+    expect(countUp('$300-$650', 300, 0.5)).toBe('$300-$650'); // not one plain figure
+    expect(countUp('80', 79.6, 0.5)).toBe('80'); // a rounded display is never recomputed
   });
 });

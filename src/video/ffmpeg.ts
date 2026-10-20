@@ -202,7 +202,7 @@ export function narrationTrack(slots: Slot[], out: string, loudnorm = true) {
     (s, i) =>
       `[${i}:a]aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=stereo,adelay=${Math.round(s.delay * 1000)}:all=1,apad=whole_dur=${s.seconds.toFixed(3)}[a${i}]`,
   );
-  const tail = `${slots.map((_, i) => `[a${i}]`).join('')}concat=n=${slots.length}:v=0:a=1${loudnorm ? ',loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000' : ''}[out]`;
+  const tail = `${slots.map((_, i) => `[a${i}]`).join('')}concat=n=${slots.length}:v=0:a=1${loudnorm ? ',loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,asetpts=N/SR/TB' : ''}[out]`;
   const script = out + '.filter';
   writeFileSync(script, [...chain, tail].join(';\n'));
   try {

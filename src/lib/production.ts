@@ -29,7 +29,7 @@ import {
   storySlug,
 } from './script';
 import { validateScript } from './script-validation';
-import { discover, loadStories, storiesPath, type Story } from './stories';
+import { chainOf, discover, loadStories, storiesPath, type Story } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from './build-report';
@@ -182,6 +182,7 @@ interface BoardContext {
   t: Corpus;
   review: ReviewFile;
   story: Story | undefined;
+  chain: Story[]; // the follow-up stories the same video answers
   pkg: EvidencePackage | null;
   script: Script | null;
   sreview: ScriptReviewFile | null;
@@ -211,7 +212,7 @@ interface StageResult {
 type BoardStage = (c: BoardContext, s: Readonly<BoardState>) => StageResult;
 
 // 1. Evidence package: rebuild from the story and compare fingerprints (what packages.test.ts does in CI).
-const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, story, pkg }, s) => {
+const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, story, chain, pkg }, s) => {
   if (!pkg)
     return {
       checks: [{ name: 'evidence package', health: 'missing', detail: 'not built', file: r(FILES.pkg) }],
@@ -235,7 +236,13 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
         cmd: `npm run stories -- show ${topic}`,
       },
     };
-  const again = buildPackage(story, t, read, { review, inputs: pkg.inputs, readDoc: docReader(root), previous: pkg });
+  const again = buildPackage(story, t, read, {
+    review,
+    inputs: pkg.inputs,
+    readDoc: docReader(root),
+    previous: pkg,
+    chain,
+  });
   const inputsNow = {
     stories: fileSha(storiesPath(topic, root)),
     review: fileSha(reviewPath(topic, root)),
@@ -468,11 +475,9 @@ const storyboardStage: BoardStage = ({ topic, storyId, r, read, pkg, script, pla
 
 // 6. Graphics: render.json drafted, every scene renderable, every diagram drawn and every bespoke graphic approved by a
 // visual review, all at the current script, storyboard and render.json (video/render-check.json, written by
-// `npm run video -- check`). Releases locked before this stage existed (no version) are grandfathered.
-const graphicsStage: BoardStage = ({ topic, storyId, root, p, r, release, live, sb }, s) => {
+// `npm run video -- check`).
+const graphicsStage: BoardStage = ({ topic, storyId, root, p, r, live, sb }, s) => {
   if (!live || !sb || s.stopped) return {};
-  // a release locked before this stage existed stays as it is until it goes stale; re-locking needs a render check
-  if (release && release.version !== 2 && !releaseCheck(release, live, sb).length) return {};
   const check = `npm run video -- check ${topic} ${storyId}`;
   if (!existsSync(p('video/render.json')))
     return {
@@ -709,6 +714,8 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
   const dir = scriptDir(topic, storyId, root);
   if (!existsSync(dir)) return null;
   const p = (f: string) => join(dir, f);
+  const stories = loadStories(topic, root);
+  const story = stories?.stories.find((s) => s.id === storyId);
   const c: BoardContext = {
     topic,
     storyId,
@@ -718,7 +725,8 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     read: passageReader(root),
     t: corpusOf(loadTopic(topic)),
     review: loadReview(topic, root),
-    story: loadStories(topic, root)?.stories.find((s) => s.id === storyId),
+    story,
+    chain: story ? chainOf(story, stories) : [],
     pkg: readJson<EvidencePackage>(p(FILES.pkg)),
     script: readJson<Script>(p(FILES.script)),
     sreview: readJson<ScriptReviewFile>(p(FILES.review)),
@@ -801,14 +809,19 @@ export interface BoardNext {
   done: boolean;
 }
 export function boardNext(topic: string, storyId: string, root = ROOT): BoardNext {
-  const prod = productionOf(topic, storyId, root);
-  const ready = loadStories(topic, root)?.stories.find((s) => s.id === storyId)?.readiness === 'ready';
+  const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
+  // A follow-up question in another story's chain is produced inside that story's video, never on its own.
+  const prod = story?.partOf ? null : productionOf(topic, storyId, root);
+  const ready = story?.readiness === 'ready' && !story.partOf;
+  const why = story?.partOf
+    ? `the story is a follow-up question in ${story.partOf}; produce that story instead`
+    : 'the story is not ready in stories.json';
   const { stage, next, halt } = prod ?? {
     stage: 'package' as const,
-    next: ready ? `npm run script -- package ${topic} ${storyId}` : 'stop: the story is not ready',
+    next: ready ? `npm run script -- package ${topic} ${storyId}` : `stop: ${why}`,
     halt: ready
       ? { kind: 'missing' as const, stage: 'package' as const, why: 'no evidence package' }
-      : { kind: 'story-left' as const, stage: 'package' as const, why: 'the story is not ready in stories.json' },
+      : { kind: 'story-left' as const, stage: 'package' as const, why },
   };
   return { topic, story: storyId, stage, next, steps: stepsOf(next, topic, storyId), halt, done: stage === 'packaged' };
 }
@@ -902,6 +915,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
             ? `; public release blocked: ${production.clearance.why.join('; ')}`
             : ''
         }`;
+      else if (story.partOf) n = `part of ${story.partOf}: answered in that video`;
       else if (production) n = production.next;
       else if (story.readiness === 'ready') n = `npm run script -- package ${name} ${story.id}`;
       else if (story.readiness === 'needs-review')
@@ -909,14 +923,16 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       else n = `research: ${story.blocking[0] ?? story.readinessWhy}`;
       stories.push({ story, decision, production, next: n });
     }
-    const queued = stories.find((s) => s.decision?.decision === 'queued');
+    // A follow-up question is produced inside its chain's video, so it is never the topic's next step.
+    const queued = stories.find((s) => s.decision?.decision === 'queued' && !s.story.partOf);
     const active = stories.find(
       (s) =>
         s.production &&
+        !s.story.partOf &&
         !['locked', 'rendered', 'scored', 'packaged'].includes(s.production.stage) &&
         !['parked', 'reviewing'].includes(s.decision?.decision ?? ''),
     );
-    const ready = stories.find((s) => !s.production && s.story.readiness === 'ready' && !s.decision);
+    const ready = stories.find((s) => !s.production && s.story.readiness === 'ready' && !s.story.partOf && !s.decision);
     next =
       (queued ?? active ?? ready)?.next ??
       checks.find((c) => c.health === 'stale' || c.health === 'pending')?.detail ??
@@ -928,33 +944,27 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
   return { topic, checks, stories, rejected: file?.rejected.length ?? 0, next };
 }
 
-/** The kanban columns, in lifecycle order: story readiness, then the script stages, then the decisions. */
+/** The board's columns, one card per video, grouped by who acts next: research, a person settling a story, a person
+ *  starting `/produce`, `/produce` itself (every stage from package to scored; the card's strip shows which), a person
+ *  reviewing the private package, then the decisions in production.json. */
 export const COLUMNS = [
   'needs-research',
   'needs-review',
   'ready',
-  'package',
-  'script',
-  'validate',
-  'script-review',
-  'storyboard',
-  'graphics',
-  'lock',
-  'locked',
-  'video',
-  'rendered',
-  'scored',
-  'packaged',
+  'producing',
+  'your-review',
   'reviewing',
   'published',
   'parked',
 ] as const;
 export type Column = (typeof COLUMNS)[number];
-export function columnOf(r: StoryRow): Column {
+/** The card's column, or null for a chain's follow-up question, which is answered on its first question's card. */
+export function columnOf(r: StoryRow): Column | null {
   if (r.decision?.decision === 'published') return 'published';
   if (r.decision?.decision === 'parked') return 'parked';
   if (r.decision?.decision === 'reviewing') return 'reviewing';
-  if (r.production) return r.production.stage === 'review' ? 'script-review' : r.production.stage;
+  if (r.story.partOf) return null;
+  if (r.production) return r.production.stage === 'packaged' ? 'your-review' : 'producing';
   return r.story.readiness === 'rejected' ? 'parked' : r.story.readiness;
 }
 

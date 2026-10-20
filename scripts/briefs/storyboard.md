@@ -39,7 +39,7 @@ conclusion). Each scene:
 - `visual.description` is concrete enough that a motion designer builds it without re-reading the
   research: what is on screen, what moves, what is emphasised, in what order.
 - `visual.chart`: `{"type": "bar", "title": "...", "points": [{"label": "...", "value": 47, "unit": "percent", "display": "47%", "cite": "<passage>"}], "note": "..."}`.
-  `type` is one of `bar`, `stacked-bar`, `dot-plot`, `waffle`, `table`, `stat-tiles`, `composite`.
+  `type` is one of `bar`, `stacked-bar`, `dot-plot`, `waffle`, `table`, `stat-tiles`.
   Each point is numeric: `value` is the number to draw, `unit` is `percent`, `usd`, `count` or
   `ratio` (for a ratio, `display` is "1 in 238" and `value` is 238), `display` is the figure as the
   passage states it (its figures must all be in the cited passage, and one of them must equal

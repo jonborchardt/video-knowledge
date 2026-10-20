@@ -7,8 +7,6 @@ import { join } from 'node:path';
 import { ROOT } from './io';
 import type { Judgments } from './evidence';
 
-export type Format = 'long-form' | 'short' | 'needs-research';
-
 export interface StoryReview {
   /** Drop the candidate with this reason (incoherent, redundant, not a story). */
   reject?: string;
@@ -24,15 +22,23 @@ export interface StoryReview {
   evidenceNeeded?: string;
   premise?: string;
   arc?: Partial<Record<'hook' | 'conflict' | 'evidence' | 'resolution' | 'takeaway', string>>;
-  format?: Format;
-  formatWhy?: string;
   /** The premise and arc carry every qualification the audit raised, so qualified findings no longer hold the story at needs-review. */
   qualificationsAccepted?: boolean;
   /** Hold the story at needs-research for this reason, whatever the audit says (an essential gap the code cannot see). */
   research?: string;
   /** Who the script is written for; the evidence package carries it to the writer (a stated default otherwise). */
   audience?: string;
+  /** Follow-up stories this story's video goes on to answer, in order: each answer raises the next question. Each
+   *  keeps its own audit; the video is ready only when every one is. Chains do not nest. */
+  chain?: string[];
+  /** Why each answer leads to the next question (required with a chain). */
+  chainWhy?: string;
 }
+
+/** Questions one video may answer: the story's own plus its chain. */
+export const MAX_QUESTIONS = 3;
+/** Claims one chained video may carry across its questions: past this it is too long to stay short. */
+export const MAX_CHAIN_CLAIMS = 14;
 
 export interface ReviewFile {
   /** `${claim}|${stance}|${cite}` -> does that verdict decide a sentence taking that stance on the claim? */

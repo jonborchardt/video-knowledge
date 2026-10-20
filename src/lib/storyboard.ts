@@ -28,7 +28,7 @@ export const VISUALS = [
 export type VisualCategory = (typeof VISUALS)[number];
 
 // What a renderer can draw without reading English: a closed set of chart types and numeric points.
-export const CHART_TYPES = ['bar', 'stacked-bar', 'dot-plot', 'waffle', 'table', 'stat-tiles', 'composite'] as const;
+export const CHART_TYPES = ['bar', 'stacked-bar', 'dot-plot', 'waffle', 'table', 'stat-tiles'] as const;
 export type ChartType = (typeof CHART_TYPES)[number];
 export type Unit = 'percent' | 'usd' | 'count' | 'ratio';
 export interface ChartPoint {

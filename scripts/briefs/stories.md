@@ -33,11 +33,20 @@ the judgment the code cannot make. Nothing here changes a verdict or adds eviden
 4. **Qualifications.** If the audit marks the central conclusion or a finding `qualify`
    or `review`, either rewrite `premise` and `arc` so the narrative carries every
    limitation and set `qualificationsAccepted: true`, or leave it for a later reviewer.
-5. **Format.** Override `format` (`long-form`, `short`, `needs-research`) with
-   `formatWhy` only when the heuristic is wrong about how much there is to explore.
-6. **Gaps the code cannot see.** `research: "<reason>"` holds a story at needs-research
+5. **Gaps the code cannot see.** `research: "<reason>"` holds a story at needs-research
    whatever the audit says, for example when the only study answers a neighbouring
    question. Say what evidence would unblock it.
+6. **Chain.** One video can answer up to three questions when each answer raises the next
+   one: "is it cheaper to run?" leads to "does the upfront cost wipe that out?", which leads
+   to "and in a real cold snap?". On the story that asks the first question, set `chain` to
+   the follow-up story ids in order and `chainWhy` to one line on why each answer leads to the
+   next. Each chained story keeps its own question, claims and audit; do not merge their
+   claims into the first. Chain only stories that are already ready (the video is ready only
+   when every question is), never a list of loosely related questions, and never a story that
+   has its own chain. A chained story is not produced as a separate video: discovery marks it
+   `partOf` the first story and the board refuses to start it. `chainCandidates` on a story are
+   the code's suggestions (ready stories sharing no claims, nearest in wording); judge each one,
+   since a shared word is not a follow-up question.
 
 Keep the candidate's primary claim (the one in its id) in `claims`; the central
 conclusion is built from it for every kind except decision groups.
@@ -65,8 +74,8 @@ conclusion is built from it for every kind except decision groups.
       "premise": "...",
       "arc": { "hook": "...", "resolution": "..." },
       "qualificationsAccepted": true,
-      "format": "long-form",
-      "formatWhy": "..."
+      "chain": ["<follow-up story id>", "<the one after>"],
+      "chainWhy": "..."
     },
     "<other id>": { "reject": "..." }
   }
