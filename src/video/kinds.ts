@@ -45,6 +45,18 @@ export const GENERIC = {
   'commission-icons': { component: 'CommissionIcons', accepts: ['diagram'], assets: ['commission-icons'] },
   waffle: { component: 'Waffle', accepts: ['data-chart'], chart: 'waffle' },
   'stacked-bar': { component: 'StackedBar', accepts: ['data-chart'], chart: 'stacked-bar', percent: true },
+  // diagrams named per scene in render.json `kinds` (never inferred: they redraw a chart or list the storyboard typed)
+  curve: { component: 'Curve', accepts: ['data-chart'] }, // a series over time drawn as a line, zooming to each point
+  cohort: { component: 'Cohort', accepts: ['data-chart'] }, // 100 icons, each 1% of a group; a series puts them out
+  columns: { component: 'Columns', accepts: ['data-chart'] }, // vertical columns rising on their cues
+  funnel: { component: 'Funnel', accepts: ['data-chart'] }, // a shrinking series as stacked funnel bands
+  gauge: { component: 'Gauge', accepts: ['data-chart'] }, // one percent as a dial, the needle sweeping to it
+  dumbbell: { component: 'Dumbbell', accepts: ['data-chart'] }, // points in pairs, the gap between each pair drawn
+  versus: { component: 'Versus', accepts: ['typography'] }, // two lines face off, split screen
+  scorecard: { component: 'Scorecard', accepts: ['typography'] }, // "claim: verdict" lines, each stamped with a mark
+  steps: { component: 'Steps', accepts: ['typography'] }, // numbered stops along a path that draws between them
+  stamp: { component: 'Stamp', accepts: ['typography'] }, // one line slammed on as a rubber stamp
+  choices: { component: 'Choices', accepts: ['typography'] }, // a question's alternatives as chips, each on its word
 } as const satisfies Record<string, KindSpec>;
 
 export type GenericKind = keyof typeof GENERIC;

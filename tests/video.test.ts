@@ -20,7 +20,7 @@ import { BESPOKE } from '../src/video/bespoke';
 import { ALL_KINDS, GENERIC, bespokeFor, kindOf, unsupportedWhy } from '../src/video/kinds';
 import { COMPONENTS } from '../src/video/remotion/scenes';
 import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
-import { theme } from '../src/video/remotion/theme';
+import { BRANDS, countUp, setBrand, theme } from '../src/video/remotion/theme';
 import { narrate } from '../src/video/narration';
 import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
@@ -578,5 +578,28 @@ describe('StackedBar', () => {
     expect(segmentColors('slate,red,muted')).toEqual([theme.slate, theme.red, theme.muted]);
     expect(segmentColors('slate,purple')).toEqual([theme.slate, theme.muted]);
     expect(segmentColors(undefined)).toEqual([theme.red, theme.slate, theme.green]);
+  });
+});
+
+describe('brands', () => {
+  it('switches the theme every scene reads, and refuses an unknown brand', () => {
+    try {
+      setBrand('pulse');
+      expect(theme.red).toBe(BRANDS.pulse.red);
+      expect(segmentColors('red')).toEqual([BRANDS.pulse.red]); // read at render time, not import time
+      expect(() => setBrand('neon')).toThrow(/unknown brand/);
+    } finally {
+      setBrand();
+    }
+    expect(theme).toEqual(BRANDS.classic);
+  });
+  it('counts a figure up in its own format and lands on the display exactly', () => {
+    expect(countUp('79.6', 79.6, 0.5)).toBe('39.8');
+    expect(countUp('44%', 44, 0.5)).toBe('22%');
+    expect(countUp('677,876', 677876, 0.5)).toBe('338,938');
+    expect(countUp('$9,450', 9450, 0)).toBe('$0');
+    expect(countUp('79.6', 79.6, 1)).toBe('79.6');
+    expect(countUp('$300-$650', 300, 0.5)).toBe('$300-$650'); // not one plain figure
+    expect(countUp('80', 79.6, 0.5)).toBe('80'); // a rounded display is never recomputed
   });
 });

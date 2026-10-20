@@ -5,13 +5,7 @@ import { cue, lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { GUTTER, easeOut, ramp, theme } from '../theme';
 
-const NAMED: Record<string, string> = {
-  red: theme.red,
-  slate: theme.slate,
-  green: theme.green,
-  amber: theme.amber,
-  muted: theme.muted,
-};
+const NAMED = ['red', 'slate', 'green', 'amber', 'muted'] as const;
 
 /** The big number a scene opens with: only when the first on-screen word starts with a digit ("601 people asked"),
  *  never from a label ("bills only" is not 0). */
@@ -26,7 +20,9 @@ export function segmentColors(option: string | number | boolean | undefined): st
     ? [theme.red, theme.slate, theme.green]
     : String(option)
         .split(',')
-        .map((c) => NAMED[c.trim()] ?? theme.muted);
+        .map((c) =>
+          (NAMED as readonly string[]).includes(c.trim()) ? theme[c.trim() as (typeof NAMED)[number]] : theme.muted,
+        );
 }
 
 /** One bar filling left to right (segment colours from options.colors when given), each segment on its `point:<label>` cue; widths are the published percentages of the
@@ -52,7 +48,7 @@ export const StackedBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const note = (chart.note ?? '').split(/(?<=\.)\s/)[0];
   const top = base ? 380 : 500;
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans, padding: `0 ${GUTTER}px` }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans, padding: `0 ${GUTTER}px` }}>
       {shown !== null ? (
         <div style={{ position: 'absolute', top: 120, left: GUTTER, opacity: ramp(t, count, 8) }}>
           <div

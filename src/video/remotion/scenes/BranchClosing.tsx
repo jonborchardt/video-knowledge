@@ -44,7 +44,7 @@ export const BranchClosing: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const pulse = Math.sin(Math.PI * Math.min(1, Math.max(0, (t - lit) / 24)));
   const box = { x: GUTTER + 60, y: 170, w: 1920 - 2 * (GUTTER + 60), h: 640 };
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
       <svg width={1920} height={1080}>
         <rect
           x={box.x}

@@ -4,9 +4,11 @@
 import { MLM_AND_SEMINARS } from './decision-mlm-and-seminars';
 import { MOST_NEW_BUSINESSES } from './surprise-most-new-businesses-including-online-stores';
 import { WHEN_DOES_IT_PAY } from './decision-when-does-it-pay-for-itself';
+import { COURTS_AND_JURISDICTION } from './decision-courts-and-jurisdiction';
 
 export const BESPOKE = {
   'get-rich-quick/decision-mlm-and-seminars': MLM_AND_SEMINARS,
   'get-rich-quick/surprise-most-new-businesses-including-online-stores': MOST_NEW_BUSINESSES,
   'heat-pumps/decision-when-does-it-pay-for-itself': WHEN_DOES_IT_PAY,
+  'sovereign-citizens/decision-courts-and-jurisdiction': COURTS_AND_JURISDICTION,
 };

@@ -5,7 +5,7 @@ import { lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { GUTTER, ramp, theme } from '../theme';
 
-const OUTCOME = [theme.red, theme.slate, theme.green];
+const outcomeColor = (i: number) => [theme.red, theme.slate, theme.green][i];
 const byLabel = (scene: TimelineScene, re: RegExp) => scene.chart!.points.find((p) => re.test(p.label));
 
 /** Composite charts that reuse figures already shown, each panel labelled with its measure (the chart's note forbids one
@@ -67,7 +67,7 @@ export const Composite: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const tails = scene.onScreenText.map((l) => l.split(':').slice(1).join(':').trim());
   if (scene.kind === 'three-measures')
     return (
-      <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+      <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
         {title}
         {panel(0, heads[0] ?? '', <Tile value={payout?.display ?? ''} note={tails[0]} />, lines[0])}
         {panel(
@@ -89,14 +89,14 @@ export const Composite: FC<{ scene: TimelineScene }> = ({ scene }) => {
     );
   // closing
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
       {title}
       <svg width={1920} height={1080}>
         <Ring pts={outcome} cx={480} cy={500} t={t} fills={fills} />
       </svg>
       <div style={{ position: 'absolute', left: 820, top: 330, display: 'flex', flexDirection: 'column', gap: 26 }}>
         {outcome.map((p, i) => (
-          <div key={p.label} style={{ fontSize: 44, color: OUTCOME[i], opacity: ramp(t, fills[i] + 8, 10) }}>
+          <div key={p.label} style={{ fontSize: 44, color: outcomeColor(i), opacity: ramp(t, fills[i] + 8, 10) }}>
             <span style={{ fontWeight: 700 }}>{p.display}</span>{' '}
             {scene.onScreenText[i]?.replace(/^[^\s]+\s/, '') ?? p.label}
           </div>
@@ -180,7 +180,7 @@ const StackedMini: FC<{ pts: { value: number; display: string }[]; t: number; at
               top: 0,
               bottom: 0,
               width: w * ramp(t, at + i * 10, 14),
-              background: OUTCOME[i],
+              background: outcomeColor(i),
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -221,7 +221,7 @@ const Ring: FC<{ pts: { value: number; display: string }[]; cx: number; cy: numb
             key={i}
             r={R}
             fill="none"
-            stroke={OUTCOME[i]}
+            stroke={outcomeColor(i)}
             strokeWidth={70}
             strokeDasharray={`${len} ${C - len}`}
             strokeDashoffset={-off}

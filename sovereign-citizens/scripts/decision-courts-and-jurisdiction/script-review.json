@@ -1,0 +1,254 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-20",
+  "revision": 3,
+  "packageFingerprint": "c986c02550",
+  "approved": {
+    "s01": "e3d7359c26",
+    "s02": "38b080dbf5",
+    "s03": "22b931e28f",
+    "s04": "c0a684ca59",
+    "s05": "7a9298105a",
+    "s06": "b7d7076bf1",
+    "s07": "4439fd313a",
+    "s08": "fab3938647",
+    "s09": "8302dc6d10",
+    "s10": "c0668eb45b",
+    "s11": "30aae501d2",
+    "s12": "c26d18349a",
+    "s13": "7fb3c801e0",
+    "s14": "57d623904a",
+    "s15": "6a8124e195",
+    "s16": "32cd92f884",
+    "s17": "6e4e2b6538",
+    "s18": "44c244c478",
+    "s19": "3c0a8c8b4a",
+    "s20": "4add76f726",
+    "s21": "b9768bafb0",
+    "s22": "fc0dbacfb8",
+    "s23": "8d343064a2",
+    "s24": "1f672c62f4",
+    "s25": "e741a346b1",
+    "s26": "1dd530351f",
+    "s27": "34faadd695",
+    "s28": "689d8ef3f0",
+    "s29": "0586abe922",
+    "s30": "ddc6ab1581",
+    "s31": "8071366211",
+    "s32": "f513941a73",
+    "s33": "b4fbd26cb8",
+    "s34": "4da4add214",
+    "s35": "a778d8bb88",
+    "s36": "3208866200",
+    "s37": "81e3168555",
+    "s38": "4c732d6e60",
+    "s39": "8075ae27ea",
+    "s40": "6fb5497a7c",
+    "s41": "aa9b2bc414",
+    "s42": "549ce2f412",
+    "s43": "5e7b0b7475",
+    "s44": "03a1e97889",
+    "s45": "c032b1d00b",
+    "s46": "f1760db874",
+    "s47": "ea4d2ec4a9",
+    "s48": "23cf16575b",
+    "s49": "1d92764b5a",
+    "s50": "ed0db02a03",
+    "s51": "4e07ed8f49",
+    "s52": "e29561257c",
+    "s53": "63eef14bd2",
+    "s54": "4f02ec00ed",
+    "s55": "b8e6807ac4",
+    "s57": "47a06de22b",
+    "s58": "fad5884414",
+    "s59": "e1f4faea6e",
+    "s60": "8f4d0a49bc",
+    "s61": "9cee19cfe0",
+    "s62": "4a840a79c0",
+    "s63": "5d55cb49a9",
+    "s64": "2d0eafcd36",
+    "s65": "f1f805709a",
+    "s66": "d93ea1aa03",
+    "s56": "e0bc54f5a4"
+  },
+  "findings": [
+    {
+      "sentence": "s01",
+      "assertion": "s01.a",
+      "fingerprint": "5bc0e1a671",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "The courtroom scene was not in late 2023. The opinion says Smith 'proceeded to a bench trial' on January 18, 2024 (L61), and the cited passage dates only the police encounter to December 22, 2023 and the judgment entries to January 18, 2024. 'Picture a courtroom in Ohio, late in 2023' puts the statement in the wrong year. ('Criminal' is fine: the four charges are misdemeanors, L49-L54.)",
+      "refs": [
+        "sovereign-citizens/sources/state-v-smith-ohio-2024.txt#L73-L98",
+        "sovereign-citizens/sources/state-v-smith-ohio-2024.txt#L49-L61"
+      ],
+      "suggestion": "Date the encounter, not the courtroom, e.g. 'Picture an Ohio courtroom, and a man facing four charges from a run-in with police at the end of 2023...'; or drop the date."
+    },
+    {
+      "sentence": "s13",
+      "assertion": "s13.a",
+      "fingerprint": "e22fd65b6e",
+      "revision": 1,
+      "category": "misattribution",
+      "severity": "blocking",
+      "explanation": "The source is a letter to the editor (the store's URL is under /opinion/letters_to_editor/ and its summary says 'Letter to the editor'), not a column. Calling it 'a column published by the Mountain Democrat newspaper' tells a viewer that a newspaper's own writer endorsed the admiralty-fringe claim.",
+      "refs": [],
+      "suggestion": "Say 'a letter to the editor printed in the Mountain Democrat newspaper says ...'."
+    },
+    {
+      "sentence": "s09",
+      "assertion": "s09.a",
+      "fingerprint": "d896f97bd6",
+      "revision": 1,
+      "category": "needs-human",
+      "severity": "warning",
+      "explanation": "In the transcript context, Menard presents these words as something Chief Justice Beverley McLachlin said ('it was beverly laughin the chief justice of the supreme court of canada who in a talk in vancouver back in 2006 stated that ... no one can provide adjudication services without the consent of both members'). The narration gives them as Menard's own formulation. That hides the appeal to judicial authority, which is part of the trick, but repeating it would relay an unverified claim about a real judge. An editor should decide how to frame it.",
+      "refs": [],
+      "suggestion": "Either 'Rob Menard ... claimed in a television interview that Canada's chief justice had said ...' (flagged as his claim), or keep the line and accept that it drops his attribution."
+    },
+    {
+      "sentence": "s07",
+      "fingerprint": "419ce33a5e",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "warning",
+      "explanation": "The promise to 'see what judges did when someone tried it' fits four of the five tricks. For the act of 1871, the ruling (Metropolitan R. Co., 1889) is not a case where someone invoked the trick. It is the Supreme Court reading the act in an unrelated dispute, which s38-s40 present correctly. This transitional sentence slightly overstates the record for that trick.",
+      "refs": [
+        "sovereign-citizens/sources/metropolitan-r-co-v-district-of-columbia-1889.txt#L34-L34"
+      ],
+      "suggestion": "'... read the document each one points to, and see what the courts have said about it.'"
+    },
+    {
+      "sentence": "s35",
+      "assertion": "s35.a",
+      "fingerprint": "f63544606b",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "The corpus holds one law firm's statement. 'Lawyers who explain these cases online agree' turns it into a consensus of lawyers that the package does not show.",
+      "refs": [],
+      "suggestion": "Drop the generalization: 'The Lux Law Firm, which explains these cases online, puts it simply: ...'."
+    },
+    {
+      "sentence": "s56",
+      "fingerprint": "8c9b8a53bd",
+      "revision": 1,
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "s52 asks whether these arguments have 'never worked anywhere, for anyone', and s56 answers 'None of that leaves room for a trick that works'. The corpus records apparent exceptions that the script omits. Netolitzky notes the 1968 Minnesota 'Credit River' decision (a debt case, later declared a nullity) as 'one of the few exceptional instances where a court decision stands for exactly what its pseudolaw proponents claim'. The Canadian history records acquittals (Porisky 2000, Naudi) that turned on the Crown failing to prove its records, with the reasoning later rejected. None is a jurisdiction escape, so the conclusion survives, but a viewer asked 'never, for anyone?' should hear that the rare apparent wins were on other grounds and did not last. Those passages are not cited yet; adding them goes through record-sources.",
+      "refs": [
+        "sovereign-citizens/sources/netolitzky-after-the-hammer.txt#L592-L601",
+        "sovereign-citizens/sources/netolitzky-history-of-opca.txt#L878-L885"
+      ],
+      "suggestion": "Add one sentence: the few apparent wins on record, such as a 1968 Minnesota debt ruling later declared void and a handful of Canadian acquittals on missing evidence, were not about jurisdiction and were later set aside."
+    },
+    {
+      "sentence": "s28",
+      "assertion": "s28.a",
+      "fingerprint": "4ecbf8c7d7",
+      "revision": 1,
+      "category": "clarity",
+      "severity": "info",
+      "explanation": "The passage supports the sentence. But the narration describes one claimant plus 'other consent arguments', then says 'all three', so the viewer never hears that there were three.",
+      "refs": [
+        "sovereign-citizens/sources/hobbs-young-mcintyre-internationalisation-pseudolaw.txt#L1104-L1114"
+      ],
+      "suggestion": "'... alongside two other consent arguments; all three were unsuccessful.'"
+    },
+    {
+      "sentence": "s59",
+      "assertion": "s59.a",
+      "fingerprint": "e1f4faea6e",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "'They can cost you' is followed only by the court's label. In Benabe the concrete cost was that the defendants were removed from their own trial (L56-L59), and that is not cited. s60 supplies a general cost, so this is not misleading, but the concrete consequence would land better if a writer recorded that passage.",
+      "refs": [
+        "sovereign-citizens/sources/us-v-benabe-7th-cir-2011.txt#L77-L77"
+      ]
+    },
+    {
+      "sentence": "s56",
+      "fingerprint": "968fde1339",
+      "revision": 2,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "The first clause is supported: none of the cited rulings or reviews records a jurisdiction escape that held (the apparent wins in the corpus, Credit River and the Porisky and Naudi acquittals, were a debt ruling and failures of Crown evidence, and were later set aside or rejected). But the second clause tells the viewer the record's \"only\" gap is the lack of an American count, two sentences after s54 says many proceedings never produce a reported judgment at all. A rhetorical sentence that states the evidence has a single gap overstates its completeness and contradicts s54.",
+      "refs": [
+        "sovereign-citizens/sources/netolitzky-after-the-hammer.txt#L592-L601",
+        "sovereign-citizens/sources/netolitzky-history-of-opca.txt#L878-L885"
+      ],
+      "suggestion": "Drop \"only\" and name both gaps, e.g. \"Nothing in that record shows a jurisdiction trick that held up; what it cannot do is count the hearings nobody wrote up, or every American courtroom.\""
+    }
+  ],
+  "dispositions": {
+    "s09.b": {
+      "fingerprint": "8302dc6d10",
+      "category": "needs-qualification",
+      "reason": "The narration only calls Menard a Canadian freeman-on-the-land figure, which the cited passage states outright (the movement's Canadian founder, a British Columbia guru); the 0.4 strength concerns the verdict on the consent claim, not this description."
+    },
+    "s27.b": {
+      "fingerprint": "34faadd695",
+      "category": "needs-qualification",
+      "reason": "The IRS qualification limits a claim about tax cases; this sentence is a quotation attributed to a named US court (the Seventh Circuit's own citation of Schneider), and it makes no claim about how courts treat these arguments generally."
+    },
+    "s48.a": {
+      "fingerprint": "23cf16575b",
+      "category": "needs-qualification",
+      "reason": "The IRS qualification limits a claim about tax cases; this sentence is a quotation attributed to a named research team whose region the sentence names; s53 to s55 then spell out where the broad reviews come from and that the IRS evidence is tax-only."
+    },
+    "s49.a": {
+      "fingerprint": "1d92764b5a",
+      "category": "needs-qualification",
+      "reason": "'Consistently' is the source's own word, quoted and attributed, and the sentence scopes it to Canadian courts; the IRS tax-only limitation does not narrow a statement about Canadian courts."
+    },
+    "s49.b": {
+      "fingerprint": "1d92764b5a",
+      "category": "needs-qualification",
+      "reason": "The IRS qualification limits a claim about tax cases; this sentence is a quotation attributed to a named Canadian study, scoped by the narration to Supreme Court of Canada appeals."
+    },
+    "s50.a": {
+      "fingerprint": "ed0db02a03",
+      "category": "needs-qualification",
+      "reason": "The IRS qualification limits a claim about tax cases; this sentence is a quotation attributed to a named Queensland judge about one case, which the narration presents as one case."
+    },
+    "s51.a": {
+      "fingerprint": "4e07ed8f49",
+      "category": "needs-qualification",
+      "reason": "The IRS qualification limits a claim about tax cases; this sentence is a quotation attributed to a named Ohio appeals court, scoped to that court."
+    },
+    "s53.a": {
+      "fingerprint": "63eef14bd2",
+      "category": "needs-qualification",
+      "reason": "This sentence is the qualification: it names Australia and New Zealand as where the broad review comes from, and s55 states the IRS tax-only scope."
+    },
+    "s53.b": {
+      "fingerprint": "63eef14bd2",
+      "category": "needs-qualification",
+      "reason": "This sentence is the qualification: it scopes the Canadian finding to Canada, and 'consistently' is the source's word; s55 states the IRS tax-only scope."
+    },
+    "s53.c": {
+      "fingerprint": "63eef14bd2",
+      "category": "needs-qualification",
+      "reason": "The sentence says US evidence is a run of appeals-court statements, not a count, which is narrower than the IRS's 'uniformly'; s55 carries the tax-only limit."
+    },
+    "s54.a": {
+      "fingerprint": "4f02ec00ed",
+      "category": "needs-qualification",
+      "reason": "The sentence is itself a limitation on the written record, attributed to its author; the IRS tax-only scope does not bear on it."
+    },
+    "s55.a": {
+      "fingerprint": "b8e6807ac4",
+      "category": "needs-qualification",
+      "reason": "The narration carries the limitation in the same sentence: 'but it is writing about tax cases only'."
+    },
+    "s60.a": {
+      "fingerprint": "8f4d0a49bc",
+      "category": "needs-qualification",
+      "reason": "The IRS qualification limits a claim about tax cases; this sentence is a quotation attributed to a named Canadian history, and the narration calls it the Canadian history."
+    }
+  }
+}

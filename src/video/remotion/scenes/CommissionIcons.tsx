@@ -55,7 +55,7 @@ export const CommissionIcons: FC<{ scene: TimelineScene }> = ({ scene }) => {
     );
   };
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
       <svg width={1920} height={1080}>
         <g opacity={ramp(t, scene.start + 4, 10)} transform="translate(960 250)">
           <circle r={70} fill={theme.raised} stroke={theme.amber} strokeWidth={5} />

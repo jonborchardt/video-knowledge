@@ -78,7 +78,7 @@ export const Tree: FC<{ scene: TimelineScene }> = ({ scene }) => {
     const [sellLabel, tierLabel] = scene.onScreenText;
     const below = [520, 813, 1107, 1400];
     return (
-      <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+      <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
         <svg width={1920} height={1080}>
           <g opacity={ramp(t, scene.start, 10) * (1 - 0.7 * ramp(t, sell, 15))} transform="translate(700 120)">
             <rect width={520} height={110} rx={28} fill={theme.raised} stroke={theme.line} strokeWidth={2} />
@@ -124,7 +124,7 @@ export const Tree: FC<{ scene: TimelineScene }> = ({ scene }) => {
     const ys = [260, 520, 780];
     const loop = ((t - scene.start) % 60) / 60;
     return (
-      <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+      <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
         <svg width={1920} height={1080}>
           {tiers.map((xs, k) =>
             xs.map((x, i) => {
@@ -190,7 +190,7 @@ export const Tree: FC<{ scene: TimelineScene }> = ({ scene }) => {
     const tr = ramp(t, turn, 14);
     const below = [640, 960, 1280];
     return (
-      <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+      <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
         <div
           style={{
             position: 'absolute',
@@ -261,7 +261,7 @@ export const Tree: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const pulse = 1 + 0.08 * Math.sin((t - scene.start) / 6);
   const flood = ramp(t, baseAt, 20);
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
       <svg width={1920} height={1080}>
         <rect x={0} y={ys[3] - 40} width={1920} height={1080 - ys[3] + 40} fill={theme.red} opacity={0.14 * flood} />
         {widths.map((n, k) =>

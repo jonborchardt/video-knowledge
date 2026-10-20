@@ -17,7 +17,7 @@ export const Pyramid: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const level = Math.max(1, Math.round(grow * target));
   const levels = Array.from({ length: Math.min(level, 7) }, (_, k) => Math.min(60, Math.pow(3, k)));
   return (
-    <AbsoluteFill style={{ background: theme.bg, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
       <svg width={1920} height={1080}>
         <circle cx={960} cy={1120} r={300} fill="none" stroke={theme.slate} strokeWidth={4} opacity={0.6} />
         <path

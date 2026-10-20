@@ -43,7 +43,7 @@ export const Excerpt: FC<{ scene: TimelineScene }> = ({ scene }) => {
     );
   };
   return (
-    <AbsoluteFill style={{ background: theme.bg }}>
+    <AbsoluteFill style={{ background: theme.field }}>
       {scene.kind === 'disclosures' ? <Thumbnails t={t} scene={scene} until={open} /> : null}
       <div
         style={{

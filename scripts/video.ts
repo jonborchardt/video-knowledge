@@ -1,10 +1,11 @@
 // npm run video -- <command> <topic> <story-id> [...]
 //   narrate <topic> <story-id> [--regenerate]        synthesise the narration (cached by voice, rate and text); writes video/narration.json
 //   timeline <topic> <story-id>                      tile the scenes by the measured audio; writes video/timeline.json
-//   render <topic> <story-id> [--scene <id> | --from <id> --to <id>] [--force]
+//   render <topic> <story-id> [--scene <id> | --from <id> --to <id>] [--force] [--brand <name>]
 //                                                    render the scenes (cached chunks in video/scenes/) and assemble them with the narration and,
 //                                                    when video/music.json exists, the soundtrack (video/mix.json records the mix):
-//                                                    every scene of render.json into video/segment.mp4, or the given range into video/scenes/<range>.mp4
+//                                                    every scene of render.json into video/segment.mp4, or the given range into video/scenes/<range>.mp4;
+//                                                    --brand pulse renders that look into segment.pulse.mp4 (<range>.pulse.mp4) beside the classic one
 //   qa <topic> <story-id> [--no-frames]              check the mp4, extract inspection frames, write video/build-report.json, .md and the contact sheet
 //   spike <topic> <story-id> [--regenerate] [--force] narrate, timeline, render, qa
 //   package <topic> <story-id>                       the private review package in video/review/: the mp4 (copied),
@@ -30,6 +31,7 @@ import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
 import { DECODABLE, type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
 import { ENTRY, renderContactSheet, renderScenes } from '../src/video/render';
+import { isBrand } from '../src/video/remotion/theme';
 import { type BuildReport, buildReport, renderReportMd } from '../src/video/report';
 import { VIDEO_FILES, videoDir } from '../src/video/files';
 import { checkSegment, loadInputs, loadSegment } from '../src/video/select';
@@ -45,7 +47,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 17)
+      .slice(0, 18)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -109,14 +111,19 @@ function range(tl: Timeline): string[] | undefined {
 }
 
 async function stageRender(
-  tl = readJson<Timeline>(p(VIDEO_FILES.timeline)),
+  timeline = readJson<Timeline>(p(VIDEO_FILES.timeline)),
   m = readJson<NarrationManifest>(p(VIDEO_FILES.narration)),
 ) {
-  if (!tl || !m) throw new Error(`no ${rel(p(VIDEO_FILES.timeline))}; run timeline first`);
+  if (!timeline || !m) throw new Error(`no ${rel(p(VIDEO_FILES.timeline))}; run timeline first`);
+  // another brand is a look to compare, beside the classic file QA and the review package check
+  const brand = flag('--brand');
+  if (brand && !isBrand(brand)) throw new Error(`unknown brand ${brand}`);
+  const tl = brand && brand !== 'classic' ? { ...timeline, brand } : timeline;
+  const tag = tl.brand ? `.${tl.brand}` : '';
   const only = range(tl);
   const out = only
-    ? p(`${VIDEO_FILES.scenes}/${only[0]}${only.length > 1 ? `-${only.at(-1)}` : ''}.mp4`)
-    : p(VIDEO_FILES.mp4);
+    ? p(`${VIDEO_FILES.scenes}/${only[0]}${only.length > 1 ? `-${only.at(-1)}` : ''}${tag}.mp4`)
+    : p(VIDEO_FILES.mp4.replace(/\.mp4$/, `${tag}.mp4`));
   const t0 = Date.now();
   let shown = '';
   const chunks = await renderScenes(tl, dir, p(VIDEO_FILES.scenes), {
