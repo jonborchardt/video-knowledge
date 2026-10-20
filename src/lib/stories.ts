@@ -649,13 +649,13 @@ function evaluate(d: Draft, t: StoryInput, review: ReviewFile, readPassage: Pass
   return frame(d, t, a, s, ready);
 }
 
-/** Discover, audit, evaluate, deduplicate and rank. Deterministic for a given corpus and review file. */
 /** Review entries keyed to a story id the corpus no longer drafts: they judge nothing and should be removed. */
 export const staleReviewIds = (t: StoryInput, review: ReviewFile): string[] => {
   const ids = new Set(drafts(t).map((d) => d.id));
   return Object.keys(review.stories ?? {}).filter((id) => !ids.has(id));
 };
 
+/** Discover, audit, evaluate, deduplicate and rank. Deterministic for a given corpus and review file. */
 export function discover(t: StoryInput, readPassage: PassageReader, review: ReviewFile = {}): StoriesFile {
   const all = drafts(t);
   const rejected: StoriesFile['rejected'] = [];
@@ -695,11 +695,12 @@ export function discover(t: StoryInput, readPassage: PassageReader, review: Revi
   }
   kept.sort((a, b) => b.scores.overall - a.scores.overall || (a.id < b.id ? -1 : 1));
   rejected.sort((a, b) => (a.id < b.id ? -1 : 1));
-  // Chains link across the whole ranked list, so the cap counts videos: a follow-up takes no slot and is listed exactly
-  // when its first question is.
+  // Chains link across the whole ranked list, so the cap counts videos: a chain is one video, ranked by its best
+  // question, and its stories are listed together or not at all.
   for (const s of kept) linkChain(s, review, kept);
-  const heads = kept.filter((s) => !s.partOf).slice(0, MAX_VIDEOS);
-  const listed = kept.filter((s) => heads.includes(s) || (s.partOf && heads.some((h) => h.id === s.partOf)));
+  const videoOf = (s: Story) => s.partOf ?? s.id;
+  const videos = new Set([...new Set(kept.map(videoOf))].slice(0, MAX_VIDEOS));
+  const listed = kept.filter((s) => videos.has(videoOf(s)));
   suggestChains(listed);
   return {
     topic: t.name,

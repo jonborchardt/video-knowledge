@@ -95,7 +95,7 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const cycle = settle >= 1 ? Math.floor((t - settleAt - 45) / 36) % n : -1;
 
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div style={{ position: 'absolute', left: 0, top: 0, width: 1920, height: H, overflow: 'hidden' }}>
         <div
           style={{
@@ -160,7 +160,7 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 <g key={`s${i}`} transform={`translate(${p.x} ${p.y})`}>
                   <circle
                     r={R}
-                    fill={theme.field === 'transparent' ? theme.bg : theme.field}
+                    fill={theme.bg}
                     stroke={theme.line}
                     strokeWidth={4}
                     strokeDasharray="10 10"

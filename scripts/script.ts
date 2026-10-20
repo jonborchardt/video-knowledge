@@ -174,7 +174,6 @@ function stageLock() {
       `storyboard.json does not match the current script and package (${liveSb.status}): re-run storyboard`,
     );
   const release: Release = {
-    version: 2,
     topic,
     story: storyId,
     approvedBy: approvedBy!,

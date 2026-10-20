@@ -13,7 +13,7 @@ export const EvidenceCards: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const frames = lineFrames(scene);
   const W = (1920 - 2 * GUTTER - 2 * 40) / 3;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       {scene.onScreenText.map((line, i) => {
         const a = ramp(t, frames[i], 14);
         const G = GLYPHS[i % GLYPHS.length];

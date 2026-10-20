@@ -24,12 +24,14 @@ const columns = COLUMNS.map((c) => ({ c, cards: rows.filter((r) => columnOf(r) =
 type Row = (typeof rows)[number];
 // A chain's card carries every question it answers and the claims of all of them.
 const followUps = (r: Row) =>
-  (r.story.chain ?? []).map((c) => rows.find((x) => x.topic.name === r.topic.name && x.story.id === c.id)?.story);
+  (r.story.chain ?? [])
+    .map((c) => rows.find((x) => x.topic.name === r.topic.name && x.story.id === c.id)?.story)
+    .filter((s) => s?.partOf === r.story.id);
 // Halts /produce stops on (.claude/skills/produce/SKILL.md): a person must act; every other halt is its next step.
 const stopped = (r: StoryRow) =>
   !!r.production &&
   (['revision-limit', 'story-left'].includes(r.production.halt?.kind ?? '') || r.next.startsWith('stop:'));
-const claimsOf = (r: Row) => r.story.claims.length + followUps(r).reduce((n, s) => n + (s?.claims.length ?? 0), 0);
+const claimsOf = (r: Row) => new Set([r.story, ...followUps(r)].flatMap((s) => s?.claims ?? [])).size;
 const HEALTH: Record<Health, { label: string; colour: string }> = {
   done: { label: 'done', colour: 'text-success' },
   current: { label: 'current', colour: 'text-success' },

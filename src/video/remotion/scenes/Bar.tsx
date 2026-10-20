@@ -40,7 +40,7 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const LW = inline ? Math.min(520, Math.max(...bars.map((p) => p.label.length)) * 30 * k * 0.55 + 48) : 0;
   const stampAt = stampIdx >= 0 ? cue(scene, 'stamp', lines[stampIdx]) : Infinity;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       {captionIdx >= 0 ? (
         <div
           style={{

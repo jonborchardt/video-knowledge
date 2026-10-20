@@ -24,7 +24,9 @@ still fails its visual review after three revisions; say so in your reply when y
 3. Add the component to `COMPONENTS` in `src/video/remotion/scenes/index.ts` (keyed by its file name).
 4. Before drawing, check git history: the purged videos' one-off graphics (courtroom, gold-fringe flag, District
    tiers, UCC ticket signature, courts evidence, toolkit cards, protest strip, MLM pyramid, branch closing) are at
-   commit `d692140` under `src/video/remotion/scenes/` and `src/video/bespoke/`; restore one rather than redraw it.
+   commit `d692140` under `src/video/remotion/scenes/` and `src/video/bespoke/`; restore one rather than redraw it, then port it: those files predate the one theme, so resolve every
+   `theme.motion ? A : B` to `A`, drop `background: theme.field` (the field is the backdrop now), and register its kind
+   under a name no generic kind uses (`fine-print` and `waterfall` are generic now).
    Register a bespoke kind in `src/video/bespoke/<story slug>.ts` (create it, and add it to
    `src/video/bespoke/index.ts` under `<topic>/<story slug>`): `{ component, accepts: [<category>] }`.
    Kind names are unique across videos: prefix them (`hp-`, `mlm-`).

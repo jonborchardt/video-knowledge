@@ -165,7 +165,6 @@ export function syntheticProduction(upTo: FixtureStage): Fixture {
   const problems = renderCheckProblems(rc, rc.fingerprints);
   if (problems.length) throw new Error(`fixture render check: ${problems.join('; ')}`);
   const release: Release = {
-    version: 2,
     topic: TOPIC,
     story: story.id,
     approvedBy: 'fixture approver',

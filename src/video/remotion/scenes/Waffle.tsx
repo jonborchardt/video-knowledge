@@ -23,7 +23,7 @@ export const Waffle: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const fill = ramp(t, at, 60);
   const caption = scene.onScreenText.at(-1);
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

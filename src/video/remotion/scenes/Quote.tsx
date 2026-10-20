@@ -39,7 +39,7 @@ export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const perLine = scene.citations.length === lines.length && lines.length > 1;
   const size = lines.length > 1 ? 62 : 68;
   return (
-    <AbsoluteFill style={{ background: theme.field }}>
+    <AbsoluteFill>
       {lines.map((l, i) => {
         const next = intro[i + 1] ?? Infinity;
         const inA = ramp(t, intro[i], 12);

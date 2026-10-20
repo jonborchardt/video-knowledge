@@ -24,7 +24,7 @@ export const RankTable: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const rowH = H / n;
   let yAcc = y0 + H;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

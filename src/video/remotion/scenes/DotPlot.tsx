@@ -27,7 +27,7 @@ export const DotPlot: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const x0 = GUTTER;
   const y0 = 300;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

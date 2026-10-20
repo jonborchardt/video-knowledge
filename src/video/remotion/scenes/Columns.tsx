@@ -65,7 +65,7 @@ export const Columns: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const id = `columns-${scene.id}`;
 
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

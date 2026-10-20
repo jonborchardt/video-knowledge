@@ -15,7 +15,7 @@ export const Waterfall: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const base = 820;
   const H = 480;
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <svg width={1920} height={1080}>
         <defs>
           <pattern id="hatch" width={16} height={16} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">

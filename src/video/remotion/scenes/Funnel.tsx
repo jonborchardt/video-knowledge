@@ -42,7 +42,7 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const titleIn = ramp(t, scene.start + 4, 14);
 
   return (
-    <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
+    <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <div
         style={{
           position: 'absolute',

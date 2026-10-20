@@ -330,7 +330,6 @@ describe('chained questions', () => {
     expect(nested.readiness).toBe('needs-review');
     expect(nested.blocking.join(' ')).toMatch(/chains do not nest/);
     expect(chain(a, [b, b, b]).blocking.join(' ')).toMatch(/at most 3 questions/);
-    expect(chain(a, [b]).blocking.join(' ')).not.toMatch(/claims/); // a short chain is fine
   });
 
   it('a follow-up belongs to one video: a second story chaining it is held', () => {
@@ -342,6 +341,38 @@ describe('chained questions', () => {
     const second = twice.find((s) => s.id === c)!;
     expect(second.readiness).toBe('needs-review');
     expect(second.blocking.join(' ')).toMatch(/already a follow-up in/);
+  });
+});
+
+describe('the list cap counts videos', () => {
+  // Sixteen ready one-claim stories and one sixteen-claim group: discovery lists twelve videos and leaves the rest out.
+  const WORDS = 'alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa';
+  const many = () =>
+    WORDS.split(' ').map((w, i) =>
+      claim(`${w}-claim`, `The ${w} widget doubles yearly output`, {
+        verdicts: [guess('wrong', 0.5), study('RCT A', 'right', 0.7, DOC_A)],
+        sources: sources(2 + (i % 5)),
+      }),
+    );
+  const run = (stories: ReviewFile['stories'] = {}) => {
+    const claims = many();
+    return discover(topic(claims, [{ title: 'Big group', claims }]), reader, { stories }).stories;
+  };
+  const best = () => run()[0].id;
+  const worst = 'surprise:papa-claim'; // ranked below the cap on its own
+
+  it('a chain is one video, ranked by its best question: a weak first question cannot sink a strong follow-up', () => {
+    expect(run().some((s) => s.id === worst)).toBe(false);
+    const listed = run({ [worst]: { chain: [best()], chainWhy: 'next' } });
+    expect(listed.find((s) => s.id === best())?.partOf).toBe(worst);
+    expect(listed.some((s) => s.id === worst)).toBe(true);
+    expect(listed.filter((s) => !s.partOf)).toHaveLength(12);
+  });
+
+  it('a chain over the claim ceiling holds its first story (claims counted once)', () => {
+    const head = run({ [best()]: { chain: ['decision:big-group'], chainWhy: 'next' } }).find((s) => s.id === best())!;
+    expect(head.readiness).toBe('needs-review');
+    expect(head.blocking.join(' ')).toMatch(/at most 14 claims; this one carries 16/);
   });
 });
 
