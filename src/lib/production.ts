@@ -475,11 +475,9 @@ const storyboardStage: BoardStage = ({ topic, storyId, r, read, pkg, script, pla
 
 // 6. Graphics: render.json drafted, every scene renderable, every diagram drawn and every bespoke graphic approved by a
 // visual review, all at the current script, storyboard and render.json (video/render-check.json, written by
-// `npm run video -- check`). Releases locked before this stage existed (no version) are grandfathered.
-const graphicsStage: BoardStage = ({ topic, storyId, root, p, r, release, live, sb }, s) => {
+// `npm run video -- check`).
+const graphicsStage: BoardStage = ({ topic, storyId, root, p, r, live, sb }, s) => {
   if (!live || !sb || s.stopped) return {};
-  // a release locked before this stage existed stays as it is until it goes stale; re-locking needs a render check
-  if (release && release.version !== 2 && !releaseCheck(release, live, sb).length) return {};
   const check = `npm run video -- check ${topic} ${storyId}`;
   if (!existsSync(p('video/render.json')))
     return {

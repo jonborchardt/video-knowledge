@@ -138,8 +138,7 @@ no figure the evidence does not; an invented typical income is not.
 ```
 
 - Sections, in order: `hook`, `setup`, `investigation`, `answer`, `takeaway`; for a package with
-  `questions`, `hook`, `question-1` ... `question-N`, `close`. (A script revised from the older
-  seven-section layout, `findings` to `conclusion`, may keep it; a new script never uses it.)
+  `questions`, `hook`, `question-1` ... `question-N`, `close`.
   Sentence ids `s01`, `s02`, ... stay stable across revisions; a deleted sentence's id
   is not reused.
 - `type`: `factual` (offered as true), `attributed` (reports what a source said), `hypothetical`,

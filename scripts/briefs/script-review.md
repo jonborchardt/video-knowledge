@@ -42,9 +42,8 @@ sentence the passages do not establish is a finding, however likely it sounds.
    `overgeneralization`), the end of each section makes the next question follow, and the `close`
    does not answer a question again.
 8. **Repetition.** Does the sentence tell the viewer something they have already heard: a figure
-   read again, an answer given again in the `answer` or `takeaway` (or a legacy script's findings, implications or conclusion), a limitation repeated after it was stated beside its figure, a hook that lays out
-   the numbers the investigation then gives? A `repetition` warning (a `HINT` on a legacy
-   script's sheet) marks a sentence that re-reads two or more earlier figures; read it and the
+   read again, an answer given again in the `answer` or `takeaway`, a limitation repeated after it was stated beside its figure, a hook that lays out
+   the numbers the investigation then gives? A `repetition` warning marks a sentence that re-reads two or more earlier figures; read it and the
    sentences it names. The `slow-start` and `number-dense` warnings work the same way: retire one
    with a disposition only when the script needs it (a hook that cannot be shorter, a comparison
    that needs every figure), otherwise make it a finding. A restatement that adds

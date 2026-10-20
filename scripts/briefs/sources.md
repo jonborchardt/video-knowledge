@@ -6,7 +6,8 @@ Give an agent this file plus: the topic id, a group name G, which documents in
 JSON file and runs nothing else.
 
 Convert documents to text first: `pdftotext -layout paper.pdf paper.txt`. Line numbers in
-citations refer to the `.txt`.
+citations refer to the `.txt`, counted by LF. Strip any bare carriage return (a table copied from a web page
+often has one between cells): the passage reader treats it as a line break, and a test fails on it.
 
 ## Method
 

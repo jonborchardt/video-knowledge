@@ -148,11 +148,9 @@ npm run script -- lock <topic> <story-id> --approved-by "<name>"   # release.jso
 A script is as long as its story needs, with no word target, and says each thing once. It has five sections: `hook`,
 `setup`, `investigation` (each limitation beside the figure it limits), `answer` (once) and `takeaway` (what the viewer
 can do). A chained story's package lists its `questions`, and its script is `hook`, `question-1` ... `question-N` and
-`close`, each question section answering its own question once. Scripts written before October 2026 keep the older
-seven-section layout (`findings` to `conclusion`) and still validate. On the current layouts the validator warns on
-pacing: `slow-start` (the evidence starts after the first minute), `number-dense` (ten or more figures inside eight
-sentences) and `repetition` (a sentence re-reading two or more figures the viewer already heard); a legacy script's
-sheet shows them as hints.
+`close`, each question section answering its own question once. The validator warns on pacing: `slow-start` (the
+evidence starts after the first minute), `number-dense` (ten or more figures inside eight sentences) and
+`repetition` (a sentence re-reading two or more figures the viewer already heard).
 
 The script is sentences with stable ids, each typed `factual`, `attributed`, `hypothetical`, `rhetorical` or
 `transitional`. A factual or attributed sentence carries one assertion per independent claim it makes, with the
@@ -214,9 +212,6 @@ them keeps the persisted contexts and the same fingerprint. The reviewer may ret
 `dispositions` entry (reason plus sentence fingerprint); it lapses when the sentence changes. `lock` records the
 approved script, package, validation and storyboard fingerprints in `release.json` (refused unless validation is
 `passed` and the storyboard `ok`); a later `validate` or `storyboard` run that drifts from them warns `release-stale`.
-
-Baseline: `mlm-script-v1` is the first locked package (`get-rich-quick/scripts/decision-mlm-and-seminars/release.json`);
-rendering work starts from it.
 
 ### Soundtrack
 
@@ -340,9 +335,9 @@ artifact that owns it (wording to the script, a graphic to its component, pacing
 `render.json`, so a pacing note re-renders by itself; a revised graphic is re-rendered by the run after its visual
 review (only the changed scene chunk renders again).
 
-## Reproducing the MLM video
+## Reproducing a video
 
-A fresh checkout plus these makes `get-rich-quick/scripts/decision-mlm-and-seminars/video/segment.mp4` again:
+A fresh checkout plus these makes a story's `<topic>/scripts/<slug>/video/segment.mp4` again:
 
 - **Node 22+** (`npm ci`); Remotion downloads Chrome on the first render. The ffmpeg and ffprobe used everywhere
   are the ones in Remotion's compositor package; `FFMPEG_DIR` overrides the directory.
@@ -354,12 +349,12 @@ A fresh checkout plus these makes `get-rich-quick/scripts/decision-mlm-and-semin
   The watcher checkout (`../retire-sim/watcher`) is not needed for any video step.
 
 ```
-npm run video -- narrate get-rich-quick decision:mlm-and-seminars     # cached per sentence; --regenerate to redo
-npm run video -- timeline get-rich-quick decision:mlm-and-seminars
-npm run video -- render get-rich-quick decision:mlm-and-seminars [--scene sc17 | --from sc10 --to sc20] [--force]
-npm run video -- qa get-rich-quick decision:mlm-and-seminars
-npm run video -- spike get-rich-quick decision:mlm-and-seminars       # the four above
-npm run video -- package get-rich-quick decision:mlm-and-seminars     # video/review/
+npm run video -- narrate <topic> <story-id>                           # cached per sentence; --regenerate to redo
+npm run video -- timeline <topic> <story-id>
+npm run video -- render <topic> <story-id>                       [--scene sc17 | --from sc10 --to sc20] [--force]
+npm run video -- qa <topic> <story-id>
+npm run video -- spike <topic> <story-id>                             # the four above
+npm run video -- package <topic> <story-id>                           # video/review/
 npm run validate                                                      # typecheck, lint, format, build, tests
 ```
 

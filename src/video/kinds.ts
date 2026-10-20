@@ -57,6 +57,9 @@ export const GENERIC = {
   steps: { component: 'Steps', accepts: ['typography'] }, // numbered stops along a path that draws between them
   stamp: { component: 'Stamp', accepts: ['typography'] }, // one line slammed on as a rubber stamp
   choices: { component: 'Choices', accepts: ['typography'] }, // a question's alternatives as chips, each on its word
+  'trick-vs-document': { component: 'TrickVsDocument', accepts: ['diagram'] }, // the claim beside what its document says
+  'fine-print': { component: 'FinePrint', accepts: ['animation'] }, // a push into a document's fine print
+  waterfall: { component: 'Waterfall', accepts: ['diagram'] }, // paid out, then costs, then what is kept
 } as const satisfies Record<string, KindSpec>;
 
 export type GenericKind = keyof typeof GENERIC;

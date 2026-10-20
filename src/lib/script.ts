@@ -19,32 +19,12 @@ export const WPM_DEFAULT = 150; // narration words per minute; the runtime estim
 export const MAX_REVISIONS = 3;
 /** The answer is given once (`answer`), limits sit beside their figures, and `takeaway` is what the viewer can do. */
 export const SECTIONS = ['hook', 'setup', 'investigation', 'answer', 'takeaway'] as const;
-/** The seven-section layout scripts written before October 2026 use; they still validate against it. */
-export const LEGACY_SECTIONS = [
-  'hook',
-  'setup',
-  'investigation',
-  'findings',
-  'qualifications',
-  'implications',
-  'conclusion',
-] as const;
 /** A video that answers a chain of questions (EvidencePackage.questions): one hook, a block per question, one close. */
 export const CHAIN_SECTIONS = ['hook', 'question-1', 'question-2', 'question-3', 'close'] as const;
-export type SectionName =
-  (typeof SECTIONS)[number] | (typeof LEGACY_SECTIONS)[number] | (typeof CHAIN_SECTIONS)[number];
-const LEGACY_ONLY = LEGACY_SECTIONS.filter((x) => !(SECTIONS as readonly string[]).includes(x));
-/** The sections a script written from this package has, in order: the chain's, the legacy layout when the script
- *  already uses it, the current one otherwise. */
-export const sectionsFor = (
-  pkg: Pick<EvidencePackage, 'questions'> | null,
-  script?: { sections: { name: string }[] },
-): readonly SectionName[] =>
-  pkg?.questions
-    ? ['hook', ...pkg.questions.map((_, i) => `question-${i + 1}` as SectionName), 'close']
-    : script?.sections.some((x) => (LEGACY_ONLY as string[]).includes(x.name))
-      ? LEGACY_SECTIONS
-      : SECTIONS;
+export type SectionName = (typeof SECTIONS)[number] | (typeof CHAIN_SECTIONS)[number];
+/** The sections a script written from this package has, in order. */
+export const sectionsFor = (pkg: Pick<EvidencePackage, 'questions'> | null): readonly SectionName[] =>
+  pkg?.questions ? ['hook', ...pkg.questions.map((_, i) => `question-${i + 1}` as SectionName), 'close'] : SECTIONS;
 export type SentenceType = 'factual' | 'attributed' | 'hypothetical' | 'rhetorical' | 'transitional';
 export type Severity = 'blocking' | 'warning' | 'info';
 export type ScriptStatus = 'passed' | 'needs-review' | 'blocked';

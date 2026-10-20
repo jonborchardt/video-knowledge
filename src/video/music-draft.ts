@@ -28,7 +28,7 @@ const GROUPS: {
   { id: 'setup', sections: ['setup'], variation: 'active', gain: -13, fadeIn: 2, fadeOut: 3 },
   {
     id: 'evidence',
-    sections: ['investigation', 'findings', 'qualifications', 'question-1', 'question-2', 'question-3'],
+    sections: ['investigation', 'question-1', 'question-2', 'question-3'],
     variation: 'texture',
     gain: -13,
     fadeIn: 4,
@@ -36,7 +36,7 @@ const GROUPS: {
   },
   {
     id: 'ending',
-    sections: ['answer', 'takeaway', 'implications', 'conclusion', 'close'],
+    sections: ['answer', 'takeaway', 'close'],
     variation: 'pulse',
     gain: -11,
     fadeIn: 2,

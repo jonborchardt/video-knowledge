@@ -2,13 +2,12 @@
 // contract (anchors, cue sheet validation against the compositions on disk, fingerprints), the mix under a narration
 // track end to end (synthetic WAVs, no TTS, no strudel-bench), what it does not touch (the chunk cache), the report's
 // clearance and the production board's reading of it. The MLM cue sheet is checked against its committed timeline.
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { fileSha, readJson, sha, toJson, ROOT } from '../src/lib/io';
-import { type Script, scriptDir } from '../src/lib/script';
-import type { Storyboard } from '../src/lib/storyboard';
+import { readJson, sha, ROOT } from '../src/lib/io';
+import type { Script } from '../src/lib/script';
 import { draftCueSheet, pickComposition } from '../src/video/music-draft';
 import { probe } from '../src/video/ffmpeg';
 import {
@@ -39,13 +38,12 @@ import {
 import { MUSIC_TOLERANCE } from '../src/video/qa';
 import { sceneKey } from '../src/video/render';
 import { type BuildReport, buildReport } from '../src/video/report';
-import { checkSegment, loadSegment } from '../src/video/select';
+import { checkSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import type { Timeline } from '../src/video/types';
 import {
-  REVIEW_DIR,
+  CHECKLIST,
   REVIEW_FILES,
-  type ReviewPackage,
   chapters,
   renderChecklist,
   renderDescription,
@@ -79,6 +77,38 @@ describe('review package chapters', () => {
     const tight = tl();
     tight.scenes[1].start = 150; // 5 s after the first
     expect(() => chapters(seg({ sc01: 'One', sc02: 'Two', sc03: 'Three' }), tight)).toThrow(/under 10 s: Two/);
+  });
+  it('packages only the mp4 QA checked, and renders every file from the package data', () => {
+    const s = seg({ sc01: 'One', sc02: 'Two', sc03: 'Three' });
+    const t = tl();
+    const built = buildReport(
+      s,
+      t,
+      manifest(inputs()),
+      { file: 'x.mp4', probe: null, renderSeconds: 1 },
+      { ok: true, checks: [], frames: [] },
+      'cmd',
+    );
+    const report: BuildReport = { ...built, output: { ...built.output!, sha: 'checked' } };
+    expect(reviewInputProblem(report, 'checked')).toBeNull();
+    expect(reviewInputProblem(report, 'other')).toMatch(/not the file QA checked/);
+    expect(reviewInputProblem(report, null)).toMatch(/render first/);
+    expect(reviewInputProblem({ ...report, qa: { ...report.qa, ok: false } }, 'checked')).toMatch(/QA failed/);
+    const made = {
+      mp4: 'x-review-private.mp4',
+      mp4Sha: 'checked',
+      buildReport: 'b',
+      thumbnail: false,
+      generatedAt: 'd',
+    };
+    const pkg = reviewData(s, t, report, made);
+    expect(pkg.chapters.map((c) => c.title)).toEqual(['One', 'Two', 'Three']);
+    expect(pkg.files).not.toContain(REVIEW_FILES.thumbnail);
+    expect(renderDescription(pkg, s, t, report)).toContain('0:20 Two');
+    expect(renderReadme(pkg, t, report)).toContain(made.mp4);
+    expect(renderChecklist(pkg, t)).toContain(CHECKLIST[0]);
+    expect(reviewMp4Name(join('t', 'scripts', 'x', 'video'))).toBe('x-review-private.mp4');
+    expect(thumbnailScene(t)).toBeNull(); // the fixture has no title card
   });
 });
 
@@ -554,66 +584,28 @@ describe('build report clearance and the board', () => {
   });
 });
 
-describe('the MLM soundtrack', () => {
-  const dir = join('get-rich-quick', 'scripts', 'decision-mlm-and-seminars', 'video');
-  const tl = readJson<Timeline>(join(dir, 'timeline.json'));
-  const cfg = readJson<MusicConfig>(join(dir, 'music.json'));
-  const assets = existsSync(join('music', 'undertow', 'pulse.wav')); // the WAVs are not committed; CI has none
-  it.skipIf(!tl || !cfg || !assets)('covers the committed timeline end to end with undertow bed sections', () => {
-    const cues = resolveCues(cfg!, tl!, process.cwd());
-    const seconds = tl!.durationInFrames / tl!.fps;
-    expect(new Set(cues.map((c) => c.composition.id))).toEqual(new Set(['undertow']));
-    // music/README.md: no silent stretch, first scene to last; no section with a lead line (motif, rest)
-    expect(cues[0].start).toBe(0);
-    expect(cues.at(-1)!.end).toBeCloseTo(seconds, 6);
-    cues.slice(1).forEach((c, i) => expect(c.start).toBeCloseTo(cues[i].end, 6));
-    for (const c of cues) {
-      expect(['undertow/pulse', 'undertow/active', 'undertow/texture']).toContain(c.asset);
-      expect(c.gain).toBeLessThanOrEqual(-6); // a bed, never a lead
-    }
-    const mix = readJson<MixReport>(join(dir, MIX_FILE));
-    if (mix) expect(mix.compositions.every((c) => c.licence.cleared)).toBe(true);
-  });
-});
-
-describe('the MLM review package', () => {
-  it('regenerates byte-for-byte from the committed build report, timeline and segment', () => {
-    const vdir = join('get-rich-quick', 'scripts', 'decision-mlm-and-seminars', 'video');
-    const rdir = join(vdir, REVIEW_DIR);
-    const committed = readJson<ReviewPackage>(join(rdir, REVIEW_FILES.json))!;
-    const report = readJson<BuildReport>(join(vdir, 'build-report.json'))!;
-    const tl = readJson<Timeline>(join(vdir, 'timeline.json'))!;
-    const seg = loadSegment('get-rich-quick', 'decision:mlm-and-seminars');
-    expect(reviewInputProblem(report, committed.mp4Sha)).toBeNull();
-    expect(reviewInputProblem(report, 'other')).toMatch(/not the file QA checked/);
-    const pkg = reviewData(seg, tl, report, {
-      mp4: reviewMp4Name(vdir),
-      mp4Sha: committed.mp4Sha,
-      buildReport: fileSha(join(vdir, 'build-report.json')),
-      thumbnail: !!thumbnailScene(tl),
-      generatedAt: committed.generatedAt,
-    });
-    const text = (f: string) => readFileSync(join(rdir, f), 'utf8').replace(/\r\n/g, '\n');
-    expect(toJson(pkg)).toBe(text(REVIEW_FILES.json));
-    expect(renderReadme(pkg, tl, report)).toBe(text(REVIEW_FILES.readme));
-    expect(renderDescription(pkg, seg, tl, report)).toBe(text(REVIEW_FILES.description));
-    expect(renderChecklist(pkg, tl)).toBe(text(REVIEW_FILES.checklist));
-  });
-});
-
 describe('cue sheet draft', () => {
-  const dir = scriptDir('heat-pumps', 'decision:when-does-it-pay-for-itself');
-  const script = () => readJson<Script>(join(dir, 'script.json'))!;
-  const sb = () => readJson<Storyboard>(join(dir, 'storyboard.json'))!;
+  // The video fixture's three scenes over a hook, an investigation and an answer.
+  const fixture = () => {
+    const inp = inputs();
+    const [s01, s02, s03] = inp.script.sections.flatMap((x) => x.sentences);
+    const sections: Script['sections'] = [
+      { name: 'hook', sentences: [s01] },
+      { name: 'investigation', sentences: [s02] },
+      { name: 'answer', sentences: [s03] },
+    ];
+    return { script: { ...inp.script, sections }, storyboard: inp.storyboard };
+  };
+  const script = () => fixture().script;
+  const sb = () => fixture().storyboard;
   const undertow = () => readJson<Composition>(join(ROOT, 'music', 'undertow', 'composition.json'))!;
 
   it('draftCueSheet covers every scene contiguously by section', () => {
     const m = draftCueSheet(script(), sb(), undertow());
     expect(m.cues.map((c) => [c.id, c.asset, c.from, c.to])).toEqual([
-      ['opening', 'undertow/pulse', 'sc01', 'sc05'],
-      ['setup', 'undertow/active', 'sc06', 'sc08'],
-      ['evidence', 'undertow/texture', 'sc09', 'sc29'],
-      ['ending', 'undertow/pulse', 'sc30', 'sc34'],
+      ['opening', 'undertow/pulse', 'sc01', 'sc01'],
+      ['evidence', 'undertow/texture', 'sc02', 'sc02'],
+      ['ending', 'undertow/pulse', 'sc03', 'sc03'],
     ]);
   });
 

@@ -22,7 +22,10 @@ still fails its visual review after three revisions; say so in your reply when y
      spoken. Nothing on screen waits long for words spoken late.
    - Browser-safe: no node imports.
 3. Add the component to `COMPONENTS` in `src/video/remotion/scenes/index.ts` (keyed by its file name).
-4. Register a bespoke kind in `src/video/bespoke/<story slug>.ts` (create it, and add it to
+4. Before drawing, check git history: the purged videos' one-off graphics (courtroom, gold-fringe flag, District
+   tiers, UCC ticket signature, courts evidence, toolkit cards, protest strip, MLM pyramid, branch closing) are at
+   commit `d692140` under `src/video/remotion/scenes/` and `src/video/bespoke/`; restore one rather than redraw it.
+   Register a bespoke kind in `src/video/bespoke/<story slug>.ts` (create it, and add it to
    `src/video/bespoke/index.ts` under `<topic>/<story slug>`): `{ component, accepts: [<category>] }`.
    Kind names are unique across videos: prefix them (`hp-`, `mlm-`).
 5. Name the kind for the scene in `video/render.json` `kinds`.

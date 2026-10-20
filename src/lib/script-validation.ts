@@ -22,7 +22,6 @@ import {
   type ScriptReviewFile,
   type ScriptStatus,
   type ScriptValidation,
-  LEGACY_SECTIONS,
   sectionsFor,
   type SentenceResult,
   type Severity,
@@ -166,7 +165,7 @@ function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackag
     if (seen.has(s.id)) top.push(issue(s.id, 'structure', 'blocking', `duplicate sentence id ${s.id}`));
     seen.add(s.id);
   }
-  const names = sectionsFor(pkg, script);
+  const names = sectionsFor(pkg);
   for (const name of names)
     if (!script.sections.some((x) => x.name === name))
       top.push(issue('-', 'structure', pkg?.questions ? 'blocking' : 'warning', `no "${name}" section`));
@@ -598,8 +597,7 @@ export function validateScript(
   const top = scriptIssues(script, all, pkg, hashDoc);
   const merge = mergeReview(script, all, review, pkg, previous);
   top.push(...merge.issues);
-  // Pacing warns on the current layouts only: a legacy seven-section script sees it as hints on the reviewer's sheet.
-  const paced = sectionsFor(pkg, script) === LEGACY_SECTIONS ? new Map<string, Issue[]>() : pacing(all, wpm);
+  const paced = pacing(all, wpm);
   const results = all.map((s) =>
     judgeSentence(
       s,

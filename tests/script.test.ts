@@ -168,11 +168,14 @@ describe('chained questions', () => {
 });
 
 describe('section layouts', () => {
-  const layout = (names: string[]) => ({ sections: names.map((name) => ({ name })) });
-  it('a new script uses the five sections; one already in the legacy seven keeps them', () => {
-    expect(sectionsFor(null, layout(['hook']))).toEqual(['hook', 'setup', 'investigation', 'answer', 'takeaway']);
-    expect(sectionsFor(null, layout(['hook', 'findings']))).toContain('conclusion');
-    expect(sectionsFor(pkg(), layout(['hook', 'answer']))).not.toContain('findings');
+  it('a script has the five sections, or a block per question when its package chains them', () => {
+    expect(sectionsFor(pkg())).toEqual(['hook', 'setup', 'investigation', 'answer', 'takeaway']);
+    const chained = buildPackage(story(), asTopic(t()), read, { review, chain: [story()] });
+    expect(sectionsFor(chained)).toEqual(['hook', 'question-1', 'question-2', 'close']);
+  });
+  it('the retired seven-section names are unknown sections', () => {
+    const old = { ...script([]), sections: [{ name: 'conclusion' as Section['name'], sentences: [] }] };
+    expect(run(old).issues.map((i) => i.explanation)).toContain('unknown section "conclusion"');
   });
 });
 
@@ -213,16 +216,6 @@ describe('pacing', () => {
     expect(
       run(s, r).issues.filter((i) => ['number-dense', 'slow-start'].includes(i.category) && !i.disposition),
     ).toEqual([]);
-  });
-
-  it('a legacy seven-section script gets no pacing warnings', () => {
-    const s = layout([
-      ['hook', [long('s01')]],
-      ['setup', [long('s02')]],
-      ['investigation', ['s03', 's04', 's05', 's06', 's07'].map(dense)],
-      ['conclusion', []],
-    ]);
-    expect(warned(s)).toEqual([]);
   });
 });
 

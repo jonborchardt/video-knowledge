@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
-import { cue, lastWord, lineFrames, spokenAt } from '../../cues';
+import { cue, lineFrames, spokenAt } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { DocStack, PeopleGrid, Snowball, Spreadsheet } from '../glyphs';
 import { GUTTER, clamp01, grow, ramp, theme } from '../theme';
 
 /** Typography scenes: `title` (one line, rule, optional subtitle), `question` (typed on, cursor), `list` (lines build
- *  on their cues or as spoken; `document` option draws a statement outline with callouts), `pair` (two words, arrow).
+ *  on their cues or as spoken; `document` option draws a statement outline with callouts).
  *  Under the pulse brand a title pops in word by word in a gradient, and list lines slide in, each in its own accent,
  *  the newest bright and the earlier ones dimmed. */
 export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
@@ -103,50 +103,6 @@ export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
             <Snowball x={1500 - 500 * (1 - ramp(t, from, 40))} y={820} r={46} roll={-360 * ramp(t, from, 40)} />
           </svg>
         ) : null}
-      </AbsoluteFill>
-    );
-  }
-  if (scene.kind === 'pair') {
-    const dim = cue(scene, 'dim', lastWord(scene) - 30);
-    const d = 1 - 0.7 * ramp(t, dim, 12);
-    return (
-      <AbsoluteFill
-        style={{ background: theme.field, fontFamily: theme.sans, justifyContent: 'center', alignItems: 'center' }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            right: 1080,
-            top: 470,
-            fontSize: 96,
-            color: theme.slate,
-            opacity: ramp(t, Math.min(frames[0], scene.start + 6), 10) * d,
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {lines[0]}
-        </div>
-        <svg
-          width={200}
-          height={40}
-          style={{ position: 'absolute', left: 860, top: 505, opacity: ramp(t, frames[1] - 6, 10) }}
-        >
-          <line x1={0} y1={20} x2={170} y2={20} stroke={theme.muted} strokeWidth={4} />
-          <polygon points="170,8 196,20 170,32" fill={theme.muted} />
-        </svg>
-        <div
-          style={{
-            position: 'absolute',
-            left: 1100,
-            top: 470,
-            fontSize: 96,
-            color: theme.amber,
-            opacity: ramp(t, frames[1], 10),
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {lines[1]}
-        </div>
       </AbsoluteFill>
     );
   }
