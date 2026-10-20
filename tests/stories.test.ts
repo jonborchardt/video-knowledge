@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { ReviewFile } from '../src/lib/review';
-import { discover, loadStories, storyTopicNames } from '../src/lib/stories';
+import { discover, loadStories, staleReviewIds, storyTopicNames } from '../src/lib/stories';
+import { loadTopic } from '../src/lib/topics';
+import { loadReview } from '../src/lib/review';
 import { DOC_A, DOC_B, DOC_C, claim, guess, reader, sources, study, topic } from './corpus';
 
 const FASTER = 'AI tools make experienced developers faster';
@@ -73,9 +75,8 @@ describe('story discovery', () => {
       expect(s.scores.editorial).toBeLessThanOrEqual(1);
       expect(s.question).toMatch(/\?$/);
       expect(s.alternates).toHaveLength(2);
-      expect(s.whyWatch && s.tension && s.evidenceNeeded && s.formatWhy && s.coherence.explanation).toBeTruthy();
+      expect(s.whyWatch && s.tension && s.evidenceNeeded && s.coherence.explanation).toBeTruthy();
       expect(['ready', 'needs-review', 'needs-research']).toContain(s.readiness);
-      expect(['long-form', 'short', 'needs-research']).toContain(s.format);
       expect(s.scores.explanation).toMatch(/not audience data/);
       if (s.readiness !== 'ready') expect(s.blocking.length).toBeGreaterThan(0);
     }
@@ -167,7 +168,6 @@ describe('story discovery', () => {
     expect(s.audit.central.context[0].applicability).toBe('contextual');
     expect(s.audit.central.status).toBe('unverified');
     expect(s.readiness).toBe('needs-research');
-    expect(s.format).toBe('needs-research');
     expect(s.gaps.join(' ')).toMatch(/context only/);
   });
 
@@ -200,17 +200,16 @@ describe('story discovery', () => {
     expect(s.title).toMatch(/^Why do studies disagree/);
   });
 
-  it('7. one thin piece of evidence is a short, not a long-form video', () => {
+  it('7. one thin piece of evidence scores less depth than several studies and sources', () => {
     const c = claim('tests', 'Fast test feedback raises AI code quality', {
       verdicts: [guess('partly', 0.4), study('RCT A', 'right', 0.7, DOC_A)],
       sources: sources(3),
     });
     const { stories } = discover(topic([c]), reader);
     const s = stories[0];
-    expect(s.format).toBe('short');
-    expect(s.formatWhy).toMatch(/1 study/);
     const deep = discover(topic([dayTrading()]), reader).stories[0]; // two studies, six sources, a flip
-    expect(deep.format).toBe('long-form');
+    expect(s.scores.depth).toBeLessThan(deep.scores.depth);
+    expect(s.scores.explanation).toMatch(/1 study/);
   });
 
   it('8. titles never expose the classifier', () => {
@@ -331,6 +330,7 @@ describe('chained questions', () => {
     expect(nested.readiness).toBe('needs-review');
     expect(nested.blocking.join(' ')).toMatch(/chains do not nest/);
     expect(chain(a, [b, b, b]).blocking.join(' ')).toMatch(/at most 3 questions/);
+    expect(chain(a, [b]).blocking.join(' ')).not.toMatch(/claims/); // a short chain is fine
   });
 
   it('a follow-up belongs to one video: a second story chaining it is held', () => {
@@ -346,10 +346,13 @@ describe('chained questions', () => {
 });
 
 describe('committed stories', () => {
+  it.each(storyTopicNames())('%s/story-review.json judges only current candidates', (name) => {
+    expect(staleReviewIds(loadTopic(name), loadReview(name))).toEqual([]);
+  });
   it.each(storyTopicNames())('%s/stories.json is valid and current', (name) => {
     const f = loadStories(name)!;
     expect(f.stories.length).toBeGreaterThanOrEqual(1);
-    expect(f.stories.length).toBeLessThanOrEqual(12);
+    expect(f.stories.filter((s) => !s.partOf).length).toBeLessThanOrEqual(12); // videos; follow-ups ride along
     const ids = f.stories.map((s) => s.id);
     expect(new Set(ids).size).toBe(ids.length);
     for (const s of f.stories) {

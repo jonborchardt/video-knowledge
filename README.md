@@ -82,8 +82,7 @@ Three layers, kept apart:
   alternates, why watch, the tension, the evidence needed and available, the gaps, and the arc. Kind names never
   appear in titles.
 
-Each story carries a coherence score, a format (`long-form`, `short`, or `needs-research`; a script runs as long as its story needs, never padded), and
-separate scores: _editorial_ (mean of coherence, relevance, curiosity, stakes, depth, all corpus heuristics, never
+Each story carries a coherence score and separate scores (a script runs as long as its story needs, never padded): _editorial_ (mean of coherence, relevance, curiosity, stakes, depth, all corpus heuristics, never
 audience data) and _evidence_ (strength of the studies behind the central conclusion, discounted when they only partly
 apply). Overall is 0.6 editorial + 0.4 evidence, scaled by originality against higher-ranked stories. Readiness is
 decided from the central conclusion and the essential findings, never from the scores: `ready` (coherent, verified,

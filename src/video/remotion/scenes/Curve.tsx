@@ -151,15 +151,15 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
             <rect x={L - 40} y={T - 40} width={R - L + 80} height={B - T + 40} />
           </clipPath>
           <linearGradient id={`${id}-area`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor={theme.slate} stopOpacity={theme.motion ? 0.55 : 0.38} />
-            <stop offset="1" stopColor={theme.motion ? theme.violet : theme.slate} stopOpacity={0.03} />
+            <stop offset="0" stopColor={theme.slate} stopOpacity={0.55} />
+            <stop offset="1" stopColor={theme.violet} stopOpacity={0.03} />
           </linearGradient>
           <linearGradient id={`${id}-stroke`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor={theme.motion ? theme.violet : theme.slate} />
+            <stop offset="0" stopColor={theme.violet} />
             <stop offset="1" stopColor={theme.slate} />
           </linearGradient>
           <filter id={`${id}-glow`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation={theme.motion ? 9 : 4} />
+            <feGaussianBlur stdDeviation={9} />
           </filter>
         </defs>
         {/* grid: quarter lines, a solid baseline; ticks from the point labels */}
@@ -192,18 +192,9 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
           })}
         </g>
         <g clipPath={`url(#${id}-clip)`} opacity={lineIn}>
-          {lost ? <path d={lost} fill={theme.red} opacity={theme.motion ? 0.16 + 0.05 * pulse : 0.12} /> : null}
+          {lost ? <path d={lost} fill={theme.red} opacity={0.16 + 0.05 * pulse} /> : null}
           <path d={area} fill={`url(#${id}-area)`} />
-          {theme.motion ? (
-            <path
-              d={path}
-              fill="none"
-              stroke={theme.slate}
-              strokeWidth={14}
-              opacity={0.6}
-              filter={`url(#${id}-glow)`}
-            />
-          ) : null}
+          <path d={path} fill="none" stroke={theme.slate} strokeWidth={14} opacity={0.6} filter={`url(#${id}-glow)`} />
           <path
             d={path}
             fill="none"
@@ -235,7 +226,7 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
             fill="none"
             stroke={theme.amber}
             strokeWidth={3}
-            opacity={(theme.motion ? 0.7 : 0.35) * (1 - pulse)}
+            opacity={0.7 * (1 - pulse)}
           />
           <circle cx={head.x} cy={head.y} r={11} fill={theme.amber} />
         </g>
@@ -259,12 +250,12 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
               opacity: a * (hot ? 1 : 0.85),
               transform: `scale(${0.6 + 0.4 * grow(t, arrive[i], 12)})`,
               transformOrigin: d.left ? 'right bottom' : 'left bottom',
-              textShadow: theme.motion && hot ? `0 0 18px ${theme.amber}` : undefined,
+              textShadow: hot ? `0 0 18px ${theme.amber}` : undefined,
               fontVariantNumeric: 'tabular-nums',
               whiteSpace: 'nowrap',
             }}
           >
-            {theme.motion ? countUp(pts[i].display, pts[i].value, ramp(t, arrive[i], 12)) : pts[i].display}
+            {countUp(pts[i].display, pts[i].value, ramp(t, arrive[i], 12))}
           </div>
         );
       })}
@@ -296,8 +287,8 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 color: theme.fg,
                 borderLeft: `8px solid ${c}`,
                 borderRadius: 10,
-                background: theme.motion ? `linear-gradient(90deg, ${c}44, ${theme.bg}DD)` : theme.raised,
-                boxShadow: theme.motion ? `0 0 ${24 + 12 * pulse}px ${c}66` : undefined,
+                background: `linear-gradient(90deg, ${c}44, ${theme.bg}DD)`,
+                boxShadow: `0 0 ${24 + 12 * pulse}px ${c}66`,
                 opacity: a,
                 transform: `translateX(${(1 - a) * (spot.right ? 60 : -60)}px) scale(${0.9 + 0.1 * grow(t, lines[j], 14)})`,
               }}

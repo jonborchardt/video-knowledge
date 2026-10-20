@@ -101,10 +101,7 @@ const SceneView: FC<{ scene: TimelineScene }> = ({ scene }) => {
     scene.kind === 'quote' && scene.citations.length === scene.onScreenText.length && scene.onScreenText.length > 1;
   return (
     <AbsoluteFill style={{ opacity }}>
-      <AbsoluteFill
-        ref={ref}
-        style={theme.motion ? { transform: `scale(${camera(scene, frame)})`, transformOrigin: '50% 40%' } : undefined}
-      >
+      <AbsoluteFill ref={ref} style={{ transform: `scale(${camera(scene, frame)})`, transformOrigin: '50% 40%' }}>
         <Component scene={scene} />
         {ownCitations ? null : <Citation scene={scene} frame={scene.start + frame} />}
       </AbsoluteFill>
@@ -145,7 +142,7 @@ const Backdrop: FC = () => {
 export const Video: FC<Timeline> = (tl) => {
   return (
     <AbsoluteFill style={{ background: theme.bg }}>
-      {theme.motion ? <Backdrop /> : null}
+      <Backdrop />
       {tl.scenes.map((s) => (
         <Sequence key={s.id} name={s.id} from={s.start} durationInFrames={s.duration}>
           <SceneView scene={s} />

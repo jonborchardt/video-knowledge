@@ -57,7 +57,9 @@ When the package has `questions`, the video answers a chain of them instead: one
 on the first question, then a `question-1`, `question-2`, ... section per question in the
 package's order, then a short `close`. Each question section asks its question in the viewer's
 words, brings in its evidence, carries its qualifications in place, answers it once, and ends on
-what that answer leaves open, which is the next question. Give each question section a `title`
+what that answer leaves open, which is the next question. Each entry in `questions` carries that question's own
+`premise`, `tension`, `whyWatch` and `arc`: frame each section from its own entry, not the first story's. The
+package's `chainWhy` is why each answer raises the next question; the end of each section should make that turn. Give each question section a `title`
 (the question as a chapter title). The `close` ties the answers together in a few sentences and
 does not answer any question again. Each question section must assert at least one claim from
 that question's `claims`; the validator blocks one that does not. Vary sentence

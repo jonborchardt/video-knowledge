@@ -95,14 +95,24 @@ export interface EvidencePackage {
   whyWatch: string;
   tension: string;
   arc: Story['arc'];
-  format: string;
   readiness: string;
   central: { text: string; status: string; decision: string; strength: number; independent: number };
   claims: PackageClaim[];
   documents: PackageDoc[];
   gaps: string[];
-  /** A chained video's questions in order, the first the story's own; absent for a one-question video. */
-  questions?: { story: string; question: string; claims: string[]; central: { text: string; status: string } }[];
+  /** A chained video's questions in order, the first the story's own, each with its own framing; absent for a
+   *  one-question video. `chainWhy` says why each answer raises the next question. */
+  chainWhy?: string;
+  questions?: {
+    story: string;
+    question: string;
+    claims: string[];
+    central: { text: string; status: string };
+    premise: string;
+    tension: string;
+    whyWatch: string;
+    arc: Story['arc'];
+  }[];
 }
 
 export const docOf = (cite: string) => cite.split('#')[0];

@@ -139,6 +139,8 @@ describe('chained questions', () => {
     const q = chained();
     expect(q.questions!.map((x) => x.story)).toEqual([story().id, story().id]);
     expect(q.claims.map((c) => c.id)).toEqual(story().claims);
+    expect(q.questions![1]).toMatchObject({ premise: story().premise, tension: story().tension, arc: story().arc });
+    expect(q.chainWhy).toBe(''); // the fixture review sets none
   });
 
   it("a package refuses more questions than a video answers, and carries every question's gaps", () => {

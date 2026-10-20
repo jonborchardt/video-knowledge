@@ -10,15 +10,15 @@ import { GUTTER, countUp, ramp, theme } from '../theme';
 const swing = (frame: number, from: number) => {
   const x = frame - from;
   if (x <= 0) return 0;
-  return 1 - Math.exp(-x / (theme.motion ? 9 : 6)) * Math.cos(x / 5);
+  return 1 - Math.exp(-x / 9) * Math.cos(x / 5);
 };
 
 /** One percent point on a semicircle dial, 0 to 100: the ticks draw on round the rim, then on the point's
  *  `point:<label>` cue the arc sweeps to the value while the pointer overshoots and settles, the display counting up
  *  in the dial's middle, the point label and the chart's note beneath. The on-screen line (its `line:1` cue or when it
  *  is spoken) is a caption card beside the dial, set apart from it; a line that states a claim ("Claimed: ...") or
- *  options.caption = 'claim' makes the card amber, dashed, in the serif. Under pulse the arc is a glowing gradient,
- *  the pointer tip pulses and the card glows. */
+ *  options.caption = 'claim' makes the card amber, dashed, in the serif. The arc is a glowing gradient, the pointer
+ *  tip pulses and the card glows. */
 export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const chart = scene.chart!;
@@ -33,7 +33,7 @@ export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const cy = 345 + R;
   const fill = ramp(t, at, 34);
   const v = Math.max(0, Math.min(100, p.value));
-  const needle = (180 * v * swing(t, at)) / 100 + (theme.motion ? 0.6 * Math.sin(t / 7) : 0);
+  const needle = (180 * v * swing(t, at)) / 100 + 0.6 * Math.sin(t / 7);
   const arc = `M ${cx - R} ${cy} A ${R} ${R} 0 0 1 ${cx + R} ${cy}`;
   const accent = theme.green;
   const pos = (u: number, r: number) => {
@@ -59,7 +59,7 @@ export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
       <svg width={1920} height={1080} style={{ position: 'absolute', left: 0, top: 0 }} viewBox="0 0 1920 1080">
         <defs>
           <linearGradient id="gauge-arc" gradientUnits="userSpaceOnUse" x1={cx - R} x2={cx + R} y1={0} y2={0}>
-            <stop offset="0" stopColor={theme.motion ? theme.violet : accent} />
+            <stop offset="0" stopColor={theme.violet} />
             <stop offset="0.3" stopColor={accent} />
           </linearGradient>
           <filter id="gauge-glow" x="-20%" y="-20%" width="140%" height="140%">
@@ -116,21 +116,16 @@ export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
           stroke="url(#gauge-arc)"
           strokeWidth={56}
           strokeDasharray={`${v * fill} 200`}
-          filter={theme.motion ? 'url(#gauge-glow)' : undefined}
+          filter="url(#gauge-glow)"
         />
         <g transform={`rotate(${needle} ${cx} ${cy})`} opacity={ramp(t, scene.start + 10, 10)}>
           {/* a pointer across the rim, clear of the figure in the middle: the dial turns about its centre */}
           <path
             d={`M ${cx - R * 0.66} ${cy} L ${cx - R + 40} ${cy - 13} L ${cx - R - 36} ${cy} L ${cx - R + 40} ${cy + 13} Z`}
             fill={theme.fg}
-            filter={theme.motion ? 'url(#gauge-glow)' : undefined}
+            filter="url(#gauge-glow)"
           />
-          <circle
-            cx={cx - R - 36}
-            cy={cy}
-            r={theme.motion ? 9 + 3 * Math.sin(t / 6) : 7}
-            fill={theme.motion ? accent : theme.fg}
-          />
+          <circle cx={cx - R - 36} cy={cy} r={9 + 3 * Math.sin(t / 6)} fill={accent} />
         </g>
         <line x1={cx - R * 0.6} x2={cx + R * 0.6} y1={cy} y2={cy} stroke={theme.line} strokeWidth={3} />
       </svg>
@@ -148,7 +143,7 @@ export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
           color: accent,
           fontVariantNumeric: 'tabular-nums',
           opacity: ramp(t, at, 6),
-          textShadow: theme.motion ? `0 0 ${26 + 8 * Math.sin(t / 10)}px ${accent}99` : undefined,
+          textShadow: `0 0 ${26 + 8 * Math.sin(t / 10)}px ${accent}99`,
         }}
       >
         {countUp(p.display, p.value, fill)}
@@ -182,10 +177,8 @@ export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
             borderRadius: 18,
             border: claim ? `4px dashed ${theme.amber}` : `2px solid ${theme.line}`,
             borderLeft: claim ? `4px dashed ${theme.amber}` : `10px solid ${theme.slate}`,
-            background: claim && theme.motion ? `${theme.amber}14` : theme.raised,
-            boxShadow: theme.motion
-              ? `0 0 ${36 + 10 * Math.sin(t / 11)}px ${claim ? theme.amber : theme.slate}55`
-              : undefined,
+            background: claim ? `${theme.amber}14` : theme.raised,
+            boxShadow: `0 0 ${36 + 10 * Math.sin(t / 11)}px ${claim ? theme.amber : theme.slate}55`,
             opacity: ramp(t, capAt, 12),
             transform: `translateX(${(1 - ramp(t, capAt, 16)) * 60}px)`,
           }}

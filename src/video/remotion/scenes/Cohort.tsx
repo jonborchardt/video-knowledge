@@ -40,7 +40,7 @@ const Shop: FC<{ color: string; lit: number }> = ({ color, lit }) => (
  *  `point:<label>` cue, and on the spoken "class photo" a flash goes off and a viewfinder frames the grid. A percent
  *  series (sc14): all 100 open, then on each point's frame the shops beyond round(value) close in a fixed scatter
  *  (flash red, drop, fade to a dim ghost), the point's label and display update big beside the grid, and the grid
- *  pushes in as the class thins. Under the pulse brand the open shops glow and their windows flicker. No options. */
+ *  pushes in as the class thins. The open shops glow and their windows flicker. No options. */
 export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const chart = scene.chart!;
@@ -105,7 +105,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
         <g
           transform={`translate(${gx + gridW / 2} ${top + gridW / 2}) scale(${zoom}) translate(${-gridW / 2} ${-gridW / 2})`}
         >
-          <g filter={theme.motion ? 'url(#cohort-glow)' : undefined}>
+          <g filter="url(#cohort-glow)">
             {RANK.map((_, i) => {
               const row = Math.floor(i / 10);
               const col = i % 10;
@@ -116,7 +116,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
               const red = ramp(t, c, 6);
               const fall = ramp(t, c + 5, 16);
               const fill = red > 0 ? theme.red : color;
-              const lit = theme.motion ? 0.5 + 0.5 * Math.sin(t / 9 + i * 1.7) : 1;
+              const lit = 0.5 + 0.5 * Math.sin(t / 9 + i * 1.7);
               const s = (cell / 48) * (0.92 - 0.12 * fall);
               return (
                 <g
@@ -181,7 +181,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
             fontVariantNumeric: 'tabular-nums',
             transform: `scale(${0.9 + 0.1 * pop})`,
             transformOrigin: 'left center',
-            textShadow: theme.motion ? `0 0 ${30 + 10 * Math.sin(t / 12)}px ${theme.slate}88` : undefined,
+            textShadow: `0 0 ${30 + 10 * Math.sin(t / 12)}px ${theme.slate}88`,
             whiteSpace: 'nowrap',
           }}
         >
@@ -203,7 +203,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   boxSizing: 'border-box',
                   border: `3px solid ${j === cur ? theme.fg : theme.line}`,
                   background: j < cur ? theme.red : j === cur ? theme.slate : 'transparent',
-                  boxShadow: theme.motion && j === cur ? `0 0 18px ${theme.slate}` : undefined,
+                  boxShadow: j === cur ? `0 0 18px ${theme.slate}` : undefined,
                 }}
               />
             ))}

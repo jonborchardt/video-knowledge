@@ -86,18 +86,14 @@ export const Columns: FC<{ scene: TimelineScene }> = ({ scene }) => {
           </clipPath>
           <linearGradient id={`${id}-col`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor={theme.slate} />
-            <stop
-              offset="1"
-              stopColor={theme.motion ? theme.violet : theme.slate}
-              stopOpacity={theme.motion ? 0.7 : 0.55}
-            />
+            <stop offset="1" stopColor={theme.violet} stopOpacity={0.7} />
           </linearGradient>
           <linearGradient id={`${id}-hot`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor={theme.green} />
             <stop offset="1" stopColor={theme.green} stopOpacity={0.45} />
           </linearGradient>
           <filter id={`${id}-glow`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation={theme.motion ? 14 : 6} />
+            <feGaussianBlur stdDeviation={14} />
           </filter>
         </defs>
         <g opacity={axisIn}>
@@ -127,7 +123,7 @@ export const Columns: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     height={h[i] + 6}
                     rx={10}
                     fill={theme.green}
-                    opacity={(theme.motion ? 0.55 : 0.25) * (0.6 + 0.4 * pulse)}
+                    opacity={0.55 * (0.6 + 0.4 * pulse)}
                     filter={`url(#${id}-glow)`}
                   />
                 ) : null}
@@ -142,16 +138,7 @@ export const Columns: FC<{ scene: TimelineScene }> = ({ scene }) => {
               </g>
             ) : null;
           })}
-          {theme.motion ? (
-            <path
-              d={path}
-              fill="none"
-              stroke={theme.amber}
-              strokeWidth={12}
-              opacity={0.45}
-              filter={`url(#${id}-glow)`}
-            />
-          ) : null}
+          <path d={path} fill="none" stroke={theme.amber} strokeWidth={12} opacity={0.45} filter={`url(#${id}-glow)`} />
           <path
             d={path}
             fill="none"
@@ -160,17 +147,15 @@ export const Columns: FC<{ scene: TimelineScene }> = ({ scene }) => {
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          {theme.motion ? (
-            <path
-              d={path}
-              fill="none"
-              stroke={theme.fg}
-              strokeWidth={3}
-              strokeDasharray="6 40"
-              strokeDashoffset={-(t - scene.start) * 2}
-              opacity={0.7}
-            />
-          ) : null}
+          <path
+            d={path}
+            fill="none"
+            stroke={theme.fg}
+            strokeWidth={3}
+            strokeDasharray="6 40"
+            strokeDashoffset={-(t - scene.start) * 2}
+            opacity={0.7}
+          />
           {trend.map((p, i) => (
             <circle
               key={i}
@@ -219,11 +204,11 @@ export const Columns: FC<{ scene: TimelineScene }> = ({ scene }) => {
               lineHeight: 1,
               color: hot ? theme.green : theme.fg,
               opacity: a,
-              textShadow: theme.motion && hot ? `0 0 18px ${theme.green}` : undefined,
+              textShadow: hot ? `0 0 18px ${theme.green}` : undefined,
               fontVariantNumeric: 'tabular-nums',
             }}
           >
-            {theme.motion ? countUp(pts[i].display, pts[i].value, ramp(t, fills[i], 20)) : pts[i].display}
+            {countUp(pts[i].display, pts[i].value, ramp(t, fills[i], 20))}
           </div>
         );
       })}

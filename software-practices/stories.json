@@ -53,8 +53,6 @@
     "basis": "review",
     "explanation": "One question, do static types pay off: errors caught before running, how much faster the fix is, the repository-scale bug claims that fell apart, and the prototyping speed argued for dynamic typing. The runtime performance claim is a separate question with only a qualified, implementation-bound verdict, so it is pruned; the in-editor feedback claim is folded in from its own candidate."
    },
-   "format": "long-form",
-   "formatWhy": "6 studies bear directly or partly on the question, 10 sources voice the belief, with a contradiction or qualification to explore, across 4 claims.",
    "scores": {
     "coherence": 0.75,
     "relevance": 0.79,
@@ -384,7 +382,7 @@
    },
    "chainCandidates": [
     "decision:10x-developers-and-productivity",
-    "decision:hours-interruptions-and-offices"
+    "decision:continuous-delivery"
    ]
   },
   {
@@ -422,8 +420,6 @@
     "basis": "review",
     "explanation": "One question: does writing the test first produce better code or faster work than testing in small steps afterwards? Three independent studies answer it."
    },
-   "format": "long-form",
-   "formatWhy": "3 studies bear directly or partly on the question, 3 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.9,
     "relevance": 0.46,
@@ -631,8 +627,6 @@
     "basis": "review",
     "explanation": "One question, are 10x programmers real: the spread between programmers, whether 10x is the typical gap, and where the 28:1 legend came from. The hiring claim is a management prescription no study here checks, and its wording is flagged, so it is pruned."
    },
-   "format": "long-form",
-   "formatWhy": "4 studies bear directly or partly on the question, 9 sources voice the belief, with a contradiction or qualification to explore, across 3 claims.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.76,
@@ -938,8 +932,6 @@
     "basis": "review",
     "explanation": "Pruned to one question, can you trust a test suite because of its coverage number: coverage against fault-finding, what a trusted suite buys, and one way suites lose trust. The TDD claims are their own story (chained ahead of this one) and the two test-first beliefs are unchecked."
    },
-   "format": "long-form",
-   "formatWhy": "2 studies bear directly or partly on the question, 9 sources voice the belief, without a contradiction or qualification to explore, across 3 claims.",
    "scores": {
     "coherence": 0.7,
     "relevance": 0.76,
@@ -1170,8 +1162,6 @@
     "basis": "review",
     "explanation": "One question: does who works on the code predict its defects better than measures of the code itself?"
    },
-   "format": "short",
-   "formatWhy": "3 studies bear directly or partly on the question, 1 source voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.85,
     "relevance": 0.23,
@@ -1348,6 +1338,189 @@
    "partOf": "decision:clean-code-and-technical-debt"
   },
   {
+   "id": "decision:continuous-delivery",
+   "kind": "decision",
+   "title": "Does Shipping Faster Mean Breaking More?",
+   "alternates": [
+    "Speed or Stability: Do You Really Have to Choose?",
+    "Why the Teams That Deploy Most Break the Least"
+   ],
+   "question": "If you ship more often, do you break more things?",
+   "whyWatch": "Release freezes and change boards exist because shipping less often feels safer. Six years of DORA survey data checked whether speed and stability really trade off.",
+   "tension": "The intuition is a trade-off: every deploy is a chance to break production. The survey finds the fastest teams are also the most stable.",
+   "evidenceNeeded": "Delivery speed and stability measured together across many teams, and the practices that go with high performance on both.",
+   "evidenceAvailable": [
+    "DORA State of DevOps 2019: right (0.5, direct)",
+    "DORA State of DevOps 2019: partly (0.4, direct)"
+   ],
+   "gaps": [
+    "No study strong enough to decide: \"Trunk-based development with one small change per release increases release frequency and makes rollbacks easier\""
+   ],
+   "premise": "DORA's 2019 State of DevOps report says that for six years running its research has found speed and stability enable each other: a cluster analysis of the four delivery measures (deployment frequency, lead time, change failure rate and time to restore) finds the highest performers significantly better on all four and the lowest performers worse on all four, rather than trading throughput for stability. The same report finds trunk-based development, with frequent check-in to trunk and deployment to production, predictive of those outcomes; it does not measure whether one small change per release makes rollbacks easier. This is a self-selected survey of practitioners analysed as correlations from one research programme: it shows the two go together in the teams surveyed, not that deploying more often by itself makes a team more stable.",
+   "claims": [
+    "software-practices/software-delivery-speed-stability-move-together",
+    "software-practices/trunk-based-development-one-small-change"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Your team ships once a month because every release is scary. Would shipping every day make it scarier?",
+    "conflict": "Each deploy is a chance to break production, so fewer deploys should mean fewer failures. The survey data say otherwise.",
+    "evidence": "DORA's cluster analysis of the four delivery measures, then its finding that trunk-based development with frequent deploys goes with high performance.",
+    "resolution": "In the teams surveyed, the fastest are also the most stable; speed and stability move together, though the survey shows association, not that speed causes stability.",
+    "takeaway": "Do not slow down releases to buy safety; small, frequent changes to trunk go with both speed and stability."
+   },
+   "coherence": {
+    "score": 0.75,
+    "basis": "review",
+    "explanation": "The group mixed delivery outcomes with branching mechanics; pruned to one question, does shipping more often mean breaking more, with trunk-based development as the practice the same survey ties to both. The long-lived-branch claim rests on a 0.3 observation about open source that measures no merge conflicts, and the feature-flag claim is unchecked."
+   },
+   "scores": {
+    "coherence": 0.75,
+    "relevance": 0.68,
+    "curiosity": 0.7,
+    "stakes": 0.7,
+    "depth": 0.68,
+    "originality": 1,
+    "evidence": 0.5,
+    "editorial": 0.7,
+    "overall": 0.62,
+    "explanation": "editorial 0.7 = mean of coherence 0.75 (review), relevance 0.68 (7 sources, 7 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.68 (1 study, 2 claims, tension); evidence 0.5 = strongest DORA State of DevOps 2019 at 0.5 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.75), central conclusion supported, 2 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Software delivery speed and stability move together rather than trading off; the best teams get both.",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.5,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/software-delivery-speed-stability-move-together",
+        "cite": "software-practices/sources/dora2019-state-of-devops.txt#L367-L382"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "DORA State of DevOps 2019",
+       "verdict": "right",
+       "confidence": 0.5,
+       "note": "Six years of survey data show speed and stability are outcomes that enable each other: cluster analysis finds elite performers do significantly better on all four metrics and low performers worse on all, rather than trading throughput for stability.",
+       "applicability": "direct",
+       "basis": "review",
+       "why": "the passage states the sentence itself from six years of survey cluster analysis: the highest performers are significantly better on all four speed and stability measures and the lowest worse on all; 'move together' is a correlational claim, which is what a cluster analysis shows, and the self-selected survey is a limit the premise carries"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [],
+     "problems": [],
+     "limitations": [],
+     "suggestions": [],
+     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.5)."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Software delivery speed and stability move together rather than trading off; the best teams get both.",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.5,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/software-delivery-speed-stability-move-together",
+          "cite": "software-practices/sources/dora2019-state-of-devops.txt#L367-L382"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "DORA State of DevOps 2019",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "Six years of survey data show speed and stability are outcomes that enable each other: cluster analysis finds elite performers do significantly better on all four metrics and low performers worse on all, rather than trading throughput for stability.",
+         "applicability": "direct",
+         "basis": "review",
+         "why": "the passage states the sentence itself from six years of survey cluster analysis: the highest performers are significantly better on all four speed and stability measures and the lowest worse on all; 'move together' is a correlational claim, which is what a cluster analysis shows, and the self-selected survey is a limit the premise carries"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.5)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "Trunk-based development with one small change per release increases release frequency and makes rollbacks easier",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/trunk-based-development-one-small-change",
+          "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1039-L1041"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "DORA State of DevOps 2019",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Survey data show trunk-based development with frequent check-in and deployment to production is predictive of software delivery performance (deploy frequency, lead time, change failure rate, time to restore); rollback ease is not measured.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "DORA State of DevOps 2019: Survey data show trunk-based development with frequent check-in and deployment to production is predictive of software delivery performance (deploy frequency, lead time, change failure rate, time to restore); rollback ease is not measured."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     }
+    ]
+   },
+   "chainCandidates": [
+    "decision:static-vs-dynamic-typing",
+    "decision:10x-developers-and-productivity"
+   ]
+  },
+  {
    "id": "decision:clean-code-and-technical-debt",
    "kind": "decision",
    "title": "Does Messy Code Really Cost You?",
@@ -1381,8 +1554,6 @@
     "basis": "review",
     "explanation": "The group mixed four questions (switch-versus-polymorphism speed, code health, modular design, rewrites); pruned to the only one a study checks, does unhealthy code cost more in defects and change time. The other claims are unchecked beliefs, two with wording flags."
    },
-   "format": "long-form",
-   "formatWhy": "2 studies bear directly or partly on the question, 3 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.85,
     "relevance": 0.46,
@@ -1565,8 +1736,6 @@
     "basis": "review",
     "explanation": "One question: does recording estimates and comparing them with actuals make your future estimates more accurate?"
    },
-   "format": "short",
-   "formatWhy": "2 studies bear directly or partly on the question, 1 source voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.9,
     "relevance": 0.23,
@@ -1709,6 +1878,236 @@
    "partOf": "surprise:relative-size-estimation-more-accurate-time"
   },
   {
+   "id": "decision:estimation-and-agile",
+   "kind": "decision",
+   "title": "Should Your Team Stop Estimating?",
+   "alternates": [
+    "Are Software Estimates Really That Bad?",
+    "NoEstimates: Is Estimating a Waste of Time?"
+   ],
+   "question": "Are software estimates so unreliable that you should stop making them?",
+   "whyWatch": "The NoEstimates movement says estimating is wasted effort because estimates are always wrong. A review of time-prediction research measured how wrong they are, and where.",
+   "tension": "Software is known for overruns, so estimates look useless. The review finds them off by a fifth to a third on average, not biased overall, and too low mainly on larger projects.",
+   "evidenceNeeded": "Measured accuracy and bias of time predictions in software, split by task size, and evidence on what replaces an estimate if you stop.",
+   "evidenceAvailable": [
+    "Halkjelsvik & Jørgensen 2018 (Time Predictions): partly (0.5, direct)",
+    "Halkjelsvik & Jørgensen 2018 (Time Predictions): partly (0.5, partial)",
+    "Halkjelsvik & Jørgensen 2018 (Time Predictions): wrong (0.4, direct)"
+   ],
+   "gaps": [],
+   "premise": "Halkjelsvik and Jørgensen's 2018 review of time-prediction research finds the average error of time predictions, across domains, is around 20 to 30%. In software it did not find a general tendency to underestimate: the median bias is dominated by many small tasks that were predicted without bias or even too pessimistically. Only for projects of at least 100 work hours does the expected overrun appear, with a median of about 20%, so the claim that most projects run late holds for larger projects, not for software work in general. That is a review of studies, not one measurement, and it gives the median and average, not how often individual projects are badly over. On NoEstimates, the authors call the suggestion that people stop giving time predictions before a project starts unrealistic, while agreeing that extrapolating from early progress is a good method; they note it is itself a simple prediction model, and few models beat it. That is the reviewers' judgement, not a test of teams that stopped estimating.",
+   "claims": [
+    "software-practices/most-software-projects-run-late-over",
+    "software-practices/long-horizon-task-estimates-inaccurate-managers",
+    "software-practices/time-spent-estimating-wasted-better-building"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Your estimates were wrong again. Some teams have decided to stop making them altogether.",
+    "conflict": "If estimates are always wrong, the time spent on them is wasted; if they are roughly right, dropping them throws away a useful tool.",
+    "evidence": "The review's 20 to 30% average error, the missing overall bias with small tasks, the 20% median overrun on larger projects, and what the reviewers say about NoEstimates.",
+    "resolution": "Estimates are imperfect rather than useless: roughly a fifth to a third off, unbiased on small tasks and too low on large ones. Measuring early progress and extrapolating, the method NoEstimates favours, is itself a good estimate.",
+    "takeaway": "Keep estimating, but break large work into smaller pieces and update the forecast from how fast the first pieces actually went."
+   },
+   "coherence": {
+    "score": 0.75,
+    "basis": "review",
+    "explanation": "Pruned to one question, are software estimates bad enough to stop making them: how far off they are, where they go wrong (larger work), and the NoEstimates claim that the time is wasted, which is folded in from its own candidate. The deadline-and-overtime claim is a different question (what pressure does to the work) and does not measure overtime; the fixed-budget-increment claim is unchecked."
+   },
+   "scores": {
+    "coherence": 0.75,
+    "relevance": 0.68,
+    "curiosity": 0.7,
+    "stakes": 0.5,
+    "depth": 0.73,
+    "originality": 1,
+    "evidence": 0.5,
+    "editorial": 0.67,
+    "overall": 0.6,
+    "explanation": "editorial 0.67 = mean of coherence 0.75 (review), relevance 0.68 (7 sources, 7 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 0.73 (1 study, 3 claims, tension); evidence 0.5 = strongest Halkjelsvik & Jørgensen 2018 (Time Predictions) at 0.5 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.75), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Most software projects run late or over budget, with few finishing early.",
+     "kind": "fact",
+     "modality": "typical",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/most-software-projects-run-late-over",
+        "cite": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L665-L684"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Halkjelsvik & Jørgensen 2018 (Time Predictions)",
+       "verdict": "partly",
+       "confidence": 0.5,
+       "note": "Systematic review found no general overoptimism in software when small tasks are included, but projects of 100+ hours had a median overrun of about 20%, i.e. more than half of larger projects overran while small tasks were unbiased or overpessimistic.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Halkjelsvik & Jørgensen 2018 (Time Predictions): Systematic review found no general overoptimism in software when small tasks are included, but projects of 100+ hours had a median overrun of about 20%, i.e. more than half of larger projects overran while small tasks were unbiased or overpessimistic."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 1 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Most software projects run late or over budget, with few finishing early.",
+       "kind": "fact",
+       "modality": "typical",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/most-software-projects-run-late-over",
+          "cite": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L665-L684"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Halkjelsvik & Jørgensen 2018 (Time Predictions)",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "Systematic review found no general overoptimism in software when small tasks are included, but projects of 100+ hours had a median overrun of about 20%, i.e. more than half of larger projects overran while small tasks were unbiased or overpessimistic.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Halkjelsvik & Jørgensen 2018 (Time Predictions): Systematic review found no general overoptimism in software when small tasks are included, but projects of 100+ hours had a median overrun of about 20%, i.e. more than half of larger projects overran while small tasks were unbiased or overpessimistic."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "Long-horizon task estimates are inaccurate and managers should not rely on them",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/long-horizon-task-estimates-inaccurate-managers",
+          "cite": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L665-L684"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Halkjelsvik & Jørgensen 2018 (Time Predictions)",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "Review of time-prediction studies finds average error of 20-30% and no general bias, but software projects of at least 100 work hours show a median overrun of about 20%, so large-scope estimates are biased low rather than useless.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Halkjelsvik & Jørgensen 2018 (Time Predictions): Review of time-prediction studies finds average error of 20-30% and no general bias, but software projects of at least 100 work hours show a median overrun of about 20%, so large-scope estimates are biased low rather than useless. [partial: the verdict note limits its own scope (\"rather than\")]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "The evidence does not support \"Time spent estimating is wasted and better spent building\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.4,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/time-spent-estimating-wasted-better-building",
+          "cite": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L4313-L4321"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Halkjelsvik & Jørgensen 2018 (Time Predictions)",
+         "verdict": "wrong",
+         "confidence": 0.4,
+         "note": "The review's authors reject the NoEstimates position that predictions are a waste as unrealistic, noting that extrapolating progress is itself a time prediction and that judgement-based predictions are on average fairly accurate (20-30% error).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [
+        "The strongest support is weak (0.4); say \"one study suggests\" or find stronger evidence."
+       ],
+       "explanation": "supported (qualify): 1 supporting (1 independent, strongest 0.4)."
+      }
+     }
+    ]
+   },
+   "partOf": "surprise:relative-size-estimation-more-accurate-time"
+  },
+  {
    "id": "decision:hours-interruptions-and-offices",
    "kind": "decision",
    "title": "Do Open-Plan Offices Make People Talk More?",
@@ -1745,8 +2144,6 @@
     "basis": "review",
     "explanation": "The group mixed three questions (crunch hours, meetings and focus blocks, open offices); pruned to the one with a direct study, do open-plan offices get people talking. Crunch and meeting claims rest on qualified evidence below 0.5 and the sleep belief has a wording flag."
    },
-   "format": "short",
-   "formatWhy": "1 study bear directly or partly on the question, 3 sources voice the belief, without a contradiction or qualification to explore, across 2 claims.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.46,
@@ -1935,8 +2332,6 @@
     "basis": "review",
     "explanation": "The group mixed pairing and mobbing beliefs with change size; pruned to one question, should you keep changes small for review. The pairing and mob claims are unchecked beliefs and the pair-review claim rests on a 0.25 recommendation."
    },
-   "format": "long-form",
-   "formatWhy": "3 studies bear directly or partly on the question, 10 sources voice the belief, with a contradiction or qualification to explore, across 3 claims.",
    "scores": {
     "coherence": 0.75,
     "relevance": 0.79,
@@ -2196,8 +2591,6 @@
     "basis": "review",
     "explanation": "One question, should a new system start as microservices or a monolith: cost, coordination, boundary mistakes and the modular-monolith alternative. The hype claim is a motive, not part of the answer, so it is pruned."
    },
-   "format": "long-form",
-   "formatWhy": "4 studies bear directly or partly on the question, 13 sources voice the belief, with a contradiction or qualification to explore, across 4 claims.",
    "scores": {
     "coherence": 0.7,
     "relevance": 0.87,
@@ -2498,7 +2891,7 @@
    "kind": "surprise",
    "title": "Are Story Points More Accurate Than Hours?",
    "alternates": [
-    "Story Points vs Hours: What the Research Says",
+    "Story Points vs Hours: Which Lands Closer?",
     "Does Estimating in Points Make You More Accurate?"
    ],
    "question": "Are story points actually more accurate than estimating in hours?",
@@ -2526,8 +2919,6 @@
     "basis": "review",
     "explanation": "One question: are relative-size estimates such as story points more accurate than estimates in hours?"
    },
-   "format": "short",
-   "formatWhy": "1 study bear directly or partly on the question, 1 source voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.9,
     "relevance": 0.23,
@@ -2629,6 +3020,10 @@
     {
      "id": "surprise:estimation-learnable-skill-recording-estimates-comparing",
      "question": "Does tracking your estimates against actuals make you a better estimator?"
+    },
+    {
+     "id": "decision:estimation-and-agile",
+     "question": "Are software estimates so unreliable that you should stop making them?"
     }
    ]
   },
@@ -2669,8 +3064,6 @@
     "basis": "review",
     "explanation": "One question: can mandatory review of every change keep up with continuous delivery? Distinct from decision:pairing-and-code-review, which asks about change size."
    },
-   "format": "short",
-   "formatWhy": "2 studies bear directly or partly on the question, 1 source voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.23,
@@ -2812,6 +3205,532 @@
      }
     ]
    }
+  },
+  {
+   "id": "gap:pairing-mobbing-puts-best-each-participant",
+   "kind": "gap",
+   "title": "Does Pair Programming Really Produce Better Code?",
+   "alternates": [
+    "Pairing and Mobbing: Better Code or Just More People?",
+    "Two Heads at One Keyboard: Does It Pay?"
+   ],
+   "question": "Does pair or mob programming really give you the best of everyone in the room?",
+   "whyWatch": "Six sources say pairing and mobbing put each person's best into the code and filter out the worst, and teams pay for that belief in developer hours; nothing in the corpus measures it.",
+   "tension": "Advocates describe fewer mistakes and shared knowledge from experience; a pair costs two people's time, and whether the code is that much better is the open question.",
+   "evidenceNeeded": "Controlled comparisons of pairs or mobs against individuals on the same tasks, measuring defects, design quality and total effort.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether pairing or mobbing puts the best of each participant into the code and rarely the worst?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "6 sources assert \"Pairing or mobbing puts the best of each participant into the code and rarely the worst\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "software-practices/pairing-mobbing-puts-best-each-participant"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: does code written by a pair or a mob take the best of each person? It was pruned from decision:pairing-and-code-review as unchecked and is its own question, about collaboration rather than change size."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.64,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.35,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.6,
+    "overall": 0.36,
+    "explanation": "editorial 0.6 = mean of coherence 0.8 (review), relevance 0.64 (6 sources, 4 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "6 sources claim \"Pairing or mobbing puts the best of each participant into the code and rarely the worst\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "typical",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+        "source": "5cvaCq1q9_E"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Mob Programming, A Whole Team Approach -  Woody Zuill",
+       "verdict": null,
+       "confidence": null,
+       "note": "when I work with a pair the best of both of us and almost never the worst of either of us gets into it"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+        "source": "UQrlEXU6RM8"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Why Pull Requests Are a Bad Idea • Dave Farley • GOTO 2022",
+       "verdict": null,
+       "confidence": null,
+       "note": "pairs make progress and nearly but not quite twice the rate of an individual working alone but they also produce work with significantly fewer defects"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+        "source": "aItVJprLYkg"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "You Must Be CRAZY To Do Pair Programming",
+       "verdict": null,
+       "confidence": null,
+       "note": "all of the studies that I've ever seen show this increase in quality"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+        "source": "martinfowler-on-pair-programming"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "On Pair Programming",
+       "verdict": null,
+       "confidence": null,
+       "note": "When we pair, we have 4 eyes on the little and the bigger things as we go, more errors will get caught"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+        "source": "martinfowler-pairprogrammingmisconceptions"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Pair Programming Misconceptions",
+       "verdict": null,
+       "confidence": null,
+       "note": "a pair is actually more productive that two separate developers. This is due to the continuous discussion and review"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+        "source": "xS6yH0VqJjw"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "\"Pair Programming Fixed Our Pull Request Bottlenecks\"",
+       "verdict": null,
+       "confidence": null,
+       "note": "on the defects side we have very few defects in production"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 6 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "6 sources claim \"Pairing or mobbing puts the best of each participant into the code and rarely the worst\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "typical",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+          "source": "5cvaCq1q9_E"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Mob Programming, A Whole Team Approach -  Woody Zuill",
+         "verdict": null,
+         "confidence": null,
+         "note": "when I work with a pair the best of both of us and almost never the worst of either of us gets into it"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+          "source": "UQrlEXU6RM8"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Why Pull Requests Are a Bad Idea • Dave Farley • GOTO 2022",
+         "verdict": null,
+         "confidence": null,
+         "note": "pairs make progress and nearly but not quite twice the rate of an individual working alone but they also produce work with significantly fewer defects"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+          "source": "aItVJprLYkg"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "You Must Be CRAZY To Do Pair Programming",
+         "verdict": null,
+         "confidence": null,
+         "note": "all of the studies that I've ever seen show this increase in quality"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+          "source": "martinfowler-on-pair-programming"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "On Pair Programming",
+         "verdict": null,
+         "confidence": null,
+         "note": "When we pair, we have 4 eyes on the little and the bigger things as we go, more errors will get caught"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+          "source": "martinfowler-pairprogrammingmisconceptions"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Pair Programming Misconceptions",
+         "verdict": null,
+         "confidence": null,
+         "note": "a pair is actually more productive that two separate developers. This is due to the continuous discussion and review"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
+          "source": "xS6yH0VqJjw"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "\"Pair Programming Fixed Our Pull Request Bottlenecks\"",
+         "verdict": null,
+         "confidence": null,
+         "note": "on the defects side we have very few defects in production"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 6 source statements."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "gap:writing-tests-first-forces-code-decoupled",
+   "kind": "gap",
+   "title": "Does Test-First Really Lead to Better Design?",
+   "alternates": [
+    "TDD and Code Design: Does Testability Come for Free?",
+    "Is Decoupled Code a Side Effect of Writing Tests First?"
+   ],
+   "question": "Does writing tests first really force cleaner, less tangled code?",
+   "whyWatch": "Six sources defend TDD less for bug counts than for design, saying test-first forces decoupled, testable code; the TDD experiments in the corpus measured other outcomes.",
+   "tension": "If the order of tests does not change quality, as the experiments found, the design argument is the one left; nobody here has measured it.",
+   "evidenceNeeded": "Studies comparing coupling, cohesion or other internal design metrics of code written test-first against test-last, on comparable tasks.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether writing tests first forces the code to be decoupled and testable by construction?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "6 sources assert \"Writing tests first forces the code to be decoupled and testable by construction\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "software-practices/writing-tests-first-forces-code-decoupled"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: does writing the test first produce more decoupled, testable design? Distinct from surprise:test-driven-development-produces-better-quality, whose studies measure external quality and productivity, not design structure."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.64,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.35,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.6,
+    "overall": 0.36,
+    "explanation": "editorial 0.6 = mean of coherence 0.8 (review), relevance 0.64 (6 sources, 6 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "6 sources claim \"Writing tests first forces the code to be decoupled and testable by construction\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+        "source": "4SIpyrko-x4"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Why you should write tests first - Uncle Bob",
+       "verdict": null,
+       "confidence": null,
+       "note": "you cannot write the code that's hard to test if you write the test first"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+        "source": "HBqhjLaZejA"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Mutation Testing in Python with Cosmic Ray - Austin Bingham - NDC TechTown 2024",
+       "verdict": null,
+       "confidence": null,
+       "note": "good testing results in better design almost always in my experience"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+        "source": "KoL_or1P4f4"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Accelerate: The State of DevOps with Dr. Nicole Forsgren",
+       "verdict": null,
+       "confidence": null,
+       "note": "when developers help write tests we write better and more testable code"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+        "source": "blog-cleancoder-monogamoustdd"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Clean Coder Blog",
+       "verdict": null,
+       "confidence": null,
+       "note": "Writing tests first requires decoupling that other testing strategies do not"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+        "source": "github-aposd-vs-clean-code"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "GitHub - johnousterhout/aposd-vs-clean-code: A discussion between John Ousterhout and Robert Martin about differences between John's book \"A Philosophy of Software Design\" and Bob's book \"Clean Code\".",
+       "verdict": null,
+       "confidence": null,
+       "note": "every small part of the system must be designed to be testable, and testability requires decoupling"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+        "source": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "A Response to “Why Most Unit Testing is Waste”",
+       "verdict": null,
+       "confidence": null,
+       "note": "I was quite surprised at how much better separated my code become when I started writing unit testing as I was developing."
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 6 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "6 sources claim \"Writing tests first forces the code to be decoupled and testable by construction\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+          "source": "4SIpyrko-x4"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Why you should write tests first - Uncle Bob",
+         "verdict": null,
+         "confidence": null,
+         "note": "you cannot write the code that's hard to test if you write the test first"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+          "source": "HBqhjLaZejA"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Mutation Testing in Python with Cosmic Ray - Austin Bingham - NDC TechTown 2024",
+         "verdict": null,
+         "confidence": null,
+         "note": "good testing results in better design almost always in my experience"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+          "source": "KoL_or1P4f4"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Accelerate: The State of DevOps with Dr. Nicole Forsgren",
+         "verdict": null,
+         "confidence": null,
+         "note": "when developers help write tests we write better and more testable code"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+          "source": "blog-cleancoder-monogamoustdd"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Clean Coder Blog",
+         "verdict": null,
+         "confidence": null,
+         "note": "Writing tests first requires decoupling that other testing strategies do not"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+          "source": "github-aposd-vs-clean-code"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "GitHub - johnousterhout/aposd-vs-clean-code: A discussion between John Ousterhout and Robert Martin about differences between John's book \"A Philosophy of Software Design\" and Bob's book \"Clean Code\".",
+         "verdict": null,
+         "confidence": null,
+         "note": "every small part of the system must be designed to be testable, and testability requires decoupling"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
+          "source": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "A Response to “Why Most Unit Testing is Waste”",
+         "verdict": null,
+         "confidence": null,
+         "note": "I was quite surprised at how much better separated my code become when I started writing unit testing as I was developing."
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 6 source statements."
+      }
+     }
+    ]
+   }
   }
  ],
  "rejected": [
@@ -2819,6 +3738,11 @@
    "id": "surprise:editor-type-errors-give-faster-feedback",
    "title": "Is it really true that in-editor type errors give faster feedback than running the program and tracing a crash?",
    "reason": "duplicate of decision:static-vs-dynamic-typing, which asks the broader question with the same experiments (Kleinschmager 2012, Hanenberg 2014) and now carries this claim; two videos would tell the viewer the same conclusion"
+  },
+  {
+   "id": "surprise:time-spent-estimating-wasted-better-building",
+   "title": "Is it really true that time spent estimating is wasted and better spent building?",
+   "reason": "a chapter of decision:estimation-and-agile, which now carries this claim: whether estimating is wasted is the NoEstimates half of the same question (are estimates bad enough to stop), and alone it rests on one review's 0.4 judgement with no test of teams that stopped estimating"
   }
  ]
 }

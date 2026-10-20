@@ -59,12 +59,12 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <defs>
           <linearGradient id={`${id}-band`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor={theme.motion ? theme.violet : theme.slate} />
+            <stop offset="0" stopColor={theme.violet} />
             <stop offset="0.5" stopColor={theme.slate} />
-            <stop offset="1" stopColor={theme.motion ? theme.violet : theme.slate} />
+            <stop offset="1" stopColor={theme.violet} />
           </linearGradient>
           <filter id={`${id}-glow`} x="-30%" y="-80%" width="160%" height="260%">
-            <feGaussianBlur stdDeviation={theme.motion ? 16 : 6} />
+            <feGaussianBlur stdDeviation={16} />
           </filter>
         </defs>
         <g transform={`translate(${cx} ${y[k] + bh / 2 + float}) scale(${s}) translate(${-cx} ${-(y[k] + bh / 2)})`}>
@@ -118,7 +118,7 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     height={bh}
                     rx={14}
                     fill={theme.slate}
-                    opacity={(theme.motion ? 0.6 : 0.25) * (0.6 + 0.4 * pulse)}
+                    opacity={0.6 * (0.6 + 0.4 * pulse)}
                     filter={`url(#${id}-glow)`}
                   />
                 ) : null}
@@ -172,7 +172,7 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   opacity={ramp(t, fills[i] + 4, 8)}
                   style={{ fontVariantNumeric: 'tabular-nums' }}
                 >
-                  {theme.motion ? countUp(p.display, p.value, ramp(t, fills[i], 18)) : p.display}
+                  {countUp(p.display, p.value, ramp(t, fills[i], 18))}
                 </text>
               </g>
             );
@@ -205,8 +205,8 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 color: theme.fg,
                 borderLeft: `8px solid ${theme.red}`,
                 borderRadius: 10,
-                background: theme.motion ? `linear-gradient(90deg, ${theme.red}44, ${theme.bg}DD)` : theme.raised,
-                boxShadow: theme.motion ? `0 0 ${24 + 12 * pulse}px ${theme.red}66` : undefined,
+                background: `linear-gradient(90deg, ${theme.red}44, ${theme.bg}DD)`,
+                boxShadow: `0 0 ${24 + 12 * pulse}px ${theme.red}66`,
               }}
             >
               {line}

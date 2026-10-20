@@ -4,8 +4,8 @@ import { pointFrames } from '../../chart';
 import type { TimelineScene } from '../../types';
 import { GUTTER, countUp, grow, ramp, theme } from '../theme';
 
-/** sc13: one tile per chart point, revealed on its `point:<label>` cue; the tile at options.alert turns red. Under the
- *  pulse brand each tile springs up in its own accent, glowing, its figure counting up. */
+/** sc13: one tile per chart point, revealed on its `point:<label>` cue; each tile springs up in its own accent, glowing,
+ *  its figure counting up; the tile at options.alert turns red. */
 export const StatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const chart = scene.chart!;
@@ -42,11 +42,11 @@ export const StatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
               width: W,
               height: 420,
               borderRadius: 18,
-              background: theme.motion ? `linear-gradient(160deg, ${accent}33, ${theme.raised} 60%)` : theme.raised,
-              border: `3px solid ${theme.motion ? accent : red ? `rgba(201,71,61,${red})` : theme.line}`,
-              boxShadow: theme.motion ? `0 0 40px ${accent}55` : undefined,
+              background: `linear-gradient(160deg, ${accent}33, ${theme.raised} 60%)`,
+              border: `3px solid ${accent}`,
+              boxShadow: `0 0 40px ${accent}55`,
               opacity: a,
-              transform: theme.motion ? `scale(${0.8 + 0.2 * pop})` : `translateY(${(1 - a) * 30}px)`,
+              transform: `scale(${0.8 + 0.2 * pop})`,
               padding: 40,
               boxSizing: 'border-box',
               display: 'flex',
@@ -58,14 +58,14 @@ export const StatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
               style={{
                 fontSize: 84,
                 fontWeight: 700,
-                color: theme.motion ? accent : red ? theme.red : theme.fg,
-                textShadow: theme.motion ? `0 0 24px ${accent}88` : undefined,
+                color: accent,
+                textShadow: `0 0 24px ${accent}88`,
                 lineHeight: 1.05,
                 letterSpacing: -1,
                 fontVariantNumeric: 'tabular-nums',
               }}
             >
-              {theme.motion ? countUp(p.display, p.value, ramp(t, fills[i], 24)) : p.display}
+              {countUp(p.display, p.value, ramp(t, fills[i], 24))}
             </div>
             <div style={{ fontSize: 34, color: theme.muted, marginTop: 24, lineHeight: 1.3 }}>{p.label}</div>
           </div>

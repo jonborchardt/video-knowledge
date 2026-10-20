@@ -80,7 +80,7 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
         const fall = clamp01(st / 7);
         const sc = st < 7 ? 2.4 - 1.4 * fall * fall : 1;
         const squash = st >= 7 && st < 19 ? Math.sin(((st - 7) / 12) * Math.PI) * (1 - (st - 7) / 12) : 0;
-        const breathe = theme.motion && landed ? 0.03 * Math.sin((t - r.stamp) / 9) : 0;
+        const breathe = landed ? 0.03 * Math.sin((t - r.stamp) / 9) : 0;
         const tint = ramp(t, r.stamp + 4, 12);
         const R = rowH * 0.36;
         return (
@@ -93,11 +93,9 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
               width,
               height: rowH,
               borderRadius: 20 * k + 6,
-              background: theme.motion
-                ? `linear-gradient(90deg, ${theme.raised}, ${color}${tint > 0 ? '30' : '00'})`
-                : theme.raised,
+              background: `linear-gradient(90deg, ${theme.raised}, ${color}${tint > 0 ? '30' : '00'})`,
               border: `3px solid ${tint > 0.5 ? color : theme.line}`,
-              boxShadow: theme.motion && tint > 0 ? `0 0 ${36 * tint}px ${color}55` : undefined,
+              boxShadow: tint > 0 ? `0 0 ${36 * tint}px ${color}55` : undefined,
               opacity: a * dim,
               transform: `translateX(${(1 - a) * -80}px)`,
               boxSizing: 'border-box',
@@ -148,7 +146,7 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   fontSize: 46 * k,
                   lineHeight: 1.15,
                   color: landed ? color : theme.muted,
-                  textShadow: theme.motion && landed ? `0 0 20px ${color}88` : undefined,
+                  textShadow: landed ? `0 0 20px ${color}88` : undefined,
                   opacity: 0.55 + 0.45 * tint,
                 }}
               >
@@ -187,10 +185,10 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 >
                   <circle
                     r={R}
-                    fill={theme.motion ? `${color}26` : theme.bg}
+                    fill={`${color}26`}
                     stroke={color}
                     strokeWidth={8}
-                    style={theme.motion ? { filter: `drop-shadow(0 0 14px ${color})` } : undefined}
+                    style={{ filter: `drop-shadow(0 0 14px ${color})` }}
                   />
                   <g transform={`scale(${(R / 60) * grow(t, r.stamp + 4, 10)})`}>
                     <Glyph mark={r.mark} d={ramp(t, r.stamp + 5, 14)} color={color} />

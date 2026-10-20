@@ -45,8 +45,6 @@
     "basis": "review",
     "explanation": "One question: can developers tell whether AI is speeding them up? Two trials measured perception against the clock and disagree."
    },
-   "format": "long-form",
-   "formatWhy": "Two trials with contrasting designs, a third document on why self-reports fail, and twenty-one sources repeating the belief.",
    "scores": {
     "coherence": 0.9,
     "relevance": 1,
@@ -301,8 +299,6 @@
     "basis": "review",
     "explanation": "One question, the size of the productivity gain, answered by the field trials' estimate, the slowdown trial, the 10x claim it bounds, and the argument that newer models change the answer. The perception claim is its own story and is dropped."
    },
-   "format": "long-form",
-   "formatWhy": "Five trials and reports with a coherent spread of results, a claim to bound, a time dimension, and thirty-plus sources voicing the beliefs.",
    "scores": {
     "coherence": 0.9,
     "relevance": 1,
@@ -719,8 +715,6 @@
     "basis": "review",
     "explanation": "One question, whether AI-written code is harder to live with, answered by the maintainability trial, the issue rates in AI commits, and what AI assistance does to the author's own understanding. The technical-debt claim is carried in the premise as the belief the trial contradicts, not as a finding."
    },
-   "format": "long-form",
-   "formatWhy": "A preregistered trial, a large commit study, a survey, a review and an experiment on understanding, with eight sources voicing the fear.",
    "scores": {
     "coherence": 0.85,
     "relevance": 0.91,
@@ -1123,8 +1117,6 @@
     "basis": "review",
     "explanation": "One question, who gains more from AI coding tools, answered by the senior-versus-junior results across six trials, the concentration of gains on unfamiliar or routine work, and the role of skill in using the tools."
    },
-   "format": "long-form",
-   "formatWhy": "Six trials with a consistent split and one exception to explain, nine sources voicing the belief and two denying it.",
    "scores": {
     "coherence": 0.9,
     "relevance": 1,
@@ -1788,8 +1780,6 @@
     "basis": "review",
     "explanation": "One question, why AI help can cost experts time, answered by the acceptance and review-time finding, the shift of the bottleneck to review, and the skill needed to verify."
    },
-   "format": "long-form",
-   "formatWhy": "A trial result with a mechanism, a company report, a review and an internal study, across three claims.",
    "scores": {
     "coherence": 0.85,
     "relevance": 1,
@@ -2191,8 +2181,6 @@
     "basis": "review",
     "explanation": "One question about one failure mode."
    },
-   "format": "short",
-   "formatWhy": "3 studies bear directly or partly on the question, 5 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.59,
@@ -2408,8 +2396,6 @@
     "basis": "review",
     "explanation": "One question: if coding was never the bottleneck, how much can faster coding help end to end?"
    },
-   "format": "short",
-   "formatWhy": "2 studies bear directly or partly on the question, 21 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 1,
@@ -2593,8 +2579,6 @@
     "basis": "review",
     "explanation": "One question about one workflow."
    },
-   "format": "short",
-   "formatWhy": "2 studies bear directly or partly on the question, 10 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.79,
@@ -2772,8 +2756,6 @@
     "basis": "review",
     "explanation": "One claim with two halves, only one of them studied."
    },
-   "format": "needs-research",
-   "formatWhy": "1 study bear directly or partly on the question, 16 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.93,
@@ -2919,8 +2901,6 @@
     "basis": "review",
     "explanation": "One question about one practice."
    },
-   "format": "short",
-   "formatWhy": "1 study bear directly or partly on the question, 8 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.72,
@@ -3066,8 +3046,6 @@
     "basis": "review",
     "explanation": "One question about one practice: do AI reviewers find real defects that human review let through?"
    },
-   "format": "needs-research",
-   "formatWhy": "0 studies bear directly or partly on the question, 14 sources voice the belief, without a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.89,
@@ -3539,8 +3517,6 @@
     "basis": "review",
     "explanation": "One question about one measured trend."
    },
-   "format": "needs-research",
-   "formatWhy": "0 studies bear directly or partly on the question, 7 sources voice the belief, without a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.68,
@@ -3790,6 +3766,506 @@
        ],
        "suggestions": [],
        "explanation": "supported (approved): no direct support, 7 source statements."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "gap:open-weight-coding-models-now-handle",
+   "kind": "gap",
+   "title": "Can a Free Open Model Do Your Everyday Coding?",
+   "alternates": [
+    "Open-Weight vs Closed Coding Models: How Big Is the Gap?",
+    "Do You Still Need to Pay for the Best Coding Model?"
+   ],
+   "question": "Are free open-weight models now good enough for everyday coding?",
+   "whyWatch": "Five sources say open-weight models now handle routine coding and only trail at the top, which decides whether a team can self-host instead of paying per token; none shows a measurement, and vendor leaderboard posts are the only numbers in circulation.",
+   "tension": "Benchmark announcements say the gap has nearly closed; the sources who say so offer impressions, and nothing in the corpus tests either model family on real work.",
+   "evidenceNeeded": "An independent evaluation running open-weight and closed models on the same realistic coding tasks, with contamination controls, reporting success rates on routine tasks and the gap at the hardest ones.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "5 sources assert \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "ai-coding/open-weight-coding-models-now-handle"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: can a free, self-hostable model do everyday coding work, and how far behind the best closed models is it?"
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.72,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.35,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.61,
+    "overall": 0.37,
+    "explanation": "editorial 0.61 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "5 sources claim \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "hFzapS8rhEs"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Two People Vibe Coded a $1.8B Company. Yes, This is AI Takeoff.",
+       "verdict": null,
+       "confidence": null,
+       "note": "85.2 compares to 92% for GPT 5.4 ... So, it's not all the way there, but these are tiny models"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "tFffUnSq7VA"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
+       "verdict": null,
+       "confidence": null,
+       "note": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "ulfZwEa1x_o"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "DeepSeek R1 vs Kimi K2 vs Qwen3 Coder vs GLM 4.5 - Head-to-Head Testing!",
+       "verdict": null,
+       "confidence": null,
+       "note": "every single one of these is something that is open source ... All of the results were acceptable"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "zanlib-do-you-still-read-the-code"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "\"Do You Still Read the Code?\" • zanlib",
+       "verdict": null,
+       "confidence": null,
+       "note": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "source": "zuJyJP517Uw"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
+       "verdict": null,
+       "confidence": null,
+       "note": "they're seven months behind and that gap is gradually narrowing"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 5 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "5 sources claim \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "hFzapS8rhEs"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Two People Vibe Coded a $1.8B Company. Yes, This is AI Takeoff.",
+         "verdict": null,
+         "confidence": null,
+         "note": "85.2 compares to 92% for GPT 5.4 ... So, it's not all the way there, but these are tiny models"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "tFffUnSq7VA"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
+         "verdict": null,
+         "confidence": null,
+         "note": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "ulfZwEa1x_o"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "DeepSeek R1 vs Kimi K2 vs Qwen3 Coder vs GLM 4.5 - Head-to-Head Testing!",
+         "verdict": null,
+         "confidence": null,
+         "note": "every single one of these is something that is open source ... All of the results were acceptable"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "zanlib-do-you-still-read-the-code"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "\"Do You Still Read the Code?\" • zanlib",
+         "verdict": null,
+         "confidence": null,
+         "note": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "source": "zuJyJP517Uw"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
+         "verdict": null,
+         "confidence": null,
+         "note": "they're seven months behind and that gap is gradually narrowing"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 5 source statements."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "gap:coding-agents-run-tools-loop-step",
+   "kind": "gap",
+   "title": "Are Coding Agents a Leap Beyond Chatbots?",
+   "alternates": [
+    "Agent or Chat Window: Which Actually Gets More Done?",
+    "Why Everyone Says Agents Changed AI Coding"
+   ],
+   "question": "Are coding agents that run tools themselves really a leap beyond chatting with an AI?",
+   "whyWatch": "Six sources describe agents that edit, run and test code in a loop as a step change over copy-pasting from a chat, and that belief drives which tools teams buy; nobody in the corpus has put the two side by side.",
+   "tension": "Practitioners report the agent shift as obvious from experience; the trials in the corpus measure AI assistance in general and never compare an agent with a chat assistant on the same tasks.",
+   "evidenceNeeded": "A controlled comparison of the same developers on the same tasks with an agentic tool against a chat assistant, measuring completion time, success and rework.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether coding agents that run tools in a loop are a step change in usefulness over chat-based LLM assistance?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "6 sources assert \"Coding agents that run tools in a loop are a step change in usefulness over chat-based LLM assistance\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "ai-coding/coding-agents-run-tools-loop-step"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: does letting the model run tools in a loop make it far more useful than chatting with it? Distinct from decision:how-much-faster (overall speed-up from any AI tool) and conflict:goal-loop-commands-prompt-agent-until (leaving an agent unattended on a backlog)."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.64,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.35,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.6,
+    "overall": 0.36,
+    "explanation": "editorial 0.6 = mean of coherence 0.8 (review), relevance 0.64 (6 sources, 6 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "6 sources claim \"Coding agents that run tools in a loop are a step change in usefulness over chat-based LLM assistance\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/coding-agents-run-tools-loop-step",
+        "source": "5tK-Y0kn_zE"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Reconsidering AI w / Steve Klabnik",
+       "verdict": null,
+       "confidence": null,
+       "note": "I hated spicy autocomplete and I love agentic style coding"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/coding-agents-run-tools-loop-step",
+        "source": "MrfiUMm2Qxk"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Broken AI Discourse with Steve Klabnik",
+       "verdict": null,
+       "confidence": null,
+       "note": "if you're doing any copy pasting at all you're not getting the experience that either of us have been talking about for an hour"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/coding-agents-run-tools-loop-step",
+        "source": "fly-youre-all-nuts"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "My AI Skeptic Friends Are All Nuts",
+       "verdict": null,
+       "confidence": null,
+       "note": "pasting the resulting (broken) code into your editor, you're not doing what the AI boosters are doing."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/coding-agents-run-tools-loop-step",
+        "source": "mitchellh-my-ai-adoption-journey"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "My AI Adoption Journey",
+       "verdict": null,
+       "confidence": null,
+       "note": "To find value, you must use an agent."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/coding-agents-run-tools-loop-step",
+        "source": "r0NWWDPiavg"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Learning to Code with AI and Steve Klabnik",
+       "verdict": null,
+       "confidence": null,
+       "note": "Claude had invoked GDB to examine the binary."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "ai-coding/coding-agents-run-tools-loop-step",
+        "source": "u_k9cwDNPcM"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "A Year of Agents | Armin Ronacher | CodeCrafts 2026",
+       "verdict": null,
+       "confidence": null,
+       "note": "I said like I would be challenged if it's more than 10%. And that was that was completely invalidated"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 6 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "6 sources claim \"Coding agents that run tools in a loop are a step change in usefulness over chat-based LLM assistance\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/coding-agents-run-tools-loop-step",
+          "source": "5tK-Y0kn_zE"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Reconsidering AI w / Steve Klabnik",
+         "verdict": null,
+         "confidence": null,
+         "note": "I hated spicy autocomplete and I love agentic style coding"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/coding-agents-run-tools-loop-step",
+          "source": "MrfiUMm2Qxk"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Broken AI Discourse with Steve Klabnik",
+         "verdict": null,
+         "confidence": null,
+         "note": "if you're doing any copy pasting at all you're not getting the experience that either of us have been talking about for an hour"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/coding-agents-run-tools-loop-step",
+          "source": "fly-youre-all-nuts"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "My AI Skeptic Friends Are All Nuts",
+         "verdict": null,
+         "confidence": null,
+         "note": "pasting the resulting (broken) code into your editor, you're not doing what the AI boosters are doing."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/coding-agents-run-tools-loop-step",
+          "source": "mitchellh-my-ai-adoption-journey"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "My AI Adoption Journey",
+         "verdict": null,
+         "confidence": null,
+         "note": "To find value, you must use an agent."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/coding-agents-run-tools-loop-step",
+          "source": "r0NWWDPiavg"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Learning to Code with AI and Steve Klabnik",
+         "verdict": null,
+         "confidence": null,
+         "note": "Claude had invoked GDB to examine the binary."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "ai-coding/coding-agents-run-tools-loop-step",
+          "source": "u_k9cwDNPcM"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "A Year of Agents | Armin Ronacher | CodeCrafts 2026",
+         "verdict": null,
+         "confidence": null,
+         "note": "I said like I would be challenged if it's more than 10%. And that was that was completely invalidated"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 6 source statements."
       }
      }
     ]

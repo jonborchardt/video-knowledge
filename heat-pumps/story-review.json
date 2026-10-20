@@ -37,12 +37,11 @@
     "decision:is-it-cheaper-to-run-than-gas": {
       "coherence": {
         "score": 0.85,
-        "reason": "One question, is a heat pump cheaper to run than a gas furnace, answered by what decides it (price ratio, efficiency), how often it comes out ahead, and the tariff lever. The oil, propane and resistance comparisons are a different question with their own story, and the gas connection fee is a footnote."
+        "reason": "One question, is a heat pump cheaper to run than a gas furnace, answered by what decides it (price ratio, efficiency), how often it comes out ahead, and the tariff lever. The oil, propane and resistance comparisons are a different question with their own story, and the gas connection fee is a footnote. The claim that high electricity prices relative to gas make heat pumps dearer to run is pruned as the converse of the COP-against-price-ratio rule, which already carries it."
       },
       "claims": [
         "heat-pumps/heating-heat-pump-costs-less-natural",
         "heat-pumps/whether-heat-pump-cheaper-run-gas",
-        "heat-pumps/high-electricity-prices-relative-gas-make",
         "heat-pumps/heat-pump-beats-gas-running-cost",
         "heat-pumps/most-households-would-see-lower-energy",
         "heat-pumps/switching-gas-heat-pump-raises-household",
@@ -265,10 +264,16 @@
         "reason": "One question: must a home be insulated first for a heat pump to pay. The advice to air-seal and insulate before or alongside is the same question, so it is added."
       },
       "claims": ["heat-pumps/heat-pumps-need-home-well-insulated", "heat-pumps/air-sealing-insulation-should-come-before"],
+      "question": "Do you have to insulate your home before a heat pump will pay off?",
+      "title": "Do You Need to Insulate Before Getting a Heat Pump?",
+      "alternates": ["Heat Pumps in Drafty Houses: Do They Still Save?", "Insulation First or Heat Pump First?"],
       "research": "the evidence is NREL's model (envelope upgrades cut bill increases but add about $9,000, helping mainly in cold climates), RMI and LBNL modelling of a few archetypes, and small Minnesota field data, none above 0.45 and none measuring heat pump bills in leaky against insulated homes; a measured comparison of heat pump running cost and payback with and without envelope work, by climate, would unblock it"
     },
     "conflict:contractors-routinely-oversize-heating-cooling-equipment": {
       "coherence": { "score": 0.75, "reason": "One claim, one question: do installers routinely oversize." },
+      "question": "Do contractors usually install heating and cooling systems that are too big?",
+      "title": "Is Your HVAC Contractor Oversizing Your System?",
+      "alternates": ["Bigger Is Not Better: Oversized Heat Pumps and Furnaces", "How Often Are Heating Systems Sized Wrong?"],
       "research": "the only evidence is a dozen NREL field sites, mostly undersized; a large audit comparing installed capacity with Manual J loads would unblock it"
     },
     "conflict:real-world-heat-pump-efficiency-lower": {
@@ -277,6 +282,9 @@
         "reason": "One question: how efficient installed heat pumps really are, against their ratings and against the seasonal efficiency of about four that some sources promise for good installs; that claim is the same question, so it is added."
       },
       "claims": ["heat-pumps/real-world-heat-pump-efficiency-lower", "heat-pumps/well-installed-air-source-heat-pumps"],
+      "question": "Do heat pumps in real homes reach the efficiency on the label?",
+      "title": "Do Heat Pumps Live Up to Their Efficiency Ratings?",
+      "alternates": ["Rated vs Real: How Efficient Are Installed Heat Pumps?", "What the Meters Say About Heat Pump Efficiency"],
       "research": "the field studies split (Cadmus measured below rating, CEE within error at one rating point, NREL matched at 7 of 12 sites) and the seasonal COPs measured (NREL 12 sites averaging 2.5, CEE three Minnesota sites at 2.5-2.8) are all small cold-climate samples; a metered study of many installs across climates, reporting seasonal COP against rated HSPF2, would unblock it"
     },
     "gap:through-2025-federal-tax-credit-covered": {
@@ -287,6 +295,9 @@
     },
     "conflict:heat-pumps-need-more-maintenance-repairs": {
       "coherence": { "score": 0.8, "reason": "One claim, one question: does a heat pump need more upkeep than a gas furnace." },
+      "question": "Does a heat pump break down or need servicing more often than a gas furnace?",
+      "title": "Are Heat Pumps Less Reliable Than Gas Furnaces?",
+      "alternates": ["Heat Pump vs Furnace: Which Needs More Repairs?", "What Owning a Heat Pump Costs in Upkeep"],
       "research": "the only evidence is seven repair visits on prototype units in the DOE cold-climate challenge (0.2); repair-frequency or maintenance-cost data for many installed heat pumps against gas furnaces, such as a large owner reliability survey or program warranty records, would unblock it"
     },
     "conflict:installing-heat-pump-can-require-costly": {

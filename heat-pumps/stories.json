@@ -38,18 +38,12 @@
     "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: right (0.45, direct)",
     "Edwards 2024, inequities in heat pump bill savings: partly (0.55, direct)",
     "Wilson 2024 (NREL and LBNL), heat pumps for all?: partly (0.5, direct)",
-    "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: right (0.65, direct)",
-    "Cadmus 2016, ductless mini-split evaluation (MA and RI): right (0.55, direct)",
-    "RMI 2018, the economics of electrifying buildings: right (0.5, direct)",
-    "Edwards 2024, inequities in heat pump bill savings: right (0.5, direct)",
-    "Less 2021 (LBNL), cost of decarbonization retrofits: right (0.45, direct)",
-    "Canadian Climate Institute 2023, heat pumps pay off: right (0.45, direct)",
-    "EIA, state residential electricity and gas prices: partly (0.45, direct)",
     "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: right (0.4, direct)",
     "EIA, state residential electricity and gas prices: partly (0.6, direct)",
     "Edwards 2024, inequities in heat pump bill savings: partly (0.45, direct)",
     "Cadmus 2016, ductless mini-split evaluation (MA and RI): partly (0.4, direct)",
     "Wilson 2024 (NREL and LBNL), heat pumps for all?: right (0.55, direct)",
+    "Edwards 2024, inequities in heat pump bill savings: right (0.5, direct)",
     "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: partly (0.55, direct)",
     "RMI 2018, the economics of electrifying buildings: partly (0.5, partial)",
     "Less 2021 (LBNL), cost of decarbonization retrofits: partly (0.4, direct)",
@@ -67,7 +61,6 @@
    "claims": [
     "heat-pumps/heating-heat-pump-costs-less-natural",
     "heat-pumps/whether-heat-pump-cheaper-run-gas",
-    "heat-pumps/high-electricity-prices-relative-gas-make",
     "heat-pumps/heat-pump-beats-gas-running-cost",
     "heat-pumps/most-households-would-see-lower-energy",
     "heat-pumps/switching-gas-heat-pump-raises-household",
@@ -79,7 +72,7 @@
     "heat-pumps/heat-pump-costs-more-buy-install",
     "heat-pumps/heat-pump-costs-about-same-less",
     "heat-pumps/heat-pump-prices-vary-mainly-system",
-    "heat-pumps/heat-pumps-outsell-gas-furnaces"
+    "heat-pumps/home-battery-charged-cheap-off-peak"
    ],
    "arc": {
     "hook": "Two neighbours install the same heat pump. One's winter bill drops; the other's goes up. Neither is lying.",
@@ -91,10 +84,8 @@
    "coherence": {
     "score": 0.85,
     "basis": "review",
-    "explanation": "One question, is a heat pump cheaper to run than a gas furnace, answered by what decides it (price ratio, efficiency), how often it comes out ahead, and the tariff lever. The oil, propane and resistance comparisons are a different question with their own story, and the gas connection fee is a footnote."
+    "explanation": "One question, is a heat pump cheaper to run than a gas furnace, answered by what decides it (price ratio, efficiency), how often it comes out ahead, and the tariff lever. The oil, propane and resistance comparisons are a different question with their own story, and the gas connection fee is a footnote. The claim that high electricity prices relative to gas make heat pumps dearer to run is pruned as the converse of the COP-against-price-ratio rule, which already carries it."
    },
-   "format": "long-form",
-   "formatWhy": "11 studies bear directly or partly on the question, 65 sources voice the belief, with a contradiction or qualification to explore, across 8 claims.",
    "scores": {
     "coherence": 0.85,
     "relevance": 1,
@@ -105,10 +96,10 @@
     "evidence": 1,
     "editorial": 0.91,
     "overall": 0.95,
-    "explanation": "editorial 0.91 = mean of coherence 0.85 (review), relevance 1 (65 sources, 49 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (11 studies, 8 claims, tension); evidence 1 = strongest Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff at 0.7 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.91 = mean of coherence 0.85 (review), relevance 1 (65 sources, 49 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (11 studies, 7 claims, tension); evidence 1 = strongest Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff at 0.7 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
-   "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 8 essential findings verified, no pending review.",
+   "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 7 essential findings verified, no pending review.",
    "blocking": [],
    "reviewed": true,
    "audit": {
@@ -510,164 +501,6 @@
       "role": "evidence",
       "validation": {
        "id": "f2",
-       "text": "High electricity prices relative to gas make heat pumps more expensive to run than gas boilers or furnaces",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0.65,
-       "independent": 6,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
-          "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1863"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff",
-         "verdict": "right",
-         "confidence": 0.65,
-         "note": "UK heat pump households (measured consumption times retail prices) pay about £190/yr more to run a heat pump than a gas boiler at Octopus standard rates (£323 at government 2024 prices), with electricity about 4x the price of gas per kWh; disconnecting from gas trims about £100/yr off the gap.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
-          "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L962-L966"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Cadmus 2016, ductless mini-split evaluation (MA and RI)",
-         "verdict": "right",
-         "confidence": 0.55,
-         "note": "With New England's high electricity-to-gas price ratio, the gas break-even temperature was above 70 F, so a mini-split 'does not offer a viable direct replacement for a gas-fired system at today's energy prices'.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
-          "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L812-L816"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "RMI 2018, the economics of electrifying buildings",
-         "verdict": "right",
-         "confidence": 0.5,
-         "note": "In RMI's Providence model, a cold climate, a leaky home and relatively high electricity prices together make a heat pump retrofit cost more than gas.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
-          "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L1026-L1029"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Edwards 2024, inequities in heat pump bill savings",
-         "verdict": "right",
-         "confidence": 0.5,
-         "note": "Edwards notes that higher electricity prices reduce the benefit of replacing a furnace with a heat pump, and its robustness checks find electricity price negatively correlated with heat pump use where direct fuels dominate.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
-          "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2700-L2710"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Less 2021 (LBNL), cost of decarbonization retrofits",
-         "verdict": "right",
-         "confidence": 0.45,
-         "note": "LBNL: some electrification projects raised energy costs by up to $1,000/yr, confirmed to come from higher electricity use paired with high regional rates (MA $0.184, CA $0.169, VT $0.154/kWh); savings were large mainly where oil or propane was displaced.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
-          "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1147-L1158"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Canadian Climate Institute 2023, heat pumps pay off",
-         "verdict": "right",
-         "confidence": 0.45,
-         "note": "Modelled for Edmonton: much lower gas prices with similar electricity rates, plus cold weather, make gas with AC (or a hybrid) the cheapest option and all-electric heat pumps less competitive.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
-          "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L538-L553"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
-         "verdict": "partly",
-         "confidence": 0.5,
-         "note": "A higher elec-to-gas price ratio (4.1 at 2019 prices vs 3.3) cuts gas homes with positive bill savings from 32-92% to 22-83%; it worsens the economics but most efficient units still beat gas.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/high-electricity-prices-relative-gas-make",
-          "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L188-L193"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "EIA, state residential electricity and gas prices",
-         "verdict": "partly",
-         "confidence": 0.45,
-         "note": "Whether a high price ratio makes heat pumps costlier depends on seasonal COP: break-even is ratio times AFUE, ranging from 1.6 (Florida) to 6.1 (Alaska) at 2024 prices, with 30 states needing COP 3 or more.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Wilson 2024 (NREL and LBNL), heat pumps for all?: A higher elec-to-gas price ratio (4.1 at 2019 prices vs 3.3) cuts gas homes with positive bill savings from 32-92% to 22-83%; it worsens the economics but most efficient units still beat gas.",
-        "EIA, state residential electricity and gas prices: Whether a high price ratio makes heat pumps costlier depends on seasonal COP: break-even is ratio times AFUE, ranging from 1.6 (Florida) to 6.1 (Alaska) at 2024 prices, with 30 states needing COP 3 or more."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): 6 supporting (6 independent, strongest 0.65), 2 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f3",
        "text": "A heat pump beats gas on running cost only when its COP exceeds the electricity-to-gas price ratio",
        "kind": "fact",
        "modality": "plain",
@@ -762,7 +595,7 @@
      {
       "role": "evidence",
       "validation": {
-       "id": "f4",
+       "id": "f3",
        "text": "Most US households would see lower energy bills with a heat pump",
        "kind": "fact",
        "modality": "typical",
@@ -818,7 +651,7 @@
      {
       "role": "evidence",
       "validation": {
-       "id": "f5",
+       "id": "f4",
        "text": "Switching from gas to a heat pump raises the household's energy bills",
        "kind": "fact",
        "modality": "plain",
@@ -948,7 +781,7 @@
      {
       "role": "evidence",
       "validation": {
-       "id": "f6",
+       "id": "f5",
        "text": "The evidence does not support \"Switching to a heat pump cuts heating bills by half or more\"",
        "kind": "fact",
        "modality": "plain",
@@ -1058,7 +891,7 @@
      {
       "role": "evidence",
       "validation": {
-       "id": "f7",
+       "id": "f6",
        "text": "Time-of-use or heat-pump electricity tariffs make heat pumps cheaper to run",
        "kind": "fact",
        "modality": "plain",
@@ -1236,8 +1069,6 @@
     "basis": "review",
     "explanation": "One question, whether and when a heat pump repays its cost, answered by the national lifetime models (and the baseline they count against) and by timing: working equipment against a needed furnace or AC replacement. It absorbs decision:replace-a-working-furnace-or-wait, which reached the same conclusion, and the payoff claim from the upfront-cost story. The fuel being replaced is the oil, propane and baseboard story, insulation is its own held story, and bill savings belong to the running-cost story this one follows in a chain."
    },
-   "format": "long-form",
-   "formatWhy": "8 studies bear directly or partly on the question, 24 sources voice the belief, with a contradiction or qualification to explore, across 7 claims.",
    "scores": {
     "coherence": 0.85,
     "relevance": 1,
@@ -2209,8 +2040,6 @@
     "basis": "review",
     "explanation": "One question: does a heat pump beat oil, propane and electric resistance heat. The claim that these homes save the most is the same question counted over the equipment's life, so it is added; it moved here from the payback story so that story stays on timing."
    },
-   "format": "long-form",
-   "formatWhy": "9 studies bear directly or partly on the question, 31 sources voice the belief, with a contradiction or qualification to explore, across 2 claims.",
    "scores": {
     "coherence": 0.85,
     "relevance": 1,
@@ -2707,8 +2536,6 @@
     "basis": "review",
     "explanation": "One claim, one question; secondary to the money question but asked in most of the videos."
    },
-   "format": "long-form",
-   "formatWhy": "6 studies bear directly or partly on the question, 22 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.75,
     "relevance": 1,
@@ -3072,8 +2899,6 @@
     "basis": "review",
     "explanation": "One question, how a heat pump copes with a cold winter and what that does to the bill. The rated-versus-real efficiency claim is about test procedures rather than cold, and the field data on it split."
    },
-   "format": "long-form",
-   "formatWhy": "9 studies bear directly or partly on the question, 68 sources voice the belief, with a contradiction or qualification to explore, across 8 claims.",
    "scores": {
     "coherence": 0.85,
     "relevance": 1,
@@ -4258,8 +4083,6 @@
     "basis": "review",
     "explanation": "One question, what money is still available toward a heat pump in 2026, told as what ended, what changed and what remains."
    },
-   "format": "long-form",
-   "formatWhy": "10 studies bear directly or partly on the question, 30 sources voice the belief, with a contradiction or qualification to explore, across 7 claims.",
    "scores": {
     "coherence": 0.9,
     "relevance": 1,
@@ -4824,8 +4647,6 @@
     "basis": "review",
     "explanation": "One question, what a heat pump costs to install against the system you would otherwise buy (furnace, furnace plus AC, AC alone) and what drives the spread. Whether that cost is repaid is decision:when-does-it-pay-for-itself, so the payoff claim moved there. Geothermal is a different product, the lifespan claim has no study, and quote spread between contractors is not isolated by any document."
    },
-   "format": "long-form",
-   "formatWhy": "9 studies bear directly or partly on the question, 39 sources voice the belief, with a contradiction or qualification to explore, across 6 claims.",
    "scores": {
     "coherence": 0.8,
     "relevance": 1,
@@ -5622,12 +5443,12 @@
   {
    "id": "conflict:heat-pumps-need-home-well-insulated",
    "kind": "conflict",
-   "title": "Is it true that heat pumps need a home to be well insulated to work economically?",
+   "title": "Do You Need to Insulate Before Getting a Heat Pump?",
    "alternates": [
-    "Sources disagree: Heat pumps need a home to be well insulated to work economically",
-    "Is it true that heat pumps need a home to be well insulated to work economically?"
+    "Heat Pumps in Drafty Houses: Do They Still Save?",
+    "Insulation First or Heat Pump First?"
    ],
-   "question": "Is it true that heat pumps need a home to be well insulated to work economically?",
+   "question": "Do you have to insulate your home before a heat pump will pay off?",
    "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
    "tension": "The sources split: Wilson 2024 (NREL and LBNL), heat pumps for all? says wrong, RMI 2018, the economics of electrifying buildings says partly, CEE 2017, cold-climate heat pumps in Minnesota says wrong, Less 2021 (LBNL), cost of decarbonization retrofits says partly.",
    "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
@@ -5672,8 +5493,6 @@
     "basis": "review",
     "explanation": "One question: must a home be insulated first for a heat pump to pay. The advice to air-seal and insulate before or alongside is the same question, so it is added."
    },
-   "format": "long-form",
-   "formatWhy": "7 studies bear directly or partly on the question, 27 sources voice the belief, with a contradiction or qualification to explore, across 2 claims.",
    "scores": {
     "coherence": 0.8,
     "relevance": 1,
@@ -6044,12 +5863,12 @@
   {
    "id": "conflict:real-world-heat-pump-efficiency-lower",
    "kind": "conflict",
-   "title": "Why do studies disagree about whether real-world heat pump efficiency is lower than manufacturers' rated figures?",
+   "title": "Do Heat Pumps Live Up to Their Efficiency Ratings?",
    "alternates": [
-    "Real-world heat pump efficiency is lower than manufacturers' rated…: the case for and against",
-    "What we actually know about whether real-world heat pump efficiency is lower than manufacturers' rated…"
+    "Rated vs Real: How Efficient Are Installed Heat Pumps?",
+    "What the Meters Say About Heat Pump Efficiency"
    ],
-   "question": "Why do studies disagree about whether real-world heat pump efficiency is lower than manufacturers' rated figures?",
+   "question": "Do heat pumps in real homes reach the efficiency on the label?",
    "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
    "tension": "The studies split: Cadmus 2016, ductless mini-split evaluation (MA and RI) says right, Winkler 2023 (NREL), cold-climate heat pump field validation says partly, CEE 2018, ducted and ductless cold-climate heat pumps in the field says wrong.",
    "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
@@ -6085,8 +5904,6 @@
     "basis": "review",
     "explanation": "One question: how efficient installed heat pumps really are, against their ratings and against the seasonal efficiency of about four that some sources promise for good installs; that claim is the same question, so it is added."
    },
-   "format": "short",
-   "formatWhy": "3 studies bear directly or partly on the question, 2 sources voice the belief, with a contradiction or qualification to explore, across 2 claims.",
    "scores": {
     "coherence": 0.75,
     "relevance": 0.36,
@@ -6323,12 +6140,12 @@
   {
    "id": "conflict:contractors-routinely-oversize-heating-cooling-equipment",
    "kind": "conflict",
-   "title": "Why do studies disagree about whether contractors routinely oversize heating and cooling equipment?",
+   "title": "Is Your HVAC Contractor Oversizing Your System?",
    "alternates": [
-    "Contractors routinely oversize heating and cooling equipment: the case for and against",
-    "What we actually know about whether contractors routinely oversize heating and cooling equipment"
+    "Bigger Is Not Better: Oversized Heat Pumps and Furnaces",
+    "How Often Are Heating Systems Sized Wrong?"
    ],
-   "question": "Why do studies disagree about whether contractors routinely oversize heating and cooling equipment?",
+   "question": "Do contractors usually install heating and cooling systems that are too big?",
    "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
    "tension": "The studies split: Cadmus 2016, ductless mini-split evaluation (MA and RI) says partly, PNNL 2025, DOE Cold Climate Heat Pump Challenge field results says right, Less 2021 (LBNL), cost of decarbonization retrofits says partly, Winkler 2023 (NREL), cold-climate heat pump field validation says wrong, Wilson 2024 (NREL and LBNL), heat pumps for all? says partly.",
    "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
@@ -6363,8 +6180,6 @@
     "basis": "review",
     "explanation": "One claim, one question: do installers routinely oversize."
    },
-   "format": "long-form",
-   "formatWhy": "5 studies bear directly or partly on the question, 3 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.75,
     "relevance": 0.46,
@@ -6606,12 +6421,12 @@
   {
    "id": "conflict:heat-pumps-need-more-maintenance-repairs",
    "kind": "conflict",
-   "title": "Is it true that heat pumps need more maintenance or repairs than gas furnaces?",
+   "title": "Are Heat Pumps Less Reliable Than Gas Furnaces?",
    "alternates": [
-    "Sources disagree: Heat pumps need more maintenance or repairs than gas furnaces",
-    "Is it true that heat pumps need more maintenance or repairs than gas furnaces?"
+    "Heat Pump vs Furnace: Which Needs More Repairs?",
+    "What Owning a Heat Pump Costs in Upkeep"
    ],
-   "question": "Is it true that heat pumps need more maintenance or repairs than gas furnaces?",
+   "question": "Does a heat pump break down or need servicing more often than a gas furnace?",
    "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
    "tension": "The sources split: PNNL 2025, DOE Cold Climate Heat Pump Challenge field results says wrong.",
    "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
@@ -6643,8 +6458,6 @@
     "basis": "review",
     "explanation": "One claim, one question: does a heat pump need more upkeep than a gas furnace."
    },
-   "format": "short",
-   "formatWhy": "1 study bear directly or partly on the question, 12 sources voice the belief, with a contradiction or qualification to explore, across 1 claim.",
    "scores": {
     "coherence": 0.8,
     "relevance": 0.84,

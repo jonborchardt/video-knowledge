@@ -29,7 +29,7 @@ const Picto: FC<{ pace: Pace; d: number; t: number; color: string; x: number; y:
     return `${(u * W).toFixed(1)},${(at(u) * H).toFixed(1)}`;
   });
   const tipU = n / steps;
-  const glow = theme.motion ? 'url(#vs-glow)' : undefined;
+  const glow = 'url(#vs-glow)';
   const spin = pace === 'fast' ? t * 14 : t * 0.8; // degrees per frame
   const page = Math.floor(t / 45) % 4; // calendar flips a page every 1.5s
   const flip = (t % 45) / 45;
@@ -110,13 +110,7 @@ const Picto: FC<{ pace: Pace; d: number; t: number; color: string; x: number; y:
         strokeLinejoin="round"
         filter={glow}
       />
-      <circle
-        cx={tipU * W}
-        cy={at(tipU) * H}
-        r={13 + (theme.motion ? 4 * Math.sin(t / 6) : 0)}
-        fill={color}
-        filter={glow}
-      />
+      <circle cx={tipU * W} cy={at(tipU) * H} r={13 + 4 * Math.sin(t / 6)} fill={color} filter={glow} />
     </g>
   );
 };
@@ -164,8 +158,8 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
             </filter>
             {colors.map((c, i) => (
               <linearGradient key={i} id={`vs-half-${i}`} x1={i ? 1 : 0} y1={0} x2={i ? 0 : 1} y2={1}>
-                <stop offset="0" stopColor={c} stopOpacity={theme.motion ? 0.42 : 0.2} />
-                <stop offset="1" stopColor={c} stopOpacity={theme.motion ? 0.08 : 0.04} />
+                <stop offset="0" stopColor={c} stopOpacity={0.42} />
+                <stop offset="1" stopColor={c} stopOpacity={0.08} />
               </linearGradient>
             ))}
           </defs>
@@ -193,7 +187,7 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
             opacity={0.25 + 0.6 * badge}
             strokeDasharray={1200}
             strokeDashoffset={1200 * (1 - ramp(t, at[0], 20))}
-            filter={theme.motion ? 'url(#vs-glow)' : undefined}
+            filter="url(#vs-glow)"
           />
           {lines.map((_, i) => (
             <g key={i} opacity={lit(i)}>
@@ -211,14 +205,8 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
           <g
             transform={`translate(${seam} 440) scale(${0.001 + badge * (1 + 0.05 * Math.sin(t / 8))}) rotate(${(1 - badge) * -90 - 8})`}
           >
-            <circle
-              r={92}
-              fill={theme.bg}
-              stroke={theme.fg}
-              strokeWidth={8}
-              filter={theme.motion ? 'url(#vs-glow)' : undefined}
-            />
-            <circle r={78} fill={theme.motion ? theme.red : theme.raised} />
+            <circle r={92} fill={theme.bg} stroke={theme.fg} strokeWidth={8} filter="url(#vs-glow)" />
+            <circle r={78} fill={theme.red} />
             <text
               y={26}
               textAnchor="middle"
@@ -249,8 +237,8 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
           const label = colon > 0 ? line.slice(0, colon) : null;
           const rest = colon > 0 ? line.slice(colon + 1).trim() : line;
           const a = ramp(t, at[i], 8);
-          // the slam: drops in from above, oversized, and lands (springing under pulse)
-          const e = theme.motion ? easeBack((t - at[i]) / 12) : easeOut((t - at[i]) / 8);
+          // the slam: drops in from above, oversized, and springs as it lands
+          const e = easeBack((t - at[i]) / 12);
           const big = rest.length > 24 ? 64 : 80;
           return (
             <div
@@ -290,8 +278,8 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   fontSize: big,
                   fontWeight: 800,
                   lineHeight: 1.08,
-                  color: theme.motion ? theme.fg : label ? theme.fg : colors[i],
-                  textShadow: theme.motion ? `0 0 30px ${colors[i]}aa` : undefined,
+                  color: theme.fg,
+                  textShadow: `0 0 30px ${colors[i]}aa`,
                   letterSpacing: -1,
                 }}
               >
@@ -304,7 +292,7 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   width: 220 * ramp(t, at[i] + 4, 16),
                   borderRadius: 4,
                   background: colors[i],
-                  boxShadow: theme.motion ? `0 0 18px ${colors[i]}` : undefined,
+                  boxShadow: `0 0 18px ${colors[i]}`,
                 }}
               />
             </div>

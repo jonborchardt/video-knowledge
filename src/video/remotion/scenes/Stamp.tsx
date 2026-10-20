@@ -13,14 +13,13 @@ const PAGE = { x: 440, y: 100, w: 1040, h: 880 };
  *  spoken) the stamp drops from large onto the page, squashes, shakes the frame and throws a ring of dust; it is
  *  double-bordered, tilted a few degrees and worn (a seeded turbulence eats specks out of the ink), in amber, the
  *  colour of a claim. Afterwards the view pushes in slowly, the wear shimmers and the page drifts. The line breaks at
- *  its first comma. Reads no options. Classic is sober: a small shake, a thin dust ring, no glow. */
+ *  its first comma. Reads no options. */
 export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const text = scene.onScreenText[0] ?? '';
   const land = lineFrames(scene)[0];
   const k = t - land; // frames since impact
   const end = scene.start + scene.duration;
-  const glow = theme.motion;
 
   // stamp face: one or two lines, sized to fit
   const comma = text.indexOf(', ');
@@ -35,10 +34,10 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const lift = clamp01(-k / DROP); // 1 high above, 0 on the page
   const fall = 1 + 1.5 * lift * lift;
   const sq = k >= 0 && k < 12 ? Math.sin((Math.PI * k) / 12) * (1 - k / 12) : 0;
-  const squash = glow ? 0.14 : 0.05;
+  const squash = 0.14;
   const visible = k > -DROP;
   // shake: decaying, inside the frame
-  const amp = k >= 0 && k < 20 ? (glow ? 13 : 3) * (1 - k / 20) : 0;
+  const amp = k >= 0 && k < 20 ? 13 * (1 - k / 20) : 0;
   const shake = { x: amp * Math.sin(k * 2.3), y: amp * Math.cos(k * 3.1) };
   // a slow push over the whole scene, faster once inked
   const push = 1 + 0.02 * ((t - scene.start) / scene.duration) + 0.07 * easeOut((t - land) / Math.max(30, end - land));
@@ -50,7 +49,7 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const per = Math.max(6, (land - DROP - 20 - writeFrom) / ROWS);
   const drift = (t - scene.start) * 0.03;
   const ink = theme.amber;
-  const dust = glow ? 28 : 12;
+  const dust = 28;
 
   return (
     <AbsoluteFill style={{ background: theme.field, overflow: 'hidden' }}>
@@ -83,15 +82,11 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
               />
               <feComposite in="holes" in2="blot" operator="arithmetic" k1={0} k2={1} k3={0.35} k4={0} result="wear" />
               <feComposite in="SourceGraphic" in2="wear" operator="out" result="worn" />
-              {glow ? (
-                <>
-                  <feGaussianBlur in="worn" stdDeviation={10 + 3 * Math.sin(t / 11)} result="b" />
-                  <feMerge>
-                    <feMergeNode in="b" />
-                    <feMergeNode in="worn" />
-                  </feMerge>
-                </>
-              ) : null}
+              <feGaussianBlur in="worn" stdDeviation={10 + 3 * Math.sin(t / 11)} result="b" />
+              <feMerge>
+                <feMergeNode in="b" />
+                <feMergeNode in="worn" />
+              </feMerge>
             </filter>
           </defs>
 
@@ -120,9 +115,7 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
               return (
                 <g key={i}>
                   <rect x={PAGE.x + 80} y={y} width={w} height={14} rx={7} fill={theme.muted} opacity={0.45} />
-                  {head ? (
-                    <circle cx={PAGE.x + 80 + w} cy={y + 7} r={9} fill={glow ? theme.slate : theme.muted} />
-                  ) : null}
+                  {head ? <circle cx={PAGE.x + 80 + w} cy={y + 7} r={9} fill={theme.slate} /> : null}
                 </g>
               );
             })}
@@ -140,7 +133,7 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
               height={bh + 60}
               rx={30}
               fill="none"
-              stroke={glow ? ink : theme.muted}
+              stroke={ink}
               strokeWidth={3}
               strokeDasharray="22 18"
               transform={`rotate(${-t * 0.4 - 5})`}
@@ -167,9 +160,9 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 rx={bw / 2 + 40 + 260 * easeOut(k / 30)}
                 ry={bh / 2 + 30 + 150 * easeOut(k / 30)}
                 fill="none"
-                stroke={glow ? ink : theme.muted}
-                strokeWidth={glow ? 10 * (1 - k / 40) + 2 : 3}
-                opacity={glow ? 0.7 : 0.45}
+                stroke={ink}
+                strokeWidth={10 * (1 - k / 40) + 2}
+                opacity={0.7}
               />
               {Array.from({ length: dust }, (_, i) => {
                 const a = ((i / dust) * 360 + ((i * 37) % 13)) * (Math.PI / 180);
@@ -180,8 +173,8 @@ export const Stamp: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     key={i}
                     cx={960 + r0.x * d + Math.cos(a) * 90 * easeOut(k / 26)}
                     cy={540 + r0.y * d + Math.sin(a) * 60 * easeOut(k / 26) + k * 0.8}
-                    r={(glow ? 7 : 5) * (1 - k / 45) + ((i * 7) % 4)}
-                    fill={glow ? (i % 3 ? ink : theme.violet) : theme.muted}
+                    r={7 * (1 - k / 45) + ((i * 7) % 4)}
+                    fill={i % 3 ? ink : theme.violet}
                   />
                 );
               })}

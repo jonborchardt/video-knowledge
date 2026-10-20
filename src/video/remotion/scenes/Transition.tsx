@@ -21,7 +21,7 @@ export const Transition: FC<{ scene: TimelineScene }> = ({ scene }) => {
           top: 0,
           bottom: 0,
           width: half,
-          background: '#3a2b12',
+          background: `${theme.amber}26`, // the pitch's gold, tinted over the backdrop
           opacity: a,
           overflow: 'hidden',
         }}
@@ -39,7 +39,7 @@ export const Transition: FC<{ scene: TimelineScene }> = ({ scene }) => {
           top: 0,
           bottom: 0,
           width: half,
-          background: '#1c2633',
+          background: `${theme.slate}26`, // the data's cyan, tinted over the backdrop
           opacity: a,
           overflow: 'hidden',
         }}

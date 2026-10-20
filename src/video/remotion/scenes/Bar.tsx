@@ -14,8 +14,8 @@ const named = (c: string) =>
  *  `point:<label>` cue, drawn against options.max (so two charts can share a scale); a count point is drawn as that
  *  many dots, not a bar. options.caption names the on-screen line shown first; options.stamp names the line stamped
  *  across the chart on the `stamp` cue. Rows that would not fit above the citation stacked (label over bar) are laid
- *  out inline (label beside bar) and shrunk to fit, so a long series never runs off the screen. Under the pulse brand
- *  bars spring in with a gradient and glow, the value counts up with the fill, and the newest bar glows brightest. */
+ *  out inline (label beside bar) and shrunk to fit, so a long series never runs off the screen. Bars spring in with a
+ *  gradient and glow, the value counts up with the fill, and the newest bar glows brightest. */
 export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const chart = scene.chart!;
@@ -115,8 +115,8 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                       bottom: 0,
                       width: w,
                       borderRadius: 6,
-                      background: theme.motion ? `linear-gradient(90deg, ${theme.violet}, ${color})` : color,
-                      boxShadow: theme.motion ? `0 0 ${newest ? 34 : 12}px ${color}${newest ? 'AA' : '55'}` : undefined,
+                      background: `linear-gradient(90deg, ${theme.violet}, ${color})`,
+                      boxShadow: `0 0 ${newest ? 34 : 12}px ${color}${newest ? 'AA' : '55'}`,
                     }}
                   />
                 </div>
@@ -125,12 +125,12 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     fontSize: 40 * k,
                     fontWeight: 700,
                     color,
-                    opacity: theme.motion ? ramp(t, fills[i], 6) : ramp(t, fills[i] + 12, 8),
-                    textShadow: theme.motion && newest ? `0 0 18px ${color}` : undefined,
+                    opacity: ramp(t, fills[i], 6),
+                    textShadow: newest ? `0 0 18px ${color}` : undefined,
                     fontVariantNumeric: 'tabular-nums',
                   }}
                 >
-                  {theme.motion ? countUp(p.display, p.value, f) : p.display}
+                  {countUp(p.display, p.value, f)}
                 </div>
               </div>
             </div>

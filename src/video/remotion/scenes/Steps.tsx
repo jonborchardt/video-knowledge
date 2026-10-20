@@ -41,8 +41,8 @@ const wrapLines = (text: string, chars: number) => {
  *  each line's frame (`lineFrames`: its `line:<n>` cue or when it is spoken) the road draws itself from the previous
  *  stop, a glowing marker travels along it, the stop pops and its line lands in a card beside it. The camera pushes in
  *  and follows the marker, then settles back on the whole route a few seconds after the last stop, where a soft
- *  pulse cycles across the stops. Reads no options. Under the pulse brand the road is a gradient through the stops'
- *  accents, everything glows and pops springier; classic keeps one amber marker and slate stops. */
+ *  pulse cycles across the stops. Reads no options. The road is a gradient through the stops' accents, and everything
+ *  glows. */
 export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const lines = scene.onScreenText;
@@ -50,7 +50,7 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const at = lineFrames(scene);
   const H = citationTop(scene);
   const end = scene.start + scene.duration;
-  const accents = theme.motion ? [theme.slate, theme.green, theme.amber, theme.violet] : [theme.slate];
+  const accents = [theme.slate, theme.green, theme.amber, theme.violet];
   const accent = (i: number) => accents[i % accents.length];
 
   // stops alternate above and below the middle; cards sit on the outer side of their stop
@@ -85,8 +85,7 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const settleAt = Math.max(at[n - 1] + 40, Math.min(at[n - 1] + 150, end - 75));
   const settle = smooth((t - settleAt) / 45);
   const b = smooth((t - scene.start - 10) / Math.max(40, at[0] - scene.start - 10)) * (1 - settle);
-  const Z = theme.motion ? 1.32 : 1.16;
-  const s = 1 + (Z - 1) * b;
+  const s = 1 + 0.32 * b;
   const C = { x: 960, y: H / 2 + 24 };
   const F = {
     x: C.x + (marker.x - C.x) * b,
@@ -142,12 +141,12 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 d={segPath(stops[i], p)}
                 pathLength={1}
                 fill="none"
-                stroke={theme.motion ? 'url(#steps-road)' : theme.slate}
-                strokeWidth={theme.motion ? 12 : 9}
+                stroke="url(#steps-road)"
+                strokeWidth={12}
                 strokeLinecap="round"
                 strokeDasharray="1 1"
                 strokeDashoffset={1 - draw(i + 1)}
-                filter={theme.motion ? 'url(#steps-glow)' : undefined}
+                filter="url(#steps-glow)"
                 opacity={draw(i + 1) > 0 ? 1 : 0}
               />
             ))}
@@ -156,7 +155,7 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
               const on = t >= at[i];
               const live = i === active && settle < 1;
               const ring = live || i === cycle ? 0.5 + 0.5 * Math.sin((t - at[i]) / 7) : 0;
-              const c = theme.motion ? accent(i) : live ? theme.amber : theme.slate;
+              const c = accent(i);
               return (
                 <g key={`s${i}`} transform={`translate(${p.x} ${p.y})`}>
                   <circle
@@ -187,20 +186,14 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
                         strokeWidth={3}
                         opacity={(1 - ring) * (live || i === cycle ? 0.8 : 0)}
                       />
-                      <circle
-                        r={R}
-                        fill={theme.motion ? c : theme.raised}
-                        stroke={c}
-                        strokeWidth={5}
-                        filter={theme.motion ? 'url(#steps-glow)' : undefined}
-                      />
+                      <circle r={R} fill={c} stroke={c} strokeWidth={5} filter="url(#steps-glow)" />
                       <text
                         y={2}
                         textAnchor="middle"
                         dominantBaseline="middle"
                         fontSize={52}
                         fontWeight={800}
-                        fill={theme.motion ? theme.bg : theme.fg}
+                        fill={theme.bg}
                       >
                         {i + 1}
                       </text>
@@ -214,10 +207,10 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
               <circle
                 r={R + 26 + 6 * Math.sin(t / 9)}
                 fill="none"
-                stroke={theme.motion ? theme.fg : theme.amber}
-                strokeWidth={theme.motion ? 4 : 3}
+                stroke={theme.fg}
+                strokeWidth={4}
                 opacity={0.55}
-                filter={theme.motion ? 'url(#steps-glow)' : undefined}
+                filter="url(#steps-glow)"
               />
             </g>
           </svg>
@@ -240,9 +233,9 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   boxSizing: 'border-box',
                   padding: '26px 32px',
                   borderRadius: 18,
-                  background: theme.motion ? `linear-gradient(150deg, ${c}38, ${theme.raised} 65%)` : theme.raised,
-                  borderLeft: `8px solid ${theme.motion ? c : live ? theme.amber : theme.slate}`,
-                  boxShadow: theme.motion && live ? `0 0 44px ${c}66` : undefined,
+                  background: `linear-gradient(150deg, ${c}38, ${theme.raised} 65%)`,
+                  borderLeft: `8px solid ${c}`,
+                  boxShadow: live ? `0 0 44px ${c}66` : undefined,
                   fontSize: font,
                   lineHeight: 1.25,
                   color: theme.fg,

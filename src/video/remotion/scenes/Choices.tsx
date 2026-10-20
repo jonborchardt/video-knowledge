@@ -23,8 +23,8 @@ const mix = (a: P, b: P, u: number): P => ({ x: a.x + (b.x - a.x) * u, y: a.y + 
  *  on the left, and each alternative pops in as a big pill on the frame it is spoken (`spokenAt`; unspoken ones fall
  *  back to the `type` cue for the first and an even spread for the rest), a branch drawing out to it from the node,
  *  the newest chip glowing. A second and a half after the last, the fan swings round: the node rises to the middle
- *  and the chips line up side by side beneath it while a soft pulse cycles across them. Reads no options. Under the
- *  pulse brand chips are gradient-filled in their own accents and glow; classic keeps slate outlines, amber active. */
+ *  and the chips line up side by side beneath it while a soft pulse cycles across them. Reads no options. Chips are
+ *  gradient-filled in their own accents and glow. */
 export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const q = scene.onScreenText[0] ?? '';
@@ -41,7 +41,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
     at.push(Math.max(s ?? fb, i ? at[i - 1] + 6 : scene.start));
   });
   const accents = [theme.slate, theme.amber, theme.green, theme.violet];
-  const accent = (i: number) => (theme.motion ? accents[i % accents.length] : theme.slate);
+  const accent = (i: number) => accents[i % accents.length];
 
   // chip size: big type, shrunk so the row fits the frame
   const est = (s: string, f: number) => s.length * f * 0.6 + f * 1.6;
@@ -82,7 +82,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
     return `M ${node.x} ${node.y} C ${d1.x} ${d1.y} ${d2.x} ${d2.y} ${ex.x} ${ex.y}`;
   };
   const chars = Math.floor(clamp01((t - typeAt) / Math.max(20, q.length * 1.1)) * q.length);
-  const nodeC = theme.motion ? theme.violet : theme.amber;
+  const nodeC = theme.violet;
 
   return (
     <AbsoluteFill style={{ background: theme.field, fontFamily: theme.sans }}>
@@ -119,19 +119,19 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 d={branch(i)}
                 pathLength={1}
                 fill="none"
-                stroke={lit(i) ? (theme.motion ? accent(i) : theme.amber) : theme.line}
+                stroke={lit(i) ? accent(i) : theme.line}
                 strokeWidth={lit(i) ? 7 : 5}
                 strokeLinecap="round"
                 strokeDasharray="1 1"
                 strokeDashoffset={1 - d}
                 opacity={d > 0 ? 1 : 0}
-                filter={theme.motion && lit(i) ? 'url(#choices-glow)' : undefined}
+                filter={lit(i) ? 'url(#choices-glow)' : undefined}
               />
               {u >= 1 ? (
                 <path
                   d={branch(i)}
                   fill="none"
-                  stroke={theme.motion ? accent(i) : theme.muted}
+                  stroke={accent(i)}
                   strokeWidth={4}
                   strokeDasharray="4 26"
                   strokeDashoffset={-t * 1.4}
@@ -154,10 +154,10 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
           />
           <circle
             r={70 * Math.max(0, grow(t, typeAt, 16))}
-            fill={theme.motion ? nodeC : theme.raised}
+            fill={nodeC}
             stroke={nodeC}
             strokeWidth={5}
-            filter={theme.motion ? 'url(#choices-glow)' : undefined}
+            filter="url(#choices-glow)"
           />
           <text
             y={4}
@@ -165,7 +165,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
             dominantBaseline="middle"
             fontSize={92}
             fontWeight={800}
-            fill={theme.motion ? theme.bg : theme.amber}
+            fill={theme.bg}
             transform={`rotate(${6 * Math.sin(t / 30)})`}
           >
             ?
@@ -193,14 +193,10 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
               lineHeight: 1,
               padding: `${font * 0.42}px ${font * 0.8}px`,
               borderRadius: 999,
-              color: theme.motion ? theme.bg : theme.fg,
-              background: theme.motion ? `linear-gradient(135deg, ${c}, ${c}AA)` : theme.raised,
-              border: `4px solid ${theme.motion ? c : hot ? theme.amber : theme.slate}`,
-              boxShadow: theme.motion
-                ? `0 0 ${20 + 40 * pulse}px ${c}${hot ? 'AA' : '44'}`
-                : hot
-                  ? `0 0 0 ${6 * pulse}px ${theme.amber}40`
-                  : undefined,
+              color: theme.bg,
+              background: `linear-gradient(135deg, ${c}, ${c}AA)`,
+              border: `4px solid ${c}`,
+              boxShadow: `0 0 ${20 + 40 * pulse}px ${c}${hot ? 'AA' : '44'}`,
             }}
           >
             {a}

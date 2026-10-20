@@ -1,5 +1,9 @@
 {
   "applicability": {
+    "software-practices/software-delivery-speed-stability-move-together|asserts|software-practices/sources/dora2019-state-of-devops.txt#L367-L382": {
+      "level": "direct",
+      "reason": "the passage states the sentence itself from six years of survey cluster analysis: the highest performers are significantly better on all four speed and stability measures and the lowest worse on all; 'move together' is a correlational claim, which is what a cluster analysis shows, and the self-selected survey is a limit the premise carries"
+    },
     "software-practices/organisational-structure-metrics-predict-defect-prone|asserts|software-practices/sources/bird2011-ownership.txt#L283-L287": {
       "level": "partial",
       "reason": "one organisational metric (minor contributors) correlating with failures more strongly than any other metric Microsoft collects, in Microsoft products only; it narrows the claim to ownership rather than establishing organisational structure in general"
@@ -233,7 +237,7 @@
       "claims": ["software-practices/relative-size-estimation-more-accurate-time"],
       "question": "Are story points actually more accurate than estimating in hours?",
       "title": "Are Story Points More Accurate Than Hours?",
-      "alternates": ["Story Points vs Hours: What the Research Says", "Does Estimating in Points Make You More Accurate?"],
+      "alternates": ["Story Points vs Hours: Which Lands Closer?", "Does Estimating in Points Make You More Accurate?"],
       "whyWatch": "Teams switch to story points because hours estimates keep failing. The research on relative estimation says whether points fix the accuracy problem.",
       "tension": "Points are pitched as the honest way to estimate uncertain work. The studies find no general accuracy gain, and a specific bias when tasks differ a lot in size.",
       "evidenceNeeded": "Comparisons of relative and absolute time predictions on accuracy, and evidence on when relative estimates go wrong.",
@@ -246,8 +250,8 @@
         "takeaway": "Use points for convenience if you like, but do not expect them to fix accuracy, and compare tasks of similar size."
       },
       "qualificationsAccepted": true,
-      "chain": ["surprise:estimation-learnable-skill-recording-estimates-comparing"],
-      "chainWhy": "If switching to points does not make estimates more accurate, the viewer asks whether they can at least get better by tracking their estimates against what actually happened."
+      "chain": ["surprise:estimation-learnable-skill-recording-estimates-comparing", "decision:estimation-and-agile"],
+      "chainWhy": "If switching to points does not make estimates more accurate, the viewer asks whether they can at least get better by tracking their estimates against what actually happened; when that does not help either, the last question is whether estimates are bad enough to stop making them."
     },
     "surprise:estimation-learnable-skill-recording-estimates-comparing": {
       "coherence": {
@@ -303,6 +307,86 @@
       "tension": "Microservices promise team independence; critics say they cost more and the boundaries are wrong at first. The studies here catalogue pains but do not measure outcomes.",
       "evidenceNeeded": "Measured cost, delivery or failure outcomes for comparable systems built as microservices and as monoliths, ideally greenfield against monolith-first.",
       "research": "The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, and coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries. Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones."
+    },
+    "decision:continuous-delivery": {
+      "coherence": {
+        "score": 0.75,
+        "reason": "The group mixed delivery outcomes with branching mechanics; pruned to one question, does shipping more often mean breaking more, with trunk-based development as the practice the same survey ties to both. The long-lived-branch claim rests on a 0.3 observation about open source that measures no merge conflicts, and the feature-flag claim is unchecked."
+      },
+      "claims": [
+        "software-practices/software-delivery-speed-stability-move-together",
+        "software-practices/trunk-based-development-one-small-change"
+      ],
+      "question": "If you ship more often, do you break more things?",
+      "title": "Does Shipping Faster Mean Breaking More?",
+      "alternates": ["Speed or Stability: Do You Really Have to Choose?", "Why the Teams That Deploy Most Break the Least"],
+      "whyWatch": "Release freezes and change boards exist because shipping less often feels safer. Six years of DORA survey data checked whether speed and stability really trade off.",
+      "tension": "The intuition is a trade-off: every deploy is a chance to break production. The survey finds the fastest teams are also the most stable.",
+      "evidenceNeeded": "Delivery speed and stability measured together across many teams, and the practices that go with high performance on both.",
+      "premise": "DORA's 2019 State of DevOps report says that for six years running its research has found speed and stability enable each other: a cluster analysis of the four delivery measures (deployment frequency, lead time, change failure rate and time to restore) finds the highest performers significantly better on all four and the lowest performers worse on all four, rather than trading throughput for stability. The same report finds trunk-based development, with frequent check-in to trunk and deployment to production, predictive of those outcomes; it does not measure whether one small change per release makes rollbacks easier. This is a self-selected survey of practitioners analysed as correlations from one research programme: it shows the two go together in the teams surveyed, not that deploying more often by itself makes a team more stable.",
+      "arc": {
+        "hook": "Your team ships once a month because every release is scary. Would shipping every day make it scarier?",
+        "conflict": "Each deploy is a chance to break production, so fewer deploys should mean fewer failures. The survey data say otherwise.",
+        "evidence": "DORA's cluster analysis of the four delivery measures, then its finding that trunk-based development with frequent deploys goes with high performance.",
+        "resolution": "In the teams surveyed, the fastest are also the most stable; speed and stability move together, though the survey shows association, not that speed causes stability.",
+        "takeaway": "Do not slow down releases to buy safety; small, frequent changes to trunk go with both speed and stability."
+      },
+      "qualificationsAccepted": true
+    },
+    "decision:estimation-and-agile": {
+      "coherence": {
+        "score": 0.75,
+        "reason": "Pruned to one question, are software estimates bad enough to stop making them: how far off they are, where they go wrong (larger work), and the NoEstimates claim that the time is wasted, which is folded in from its own candidate. The deadline-and-overtime claim is a different question (what pressure does to the work) and does not measure overtime; the fixed-budget-increment claim is unchecked."
+      },
+      "claims": [
+        "software-practices/most-software-projects-run-late-over",
+        "software-practices/long-horizon-task-estimates-inaccurate-managers",
+        "software-practices/time-spent-estimating-wasted-better-building"
+      ],
+      "question": "Are software estimates so unreliable that you should stop making them?",
+      "title": "Should Your Team Stop Estimating?",
+      "alternates": ["Are Software Estimates Really That Bad?", "NoEstimates: Is Estimating a Waste of Time?"],
+      "whyWatch": "The NoEstimates movement says estimating is wasted effort because estimates are always wrong. A review of time-prediction research measured how wrong they are, and where.",
+      "tension": "Software is known for overruns, so estimates look useless. The review finds them off by a fifth to a third on average, not biased overall, and too low mainly on larger projects.",
+      "evidenceNeeded": "Measured accuracy and bias of time predictions in software, split by task size, and evidence on what replaces an estimate if you stop.",
+      "premise": "Halkjelsvik and Jørgensen's 2018 review of time-prediction research finds the average error of time predictions, across domains, is around 20 to 30%. In software it did not find a general tendency to underestimate: the median bias is dominated by many small tasks that were predicted without bias or even too pessimistically. Only for projects of at least 100 work hours does the expected overrun appear, with a median of about 20%, so the claim that most projects run late holds for larger projects, not for software work in general. That is a review of studies, not one measurement, and it gives the median and average, not how often individual projects are badly over. On NoEstimates, the authors call the suggestion that people stop giving time predictions before a project starts unrealistic, while agreeing that extrapolating from early progress is a good method; they note it is itself a simple prediction model, and few models beat it. That is the reviewers' judgement, not a test of teams that stopped estimating.",
+      "arc": {
+        "hook": "Your estimates were wrong again. Some teams have decided to stop making them altogether.",
+        "conflict": "If estimates are always wrong, the time spent on them is wasted; if they are roughly right, dropping them throws away a useful tool.",
+        "evidence": "The review's 20 to 30% average error, the missing overall bias with small tasks, the 20% median overrun on larger projects, and what the reviewers say about NoEstimates.",
+        "resolution": "Estimates are imperfect rather than useless: roughly a fifth to a third off, unbiased on small tasks and too low on large ones. Measuring early progress and extrapolating, the method NoEstimates favours, is itself a good estimate.",
+        "takeaway": "Keep estimating, but break large work into smaller pieces and update the forecast from how fast the first pieces actually went."
+      },
+      "qualificationsAccepted": true
+    },
+    "gap:pairing-mobbing-puts-best-each-participant": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question: does code written by a pair or a mob take the best of each person? It was pruned from decision:pairing-and-code-review as unchecked and is its own question, about collaboration rather than change size."
+      },
+      "question": "Does pair or mob programming really give you the best of everyone in the room?",
+      "title": "Does Pair Programming Really Produce Better Code?",
+      "alternates": ["Pairing and Mobbing: Better Code or Just More People?", "Two Heads at One Keyboard: Does It Pay?"],
+      "whyWatch": "Six sources say pairing and mobbing put each person's best into the code and filter out the worst, and teams pay for that belief in developer hours; nothing in the corpus measures it.",
+      "tension": "Advocates describe fewer mistakes and shared knowledge from experience; a pair costs two people's time, and whether the code is that much better is the open question.",
+      "evidenceNeeded": "Controlled comparisons of pairs or mobs against individuals on the same tasks, measuring defects, design quality and total effort.",
+      "research": "No study in the corpus measures pair or mob programming; the lean is an AI guess about meta-analyses. Needs the primary evidence, such as a meta-analysis of pair-programming experiments (for example Hannay et al. 2009) reporting quality and effort against solo work, and any measured study of mob programming."
+    },
+    "gap:writing-tests-first-forces-code-decoupled": {
+      "coherence": {
+        "score": 0.8,
+        "reason": "One question: does writing the test first produce more decoupled, testable design? Distinct from surprise:test-driven-development-produces-better-quality, whose studies measure external quality and productivity, not design structure."
+      },
+      "question": "Does writing tests first really force cleaner, less tangled code?",
+      "title": "Does Test-First Really Lead to Better Design?",
+      "alternates": ["TDD and Code Design: Does Testability Come for Free?", "Is Decoupled Code a Side Effect of Writing Tests First?"],
+      "whyWatch": "Six sources defend TDD less for bug counts than for design, saying test-first forces decoupled, testable code; the TDD experiments in the corpus measured other outcomes.",
+      "tension": "If the order of tests does not change quality, as the experiments found, the design argument is the one left; nobody here has measured it.",
+      "evidenceNeeded": "Studies comparing coupling, cohesion or other internal design metrics of code written test-first against test-last, on comparable tasks.",
+      "research": "No study in the corpus measures design structure under TDD; Fucci et al. and Karac and Turhan measure external quality and productivity. Needs a controlled study or review of internal quality metrics (coupling, cohesion, complexity) in test-first against test-last code, for example Janzen and Saiedian's experiments."
+    },
+    "surprise:time-spent-estimating-wasted-better-building": {
+      "reject": "a chapter of decision:estimation-and-agile, which now carries this claim: whether estimating is wasted is the NoEstimates half of the same question (are estimates bad enough to stop), and alone it rests on one review's 0.4 judgement with no test of teams that stopped estimating"
     }
   }
 }

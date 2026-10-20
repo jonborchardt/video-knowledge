@@ -9,8 +9,8 @@ import { GUTTER, countUp, grow, ramp, theme } from '../theme';
  *  dot drops in, then the second, and a bar stretches from the first to the second with the gap glowing. Each dot
  *  carries its display above and its label beside (the lower dot's to the left, the higher's to the right, wrapped to
  *  two lines by width, never reworded); an odd last point is drawn alone. A legend names the two series by the text
- *  before the first comma of the first pair's labels, and the chart's note sits under the title. Under the pulse brand
- *  the dots glow, the gap bar is a gradient that breathes. No options. */
+ *  before the first comma of the first pair's labels, and the chart's note sits under the title. The dots
+ *  glow, the gap bar is a gradient that breathes. No options. */
 export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const chart = scene.chart!;
@@ -53,7 +53,7 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 height: 22,
                 borderRadius: 11,
                 background: colors[i],
-                boxShadow: theme.motion ? `0 0 14px ${colors[i]}` : undefined,
+                boxShadow: `0 0 14px ${colors[i]}`,
               }}
             />
             {s}
@@ -104,7 +104,7 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
           const stretch = ramp(t, fb + 6, 20);
           const xa = x(a.value);
           const xb = b ? x(b.value) : xa;
-          const breathe = theme.motion ? 0.75 + 0.25 * Math.sin(t / 10 + r) : 1;
+          const breathe = 0.75 + 0.25 * Math.sin(t / 10 + r);
           return (
             <g key={a.label}>
               <line x1={L} x2={L + W} y1={cy} y2={cy} stroke={theme.line} strokeWidth={2} opacity={intro} />
@@ -121,11 +121,11 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   x2={xa + (xb - xa) * stretch}
                   y1={cy}
                   y2={cy}
-                  stroke={theme.motion ? `url(#dumbbell-gap-${r})` : theme.muted}
+                  stroke={`url(#dumbbell-gap-${r})`}
                   strokeWidth={18}
                   strokeLinecap="round"
                   opacity={stretch > 0 ? 0.85 * breathe : 0}
-                  filter={theme.motion ? 'url(#dumbbell-glow)' : undefined}
+                  filter="url(#dumbbell-glow)"
                 />
               ) : null}
               {[a, b].map((p, i) => {
@@ -142,7 +142,7 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     stroke={theme.bg}
                     strokeWidth={5}
                     opacity={ramp(t, f, 6)}
-                    filter={theme.motion ? 'url(#dumbbell-glow)' : undefined}
+                    filter="url(#dumbbell-glow)"
                   />
                 );
               })}
@@ -173,7 +173,7 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   color: [theme.amber, theme.slate][i],
                   fontVariantNumeric: 'tabular-nums',
                   opacity: ramp(t, f + 4, 8),
-                  textShadow: theme.motion ? `0 0 18px ${[theme.amber, theme.slate][i]}99` : undefined,
+                  textShadow: `0 0 18px ${[theme.amber, theme.slate][i]}99`,
                 }}
               >
                 {countUp(p.display, p.value, ramp(t, f, 24))}

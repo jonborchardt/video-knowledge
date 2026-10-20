@@ -229,11 +229,11 @@ const stripOf = (r: StoryRow) => {
                       ))}
                     </dl>
                     <div class="flex flex-wrap items-center gap-1">
-                      <span class:list={[badge, HEALTH[h].colour]}>
-                        {r.production
-                          ? `${r.production.stage} · ${HEALTH[h].label} · r${r.production.versions.length || '0'}`
-                          : r.story.format}
-                      </span>
+                      {r.production && (
+                        <span class:list={[badge, HEALTH[h].colour]}>
+                          {r.production.stage} · {HEALTH[h].label} · r{r.production.versions.length || '0'}
+                        </span>
+                      )}
                       <span class={badge} title="claims across every question on the card">
                         {claimsOf(r)} claims
                       </span>

@@ -1,30 +1,11 @@
-// The look: `pulse`, saturated colour for each role (pink for losses, cyan for data, lime for gains, gold for the
-// pitch) over a drifting gradient backdrop, with a camera that pushes in, punches on every cue and zooms between scenes
-// (Video.tsx), glowing springy charts. It is built on `base`, the old classic palette, which is no longer rendered.
-// ponytail: the scenes still branch on `theme.motion` for the retired classic look; those branches are dead and go
-// when each scene is next edited and re-rendered. Fonts are system fonts so a render needs no network; bundle a webfont
-// when renders must match across machines.
-const base = {
-  bg: '#111318', // the field colour, and dark ink on coloured shapes
-  field: '#111318', // what a scene paints behind itself; transparent where the backdrop shows through
-  raised: '#1A1D24',
-  line: '#2B2F39',
-  fg: '#ECE9E2',
-  muted: '#8E939C',
-  amber: '#E3A33A',
-  slate: '#6F8FB3',
-  red: '#C9473D',
-  green: '#6FA06C',
-  violet: '#6F8FB3',
-  serif: 'Georgia, "Times New Roman", Times, serif',
-  sans: '"Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif',
-  motion: false, // backdrop, camera and springy charts
-};
-export type Theme = typeof base;
-const pulse: Theme = {
-  ...base,
-  bg: '#0B0820',
-  field: 'transparent',
+// The look: saturated colour for each role (pink for losses, cyan for data, lime for gains, gold for the pitch, violet
+// for accents) over a drifting gradient backdrop, with a camera that pushes in, punches on every cue and zooms between
+// scenes (Video.tsx), and glowing springy charts. Fonts are system fonts so a render needs no network. ponytail: bundle a
+// webfont when renders must match across machines.
+/** The theme every scene reads at render time (never copied into a module-level constant). */
+export const theme = {
+  bg: '#0B0820', // the deepest field colour, and dark ink on coloured shapes
+  field: 'transparent', // what a scene paints behind itself: the backdrop shows through
   raised: 'rgba(255,255,255,0.07)',
   line: 'rgba(255,255,255,0.16)',
   fg: '#F7F4FF',
@@ -34,10 +15,10 @@ const pulse: Theme = {
   red: '#FF3D7F',
   green: '#B6F23A',
   violet: '#8B5CF6',
-  motion: true,
+  serif: 'Georgia, "Times New Roman", Times, serif',
+  sans: '"Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif',
 };
-/** The theme every scene reads at render time. */
-export const theme: Theme = pulse;
+export type Theme = typeof theme;
 export const GUTTER = 120;
 
 export const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
@@ -49,9 +30,8 @@ export const easeBack = (t: number) => {
 };
 /** 0 before `from`, eased to 1 over `len` frames. */
 export const ramp = (frame: number, from: number, len: number) => easeOut((frame - from) / len);
-/** `ramp`, springing past 1 and back under the pulse brand; plain `ramp` under classic. */
-export const grow = (frame: number, from: number, len: number) =>
-  theme.motion ? easeBack((frame - from) / (len * 1.4)) : ramp(frame, from, len);
+/** `ramp`, springing past 1 and back before it settles. */
+export const grow = (frame: number, from: number, len: number) => easeBack((frame - from) / (len * 1.4));
 /** A figure's display string counted up to `f` (0..1) of itself, same prefix, suffix, decimals and grouping; the
  *  display unchanged when it is not plain `value` ("$300-$650", "<0.01%"). f = 1 is always the display itself. */
 export function countUp(display: string, value: number, f: number): string {

@@ -218,7 +218,6 @@ export function buildPackage(
     whyWatch: story.whyWatch,
     tension: story.tension,
     arc: story.arc,
-    format: story.format,
     readiness: story.readiness,
     central: {
       text: story.audit.central.text,
@@ -230,12 +229,18 @@ export function buildPackage(
     claims,
     documents: [...docs.values()].sort((a, b) => (a.file < b.file ? -1 : 1)),
     gaps: [...new Set(parts.flatMap((s) => s.gaps))],
+    // A chained video carries each question's own framing, and why each answer leads to the next.
     ...(chain.length && {
+      chainWhy: review.stories?.[story.id]?.chainWhy ?? '',
       questions: parts.map((s) => ({
         story: s.id,
         question: s.question,
         claims: s.claims,
         central: { text: s.audit.central.text, status: s.audit.central.status },
+        premise: s.premise,
+        tension: s.tension,
+        whyWatch: s.whyWatch,
+        arc: s.arc,
       })),
     }),
   };
