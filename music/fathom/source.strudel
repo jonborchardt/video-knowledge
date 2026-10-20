@@ -1,0 +1,40 @@
+// fathom: a documentary bed in E minor at 84 bpm for video-knowledge. Every voice is an oscillator (no sample pack,
+// no soundfont), so nothing in it carries a sample licence. No melody, no build: three loopable variations.
+//   pulse    a deep sine drone, a wide soft pad, a tick on one and the and of two
+//   active   the pulse plus a slow sine bass and a quiet glass arpeggio
+//   texture  pad and drone only, very still, the tick once a bar
+const feel = { timingMs: 10, velocity: .06, correlation: 'bar' };
+const drone = (line, o = {}) => ({
+  pattern: note('<' + line + '>').s('sine').clip(1.02).attack(.5).release(1),
+  level: .3, space: 0, humanize: feel, ...o,
+});
+const tick = (grid, o = {}) => ({
+  pattern: note('e4').s('sine').struct(grid).attack(.005).decay(.1).sustain(0).release(.05),
+  level: .18, space: .3, position: -.1, humanize: feel, ...o,
+});
+const pad = { patch: 'wide', brightness: .24, weight: .45, articulation: .15, space: .75, width: .6, density: .45, level: .45, humanize: { ...feel, correlation: 'phrase' } };
+const arp = { patch: 'glass', brightness: .33, weight: .3, articulation: .4, space: .65, width: .5, density: .5, register: .6, level: .22, arp: '0 2 1 2', position: .3 };
+const bass = { sound: 'sine', register: .3, weight: .55, brightness: .3, articulation: .55, space: .1, density: .4, level: .85, humanize: feel };
+
+song({ cps: .35, key: 'E:minor', seed: 53, saturate: .35, room: { size: 2.8, fade: .12, damping: 3600 } }, [
+
+  section('pulse', 16, { role: 'establish', progression: 'i@2 VI@2',
+    raw:  { ...drone('e1 e1 c2 c2') },
+    raw2: { ...tick('x ~ [~ x] ~') },
+    pad:  { ...pad, enter: 2 },
+  }),
+
+  section('active', 16, { role: 'develop', progression: 'i VI III VII',
+    raw:  { ...drone('e1 c2 g1 d2') },
+    raw2: { ...tick('x ~ [~ x] [~ x]') },
+    pad:  { ...pad },
+    pad2: { ...arp, enter: 4 },
+    bass: { ...bass, rhythm: 'x...............|................|x...............|................', notes: '0 5' },
+  }),
+
+  section('texture', 16, { role: 'develop', progression: 'i@2 iv@2',
+    raw:  { ...drone('e1 e1 a1 a1', { level: .26 }) },
+    raw2: { ...tick('x ~ ~ ~', { level: .12 }) },
+    pad:  { ...pad, brightness: .18, density: .35, level: .42 },
+  }),
+])

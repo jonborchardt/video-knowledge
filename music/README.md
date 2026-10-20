@@ -20,7 +20,7 @@ music/<composition>/
 <s> --name <name>.<s>` in strudel-bench). It is whole bars, so it loops on a bar boundary; the manifest records its
   measured length, bar count, sha and a `crossfade` (seconds of head blended over the cut tail at each loop seam,
   because a strudel-bench section render starts dry and stops mid-reverb).
-- A **cue** (`<topic>/scripts/<slug>/video/music.json`) places a variation between two scene anchors with a gain,
+- A **cue** (`topics/<topic>/scripts/<slug>/video/music.json`) places a variation between two scene anchors with a gain,
   fades, looping and optional ducking. Cues never hold seconds: `"from": "sc12"` is the measured start of sc12,
   `"to": "sc20"` the measured end of sc20, `"sc12:end-2"` and `"sc07+1.5"` offset from an edge. When narration
   re-times a scene, the music moves with it and no asset is regenerated.
