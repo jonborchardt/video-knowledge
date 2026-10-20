@@ -58,7 +58,8 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3â
 
 `npm run stories -- discover <topic>` reads the topic's report and store (no watcher checkout needed), drafts
 candidate videos, audits each against the recorded evidence, evaluates and ranks them and writes
-`<topic>/stories.json` (at most 12 kept; the rest are listed as rejected with a reason). The site shows them at
+`<topic>/stories.json` (at most 12 videos listed, a chain's follow-up questions riding with their first question;
+rejected candidates are listed with a reason). The site shows them at
 `/<topic>/stories/`.
 
 ```
@@ -94,8 +95,11 @@ strongest applicable study is below 0.5 confidence is never ready. Every non-rea
 One video can answer a chain of up to three questions. The reviewer sets `chain` (the follow-up story ids, in order)
 and `chainWhy` on the first story; each chained story keeps its own claims and audit, the video is ready only when
 every one is, chains do not nest, and a chained story is marked `partOf` the first and never produced on its own (the
-board refuses it). Discovery suggests `chainCandidates` for each ready story outside a chain (ready stories sharing no
-claims, nearest in wording); the reviewer decides.
+board refuses it). A chained video carries at most 14 claims across its questions; a longer chain holds the first story
+at `needs-review`. Its evidence package carries every question's own premise, tension, why-watch and arc, and the
+`chainWhy`, so the writer frames each question from its own story. Discovery suggests `chainCandidates` for each ready
+story outside a chain (ready stories sharing no claims, nearest in wording); the reviewer decides. A review entry for an
+id discovery no longer drafts fails a test (`staleReviewIds`).
 
 The validator (`src/lib/evidence.ts`) takes an assertion (`fact`, `attribution` or `disagreement`), the canonical
 claims it rests on and its evidence references, and returns a status (`supported`, `qualified`, `disputed`,
@@ -285,6 +289,11 @@ candidates reviewed), each story's readiness, and for each `<topic>/scripts/<slu
 (`buildPackage`, `validateScript`, `buildStoryboard`, `releaseCheck`); "stale" means it would not; "pending" means an
 agent step is owed; "blocked" means the gate says so. Each row names the next command or brief. There is no state
 machine: the stage is the first artifact that is missing or not current.
+
+The board has one card per video (a chain is one card listing its follow-up questions and total claims; follow-ups get
+no card), in a column for whoever acts next: needs research, needs review, ready to produce, in production (`/produce`
+is on it; the strip on the card shows the stage, red means it stopped and a person must act), your review (a private
+package is made), in review, published and parked.
 
 The one hand-written input is `production.json` at the repo root, for decisions no artifact records:
 

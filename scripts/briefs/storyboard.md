@@ -13,7 +13,7 @@ that is not `blocked`.
 Cut the narration into scenes of one to four sentences, in script order, every sentence in
 exactly one scene. Pace deliberately: a hook scene can hold one sentence; an investigation scene
 can hold three. Add `pauseSeconds` where the viewer needs a beat (after a reveal, before the
-conclusion). Each scene:
+answer). Each scene:
 
 ```json
 {
