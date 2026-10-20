@@ -7,12 +7,12 @@
 //         (add "f": true to force past the near-duplicate check when the meaning really differs)
 //       { "n2": "Exact text of a claim created earlier", "q": "..." } ] }]   reuse a claim created by an earlier "n"
 // For each source: records its assertions, then the AI-guess verdicts of the claims it created. Evidence belongs to the
-// claim, so a reused claim needs no new verdict. New claims' "l" tags go into <topic>/lean.json.
+// claim, so a reused claim needs no new verdict. New claims' "l" tags go into topics/<topic>/lean.json.
 // --label creates the topic on the first batch of an empty store. --from skips batches before that video (resume).
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkBatches } from '../src/lib/batches.ts';
-import { ROOT, watcher } from './watcher.mjs';
+import { ROOT, TOPICS, topicDir, watcher } from './watcher.mjs';
 
 const [topic, file, ...rest] = process.argv.slice(2);
 const opt = (k) => {
@@ -23,14 +23,14 @@ if (!topic || !file) {
   console.error('usage: node scripts/record.mjs <topic> <batches.json> [--label "<label>"] [--from <video-id>]');
   process.exit(1);
 }
-const store = join(topic, 'store');
+const store = join(TOPICS, topic, 'store');
 const cli = (args) => watcher([...args, '--store', store]);
 const claimsNow = () =>
   JSON.parse(readFileSync(join(ROOT, store, 'topics.json'), 'utf8')).topics.find((t) => t.id === topic)?.claims ?? [];
 const full = (slug) => (slug.includes('/') ? slug : `${topic}/${slug}`);
-const leanFile = join(ROOT, topic, 'lean.json');
+const leanFile = join(topicDir(topic), 'lean.json');
 const lean = existsSync(leanFile) ? JSON.parse(readFileSync(leanFile, 'utf8')) : {};
-const work = join(ROOT, topic, 'work');
+const work = join(topicDir(topic), 'work');
 mkdirSync(work, { recursive: true });
 
 const batches = JSON.parse(readFileSync(file, 'utf8'));

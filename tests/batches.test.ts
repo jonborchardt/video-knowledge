@@ -103,9 +103,9 @@ describe('cited verdicts', () => {
         { kind: 'study', claim: 't/c', cite },
         { kind: 'statement', claim: 't/c' },
       ];
-      mkdirSync(join(root, 't', 'scripts', 's'), { recursive: true });
+      mkdirSync(join(root, 'topics', 't', 'scripts', 's'), { recursive: true });
       writeFileSync(
-        join(root, 't', 'scripts', 's', 'script.json'),
+        join(root, 'topics', 't', 'scripts', 's', 'script.json'),
         JSON.stringify({ sections: [{ sentences: [{ assertions: [{ evidence }] }] }] }),
       );
       expect([...citedPairs('t', root)]).toEqual([['t/c|t/sources/a.txt', cite]]);

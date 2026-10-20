@@ -1,4 +1,4 @@
-// Integration: every committed script package (<topic>/scripts/<slug>/) re-validates from the repository alone,
+// Integration: every committed script package (topics/<topic>/scripts/<slug>/) re-validates from the repository alone,
 // with no transcripts (CI has none) and no watcher: the package rebuilds byte-for-byte, every cited passage and quote
 // context is present, the committed review still passes, the storyboard covers the script, and a locked release
 // matches the files. Skipped where no package is checked out.
@@ -26,7 +26,7 @@ import { loadTopic } from '../src/lib/topics';
 const dirs = scriptDirs();
 
 describe.skipIf(!dirs.length)('committed script packages', () => {
-  describe.each(dirs)('$topic/scripts/$slug', ({ topic, slug, dir }) => {
+  describe.each(dirs)('topics/$topic/scripts/$slug', ({ topic, slug, dir }) => {
     const pkg = readJson<EvidencePackage>(join(dir, FILES.pkg))!;
     const script = readJson<Script>(join(dir, FILES.script))!;
     const review = readJson<ScriptReviewFile>(join(dir, FILES.review));

@@ -175,7 +175,7 @@ export function checkSegment(
   return { ...inp, scenes, sentences: out, fingerprints: fp, problems };
 }
 
-/** The segment's inputs from <topic>/scripts/<slug>/ and its video/render.json; throws when a file is missing. */
+/** The segment's inputs from topics/<topic>/scripts/<slug>/ and its video/render.json; throws when a file is missing. */
 export function loadInputs(topic: string, storyId: string, root = ROOT): SegmentInputs {
   const dir = scriptDir(topic, storyId, root);
   const need = <T>(name: string, hint: string): T => {
@@ -196,7 +196,7 @@ export function loadInputs(topic: string, storyId: string, root = ROOT): Segment
   };
 }
 
-/** The segment from <topic>/scripts/<slug>/ and its video/render.json; throws listing every problem. */
+/** The segment from topics/<topic>/scripts/<slug>/ and its video/render.json; throws listing every problem. */
 export function loadSegment(topic: string, storyId: string, root = ROOT): Segment {
   const seg = checkSegment(loadInputs(topic, storyId, root));
   if (seg.problems.length) throw new Error(`cannot render:\n  ${seg.problems.join('\n  ')}`);

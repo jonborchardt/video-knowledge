@@ -89,7 +89,7 @@ Notes never touch derived files. The lock is redone through the board's lock ste
 ## Finish
 
 1. `npm run validate` (fix code the run added until it passes; if it cannot, Stop).
-2. Write `<topic>/scripts/<slug>/video/review/run-report.md`:
+2. Write `topics/<topic>/scripts/<slug>/video/review/run-report.md`:
    - the mp4 and checklist paths (`video/review/`), wall-clock time;
    - evidence added (documents, verdicts with cites, and why);
    - script revisions and the findings behind each;

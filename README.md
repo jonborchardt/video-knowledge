@@ -10,10 +10,10 @@ The library lives in `../retire-sim/watcher`, which must be checked out next to 
 
 Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checkout is only needed for the data scripts, not for building the site.
 
-## One folder per topic
+## One folder per topic, under topics/
 
 ```
-<topic>/
+topics/<topic>/
   videos.txt   YouTube URLs, one per line (blank and # lines ignored)
   blogs.txt    optional: blog/article URLs, same format
   sources/     studies the claims are checked against: <name>.pdf (gitignored) + <name>.txt (committed)
@@ -34,18 +34,18 @@ Node 22, `npm install`, and `pdftotext` (poppler) for step 5. The watcher checko
 
 The agent does the reading and judging; the scripts do the bookkeeping. Steps 3–5 are written for Claude Code, which runs one agent per group of sources in parallel.
 
-1. **Lists.** Create `<topic>/videos.txt` (and `blogs.txt` if any). Mark later additions with a `# --- Batch N, <how they were found>` line so it's clear which sources came from where.
-2. **Fetch.** `npm run watcher -- fetch <topic>/videos.txt --store <topic>/store`, then the same for `blogs.txt`. Videos without captions are reported and skipped. An article that comes out as junk can be attached by hand: `npm run watcher -- fetch --text <file> <id> --title "<t>" --url <u> --store <topic>/store`.
-3. **Extract.** Write the claims list (`npm run watcher -- claims list --topic <topic> --store <topic>/store > <topic>/work/claims.txt`), split the `extract` entries from `npm run watcher -- next --json --store <topic>/store` into `<topic>/work/grpN.txt` files (about 400k characters each), and give each group to an agent with `scripts/briefs/extract.md`. Each writes `<topic>/work/hN.json` with its claims, AI guesses and lean tags (the format is typed and checked in `src/lib/batches.ts`; `record` refuses a malformed file before writing anything).
+1. **Lists.** Create `topics/<topic>/videos.txt` (and `blogs.txt` if any). Mark later additions with a `# --- Batch N, <how they were found>` line so it's clear which sources came from where.
+2. **Fetch.** `npm run watcher -- fetch topics/<topic>/videos.txt --store topics/<topic>/store`, then the same for `blogs.txt`. Videos without captions are reported and skipped. An article that comes out as junk can be attached by hand: `npm run watcher -- fetch --text <file> <id> --title "<t>" --url <u> --store topics/<topic>/store`.
+3. **Extract.** Write the claims list (`npm run watcher -- claims list --topic <topic> --store topics/<topic>/store > topics/<topic>/work/claims.txt`), split the `extract` entries from `npm run watcher -- next --json --store topics/<topic>/store` into `topics/<topic>/work/grpN.txt` files (about 400k characters each), and give each group to an agent with `scripts/briefs/extract.md`. Each writes `topics/<topic>/work/hN.json` with its claims, AI guesses and lean tags (the format is typed and checked in `src/lib/batches.ts`; `record` refuses a malformed file before writing anything).
 4. **Merge and record.** Agents working in parallel can each create the same new claim. List those in a merges file (`{"<duplicate text>": "<existing-slug>" | "=<canonical new text>"}`), then:
    ```
-   npm run merge-claims -- <topic>/work/merges.json <topic>/work/h*.json
-   npm run record -- <topic> <topic>/work/h1.json --label "<Topic label>"   # --label only on the very first batch
-   npm run record -- <topic> <topic>/work/h2.json                            # …and so on; --from <id> resumes
+   npm run merge-claims -- topics/<topic>/work/merges.json topics/<topic>/work/h*.json
+   npm run record -- <topic> topics/<topic>/work/h1.json --label "<Topic label>"   # --label only on the very first batch
+   npm run record -- <topic> topics/<topic>/work/h2.json                            # …and so on; --from <id> resumes
    ```
-5. **Studies.** Put papers in `<topic>/sources/` and convert them (`pdftotext -layout x.pdf x.txt`). Give each agent `scripts/briefs/sources.md`, a few documents and the claims list. Each writes `<topic>/work/sv_G.json`. Then `npm run record-sources -- <topic> <topic>/work/sv_*.json`. When you add claims or documents later, only the new pairs need checking: new claims against all documents, and new documents against all claims.
-6. **Changed minds.** If a speaker reverses an earlier position in a later source, run `npm run watcher -- supersede <old-id> <new-id> --store <topic>/store`. The old source stays listed but stops counting.
-7. **Publish.** Optionally add `<topic>/site.json` (copy `ai-coding/site.json`: recap groups, bottom line, study display names). Then `npm run report && npm run validate`, check the page with `npm run dev`, and commit and push.
+5. **Studies.** Put papers in `topics/<topic>/sources/` and convert them (`pdftotext -layout x.pdf x.txt`). Give each agent `scripts/briefs/sources.md`, a few documents and the claims list. Each writes `topics/<topic>/work/sv_G.json`. Then `npm run record-sources -- <topic> topics/<topic>/work/sv_*.json`. When you add claims or documents later, only the new pairs need checking: new claims against all documents, and new documents against all claims.
+6. **Changed minds.** If a speaker reverses an earlier position in a later source, run `npm run watcher -- supersede <old-id> <new-id> --store topics/<topic>/store`. The old source stays listed but stops counting.
+7. **Publish.** Optionally add `topics/<topic>/site.json` (copy `topics/ai-coding/site.json`: recap groups, bottom line, study display names). Then `npm run report && npm run validate`, check the page with `npm run dev`, and commit and push.
 
 ### How verdicts work
 
@@ -58,12 +58,12 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3�
 
 `npm run stories -- discover <topic>` reads the topic's report and store (no watcher checkout needed), drafts
 candidate videos, audits each against the recorded evidence, evaluates and ranks them and writes
-`<topic>/stories.json` (at most 12 videos listed, a chain's follow-up questions riding with their first question;
+`topics/<topic>/stories.json` (at most 12 videos listed, a chain's follow-up questions riding with their first question;
 rejected candidates are listed with a reason). The site shows them at
 `/<topic>/stories/`.
 
 ```
-npm run stories -- discover <topic>              # draft, audit, evaluate, rank; writes <topic>/stories.json
+npm run stories -- discover <topic>              # draft, audit, evaluate, rank; writes topics/<topic>/stories.json
 npm run stories -- show <topic> [story-id]       # the ranked list, or one story with its audit and cited passages
 npm run stories -- validate <topic> <file.json>  # run the evidence gate on your own assertions (exit 2 if any is blocked)
 ```
@@ -74,7 +74,7 @@ Three layers, kept apart:
   (a popular claim a study contradicts, studies or sources that disagree, a study that overturned the AI guess, a widely
   repeated claim nobody checked, and the recap groups in `site.json` as decision stories), and every reference is
   verified. Ids are `<kind>:<claim slug>`, so a rerun is byte-identical and ids survive corpus changes.
-- **Semantic judgment** (`<topic>/story-review.json`, written by an agent following `scripts/briefs/stories.md`): does a
+- **Semantic judgment** (`topics/<topic>/story-review.json`, written by an agent following `scripts/briefs/stories.md`): does a
   study verdict decide _this_ sentence (`direct`, `partial`, `contextual`), do a candidate's claims answer one question
   (coherence score, pruned claim list, or rejection), and are the audit's qualifications carried into the narrative.
   Without a review, the validator falls back to conservative wording heuristics (a base rate is only context for a
@@ -131,7 +131,7 @@ endorsing X.
 
 ## Scripts and storyboards
 
-A `ready` story becomes a narration script and a storyboard in `<topic>/scripts/<story slug>/`. The code builds
+A `ready` story becomes a narration script and a storyboard in `topics/<topic>/scripts/<story slug>/`. The code builds
 the evidence package, checks the script and fills in the storyboard; three agent briefs do the writing and the
 judging (`scripts/briefs/script.md`, `script-review.md`, `storyboard.md`). Every stage persists its output, so a
 rejected script is revised and rechecked without touching research or story discovery.
@@ -173,11 +173,11 @@ guidance for a designer. Every chart point and on-screen figure must be in a cit
 
 Everything needed to inspect and re-validate a script is committed: the package records the sha of every cited
 document and a transcript window around every recorded source quote (`statements[].context`, the only place a
-speaker attribution can be confirmed from), so `<topic>/sources/*.txt` plus `<topic>/scripts/<slug>/` is enough.
+speaker attribution can be confirmed from), so `topics/<topic>/sources/*.txt` plus `topics/<topic>/scripts/<slug>/` is enough.
 
 ## Video
 
-A validated storyboard becomes an MP4 in `<topic>/scripts/<slug>/video/`. `render.json` (committed, written by
+A validated storyboard becomes an MP4 in `topics/<topic>/scripts/<slug>/video/`. `render.json` (committed, written by
 hand) names the contiguous scenes to render, the voice, the cues (which narration word each animation waits for), a
 bespoke `kinds` entry for scenes the storyboard category alone does not identify (one scene's own diagram or
 animation), and per-scene `options` (layout choices, never figures). Narration is one file per sentence, cached by
@@ -284,7 +284,7 @@ release is blocked; the Edge voice keeps it blocked until the video is re-narrat
 `/production/` on the site shows what stage every topic, story and script is in. Everything on it is derived at
 build time by `src/lib/production.ts` from the committed files: the research pipeline per topic (sources listed vs
 fetched, fetched vs extracted, documents vs recorded verdicts, report vs store, stories.json vs a fresh `discover`,
-candidates reviewed), each story's readiness, and for each `<topic>/scripts/<slug>/` the health of every artifact.
+candidates reviewed), each story's readiness, and for each `topics/<topic>/scripts/<slug>/` the health of every artifact.
 "Current" means re-running the library on today's inputs reproduces the file, the same test `lock` applies
 (`buildPackage`, `validateScript`, `buildStoryboard`, `releaseCheck`); "stale" means it would not; "pending" means an
 agent step is owed; "blocked" means the gate says so. Each row names the next command or brief. There is no state
@@ -345,7 +345,7 @@ review (only the changed scene chunk renders again).
 
 ## Reproducing a video
 
-A fresh checkout plus these makes a story's `<topic>/scripts/<slug>/video/segment.mp4` again:
+A fresh checkout plus these makes a story's `topics/<topic>/scripts/<slug>/video/segment.mp4` again:
 
 - **Node 22+** (`npm ci`); Remotion downloads Chrome on the first render. The ffmpeg and ffprobe used everywhere
   are the ones in Remotion's compositor package; `FFMPEG_DIR` overrides the directory.
@@ -376,8 +376,8 @@ the strudel-bench checkout when regenerating music.
 An [Astro](https://astro.build) site with Tailwind. Each topic with a `report.json` becomes a page (`src/pages/[topic]/index.astro`), linked from a home page. Pages are rendered at build time; the only client script is the tab bar and the claim search.
 
 ```
-npm run report     # refresh <topic>/report.json from the stores (needs the watcher checkout, so run locally)
-npm run stories -- discover <topic>   # refresh <topic>/stories.json from the report and store
+npm run report     # refresh topics/<topic>/report.json from the stores (needs the watcher checkout, so run locally)
+npm run stories -- discover <topic>   # refresh topics/<topic>/stories.json from the report and store
 npm run dev        # live preview at http://localhost:4321/video-knowledge/
 npm run build      # build dist/
 npm run validate   # typecheck + lint + format check + build + tests (what CI runs)

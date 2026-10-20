@@ -45,7 +45,7 @@ export interface Cue {
 }
 /** Layout choices a component reads (colour, counts, flags); never figures. */
 export type SceneOptions = Record<string, string | number | boolean>;
-/** <topic>/scripts/<slug>/video/render.json: what to render and which words drive which animations. */
+/** topics/<topic>/scripts/<slug>/video/render.json: what to render and which words drive which animations. */
 export interface RenderConfig {
   scenes: string[]; // contiguous storyboard scene ids, in storyboard order
   voice: { provider: string; voice: string; rate: string };

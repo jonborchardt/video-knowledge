@@ -2,7 +2,7 @@
 // The report already decides each claim's verdict; nothing here re-judges.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, ROOT } from './io';
+import { readJson, topicDir, TOPICS, ROOT } from './io';
 
 import type { Verdict } from './corpus';
 export type { Verdict };
@@ -84,7 +84,7 @@ export interface ClaimView {
   note: string;
   decidedBy: string | null; // a study's display name, or null when the AI guess decides
   studies: number; // documents with a verdict on this claim
-  lean: string | null; // from <topic>/lean.json: pro | pro-hype | calibrating | skeptic | neutral
+  lean: string | null; // from topics/<topic>/lean.json: pro | pro-hype | calibrating | skeptic | neutral
   sources: ClaimSourceView[]; // every source that asserts or denies it, with its quote
   verdicts: ClaimVerdictView[]; // every recorded judgment: the AI guess and each study
 }
@@ -171,14 +171,14 @@ export const VAL: Record<string, number> = { right: 1, partly: 0.5, wrong: -1 };
 
 /** Topic folders that have a report with claims. */
 export function topicNames(): string[] {
-  return readdirSync(ROOT, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && !d.name.startsWith('.') && existsSync(join(ROOT, d.name, 'report.json')))
+  return readdirSync(join(ROOT, TOPICS), { withFileTypes: true })
+    .filter((d) => d.isDirectory() && !d.name.startsWith('.') && existsSync(join(topicDir(d.name), 'report.json')))
     .map((d) => d.name)
-    .filter((n) => (readJson<Report>(join(ROOT, n, 'report.json'))?.topics[0]?.claims.length ?? 0) > 0);
+    .filter((n) => (readJson<Report>(join(topicDir(n), 'report.json'))?.topics[0]?.claims.length ?? 0) > 0);
 }
 
 export function loadTopic(name: string): Topic {
-  const dir = join(ROOT, name);
+  const dir = topicDir(name);
   const r = readJson<Report>(join(dir, 'report.json'))!;
   const t = r.topics[0];
   const cfg = readJson<SiteConfig>(join(dir, 'site.json')) ?? {};

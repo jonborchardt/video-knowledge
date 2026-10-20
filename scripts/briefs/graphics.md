@@ -2,7 +2,7 @@
 
 Give an agent this file plus the topic id, story id and the scenes (`Scenes: sc18,sc20`). Each
 listed scene is a `diagram` or `animation` (or a chart no generic kind draws faithfully) in
-`<topic>/scripts/<slug>/storyboard.json`. Build a real graphic for it: a Remotion component that
+`topics/<topic>/scripts/<slug>/storyboard.json`. Build a real graphic for it: a Remotion component that
 draws what the storyboard describes. Labelled text is a last resort, used only when a component
 still fails its visual review after three revisions; say so in your reply when you fall back.
 

@@ -1,5 +1,5 @@
 // Storyboard: scenes over the validated script. The planner agent (scripts/briefs/storyboard.md) writes
-// <topic>/scripts/<slug>/storyboard.json with scenes that reference sentence ids and describe visuals; this module fills
+// topics/<topic>/scripts/<slug>/storyboard.json with scenes that reference sentence ids and describe visuals; this module fills
 // in the narration from script.json (so the storyboard cannot reword it), computes timing from the narration speed,
 // and checks that every chart figure and on-screen citation comes from a passage in the evidence package.
 import { type PassageReader } from './evidence';

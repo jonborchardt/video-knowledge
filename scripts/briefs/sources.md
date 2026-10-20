@@ -1,8 +1,8 @@
 # Brief: judge claims against study documents
 
 Give an agent this file plus: the topic id, a group name G, which documents in
-`<topic>/sources/` to read, and which claims list to judge (all claims:
-`<topic>/work/claims.txt`; only new ones: a smaller file you make). The agent writes one
+`topics/<topic>/sources/` to read, and which claims list to judge (all claims:
+`topics/<topic>/work/claims.txt`; only new ones: a smaller file you make). The agent writes one
 JSON file and runs nothing else.
 
 Convert documents to text first: `pdftotext -layout paper.pdf paper.txt`. Line numbers in
@@ -28,13 +28,14 @@ often has one between cells): the passage reader treats it as a line break, and 
      self-report, case study or count-the-mentions review: 0.2–0.5. Confidence decides
      whether a study overrides the AI guess, which counts for at most 0.5.
    - note: one plain sentence with the passage's gist and how it bears on the claim (numbers welcome).
-   - source: `"<topic>/sources/<file>.txt#L<start>-L<end>"`, the tightest range holding the
+   - source: `"<topic>/sources/<file>.txt#L<start>-L<end>"` (a cite is relative to `topics/`: the file is
+     `topics/<topic>/sources/<file>.txt`), the tightest range holding the
      passage. Re-read those lines to check them.
 5. Be even-handed: report what the source shows, whether it helps or hurts the claim.
 
 ## Output
 
-Write `<topic>/work/sv_G.json`:
+Write `topics/<topic>/work/sv_G.json`:
 
 ```json
 [

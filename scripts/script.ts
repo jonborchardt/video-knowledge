@@ -1,5 +1,5 @@
 // npm run script -- <command> <topic> <story-id> [...]
-//   package <topic> <story-id>              build <topic>/scripts/<slug>/evidence-package.json from the reviewed story
+//   package <topic> <story-id>              build topics/<topic>/scripts/<slug>/evidence-package.json from the reviewed story
 //   validate <topic> <story-id> [--wpm N]   check script.json (+ script-review.json); writes validation.json, script.md, review.md
 //   show <topic> <story-id> [sentence-id]   the reviewer's sheet: each sentence, its assertions, fingerprints and passages
 //   storyboard <topic> <story-id>           fill and check storyboard.json against the script; writes storyboard.md, review.md
@@ -11,7 +11,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
-import { fileSha, readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
+import { fileSha, readJson, toJson, writeArtifact, topicDir, ROOT } from '../src/lib/io';
 import { loadReview, reviewPath } from '../src/lib/review';
 import { buildPackage, transcriptReader } from '../src/lib/evidence-package';
 import { approverProblem, releaseCheck, storyboardFingerprint, validationFingerprint } from '../src/lib/release';
@@ -75,7 +75,7 @@ function stagePackage(): EvidencePackage {
     inputs: {
       stories: fileSha(storiesPath(topic)),
       review: fileSha(reviewPath(topic)),
-      report: fileSha(join(ROOT, topic, 'report.json')),
+      report: fileSha(join(topicDir(topic), 'report.json')),
     },
     readTranscript: transcriptReader(topic),
     previous: old,

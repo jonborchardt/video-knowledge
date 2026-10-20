@@ -10,7 +10,7 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { checkStudyVerdicts } from '../src/lib/batches.ts';
 import { citedPairs, replacedCited } from '../src/lib/cited.ts';
-import { ROOT, watcher } from './watcher.mjs';
+import { ROOT, TOPICS, topicDir, watcher } from './watcher.mjs';
 
 const args = process.argv.slice(2);
 const replaceCited = args.includes('--replace-cited');
@@ -19,7 +19,7 @@ if (!topic || !files.length) {
   console.error('usage: node scripts/record-sources.mjs <topic> <verdicts.json> [...] [--replace-cited]');
   process.exit(1);
 }
-const store = join(topic, 'store'),
+const store = join(TOPICS, topic, 'store'),
   vdir = join(ROOT, store, 'videos');
 const first = {};
 for (const f of readdirSync(vdir).sort()) {
@@ -62,7 +62,7 @@ if (missing.length) {
   console.error('no source makes these claims:\n' + missing.join('\n'));
   process.exit(1);
 }
-const work = join(ROOT, topic, 'work');
+const work = join(topicDir(topic), 'work');
 mkdirSync(work, { recursive: true });
 let n = 0;
 for (const [video, verdicts] of Object.entries(by)) {

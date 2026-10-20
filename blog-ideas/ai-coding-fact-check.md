@@ -1,7 +1,7 @@
 # Blog post idea: I ran 220 AI-coding videos through a fact-checker
 
 Status: idea, not drafted. Written 2026-10-15 for the Always Shippable blog.
-Numbers below come from `ai-coding/report.json` at commit df2c07b; re-run the queries
+Numbers below come from `topics/ai-coding/report.json` at commit df2c07b; re-run the queries
 at the bottom before publishing.
 
 **One-line pitch:** YouTube and blogs make hundreds of claims about AI coding tools. I
@@ -109,7 +109,7 @@ eight commits are dated 2026-10-15).
 
 - `worthWatching` is true on every source in the current report. Do not quote a
   worth-watching count until that is fixed or explained.
-- The bottom line in `ai-coding/site.json` says "20 to 26 percent in field trials".
+- The bottom line in `topics/ai-coding/site.json` says "20 to 26 percent in field trials".
   Confirm the Microsoft/Accenture and Shan figures before repeating the range.
 - GLP-1 has one video and no report. Call it "started", not "published".
 

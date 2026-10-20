@@ -26,7 +26,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Typecheck, lint, format check, build dist/ from the committed <topic>/report.json files, then test the build.
+      # Typecheck, lint, format check, build dist/ from the committed topics/<topic>/report.json files, then test the build.
       - run: npm run validate
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

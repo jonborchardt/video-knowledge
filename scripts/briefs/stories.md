@@ -1,8 +1,8 @@
 # Brief: review story candidates
 
-Give an agent this file plus the topic id. The agent reads `<topic>/stories.json` (run
+Give an agent this file plus the topic id. The agent reads `topics/<topic>/stories.json` (run
 `npm run stories -- discover <topic>` first), the claims and verdicts behind each candidate,
-and the cited passages in `<topic>/sources/`, then writes `<topic>/story-review.json` and
+and the cited passages in `topics/<topic>/sources/`, then writes `topics/<topic>/story-review.json` and
 runs discover again. The code drafts candidates and audits references; this pass supplies
 the judgment the code cannot make. Nothing here changes a verdict or adds evidence.
 

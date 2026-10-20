@@ -1,9 +1,9 @@
 // npm run stories -- <command> <topic> [...]
-//   discover <topic> [--json]           draft, audit, evaluate and rank candidates; writes <topic>/stories.json
-//                                       (merges <topic>/story-review.json when present; see scripts/briefs/stories.md)
+//   discover <topic> [--json]           draft, audit, evaluate and rank candidates; writes topics/<topic>/stories.json
+//                                       (merges topics/<topic>/story-review.json when present; see scripts/briefs/stories.md)
 //   show <topic> [story-id] [--json]    the ranked list, or one story with its audit and cited passages
 //   validate <topic> <assertions.json> [--json]   run the evidence gate on your own assertions (exit 2 if any is blocked)
-// Reads <topic>/report.json and <topic>/store/ through src/lib/topics.ts; no watcher checkout needed.
+// Reads topics/<topic>/report.json and topics/<topic>/store/ through src/lib/topics.ts; no watcher checkout needed.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { type Assertion, passageReader, validate, type Validation } from '../src/lib/evidence';
 import { loadReview } from '../src/lib/review';

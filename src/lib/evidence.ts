@@ -15,7 +15,7 @@
 // contradictions and qualifications are pulled from every study verdict on the claim, so none can be hidden.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { lf, ROOT } from './io';
+import { lf, TOPICS, ROOT } from './io';
 import { hasFigure, nums } from './numbers';
 import type { Corpus, CorpusClaim, CorpusVerdict, Verdict } from './corpus';
 
@@ -92,12 +92,12 @@ export interface Validation {
 
 export type PassageReader = (cite: string) => string | null;
 
-/** Reads `<topic>/sources/<file>.txt#L10-L24` from the repo; null when the file or the lines do not exist. */
+/** Reads `<topic>/sources/<file>.txt#L10-L24` from topics/; null when the file or the lines do not exist. */
 export function passageReader(root = ROOT): PassageReader {
   return (cite) => {
     const m = cite.match(/^([^#]+\.txt)#L(\d+)(?:-L(\d+))?$/);
     if (!m) return null;
-    const file = join(root, m[1]);
+    const file = join(root, TOPICS, m[1]);
     if (!existsSync(file)) return null;
     const lines = lf(readFileSync(file, 'utf8')).split('\n');
     const [from, to] = [Number(m[2]), Number(m[3] ?? m[2])];

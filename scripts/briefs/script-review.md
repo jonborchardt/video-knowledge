@@ -3,8 +3,8 @@
 Give an agent that did not write the script this file plus the topic id and story id. The agent
 reads `npm run script -- show <topic> <story-id>` (every sentence with its assertions, their
 fingerprints, the deterministic result and the cited passages), the evidence package, and the
-source documents themselves in `<topic>/sources/` where a passage needs its surroundings, then
-writes `<topic>/scripts/<slug>/script-review.json` and runs `npm run script -- validate <topic> <story-id>`.
+source documents themselves in `topics/<topic>/sources/` where a passage needs its surroundings, then
+writes `topics/<topic>/scripts/<slug>/script-review.json` and runs `npm run script -- validate <topic> <story-id>`.
 The code has already checked references, figures, quotations and arithmetic; this pass supplies
 the judgment the code cannot make. It never adds evidence and never approves on plausibility: a
 sentence the passages do not establish is a finding, however likely it sounds.

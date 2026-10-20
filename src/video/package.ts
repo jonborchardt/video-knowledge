@@ -1,5 +1,5 @@
 // The private review package: everything a person needs to upload the rendered MP4 to YouTube as a private video and
-// review it, written to <topic>/scripts/<slug>/video/review/. No API call, no publishing: a folder with the file, the
+// review it, written to topics/<topic>/scripts/<slug>/video/review/. No API call, no publishing: a folder with the file, the
 // paste-ready text (working title, description with measured chapter timestamps and the research sources), the
 // provenance of the voice and the music, the build report and the review checklist. The package says, in every file,
 // that it is a review build and whether it is cleared for public release.

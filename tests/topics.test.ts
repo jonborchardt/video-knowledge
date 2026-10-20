@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ROOT } from '../src/lib/io';
+import { topicDir } from '../src/lib/io';
 import { loadTopic, topicNames } from '../src/lib/topics';
 
 describe('topics', () => {
@@ -50,7 +50,7 @@ describe('source documents', () => {
   // A cite counts LF lines, but the passage reader also breaks lines at a bare CR, so a CR inside a row (a table
   // pasted from a web page) shifts every later line and the gate checks figures against the wrong rows.
   it.each(topicNames())('%s: no source has a bare carriage return', (topic) => {
-    const dir = join(ROOT, topic, 'sources');
+    const dir = join(topicDir(topic), 'sources');
     const files = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.txt')) : [];
     const bad = files.filter((f) => /\r(?!\n)/.test(readFileSync(join(dir, f), 'utf8')));
     expect(bad).toEqual([]);

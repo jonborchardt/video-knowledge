@@ -7,7 +7,7 @@ import type { BuildSummary } from '../src/lib/build-report';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { buildPackage, docHasher, docReader } from '../src/lib/evidence-package';
-import { fileSha, readJson, sha, toJson, ROOT } from '../src/lib/io';
+import { fileSha, readJson, sha, toJson, topicDir } from '../src/lib/io';
 import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { renderCheckProblems } from '../src/lib/render-check';
 import { loadReview, reviewPath } from '../src/lib/review';
@@ -36,8 +36,8 @@ const SKIP_EXT = ['.pdf', '.mp4', '.wav', '.png'];
 
 export function copyTopic(topic: string): { root: string; dir: (storyId: string) => string; cleanup: () => void } {
   const root = mkdtempSync(join(tmpdir(), 'vk-topic-'));
-  const from = join(ROOT, topic);
-  cpSync(from, join(root, topic), {
+  const from = topicDir(topic);
+  cpSync(from, topicDir(topic, root), {
     recursive: true,
     filter: (src) => {
       const f = '/' + relative(from, src).replaceAll('\\', '/');
@@ -92,7 +92,7 @@ export function syntheticProduction(upTo: FixtureStage): Fixture {
     inputs: {
       stories: fileSha(storiesPath(TOPIC, root)),
       review: fileSha(reviewPath(TOPIC, root)),
-      report: fileSha(join(root, TOPIC, 'report.json')),
+      report: fileSha(join(topicDir(TOPIC, root), 'report.json')),
     },
     readDoc: docReader(root),
     previous: null,
