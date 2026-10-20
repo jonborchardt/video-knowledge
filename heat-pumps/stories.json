@@ -1151,9 +1151,11 @@
      }
     ]
    },
-   "chainCandidates": [
-    "conflict:heat-pump-costs-less-run-heating",
-    "decision:does-the-upfront-cost-eat-the-savings"
+   "chain": [
+    {
+     "id": "decision:does-the-upfront-cost-eat-the-savings",
+     "question": "How much more does a heat pump cost to install, and does that wipe out the savings?"
+    }
    ]
   },
   {
@@ -1514,7 +1516,7 @@
    },
    "chainCandidates": [
     "decision:when-does-it-pay-for-itself",
-    "decision:is-it-cheaper-to-run-than-gas"
+    "decision:what-happens-when-it-gets-cold"
    ]
   },
   {
@@ -1838,7 +1840,7 @@
    },
    "chainCandidates": [
     "conflict:heat-pump-costs-less-run-heating",
-    "decision:does-the-upfront-cost-eat-the-savings"
+    "decision:when-does-it-pay-for-itself"
    ]
   },
   {
@@ -2935,7 +2937,7 @@
    },
    "chainCandidates": [
     "conflict:heat-pump-costs-less-run-heating",
-    "decision:does-the-upfront-cost-eat-the-savings"
+    "decision:what-happens-when-it-gets-cold"
    ]
   },
   {
@@ -4144,7 +4146,7 @@
    },
    "chainCandidates": [
     "conflict:heat-pump-costs-less-run-heating",
-    "decision:does-the-upfront-cost-eat-the-savings"
+    "decision:when-does-it-pay-for-itself"
    ]
   },
   {
@@ -4702,10 +4704,7 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:when-does-it-pay-for-itself",
-    "conflict:heat-pumps-cut-home-carbon-emissions"
-   ]
+   "partOf": "decision:replace-a-working-furnace-or-wait"
   },
   {
    "id": "decision:does-the-upfront-cost-eat-the-savings",
@@ -5638,10 +5637,7 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:when-does-it-pay-for-itself",
-    "decision:replace-a-working-furnace-or-wait"
-   ]
+   "partOf": "decision:is-it-cheaper-to-run-than-gas"
   },
   {
    "id": "decision:replace-a-working-furnace-or-wait",
@@ -6324,9 +6320,11 @@
      }
     ]
    },
-   "chainCandidates": [
-    "decision:does-the-upfront-cost-eat-the-savings",
-    "decision:what-happens-when-it-gets-cold"
+   "chain": [
+    {
+     "id": "decision:what-incentives-are-left",
+     "question": "What heat pump tax credits and rebates are actually left in 2026?"
+    }
    ]
   },
   {
