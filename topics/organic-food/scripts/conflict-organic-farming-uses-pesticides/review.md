@@ -3,14 +3,14 @@
 | | |
 |---|---|
 | Story | `conflict:organic-farming-uses-pesticides` (organic-food) |
-| Revision | 3 (3 of at most 3 in this pass) |
-| Validation | **blocked** (2026-10-21) |
-| Words / runtime | 793 words, about 5.4 min at 150 wpm |
+| Revision | 4 (4 of at most 3 in this pass) |
+| Validation | **passed** (2026-10-21) |
+| Words / runtime | 784 words, about 5.3 min at 150 wpm |
 | Sentences | 32 (23 factual or attributed) |
-| Assertions | 28, 27 verified |
-| Issues | 1 blocking, 1 warnings, 16 dispositioned |
+| Assertions | 28, 28 verified |
+| Issues | 0 blocking, 1 warnings, 16 dispositioned |
 | Unreviewed sentences | 0 |
-| Scenes | no storyboard yet |
+| Scenes | 26, 5:29 (ok) |
 | Evidence package | db3fc8d736 (10 documents, 5 claims) |
 | Model | claude-opus-5-5 |
 
@@ -18,7 +18,6 @@ Automated validation says whether the narration is eligible for human editorial 
 
 ## Open issues
 
-- **blocking** s11 (s11.a) overgeneralization (review): The passage says the 26 organic substances were evaluated under the same legal framework as all EU pesticides, which is about their safety approval; it does not say organic use is not regulated more closely. The corpus shows the opposite for use: the EU organic annex adds conditions (deltamethrin and lambda-cyhalothrin only in traps), which s17 itself reports. A viewer would come away believing organic pesticides face no extra rules in Europe.
 - **warning** s10 (s10.a) omission (review): The quote includes 'they're more closely regulated', and the script never comes back to it. The corpus speaks against it: Mie 2017 says the 26 EU organic substances are approved 'as evaluated in accordance with the same legal framework' as all pesticides. Only the 'not as harmful' half is investigated (s11 to s18), so a viewer may keep the regulation claim as true.
 
 ## Dispositions
@@ -51,6 +50,7 @@ Deterministic warnings the reviewer judged false positives or already carried by
 - s27 (s27.a) missing-qualification (raised against revision 1, addressed in revision 2): 'Every trial that swapped people's whole diet to organic and tested their urine' is four trials (two in children, two in adults) lasting from 4 days to 22 days. Without the count, 'every trial' and 'a systematic review backs it' sound like a large body of evidence.
 - s07 (s07.a) unsupported (raised against revision 1, addressed in revision 3): The cited passage (7 CFR 205.601 heading and preamble, L263-L264) contains none of the four examples; the writer's note says they come from the verdict note. They do appear further down the same document (L295-L311), but those lines are not cited and the brief forbids citing uncited lines, so the examples are not established by the evidence presented.
 - s24 (s24.a) unsupported (raised against revision 1, addressed in revision 3): The figures (46% and 11%) are in the cited passage, but the limitation 'it could compare only how often residues appeared, not how much' is not; it is in the same paper at L1196-L1201 ('the data available did not allow scientifically robust comparisons of the concentrations of pesticides'), outside the cited lines. The limitation is accurate and narrows the claim, so a viewer is not misled, but it does not trace to a cited passage. The same lines add that only eleven studies compared frequencies and eight of them covered a single crop.
+- s11 (s11.a) overgeneralization (raised against revision 3, addressed in revision 4): The passage says the 26 organic substances were evaluated under the same legal framework as all EU pesticides, which is about their safety approval; it does not say organic use is not regulated more closely. The corpus shows the opposite for use: the EU organic annex adds conditions (deltamethrin and lambda-cyhalothrin only in traps), which s17 itself reports. A viewer would come away believing organic pesticides face no extra rules in Europe.
 
 ## Research gaps
 
@@ -60,10 +60,10 @@ Deterministic warnings the reviewer judged false positives or already carried by
 ## Outstanding editorial decisions
 
 - s10 s10.a: The quote includes 'they're more closely regulated', and the script never comes back to it. The corpus speaks against it: Mie 2017 says the 26 EU organic substances are approved 'as evaluated in accordance with the same legal framework' as all pesticides. Only the 'not as harmful' half is investigated (s11 to s18), so a viewer may keep the regulation claim as true.
-- Revision limit (3) reached with 1 blocking issues open: a person decides whether to cut, re-research or abandon.
 
 ## History
 
 - revision 1, 2026-10-21: blocked, 3 blocking, 9 warnings
 - revision 2, 2026-10-21: blocked, 1 blocking, 5 warnings
 - revision 3, 2026-10-21: blocked, 1 blocking, 1 warnings
+- revision 4, 2026-10-21: passed, 0 blocking, 1 warnings

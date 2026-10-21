@@ -2,13 +2,23 @@
   "topic": "organic-food",
   "story": "conflict:organic-farming-uses-pesticides",
   "title": "Does Organic Mean No Pesticides?",
-  "revision": 3,
+  "revision": 4,
   "generation": {
     "model": "claude-opus-5-5",
     "brief": "scripts/briefs/script.md",
     "date": "2026-10-20",
     "wordsPerMinute": 150,
-    "evidencePackage": "db3fc8d736"
+    "evidencePackage": "db3fc8d736",
+    "corrective": [
+      {
+        "reason": "Revision limit reached with one blocker: s11 overgeneralization. End s11 on the quote (or say they pass the same safety approval), without claiming organic pesticides are not regulated more closely.",
+        "sentences": [
+          "s11"
+        ],
+        "authorizedBy": "jon",
+        "revision": 4
+      }
+    ]
   },
   "sections": [
     {
@@ -240,7 +250,7 @@
         },
         {
           "id": "s11",
-          "text": "A review of organic food and health went through Europe's approved list: of 385 substances authorised as pesticides in the EU, 26 are also approved for organic farming, \"evaluated in accordance with the same legal framework\", so in Europe they are not regulated more closely.",
+          "text": "A review of organic food and health went through Europe's approved list: of 385 substances authorised as pesticides in the EU, 26 are also approved for organic farming, \"evaluated in accordance with the same legal framework\".",
           "type": "factual",
           "assertions": [
             {
@@ -265,7 +275,7 @@
                 "cite": "organic-food/sources/mie-2017-health.txt#L76-L76"
               },
               "qualifications": [
-                "\"in Europe\" keeps the EU scope; answers the regulation half of s10's quote."
+                "Ends on the quote: the same safety approval, not a claim about how closely organic use is regulated (s17 gives the extra EU conditions)."
               ]
             }
           ]

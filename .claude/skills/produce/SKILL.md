@@ -70,7 +70,8 @@ A render or QA command whose output has not changed for 90 minutes is hung (a cr
 exits): kill its node and `chrome-headless-shell` processes and run the step again (cached chunks are
 kept). A transient narration failure (edge-tts "No audio was received", or a clip the timeline calls
 truncated, whose cached mp3 you delete first) is retried the same way. Three hung or failed attempts at
-one step is a Stop.
+one step is a Stop. Each render leaves a ~1 GB `remotion-webpack-bundle-*` folder in `%TEMP%`; with no render
+running, delete those (and `react-motion-render*`) before the next one, or the system drive fills up.
 
 Never edit a review file, a validation or any derived file to get past a check, never soften a
 sentence because evidence is missing when evidence could be gathered, and never pass
