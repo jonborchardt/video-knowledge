@@ -6,3 +6,4 @@
 - heat-pumps conflict:heat-pumps-cut-home-carbon-emissions: packaged, 42 min, topics/heat-pumps/scripts/conflict-heat-pumps-cut-home-carbon-emissions/video/review/conflict-heat-pumps-cut-home-carbon-emissions-review-private.mp4
 - inflation-2026 decision:is-gas-cheaper-than-under-biden: packaged, 45 min, topics/inflation-2026/scripts/decision-is-gas-cheaper-than-under-biden/video/review/decision-is-gas-cheaper-than-under-biden-review-private.mp4
 - organic-food conflict:eating-organic-food-has-proven-health: packaged, 45 min, topics/organic-food/scripts/conflict-eating-organic-food-has-proven-health/video/review/conflict-eating-organic-food-has-proven-health-review-private.mp4
+- heat-pumps decision:what-happens-when-it-gets-cold: packaged, 57 min, topics/heat-pumps/scripts/decision-what-happens-when-it-gets-cold/video/review/decision-what-happens-when-it-gets-cold-review-private.mp4

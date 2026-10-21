@@ -1,6 +1,6 @@
 // The production board derives every stage from the persisted artifacts. Every topic must derive without throwing; the
 // stage tests run on a synthetic production (production-helpers.ts) built by the library code, not a committed video.
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -19,6 +19,7 @@ import {
   validationHaltKind,
 } from '../src/lib/production';
 import { corpusOf } from '../src/lib/corpus';
+import { loadStories } from '../src/lib/stories';
 import { passageReader } from '../src/lib/evidence';
 import { docHasher, docReader } from '../src/lib/evidence-package';
 import { loadReview } from '../src/lib/review';
@@ -201,11 +202,13 @@ describe('graphics stage', () => {
 
 describe('board next', () => {
   it('boardNext for a story without a script dir', () => {
-    const n = boardNext('heat-pumps', 'decision:what-happens-when-it-gets-cold');
+    // Any heat-pumps story not yet produced (production keeps taking them, so none is named here).
+    const id = loadStories('heat-pumps')!.stories.find(
+      (s) => !s.partOf && !existsSync(scriptDir('heat-pumps', s.id)),
+    )!.id;
+    const n = boardNext('heat-pumps', id);
     expect(n.stage).toBe('package');
-    expect(n.steps).toEqual([
-      { kind: 'run', text: 'npm run script -- package heat-pumps decision:what-happens-when-it-gets-cold' },
-    ]);
+    expect(n.steps).toEqual([{ kind: 'run', text: `npm run script -- package heat-pumps ${id}` }]);
     expect(n.done).toBe(false);
   });
 

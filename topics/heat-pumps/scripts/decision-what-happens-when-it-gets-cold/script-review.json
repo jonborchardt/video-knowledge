@@ -1,0 +1,285 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-21",
+  "revision": 2,
+  "packageFingerprint": "d8e5d3dd14",
+  "approved": {
+    "s01": "6eaab4e981",
+    "s02": "9cf51128e4",
+    "s03": "e696145c04",
+    "s04": "6a1f7134d6",
+    "s05": "851b47cb9d",
+    "s06": "4a0e17552b",
+    "s07": "3deb35ab03",
+    "s08": "650c5a4df4",
+    "s09": "390a474b6d",
+    "s10": "7fb4d8e380",
+    "s11": "3790a7f33d",
+    "s12": "d2805f0f52",
+    "s13": "2901939969",
+    "s14": "d3d8f5b066",
+    "s15": "a271e1bda3",
+    "s16": "2c9e1a2382",
+    "s17": "ef00db3450",
+    "s18": "4872cedc39",
+    "s19": "a705303a89",
+    "s20": "a99e2bf735",
+    "s21": "60f6c1c927",
+    "s22": "d5b5c83725",
+    "s23": "8e594db20f",
+    "s24": "d4218a6e8e",
+    "s25": "ee9d6b19a2",
+    "s26": "16fe437eaf",
+    "s27": "40b7895298",
+    "s28": "f251035a8f",
+    "s29": "549025efaa",
+    "s30": "1bb9d18010",
+    "s31": "1a01d7531e",
+    "s32": "1038940291",
+    "s33": "7affad6967",
+    "s34": "3d727eabc0",
+    "s35": "7101076d06",
+    "s36": "44055e6473",
+    "s37": "0276e5496d",
+    "s38": "c1f1cb5cf6",
+    "s39": "a3859a3ecd",
+    "s40": "02b0f27f8b",
+    "s41": "b70eb711c1",
+    "s42": "61cdca0cbf",
+    "s43": "d67cc0561b",
+    "s44": "018f95d5ab",
+    "s45": "289f23c8a7",
+    "s46": "7814a44d88",
+    "s47": "9ee928e3a5"
+  },
+  "findings": [
+    {
+      "sentence": "s36",
+      "assertion": "s36.a",
+      "category": "omission",
+      "severity": "blocking",
+      "explanation": "The cited passage gives three gas balance points: all measured units above 70 F (s34), the measured units listed as cold-climate still above 58 F (Figure 79), and only the rating curve of an HSPF-13 unit at 28-40 F. Skipping the measured cold-climate result leaves the viewer thinking a cold-climate model breaks even with gas at 28-40 F, when the cold-climate units actually metered did not get below 58 F.",
+      "refs": [
+        "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3436-L3459"
+      ],
+      "suggestion": "Add the measured cold-climate result before the rating curve, e.g. \"Even the measured units listed as cold-climate broke even with gas only above 58 °F; on paper, the rating curve of a then-current cold-climate model brought it down to between 28 and 40 °F.\"",
+      "fingerprint": "66d8dd27b2",
+      "revision": 1
+    },
+    {
+      "sentence": "s40",
+      "assertion": "s40.a",
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "The answer says that in \"these field tests\" the heat pumps kept heating below zero, but s30 reports a field-study site whose compressor did not run below 0 F at all (and the same passage has another that stopped below 4 F). The evidence supports that most units kept heating, not all of them.",
+      "refs": [
+        "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt#L1946-L1951",
+        "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L2926-L2935"
+      ],
+      "suggestion": "Narrow it: \"In these field tests most units did: they kept heating below zero, with less efficiency and less output, and still got more heat from each unit of electricity than resistance heat.\"",
+      "fingerprint": "fe3790b89e",
+      "revision": 1
+    },
+    {
+      "sentence": "s37",
+      "assertion": "s37.a",
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "The Canadian Climate Institute model compares lifetime costs (equipment and installation as well as energy; see the report's lifetime-cost method), while s34-s36 are running-cost break-even temperatures; \"points the same way\" presents the two as one measure.",
+      "refs": [
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1142-L1150"
+      ],
+      "suggestion": "Say what it counts: \"A cost model for Toronto and Edmonton that counts equipment as well as energy points the same way: ...\"",
+      "fingerprint": "59d2b117c2",
+      "revision": 1
+    },
+    {
+      "sentence": "s27",
+      "assertion": "s27.a",
+      "category": "causation",
+      "severity": "warning",
+      "explanation": "\"Part of that\" ties the thermostat to the 25 percent backup time below 0 F in s26, but the passage only says setpoint interference raised the switchover temperature (30-35 F); it attributes none of the below-0 F backup time to it.",
+      "refs": [
+        "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1238-L1247"
+      ],
+      "suggestion": "Detach it from the 25 percent: \"Some backup use came from the thermostat: ...\"",
+      "fingerprint": "59226cd922",
+      "revision": 1
+    },
+    {
+      "sentence": "s28",
+      "assertion": "s28.a",
+      "category": "causation",
+      "severity": "warning",
+      "explanation": "\"Part is faults\" also hangs on the 25 percent in s26, but that figure excludes defrost, which is where both sites engaged the higher stages; only the one site seen doing it in normal heating could contribute.",
+      "refs": [
+        "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1249-L1310",
+        "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt#L1169-L1193"
+      ],
+      "suggestion": "Reword as \"Some came from faults: ...\" so it does not claim a share of the below-0 F figure.",
+      "fingerprint": "fdcf03ad24",
+      "revision": 1
+    },
+    {
+      "sentence": "s43",
+      "assertion": "s43.a",
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "The answer to \"do they still save money?\" is \"yes\" against propane or electric heat, but the same Minnesota passage that gives the 30-56 percent savings says retrofit paybacks are typically longer than 10 years unless the equipment needs replacing anyway.",
+      "refs": [
+        "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L495-L518"
+      ],
+      "suggestion": "Add a clause here or in s33: \"on running costs, though the Minnesota researchers put retrofit paybacks at over 10 years unless the old system needs replacing.\"",
+      "fingerprint": "16941dc54a",
+      "revision": 1
+    }
+  ],
+  "dispositions": {
+    "s08.a": {
+      "fingerprint": "650c5a4df4",
+      "category": "needs-qualification",
+      "reason": "s11 says ordinary models ran less efficiently and s19 how far COP falls; s08 only defines COP 1 for resistance heat."
+    },
+    "s09.a": {
+      "fingerprint": "390a474b6d",
+      "category": "needs-qualification",
+      "reason": "The sentence names one evaluation and the later winter, s10 gives the weaker first winter; the rated-list and single-stage-assumption limits do not narrow a measured average."
+    },
+    "s10.a": {
+      "fingerprint": "7fb4d8e380",
+      "category": "needs-qualification",
+      "reason": "The 50 percent is the evaluators' own comparison for these measured units; equipment-type dependence is carried by s11."
+    },
+    "s10.b": {
+      "fingerprint": "7fb4d8e380",
+      "category": "needs-qualification",
+      "reason": "The sentence itself is the qualification (the weaker first winter)."
+    },
+    "s11.a": {
+      "fingerprint": "3790a7f33d",
+      "category": "needs-qualification",
+      "reason": "The sentence says the ordinary models ran less efficiently; the cited limits concern other units."
+    },
+    "s12.a": {
+      "fingerprint": "d2805f0f52",
+      "category": "needs-qualification",
+      "reason": "The sentence says prototypes and excludes backup and defrost periods; s13 adds the lab-field gap."
+    },
+    "s13.a": {
+      "fingerprint": "2901939969",
+      "category": "needs-qualification",
+      "reason": "The sentence says most, not all, units cleared 1.75 in the field."
+    },
+    "s16.a": {
+      "fingerprint": "2c9e1a2382",
+      "category": "needs-qualification",
+      "reason": "The sentence says one small unit; s17 and s18 give its reduced output and the backup advice below -15 F."
+    },
+    "s18.a": {
+      "fingerprint": "4872cedc39",
+      "category": "needs-qualification",
+      "reason": "This sentence is the qualification on s16."
+    },
+    "s25.a": {
+      "fingerprint": "ee9d6b19a2",
+      "category": "needs-qualification",
+      "reason": "s26 follows at once with the backup time below 0 F and the thin sample."
+    },
+    "s26.a": {
+      "fingerprint": "16fe437eaf",
+      "category": "needs-qualification",
+      "reason": "The sentence says only some of the 22 sites had data that cold; s31 covers sizing."
+    },
+    "s29.a": {
+      "fingerprint": "549025efaa",
+      "category": "needs-qualification",
+      "reason": "Scoped to the Minnesota all-electric system and says the booster joined in; the passage itself states the system COP stayed above 1."
+    },
+    "s30.a": {
+      "fingerprint": "1bb9d18010",
+      "category": "needs-qualification",
+      "reason": "The sentence is itself the limitation (one site, a fixed control setting)."
+    },
+    "s31.a": {
+      "fingerprint": "1a01d7531e",
+      "category": "needs-qualification",
+      "reason": "The sentence says one study estimated it and that the rise comes from sizing."
+    },
+    "s33.a": {
+      "fingerprint": "7affad6967",
+      "category": "needs-qualification",
+      "reason": "The sentence names the propane or electric baseline and says the savings are estimated from performance maps."
+    },
+    "s34.a": {
+      "fingerprint": "3d727eabc0",
+      "category": "needs-qualification",
+      "reason": "The sentence ties the result to those winters' prices, the 80 percent gas system and the measured units."
+    },
+    "s35.a": {
+      "fingerprint": "7101076d06",
+      "category": "needs-qualification",
+      "reason": "The passage says the mini-split was always less expensive than propane in both winters; s34 carries the price context."
+    },
+    "s38.a": {
+      "fingerprint": "c1f1cb5cf6",
+      "category": "needs-qualification",
+      "reason": "The sentence gives the model's own stated reasons, for Edmonton only."
+    },
+    "s41.a": {
+      "fingerprint": "b70eb711c1",
+      "category": "needs-qualification",
+      "reason": "Backup generally rising in colder bins is what the passages report; sizing and controls are named in the same sentence."
+    },
+    "s41.b": {
+      "fingerprint": "b70eb711c1",
+      "category": "needs-qualification",
+      "reason": "s31 already said this was one study's estimate for Minnesota."
+    },
+    "s44.a": {
+      "fingerprint": "018f95d5ab",
+      "category": "needs-qualification",
+      "reason": "The sentence is itself the sample-size qualification."
+    },
+    "s27.a": {
+      "fingerprint": "40b7895298",
+      "category": "needs-qualification",
+      "reason": "The cited limits (one ductless unit, Site 10, CCI backup note) concern capacity at extreme cold, not when backup switched on; the sentence reports only the switchover and its cause."
+    },
+    "s36.a": {
+      "fingerprint": "44055e6473",
+      "category": "needs-qualification",
+      "reason": "The sentence gives the measured cold-climate result first and marks the 28 to 40 F range as a rating curve; s34 ties both to those winters prices."
+    },
+    "s37.a": {
+      "fingerprint": "0276e5496d",
+      "category": "needs-qualification",
+      "reason": "The passage itself says nearly all; the sentence says nearly all, names the two cities and says the model counts equipment as well as energy."
+    },
+    "s40.a": {
+      "fingerprint": "02b0f27f8b",
+      "category": "needs-qualification",
+      "reason": "The sentence says most units, not all; s30 gives the site whose compressor stopped below 0 F, s18 the backup advice, s44 the small samples."
+    },
+    "s40.c": {
+      "fingerprint": "02b0f27f8b",
+      "category": "needs-qualification",
+      "reason": "The sentence speaks of the field-tested units, whose measured COP stayed above 1; s11 already says ordinary models ran less efficiently."
+    },
+    "s43.a": {
+      "fingerprint": "d67cc0561b",
+      "category": "needs-qualification",
+      "reason": "The always is the passage own wording for propane (balance point -15 F in both winters); the payback limit sits in the same sentence."
+    },
+    "s43.b": {
+      "fingerprint": "d67cc0561b",
+      "category": "needs-qualification",
+      "reason": "The sentence says the gas result turns on unit, climate and prices; s34 ties the measured result to those winters prices and s37 says the model counts equipment."
+    },
+    "s29": {
+      "fingerprint": "549025efaa",
+      "category": "number-dense",
+      "reason": "The ten figures span five separate findings (booster threshold, compressor cutoff, sizing, savings, gas break-even); the break-even temperatures in s34 and s36 are one comparison the storyboard can chart, and cutting any of them would drop a qualification an earlier review required."
+    }
+  }
+}
