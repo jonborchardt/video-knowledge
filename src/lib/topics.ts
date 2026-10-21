@@ -211,15 +211,18 @@ export function loadTopic(name: string): Topic {
       for (const v of a.verdicts ?? []) {
         const vs = claimVerdicts.get(a.claim) ?? [];
         const by = v.method === 'prior' || !v.source ? 'AI guess' : docName(v.source);
-        if (!vs.some((o) => o.by === by && o.note === (v.note ?? '')))
-          vs.push({
-            by,
-            verdict: v.verdict,
-            confidence: v.confidence ?? null,
-            note: v.note ?? '',
-            cite: v.source ?? null,
-            date: v.date ?? null,
-          });
+        const view = {
+          by,
+          verdict: v.verdict,
+          confidence: v.confidence ?? null,
+          note: v.note ?? '',
+          cite: v.source ?? null,
+          date: v.date ?? null,
+        };
+        // The same verdict re-recorded (say, on a wider range) replaces the older copy instead of being dropped.
+        const i = vs.findIndex((o) => o.by === by && o.note === view.note);
+        if (i < 0) vs.push(view);
+        else if ((view.date ?? '') >= (vs[i].date ?? '')) vs[i] = view;
         claimVerdicts.set(a.claim, vs);
       }
     }

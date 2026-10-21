@@ -18,6 +18,7 @@ export interface KindSpec {
   cues?: string[]; // cues it must get from render.json; every other cue a component reads has a fallback
   percent?: boolean; // draws percentages: every point is a percent and the points total at most 100
   fadesOut?: boolean; // ends on an intentional fade to black, which QA's blank check allows at the end
+  passage?: boolean; // reads its figures from the scene's first cited passage (TimelineScene.excerpt), not chart points
 }
 
 export const GENERIC = {

@@ -1,0 +1,179 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-20",
+  "revision": 4,
+  "packageFingerprint": "52bd330e8e",
+  "approved": {
+    "s01": "ed88b27713",
+    "s02": "bdcab61bd3",
+    "s03": "ff023491b5",
+    "s04": "61d31996ec",
+    "s05": "e6d15ba3ba",
+    "s06": "62e4042481",
+    "s07": "e9377a9978",
+    "s08": "3a8631b94f",
+    "s09": "17759acaee",
+    "s10": "e27631a0ac",
+    "s11": "3997d1613d",
+    "s12": "af72bf3217",
+    "s13": "4c19e8942d",
+    "s14": "f9c504ad36",
+    "s15": "c13d6f9fa8",
+    "s16": "385ff04fb7",
+    "s17": "15829f2716",
+    "s18": "673d2c0a43",
+    "s19": "fef5798c2c",
+    "s20": "29160fdde1",
+    "s22": "159faca363",
+    "s23": "875c6d4ceb"
+  },
+  "dispositions": {
+    "s01.a": {
+      "fingerprint": "ed88b27713",
+      "category": "needs-qualification",
+      "reason": "The sentence says only that GDP grew in Q1 and Q2 2026, which the BEA passage states directly; it claims no boom, and s08 gives the trend comparison."
+    },
+    "s07.a": {
+      "fingerprint": "e9377a9978",
+      "category": "needs-qualification",
+      "reason": "The figures and quarters are read exactly from the BEA passage, and s08 immediately says this is only a little above the long-run pace."
+    },
+    "s08.a": {
+      "fingerprint": "3a8631b94f",
+      "category": "needs-qualification",
+      "reason": "The sentence attributes the 2.0 percent to Federal Reserve officials, so the viewer hears it as their projection; it is the longer-run median in SEP Table 1 (L17)."
+    },
+    "s08.b": {
+      "fingerprint": "3a8631b94f",
+      "category": "needs-qualification",
+      "reason": "The sentence is the qualification itself: 2.5 and 2.2 against the SEP longer-run median of 2.0 is a little above normal, not a boom."
+    },
+    "s10.a": {
+      "fingerprint": "e27631a0ac",
+      "category": "needs-qualification",
+      "reason": "The rate and range are verbatim from the release (L25-L27), and s12-s13 give the weak payrolls and the missing definition of full employment."
+    },
+    "s12.a": {
+      "fingerprint": "af72bf3217",
+      "category": "needs-qualification",
+      "reason": "'Barely moved' and +29,000 match the release's 'changed little (+29,000)'; the sentence is itself the payroll qualification."
+    },
+    "s13.a": {
+      "fingerprint": "4c19e8942d",
+      "category": "needs-qualification",
+      "reason": "The sentence is itself the qualification; the release defines no full employment."
+    },
+    "s18.c": {
+      "fingerprint": "673d2c0a43",
+      "category": "needs-qualification",
+      "reason": "The sentence says only that the boast does not match the year to September, which the BLS real earnings passage (-0.7%) establishes; s19 gives the all-employees limit next."
+    },
+    "s19.a": {
+      "fingerprint": "fef5798c2c",
+      "category": "needs-qualification",
+      "reason": "The sentence is the limitation itself (averages, not the median worker) and makes no purchasing-power claim."
+    },
+    "s20.a": {
+      "fingerprint": "29160fdde1",
+      "category": "needs-qualification",
+      "reason": "The sentence says 'a little faster than the Fed's long-run pace' and answers no to boom, the narrower statement the SEP and BEA passages support."
+    },
+    "s20.b": {
+      "fingerprint": "29160fdde1",
+      "category": "needs-qualification",
+      "reason": "The sentence attributes the benchmark to Fed officials (SEP longer-run unemployment median 4.2 vs September 4.2) and pairs it with slow hiring; s13 already says full employment is a judgement."
+    },
+    "s22.a": {
+      "fingerprint": "159faca363",
+      "category": "needs-qualification",
+      "reason": "The sentence says only that growth and falling real pay coexisted, which s07 and s16-s17 establish; it does not call employment strong, and s12 and s20 give the slow hiring."
+    }
+  },
+  "findings": [
+    {
+      "sentence": "s03",
+      "fingerprint": "28c5be80e8",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "A rhetorical sentence that smuggles a fact: Trump's quote in s04 ('the greatest economy we've ever had') cites no government number at all, and the script later finds his wage boast does not fit the data, so 'both camps quote real government numbers' is not established.",
+      "refs": [],
+      "suggestion": "Drop the first clause: 'The trick is noticing which measure each side is talking about.'"
+    },
+    {
+      "sentence": "s08",
+      "assertion": "s08.a",
+      "fingerprint": "76f08dfe4e",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'Roughly the pace the economy usually runs at' comes only from the verdict note; the cited BEA passage gives the two quarterly rates and nothing about trend or usual growth, and no corpus passage states a trend rate.",
+      "refs": [
+        "inflation-2026/sources/bea-gdp-2026-q2.txt#L12-L12"
+      ],
+      "suggestion": "Say what the passage supports, e.g. 'That is steady growth, not the surge the word boom suggests', or have a trend-growth passage recorded through record-sources first."
+    },
+    {
+      "sentence": "s20",
+      "assertion": "s20.a",
+      "fingerprint": "713f9c6726",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'Growing at about its usual pace' repeats the s08 trend claim that no cited passage establishes; 'low unemployment' is likewise a judgement from the verdict note ('near common estimates of the natural rate'), not from the BLS passage.",
+      "refs": [
+        "inflation-2026/sources/bea-gdp-2026-q2.txt#L12-L12",
+        "inflation-2026/sources/bls-employment-situation-2026-09.txt#L14-L27"
+      ],
+      "suggestion": "'By these measures, no: it is growing steadily, unemployment is holding still, and hiring is slow.'"
+    },
+    {
+      "sentence": "s18",
+      "assertion": "s18.a",
+      "fingerprint": "c914e78d7b",
+      "revision": 1,
+      "category": "selective",
+      "severity": "blocking",
+      "explanation": "The boast is present tense from an address whose other claims the store judges on December 2025 data, when the series shows pay beating prices (Nov 2025: 3.9 vs 2.7; Jan 2026: 3.7 vs 2.4). Testing it against a year that mostly came after it leaves the viewer thinking it was false when said; the narration also names nobody, so the viewer must guess it was Trump.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L1434-L1434",
+        "inflation-2026/sources/bls-real-earnings-2026-09.txt#L11-L14"
+      ],
+      "suggestion": "'So Trump's line that wages are \"rising much faster than inflation\" held at the turn of the year, but no longer fits.'"
+    },
+    {
+      "sentence": "s24",
+      "fingerprint": "8369302c62",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "blocking",
+      "explanation": "Restates s22 almost word for word ('output, jobs and what a paycheck buys' are different measurements / tell different stories), and s23 already makes the 'which number?' point that s03 set up.",
+      "refs": [],
+      "suggestion": "Cut s24 and end on s23, or cut the 'because ...' clause from s22 and keep s24."
+    },
+    {
+      "sentence": "s21",
+      "fingerprint": "b6563471b5",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "warning",
+      "explanation": "Re-tells s15-s16 nearly verbatim ('then prices jumped in the spring' / 'fell behind once prices jumped in the spring') without adding anything the answer needs beyond the direction of real pay.",
+      "refs": [],
+      "suggestion": "Fold into s20 as a short callback, e.g. '... and since spring, the paycheck has lost ground.'"
+    },
+    {
+      "sentence": "s12",
+      "assertion": "s12.a",
+      "fingerprint": "42895ebf69",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "warning",
+      "explanation": "'Slowed' asserts a deceleration; the cited passage (L14-L27) says only that payrolls 'changed little' (+29,000). The comparison with the 45,000 monthly average is at L60-L61, which is not cited.",
+      "refs": [
+        "inflation-2026/sources/bls-employment-situation-2026-09.txt#L14-L27"
+      ],
+      "suggestion": "'But hiring is barely moving: employers added just 29,000 jobs in September.'"
+    }
+  ]
+}

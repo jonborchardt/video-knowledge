@@ -3,7 +3,7 @@
  "basis": {
   "claims": 252,
   "sources": 68,
-  "studies": 14,
+  "studies": 15,
   "candidates": 26
  },
  "stories": [
@@ -22,6 +22,7 @@
    "evidenceAvailable": [
     "BLS Real Earnings, September 2026: right (0.95, direct)",
     "BLS CPI, earnings and jobs series 2019-2026: right (0.9, direct)",
+    "fomc-sep-2026-09-16.txt: partly (0.55, partial)",
     "BEA GDP, Q2 2026: partly (0.6, partial)",
     "BLS CPI, earnings and jobs series 2019-2026: right (0.95, direct)",
     "BLS Real Earnings, September 2026: wrong (0.8, partial)",
@@ -63,7 +64,7 @@
     "evidence": 1,
     "editorial": 0.91,
     "overall": 0.95,
-    "explanation": "editorial 0.91 = mean of coherence 0.85 (review), relevance 0.98 (19 sources, 15 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (4 studies, 6 claims, tension); evidence 1 = strongest BLS Real Earnings, September 2026 at 0.95 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.91 = mean of coherence 0.85 (review), relevance 0.98 (19 sources, 15 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (5 studies, 6 claims, tension); evidence 1 = strongest BLS Real Earnings, September 2026 at 0.95 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.85), central conclusion supported, 6 essential findings verified, no pending review.",
@@ -144,6 +145,22 @@
          "ref": {
           "kind": "study",
           "claim": "inflation-2026/economy-booming-2026",
+          "cite": "inflation-2026/sources/fomc-sep-2026-09-16.txt#L13-L17"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "fomc-sep-2026-09-16.txt",
+         "verdict": "partly",
+         "confidence": 0.55,
+         "note": "FOMC participants put longer-run real GDP growth at a 2.0% median (central tendency 2.0-2.2%) and project 2.3% for 2026, so 2026 growth runs only slightly above the economy's trend pace, an expansion rather than a boom.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/economy-booming-2026",
           "cite": "inflation-2026/sources/bea-gdp-2026-q2.txt#L12-L12"
          },
          "cited": true,
@@ -160,12 +177,13 @@
        "context": [],
        "problems": [],
        "limitations": [
+        "fomc-sep-2026-09-16.txt: FOMC participants put longer-run real GDP growth at a 2.0% median (central tendency 2.0-2.2%) and project 2.3% for 2026, so 2026 growth runs only slightly above the economy's trend pace, an expansion rather than a boom. [partial: the verdict note limits its own scope (\"rather than\")]",
         "BEA GDP, Q2 2026: Real GDP grew at 2.5% and 2.2% annual rates in Q1 and Q2 2026, roughly trend growth, while payrolls averaged +45,000 a month and real hourly earnings fell 0.7% over the year; the economy is growing, but the data describe a solid expansion rather than a boom. [partial: the verdict note limits its own scope (\"rather than\")]"
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
       }
      },
      {
@@ -372,7 +390,7 @@
          "ref": {
           "kind": "study",
           "claim": "inflation-2026/labor-market-full-employment-2026",
-          "cite": "inflation-2026/sources/bls-employment-situation-2026-09.txt#L25-L27"
+          "cite": "inflation-2026/sources/bls-employment-situation-2026-09.txt#L14-L27"
          },
          "cited": true,
          "role": "qualifies",
@@ -383,17 +401,34 @@
          "applicability": "direct",
          "basis": "heuristic",
          "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/labor-market-full-employment-2026",
+          "cite": "inflation-2026/sources/fomc-sep-2026-09-16.txt#L13-L21"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "fomc-sep-2026-09-16.txt",
+         "verdict": "partly",
+         "confidence": 0.55,
+         "note": "FOMC participants put the longer-run unemployment rate at a 4.2% median (central tendency 4.0-4.3%), so the 4.1-4.2% rate is at the Fed's own estimate of its sustainable level, though projections are judgments and say nothing about weak payroll growth.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"though\")"
         }
        ],
        "context": [],
        "problems": [],
        "limitations": [
-        "BLS Employment Situation, September 2026: Unemployment was 4.2% in September 2026 and has stayed in a 4.1-4.3% range since March, near common estimates of the natural rate, but payroll growth was weak (+29,000, 45,000/month average) and the release does not define full employment."
+        "BLS Employment Situation, September 2026: Unemployment was 4.2% in September 2026 and has stayed in a 4.1-4.3% range since March, near common estimates of the natural rate, but payroll growth was weak (+29,000, 45,000/month average) and the release does not define full employment.",
+        "fomc-sep-2026-09-16.txt: FOMC participants put the longer-run unemployment rate at a 4.2% median (central tendency 4.0-4.3%), so the 4.1-4.2% rate is at the Fed's own estimate of its sustainable level, though projections are judgments and say nothing about weak payroll growth. [partial: the verdict note limits its own scope (\"though\")]"
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
       }
      }
     ]

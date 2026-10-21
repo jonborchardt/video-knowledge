@@ -4,6 +4,7 @@
 import type { PassageReader } from '../lib/evidence';
 import { sha } from '../lib/io';
 import { narrationFingerprint } from './files';
+import { ALL_KINDS } from './kinds';
 import type { Segment } from './select';
 import {
   FPS,
@@ -66,8 +67,12 @@ export function buildTimeline(
       cues[name] = w.frame;
     }
     let excerpt: TimelineScene['excerpt'] = null;
-    if (scene.visual.excerpt) {
-      const { cite, highlight } = scene.visual.excerpt;
+    // a kind that draws figures from its cited passage reads the scene's first citation, like an excerpt
+    const first = scene.citations?.[0]?.cite;
+    const source =
+      scene.visual.excerpt ?? (ALL_KINDS[kind]?.passage && first ? { cite: first, highlight: null } : null);
+    if (source) {
+      const { cite, highlight } = source;
       const text = read?.(cite) ?? null;
       if (text === null) throw new Error(`${scene.id}: excerpt ${cite} cannot be read from the corpus`);
       const [file, anchor] = cite.split('#');

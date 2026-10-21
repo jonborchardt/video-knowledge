@@ -80,8 +80,7 @@ describe.skipIf(!dirs.length)('committed script packages', () => {
         expect(v.counts.unreviewed).toBe(0);
       }
       expect(v.counts.blocking).toBe(release ? 0 : v.counts.blocking); // a blocked revision-3 package may ship unlocked
-      expect(v.minutes).toBeGreaterThanOrEqual(8);
-      expect(v.minutes).toBeLessThanOrEqual(12.5);
+      expect(v.minutes).toBeGreaterThan(0); // no length format: a script is as long as its questions need
     });
 
     it.skipIf(!plan)('the storyboard covers the script and its charts resolve', () => {
