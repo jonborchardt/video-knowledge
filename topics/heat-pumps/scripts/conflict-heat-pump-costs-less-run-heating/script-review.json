@@ -1,0 +1,216 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-20",
+  "revision": 3,
+  "packageFingerprint": "5c7fc6ca95",
+  "approved": {
+    "s01": "139ac1dc70",
+    "s02": "498d30b959",
+    "s03": "408bdb5702",
+    "s04": "642cd46e31",
+    "s05": "ac1995cb02",
+    "s06": "c81148998a",
+    "s07": "e9fe2cdb1f",
+    "s08": "d72328f522",
+    "s10": "79764cc7d3",
+    "s11": "1e99d878ec",
+    "s12": "ce9bc358e7",
+    "s13": "948a922026",
+    "s14": "623ee6c698",
+    "s15": "15b5eeb2e9",
+    "s17": "e3d309fefa",
+    "s18": "10b4b55a01",
+    "s21": "337cd98aa0",
+    "s22": "789a663ef2",
+    "s23": "baf433a9b9",
+    "s24": "ca7d738d62",
+    "s25": "5ec926abb0",
+    "s26": "7411b150bd",
+    "s27": "c832739de2",
+    "s28": "cdb918d14e",
+    "s30": "74d5a5b2ae",
+    "s31": "64b3442d50",
+    "s09": "f4cbb63941"
+  },
+  "dispositions": {
+    "s07.a": {
+      "fingerprint": "e9fe2cdb1f",
+      "category": "needs-qualification",
+      "reason": "The sentence says 'estimated', 'would see' and limits the figure to homes with AC; the listed limits belong to other studies and do not narrow Wilson's modelled result."
+    },
+    "s08.a": {
+      "fingerprint": "d72328f522",
+      "category": "needs-qualification",
+      "reason": "Same population and model as s07, which carries 'estimated'; the median range is read as the passage gives it."
+    },
+    "s10.a": {
+      "fingerprint": "79764cc7d3",
+      "category": "needs-qualification",
+      "reason": "The gas comparison is like for like with s07-s08 (AC homes, medians, varies with heat pump); the listed limits concern oil, propane and the UK, not this figure."
+    },
+    "s12.a": {
+      "fingerprint": "ce9bc358e7",
+      "category": "needs-qualification",
+      "reason": "'all' comes from 'all-electric systems', not a universal claim; the sentence names the assumed resistance baseline and says nothing about oil."
+    },
+    "s13.a": {
+      "fingerprint": "948a922026",
+      "category": "needs-qualification",
+      "reason": "'every ... it examined' is the passage's own scope; the oil exception follows in s14."
+    },
+    "s14.a": {
+      "fingerprint": "623ee6c698",
+      "category": "needs-qualification",
+      "reason": "This sentence is the oil qualification itself, stated beside the result it limits."
+    },
+    "s15.a": {
+      "fingerprint": "15b5eeb2e9",
+      "category": "needs-qualification",
+      "reason": "The thresholds are tied to their year's prices in the sentence, as the recommendation passage ties them; the Deetjen and UK limits do not bear on it."
+    },
+    "s17.a": {
+      "fingerprint": "e3d309fefa",
+      "category": "needs-qualification",
+      "reason": "A descriptive fact the study states; the sentence does not present it as a cause."
+    },
+    "s18.a": {
+      "fingerprint": "10b4b55a01",
+      "category": "needs-qualification",
+      "reason": "'almost always' and 'often' are the passage's own modality, kept verbatim."
+    },
+    "s21.a": {
+      "fingerprint": "337cd98aa0",
+      "category": "needs-qualification",
+      "reason": "Reports the analysis's own recommendation and reason; dropping 'carbon' does not change the cost claim."
+    },
+    "s22.a": {
+      "fingerprint": "789a663ef2",
+      "category": "needs-qualification",
+      "reason": "The sentence keeps 'generally' and the study's caveat that climate and energy prices matter."
+    },
+    "s23.a": {
+      "fingerprint": "baf433a9b9",
+      "category": "needs-qualification",
+      "reason": "Says 'electrification projects' and 'most likely', the passage's population and modality, and reports the cost increases too."
+    },
+    "s25.a": {
+      "fingerprint": "5ec926abb0",
+      "category": "needs-qualification",
+      "reason": "'nearly always' and 'this evidence' scope the answer to propane and resistance, the fuels these studies tested; oil is answered separately in s26."
+    },
+    "s26.a": {
+      "fingerprint": "7411b150bd",
+      "category": "needs-qualification",
+      "reason": "The sentence states exactly the oil limitation the Cadmus passage gives."
+    },
+    "s27.a": {
+      "fingerprint": "c832739de2",
+      "category": "needs-qualification",
+      "reason": "This sentence is the overall limit; it claims only that results moved with AC, climate and prices, which Wilson and Edwards state."
+    },
+    "s09.a": {
+      "fingerprint": "f4cbb63941",
+      "category": "needs-qualification",
+      "reason": "Same Wilson population as s07 (homes on those fuels, here without AC); the listed limits concern other studies' fuels and do not narrow this modelled share."
+    },
+    "s09.b": {
+      "fingerprint": "f4cbb63941",
+      "category": "needs-qualification",
+      "reason": "The clause keeps the passage's 'most' and its hot-climate, no-AC population; Deetjen's capital-cost oil result and Bernard's UK data do not bear on it."
+    }
+  },
+  "findings": [
+    {
+      "sentence": "s16",
+      "assertion": "s16.a",
+      "fingerprint": "264c3e8b6a",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "blocking",
+      "explanation": "Deetjen's private NPV is energy cost savings minus the amortized installation cost (deetjen L228-L233); in a video about running cost, 'leaves the homeowner with a private economic loss' will be heard as the heat pump costing more to run than oil, which the passage does not establish.",
+      "refs": [
+        "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+      ],
+      "suggestion": "Say the loss is counted once the cost of buying and installing the heat pump is included, e.g. 'usually leaves the homeowner worse off once the installation cost is counted'."
+    },
+    {
+      "sentence": "s29",
+      "assertion": "s29.a",
+      "fingerprint": "999601c46c",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "blocking",
+      "explanation": "In the answer, right after the running-cost verdict on oil, 'oil homes usually lose' reads as a running-cost result; the study's measure includes the amortized installation cost, and 'private economics' does not tell a viewer that.",
+      "refs": [
+        "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+      ],
+      "suggestion": "Name the measure in plain words: 'and once the cost of installing one is counted, one study found oil homes usually come out behind'."
+    },
+    {
+      "sentence": "s09",
+      "assertion": "s09.a",
+      "fingerprint": "74c1cc3f58",
+      "revision": 1,
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "The same Wilson passage (L401-L406, inside s10's cited range) says most homes with higher bills are hot-climate homes without AC where new cooling costs outweigh heating savings; without that, a viewer hears that the heat pump lost on heating in up to a quarter of these homes.",
+      "refs": [
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L414"
+      ],
+      "suggestion": "Add the reason: 'mostly hot-climate homes where the heat pump's new air conditioning added more cost than heating saved'."
+    },
+    {
+      "sentence": "s20",
+      "assertion": "s20.a",
+      "fingerprint": "a8d6eb3d45",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "RMI's figure is from its Providence, RI model (L802-L820, Figure 18) and is the net present cost of water and space conditioning, equipment included; the sentence presents it as a finding for 'the many areas of New England' and does not say it is a lifetime cost.",
+      "refs": [
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L817-L820"
+      ],
+      "suggestion": "Say 'one analysis modelling Providence, Rhode Island found heat pumps had a lower lifetime cost, equipment included, than both oil and propane'."
+    },
+    {
+      "sentence": "s20",
+      "assertion": "s20.a",
+      "fingerprint": "f8328f77f8",
+      "revision": 3,
+      "category": "selective",
+      "severity": "blocking",
+      "explanation": "s16's note drops Deetjen's oil result because its NPV counts installation cost, yet s20 keeps RMI's oil result, which is the same kind of measure: L817-L820 sit under 'RESULTS: PROVIDENCE, RI' and Figure 18, the 15-year net present cost of water and space conditioning, equipment included (L800-L816 compare retrofit costs). Keeping the capital-inclusive result that favours the heat pump and dropping the one that goes against it, in a running-cost video, tilts the oil verdict; 'net present cost' will be heard as cheaper to run.",
+      "refs": [
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L817-L820",
+        "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+      ],
+      "suggestion": "Treat both alike: either cut RMI's net-present-cost result (s19-s20, re-introducing the analysis in s21) so the oil section rests on running-cost evidence, or report both capital-inclusive results side by side with the measure named in words a cited passage supports."
+    },
+    {
+      "sentence": "s19",
+      "fingerprint": "150509fbad",
+      "revision": 3,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "With s16 no longer giving Deetjen's oil result, 'Not every analysis lands there on oil' points at a finding the viewer was never told; it implies the previous study found the heat pump losing on oil, a fact no assertion in the sentence carries.",
+      "refs": [
+        "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+      ],
+      "suggestion": "Rewrite or cut the transition to match whatever s16-s20 now say; it must not imply an unstated oil result."
+    },
+    {
+      "sentence": "s16",
+      "assertion": "s16.a",
+      "fingerprint": "8a030b6996",
+      "revision": 3,
+      "category": "omission",
+      "severity": "blocking",
+      "explanation": "The sentence announces that the study looked at oil-heated homes, s17 adds that most of them are in cold climates, and then the study's oil finding (usually a private economic loss, L653-L665) is never given; a viewer is set up for an oil result and left to guess it, and the corpus holds a result that cuts against the heat pump.",
+      "refs": [
+        "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+      ],
+      "suggestion": "Either introduce the study only for its resistance and propane results (drop 'in oil-heated homes' and s17), or give its oil result with its measure, consistent with how s20 is resolved."
+    }
+  ]
+}
