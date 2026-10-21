@@ -8,19 +8,23 @@ import { Choices } from './Choices';
 import { Stamp } from './Stamp';
 import { Steps } from './Steps';
 import { Scorecard } from './Scorecard';
+import { ShopProtest } from './ShopProtest';
 import { Versus } from './Versus';
 import { Dumbbell } from './Dumbbell';
 import { Gauge } from './Gauge';
 import { Funnel } from './Funnel';
 import { Columns } from './Columns';
 import { Cohort } from './Cohort';
+import { CourtsKit } from './CourtsKit';
 import { Curve } from './Curve';
 import { CommissionIcons } from './CommissionIcons';
+import { DistrictTimeline } from './DistrictTimeline';
 import { DotPlot } from './DotPlot';
 import { EvidenceCards } from './EvidenceCards';
 import { Excerpt } from './Excerpt';
 import { FinePrint } from './FinePrint';
 import { PersonGrid } from './PersonGrid';
+import { NationalCircles } from './NationalCircles';
 import { Phone } from './Phone';
 import { Quote } from './Quote';
 import { RankTable } from './RankTable';
@@ -38,12 +42,15 @@ export const COMPONENTS = {
   Stamp,
   Steps,
   Scorecard,
+  ShopProtest,
   Versus,
   Dumbbell,
   Gauge,
   Funnel,
   Columns,
   Cohort,
+  CourtsKit,
+  DistrictTimeline,
   Curve,
   Bar,
   CommissionIcons,
@@ -51,6 +58,7 @@ export const COMPONENTS = {
   EvidenceCards,
   Excerpt,
   FinePrint,
+  NationalCircles,
   PersonGrid,
   Phone,
   Quote,

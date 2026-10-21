@@ -1,0 +1,207 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-20",
+  "revision": 2,
+  "packageFingerprint": "7d3b113129",
+  "approved": {
+    "s01": "124d5487b4",
+    "s02": "ac687cb09f",
+    "s03": "5cb0304e77",
+    "s04": "c72c948540",
+    "s06": "e6ae45ff2c",
+    "s07": "408f28ef79",
+    "s08": "5a7ef7f75a",
+    "s09": "4d4b6c1e73",
+    "s10": "3f7de1e96e",
+    "s11": "3da9675c9d",
+    "s12": "4dfe9af712",
+    "s13": "c049073783",
+    "s14": "72ef98abc1",
+    "s15": "cb9645af62",
+    "s16": "5927b173ab",
+    "s17": "610f026b1b",
+    "s18": "86e9baed32",
+    "s19": "3227ceed8d",
+    "s21": "9761544cbb",
+    "s22": "94089419cc",
+    "s23": "4d4f70a4f1",
+    "s24": "e6357ee5be",
+    "s25": "334e8ad170",
+    "s26": "46ba90915a",
+    "s27": "f3c4f71f5b",
+    "s28": "b0d0dd9679",
+    "s30": "151889b8a5",
+    "s31": "0967a904de",
+    "s32": "6d93406b1f",
+    "s33": "0600b19182",
+    "s34": "97a3b2d741",
+    "s35": "d685997c93",
+    "s37": "04da0b163d",
+    "s38": "f32069e34a",
+    "s39": "b1e9c91514",
+    "s40": "5032cf5952",
+    "s41": "36efaacc11",
+    "s42": "0db06d18ed",
+    "s44": "9b1dbe5ab2",
+    "s45": "2941cbaf34",
+    "s46": "33b6dc3226",
+    "s47": "ed1f186242",
+    "s49": "52f7039cb6",
+    "s50": "ed7454f5b6",
+    "s51": "80665eb4ce",
+    "s52": "b56f98dd2f",
+    "s54": "70f7f22d79",
+    "s55": "7b8143cfee",
+    "s56": "1349b5afed",
+    "s05": "a038a73e60",
+    "s20": "29d21ab16b",
+    "s29": "5eed243a10",
+    "s36": "f21fa2524c",
+    "s43": "4c71e785ea",
+    "s48": "05b7e23ee4",
+    "s53": "300bf8b11a"
+  },
+  "findings": [
+    {
+      "sentence": "s20",
+      "assertion": "s20.a",
+      "fingerprint": "9fedea3194",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "The passage says other courts had considered McCann's argument and called it frivolous; nothing says this court had heard it before, yet the sentence says 'A federal court that had heard this argument before'.",
+      "refs": [
+        "sovereign-citizens/sources/mccann-v-greenway-wdmo-1997.txt#L30-L35"
+      ],
+      "suggestion": "Say 'A federal court, noting that other courts had already called the argument frivolous, decided to examine...'."
+    },
+    {
+      "sentence": "s36",
+      "assertion": "s36.a",
+      "fingerprint": "eef1b4bcc4",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'In the United States nobody has published a count like that' is a claim about the world with no assertion; the corpus only shows that this evidence holds no US tally, not that none exists.",
+      "refs": [
+        "sovereign-citizens/sources/state-v-smith-ohio-2024.txt#L228-L265"
+      ],
+      "suggestion": "Scope it to the evidence: 'For the United States, the evidence here has no count like that; what it has is a run of rulings...'."
+    },
+    {
+      "sentence": "s48",
+      "assertion": "s48.a",
+      "fingerprint": "515803727c",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'the charter this version leans on hardest' is an uncovered comparative claim; no passage ranks what common-law promoters rely on (the National Liberty Alliance quote in s47 does not mention Magna Carta).",
+      "refs": [
+        "sovereign-citizens/sources/hobbs-young-mcintyre-internationalisation-pseudolaw.txt#L1241-L1259"
+      ],
+      "suggestion": "Drop the clause: 'As for Magna Carta, it had been repealed by 1969 except for three provisions.'"
+    },
+    {
+      "sentence": "s05",
+      "fingerprint": "c71f6bf44f",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "'Each one points at a real document, so we can read the document' holds for the UCC section, the flag and the 1871 act, but for 'every law is just a contract' the script reads no document; it goes straight to rulings (s30-s32).",
+      "refs": [
+        "sovereign-citizens/sources/bey-v-indiana-7th-cir-2017.txt#L16-L20"
+      ],
+      "suggestion": "Say 'Most of them point at a real document...' or 'Each one leans on something real...'."
+    },
+    {
+      "sentence": "s29",
+      "assertion": "s29.a",
+      "fingerprint": "b131cb60b3",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "The paraphrase 'rules that bind only those who agree to them' goes beyond the speaker's context, which says state nationals 'are not obligated by corporate government rules' (an exemption by status, not by agreement).",
+      "refs": [],
+      "suggestion": "Paraphrase what the context says: 'rules that, it says, do not bind state nationals'."
+    },
+    {
+      "sentence": "s43",
+      "assertion": "s43.a",
+      "fingerprint": "6f98b0f86f",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "'barely worth a footnote' comes from Upton v. IRS, a civil suit against the IRS, not a prosecution; the sentence presents it as one of the 'tax prosecutions'.",
+      "refs": [
+        "sovereign-citizens/sources/irs-truth-about-frivolous-tax-arguments.txt#L962-L992"
+      ],
+      "suggestion": "Say 'Federal appeals courts, in tax cases, have also rejected...'."
+    },
+    {
+      "sentence": "s53",
+      "assertion": "s53.b",
+      "fingerprint": "a8c878faf1",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "warning",
+      "explanation": "'the protection at a stop rests on that one bulletin about sellers' restates s51, two sentences earlier, which already said the evidence is one bulletin recording the sellers' convictions; the state-court point is new and worth keeping.",
+      "refs": [
+        "sovereign-citizens/sources/fbi-leb-2011-sovereign-citizens-domestic-threat.txt#L36-L36"
+      ],
+      "suggestion": "Keep the tax-case limit and cut the bulletin clause, or point back in two words ('and, as above, the stop question')."
+    }
+  ],
+  "dispositions": {
+    "s34.a": {
+      "fingerprint": "97a3b2d741",
+      "category": "needs-qualification",
+      "reason": "The tax-litigation limit belongs to the IRS document; this sentence reports Supreme Court of Canada leave decisions, which the cited Netolitzky and Warman passage covers without that limit."
+    },
+    "s35.a": {
+      "fingerprint": "d685997c93",
+      "category": "needs-qualification",
+      "reason": "The sentence quotes the Australia/New Zealand review's own statement and names its scope; the IRS tax-only limit does not bear on it."
+    },
+    "s41.a": {
+      "fingerprint": "36efaacc11",
+      "category": "needs-qualification",
+      "reason": "The sentence quotes the statutory definition of a national; the tax-case limit applies to court rulings on state citizenship, which s43 and s53 qualify."
+    },
+    "s42.a": {
+      "fingerprint": "0db06d18ed",
+      "category": "needs-qualification",
+      "reason": "The sentence restates 8 USC 1101 and 1408 on who is a national; the tax-case limit applies to court rulings, not to the statute."
+    },
+    "s43.a": {
+      "fingerprint": "4c71e785ea",
+      "category": "needs-qualification",
+      "reason": "The sentence says the rulings came in tax cases in federal courts, and s53 says state jurisdiction is not what they tested."
+    },
+    "s51.a": {
+      "fingerprint": "80665eb4ce",
+      "category": "needs-qualification",
+      "reason": "The sentence calls the evidence thin, names it as one bulletin and says it records the sellers' convictions, not outcomes at stops."
+    },
+    "s52.a": {
+      "fingerprint": "b56f98dd2f",
+      "category": "needs-qualification",
+      "reason": "s43 says the state-citizen rulings are tax cases and s53, the next sentence, says state jurisdiction is not tested by them."
+    },
+    "s53.a": {
+      "fingerprint": "300bf8b11a",
+      "category": "needs-qualification",
+      "reason": "This sentence is the tax-case qualification itself."
+    },
+    "s53.b": {
+      "fingerprint": "300bf8b11a",
+      "category": "needs-qualification",
+      "reason": "The sentence points back to the bulletin s51 already called thin and limited to the sellers convictions."
+    },
+    "s36.a": {
+      "fingerprint": "f21fa2524c",
+      "category": "needs-qualification",
+      "reason": "State v. Smith is a criminal traffic case, not tax litigation, so the IRS tax-only limit does not bear on it; the sentence already scopes the US evidence to a run of rulings."
+    }
+  }
+}
