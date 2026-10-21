@@ -1,8 +1,8 @@
 {
   "reviewer": "scripts/briefs/script-review.md",
   "model": "claude-opus-5-5",
-  "date": "2026-10-20",
-  "revision": 3,
+  "date": "2026-10-21",
+  "revision": 5,
   "packageFingerprint": "5c7fc6ca95",
   "approved": {
     "s01": "139ac1dc70",
@@ -19,9 +19,6 @@
     "s13": "948a922026",
     "s14": "623ee6c698",
     "s15": "15b5eeb2e9",
-    "s17": "e3d309fefa",
-    "s18": "10b4b55a01",
-    "s21": "337cd98aa0",
     "s22": "789a663ef2",
     "s23": "baf433a9b9",
     "s24": "ca7d738d62",
@@ -31,7 +28,8 @@
     "s28": "cdb918d14e",
     "s30": "74d5a5b2ae",
     "s31": "64b3442d50",
-    "s09": "f4cbb63941"
+    "s09": "f4cbb63941",
+    "s20": "cb83cd7cac"
   },
   "dispositions": {
     "s07.a": {
@@ -69,21 +67,6 @@
       "category": "needs-qualification",
       "reason": "The thresholds are tied to their year's prices in the sentence, as the recommendation passage ties them; the Deetjen and UK limits do not bear on it."
     },
-    "s17.a": {
-      "fingerprint": "e3d309fefa",
-      "category": "needs-qualification",
-      "reason": "A descriptive fact the study states; the sentence does not present it as a cause."
-    },
-    "s18.a": {
-      "fingerprint": "10b4b55a01",
-      "category": "needs-qualification",
-      "reason": "'almost always' and 'often' are the passage's own modality, kept verbatim."
-    },
-    "s21.a": {
-      "fingerprint": "337cd98aa0",
-      "category": "needs-qualification",
-      "reason": "Reports the analysis's own recommendation and reason; dropping 'carbon' does not change the cost claim."
-    },
     "s22.a": {
       "fingerprint": "789a663ef2",
       "category": "needs-qualification",
@@ -118,6 +101,11 @@
       "fingerprint": "f4cbb63941",
       "category": "needs-qualification",
       "reason": "The clause keeps the passage's 'most' and its hot-climate, no-AC population; Deetjen's capital-cost oil result and Bernard's UK data do not bear on it."
+    },
+    "s20.a": {
+      "fingerprint": "cb83cd7cac",
+      "category": "needs-qualification",
+      "reason": "The sentence now states only the analysis's regional framing (no gas, oil or propane), which L817-L820 say verbatim; the listed limits concern cost results it no longer gives."
     }
   },
   "findings": [
@@ -211,6 +199,21 @@
         "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
       ],
       "suggestion": "Either introduce the study only for its resistance and propane results (drop 'in oil-heated homes' and s17), or give its oil result with its measure, consistent with how s20 is resolved."
+    },
+    {
+      "sentence": "s21",
+      "assertion": "s21.a",
+      "fingerprint": "337cd98aa0",
+      "revision": 4,
+      "category": "selective",
+      "severity": "blocking",
+      "explanation": "The recommendation sits under 'Recommendations based on Providence results' (L861-L865), i.e. the same 15-year net present cost, equipment included (Figure 18, L817-L820), that s20's note cuts as a lifetime measure. Keeping it says oil customers get the greatest cost benefit while Deetjen's capital-inclusive oil result (usually a private loss, L653-L665) is cut, so the corrective's 'treat them alike' is not met and the oil verdict is still tilted.",
+      "refs": [
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L861-L865",
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L803-L820",
+        "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
+      ],
+      "suggestion": "Cut s21 and s20 together (s20 only introduces it) and let s22 follow s15; the oil exception already rests on Cadmus (s14-s15) and the running-cost evidence in s22-s23."
     }
   ]
 }

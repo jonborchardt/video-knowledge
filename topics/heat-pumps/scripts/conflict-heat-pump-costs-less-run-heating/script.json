@@ -2,13 +2,36 @@
   "topic": "heat-pumps",
   "story": "conflict:heat-pump-costs-less-run-heating",
   "title": "Heat Pump vs Oil, Propane and Baseboard Heat",
-  "revision": 3,
+  "revision": 5,
   "generation": {
     "model": "claude-opus-5-5",
     "brief": "scripts/briefs/script.md",
     "date": "2026-10-20",
     "wordsPerMinute": 150,
-    "evidencePackage": "5c7fc6ca95"
+    "evidencePackage": "5c7fc6ca95",
+    "corrective": [
+      {
+        "reason": "Revision limit reached with blockers s16, s19, s20 (selective): Deetjen and RMI oil results are both lifetime costs including equipment; treat them alike (cut both from the running-cost answer, or name the measure for both) and leave no dangling reference.",
+        "sentences": [
+          "s16",
+          "s17",
+          "s18",
+          "s19",
+          "s20"
+        ],
+        "authorizedBy": "jon",
+        "revision": 4
+      },
+      {
+        "revision": 5,
+        "reason": "Same blocker as revision 4 (selective lifetime-cost results): s21 recommendation comes from RMI Providence lifetime results; cut s20 and s21 together so s22 follows s15, per the revision-4 review.",
+        "sentences": [
+          "s20",
+          "s21"
+        ],
+        "authorizedBy": "jon"
+      }
+    ]
   },
   "sections": [
     {
@@ -378,142 +401,6 @@
             }
           ],
           "note": "L1196-L1199: 'turn off a DMSHP during very cold outdoor conditions (below 8°F in 2015 and below 25°F in 2016), when an oil-fired system would operate less expensively (depending on energy prices...)'."
-        },
-        {
-          "id": "s16",
-          "text": "Another study looked at heat pump adoption in oil-heated homes as well.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s16.a",
-              "text": "The study assessed heat pump adoption in fuel oil heated homes.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
-                }
-              ]
-            }
-          ],
-          "note": "Introduces the study for s17-s18 only. Its oil result (a private economic loss) is a net present value that counts installation cost, not running cost, so this running-cost video does not report it; the oil exception rests on Cadmus (s14-s15, s26)."
-        },
-        {
-          "id": "s17",
-          "text": "It notes that nearly 65 percent of oil-heated houses are in cold climates.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s17.a",
-              "text": "Nearly 65% of fuel oil heated houses are in cold climates.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
-                }
-              ]
-            }
-          ],
-          "note": "Stated as a fact the study notes, not as the cause of the loss."
-        },
-        {
-          "id": "s18",
-          "text": "For electric resistance heaters, the same study found switching almost always produces a clear benefit, and for propane it is often economical to the homeowner.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s18.a",
-              "text": "Switching homes that use electric resistance heaters to heat pumps almost always produces a clear benefit; replacing a propane heater with a heat pump is often economical to the homeowner.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "s19",
-          "text": "Not every analysis lands there on oil, though.",
-          "type": "transitional"
-        },
-        {
-          "id": "s20",
-          "text": "Writing about New England, one analysis noted that many areas there have no gas and rely on heating oil or propane, and it found heat pumps had a lower net present cost than both oil and propane systems.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s20.a",
-              "text": "Many areas in New England lack gas infrastructure and rely on heating oil or propane; heat pumps have a lower net present cost than both heating oil- and propane-fired systems.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L817-L820"
-                }
-              ],
-              "qualifications": [
-                "The sentence keeps the measure (net present cost) and reports the regional framing as the analysis's own ('noted'), not as a survey of New England."
-              ]
-            }
-          ],
-          "note": "The cited lines (L817-L820) do not say the figure comes from the Providence model or that net present cost includes equipment; both are outside the package, and RMI is already cited for both package claims, so record-sources cannot add them. The sentence claims only what L817-L820 say."
-        },
-        {
-          "id": "s21",
-          "text": "Its authors told programmes to put oil and propane customers first, because that is where electrification has the greatest immediate cost benefit.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s21.a",
-              "text": "The analysis recommends prioritising electrification programs targeting customers using heating oil or propane, as electrification has the greatest immediate carbon and cost benefit for them.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pumps-save-most-money-homes",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L862-L865"
-                }
-              ]
-            }
-          ]
         },
         {
           "id": "s22",
