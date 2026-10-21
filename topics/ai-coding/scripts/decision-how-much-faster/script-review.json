@@ -1,0 +1,189 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-21",
+  "revision": 2,
+  "packageFingerprint": "17538cd756",
+  "approved": {
+    "s01": "3f52d08957",
+    "s02": "74f84967eb",
+    "s03": "6d8c6a4644",
+    "s04": "232652c286",
+    "s05": "960bdafced",
+    "s06": "acea27b0b2",
+    "s07": "5d107253f9",
+    "s08": "13b516639f",
+    "s09": "d4fab8e134",
+    "s10": "0d843adc21",
+    "s11": "22ba10c0a6",
+    "s12": "6541fb649c",
+    "s13": "1a3839a283",
+    "s14": "978cd2ef1c",
+    "s15": "12c0e50423",
+    "s16": "80062d4bd0",
+    "s17": "ca1c26b86d",
+    "s19": "a9f7c5279c",
+    "s20": "0b6494163f",
+    "s21": "05d15fdba9",
+    "s23": "509a19c9a4",
+    "s24": "efb5503991",
+    "s25": "696a1f1c5b",
+    "s26": "d46b48fa74",
+    "s27": "7a5860de9d",
+    "s28": "9fbb6d021c",
+    "s29": "dbf13539c7",
+    "s30": "59a24c5f74",
+    "s31": "a551ebae68",
+    "s32": "51b5491e23",
+    "s34": "3f06354830",
+    "s35": "f275368b0b",
+    "s18": "6d2ecb3423",
+    "s22": "0e154cc0d2",
+    "s33": "1aa9a16941"
+  },
+  "findings": [
+    {
+      "sentence": "s18",
+      "assertion": "s18.a",
+      "fingerprint": "659528e913",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "The cited passage (L61-L62) says only that 'because of the selection effects in our experiment, our data is only very weak evidence'; the mechanism the sentence narrates (more developers declining because they don't want to work without AI, which likely pushes the speedup estimate down) is on L60, outside the cite.",
+      "refs": [
+        "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62"
+      ],
+      "suggestion": "Either cite the verdict passage that covers L60 (ai-coding/sources/metr-2026-experiment-design.txt#L58-L62, on ai-coding/tools-slowed-experienced-open-source-developers, as s11 does) for the participation clause, or cut the sentence to what L61-L62 says: 'And METR calls this only very weak evidence, because of who now chooses to take part.'"
+    },
+    {
+      "sentence": "s22",
+      "assertion": "s22.a",
+      "fingerprint": "31451d3e22",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "The answer calls the workplace gains 'real', but one of the two estimates it rests on (Google's 21 percent, s09) missed statistical significance; and the workplace studies measured code-suggestion and 2024-era assistants, while the multiples it sets them against (DHH, s04) are about working with agents directly. The answer reads as covering today's agentic tools.",
+      "refs": [
+        "ai-coding/sources/2410.12944.txt#L519-L528",
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+      ],
+      "suggestion": "Drop 'real' and scope it to the tools tested: 'So, how much faster? In the workplace studies, with the tools they tested, the measured gains were modest, nowhere near the multiples in the hype.'"
+    },
+    {
+      "sentence": "s33",
+      "assertion": "s33.a",
+      "fingerprint": "6133c0664b",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "warning",
+      "explanation": "'once too high and once too low' restates s31 ('missed in opposite directions: too high ... too low') two sentences earlier; the answer itself ('not reliably', 'by a wide margin') is new, the closing clause adds nothing.",
+      "refs": [
+        "ai-coding/sources/2507.09089v2.txt#L17-L24",
+        "ai-coding/sources/2302.06590.txt#L184-L188"
+      ],
+      "suggestion": "End the sentence at 'their guesses missed by a wide margin.' (or fold s31 into s33 and keep the direction only once)."
+    }
+  ],
+  "dispositions": {
+    "s07.a": {
+      "fingerprint": "5d107253f9",
+      "category": "needs-qualification",
+      "reason": "The sentence is scoped to this one field study's developers and tool; s11-s14 give the METR slowdown and its project-size hypothesis right after, so no general claim is left unqualified."
+    },
+    "s08.a": {
+      "fingerprint": "13b516639f",
+      "category": "needs-qualification",
+      "reason": "The sentence reports the authors' own comparison and hedged explanation ('suggest why'); METR's contrasting result follows in s11-s14."
+    },
+    "s09.a": {
+      "fingerprint": "d4fab8e134",
+      "category": "needs-qualification",
+      "reason": "The sentence carries its own key limit (missed significance, less certain than it sounds) and the METR contrast follows in s11-s14."
+    },
+    "s14.a": {
+      "fingerprint": "978cd2ef1c",
+      "category": "needs-qualification",
+      "reason": "The sentence frames the project-size explanation as the researchers' hypothesis and s11 names the projects as open-source."
+    },
+    "s16.a": {
+      "fingerprint": "80062d4bd0",
+      "category": "needs-qualification",
+      "reason": "Stated as METR's belief from talking to participants; s17 gives the wide ranges and s18 that METR calls the data very weak evidence, two sentences later."
+    },
+    "s17.a": {
+      "fingerprint": "ca1c26b86d",
+      "category": "needs-qualification",
+      "reason": "The sentence says both ranges still reach a slowdown and s18, immediately after, gives METR's 'very weak evidence' caveat."
+    },
+    "s20.a": {
+      "fingerprint": "0b6494163f",
+      "category": "needs-qualification",
+      "reason": "The sentence says the 50 percent is self-reported and comes from Anthropic's own report on its staff."
+    },
+    "s20.b": {
+      "fingerprint": "0b6494163f",
+      "category": "needs-qualification",
+      "reason": "Named as Anthropic's own report; s21 immediately says a count of merged changes is not time saved."
+    },
+    "s21.b": {
+      "fingerprint": "05d15fdba9",
+      "category": "needs-qualification",
+      "reason": "The sentence itself carries the measure caveat ('not the same as time saved', 'even taken at face value'); 1.5x and 1.67x against 10x matches the verdict note."
+    },
+    "s22.a": {
+      "fingerprint": "0e154cc0d2",
+      "category": "needs-qualification",
+      "reason": "Now scoped to the workplace studies and the tools they tested; s09 carries the missed significance beside the 21 percent and s23 gives the METR exception right after."
+    },
+    "s23.b": {
+      "fingerprint": "509a19c9a4",
+      "category": "needs-qualification",
+      "reason": "The sentence is itself the qualification: METR's newer data is too weak to say, matching the passage's 'very weak evidence'."
+    },
+    "s26.a": {
+      "fingerprint": "d46b48fa74",
+      "category": "needs-qualification",
+      "reason": "Scoped to the METR developers; s29-s31 present the Copilot trial where participants underestimated, so overestimation is not stated as the rule."
+    },
+    "s27.a": {
+      "fingerprint": "7a5860de9d",
+      "category": "needs-qualification",
+      "reason": "Scoped to the METR trial; s29-s31 present the Copilot underestimate on the other side."
+    },
+    "s28.a": {
+      "fingerprint": "9fbb6d021c",
+      "category": "needs-qualification",
+      "reason": "Scoped to METR's expert forecasts; s29-s31 name the Copilot trial on the other side."
+    },
+    "s30.a": {
+      "fingerprint": "59a24c5f74",
+      "category": "needs-qualification",
+      "reason": "The sentence is the other side of the disagreement; s26-s28 name the METR trial and s31 sets the two side by side."
+    },
+    "s30.b": {
+      "fingerprint": "59a24c5f74",
+      "category": "needs-qualification",
+      "reason": "The sentence names the setting as a lab task on a greenfield-style project, which is the qualification the METR note asks for."
+    },
+    "s31.a": {
+      "fingerprint": "a551ebae68",
+      "category": "needs-qualification",
+      "reason": "The sentence names both trials and both directions, so neither study is stated as the rule."
+    },
+    "s32.a": {
+      "fingerprint": "51b5491e23",
+      "category": "needs-qualification",
+      "reason": "Reported as METR's statement with its own hedge ('can be'); the Copilot underestimate is given in s30."
+    },
+    "s33.a": {
+      "fingerprint": "1aa9a16941",
+      "category": "needs-qualification",
+      "reason": "Scoped to both of these trials, whose opposite directions s26-s31 name, so neither study is stated as the rule."
+    },
+    "s18.a": {
+      "fingerprint": "6d2ecb3423",
+      "category": "needs-qualification",
+      "reason": "The sentence is itself the qualification: it gives METR's very-weak-evidence caveat and its selection reason, which s18.b now cites from L58-L62."
+    }
+  }
+}

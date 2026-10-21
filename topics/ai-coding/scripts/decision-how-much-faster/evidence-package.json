@@ -1,0 +1,1104 @@
+{
+ "topic": "ai-coding",
+ "story": "decision:how-much-faster",
+ "inputs": {
+  "stories": "be938efb9b",
+  "review": "36e8a6703d",
+  "report": "c4b59fd273"
+ },
+ "audience": "General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).",
+ "title": "How Much Faster Does AI Actually Make Programmers?",
+ "question": "How much faster does AI actually make programmers?",
+ "alternates": [
+  "2x, 10x, or Slower? What the Trials Found",
+  "The METR Study Everyone Cites, Explained"
+ ],
+ "premise": "Field trials put the average gain in the twenties: Microsoft/Accenture (4,867 developers, 26% more weekly PRs), Google (96 engineers, about 21% less time on an enterprise task, confidence interval crossing zero) and Shan's field study (18% more user stories, self-selected usage). METR 2025 found the opposite sign for 16 experienced open-source maintainers in their own mature repos: 19% slower with early-2025 tools. The 10x claim has no supporting measurement; the field gain and Anthropic's self-reported 50% bound it, and neither measured agentic coding. METR's 2026 update says the slowdown was probably specific to early 2025 but calls its new data very weak evidence because of selection effects. Google's migration figures (50% to 89% savings) are bespoke pipelines and engineers' estimates, context only.",
+ "whyWatch": "The claims run from 10x to 'it slows you down', and both extremes cite studies. The trials fit together once you look at who was measured doing what.",
+ "tension": "Ten-times claims against field trials in the twenties of percent and one trial that found experienced maintainers 19% slower.",
+ "arc": {
+  "hook": "Three numbers on screen: 10x, 26%, minus 19%. All of them come with a study attached.",
+  "conflict": "The hype and the slowdown both cite trials; the question is what each trial measured.",
+  "evidence": "Microsoft/Accenture, Google and Shan on real work; METR 2025 on mature repos with experts; METR 2026 on what changed and why it cannot tell; the absence of any 10x measurement.",
+  "resolution": "Twenties of percent on average work, less or negative for experts in familiar code, unknown for today's agentic tools; 10x is unmeasured.",
+  "takeaway": "Expect a quarter, not a multiple, and expect less on the code you know best."
+ },
+ "readiness": "ready",
+ "central": {
+  "text": "AI tools slowed experienced open-source developers working on their own familiar codebases (METR 2025 RCT)",
+  "status": "supported",
+  "decision": "approved",
+  "strength": 0.85,
+  "independent": 2
+ },
+ "claims": [
+  {
+   "id": "ai-coding/tools-slowed-experienced-open-source-developers",
+   "text": "AI tools slowed experienced open-source developers working on their own familiar codebases (METR 2025 RCT)",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.85,
+   "decidedBy": "METR 2025 RCT",
+   "lean": "skeptic",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.8,
+    "note": "Accurately reports METR's July 2025 RCT (16 devs, ~19% slower); the finding is specific to that setting and early-2025 tools."
+   },
+   "statements": [
+    {
+     "source": "9wF0n48k6JU",
+     "title": "Jensen Huang Said \"Stop Learning to Code\" — Then Hired 10,000 Developers",
+     "channel": "Olive Badger",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=9wF0n48k6JU",
+     "stance": "asserts",
+     "quote": "experienced developers using AI actually worked 19% slower",
+     "context": " writing and translation jobs got hammered by ai, but programming is growing. i wish, to be honest, somebody would tell the job market that they need to hire me. but, that is not the point of this video. cuz meanwhile, ai coding tools were providing unreliable answers and buggy code. studies showed experienced developers using ai actually worked 19% slower, even though they felt 20% faster. even andrej karpathy, former director of ai at tesla, admitted ai coding agents don't work well enough yet. he had to write most of his project by hand. so, yeah, the death of coding proclamation aged about as well as milk in the sun. now, here's where it gets rea"
+    },
+    {
+     "source": "CS5Cmz5FssI",
+     "title": "How AI is changing Software Engineering: A Conversation with Gergely Orosz, @pragmaticengineer",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=CS5Cmz5FssI",
+     "stance": "asserts",
+     "quote": "they felt 20% more productive, but ... they were 20% less productive",
+     "context": "(quote not located) sure game. >> all right. i going to assume most of you uh show of hands who subscribes to pragmatic engineer. oh my god. >> wow. uh he is uh he needs no introduction. then let's get right into it. um what is token maxing and should everyone here be doing it? >> so i i heard about token maxing a week"
+    },
+    {
+     "source": "LUaPqGpmwBw",
+     "title": "AI made Developers Slower",
+     "channel": "Telusko",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=LUaPqGpmwBw",
+     "stance": "asserts",
+     "quote": "it has decreased their productivity by 19%",
+     "context": "xperts in ml they said okay let let's go bit down and let's have a smaller range now the developers before this study they they thought okay it will speed up their process by around 25%. and after the study they thought they it has improved their performance by 20%. okay. but the observed result is it has decreased their productivity by 19%. so this is for people who used ai to complete those task. so that means ai is actually reducing your speed of development. okay. now that is what this research talks about. now of course they actually went in detail. uh so the thing is there are certain things which we have to understand first the"
+    },
+    {
+     "source": "RhfqQKe22ZA",
+     "title": "Why Agent Hype can fall short of reality – Joel Becker, METR",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=RhfqQKe22ZA",
+     "stance": "asserts",
+     "quote": "we find that developers are slowed down by 19%",
+     "context": "something like 24 25%. then we ask the developers after the study has been completed how much they think they were sped up in the past by ai being allowed on the issues they completed as part of this study and they say that it will have sped them up by something like 20%. and the punch line is that we find that developers are slowed down by 19%. they take 19% more time when ai is allowed relative to when ai is not allowed. you know, when i first saw the data coming in, saw sort of early versions of this plot, um, i thought presumably the same thing that many of you might be thinking right now, that we've messed something up. um, that that"
+    },
+    {
+     "source": "Sf9vENm2GnE",
+     "title": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
+     "channel": "Stanford Digital Economy Lab",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=Sf9vENm2GnE",
+     "stance": "asserts",
+     "quote": "they take 20% longer to complete tasks when they're allowed to use AI versus not.",
+     "context": "they have access to their time still when they're making this when they're making this retradiction how much they were sped up in the past on the issues that they completed as part of this study. and they say that ai made them complete tasks in 20% less time. and we find you know actually that they they take 20% longer to complete tasks when they're allowed to use ai versus not. um there's you know a bunch of implicit caveats in this in this title. um these these should be these should be front of mind. this is this is not something that we're that we're shying away from in any way. these are extremely experienced, extremely um familiar um with the with particular challeng"
+    },
+    {
+     "source": "Zdus-d4ehN0",
+     "title": "AI Replacing Developers Has Officially Failed",
+     "channel": "Sajjaad Khader",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=Zdus-d4ehN0",
+     "stance": "asserts",
+     "quote": "Seasoned engineers were actually 19% slower when using AI tools",
+     "context": " kept getting better while hundreds of thousands of software engineers got laid [music] off. so, it looked inevitable. ai killed software engineering. but then this happened. big tech is scrambling to slow down its use of ai. uber and microsoft are starting to secondguess aggressive ai adoption. >> seasoned engineers were actually 19% slower when using ai tools. >> research shows the tools might not be as helpful as some expect. >> the ai experiment has officially failed and tech companies are desperate for human workers once again. though. in this video, we're actually going to go back over the last couple years and really understand what went wrong with"
+    },
+    {
+     "source": "fuRmxFZ-umE",
+     "title": "AI Safety (CS 2881) Lecture 7: Lab vs Field: Guest lecture by Joel Becker",
+     "channel": "Boaz Barak",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=fuRmxFZ-umE",
+     "stance": "asserts",
+     "quote": "And in fact, we we observe that they go slower.",
+     "context": "ase in time to completion. the developers themselves are predicting a 24% decrease in time to completion. the developers themselves, after the study has been completed, retradicting how much they were sped up in the past on the issues in this study predict that they went 20% faster by this measure. and in fact, we we observe that they go slower. >> that's that's actually fine for us because we get paid by how much developers think they get. [laughter] [music] um there are a bunch of there are a bunch of caveats at the at the top here. we're going to go through the caveats. um here's here's another way of seeing basically the the same thing"
+    },
+    {
+     "source": "haWve-6WgW4",
+     "title": "The METR Paradox. Why AI Made Senior Devs 19% Slower",
+     "channel": "Macro Lens",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=haWve-6WgW4",
+     "stance": "asserts",
+     "quote": "they were 19% slower than when they weren't",
+     "context": "16 experienced open-source developers, 246 real tasks, a randomized controlled trial, not a vibe survey, not a vendor white paper. the result: when these developers were allowed to use ai tools, they were 19% slower than when they weren't. here's the part that should make every cto uncomfortable. after the study ended, those same developers still believed ai had made them 20% faster. that gap between what was measured and what was felt is the most important data point in the ai coding debate of 2026. the number got covered. the impl"
+    },
+    {
+     "source": "j-ZEhEiHzjg",
+     "title": "Is AI making devs SLOWER? Yes, according to this study...",
+     "channel": "Native Notify",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=j-ZEhEiHzjg",
+     "stance": "asserts",
+     "quote": "experienced coders finish their work 19% slower",
+     "context": "is ai actually slowing down developers? there is a new meter study out claiming that experienced coders finish their work 19% slower even though they felt like they were finishing their work 20% faster using ai tools. meter, which is short for model evaluation and threat research, ran the first real code, real repo randomized controlled trial in 2025. they had 246 authentic issues in code bases and the developers chosen each had"
+    },
+    {
+     "source": "k1t2xyWMUdY",
+     "title": "How METR measures Long Tasks and Experienced Open Source Dev Productivity - Joel Becker, METR",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=k1t2xyWMUdY",
+     "stance": "asserts",
+     "quote": "And in fact, you know, we find that we find a slowdown.",
+     "context": "twice as slow? how would we get that information? well, we'd do something like take the ai disallowed times divided by the allowed ai times. you know, if this was 1.1, let's say, times as long as the allowed times, then we'd get to 1.1 x speed up. it's something something like that that's going on. and in fact, you know, we find that we find a slowdown. obviously. i i just read a fascinating article last company i can't remember, but basically journalist was allowed to uh using five coding, right? uh do a pull request, meaning there was some feature ai was used to assist with building out the requirements and he practically according to the articl"
+    },
+    {
+     "source": "mikelovesrobots-substack-wheres-the-shovelware-why-ai-coding",
+     "title": "Where's the Shovelware? Why AI Coding Claims Don't Add Up",
+     "channel": "mikelovesrobots.substack.com",
+     "kind": "post",
+     "href": "https://mikelovesrobots.substack.com/p/wheres-the-shovelware-why-ai-coding",
+     "stance": "asserts",
+     "quote": "They thought AI was making them 20% faster, but it was actually making them 19% slower.",
+     "context": " i thrive off the dopamine hits from shipping cool things. i was an early adopter of ai coding and a fan until maybe two months ago, when i read the metr study and suddenly got serious doubts. in that study, the authors discovered that developers were unreliable narrators of their own productivity. they thought ai was making them 20% faster, but it was actually making them 19% slower. this shocked me because i had just told someone the week before that i thought ai was only making me about 25% faster, and i was bummed it wasn't a higher number. i was only off by 5% from the developer's own incorrect estimates. this was unsettling. it was impossible not to question if i too were "
+    },
+    {
+     "source": "rdcjMm11TUU",
+     "title": "Are Junior Developers Really Getting Replaced by AI? I'm not sold...",
+     "channel": "Brian Jenney",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=rdcjMm11TUU",
+     "stance": "asserts",
+     "quote": "those developers got 19% slower, not faster",
+     "context": "hen what makes you think that your no-name company somehow has the secret sauce? now, here's what the actual research says. cornell and an organization called meterme, if i'm pronouncing that correctly, ran a study on experienced open-source software developers with ai tools, and they observed that those developers got 19% slower, not faster, slower. the devs actually still thought ai sped them up. this is how strong the hype is. so on one side you have the aws ceo saying firing juniors is stupid and on the other side you have researchers saying ai is slowing down senior level developers and yet you have a whole internet full of genius"
+    },
+    {
+     "source": "seangoedecke-impact-of-ai-study",
+     "title": "METR's AI productivity study is really good",
+     "channel": "seangoedecke.com",
+     "kind": "post",
+     "href": "https://www.seangoedecke.com/impact-of-ai-study/",
+     "stance": "asserts",
+     "quote": "But in fact they were 19% slower overall",
+     "context": "ch for the relevant code snippets that need changing\" is huge. ## what they found the main result of the study is fascinating. when asked to estimate how much using ai would speed them up, the developers guessed around 24%. after actually using ai, they thought they'd been working about 20% faster. but in fact they were 19% slower overall - even though it was entirely up to them how much or how they used ai. when you read a result like this, it's very tempting to start hypothesizing (particularly if you yourself have been using ai tooling and think it's made you faster). for instance, maybe there's a steep learning curve to the tool"
+    },
+    {
+     "source": "simonwillison-ai-open-source-productivity",
+     "title": "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity",
+     "channel": "Simon Willison’s Weblog",
+     "kind": "post",
+     "href": "https://simonwillison.net/2025/Jul/12/ai-open-source-productivity/",
+     "stance": "asserts",
+     "quote": "Surprisingly, we find that when developers use AI tools, they take 19% longer than without—AI makes them slower.",
+     "context": "d to system cards for openai and anthropic, but this new research represents a slightly different direction for them: we conduct a randomized controlled trial (rct) to understand how early-2025 ai tools affect the productivity of experienced open-source developers working on their own repositories. surprisingly, we find that when developers use ai tools, they take 19% longer than without-ai makes them slower. the full paper (pdf) has a lot of details that are missing from the linked summary. metr recruited 16 experienced open source developers for their study, with varying levels of exposure to llm tools. they then assigned them tasks from their own open source projects, randomly assigning whether ai wa"
+    },
+    {
+     "source": "u-oOcKbgw0w",
+     "title": "Does AI Secretly Slow Developers Down?",
+     "channel": "The AI Daily Brief: Artificial Intelligence News",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=u-oOcKbgw0w",
+     "stance": "asserts",
+     "quote": "the study actually found that they were 19% less productive",
+     "context": "ing an absolute ton of buzz. a group of developers were tested to see how much more productive ai coding tools would make them. they assumed going into the study that they would be about 24 25% more productive and even after the study concluded thought that ai had made them 20% more productive. but the study actually found that they were 19% less productive, 19% slower on this set of coding tasks. now, as you might imagine, this has been widely reported on outlets like cnbc, suggesting that it makes for a crack in the ai productivity bullcase. the implications of something like this are big. billions and billions, if not trillions of dollars, are bein"
+    },
+    {
+     "source": "zqTxwlcWS-Q",
+     "title": "AI Made Devs 19% Slower (METR 2025 Study)",
+     "channel": "zencoderai",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=zqTxwlcWS-Q",
+     "stance": "asserts",
+     "quote": "they actually were 19% slower",
+     "context": "hing very strange about ai coding. there was a recent study done by meter with 16 experienced developers, 246 real coding tasks, and they thought that ai would make them about 24% faster. after using it, they said they felt about 20% faster. but when researchers measured what they actually shipped, they actually were 19% slower. and that's meter. it's a peer-reviewed, randomized, not a vibes-based twitter poll or anything like that. um and it's not a fluke. dora's state of devops report last year surveyed thousands of engineering teams. 75% of devs said ai made them personally more productive, but across those same teams "
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L11-L27",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "right",
+     "confidence": 0.85,
+     "note": "METR RCT: 16 experienced developers, 246 tasks in their own mature repos; allowing early-2025 AI tools increased completion time by 19%.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L58-L62",
+     "doc": "ai-coding/sources/metr-2026-experiment-design.txt",
+     "by": "METR 2026 update",
+     "verdict": "right",
+     "confidence": 0.7,
+     "note": "METR Feb 2026 restates the early-2025 result (tasks took 19% longer with AI, CI +2% to +39%) but adds that the 10 returning developers are now estimated ~18% faster with AI (CI -38% to +9%), so the slowdown was specific to early 2025.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "AI tools slowed experienced open-source developers working on their own familiar codebases (METR 2025 RCT)",
+    "status": "supported",
+    "decision": "approved",
+    "limitations": [],
+    "suggestions": []
+   }
+  },
+  {
+   "id": "ai-coding/real-enterprise-codebases-yields-modest-average",
+   "text": "In real enterprise codebases AI yields modest average productivity gains, far below headline claims",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.7,
+   "decidedBy": "Microsoft/Accenture field RCTs",
+   "lean": "calibrating",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.65,
+    "note": "The Stanford 100k-developer study and other field data put average gains around 10-20%, far below 2x-10x marketing claims."
+   },
+   "statements": [
+    {
+     "source": "3vEDECfa4tw",
+     "title": "AI at Honeycomb: What’s Actually Working (w/ CTO Charity Majors)",
+     "channel": "Jam",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=3vEDECfa4tw",
+     "stance": "asserts",
+     "quote": "it hasn't transformed our team's velocity. It's made us a little slower in some places, a little faster in others.",
+     "context": "city. i think it's made us able to try more things faster. um, so when it comes to speed, the absolute most important thing is making sure you're working on the right things, right? doesn't matter how fast you're going if you aren't working on things that really change your users's lives. so, yeah, it hasn't transformed our team's velocity. it's made us a little slower in some places, a little faster in others. uh, but i have more confidence that we're working on the right things now. how are you trying new things faster? uh because it's so good at just the like you know our our our designers can you know uh do do code prototypes instead of just like you know it's you you can the ideation phase when when "
+    },
+    {
+     "source": "5tmWlvn-uLY",
+     "title": "Stanford Study: AI Makes Developers 20% More Productive (But There's a Catch)",
+     "channel": "Josh Anderson",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=5tmWlvn-uLY",
+     "stance": "asserts",
+     "quote": "you're going to be 15 to 20% more effective using AI",
+     "context": "(quote not located) there is new research done by stanford. on productivity with ai, and it's way better than the previous one. so last week i talked about a survey that came out that said engineers thought they were 20 % more efficient when in reality they were 19 % less efficient. that was only done on 16 people. as "
+    },
+    {
+     "source": "6A-dp1Kzyjk",
+     "title": "Measuring AI code assistants and agents with the AI Measurement Framework",
+     "channel": "DX",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=6A-dp1Kzyjk",
+     "stance": "asserts",
+     "quote": "AI is not a magic silver bullet",
+     "context": "we can't lose sight of the bigger picture. ai is another tool. ai works because it improves developer experience and developer experience leads to better organizational outcomes. [music] and ai is not a magic silver bullet that's magically going to allow you to get to market in 30 seconds when things used to take 30 [music] weeks before. there is a lot of promise though and like any tool we really need to deeply understand how it's working the best ways that it's working so that we can provide support and enablement "
+    },
+    {
+     "source": "9xoqlstC-W0",
+     "title": "AI Make Developers More Productive? Data from a 100k Engineer Stanford Study | Yegor Denisov",
+     "channel": "Toronto Machine Learning Society (TMLS)",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=9xoqlstC-W0",
+     "stance": "asserts",
+     "quote": "the median productivity gain you can expect is about 10%",
+     "context": "en apples to red apples, but we're not comparing apples to oranges, right? so, it's not perfect, but it's as good as um as science dictates it could be. and so, there's two takeaways here. we can attract these teams across time from april of 23 until july of 25. and what you'll see is that firstly, the median productivity gain you can expect is about 10%. which, you know, it's okay. it's it's good. however, um if you look at april of 23, the difference between q1 and q3, which is kind of the shaded area, the the thick line in the middle is kind of the the median, right? so, the difference there was 5%. but this difference grew by july of 25 to 20%."
+    },
+    {
+     "source": "LOHgRw43fFk",
+     "title": "Data vs Hype: How Orgs Actually Win with AI - The Pragmatic Summit",
+     "channel": "The Pragmatic Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=LOHgRw43fFk",
+     "stance": "asserts",
+     "quote": "We're sitting around 4.08 uh self-reported hours saved due to AI tool usage per week per developer.",
+     "context": "t developers define that as cursor, codex, copi, you know, claude, not chatgpt necessarily. um, but it is a bit open-ended, so keep that in mind. when it comes to time savings, time savings is not the only measure of productivity impact, but it is an important signal. it's a good leading indicator. we're sitting around 4.08 uh self-reported hours saved due to ai tool usage per week per developer. this is not all too different from the number that came in q2 of 2025. and then the number for q4 of 2025 was about 3 uh six or seven. so this is kind of hovering around the 4 hour mark. and there's been a few articles, for example, from google in the last year citing about a 10% productivity incre"
+    },
+    {
+     "source": "WILFeSGXwio",
+     "title": "AI in engineering: Q2 2026 benchmarks & research readout",
+     "channel": "DX",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=WILFeSGXwio",
+     "stance": "asserts",
+     "quote": "We're still not seeing 2x, 5x, 10x, but we are seeing improvement.",
+     "context": "ar. we looked at 16 months worth of data and found what we would have used to have celebrate like a 10% you know improvement in in the in the proxy metric of pr throughput. um but of course we compare that 10% to what we hear from the the the industry. oh 2x 5x 10x we didn't see that in the report. we're still not seeing 2x, 5x, 10x, but we are seeing improvement. i mean, the last report showed, you know, a mean 13%, a median p 8%. we're seeing this increase in pr throughput now moving up to more like 25%. um, so this is steadily increasing as well, but again, we don't know what's in those prs. um, we don't know, you know, how many of these metrics have been"
+    },
+    {
+     "source": "newsletter-getdx-how-much-does-ai-impact-development-speed",
+     "title": "How much does AI impact development speed?",
+     "channel": "newsletter.getdx.com",
+     "kind": "post",
+     "href": "https://newsletter.getdx.com/p/how-much-does-ai-impact-development-speed",
+     "stance": "asserts",
+     "quote": "AI tools may reduce task completion time by around 21% in enterprise settings",
+     "context": " who had frequently used ai tools in the past didn't complete tasks significantly faster than those with less prior experience. ## final thoughts there's still much to learn about how ai impacts different aspects of developer productivity. this study contributes to that conversation by showing that ai tools may reduce task completion time by around 21% in enterprise settings. but it's still unclear from the research the true impact ai is having and what factors-like experience, tool usage, or coding habits-meaningfully drive gains. the authors emphasize that the impact of ai will likely change over time as the tools evolve, workflows adapt, and developers become more s"
+    },
+    {
+     "source": "tbDDYKRFjhk",
+     "title": "Does AI Actually Boost Developer Productivity? (100k Devs Study) - Yegor Denisov-Blanch, Stanford",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=tbDDYKRFjhk",
+     "stance": "asserts",
+     "quote": "an average productivity gain across all industries ... of roughly about 15 to 20%",
+     "context": "(quote not located) [music] in january of this year, mark zuckerberg said that he was going to replace all of the mid-level engineers at meta with ai by the end of the year. i think mark was a bit optimistic and he was probably acting like a good ceo would to inspire a vision and also probably to keep the facebook stoc"
+    },
+    {
+     "source": "xu0QI0N0EmU",
+     "title": "Measuring the actual impact of AI coding | Abi Noda from DX",
+     "channel": "Changelog",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=xu0QI0N0EmU",
+     "stance": "asserts",
+     "quote": "On average developers report saving about three hours per week thanks AI tools.",
+     "context": "message became you got to get on board or you're going to be left behind. so like we're seeing that in the data in in terms of impact we see a number of really interesting things. so first of all on average and keep in mind this is it's called q2 2025 because this space is evolving very quickly. >> on average developers report saving about three hours per week thanks ai tools. okay. now, when you think about what what is put that into context. well, that's about what 5 to 10% of their work week, >> right? so, about so we're talking about about a 5 to 10% boost. now, that is a lot less than maybe what you might expect if you were just looking at the headlines or scrolling"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2410.12944.txt#L519-L528",
+     "doc": "ai-coding/sources/2410.12944.txt",
+     "by": "Google RCT",
+     "verdict": "right",
+     "confidence": 0.7,
+     "note": "Google RCT, 96 full-time engineers on an enterprise-grade C++ task in the monorepo: AI cut time on task by ~21% in the best-fit model (95% CI crosses zero, p=0.086), well below Peng et al.'s 56% and in line with Cui et al.'s 26%.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784",
+     "doc": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+     "by": "Microsoft/Accenture field RCTs",
+     "verdict": "right",
+     "confidence": 0.7,
+     "note": "Field RCTs with 4,867 developers at Microsoft, Accenture and a Fortune-100 firm: Copilot raised weekly completed PRs by 26% (SE 10.3%), substantially smaller than the lab's 56% speedup, which the authors attribute to real work being less assistable.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L995-L1001",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "partly",
+     "confidence": 0.5,
+     "note": "METR 2025: in large, mature repos (~10 years old, >1.1M LOC) AI helped less than in greenfield RCTs, and on average slowed developers by 19%; this goes beyond 'modest gains', and the repos are open-source rather than enterprise.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"rather than\")",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/4859137.txt#L489-L493",
+     "doc": "ai-coding/sources/4859137.txt",
+     "by": "Shan et al. field study + RCT",
+     "verdict": "partly",
+     "confidence": 0.5,
+     "note": "Field DID at a 5,000-person IT services firm (201 devs, 27 weeks, 2023-24 Copilot/ChatGPT/Gemini): AI users completed 1.08 more user stories per week (+18%), a real gain but modest next to 55% or 10x headlines; usage was self-reported and partly self-selected.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"self-reported\")",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2501.06972.txt#L245-L251",
+     "doc": "ai-coding/sources/2501.06972.txt",
+     "by": "Google migrations report",
+     "verdict": "partly",
+     "confidence": 0.3,
+     "note": "Google reports large end-to-end savings (about 50% on int64, about 89% on small Joda clusters) in a 500M+ LOC codebase, but only for bespoke migration pipelines with fine-tuned models, not average developer work, and the figures are engineers' estimates.",
+     "role": "context",
+     "applicability": "contextual",
+     "basis": "review",
+     "why": "bespoke migration pipelines with fine-tuned models and engineers' estimates; not average developer work in an enterprise codebase",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "In real enterprise codebases AI yields modest average productivity gains, far below headline claims",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "METR 2025 RCT: METR 2025: in large, mature repos (~10 years old, >1.1M LOC) AI helped less than in greenfield RCTs, and on average slowed developers by 19%; this goes beyond 'modest gains', and the repos are open-source rather than enterprise. [partial: the verdict note limits its own scope (\"rather than\")]",
+     "Shan et al. field study + RCT: Field DID at a 5,000-person IT services firm (201 devs, 27 weeks, 2023-24 Copilot/ChatGPT/Gemini): AI users completed 1.08 more user stories per week (+18%), a real gain but modest next to 55% or 10x headlines; usage was self-reported and partly self-selected. [partial: the verdict note limits its own scope (\"self-reported\")]",
+     "Context only, Google migrations report (partly): bespoke migration pipelines with fine-tuned models and engineers' estimates; not average developer work in an enterprise codebase."
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/engineers-who-adopt-agentic-coding-about",
+   "text": "Engineers who adopt agentic coding are about ten times as productive as peers who don't",
+   "stance": "denies",
+   "verdict": "wrong",
+   "confidence": 0.5,
+   "decidedBy": null,
+   "lean": "pro-hype",
+   "role": "evidence",
+   "guess": {
+    "verdict": "wrong",
+    "confidence": 0.6,
+    "note": "Second-hand anecdote measured by lines of code and commits; controlled and large field studies find average gains of roughly 10-30%, sometimes negative."
+   },
+   "statements": [
+    {
+     "source": "MrfiUMm2Qxk",
+     "title": "Broken AI Discourse with Steve Klabnik",
+     "channel": "Software Unscripted Podcast",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=MrfiUMm2Qxk",
+     "stance": "denies",
+     "quote": "I'm not 100x faster. I'm not even 10x faster.",
+     "context": " like i am using it for more than that and i'm happy doing it. i i i like it. it does feel different, but it's like i think of it as like i like both ways of programming. i like doing it by hand and i also like doing it with ai. i am some amount faster. and this gets into another pet peeve of mine. i'm not 100x faster. i'm not even 10x faster. like i'm i'm some something faster, but it's not that high. yeah. yeah. totally. but but definitely like i feel fortunate that i like both because i i don't think that was a given. i think i might have tried it and been like i don't like this. and like i i feel you like if you have given it a real "
+    },
+    {
+     "source": "NYFGCESmikA",
+     "title": "DHH: Future of Programming, AI, Agentic Engineering, Vibe Coding & Linux | Lex Fridman Podcast #501",
+     "channel": "Lex Fridman",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=NYFGCESmikA",
+     "stance": "asserts",
+     "quote": "to get that magical 10X, 100X, in a few rare cases, 1000X productivity boost, you have to interact with the agents directly",
+     "context": "oduct manager and a couple of designers and a vp above them and a cto above them, and everyone wants to be part of the shaping process because we're all justifying why we're here, that's where all the productivity goes to die. the revelation i've had working on omarchy the last three months is that to get that magical 10x, 100x, in a few rare cases, 1000x productivity boost, you have to interact with the agents directly, and you cannot intermediate that bandwidth with another human because it's simply too slow. and on the one hand, that's a bit of a bummer. i mean, i like humans, and it's great to work together. but it also means we need to temper our expectations with what these agents can do if it's humans drivi"
+    },
+    {
+     "source": "PkITOx9lIT8",
+     "title": "AI Makes Verifying the Bottleneck with Dave Farley @ModernSoftwareEngineeringYT",
+     "channel": "Aviator",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=PkITOx9lIT8",
+     "stance": "denies",
+     "quote": "the people that are claiming that you get tens or hundreds of times productivity are wrong too",
+     "context": "lly surprising answer was didn't really make any difference. the the ai didn't make it any better and it didn't make it any worse. m >> um so so i think that the scare the people that are scaremongers saying that a you know ai can't code and it can't write systems are are wrong. um and i think that the people that are claiming that you get tens or hundreds of times productivity are wrong too. um there were some improvements in productivity but it wasn't really related to either of those things. it was more to do with the experience and the approach of the individual. so this engineering stuff that we were talking about, if you're doing the good engineering things, you're working increm"
+    },
+    {
+     "source": "WJS2YDZO-vc",
+     "title": "Build to Last — Chris Lattner talks with Jeremy Howard",
+     "channel": "Jeremy Howard",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=WJS2YDZO-vc",
+     "stance": "denies",
+     "quote": "the results were just terrible. We we our productivity fell off a cliff.",
+     "context": "s of code a day. it's ridiculous that we're not. are we doing are we doing something wrong because we're not getting the 10x wins that everybody else is claiming they're getting? so we really invested in it. you know, and all of my team is amongst the best in the world at practical usage of ai. and the results were just terrible. we we our productivity fell off a cliff. our morale fell off a cliff. i was unhappy. how do you measure productivity? is it number of lines of code written? or is it product progress? or is it something else? >> it's getting out the door that people use. yeah. so that's how i measure productivity, too, right? and so >> seen this, chris? l"
+    },
+    {
+     "source": "colton-curing-your-ai-10x-engineer-imposter-syndrome",
+     "title": "No, AI is not Making Engineers 10x as Productive",
+     "channel": "colton.dev",
+     "kind": "post",
+     "href": "https://colton.dev/blog/curing-your-ai-10x-engineer-imposter-syndrome/",
+     "stance": "denies",
+     "quote": "10x productivity means ten times the outcomes, not ten times the lines of code.",
+     "context": "out of this slump. one of those was this article from ludicity, directly countering the claims of the ai pumpers. i write this article to share more things that helped me get out of the ai 10x engineer imposter syndrome. ## the math let's start by looking at the simple math of 10-100x productivity. 10x productivity means ten times the outcomes, not ten times the lines of code. this means what you used to ship in a quarter you now ship in a week and a half. these numbers should make even the truest ai believer pause. the amount of product ideation, story point negotiation, bugfixing, code review, waiting for deployments, testing, and qa in that go into what was traditiona"
+    },
+    {
+     "source": "mikelovesrobots-substack-wheres-the-shovelware-why-ai-coding",
+     "title": "Where's the Shovelware? Why AI Coding Claims Don't Add Up",
+     "channel": "mikelovesrobots.substack.com",
+     "kind": "post",
+     "href": "https://mikelovesrobots.substack.com/p/wheres-the-shovelware-why-ai-coding",
+     "stance": "denies",
+     "quote": "There are no new 10xers.",
+     "context": "redly untrue, demand they show receipts or shut the fuck up. now, i know the internet. i know what many of you chumps are going to say before you even say it, so let's just get into it: - \"well, if you just learned how to prompt properly, then you would be a 10x engineer like me.\" look at the data. there are no new 10xers. if there were - if the 14% of self-proclaimed ai 10xers were actually 10xers - that would more than double the worldwide output of new software. that didn't happen. and as for you, personally, show me the 30 apps you created this year. i'm not entertaining this without receipts. - \"well, it's a new"
+    },
+    {
+     "source": "zuJyJP517Uw",
+     "title": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
+     "channel": "Latent Space",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=zuJyJP517Uw",
+     "stance": "asserts",
+     "quote": "the performance difference is like 10x any way that you measure it",
+     "context": ". yeah. >> and uh yeah, it's uh so you know we talked to you know andrew glover there you know the director of dev prod and uh from what he was saying they've been planning on going >> public with this once they have more data about it. yeah. >> anecdotally they're sharing that uh >> performance >> the performance difference is like 10x any way that you measure it. so lines of code commits business impact whatever. and it's it's so stark and pronounced that the people who aren't adopting it are now 10 times less productive at performance review time. two people, same title, same job, and all of a sudden one of them is 10 times as productive than the other on"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35",
+     "doc": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+     "by": "Anthropic internal study",
+     "verdict": "wrong",
+     "confidence": 0.4,
+     "note": "Anthropic: users self-report an average +50% gain at 59% usage, plus about 67% more merged PRs per engineer after Claude Code adoption, an order of magnitude below 10x.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"self-report\")",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/4859137.txt#L489-L493",
+     "doc": "ai-coding/sources/4859137.txt",
+     "by": "Shan et al. field study + RCT",
+     "verdict": "wrong",
+     "confidence": 0.3,
+     "note": "The field gain from AI assistants was about 18% more user stories (24-31% under alternative estimators), far from 10x. The tools were 2023-24 assistants, not agentic coding.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "review",
+     "why": "measures 2023-24 assistants, not agentic coding; it bounds the plausible gain rather than testing the 10x claim",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "The evidence does not support \"Engineers who adopt agentic coding are about ten times as productive as peers who don't\"",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "Anthropic internal study: Anthropic: users self-report an average +50% gain at 59% usage, plus about 67% more merged PRs per engineer after Claude Code adoption, an order of magnitude below 10x. [partial: the verdict note limits its own scope (\"self-report\")]",
+     "Shan et al. field study + RCT: The field gain from AI assistants was about 18% more user stories (24-31% under alternative estimators), far from 10x. The tools were 2023-24 assistants, not agentic coding. [partial: measures 2023-24 assistants, not agentic coding; it bounds the plausible gain rather than testing the 10x claim]"
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/measured-slowdown-mainly-artifact-older-models",
+   "text": "The measured AI slowdown is mainly an artifact of older models and would disappear with newer ones",
+   "stance": "asserts",
+   "verdict": "partly",
+   "confidence": 0.4,
+   "decidedBy": "METR 2026 update",
+   "lean": "pro",
+   "role": "evidence",
+   "guess": {
+    "verdict": "partly",
+    "confidence": 0.4,
+    "note": "Newer models may help, but METR attributed much of the slowdown to context, review overhead and repo familiarity, not model quality alone; METR's own later follow-up was mixed."
+   },
+   "statements": [
+    {
+     "source": "LUaPqGpmwBw",
+     "title": "AI made Developers Slower",
+     "channel": "Telusko",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=LUaPqGpmwBw",
+     "stance": "asserts",
+     "quote": "if they conduct the same research now ... the result of using AI would be bit better",
+     "context": "(quote not located) i bought the subscription for claude. in fact, i've added some credits in the openi. i got the subscription for jad gpt and many more. in fact, jet brains ai assistance and i thought it will increase my productivity. and then when you build with ai, if you're using cursor or any other ai agents or i"
+    },
+    {
+     "source": "Sf9vENm2GnE",
+     "title": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
+     "channel": "Stanford Digital Economy Lab",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=Sf9vENm2GnE",
+     "stance": "asserts",
+     "quote": "I think this is sort of significantly understating the degree to which people are sped up today.",
+     "context": " and on the issue level within developers, the issues for which developers expect more speed up, they systematically do not contribute to the study, we still measure point estimates that are um that are i was going to say positive, but you know, negative that they're taking less time. but actually, i think this is sort of significantly understating the degree to which people are sped up today. this is not even including the possibility of concurrency which i think was less important at you know roughly march 2025 the time of the previous study that is you know you you you ask your ai to go about solving task one um and then while it's working off on that you go about completing task two "
+    },
+    {
+     "source": "haWve-6WgW4",
+     "title": "The METR Paradox. Why AI Made Senior Devs 19% Slower",
+     "channel": "Macro Lens",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=haWve-6WgW4",
+     "stance": "denies",
+     "quote": "every previous generation of these tools was also sold as the one that finally cracks senior productivity ... The burden of proof is on the next study",
+     "context": "(quote not located) 16 experienced open-source developers, 246 real tasks, a randomized controlled trial, not a vibe survey, not a vendor white paper. the result: when these developers were allowed to use ai tools, they were 19% slower than when they weren't. here's the part that should make every cto uncomfortable. af"
+    },
+    {
+     "source": "u-oOcKbgw0w",
+     "title": "Does AI Secretly Slow Developers Down?",
+     "channel": "The AI Daily Brief: Artificial Intelligence News",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=u-oOcKbgw0w",
+     "stance": "asserts",
+     "quote": "all of the models that people use to code are much advanced from the ones that they were using in this study",
+     "context": "r. it is a new process that requires new thinking. next, let's talk about the models that were used. now, bad models might be an overstatement for the sake of space in an ai generated image here, but this study was conducted at the beginning of this year. and while that seems like a short time ago, all of the models that people use to code are much advanced from the ones that they were using in this study. ruben bloom, who works on less wrong, also participated in the study and said, \"as a developer in the study, it's striking to me how much more capable the models have gotten since february when i was participating. i'm trying to recall if i was even using agents at the start. certainly, the later "
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62",
+     "doc": "ai-coding/sources/metr-2026-experiment-design.txt",
+     "by": "METR 2026 update",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "METR Feb 2026: METR believes developers are likely more sped up in early 2026. Returning developers show an 18% time reduction (CI -38% to +9%) and new recruits a 4% reduction (CI -15% to +9%), but selection effects make this 'very weak evidence', and models are not separated from other changes.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "review",
+     "why": "METR's own belief with selection effects it calls very weak evidence; models are not separated from other changes",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L587-L599",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "unknown",
+     "confidence": null,
+     "note": "The paper tests only Feb-June 2025 tools. It says more reliable or better-elicited systems could speed up developers, and that early agents already make progress, but it doesn't test newer models.",
+     "role": "context",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "The measured AI slowdown is mainly an artifact of older models and would disappear with newer ones",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "METR 2026 update: METR Feb 2026: METR believes developers are likely more sped up in early 2026. Returning developers show an 18% time reduction (CI -38% to +9%) and new recruits a 4% reduction (CI -15% to +9%), but selection effects make this 'very weak evidence', and models are not separated from other changes. [partial: METR's own belief with selection effects it calls very weak evidence; models are not separated from other changes]"
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/developers-overestimate-how-much-tools-speed",
+   "text": "Developers overestimate how much AI tools speed them up",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.8,
+   "decidedBy": "METR 2025 RCT",
+   "lean": "calibrating",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.7,
+    "note": "METR found devs believed they were ~20% faster while measured slower; other studies also show self-reports outrunning measured gains."
+   },
+   "statements": [
+    {
+     "source": "5tmWlvn-uLY",
+     "title": "Stanford Study: AI Makes Developers 20% More Productive (But There's a Catch)",
+     "channel": "Josh Anderson",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=5tmWlvn-uLY",
+     "stance": "asserts",
+     "quote": "people telling you estimating how their productivity was affected by AI is effectively a coin flip",
+     "context": " the estimate is, what the size is, doesn't matter. the estimate's just a tool for you to get to a spot. as he talked about, most people, when they estimated their productivity, weren't even within their quartile. so they weren't even with their 25 % range of what they actually were. so as he said, people telling you estimating how their productivity was affected by ai is effectively a coin flip. half the time they're right, half the time they're wrong. for productivity cases. you can measure it to see how happy they are using ai or whatever, i suppose. um great. so now let's dive into our he was he was very reluctant with that last bit around. i suppose you could. so let's go back and lis"
+    },
+    {
+     "source": "6A-dp1Kzyjk",
+     "title": "Measuring AI code assistants and agents with the AI Measurement Framework",
+     "channel": "DX",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=6A-dp1Kzyjk",
+     "stance": "asserts",
+     "quote": "developers uh self- reports of the fact that they were faster with AI than without it were were actually wrong in in many cases",
+     "context": "came out. they measure time savings through analysis of logs based systembased data. on on the topic of uh aidriven time savings measured through surveys. i think i i did want to touch on that recent uh meta study that came out because one of the really interesting findings from that study was that developers uh self- reports of the fact that they were faster with ai than without it were were actually wrong in in many cases that observationally they were slower than uh the folks who use ai. so i think i've commented on this on linkedin and online, but it's a really interesting phenomenon. i think that is actually pretty pervasive right now in the industry where folks feel the the magic of these ai tools and the superp"
+    },
+    {
+     "source": "9xoqlstC-W0",
+     "title": "AI Make Developers More Productive? Data from a 100k Engineer Stanford Study | Yegor Denisov",
+     "channel": "Toronto Machine Learning Society (TMLS)",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=9xoqlstC-W0",
+     "stance": "asserts",
+     "quote": "be careful with using surveys ... to estimate how much more productive AI makes you",
+     "context": "(quote not located) [music] all right. so, this is going to be one of the, let's call it, less technical talks of this conference, but hopefully equally as engaging. earlier this year, some tech ceos made some really bold predictions. zuck said that he was going to replace his mid-level engineers with ai by the end of "
+    },
+    {
+     "source": "DgPr3HVp0eg",
+     "title": "SolveIt: The Thinking Developer's Environment w/Jeremy Howard & Johno Whitaker",
+     "channel": "Hamel Husain",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=DgPr3HVp0eg",
+     "stance": "asserts",
+     "quote": "That's not what happened I haven't actually sped up",
+     "context": "small limited areas where that approach can be useful but overall we've discovered that many of us have felt like wow this is going to change the way i work this is going to change the world maybe i'm not going to be needed anymore and then discovered over the months of like okay that was imaginary that's not what happened i haven't actually sped up i haven't actually created a thousand times more things than i did last year so that's the background now we started working on this over a year ago and we did it you know partly because we were worried about the direction things were going but also just because we were excited about the opportunit"
+    },
+    {
+     "source": "EO3_qN_Ynsk",
+     "title": "Software engineering with LLMs in 2025: reality check (at LDX3 by LeadDev)",
+     "channel": "The Pragmatic Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=EO3_qN_Ynsk",
+     "stance": "asserts",
+     "quote": "estimations are maybe 3 to 5 hours, maybe 4 hours. I mean, okay, 4 hours saved is pretty good, but that's not 10x",
+     "context": "ality is and and maybe there's a selection bias maybe the ones who are using it are more willing to talk about it number three how much time do we save so you know peter uh or pete told me that he thinks output is 10 to 20x more. but then dx did the survey and they found that on a weekly basis, uh, estimations are maybe 3 to 5 hours, maybe 4 hours. i mean, okay, 4 hours saved is pretty good, but that's not 10x, you know, even on a 40hour work week. and what do we do with that time? like, do do we produce anything more? i don't know. finally, why does it work so much better for individuals and teams? uh, we we see this all the time. and laura tasha from dx told me the same thing. these tools are great for"
+    },
+    {
+     "source": "LUaPqGpmwBw",
+     "title": "AI made Developers Slower",
+     "channel": "Telusko",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=LUaPqGpmwBw",
+     "stance": "asserts",
+     "quote": "after the study they thought they it has improved their performance by 20%",
+     "context": "r whatever you are into uh it will speed up your process by around 40% that's what they are forecasting the experts in ml they said okay let let's go bit down and let's have a smaller range now the developers before this study they they thought okay it will speed up their process by around 25%. and after the study they thought they it has improved their performance by 20%. okay. but the observed result is it has decreased their productivity by 19%. so this is for people who used ai to complete those task. so that means ai is actually reducing your speed of development. okay. now that is what this research talks about. now of course they actually went in detail. uh s"
+    },
+    {
+     "source": "NRizG0tSGic",
+     "title": "Unpacking METR’s findings: Does AI slow developers down?",
+     "channel": "DX",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=NRizG0tSGic",
+     "stance": "asserts",
+     "quote": "I think everyone um estimates speed up because it's just it's so much fun to use AI.",
+     "context": "slowdown.\" kind of like this totally separate because in all of my interviews uh in all of my issues like i was talking about how great ai was and how it was speeding me up and as expected proceed kind of thing. so yeah, it's very shocking to me and i think the study uh the study designers. i think i think everyone um estimates speed up because it's just it's so much fun to use ai. that's why i talk about like subjective enjoyment is very high. we all sit and work on these long bugs and then eventually ai um will will solve the bug. but we don't focus on all of the time that we we actually spent. we just focus on it was en more enjoyable to talk back and forth to an ai than i"
+    },
+    {
+     "source": "PlyzvM--xbQ",
+     "title": "Open-source, complexity & AI coding 🔧 — with Salvatore \"Antirez\" Sanfilippo",
+     "channel": "Refactoring",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=PlyzvM--xbQ",
+     "stance": "denies",
+     "quote": "people under report significantly the help that they get from AI because they don't want to lose their job.",
+     "context": "d then i moved to claude, i always used the ai, and i saw myself changing a lot the way i started to use it, the ai after understanding what was the key in order to make it useful. because initially, i didn't get it very well, what was the way to use this system. and i believe another thing is that people under report significantly the help that they get from ai because they don't want to lose their job. they get from ai because they don't want to lose their job. there's this bias. yeah, there is a bias also because of ego. and it's very hard to say that ai helps so much. but for me, it's really great. for example, i think that if i sum all the time, it took me to write the test for vector set, whi"
+    },
+    {
+     "source": "Q6SgBDu6GNA",
+     "title": "Does AI-driven productivity come at the cost of code quality?",
+     "channel": "Proxify",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=Q6SgBDu6GNA",
+     "stance": "asserts",
+     "quote": "for the first two months you might perceive that you're moving faster but in reality",
+     "context": "but what that creates is it creates technical debt and a decrease in code quality which then means that for the subsequent months your productivity slows down because you're stuck dealing with all this uh lower quality code and bugs you've introduced earlier on. and so then the answer there is that for the first two months you might perceive that you're moving faster but in reality if you just kind of dig deep and understand what this does for the product for the company for the engineering team it doesn't make sense to lean so hard on ai to use it right it's >> um it's it's more like around and of course this is going to change and it does improve and whatnot but at this poi"
+    },
+    {
+     "source": "RhfqQKe22ZA",
+     "title": "Why Agent Hype can fall short of reality – Joel Becker, METR",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=RhfqQKe22ZA",
+     "stance": "asserts",
+     "quote": "they think that it will have sped them up by something like 20%",
+     "context": "(quote not located) [music] hey guys, thank you so much for having me. my name is joel becker. i work as a researcher or member of technical staff at met, which stands for model evaluation and threat research. as we'll see in a second, i'm going to be talking about ai capabilities. how do we know how performant ais are"
+    },
+    {
+     "source": "Sf9vENm2GnE",
+     "title": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
+     "channel": "Stanford Digital Economy Lab",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=Sf9vENm2GnE",
+     "stance": "asserts",
+     "quote": "they say that AI made them complete tasks in 20% less time.",
+     "context": "ed those same developers after the study's been completed and they've recorded all their times that they have access to their time still when they're making this when they're making this retradiction how much they were sped up in the past on the issues that they completed as part of this study. and they say that ai made them complete tasks in 20% less time. and we find you know actually that they they take 20% longer to complete tasks when they're allowed to use ai versus not. um there's you know a bunch of implicit caveats in this in this title. um these these should be these should be front of mind. this is this is not something that we're that we'r"
+    },
+    {
+     "source": "_Zcw_sVF6hU",
+     "title": "The Friction is Your Judgment — Armin Ronacher & Cristina Poncela Cubeiro, Earendil",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=_Zcw_sVF6hU",
+     "stance": "asserts",
+     "quote": "because we produce a lot of output very fast, we are tricked into thinking that we're actually being more efficient",
+     "context": "our product work and you've added a new feature or if it's going to be that last drop of slop that brings your product crashing down. and so, it's very addictive. we keep doing what we're doing. it's not a great solution. but also most importantly, and i don't think we realize this as much, is that because we produce a lot of output very fast, we are tricked into thinking that we're actually being more efficient, doing more work. and this is quite the opposite because now we don't have as much time to actually stop and think and decide what we're doing, ask ourselves, is this the best way in which i can implement this or could i be some doing something better? and when you're in this flow, it's very diffic"
+    },
+    {
+     "source": "fuRmxFZ-umE",
+     "title": "AI Safety (CS 2881) Lecture 7: Lab vs Field: Guest lecture by Joel Becker",
+     "channel": "Boaz Barak",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=fuRmxFZ-umE",
+     "stance": "asserts",
+     "quote": "retradicting how much they were sped up in the past on the issues in this study predict that they went 20% faster",
+     "context": " um these are often people at labs or on the top four uh machine learning phd programs, they're predicting something like 40% decrease in time to completion. the developers themselves are predicting a 24% decrease in time to completion. the developers themselves, after the study has been completed, retradicting how much they were sped up in the past on the issues in this study predict that they went 20% faster by this measure. and in fact, we we observe that they go slower. >> that's that's actually fine for us because we get paid by how much developers think they get. [laughter] [music] um there are a bunch of there are a bunch of caveats at the at the top here. we're going to go through the caveats. um"
+    },
+    {
+     "source": "haWve-6WgW4",
+     "title": "The METR Paradox. Why AI Made Senior Devs 19% Slower",
+     "channel": "Macro Lens",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=haWve-6WgW4",
+     "stance": "asserts",
+     "quote": "those same developers still believed AI had made them 20% faster",
+     "context": "ource developers, 246 real tasks, a randomized controlled trial, not a vibe survey, not a vendor white paper. the result: when these developers were allowed to use ai tools, they were 19% slower than when they weren't. here's the part that should make every cto uncomfortable. after the study ended, those same developers still believed ai had made them 20% faster. that gap between what was measured and what was felt is the most important data point in the ai coding debate of 2026. the number got covered. the implication for how companies are pricing senior engineers did not. before we go in, you need to understand why this study is different from everything"
+    },
+    {
+     "source": "j-ZEhEiHzjg",
+     "title": "Is AI making devs SLOWER? Yes, according to this study...",
+     "channel": "Native Notify",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=j-ZEhEiHzjg",
+     "stance": "asserts",
+     "quote": "they felt like they were finishing their work 20% faster",
+     "context": "is ai actually slowing down developers? there is a new meter study out claiming that experienced coders finish their work 19% slower even though they felt like they were finishing their work 20% faster using ai tools. meter, which is short for model evaluation and threat research, ran the first real code, real repo randomized controlled trial in 2025. they had 246 authentic issues in code bases and the developers chosen each had five years of experience with the codebase. each issue randomly allo"
+    },
+    {
+     "source": "k1t2xyWMUdY",
+     "title": "How METR measures Long Tasks and Experienced Open Source Dev Productivity - Joel Becker, METR",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=k1t2xyWMUdY",
+     "stance": "asserts",
+     "quote": "developers will tell you that they were faster when they weren't.",
+     "context": " think we despite this were interested in time estimates because um you know, we're we're interested in providing yeah, i mean i mean >> [laughter] >> i mean it's the perceptual like yeah, i do think that's relevant to also because like the perceptual aspect is also the hype aspect. right? like so, developers will tell you that they were faster when they weren't. and i think that is worth knowing. and you know, to to the extent that we're interested in um uh measuring the, you know, possibility timing nature of um of capability explosions or sort of r&d being automated. one commonly proposed measure to do this is just like ask developers or researchers how "
+    },
+    {
+     "source": "mikelovesrobots-substack-wheres-the-shovelware-why-ai-coding",
+     "title": "Where's the Shovelware? Why AI Coding Claims Don't Add Up",
+     "channel": "mikelovesrobots.substack.com",
+     "kind": "post",
+     "href": "https://mikelovesrobots.substack.com/p/wheres-the-shovelware-why-ai-coding",
+     "stance": "asserts",
+     "quote": "developers were unreliable narrators of their own productivity",
+     "context": "ty are wrapped up in this programming thing for better or worse. i thrive off the dopamine hits from shipping cool things. i was an early adopter of ai coding and a fan until maybe two months ago, when i read the metr study and suddenly got serious doubts. in that study, the authors discovered that developers were unreliable narrators of their own productivity. they thought ai was making them 20% faster, but it was actually making them 19% slower. this shocked me because i had just told someone the week before that i thought ai was only making me about 25% faster, and i was bummed it wasn't a higher number. i was only off by 5% from the developer's own i"
+    },
+    {
+     "source": "seangoedecke-impact-of-ai-study",
+     "title": "METR's AI productivity study is really good",
+     "channel": "seangoedecke.com",
+     "kind": "post",
+     "href": "https://www.seangoedecke.com/impact-of-ai-study/",
+     "stance": "asserts",
+     "quote": "developers came away from the study thinking they were 20% faster, but were in fact 19% slower.",
+     "context": "s much more likely that gpt-4.1 can write acceptable code for the prototype dashboard at my startup than it can for the haskell compiler (one of the actual repositories in the study). ## the illusion of speed however, this is only half of the study's result. the other half is even more interesting: developers came away from the study thinking they were 20% faster, but were in fact 19% slower. how can experienced developers not know how fast they're going? i don't think the study offers a compelling answer to this question. but it does give some hints. first, it notes that many developers (though not all) felt that working with ai was easier. 69% of developers continued using the ai tool"
+    },
+    {
+     "source": "simonwillison-ai-open-source-productivity",
+     "title": "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity",
+     "channel": "Simon Willison’s Weblog",
+     "kind": "post",
+     "href": "https://simonwillison.net/2025/Jul/12/ai-open-source-productivity/",
+     "stance": "asserts",
+     "quote": "developers estimate that allowing AI reduced completion time by 20%.",
+     "context": "vels of exposure to llm tools. they then assigned them tasks from their own open source projects, randomly assigning whether ai was allowed or not allowed for each of those tasks. they found a surprising difference between developer estimates and actual completion times: after completing the study, developers estimate that allowing ai reduced completion time by 20%. surprisingly, we find that allowing ai actually increases completion time by 19%-ai tooling slowed developers down. i shared my initial intuition about this paper on hacker news the other day: my personal theory is that getting a significant productivity boost from llm assistance and ai tools has a"
+    },
+    {
+     "source": "tbDDYKRFjhk",
+     "title": "Does AI Actually Boost Developer Productivity? (100k Devs Study) - Yegor Denisov-Blanch, Stanford",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=tbDDYKRFjhk",
+     "stance": "asserts",
+     "quote": "asking someone how productive they think they are is almost as good as flipping a coin",
+     "context": " this small experiment with 43 developers whereby we ask every developer to evaluate themselves relative to the global mean or median in five percentile uh buckets from 0 to 100 and then we compared that to their measured productivity. we'll get into what that means later, but what we found is that asking someone how productive they think they are is almost as good as flipping a coin. there's very little correlation, right? and so we found that people misjudged their productivity by about 30 percentile points. only one in three people actually estimated their productivity within their quartile, one quartile. and i think surveys are great. they're valuable for surfacing, you kno"
+    },
+    {
+     "source": "u-oOcKbgw0w",
+     "title": "Does AI Secretly Slow Developers Down?",
+     "channel": "The AI Daily Brief: Artificial Intelligence News",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=u-oOcKbgw0w",
+     "stance": "asserts",
+     "quote": "even after the study concluded thought that AI had made them 20% more productive",
+     "context": "n? welcome back to the ai daily brief. today we are talking about a study that is getting an absolute ton of buzz. a group of developers were tested to see how much more productive ai coding tools would make them. they assumed going into the study that they would be about 24 25% more productive and even after the study concluded thought that ai had made them 20% more productive. but the study actually found that they were 19% less productive, 19% slower on this set of coding tasks. now, as you might imagine, this has been widely reported on outlets like cnbc, suggesting that it makes for a crack in the ai productivity bullcase. the implications of something like this are "
+    },
+    {
+     "source": "zqTxwlcWS-Q",
+     "title": "AI Made Devs 19% Slower (METR 2025 Study)",
+     "channel": "zencoderai",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=zqTxwlcWS-Q",
+     "stance": "asserts",
+     "quote": "After using it, they said they felt about 20% faster",
+     "context": "something very strange about ai coding. there was a recent study done by meter with 16 experienced developers, 246 real coding tasks, and they thought that ai would make them about 24% faster. after using it, they said they felt about 20% faster. but when researchers measured what they actually shipped, they actually were 19% slower. and that's meter. it's a peer-reviewed, randomized, not a vibes-based twitter poll or anything like that. um and it's not a fluke. dora's state of devops report last year surveyed thousands of engineering team"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L17-L24",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "right",
+     "confidence": 0.8,
+     "note": "Developers forecast a 24% speedup and afterward estimated 20%, but were actually slowed 19%. Experts also overestimated, predicting 38-39% faster.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2302.06590.txt#L184-L188",
+     "doc": "ai-coding/sources/2302.06590.txt",
+     "by": "Copilot RCT (Peng)",
+     "verdict": "wrong",
+     "confidence": 0.45,
+     "note": "In the Copilot RCT both groups estimated a ~35% productivity gain, an underestimate of the measured 55.8% speedup.",
+     "role": "contradicts",
+     "applicability": "direct",
+     "basis": "review",
+     "why": "the trial compared participants' estimated gain with the measured gain, which is exactly the claim",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/metr-2026-experiment-design.txt#L63-L63",
+     "doc": "ai-coding/sources/metr-2026-experiment-design.txt",
+     "by": "METR 2026 update",
+     "verdict": "partly",
+     "confidence": 0.35,
+     "note": "METR Feb 2026: some developers self-report very high speedups, which METR notes can be 'quite unreliable' per its earlier study; it also says the true speedup may be higher among those who selected out, so no new measured overestimate.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"self-report\")",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L36",
+     "doc": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+     "by": "Anthropic internal study",
+     "verdict": "unknown",
+     "confidence": null,
+     "note": "Anthropic's +50% figures are self-reported; the post cites METR's overestimation finding and admits perception, social-desirability and recall biases, so it cannot settle the question.",
+     "role": "context",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"self-reported\")",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "Developers overestimate how much AI tools speed them up",
+    "status": "disputed",
+    "decision": "qualify",
+    "limitations": [
+     "Contradicted by Copilot RCT (Peng): In the Copilot RCT both groups estimated a ~35% productivity gain, an underestimate of the measured 55.8% speedup."
+    ],
+    "suggestions": [
+     "Present the disagreement: name the studies on each side instead of stating one side as fact."
+    ]
+   }
+  }
+ ],
+ "documents": [
+  {
+   "file": "ai-coding/sources/2302.06590.txt",
+   "name": "Copilot RCT (Peng)",
+   "sha": "f4cdcf3e3c",
+   "lines": 351,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2302.06590.txt#L184-L188"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2410.12944.txt",
+   "name": "Google RCT",
+   "sha": "9c526cc1a6",
+   "lines": 724,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2410.12944.txt#L519-L528"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2501.06972.txt",
+   "name": "Google migrations report",
+   "sha": "e62062a6b4",
+   "lines": 776,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2501.06972.txt#L245-L251"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2507.09089v2.txt",
+   "name": "METR 2025 RCT",
+   "sha": "3f351a2caa",
+   "lines": 2703,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2507.09089v2.txt#L11-L27",
+    "ai-coding/sources/2507.09089v2.txt#L995-L1001",
+    "ai-coding/sources/2507.09089v2.txt#L587-L599",
+    "ai-coding/sources/2507.09089v2.txt#L17-L24"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/4859137.txt",
+   "name": "Shan et al. field study + RCT",
+   "sha": "8ca047452e",
+   "lines": 1775,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/4859137.txt#L489-L493"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+   "name": "Anthropic internal study",
+   "sha": "d1d3bffd06",
+   "lines": 179,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35",
+    "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L36"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+   "name": "Microsoft/Accenture field RCTs",
+   "sha": "bcf2933521",
+   "lines": 1215,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L774-L784"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/metr-2026-experiment-design.txt",
+   "name": "METR 2026 update",
+   "sha": "6b99f622cf",
+   "lines": 130,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/metr-2026-experiment-design.txt#L58-L62",
+    "ai-coding/sources/metr-2026-experiment-design.txt#L61-L62",
+    "ai-coding/sources/metr-2026-experiment-design.txt#L63-L63"
+   ]
+  }
+ ],
+ "gaps": [
+  "Google migrations report is context only: bespoke migration pipelines with fine-tuned models and engineers' estimates; not average developer work in an enterprise codebase",
+  "No study strong enough to decide: \"Engineers who adopt agentic coding are about ten times as productive as peers who don't\"",
+  "What explains the split between METR 2025 RCT, Copilot RCT (Peng), METR 2026 update?",
+  "METR 2026 update: METR Feb 2026: some developers self-report very high speedups, which METR notes can be 'quite unreliable' per its earlier study; it also says the true speedup may be higher among those who selected out, so no new measured overestimate."
+ ],
+ "chainWhy": "The answer ends on METR's maintainers, who were 19% slower while believing they were faster, which raises the next question: can developers tell at all whether the tool is speeding them up?",
+ "questions": [
+  {
+   "story": "decision:how-much-faster",
+   "question": "How much faster does AI actually make programmers?",
+   "claims": [
+    "ai-coding/tools-slowed-experienced-open-source-developers",
+    "ai-coding/real-enterprise-codebases-yields-modest-average",
+    "ai-coding/engineers-who-adopt-agentic-coding-about",
+    "ai-coding/measured-slowdown-mainly-artifact-older-models"
+   ],
+   "central": {
+    "text": "AI tools slowed experienced open-source developers working on their own familiar codebases (METR 2025 RCT)",
+    "status": "supported"
+   },
+   "premise": "Field trials put the average gain in the twenties: Microsoft/Accenture (4,867 developers, 26% more weekly PRs), Google (96 engineers, about 21% less time on an enterprise task, confidence interval crossing zero) and Shan's field study (18% more user stories, self-selected usage). METR 2025 found the opposite sign for 16 experienced open-source maintainers in their own mature repos: 19% slower with early-2025 tools. The 10x claim has no supporting measurement; the field gain and Anthropic's self-reported 50% bound it, and neither measured agentic coding. METR's 2026 update says the slowdown was probably specific to early 2025 but calls its new data very weak evidence because of selection effects. Google's migration figures (50% to 89% savings) are bespoke pipelines and engineers' estimates, context only.",
+   "tension": "Ten-times claims against field trials in the twenties of percent and one trial that found experienced maintainers 19% slower.",
+   "whyWatch": "The claims run from 10x to 'it slows you down', and both extremes cite studies. The trials fit together once you look at who was measured doing what.",
+   "arc": {
+    "hook": "Three numbers on screen: 10x, 26%, minus 19%. All of them come with a study attached.",
+    "conflict": "The hype and the slowdown both cite trials; the question is what each trial measured.",
+    "evidence": "Microsoft/Accenture, Google and Shan on real work; METR 2025 on mature repos with experts; METR 2026 on what changed and why it cannot tell; the absence of any 10x measurement.",
+    "resolution": "Twenties of percent on average work, less or negative for experts in familiar code, unknown for today's agentic tools; 10x is unmeasured.",
+    "takeaway": "Expect a quarter, not a multiple, and expect less on the code you know best."
+   }
+  },
+  {
+   "story": "conflict:developers-overestimate-how-much-tools-speed",
+   "question": "Do developers know whether AI is actually making them faster?",
+   "claims": [
+    "ai-coding/developers-overestimate-how-much-tools-speed"
+   ],
+   "central": {
+    "text": "Studies disagree on whether developers overestimate how much AI tools speed them up",
+    "status": "supported"
+   },
+   "premise": "The disagreement is the story and it is well measured on both sides. METR 2025 (16 experienced open-source developers, 246 tasks in their own mature repos, early-2025 tools) found a 19% slowdown against a forecast of 24% faster and an after-the-fact estimate of 20% faster; experts predicted 38-39%. Peng's 2023 Copilot trial (freelancers, a greenfield HTTP server task) found a 55.8% speedup that participants underestimated at about 35%. METR's 2026 update adds that self-reports can be very unreliable and that its new data are too selection-biased to measure. The likely explanation, task familiarity and codebase maturity, is the resolution the video should offer as a hypothesis, not a finding.",
+   "tension": "METR: developers forecast 24% faster, felt 20% faster, were 19% slower. Peng's Copilot trial: both groups guessed about 35% and the measured gain was 55.8%. Overestimate in one, underestimate in the other.",
+   "whyWatch": "Every developer has a feeling about this. Two randomized trials checked the feeling against the stopwatch and got opposite answers, which is the most useful thing a viewer can learn about their own estimate.",
+   "arc": {
+    "hook": "Ask the viewer to guess how much faster AI makes them, then show what happened when two trials asked the same of their participants.",
+    "conflict": "Two randomized trials, opposite errors: experienced maintainers overestimated and got slower; freelancers on a fresh task underestimated and got much faster.",
+    "evidence": "METR's forecast-versus-measured numbers and acceptance rates; Peng's estimate-versus-measured numbers; METR 2026's warning about self-reports and selection.",
+    "resolution": "Perception tracks effort saved on the parts AI does, not time spent on the parts it creates; which dominates depends on task familiarity and codebase maturity (a hypothesis both papers gesture at).",
+    "takeaway": "Measure, don't ask: time a week of comparable tasks with and without the tool."
+   }
+  }
+ ],
+ "fingerprint": "17538cd756",
+ "generatedAt": "2026-10-21T08:29:15.036Z"
+}
