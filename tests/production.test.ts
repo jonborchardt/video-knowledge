@@ -1,6 +1,6 @@
 // The production board derives every stage from the persisted artifacts. Every topic must derive without throwing; the
 // stage tests run on a synthetic production (production-helpers.ts) built by the library code, not a committed video.
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -32,7 +32,7 @@ import {
   type ScriptValidation,
   scriptDir,
 } from '../src/lib/script';
-import { type Fixture, syntheticProduction } from './production-helpers';
+import { type Fixture, copyTopic, syntheticProduction } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
 describe('production board', () => {
@@ -202,14 +202,18 @@ describe('graphics stage', () => {
 
 describe('board next', () => {
   it('boardNext for a story without a script dir', () => {
-    // Any heat-pumps story not yet produced (production keeps taking them, so none is named here).
-    const id = loadStories('heat-pumps')!.stories.find(
-      (s) => !s.partOf && !existsSync(scriptDir('heat-pumps', s.id)),
-    )!.id;
-    const n = boardNext('heat-pumps', id);
-    expect(n.stage).toBe('package');
-    expect(n.steps).toEqual([{ kind: 'run', text: `npm run script -- package heat-pumps ${id}` }]);
-    expect(n.done).toBe(false);
+    // A ready story with its script dir removed, in a copy of the topic (production keeps taking the real ones).
+    const c = copyTopic('heat-pumps');
+    try {
+      const id = loadStories('heat-pumps', c.root)!.stories.find((s) => s.readiness === 'ready' && !s.partOf)!.id;
+      rmSync(c.dir(id), { recursive: true, force: true });
+      const n = boardNext('heat-pumps', id, c.root);
+      expect(n.stage).toBe('package');
+      expect(n.steps).toEqual([{ kind: 'run', text: `npm run script -- package heat-pumps ${id}` }]);
+      expect(n.done).toBe(false);
+    } finally {
+      c.cleanup();
+    }
   });
 
   it('boardNext of an unknown story stops', () => {

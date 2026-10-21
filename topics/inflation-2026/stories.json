@@ -439,6 +439,481 @@
    ]
   },
   {
+   "id": "decision:how-high-is-inflation",
+   "kind": "decision",
+   "title": "How High Is Inflation, Really?",
+   "alternates": [
+    "Is There Really No Inflation? The September 2026 Numbers",
+    "Inflation in 2026: High, Low, or Neither?"
+   ],
+   "question": "How high is US inflation right now, compared with the target, the past and the 2022 peak?",
+   "whyWatch": "People are told there is no inflation, that it is low by historical standards, and that it is far below the peak. The official CPI shows which of these comparisons hold and which pick a convenient baseline.",
+   "tension": "Inflation is less than half its 2022 peak, which lets one side call it low. It is also higher than when the administration took office and has been above target for five years, which lets the other side call it high.",
+   "evidenceNeeded": "The latest monthly and twelve-month CPI readings, the recent three-month pace, the CPI history back to before the pandemic, and the 2022 peak.",
+   "evidenceAvailable": [
+    "BLS CPI release, September 2026: wrong (0.95, direct)",
+    "BLS CPI, earnings and jobs series 2019-2026: wrong (0.85, direct)",
+    "BLS CPI, earnings and jobs series 2019-2026: right (0.7, direct)",
+    "BLS CPI, earnings and jobs series 2019-2026: right (0.95, direct)",
+    "BLS CPI, earnings and jobs series 2019-2026: right (0.85, direct)",
+    "FOMC statement, 16 Sep 2026: partly (0.5, direct)",
+    "fomc-sep-2026-09-16.txt: partly (0.5, direct)",
+    "BLS CPI, earnings and jobs series 2019-2026: wrong (0.9, direct)"
+   ],
+   "gaps": [],
+   "premise": "Consumer prices rose 0.6% in September 2026 and 3.7% over twelve months, so the claim that there is no inflation is wrong. 3.7% is below the 9.1% peak of June 2022 but above every reading in 2024 and 2025, above the roughly 1.5-2.5% pace before the pandemic, and above the 3.0% of January 2025. It was a different story in January 2026: 2.4%, tied for the lowest reading since early 2021 and about the pre-pandemic pace, so 'low by historical standards' was fair then (in a series that starts in 2019) and stopped being fair by September. Prices rose about 1.1% from June to September, a 4.6% annualized pace, so the recent three months were not below target. The twelve-month CPI rate has been at least 2.3% every month since March 2021; the Fed's 2% target is defined on a different index (PCE), which usually runs somewhat lower, so 'above target' is shown on CPI. And a falling inflation rate does not mean falling prices: from January 2023 to September 2024 the rate fell from 6.4% to 2.4% while the price level kept rising.",
+   "claims": [
+    "inflation-2026/has-inflation-october-2026",
+    "inflation-2026/inflation-low-historical-standards-september-2026",
+    "inflation-2026/inflation-low-historical-standards-january-2026",
+    "inflation-2026/inflation-today-substantially-below-peak-under",
+    "inflation-2026/inflation-higher-now-when-administration-took",
+    "inflation-2026/inflation-over-most-recent-three-months",
+    "inflation-2026/inflation-has-run-above-fed-target",
+    "inflation-2026/falling-inflation-rate-means-consumer-prices"
+   ],
+   "related": [
+    "inflation-2026/has-inflation-december-2025",
+    "inflation-2026/currently-has-inflation-september-2026",
+    "inflation-2026/grocery-inflation-has-slowed-sharply-september",
+    "inflation-2026/annual-inflation-under-previous-administration-peaked",
+    "inflation-2026/gasoline-cheaper-now-under-previous-administration-3"
+   ],
+   "arc": {
+    "hook": "Depending on who you listen to, there is no inflation, or it is the worst in years. Both cannot be right.",
+    "conflict": "Each side picks a baseline: the 2022 peak makes today look low; January 2025 and the Fed target make it look high.",
+    "evidence": "The September 2026 CPI, then the same number against history, the peak, January 2025, the recent three months and the target, then the rate against the price level.",
+    "resolution": "Inflation is 3.7%: far below the 2022 peak, but above target, above the start of 2025 and above any year from 2024 to 2025, and not zero by any measure.",
+    "takeaway": "When you hear an inflation comparison, ask what it is being compared with, and remember that a lower rate still means higher prices."
+   },
+   "coherence": {
+    "score": 0.85,
+    "basis": "review",
+    "explanation": "One question, how high inflation is right now, answered against zero, the Fed target, history (in January 2026 and now), the 2022 peak and January 2025, plus the common confusion between a falling rate and falling prices."
+   },
+   "scores": {
+    "coherence": 0.85,
+    "relevance": 0.95,
+    "curiosity": 0.7,
+    "stakes": 1,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.95,
+    "editorial": 0.9,
+    "overall": 0.92,
+    "explanation": "editorial 0.9 = mean of coherence 0.85 (review), relevance 0.95 (17 sources, 14 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (4 studies, 8 claims, tension); evidence 0.95 = strongest BLS CPI release, September 2026 at 0.95 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.85), central conclusion supported, 8 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "The evidence does not support \"The US has no inflation [October 2026]\"",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.95,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "inflation-2026/has-inflation-october-2026",
+        "cite": "inflation-2026/sources/bls-cpi-2026-09.txt#L11-L13"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "BLS CPI release, September 2026",
+       "verdict": "wrong",
+       "confidence": 0.95,
+       "note": "The latest release (September 2026) shows CPI-U up 0.6% on the month and 3.7% over 12 months, the fastest 12-month pace since May 2026.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [],
+     "problems": [],
+     "limitations": [],
+     "suggestions": [],
+     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The evidence does not support \"The US has no inflation [October 2026]\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.95,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/has-inflation-october-2026",
+          "cite": "inflation-2026/sources/bls-cpi-2026-09.txt#L11-L13"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "BLS CPI release, September 2026",
+         "verdict": "wrong",
+         "confidence": 0.95,
+         "note": "The latest release (September 2026) shows CPI-U up 0.6% on the month and 3.7% over 12 months, the fastest 12-month pace since May 2026.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "The evidence does not support \"Inflation is low by historical standards [September 2026]\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.85,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/inflation-low-historical-standards-september-2026",
+          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L19-L99"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "BLS CPI, earnings and jobs series 2019-2026",
+         "verdict": "wrong",
+         "confidence": 0.85,
+         "note": "Headline CPI rose 3.7% in the 12 months to September 2026, above every reading in 2024 (max 3.5%) and 2025 (2.3-3.0%) and above the 2019-20 pre-pandemic pace of about 1.5-2.5%; only the 2021-23 spike (peak 9.1% in June 2022) and April-May 2026 (3.8%, 4.2%) were higher in this series.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Inflation is low by historical standards [January 2026]",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.7,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/inflation-low-historical-standards-january-2026",
+          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L19-L91"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "BLS CPI, earnings and jobs series 2019-2026",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "Headline CPI was 2.4% in January 2026, tied for the lowest reading since February 2021 (2.3% in April 2025), far below the 9.1% peak of June 2022 and about the 2019-20 pre-pandemic pace (2.3-2.5%); it remained above the 2% target, and the series only spans 2019-2026.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.7)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f3",
+       "text": "Inflation today is substantially below its peak under the previous administration",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.95,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/inflation-today-substantially-below-peak-under",
+          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L48-L99"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "BLS CPI, earnings and jobs series 2019-2026",
+         "verdict": "right",
+         "confidence": 0.95,
+         "note": "The 12-month CPI-U change peaked at 9.1% in June 2022 and was 3.7% in September 2026, less than half the peak.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f4",
+       "text": "Inflation is higher now than when the administration took office [October 2026]",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.95,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/inflation-higher-now-when-administration-took",
+          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L79-L99"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "BLS CPI, earnings and jobs series 2019-2026",
+         "verdict": "right",
+         "confidence": 0.95,
+         "note": "The 12-month CPI change was 3.0% in January 2025 and 3.7% in September 2026, the latest reading; core rose from 3.3% to 2.6% over the same span, so the increase is in headline inflation driven by energy.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f5",
+       "text": "The evidence does not support \"Inflation over the most recent three months has run below the Fed's two percent target [October 2026]\"",
+       "kind": "fact",
+       "modality": "typical",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.85,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/inflation-over-most-recent-three-months",
+          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L191-L195"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "BLS CPI, earnings and jobs series 2019-2026",
+         "verdict": "wrong",
+         "confidence": 0.85,
+         "note": "Seasonally adjusted CPI-U rose from 332.568 in June to 336.298 in September 2026 (+1.1% in three months, about 4.6% annualized), far above 2%; the claim held only for the June-August window (May 333.979 to August 334.131, about 0.2% annualized) because of June's energy-driven -0.4% month.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f6",
+       "text": "Inflation has run above the Fed's target for more than five years [September 2026]",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.85,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/inflation-has-run-above-fed-target",
+          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L33-L99"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "BLS CPI, earnings and jobs series 2019-2026",
+         "verdict": "right",
+         "confidence": 0.85,
+         "note": "The 12-month CPI-U change has been at least 2.3% in every month from March 2021 (2.6%) through September 2026 (3.7%), five and a half years; the Fed's target is on PCE inflation, which runs somewhat below CPI, so the lowest CPI readings (2.3% in April 2025) leave a small margin.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/inflation-has-run-above-fed-target",
+          "cite": "inflation-2026/sources/fomc-statement-2026-09-16.txt#L9-L9"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "FOMC statement, 16 Sep 2026",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "The September 16, 2026 FOMC statement says inflation remains elevated and names the Committee's goal as 2 percent, so inflation was above target in September 2026; the statement says nothing about how long it has been above.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/inflation-has-run-above-fed-target",
+          "cite": "inflation-2026/sources/fomc-sep-2026-09-16.txt#L25-L39"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "fomc-sep-2026-09-16.txt",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "FOMC participants project PCE inflation of 3.7% for 2026 against a longer-run rate of 2.0%, and the note defines PCE inflation as the change in the price index for personal consumption expenditures, so on the Fed's own index 2026 runs well above 2%; it does not cover earlier years.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "FOMC statement, 16 Sep 2026: The September 16, 2026 FOMC statement says inflation remains elevated and names the Committee's goal as 2 percent, so inflation was above target in September 2026; the statement says nothing about how long it has been above.",
+        "fomc-sep-2026-09-16.txt: FOMC participants project PCE inflation of 3.7% for 2026 against a longer-run rate of 2.0%, and the note defines PCE inflation as the change in the price index for personal consumption expenditures, so on the Fed's own index 2026 runs well above 2%; it does not cover earlier years."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.85), 2 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f7",
+       "text": "The evidence does not support \"A falling inflation rate means consumer prices are falling\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.9,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/falling-inflation-rate-means-consumer-prices",
+          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L55-L75"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "BLS CPI, earnings and jobs series 2019-2026",
+         "verdict": "wrong",
+         "confidence": 0.9,
+         "note": "From January 2023 to September 2024 the 12-month inflation rate fell from 6.4% to 2.4% while the CPI-U level rose from 299.17 to 315.301; a falling rate means prices rise more slowly, not that they fall.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.9)."
+      }
+     }
+    ]
+   },
+   "chain": [
+    {
+     "id": "decision:what-is-driving-it",
+     "question": "What is pushing US inflation up in 2026: gasoline, tariffs, or prices across the board?"
+    }
+   ]
+  },
+  {
    "id": "decision:is-gas-cheaper-than-under-biden",
    "kind": "decision",
    "title": "Is Gas Cheaper Now Than Under Biden?",
@@ -837,441 +1312,6 @@
     {
      "id": "surprise:cumulative-price-increases-under-current-administration",
      "question": "Have prices risen less under this administration than under the last one?"
-    }
-   ]
-  },
-  {
-   "id": "decision:how-high-is-inflation",
-   "kind": "decision",
-   "title": "How High Is Inflation, Really?",
-   "alternates": [
-    "Is There Really No Inflation? The September 2026 Numbers",
-    "Inflation in 2026: High, Low, or Neither?"
-   ],
-   "question": "How high is US inflation right now, compared with the target, the past and the 2022 peak?",
-   "whyWatch": "People are told there is no inflation, that it is low by historical standards, and that it is far below the peak. The official CPI shows which of these comparisons hold and which pick a convenient baseline.",
-   "tension": "Inflation is less than half its 2022 peak, which lets one side call it low. It is also higher than when the administration took office and has been above target for five years, which lets the other side call it high.",
-   "evidenceNeeded": "The latest monthly and twelve-month CPI readings, the recent three-month pace, the CPI history back to before the pandemic, and the 2022 peak.",
-   "evidenceAvailable": [
-    "BLS CPI release, September 2026: wrong (0.95, direct)",
-    "BLS CPI, earnings and jobs series 2019-2026: wrong (0.85, direct)",
-    "BLS CPI, earnings and jobs series 2019-2026: right (0.7, direct)",
-    "BLS CPI, earnings and jobs series 2019-2026: right (0.95, direct)",
-    "BLS CPI, earnings and jobs series 2019-2026: right (0.85, direct)",
-    "BLS CPI, earnings and jobs series 2019-2026: wrong (0.9, direct)"
-   ],
-   "gaps": [],
-   "premise": "Consumer prices rose 0.6% in September 2026 and 3.7% over twelve months, so the claim that there is no inflation is wrong. 3.7% is below the 9.1% peak of June 2022 but above every reading in 2024 and 2025, above the roughly 1.5-2.5% pace before the pandemic, and above the 3.0% of January 2025. It was a different story in January 2026: 2.4%, tied for the lowest reading since early 2021 and about the pre-pandemic pace, so 'low by historical standards' was fair then (in a series that starts in 2019) and stopped being fair by September. Prices rose about 1.1% from June to September, a 4.6% annualized pace, so the recent three months were not below target. The twelve-month CPI rate has been at least 2.3% every month since March 2021; the Fed's 2% target is defined on a different index (PCE), which usually runs somewhat lower, so 'above target' is shown on CPI. And a falling inflation rate does not mean falling prices: from January 2023 to September 2024 the rate fell from 6.4% to 2.4% while the price level kept rising.",
-   "claims": [
-    "inflation-2026/has-inflation-october-2026",
-    "inflation-2026/inflation-low-historical-standards-september-2026",
-    "inflation-2026/inflation-low-historical-standards-january-2026",
-    "inflation-2026/inflation-today-substantially-below-peak-under",
-    "inflation-2026/inflation-higher-now-when-administration-took",
-    "inflation-2026/inflation-over-most-recent-three-months",
-    "inflation-2026/inflation-has-run-above-fed-target",
-    "inflation-2026/falling-inflation-rate-means-consumer-prices"
-   ],
-   "related": [
-    "inflation-2026/has-inflation-december-2025",
-    "inflation-2026/currently-has-inflation-september-2026",
-    "inflation-2026/grocery-inflation-has-slowed-sharply-september",
-    "inflation-2026/annual-inflation-under-previous-administration-peaked",
-    "inflation-2026/gasoline-cheaper-now-under-previous-administration-3"
-   ],
-   "arc": {
-    "hook": "Depending on who you listen to, there is no inflation, or it is the worst in years. Both cannot be right.",
-    "conflict": "Each side picks a baseline: the 2022 peak makes today look low; January 2025 and the Fed target make it look high.",
-    "evidence": "The September 2026 CPI, then the same number against history, the peak, January 2025, the recent three months and the target, then the rate against the price level.",
-    "resolution": "Inflation is 3.7%: far below the 2022 peak, but above target, above the start of 2025 and above any year from 2024 to 2025, and not zero by any measure.",
-    "takeaway": "When you hear an inflation comparison, ask what it is being compared with, and remember that a lower rate still means higher prices."
-   },
-   "coherence": {
-    "score": 0.85,
-    "basis": "review",
-    "explanation": "One question, how high inflation is right now, answered against zero, the Fed target, history (in January 2026 and now), the 2022 peak and January 2025, plus the common confusion between a falling rate and falling prices."
-   },
-   "scores": {
-    "coherence": 0.85,
-    "relevance": 0.95,
-    "curiosity": 0.7,
-    "stakes": 1,
-    "depth": 0.87,
-    "originality": 1,
-    "evidence": 0.95,
-    "editorial": 0.87,
-    "overall": 0.9,
-    "explanation": "editorial 0.87 = mean of coherence 0.85 (review), relevance 0.95 (17 sources, 14 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 1 (lean: pro-hype), depth 0.87 (2 studies, 8 claims, tension); evidence 0.95 = strongest BLS CPI release, September 2026 at 0.95 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.85), central conclusion supported, 8 essential findings verified, no pending review.",
-   "blocking": [],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "The evidence does not support \"The US has no inflation [October 2026]\"",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0.95,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "inflation-2026/has-inflation-october-2026",
-        "cite": "inflation-2026/sources/bls-cpi-2026-09.txt#L11-L13"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "BLS CPI release, September 2026",
-       "verdict": "wrong",
-       "confidence": 0.95,
-       "note": "The latest release (September 2026) shows CPI-U up 0.6% on the month and 3.7% over 12 months, the fastest 12-month pace since May 2026.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "The evidence does not support \"The US has no inflation [October 2026]\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.95,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "inflation-2026/has-inflation-october-2026",
-          "cite": "inflation-2026/sources/bls-cpi-2026-09.txt#L11-L13"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "BLS CPI release, September 2026",
-         "verdict": "wrong",
-         "confidence": 0.95,
-         "note": "The latest release (September 2026) shows CPI-U up 0.6% on the month and 3.7% over 12 months, the fastest 12-month pace since May 2026.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f1",
-       "text": "The evidence does not support \"Inflation is low by historical standards [September 2026]\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.85,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "inflation-2026/inflation-low-historical-standards-september-2026",
-          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L19-L99"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "BLS CPI, earnings and jobs series 2019-2026",
-         "verdict": "wrong",
-         "confidence": 0.85,
-         "note": "Headline CPI rose 3.7% in the 12 months to September 2026, above every reading in 2024 (max 3.5%) and 2025 (2.3-3.0%) and above the 2019-20 pre-pandemic pace of about 1.5-2.5%; only the 2021-23 spike (peak 9.1% in June 2022) and April-May 2026 (3.8%, 4.2%) were higher in this series.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f2",
-       "text": "Inflation is low by historical standards [January 2026]",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.7,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "inflation-2026/inflation-low-historical-standards-january-2026",
-          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L19-L91"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "BLS CPI, earnings and jobs series 2019-2026",
-         "verdict": "right",
-         "confidence": 0.7,
-         "note": "Headline CPI was 2.4% in January 2026, tied for the lowest reading since February 2021 (2.3% in April 2025), far below the 9.1% peak of June 2022 and about the 2019-20 pre-pandemic pace (2.3-2.5%); it remained above the 2% target, and the series only spans 2019-2026.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.7)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f3",
-       "text": "Inflation today is substantially below its peak under the previous administration",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.95,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "inflation-2026/inflation-today-substantially-below-peak-under",
-          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L48-L99"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "BLS CPI, earnings and jobs series 2019-2026",
-         "verdict": "right",
-         "confidence": 0.95,
-         "note": "The 12-month CPI-U change peaked at 9.1% in June 2022 and was 3.7% in September 2026, less than half the peak.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f4",
-       "text": "Inflation is higher now than when the administration took office [October 2026]",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.95,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "inflation-2026/inflation-higher-now-when-administration-took",
-          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L79-L99"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "BLS CPI, earnings and jobs series 2019-2026",
-         "verdict": "right",
-         "confidence": 0.95,
-         "note": "The 12-month CPI change was 3.0% in January 2025 and 3.7% in September 2026, the latest reading; core rose from 3.3% to 2.6% over the same span, so the increase is in headline inflation driven by energy.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f5",
-       "text": "The evidence does not support \"Inflation over the most recent three months has run below the Fed's two percent target [October 2026]\"",
-       "kind": "fact",
-       "modality": "typical",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.85,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "inflation-2026/inflation-over-most-recent-three-months",
-          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L191-L195"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "BLS CPI, earnings and jobs series 2019-2026",
-         "verdict": "wrong",
-         "confidence": 0.85,
-         "note": "Seasonally adjusted CPI-U rose from 332.568 in June to 336.298 in September 2026 (+1.1% in three months, about 4.6% annualized), far above 2%; the claim held only for the June-August window (May 333.979 to August 334.131, about 0.2% annualized) because of June's energy-driven -0.4% month.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f6",
-       "text": "Inflation has run above the Fed's target for more than five years [September 2026]",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.85,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "inflation-2026/inflation-has-run-above-fed-target",
-          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L33-L99"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "BLS CPI, earnings and jobs series 2019-2026",
-         "verdict": "right",
-         "confidence": 0.85,
-         "note": "The 12-month CPI-U change has been at least 2.3% in every month from March 2021 (2.6%) through September 2026 (3.7%), five and a half years; the Fed's target is on PCE inflation, which runs somewhat below CPI, so the lowest CPI readings (2.3% in April 2025) leave a small margin.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.85)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f7",
-       "text": "The evidence does not support \"A falling inflation rate means consumer prices are falling\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.9,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "inflation-2026/falling-inflation-rate-means-consumer-prices",
-          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L55-L75"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "BLS CPI, earnings and jobs series 2019-2026",
-         "verdict": "wrong",
-         "confidence": 0.9,
-         "note": "From January 2023 to September 2024 the 12-month inflation rate fell from 6.4% to 2.4% while the CPI-U level rose from 299.17 to 315.301; a falling rate means prices rise more slowly, not that they fall.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.9)."
-      }
-     }
-    ]
-   },
-   "chain": [
-    {
-     "id": "decision:what-is-driving-it",
-     "question": "What is pushing US inflation up in 2026: gasoline, tariffs, or prices across the board?"
     }
    ]
   },
@@ -1678,6 +1718,7 @@
    "evidenceNeeded": "The CPI breakdown by component for September 2026, the headline and core path through 2026, shelter inflation, and estimates of the tariff contribution.",
    "evidenceAvailable": [
     "BLS CPI release, September 2026: right (0.95, direct)",
+    "BLS CPI, earnings and jobs series 2019-2026: right (0.6, partial)",
     "BLS CPI, earnings and jobs series 2019-2026: right (0.75, partial)",
     "BLS CPI release, September 2026: partly (0.7, partial)",
     "BLS CPI, earnings and jobs series 2019-2026: partly (0.75, direct)",
@@ -1719,13 +1760,13 @@
     "stakes": 0.5,
     "depth": 1,
     "originality": 1,
-    "evidence": 0.95,
+    "evidence": 1,
     "editorial": 0.77,
-    "overall": 0.84,
-    "explanation": "editorial 0.77 = mean of coherence 0.8 (review), relevance 0.87 (13 sources, 12 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 1 (3 studies, 6 claims, tension); evidence 0.95 = strongest BLS CPI release, September 2026 at 0.95 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "overall": 0.86,
+    "explanation": "editorial 0.77 = mean of coherence 0.8 (review), relevance 0.87 (13 sources, 12 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 1 (3 studies, 6 claims, tension); evidence 1 = strongest BLS CPI release, September 2026 at 0.95 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
-   "readinessWhy": "Coherent (0.8), central conclusion supported, 6 essential findings verified, no pending review.",
+   "readinessWhy": "Coherent (0.8), central conclusion qualified with accepted qualifications, 6 essential findings verified, no pending review.",
    "blocking": [],
    "reviewed": true,
    "audit": {
@@ -1734,9 +1775,9 @@
      "text": "Gasoline prices are the main driver of the recent rise in headline inflation [September 2026]",
      "kind": "fact",
      "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
      "verbatim": true,
      "strength": 0.95,
      "independent": 1,
@@ -1759,12 +1800,33 @@
       }
      ],
      "contradicting": [],
-     "qualifying": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "inflation-2026/gasoline-prices-main-driver-recent-rise",
+        "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L476-L483"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "BLS CPI, earnings and jobs series 2019-2026",
+       "verdict": "right",
+       "confidence": 0.6,
+       "note": "The CPI gasoline index rose 24.9% in March, 11.1% in April and 8.6% in May 2026 (263.4 to 397.0), fell 9.7% in June when all-items CPI fell, and stood 34.2% above a year earlier in September 2026, tracking the jump in headline CPI; the series gives no basket weights, so it shows co-movement rather than the exact share.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"rather than\")"
+      }
+     ],
      "context": [],
      "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
+     "limitations": [
+      "BLS CPI, earnings and jobs series 2019-2026: The CPI gasoline index rose 24.9% in March, 11.1% in April and 8.6% in May 2026 (263.4 to 397.0), fell 9.7% in June when all-items CPI fell, and stood 34.2% above a year earlier in September 2026, tracking the jump in headline CPI; the series gives no basket weights, so it shows co-movement rather than the exact share. [partial: the verdict note limits its own scope (\"rather than\")]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.95), 1 qualifying."
     },
     "findings": [
      {
@@ -1774,9 +1836,9 @@
        "text": "Gasoline prices are the main driver of the recent rise in headline inflation [September 2026]",
        "kind": "fact",
        "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
        "verbatim": true,
        "strength": 0.95,
        "independent": 1,
@@ -1799,12 +1861,33 @@
         }
        ],
        "contradicting": [],
-       "qualifying": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "inflation-2026/gasoline-prices-main-driver-recent-rise",
+          "cite": "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L476-L483"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "BLS CPI, earnings and jobs series 2019-2026",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "The CPI gasoline index rose 24.9% in March, 11.1% in April and 8.6% in May 2026 (263.4 to 397.0), fell 9.7% in June when all-items CPI fell, and stood 34.2% above a year earlier in September 2026, tracking the jump in headline CPI; the series gives no basket weights, so it shows co-movement rather than the exact share.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        }
+       ],
        "context": [],
        "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.95)."
+       "limitations": [
+        "BLS CPI, earnings and jobs series 2019-2026: The CPI gasoline index rose 24.9% in March, 11.1% in April and 8.6% in May 2026 (263.4 to 397.0), fell 9.7% in June when all-items CPI fell, and stood 34.2% above a year earlier in September 2026, tracking the jump in headline CPI; the series gives no basket weights, so it shows co-movement rather than the exact share. [partial: the verdict note limits its own scope (\"rather than\")]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.95), 1 qualifying."
       }
      },
      {

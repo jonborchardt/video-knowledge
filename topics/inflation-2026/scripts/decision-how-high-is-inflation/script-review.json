@@ -1,0 +1,142 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-21",
+  "revision": 2,
+  "packageFingerprint": "9f5baa962a",
+  "approved": {
+    "s01": "32158eb1e8",
+    "s02": "933586c33a",
+    "s03": "713e621f41",
+    "s04": "64c1b5532b",
+    "s05": "7dc9c60635",
+    "s06": "795a916e35",
+    "s07": "30f804b56f",
+    "s10": "19d8f4774f",
+    "s11": "14f51e67eb",
+    "s12": "c761f55663",
+    "s13": "ec7e2c1b60",
+    "s15": "8002124932",
+    "s16": "58167073a7",
+    "s17": "19eaa71184",
+    "s18": "15dc73d73c",
+    "s19": "420bfd39cd",
+    "s20": "9180fcef51",
+    "s21": "631c78621d",
+    "s22": "bb1ee73d60",
+    "s23": "d9f8fc3a14",
+    "s24": "a71d1f8dcf",
+    "s25": "ed01085d35",
+    "s26": "9e0126e8a0",
+    "s27": "cd43eeb950",
+    "s41": "abc54351b9",
+    "s28": "3a2214d61a",
+    "s29": "2d01f91038",
+    "s30": "82e18ca90b",
+    "s31": "4033a914d1",
+    "s32": "a0454e871e",
+    "s33": "a1100fa817",
+    "s34": "535d4155a7",
+    "s35": "bac99122e3",
+    "s36": "c078b4323e",
+    "s37": "cbdade252c",
+    "s38": "c5888eff91",
+    "s39": "0d493ae153",
+    "s40": "4a6fd5ba79",
+    "s08": "cdd3a3893c",
+    "s09": "5ca34dd8ca"
+  },
+  "findings": [
+    {
+      "sentence": "s09",
+      "assertion": "s09.a",
+      "fingerprint": "f1cc3db26e",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'In January, ... called it' tells the viewer the channel spoke in January, but the quote is about the January CPI reading ('inflation slowed in january 2026 with the cpi up about 2.4%'), which could only be discussed after its release; nothing in the corpus dates the remark, and the store has no publish date for JmcR1JqUc3o.",
+      "refs": [],
+      "suggestion": "Date the reading, not the remark: 'Of January's reading, the YouTube channel The Right-Wing Populist said it was \"the lowest we've had in five years\".'"
+    },
+    {
+      "sentence": "s08",
+      "assertion": "s08.a",
+      "fingerprint": "d3b9cb0d5e",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "Figures are right, but 'the peak he means was real' answers Trump's 'we inherited the worst inflation' with the June 2022 peak, leaving a viewer to think 9.1 percent is what was inherited; the rate when he took office (3.0 percent, January 2025) only comes four sentences later in s12 and is tied there to CBS, not to the 'inherited' claim. 'The peak he means' also reads intent into the quote.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L48-L99"
+      ],
+      "suggestion": "Say 'but the 2022 peak was real: in June 2022 the yearly rate hit 9.1 percent, and today's is less than half of that', and in s12 tie the 3.0 percent to both sides ('what he actually inherited, and the comparison CBS was making')."
+    }
+  ],
+  "dispositions": {
+    "s19.a": {
+      "fingerprint": "420bfd39cd",
+      "category": "needs-qualification",
+      "reason": "s19 states only the 2 percent goal and claims nothing about duration; the five-year claim is the Fed's own words in s18 and the CPI record in s20."
+    },
+    "s19.b": {
+      "fingerprint": "420bfd39cd",
+      "category": "needs-qualification",
+      "reason": "'expect' and 'over 2026' mark it as a projection for 2026 only, and the sentence names PCE as the index."
+    },
+    "s20.a": {
+      "fingerprint": "9180fcef51",
+      "category": "needs-qualification",
+      "reason": "Checked every row L33-L99: minimum 2.3 (April 2025), October 2025 has no reading and the sentence says 'with a reading'; it says 'on the consumer price index', so the FOMC limits do not apply."
+    },
+    "s25.a": {
+      "fingerprint": "ed01085d35",
+      "category": "needs-qualification",
+      "reason": "s25 states only the rates, which L87-L99 give; the cause qualification is carried two sentences later in s27."
+    },
+    "s27.a": {
+      "fingerprint": "cd43eeb950",
+      "category": "needs-qualification",
+      "reason": "This sentence is the qualification: it says the tables show the jump but do not name a cause; 'cause' is the point, not an overclaim."
+    },
+    "s41.a": {
+      "fingerprint": "abc54351b9",
+      "category": "needs-qualification",
+      "reason": "Monthly gasoline changes match L477-L480, and the sentence itself says the tables do not give gasoline's share of the overall jump."
+    },
+    "s28.a": {
+      "fingerprint": "3a2214d61a",
+      "category": "needs-qualification",
+      "reason": "'all' is the index name 'all items'; the BLS release L16 says verbatim that gasoline rose 9.1 percent and accounted for over half of the monthly all items increase."
+    },
+    "s30.a": {
+      "fingerprint": "82e18ca90b",
+      "category": "needs-qualification",
+      "reason": "The list matches the release L21-L22 and the very next sentence, s31, says the spread is modest with core unchanged at 0.3 percent."
+    },
+    "s31.a": {
+      "fingerprint": "4033a914d1",
+      "category": "needs-qualification",
+      "reason": "'all' is the index name 'all items less food and energy'; release L20 and L25-L26 give 0.3 percent as in August and 2.6 percent over the year."
+    },
+    "s33.a": {
+      "fingerprint": "a1100fa817",
+      "category": "needs-qualification",
+      "reason": "The sentence carries the verdict's limit: core ran 2.4-2.9 (L283-L291), a little under 3, and slowed from 3.1 (L277-L278) before ticking back up."
+    },
+    "s35.a": {
+      "fingerprint": "bac99122e3",
+      "category": "needs-qualification",
+      "reason": "s35 confines the figure to 'the goods they studied' and s36, the next sentence, states the relative-to-less-exposed-goods and illustrative caveats from L1031-L1038."
+    },
+    "s36.a": {
+      "fingerprint": "c078b4323e",
+      "category": "needs-qualification",
+      "reason": "This sentence is the qualification the warning asks for, paraphrasing the study's own caution at L1027-L1038."
+    },
+    "s37.a": {
+      "fingerprint": "cbdade252c",
+      "category": "needs-qualification",
+      "reason": "'all' is the index name; 'biggest single push' in September follows from 'over half of the monthly all items increase' (release L16) and is limited to September."
+    }
+  }
+}

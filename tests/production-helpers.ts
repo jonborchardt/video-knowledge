@@ -80,6 +80,8 @@ export function syntheticProduction(upTo: FixtureStage): Fixture {
   const stories = loadStories(TOPIC, root)!;
   const story = stories.stories.find((s) => s.readiness === 'ready' && !s.chain && !s.partOf)!;
   const dir = c.dir(story.id);
+  // The copied topic may hold this story's real production; the fixture builds its own from scratch.
+  rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
   const write = (f: string, x: unknown) => writeFileSync(join(dir, f), typeof x === 'string' ? x : toJson(x));
   const read = passageReader(root);

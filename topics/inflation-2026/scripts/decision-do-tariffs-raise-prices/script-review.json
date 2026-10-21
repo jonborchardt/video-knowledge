@@ -1,0 +1,97 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-21",
+  "revision": 2,
+  "packageFingerprint": "5dff8d800b",
+  "approved": {
+    "s01": "df94247b35",
+    "s02": "cdc13230ec",
+    "s03": "fb519c4c28",
+    "s04": "c8021aa0a4",
+    "s05": "7c9d209406",
+    "s06": "df2e3dd6f5",
+    "s07": "da063fd3b1",
+    "s08": "bbfc0b8cb4",
+    "s09": "c07bf84b9b",
+    "s11": "92da1755a0",
+    "s12": "80bb27765f",
+    "s13": "88304073cd",
+    "s14": "a23b091617",
+    "s15": "4206f283ff",
+    "s16": "9367abcc95",
+    "s19": "1c25ab50c0",
+    "s20": "2ac5634ace",
+    "s21": "276178b9cc",
+    "s22": "0998a5c63b",
+    "s23": "e4e33a07f1",
+    "s24": "db14809414",
+    "s10": "1208386f72",
+    "s17": "92852d857a",
+    "s18": "2ef14b83f3"
+  },
+  "dispositions": {
+    "s19.a": {
+      "fingerprint": "1c25ab50c0",
+      "category": "needs-qualification",
+      "reason": "The sentence is the qualification itself, quoted with the passage's own hedge ('can be')."
+    },
+    "s22.a": {
+      "fingerprint": "0998a5c63b",
+      "category": "needs-qualification",
+      "reason": "The sentence carries the survey limitation in 'though a step that firms are taking slowly', right after s19 states it."
+    },
+    "s17.a": {
+      "fingerprint": "92852d857a",
+      "category": "needs-qualification",
+      "reason": "s19, two sentences later, quotes the survey researchers that a one-time adjustment can be a drawn-out affair, and s22 repeats it in the answer."
+    },
+    "s18.a": {
+      "fingerprint": "2ef14b83f3",
+      "category": "needs-qualification",
+      "reason": "The very next sentence, s19, carries the survey limitation that the one-time step is drawn out in practice."
+    }
+  },
+  "findings": [
+    {
+      "sentence": "s18",
+      "assertion": "s18.a",
+      "fingerprint": "d9e5e6ecdd",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "blocking",
+      "explanation": "The passage gives the tariffs' contribution to twelve-month changes in consumer goods prices (L20 of the same post: '2.9 percentage points to goods price inflation'), not to the yearly inflation rate; a viewer hears 2.9 points added to headline inflation, and s21 then says these estimates cannot give the economy-wide inflation rate, contradicting it.",
+      "refs": [
+        "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31"
+      ],
+      "suggestion": "Say 'Its contribution to the yearly rise in consumer goods prices also peaked that February, at 2.9 percentage points, and is forecast to fall to around zero by August.' Drop the closing 'so prices stay higher even as the inflation it causes fades', which s22 says again as the answer."
+    },
+    {
+      "sentence": "s17",
+      "assertion": "s17.a",
+      "fingerprint": "24b02c556e",
+      "revision": 1,
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "The passage says the easing to about 2 percent reflects the early-2026 tariff cut after the Supreme Court ruling, and the edge up comes mainly from the Canadian tariffs; without that, a viewer placed right after s16's 'one-time bump or lasting inflation?' can read the easing as prices drifting back on their own. 'Eased' and 'edges up' are also the post's forecast, not observed prices.",
+      "refs": [
+        "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L29-L31"
+      ],
+      "suggestion": "Say 'peaked near 3 percent in February 2026, is forecast to ease to about 2 percent by August after a court ruling cut some tariffs, then edge up again with new tariffs on Canadian goods.'"
+    },
+    {
+      "sentence": "s10",
+      "assertion": "s10.a",
+      "fingerprint": "a4452d848b",
+      "revision": 1,
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "Straight after s07-s08 (94 and 86 percent stay with importers), '26 percent passes through to consumer prices' invites the reading that importers and shops swallowed the other three quarters. The corpus explains most of the gap differently: distribution margins are about half of what consumers pay, and imports are only part of consumer goods (Oct 2026 post, L13-L16), but that passage is not cited and the script leaves the gap unexplained.",
+      "refs": [
+        "inflation-2026/sources/nyfed-sr1201-tariff-passthrough.txt#L15-L24",
+        "inflation-2026/sources/nyfed-lse-2026-10-tariff-passthrough.txt#L13-L16"
+      ],
+      "suggestion": "Either rephrase so it does not read as a share of the importer's cost ('consumer goods prices rise by about a quarter of the tariff rate'), or set generation.needsEvidence for the distribution-margin passage and add a short clause on why the shelf share is smaller than the border share."
+    }
+  ]
+}

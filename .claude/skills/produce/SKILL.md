@@ -66,6 +66,12 @@ Caps (each one hit is a Stop, naming the cap): 60 loop iterations; 3 graphics re
 (after the third, the builder may draw the scene as labelled text, and the report says so); 3
 `qa-failed` fixes; the same `next` three times in a row with nothing changed.
 
+A render or QA command whose output has not changed for 90 minutes is hung (a crashed browser never
+exits): kill its node and `chrome-headless-shell` processes and run the step again (cached chunks are
+kept). A transient narration failure (edge-tts "No audio was received", or a clip the timeline calls
+truncated, whose cached mp3 you delete first) is retried the same way. Three hung or failed attempts at
+one step is a Stop.
+
 Never edit a review file, a validation or any derived file to get past a check, never soften a
 sentence because evidence is missing when evidence could be gathered, and never pass
 `--replace-cited` or `--force` to get unstuck.
