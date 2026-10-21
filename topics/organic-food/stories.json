@@ -3,7 +3,7 @@
  "basis": {
   "claims": 182,
   "sources": 129,
-  "studies": 21,
+  "studies": 23,
   "candidates": 34
  },
  "stories": [
@@ -23,6 +23,7 @@
     "USDA organic regulations (7 CFR 205): wrong (0.85, direct)",
     "Mie 2017 review, health effects of organic food and farming: wrong (0.6, direct)",
     "Baranski 2014 meta-analysis, organic crops: wrong (0.55, direct)",
+    "eu-2021-1165.txt: wrong (0.85, direct)",
     "Mie 2017 review, health effects of organic food and farming: wrong (0.45, partial)",
     "Mie 2017 review, health effects of organic food and farming: partly (0.5, direct)"
    ],
@@ -64,7 +65,7 @@
     "evidence": 1,
     "editorial": 0.98,
     "overall": 0.99,
-    "explanation": "editorial 0.98 = mean of coherence 0.9 (review), relevance 1 (40 sources, 40 channels), curiosity 1 (conflict, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (3 studies, 3 claims, tension); evidence 1 = strongest USDA organic regulations (7 CFR 205) at 0.85 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.98 = mean of coherence 0.9 (review), relevance 1 (40 sources, 40 channels), curiosity 1 (conflict, a study overturned the guess), stakes 1 (lean: pro-hype), depth 1 (4 studies, 3 claims, tension); evidence 1 = strongest USDA organic regulations (7 CFR 205) at 0.85 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.9), central conclusion supported, 3 essential findings verified, no pending review.",
@@ -225,8 +226,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.85,
-       "independent": 1,
+       "independent": 2,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-farming-bans-all-synthetic-pesticides",
+          "cite": "organic-food/sources/eu-2021-1165.txt#L181-L193"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "eu-2021-1165.txt",
+         "verdict": "wrong",
+         "confidence": 0.85,
+         "note": "Annex I of EU Regulation 2021/1165 authorises plant protection active substances for organic production including paraffin oils, lime sulphur, copper hydroxide, copper oxychloride, Bordeaux mixture and the synthetic pyrethroids deltamethrin and lambda-cyhalothrin (in traps only), so EU organic rules do not ban all synthetic pesticides.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -289,7 +306,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.85), 1 qualifying, 1 context only."
+       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.85), 1 qualifying, 1 context only."
       }
      },
      {
@@ -920,6 +937,7 @@
     "Mie 2017 review, health effects of organic food and farming: right (0.5, direct)",
     "Hyland 2019 organic diet intervention, abstract: right (0.45, direct)",
     "Smith-Spangler 2012 review (Stanford), abstract: right (0.4, direct)",
+    "baker-2002-residues.txt: right (0.6, direct)",
     "Mie 2017 review, health effects of organic food and farming: right (0.6, direct)",
     "Smith-Spangler 2012 review (Stanford), abstract: right (0.5, direct)",
     "Clark and Tilman 2017, environmental impacts of farming systems: right (0.25, direct)",
@@ -959,7 +977,7 @@
     "evidence": 1,
     "editorial": 0.77,
     "overall": 0.86,
-    "explanation": "editorial 0.77 = mean of coherence 0.85 (review), relevance 1 (42 sources, 40 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 0.8 (7 studies, 2 claims); evidence 1 = strongest Vigar 2019 systematic review, organic diet and health at 0.75 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.77 = mean of coherence 0.85 (review), relevance 1 (42 sources, 40 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 0.8 (8 studies, 2 claims); evidence 1 = strongest Vigar 2019 systematic review, organic diet and health at 0.75 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.85), central conclusion supported, 2 essential findings verified, no pending review.",
@@ -1152,8 +1170,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.6,
-       "independent": 3,
+       "independent": 4,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-produce-carries-lower-pesticide-residues",
+          "cite": "organic-food/sources/baker-2002-residues.txt#L20-L26"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "baker-2002-residues.txt",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Baker et al. analysed three US residue data sets (USDA PDP, California DPR, Consumers Union) and found organic produce had about one-third as many residues as conventional, fewer multiple residues, and lower residue concentrations crop by crop; older data and authors linked to the organic sector temper the weight.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -1247,7 +1281,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 3 supporting (3 independent, strongest 0.6), 2 qualifying."
+       "explanation": "qualified (qualify): 4 supporting (4 independent, strongest 0.6), 2 qualifying."
       }
      }
     ]
