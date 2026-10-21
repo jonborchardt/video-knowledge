@@ -1027,10 +1027,10 @@
     "CEE 2017, cold-climate heat pumps in Minnesota: partly (0.45, direct)",
     "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: partly (0.35, direct)",
     "Less 2021 (LBNL), cost of decarbonization retrofits: partly (0.25, direct)",
+    "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: right (0.4, direct)",
     "Deetjen 2021, private economics of US residential heat pumps: right (0.4, direct)",
     "Wilson 2024 (NREL and LBNL), heat pumps for all?: right (0.4, direct)",
     "Deetjen 2021, private economics of US residential heat pumps: right (0.5, direct)",
-    "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: right (0.4, direct)",
     "Wilson 2024 (NREL and LBNL), heat pumps for all?: right (0.5, direct)",
     "CEE 2018, ducted and ductless cold-climate heat pumps in the field: right (0.5, direct)",
     "CEE 2017, cold-climate heat pumps in Minnesota: right (0.5, direct)",
@@ -1738,8 +1738,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.4,
-       "independent": 2,
+       "independent": 3,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/payback-should-count-only-heat-pump",
+          "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1821-L1825"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff",
+         "verdict": "right",
+         "confidence": 0.4,
+         "note": "Bernard et al. put the average Boiler Upgrade Scheme install at £12,713 total (private spend plus subsidy), £5,213 private, and count it against a £2,250 gas boiler the household would buy anyway, so the cost they weigh is the extra over the replaced system; a modelling assumption, not a test of the rule.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -1781,7 +1797,7 @@
        "suggestions": [
         "The strongest support is weak (0.4); say \"one study suggests\" or find stronger evidence."
        ],
-       "explanation": "supported (qualify): 2 supporting (2 independent, strongest 0.4)."
+       "explanation": "supported (qualify): 3 supporting (3 independent, strongest 0.4)."
       }
      },
      {
