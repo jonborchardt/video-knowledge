@@ -1,0 +1,604 @@
+{
+  "topic": "heat-pumps",
+  "story": "conflict:heat-pumps-cut-home-carbon-emissions",
+  "title": "Do Heat Pumps Cut Emissions on Today's Grid?",
+  "revision": 4,
+  "generation": {
+    "model": "claude-opus-5-5",
+    "brief": "scripts/briefs/script.md",
+    "date": "2026-10-20",
+    "wordsPerMinute": 150,
+    "evidencePackage": "22c48262b2",
+    "notes": "Revision 2: the rebuilt package records Deetjen 2021 at L635-L642 (share of houses with its grid assumption) and Wilson 2024 at L248-L258 (every state, future grid scenarios). They are added as s23-s26 between s14 and s15, and s20 replaces the placeholder with the limit that applies to the whole answer: the national US estimates assume or project a cleaner grid. Wilson is not compared with gas in the narration because its reference baseline is not in the cited lines. Revision 3: s24 says the 2.1 percent is a share of the whole US housing stock (the passage), not of gas homes; s25 says Wilson modelled full, immediate adoption (L257: every home, not only gas-heated ones) and names no gas baseline; s19 is cut to a callback; s22 claims less."
+  },
+  "sections": [
+    {
+      "name": "hook",
+      "sentences": [
+        {
+          "id": "s01",
+          "text": "If the electricity that runs a heat pump comes from a gas or coal power plant, is the heat pump really any cleaner than the gas furnace it replaced?",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s02",
+          "text": "It is a fair question, so let's put it to the studies.",
+          "type": "transitional"
+        }
+      ]
+    },
+    {
+      "name": "setup",
+      "sentences": [
+        {
+          "id": "s03",
+          "text": "The doubters are easy to find: one letter to the Boston Globe warned that \"the majority of electricity in Massachusetts is sourced from gas- and coal-fired power plants\", and the American Gas Association argues that a gas home can have a smaller carbon footprint than a heat pump home.",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s03.a",
+              "text": "A letter to the Boston Globe warned that most Massachusetts electricity comes from gas- and coal-fired plants, and the American Gas Association argues that a natural gas home can have a lower carbon footprint than a heat pump home.",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "denies"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "source": "bostonglobe-letters-to-the-editor-heat-pump-transition"
+                },
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "source": "aga-natural-gas-or-a-heat-pump-where-you-live-matters"
+                }
+              ],
+              "quote": {
+                "text": "the majority of electricity in Massachusetts is sourced from gas- and coal-fired power plants",
+                "source": "bostonglobe-letters-to-the-editor-heat-pump-transition",
+                "speaker": "Boston Globe"
+              }
+            }
+          ],
+          "note": "The letter writer is not named (personal data). The AGA's own wording compares ENERGY STAR gas and heat pump households; the sentence paraphrases it without the figure."
+        },
+        {
+          "id": "s04",
+          "text": "The channel Technology Connections answers that even with a gas-fired power plant behind it, \"a heat pump can move more heat energy into a living space than the natural gas itself contains\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s04.a",
+              "text": "Technology Connections argues that even with a natural gas fired power plant, a heat pump can move more heat into a home than the gas itself contains.",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "source": "56DSH8tKUvo"
+                }
+              ],
+              "quote": {
+                "text": "a heat pump can move more heat energy into a living space than the natural gas itself contains",
+                "source": "56DSH8tKUvo",
+                "speaker": "Technology Connections"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s05",
+          "text": "So which is it, in real homes, on real grids?",
+          "type": "rhetorical"
+        }
+      ]
+    },
+    {
+      "name": "investigation",
+      "sentences": [
+        {
+          "id": "s06",
+          "text": "Start in Britain, with households that replaced a gas boiler with a heat pump.",
+          "type": "transitional",
+          "note": "Sets up s07; the population is carried by s07's assertion (Bernard 2024, UK households replacing gas boilers)."
+        },
+        {
+          "id": "s07",
+          "text": "A working paper turned the change in those households' energy use into emissions and found, in today's terms, a cut of 1.16 tonnes of CO2 equivalent per household per year: 36 percent of the footprint their energy use had before the heat pump.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s07.a",
+              "text": "In today's terms, replacing a gas boiler with a heat pump is equivalent to a 1.16 tonne reduction in CO2eq emissions per household per year, a 36% reduction on the households' pre-heat-pump CO2eq footprint from annual energy consumption.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L193-L198"
+                }
+              ]
+            }
+          ],
+          "note": "Annual figure on today's emission factors (the passage's 'in today's terms'), calculated from the households' energy consumption; 'working paper' is the NBER document. British households only (s06, document title)."
+        },
+        {
+          "id": "s08",
+          "text": "The authors also assume the electricity grid keeps getting cleaner, and on that assumption project a 68 percent cut across an assumed 20-year working life: a lifetime projection, not today's figure.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s08.a",
+              "text": "Assuming a 20-year heat pump lifespan and an electricity grid that decarbonizes, the authors estimate heat pumps can reduce a household's CO2 equivalent emissions by 68% throughout their operational lifespan.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L193-L198"
+                }
+              ],
+              "qualifications": [
+                "s08 itself says the 68 percent is a lifetime projection that assumes a cleaner grid, not today's figure."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s09",
+          "text": "But not every grid is Britain's. What happens where coal still runs the show?",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s10",
+          "text": "A report from RMI compared electric heating with gas in American cities on the grid of the time, and found it cut carbon in Oakland, Houston and Providence.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s10.a",
+              "text": "RMI found that electrifying space and water heating reduced carbon compared with natural gas on the electric grid of the time in Oakland, Houston and Providence.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231"
+                }
+              ],
+              "qualifications": [
+                "s11 gives the fourth city, Chicago, where it raised emissions in the short term."
+              ]
+            }
+          ],
+          "note": "'The grid of the time' renders the passage's 'today's electric grid' in an older report; Chicago follows in s11."
+        },
+        {
+          "id": "s11",
+          "text": "But in Chicago, where coal is the power that answers extra demand most of the year, electrifying heat increased carbon emissions in the short term.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s11.a",
+              "text": "Because the grid serving Chicago has coal as its marginal generator most of the year, RMI found the short-term impact of electrification there increases carbon emissions.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231"
+                }
+              ],
+              "qualifications": [
+                "s11 states the Chicago exception in full; it is the qualification the RMI verdict carries."
+              ]
+            }
+          ],
+          "note": "'The power that answers extra demand' is a plain-language rendering of 'marginal generator'."
+        },
+        {
+          "id": "s12",
+          "text": "RMI expected that to swing in favour of electrification, in Chicago and nationally, as coal plants keep retiring.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s12.a",
+              "text": "RMI expects the long-term impact to swing in favor of electrification in Chicago and nationally with continued retirement of coal plants.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231"
+                }
+              ],
+              "qualifications": [
+                "s12 is worded as RMI's expectation, not a result."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s13",
+          "text": "The Canadian Climate Institute, citing the International Energy Agency and a consulting firm, says that even on relatively emissions-intensive electricity, heat pumps emit 20 to 30 percent less carbon than gas furnaces, because they are so efficient.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s13.a",
+              "text": "Citing the International Energy Agency (2022) and a consultancy (2021), the Canadian Climate Institute says that even on relatively emissions-intensive electricity, heat pumps emit between 20 and 30 per cent less carbon than gas furnaces because of their high efficiency.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L459-L462"
+                }
+              ],
+              "qualifications": [
+                "s13 attributes it as a summary citing other studies, and s14 says it is not a measurement of any one grid."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s14",
+          "text": "That is a summary of other work, not a measurement on any one grid, so it sits beside RMI's Chicago result rather than overturning it.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s14.a",
+              "text": "The Canadian Climate Institute's 20 to 30 per cent figure is cited from the International Energy Agency and a consultancy, not measured on a named grid.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L459-L462"
+                }
+              ]
+            }
+          ],
+          "note": "Keeps the CCI summary and the RMI Chicago result (s11) side by side rather than letting the broad estimate erase the exception."
+        },
+        {
+          "id": "s23",
+          "text": "So how many American homes sit on the wrong side of that line?",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s24",
+          "text": "One national model found switching to a heat pump would raise CO2 emissions in just 2.1 percent of the US housing stock, a share of all houses rather than of gas homes alone, but that estimate assumes grid CO2 emissions fall 45 percent over the heat pump's 15-year life.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s24.a",
+              "text": "Deetjen et al. estimate heat pump adoption increases CO2 emissions in only 2.1% of the US housing stock, based on historical grid operations and the assumption that over the heat pump's 15 years life electric grid CO2 emissions decrease by 45%.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L635-L642"
+                }
+              ],
+              "qualifications": [
+                "s24 carries the 45 percent grid-cleaning assumption beside the 2.1 percent."
+              ]
+            }
+          ],
+          "note": "The passage gives the share of the US housing stock, that is all houses; it does not name the heating each house has, so the sentence says the share is not of gas homes and names no baseline."
+        },
+        {
+          "id": "s25",
+          "text": "A second national study, from US national laboratories, modelled every home switching to a heat pump at once, not only gas-heated ones, and found average greenhouse gas savings positive in every state, in every future grid scenario it modelled, even the most conservative one.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s25.a",
+              "text": "Wilson et al. model full, immediate ASHP adoption and find average annual GHG savings are positive in every state and in every heat pump and future grid scenario, even the conservative high renewable energy cost grid scenario.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L248-L258"
+                }
+              ],
+              "qualifications": [
+                "s26 says these are state averages on projected future grids, not today's grid."
+              ]
+            }
+          ],
+          "note": "National laboratories: NREL and LBNL, from the document. 'Every home switching at once' renders the passage's 'full, immediate ASHP adoption' (L257); no baseline fuel is named, and the sentence says the result is not for gas homes alone."
+        },
+        {
+          "id": "s26",
+          "text": "Notice what that measures: an average for each state on grids the authors project into the future, not today's grid, and not a count of the homes that come out behind.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s26.a",
+              "text": "Wilson et al. report average annual GHG savings per household by state under different future grid scenarios.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L248-L258"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s15",
+          "text": "The cleaner the grid, the bigger the gain.",
+          "type": "transitional",
+          "note": "Introduces s16-s17, whose assertions carry it (LBNL)."
+        },
+        {
+          "id": "s16",
+          "text": "In a Lawrence Berkeley National Laboratory study of home retrofits, the group of projects built around electrification, with solar panels, sat mostly in states with low-carbon electricity, and there switching fuels sharply boosted their carbon savings.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s16.a",
+              "text": "In LBNL's retrofit study, projects in the Electrification with PV cluster tended to be located in states with low carbon intensity of grid electricity, and fuel switching dramatically boosted carbon reductions in that cluster.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L1947-L1952"
+                }
+              ],
+              "qualifications": [
+                "s16 says the projects included solar panels and sat in low-carbon states; s17 gives the authors' expectation for dirtier grids."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s17",
+          "text": "The authors expect similar projects to save less carbon in states whose electricity is more carbon-intensive.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s17.a",
+              "text": "LBNL's authors expect similar electrification projects to have lower carbon savings in states with higher carbon intensity in their electricity.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L1947-L1952"
+                }
+              ],
+              "qualifications": [
+                "s17 is the authors' expectation, worded as one."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "answer",
+      "sentences": [
+        {
+          "id": "s18",
+          "text": "So does swapping gas for a heat pump cut emissions on today's grid? In the British homes, yes, by about a third of their energy footprint, and in RMI's words it already cuts carbon on today's grid in all but the most coal-heavy systems, though that was the grid when RMI wrote it.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s18.a",
+              "text": "In today's terms, British households that replaced a gas boiler with a heat pump cut the CO2eq footprint of their energy use by about a third (36%).",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L193-L198"
+                }
+              ]
+            },
+            {
+              "id": "s18.b",
+              "text": "RMI states that electrification already reduces carbon with today's electric grid in all but the most coal-heavy systems, compared with natural gas as well as oil and propane.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231"
+                }
+              ],
+              "qualifications": [
+                "s18 says RMI's 'today' was the grid when it wrote, and s11 gives the Chicago exception."
+              ]
+            }
+          ],
+          "note": "'About a third' points back to s07's 36 percent in words."
+        },
+        {
+          "id": "s19",
+          "text": "The exception is a grid like Chicago's.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s19.a",
+              "text": "RMI found the short-term impact of electrification increases carbon emissions in Chicago, whose grid has coal as its marginal generator most of the year.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231"
+                }
+              ]
+            }
+          ],
+          "note": "A callback to s11 in words; no figure or fact the viewer has not heard."
+        },
+        {
+          "id": "s20",
+          "text": "How rare that exception is, the evidence can only estimate: the national American studies both build in a grid that gets cleaner, so neither is a reading of today's grid alone.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s20.a",
+              "text": "Deetjen et al. base their estimate on the assumption that electric grid CO2 emissions decrease over the heat pump's life.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L635-L642"
+                }
+              ]
+            },
+            {
+              "id": "s20.b",
+              "text": "Wilson et al. estimate savings under future grid scenarios.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L248-L258"
+                }
+              ]
+            }
+          ],
+          "note": "Points back to s24-s26 in words; no figure re-read."
+        }
+      ]
+    },
+    {
+      "name": "takeaway",
+      "sentences": [
+        {
+          "id": "s21",
+          "text": "If carbon is why you are looking at a heat pump, the question to put to your power company is not whether it burns anything, but what it burns when demand rises, and whether that is changing.",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s22",
+          "text": "Know that, and you know the part of the answer these studies turn on.",
+          "type": "rhetorical"
+        }
+      ]
+    }
+  ]
+}

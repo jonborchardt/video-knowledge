@@ -2521,15 +2521,15 @@
    "tension": "Advocates say heat pumps cut emissions everywhere; skeptics say coal power makes them worse. The modelling says both cases exist, and one is much rarer.",
    "evidenceNeeded": "Household emissions before and after switching from gas, by grid region, on current and projected grid emission factors.",
    "evidenceAvailable": [
+    "Wilson 2024 (NREL and LBNL), heat pumps for all?: right (0.6, direct)",
+    "Deetjen 2021, private economics of US residential heat pumps: right (0.5, direct)",
     "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: right (0.65, direct)",
     "Canadian Climate Institute 2023, heat pumps pay off: right (0.4, direct)",
-    "Wilson 2024 (NREL and LBNL), heat pumps for all?: right (0.6, partial)",
-    "Deetjen 2021, private economics of US residential heat pumps: right (0.5, partial)",
     "RMI 2018, the economics of electrifying buildings: partly (0.5, direct)",
     "Less 2021 (LBNL), cost of decarbonization retrofits: partly (0.35, direct)"
    ],
    "gaps": [
-    "What explains the split between Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, Wilson 2024 (NREL and LBNL), heat pumps for all?, Deetjen 2021, private economics of US residential heat pumps, RMI 2018, the economics of electrifying buildings, Canadian Climate Institute 2023, heat pumps pay off, Less 2021 (LBNL), cost of decarbonization retrofits?",
+    "What explains the split between Wilson 2024 (NREL and LBNL), heat pumps for all?, Deetjen 2021, private economics of US residential heat pumps, Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff, RMI 2018, the economics of electrifying buildings, Canadian Climate Institute 2023, heat pumps pay off, Less 2021 (LBNL), cost of decarbonization retrofits?",
     "RMI 2018, the economics of electrifying buildings: On 2016 short-term marginal grid data, heat pumps cut emissions versus gas in Oakland, Houston and Providence but raised them in coal-heavy Chicago (about 50% more), so the claim holds on most grids but not all.",
     "Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: fuel switching boosted carbon cuts (68% vs 50%) in the electrification cluster, but those projects were mostly in states with low-carbon grids, and the authors expect lower carbon savings where electricity is more carbon-intensive."
    ],
@@ -2579,8 +2579,40 @@
      "review": true,
      "verbatim": true,
      "strength": 0.65,
-     "independent": 2,
+     "independent": 4,
      "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+        "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L248-L258"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
+       "verdict": "right",
+       "confidence": 0.6,
+       "note": "Average GHG savings are positive in every state for every heat pump and future grid scenario, even the conservative high-renewable-cost one, with emissions levelized over a 16-year equipment lifetime (projected grids, not today's).",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+        "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L635-L642"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Deetjen 2021, private economics of US residential heat pumps",
+       "verdict": "right",
+       "confidence": 0.5,
+       "note": "Heat pump adoption raises CO2 for only 2.1% of US houses (1.7 million), but the estimate assumes grid CO2 emissions fall 45% over the heat pump's 15-year life.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
       {
        "ref": {
         "kind": "study",
@@ -2620,38 +2652,6 @@
        "ref": {
         "kind": "study",
         "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
-        "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L249-L251"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
-       "verdict": "right",
-       "confidence": 0.6,
-       "note": "Average lifetime GHG savings are positive in every state for every heat pump and grid scenario, including the conservative high-renewable-cost grid, though these are 2022-2038 long-run marginal grid factors rather than today's grid.",
-       "applicability": "partial",
-       "basis": "heuristic",
-       "why": "the verdict note limits its own scope (\"though\")"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
-        "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L677-L681"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Deetjen 2021, private economics of US residential heat pumps",
-       "verdict": "right",
-       "confidence": 0.5,
-       "note": "Heat pump adoption raises CO2 for only 2.1% of US houses, though the model assumes grid emissions fall 45% over the heat pump's life.",
-       "applicability": "partial",
-       "basis": "heuristic",
-       "why": "the verdict note limits its own scope (\"though\")"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
         "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231"
        },
        "cited": true,
@@ -2684,15 +2684,13 @@
      "context": [],
      "problems": [],
      "limitations": [
-      "Wilson 2024 (NREL and LBNL), heat pumps for all?: Average lifetime GHG savings are positive in every state for every heat pump and grid scenario, including the conservative high-renewable-cost grid, though these are 2022-2038 long-run marginal grid factors rather than today's grid. [partial: the verdict note limits its own scope (\"though\")]",
-      "Deetjen 2021, private economics of US residential heat pumps: Heat pump adoption raises CO2 for only 2.1% of US houses, though the model assumes grid emissions fall 45% over the heat pump's life. [partial: the verdict note limits its own scope (\"though\")]",
       "RMI 2018, the economics of electrifying buildings: On 2016 short-term marginal grid data, heat pumps cut emissions versus gas in Oakland, Houston and Providence but raised them in coal-heavy Chicago (about 50% more), so the claim holds on most grids but not all.",
       "Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: fuel switching boosted carbon cuts (68% vs 50%) in the electrification cluster, but those projects were mostly in states with low-carbon grids, and the authors expect lower carbon savings where electricity is more carbon-intensive."
      ],
      "suggestions": [
       "Add the qualification: the evidence supports a narrower or weaker statement."
      ],
-     "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.65), 4 qualifying."
+     "explanation": "qualified (qualify): 4 supporting (4 independent, strongest 0.65), 2 qualifying."
     },
     "findings": [
      {
@@ -2707,8 +2705,40 @@
        "review": true,
        "verbatim": true,
        "strength": 0.65,
-       "independent": 2,
+       "independent": 4,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+          "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L248-L258"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Average GHG savings are positive in every state for every heat pump and future grid scenario, even the conservative high-renewable-cost one, with emissions levelized over a 16-year equipment lifetime (projected grids, not today's).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
+          "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L635-L642"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Deetjen 2021, private economics of US residential heat pumps",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "Heat pump adoption raises CO2 for only 2.1% of US houses (1.7 million), but the estimate assumes grid CO2 emissions fall 45% over the heat pump's 15-year life.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -2748,38 +2778,6 @@
          "ref": {
           "kind": "study",
           "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
-          "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L249-L251"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Wilson 2024 (NREL and LBNL), heat pumps for all?",
-         "verdict": "right",
-         "confidence": 0.6,
-         "note": "Average lifetime GHG savings are positive in every state for every heat pump and grid scenario, including the conservative high-renewable-cost grid, though these are 2022-2038 long-run marginal grid factors rather than today's grid.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"though\")"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
-          "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L677-L681"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Deetjen 2021, private economics of US residential heat pumps",
-         "verdict": "right",
-         "confidence": 0.5,
-         "note": "Heat pump adoption raises CO2 for only 2.1% of US houses, though the model assumes grid emissions fall 45% over the heat pump's life.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"though\")"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "heat-pumps/heat-pumps-cut-home-carbon-emissions",
           "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L225-L231"
          },
          "cited": true,
@@ -2812,15 +2810,13 @@
        "context": [],
        "problems": [],
        "limitations": [
-        "Wilson 2024 (NREL and LBNL), heat pumps for all?: Average lifetime GHG savings are positive in every state for every heat pump and grid scenario, including the conservative high-renewable-cost grid, though these are 2022-2038 long-run marginal grid factors rather than today's grid. [partial: the verdict note limits its own scope (\"though\")]",
-        "Deetjen 2021, private economics of US residential heat pumps: Heat pump adoption raises CO2 for only 2.1% of US houses, though the model assumes grid emissions fall 45% over the heat pump's life. [partial: the verdict note limits its own scope (\"though\")]",
         "RMI 2018, the economics of electrifying buildings: On 2016 short-term marginal grid data, heat pumps cut emissions versus gas in Oakland, Houston and Providence but raised them in coal-heavy Chicago (about 50% more), so the claim holds on most grids but not all.",
         "Less 2021 (LBNL), cost of decarbonization retrofits: LBNL: fuel switching boosted carbon cuts (68% vs 50%) in the electrification cluster, but those projects were mostly in states with low-carbon grids, and the authors expect lower carbon savings where electricity is more carbon-intensive."
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.65), 4 qualifying."
+       "explanation": "qualified (qualify): 4 supporting (4 independent, strongest 0.65), 2 qualifying."
       }
      }
     ]
