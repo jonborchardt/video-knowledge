@@ -1,6 +1,7 @@
 ---
-// The production board: one card per video across topics (a chain is one card; its follow-up questions get none),
-// in a column per who acts next (src/lib/production.ts columnOf). The strip on a card is the production stages.
+// The production board: one row per video across topics (a chain is one row; its follow-up questions get none),
+// in the state of who acts next (src/lib/production.ts columnOf), sortable and filterable. The strip in a row is the
+// production stages.
 // Above it, each topic's research pipeline; below, artifact-by-artifact inspection of every script directory.
 import Base from '../../layouts/Base.astro';
 import NextStep from '../../components/NextStep.astro';
@@ -20,9 +21,28 @@ import { href } from '../../lib/url';
 const topics = board();
 const rows = topics.flatMap((t) => t.stories.map((s) => ({ ...s, topic: t.topic })));
 const productions = rows.filter((s) => s.production);
-const columns = COLUMNS.map((c) => ({ c, cards: rows.filter((r) => columnOf(r) === c) }));
+// One row per video, in board order (who acts next), best first within a state; follow-ups ride on their chain.
+const videos = rows
+  .filter((r) => columnOf(r))
+  .sort(
+    (a, b) =>
+      COLUMNS.indexOf(columnOf(a)!) - COLUMNS.indexOf(columnOf(b)!) || b.story.scores.overall - a.story.scores.overall,
+  );
+// Table headers; a type makes the column sortable (the script below reads a cell's data-sort, else its text).
+const SORTABLE = [
+  ['Topic', 'text'],
+  ['Title', 'text'],
+  ['Question', 'text'],
+  ['Overall', 'num'],
+  ['Editorial', 'num'],
+  ['Evidence', 'num'],
+  ['Claims', 'num'],
+  ['State', 'num'],
+  ['Next', ''],
+  ['Notes', ''],
+] as const;
 type Row = (typeof rows)[number];
-// A chain's card carries every question it answers and the claims of all of them.
+// A chain's row carries every question it answers and the claims of all of them.
 const followUps = (r: Row) =>
   (r.story.chain ?? [])
     .map((c) => rows.find((x) => x.topic.name === r.topic.name && x.story.id === c.id)?.story)
@@ -69,13 +89,16 @@ const COLUMN: Record<Column, { label: string; help: string; colour: string }> = 
 const badge =
   'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase';
 const small = 'text-sm text-muted-foreground';
+// A filter tag: a hidden checkbox in a chip that fills when checked; the focus ring follows the keyboard.
+const tag =
+  'cursor-pointer rounded-full border px-2 py-0.5 text-xs select-none hover:bg-muted has-checked:border-primary has-checked:bg-primary has-checked:text-primary-foreground has-focus-visible:ring-2 has-focus-visible:ring-ring';
 const mono = 'font-mono text-xs [overflow-wrap:anywhere]';
 const blob = (file: string) => `${site.repo}/blob/main/${file}`;
 const day = (iso?: string) => (iso ? iso.slice(0, 10) : '');
 const chip = (c: Check) => `${c.name}: ${c.health}`;
-const cardHealth = (r: StoryRow): Health =>
+const rowHealth = (r: StoryRow): Health =>
   r.production ? r.production.health : r.story.readiness === 'ready' ? 'current' : 'pending';
-// The production stages on a card: what has run, the stage it is at, and what is still to come.
+// The production stages in a row: what has run, the stage it is at, and what is still to come.
 const stripOf = (r: StoryRow) => {
   const col = columnOf(r);
   const at =
@@ -96,13 +119,14 @@ const stripOf = (r: StoryRow) => {
     <div class="eyebrow text-muted-foreground">Production</div>
     <h1 class="mt-1 text-display font-semibold">Topic → story → script</h1>
     <p class="mt-3 max-w-prose text-muted-foreground">
-      One card per video, in the column of whoever acts next. A chain of questions is one card; its follow-up questions
-      have none. Placement comes from the committed artifacts: readiness from <code>stories.json</code>, then the first
-      production stage whose file is missing or not current (re-running the library on today's inputs must reproduce the
-      file, the test <code>lock</code> applies). The strip on each card is the production stages: what has run (filled), the
-      stage it is at, and what is still to come; red means <code>/produce</code> stopped and a person must act. Only <code
-        >production.json</code
-      > is hand-written (queued, reviewing, parked, published), because no artifact records those.
+      One row per video; its state is whoever acts next. A chain of questions is one row; its follow-up questions have
+      none. Click a header to sort; filter by text, topic or state. The state comes from the committed artifacts:
+      readiness from <code>stories.json</code>, then the first production stage whose file is missing or not current
+      (re-running the library on today's inputs must reproduce the file, the test <code>lock</code> applies). The strip in
+      each row is the production stages: what has run (filled), the stage it is at, and what is still to come; red means <code
+        >/produce</code
+      > stopped and a person must act. Only <code>production.json</code> is hand-written (queued, reviewing, parked, published),
+      because no artifact records those.
     </p>
   </header>
 
@@ -162,110 +186,158 @@ const stripOf = (r: StoryRow) => {
 
   <section class="grid gap-3">
     <h2 class="text-featured font-semibold">Stories</h2>
+    <form id="story-filter" class="grid gap-2 text-sm">
+      <div class="flex flex-wrap items-center gap-2">
+        <input
+          type="search"
+          name="q"
+          placeholder="Filter by text"
+          aria-label="Filter stories by text"
+          class="min-w-48 flex-1 rounded-sm border bg-card px-2 py-1"
+        />
+        <label class={tag}>
+          <input type="checkbox" name="stopped" aria-label="Stopped only" class="sr-only" /> stopped
+        </label>
+        <output name="count" class="ml-auto font-mono text-xs text-muted-foreground">{videos.length} videos</output>
+      </div>
+      {
+        (
+          [
+            [
+              'topic',
+              'Topic',
+              topics.map(({ topic: t }) => [t.name, t.label, videos.filter((r) => r.topic.name === t.name).length]),
+            ],
+            [
+              'state',
+              'State',
+              COLUMNS.map((c) => [c, COLUMN[c].label, videos.filter((r) => columnOf(r) === c).length]),
+            ],
+          ] as const
+        ).map(([name, legend, options]) => (
+          <fieldset class="flex flex-wrap items-center gap-1.5">
+            <legend class="float-left mr-1 eyebrow text-muted-foreground">{legend}</legend>
+            {options.map(([value, label, n]) => (
+              <label class:list={[tag, !n && 'opacity-50']}>
+                <input type="checkbox" name={name} value={value} aria-label={`${legend}: ${label}`} class="sr-only" />{' '}
+                {label} <span class="font-mono text-xs opacity-70">{n}</span>
+              </label>
+            ))}
+          </fieldset>
+        ))
+      }
+    </form>
     <div class="mx-[calc(50%-50vw+1rem)] overflow-x-auto pb-3">
-      <ol class="flex gap-3" aria-label="Kanban">
-        {
-          columns.map(({ c, cards }) => (
-            <li
-              class:list={[
-                'flex flex-none flex-col gap-2 rounded-lg bg-muted/60 p-2',
-                cards.length ? 'w-56' : 'w-9 items-center',
-              ]}
-              data-column={c}
-            >
-              <h3
-                class:list={[
-                  'flex items-baseline justify-between px-1 text-sm font-semibold',
-                  !cards.length && 'py-1 [writing-mode:vertical-rl]',
-                ]}
-              >
-                <span class:list={[COLUMN[c].colour]} title={COLUMN[c].help}>
-                  {COLUMN[c].label}
-                </span>
-                {cards.length > 0 && <span class="font-mono text-xs text-muted-foreground">{cards.length}</span>}
-              </h3>
-              {cards.length > 0 && <p class="px-1 text-xs text-muted-foreground">{COLUMN[c].help}</p>}
-              {cards.map((r) => {
-                const h = cardHealth(r);
-                const target = r.production
-                  ? `#${r.topic.name}-${r.production.slug}`
-                  : href(`/${r.topic.name}/stories/`);
-                return (
-                  <article class="grid gap-1.5 rounded-md border bg-card p-2 text-card-foreground">
-                    <div class="flex items-baseline justify-between gap-2">
-                      <span class="eyebrow text-muted-foreground">{r.topic.label}</span>
-                      <span
-                        class="font-mono text-sm font-semibold tabular-nums"
-                        title={`overall ${r.story.scores.overall}: ${r.story.scores.explanation}`}
-                      >
-                        {r.story.scores.overall.toFixed(2)}
-                      </span>
-                    </div>
-                    <a class="text-sm leading-snug font-medium text-primary" href={target}>
+      <table id="story-table" class="w-full min-w-[64rem] text-sm">
+        <thead class="text-left text-xs text-muted-foreground uppercase">
+          <tr>
+            {
+              SORTABLE.map(([label, type]) => (
+                <th class="py-1 pr-3 align-bottom font-medium" data-type={type || undefined}>
+                  {type ? (
+                    <button type="button" class="uppercase hover:text-foreground">
+                      {label}
+                    </button>
+                  ) : (
+                    label
+                  )}
+                </th>
+              ))
+            }
+          </tr>
+        </thead>
+        <tbody class="align-top">
+          {
+            videos.map((r) => {
+              const c = columnOf(r)!;
+              const h = rowHealth(r);
+              const target = r.production ? `#${r.topic.name}-${r.production.slug}` : href(`/${r.topic.name}/stories/`);
+              const notes = [
+                ...(r.decision ? [`${r.decision.decision} ${day(r.decision.date)}: ${r.decision.note}`] : []),
+                ...(r.production?.blockers ?? []),
+                ...(r.production ? [] : r.story.blocking),
+              ];
+              return (
+                <tr
+                  class="border-t"
+                  data-topic={r.topic.name}
+                  data-state={c}
+                  data-stopped={stopped(r) ? '' : undefined}
+                  data-search={[
+                    r.topic.label,
+                    r.story.title,
+                    r.story.question,
+                    ...followUps(r).map((s) => s?.question),
+                    COLUMN[c].label,
+                    r.production?.stage,
+                    r.next,
+                    ...notes,
+                  ]
+                    .join(' ')
+                    .toLowerCase()}
+                >
+                  <td class="py-2 pr-3 whitespace-nowrap">{r.topic.label}</td>
+                  <td class="max-w-64 py-2 pr-3">
+                    <a class="leading-snug font-medium text-primary" href={target}>
                       {r.story.title}
                     </a>
                     {followUps(r).length > 0 && (
-                      <ul class="grid gap-0.5 text-xs text-muted-foreground">
+                      <ul class="mt-1 grid gap-0.5 text-xs text-muted-foreground">
                         {followUps(r).map((s) => (
                           <li>then: {s?.question ?? '(follow-up not listed)'}</li>
                         ))}
                       </ul>
                     )}
-                    <dl
-                      class="grid grid-cols-[auto_1fr_auto] items-center gap-x-1.5 gap-y-0.5 text-[11px] text-muted-foreground"
+                  </td>
+                  <td class="max-w-80 py-2 pr-3 text-muted-foreground" title={r.story.whyWatch}>
+                    {r.story.question}
+                  </td>
+                  {(['overall', 'editorial', 'evidence'] as const).map((k) => (
+                    <td
+                      class="py-2 pr-3 font-mono tabular-nums"
+                      data-sort={r.story.scores[k]}
                       title={r.story.scores.explanation}
                     >
-                      {(
-                        [
-                          ['editorial', r.story.scores.editorial],
-                          ['evidence', r.story.scores.evidence],
-                        ] as const
-                      ).map(([k, v]) => (
-                        <>
-                          <dt class="w-14">{k}</dt>
-                          <dd class="h-1 rounded-xs bg-border">
-                            <div class="h-full rounded-xs bg-primary" style={`width:${Math.round(v * 100)}%`} />
-                          </dd>
-                          <dd class="font-mono tabular-nums">{v.toFixed(2)}</dd>
-                        </>
-                      ))}
-                    </dl>
-                    <div class="flex flex-wrap items-center gap-1">
+                      {r.story.scores[k].toFixed(2)}
+                    </td>
+                  ))}
+                  <td
+                    class="py-2 pr-3 font-mono tabular-nums"
+                    data-sort={claimsOf(r)}
+                    title="claims across every question in the video"
+                  >
+                    {claimsOf(r)}
+                  </td>
+                  <td class="py-2 pr-3" data-sort={COLUMNS.indexOf(c)}>
+                    <div class="grid w-40 gap-1">
+                      <span class:list={['font-medium', COLUMN[c].colour]} title={COLUMN[c].help}>
+                        {COLUMN[c].label}
+                      </span>
                       {r.production && (
-                        <span class:list={[badge, HEALTH[h].colour]}>
+                        <span class:list={[badge, 'justify-self-start', HEALTH[h].colour]}>
                           {r.production.stage} · {HEALTH[h].label} · r{r.production.versions.length || '0'}
                         </span>
                       )}
-                      <span class={badge} title="claims across every question on the card">
-                        {claimsOf(r)} claims
-                      </span>
-                      {r.decision && <span class={badge}>{r.decision.decision}</span>}
+                      <ol class="flex gap-px" aria-label="Production stages">
+                        {stripOf(r).map(({ s, state }) => (
+                          <li
+                            class:list={[
+                              'h-1.5 flex-1 rounded-xs',
+                              state === 'done'
+                                ? 'bg-success'
+                                : state === 'current'
+                                  ? stopped(r)
+                                    ? 'bg-destructive'
+                                    : 'bg-warning'
+                                  : 'bg-border',
+                            ]}
+                            title={`${s}: ${state}`}
+                          />
+                        ))}
+                      </ol>
                     </div>
-                    <ol class="flex gap-px" aria-label="Production stages">
-                      {stripOf(r).map(({ s, state }) => (
-                        <li
-                          class:list={[
-                            'h-1.5 flex-1 rounded-xs',
-                            state === 'done'
-                              ? 'bg-success'
-                              : state === 'current'
-                                ? stopped(r)
-                                  ? 'bg-destructive'
-                                  : 'bg-warning'
-                                : 'bg-border',
-                          ]}
-                          title={`${s}: ${state}`}
-                        />
-                      ))}
-                    </ol>
-                    {stopped(r) && (
-                      <p class="text-xs text-destructive">
-                        stopped ({r.production!.halt?.kind ?? 'stop'}): {r.production!.halt?.why ?? r.next}
-                      </p>
-                    )}
-                    <p class:list={[mono, 'text-muted-foreground']}>
-                      {r.next.length > 110 ? r.next.slice(0, 110) + '…' : r.next}
-                    </p>
+                  </td>
+                  <td class="py-2 pr-3" title={r.next}>
                     <NextStep
                       id={`next-${r.topic.name}-${r.story.id.replace(/\W+/g, '-')}`}
                       next={r.next}
@@ -278,13 +350,27 @@ const stripOf = (r: StoryRow) => {
                           : (r.production?.stage ?? (r.story.readiness === 'ready' ? 'ready' : undefined))
                       }
                     />
-                  </article>
-                );
-              })}
-            </li>
-          ))
-        }
-      </ol>
+                  </td>
+                  <td class="max-w-80 py-2 text-xs">
+                    {stopped(r) && (
+                      <p class="text-destructive">
+                        stopped ({r.production!.halt?.kind ?? 'stop'}): {r.production!.halt?.why ?? r.next}
+                      </p>
+                    )}
+                    {notes.length > 0 && (
+                      <ul class="grid gap-0.5 text-muted-foreground">
+                        {notes.map((n) => (
+                          <li>{n}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -431,3 +517,52 @@ const stripOf = (r: StoryRow) => {
     )
   }
 </Base>
+
+<script>
+  // The stories table: click a header to sort (numbers high first, text A-Z first; again to reverse), and the form
+  // above it filters rows by text, topic tags, state tags and whether /produce stopped.
+  const table = document.getElementById('story-table') as HTMLTableElement;
+  const body = table.tBodies[0];
+  const heads = [...table.tHead!.rows[0].cells];
+  const form = document.getElementById('story-filter') as HTMLFormElement;
+  const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+  // A tag group with nothing checked filters nothing.
+  const checked = (n: string) =>
+    [...form.querySelectorAll<HTMLInputElement>(`input[name=${n}]:checked`)].map((i) => i.value);
+
+  table.tHead!.addEventListener('click', (e) => {
+    const th = (e.target as Element).closest('th');
+    if (!th?.dataset.type || !(e.target as Element).closest('button')) return;
+    const i = heads.indexOf(th);
+    const num = th.dataset.type === 'num';
+    const down = th.getAttribute('aria-sort') ? th.getAttribute('aria-sort') === 'ascending' : num;
+    heads.forEach((h) => h.removeAttribute('aria-sort'));
+    th.setAttribute('aria-sort', down ? 'descending' : 'ascending');
+    const key = (r: HTMLTableRowElement) => r.cells[i].dataset.sort ?? r.cells[i].textContent!.trim();
+    const rows = [...body.rows].sort((a, b) => {
+      const d = num ? Number(key(a)) - Number(key(b)) : key(a).localeCompare(key(b));
+      return down ? -d : d;
+    });
+    body.append(...rows);
+  });
+
+  form.addEventListener('submit', (e) => e.preventDefault());
+  form.addEventListener('input', () => {
+    const q = field('q').value.trim().toLowerCase();
+    const topic = checked('topic');
+    const state = checked('state');
+    const stopped = field('stopped').checked;
+    let shown = 0;
+    for (const r of body.rows) {
+      r.hidden = !(
+        (!topic.length || topic.includes(r.dataset.topic!)) &&
+        (!state.length || state.includes(r.dataset.state!)) &&
+        (!stopped || r.dataset.stopped !== undefined) &&
+        (!q || r.dataset.search!.includes(q))
+      );
+      if (!r.hidden) shown++;
+    }
+    (form.elements.namedItem('count') as HTMLOutputElement).value =
+      shown === body.rows.length ? `${shown} videos` : `${shown} of ${body.rows.length} videos`;
+  });
+</script>
