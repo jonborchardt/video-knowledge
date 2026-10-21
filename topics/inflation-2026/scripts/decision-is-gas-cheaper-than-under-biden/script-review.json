@@ -1,0 +1,160 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-20",
+  "revision": 2,
+  "packageFingerprint": "8545d02d4d",
+  "approved": {
+    "s01": "067f823634",
+    "s02": "f1757b7fbc",
+    "s03": "9adc46e8aa",
+    "s04": "28453db3d2",
+    "s05": "69ad47b454",
+    "s06": "6959c377de",
+    "s07": "951a699f85",
+    "s08": "a866a3bc45",
+    "s09": "abf1464931",
+    "s10": "26341c1a74",
+    "s12": "225eb7882e",
+    "s13": "d21e10ed38",
+    "s14": "3b78eb9411",
+    "s15": "c7c974c5e7",
+    "s16": "79a55b4a12",
+    "s17": "80981b3e81",
+    "s18": "c5a5579843",
+    "s19": "b128d80f00",
+    "s20": "fcfe198dea",
+    "s22": "01cea452b0",
+    "s23": "831c06bbd7",
+    "s24": "d25cb0b6cd",
+    "s26": "650a5ecdf0",
+    "s28": "4293f74dae",
+    "s29": "1a8452cb7d",
+    "s30": "15531d02b8",
+    "s11": "9dd2f4c6c5",
+    "s21": "5337ff8310",
+    "s25": "93c0c65315",
+    "s27": "cd64bcd34b"
+  },
+  "findings": [
+    {
+      "sentence": "s25",
+      "assertion": "s25.a",
+      "fingerprint": "83bda6a43a",
+      "revision": 1,
+      "category": "selective",
+      "severity": "blocking",
+      "explanation": "Of the equal 20-month windows in Biden's term, the script picks his first (Jan 2021 to Sep 2022, 13.5%), which holds the 2022 inflation peak (12-month rate 9.1% in June 2022). His last 20 months, May 2023 to Jan 2025 (304.127 to 317.671), rose about 4.5%, less than this term's 6.1%. So 'still well above this term's rise' depends on which equal window you pick, and the verdict's own like-for-like figure (annualized 5.0% against 3.6%) is a much smaller gap than 13.5 against 6.1.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L31-L99"
+      ],
+      "suggestion": "Give both ends of Biden's term: his first 20 months rose 13.5 percent, his last 20 (May 2023 to January 2025) about 4.5 percent (calc (317.671 / 304.127 - 1) * 100), against 6.1 percent since. Say this term's pace is slower than his term as a whole, not 'well above' over any equal stretch."
+    },
+    {
+      "sentence": "s27",
+      "assertion": "s27.a",
+      "fingerprint": "5ff4cc1682",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "'Prices have risen less under this term so far, even over equal stretches' holds only for the start-of-term window. Over Biden's last 20 months the CPI rose about 4.5% (May 2023 304.127 to Jan 2025 317.671), less than this term's 6.1%. The evidence supports 'less than across his full term, at a slower annual pace' (verdict: 5.0% against 3.6%), not 'less over equal stretches' in general.",
+      "refs": [
+        "inflation-2026/sources/bls-cpi-earnings-series-2019-2026.txt#L31-L99"
+      ],
+      "suggestion": "Say: 'So prices have risen more slowly this term than across Biden's term as a whole, though faster than in his last stretch, and by a smaller margin than the totals suggest; and the index cannot say how much of either rise any president caused.'"
+    },
+    {
+      "sentence": "s11",
+      "fingerprint": "ab9959fa40",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "The opening clause 'News reports blamed the war with Iran' claims that several outlets made this attribution, but the only assertion (s11.b) covers NBC alone. The corpus does hold other outlets' statements on the claim (MS NOW 0ILSOv_yPUw, CBS 9nMd5w62-HI), but the sentence asserts none of them.",
+      "refs": [],
+      "suggestion": "Add an attribution assertion for a second outlet's statement on inflation-2026/iran-conflict-has-materially-raised-gasoline (e.g. MS NOW: 'up by well over a dollar since the war started'), or cut the clause to 'NBC News blamed the war with Iran: ...'."
+    },
+    {
+      "sentence": "s21",
+      "assertion": "s21.a",
+      "fingerprint": "ff805fd750",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "Nothing in the package backs 'a popular comparison'. The corpus has one channel making it (and in its transcript the channel offers it as its own 'real record' rebuttal). The viewer would hear that the comparison is widely made.",
+      "refs": [],
+      "suggestion": "Drop 'popular': 'The channel Squirrelly Economics put the comparison this way: ...'."
+    }
+  ],
+  "dispositions": {
+    "s10.a": {
+      "fingerprint": "26341c1a74",
+      "category": "needs-qualification",
+      "reason": "s10 gives timing and price only, no cause; s13, three sentences on, says the record shows when prices jumped, not why."
+    },
+    "s10.c": {
+      "fingerprint": "26341c1a74",
+      "category": "needs-qualification",
+      "reason": "s10 gives timing and price only, no cause; s13, three sentences on, says the record shows when prices jumped, not why."
+    },
+    "s12.a": {
+      "fingerprint": "225eb7882e",
+      "category": "needs-qualification",
+      "reason": "s12 reports crude prices with no policy claim; s18 says co-movement cannot show policy played no part."
+    },
+    "s13.a": {
+      "fingerprint": "d21e10ed38",
+      "category": "needs-qualification",
+      "reason": "s13 is the qualification itself: 'causes' sits inside 'cannot rule out other causes', so it weakens the claim rather than overstating it."
+    },
+    "s17.a": {
+      "fingerprint": "80981b3e81",
+      "category": "needs-qualification",
+      "reason": "The very next sentence, s18, carries the limitation that co-movement cannot show policy played no part."
+    },
+    "s18.b": {
+      "fingerprint": "c5a5579843",
+      "category": "needs-qualification",
+      "reason": "s18 states the audit's limitation word for word: prices moving together cannot show policy played no part, since policy can move crude."
+    },
+    "s22.a": {
+      "fingerprint": "01cea452b0",
+      "category": "needs-qualification",
+      "reason": "s24, two sentences on, says the comparison sets a full term against a much shorter one."
+    },
+    "s23.a": {
+      "fingerprint": "831c06bbd7",
+      "category": "needs-qualification",
+      "reason": "The next sentence, s24, says this is a term still under way over a much shorter stretch."
+    },
+    "s24.a": {
+      "fingerprint": "d25cb0b6cd",
+      "category": "needs-qualification",
+      "reason": "s24 is the period-length limitation the audit asks for."
+    },
+    "s26.a": {
+      "fingerprint": "650a5ecdf0",
+      "category": "needs-qualification",
+      "reason": "s26 gives 12-month rates, with no cumulative comparison; s24 already carries the period-length limitation, and the sentence itself says the count is still running."
+    },
+    "s25.a": {
+      "fingerprint": "93c0c65315",
+      "category": "needs-qualification",
+      "reason": "s25 gives two 20-month windows of the same length as this term so far, the like-for-like comparison the period-length limitation asks for; s24 states the limitation itself."
+    },
+    "s25.b": {
+      "fingerprint": "93c0c65315",
+      "category": "needs-qualification",
+      "reason": "s25 gives two 20-month windows of the same length as this term so far, the like-for-like comparison the period-length limitation asks for; s24 states the limitation itself."
+    },
+    "s27.a": {
+      "fingerprint": "cd64bcd34b",
+      "category": "needs-qualification",
+      "reason": "s27 is the qualified conclusion: it compares pace rather than totals, says the gap is smaller than the totals suggest and that the index cannot attribute cause; s24 carries the period-length limit."
+    },
+    "s27.b": {
+      "fingerprint": "cd64bcd34b",
+      "category": "needs-qualification",
+      "reason": "Equal 20-month windows (4.5 percent against 6.1 percent, s25 and s23), so period length does not distort this comparison."
+    }
+  }
+}
