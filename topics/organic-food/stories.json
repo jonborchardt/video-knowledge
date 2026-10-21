@@ -2235,6 +2235,325 @@
    ]
   },
   {
+   "id": "decision:price-and-the-planet",
+   "kind": "decision",
+   "title": "Is Organic Farming Better for the Planet?",
+   "alternates": [
+    "Organic Food's Environmental Footprint, Per Kilogram",
+    "Land, Emissions and Runoff: Organic Versus Conventional"
+   ],
+   "question": "Is organic farming actually better for the planet?",
+   "whyWatch": "Many people buy organic for the environment. Measured per kilogram of food, organic wins on some impacts and loses on others, and the choice of food turns out to matter far more than the label.",
+   "tension": "Organic avoids synthetic fertiliser and most synthetic pesticides, so it must be greener; but it needs more land for the same harvest. A meta-analysis of life-cycle studies finds both effects, and the authors refuse to call either system more sustainable.",
+   "evidenceNeeded": "Life-cycle comparisons of organic and conventional systems per unit of food across several environmental indicators, and the size of those differences against differences between foods.",
+   "evidenceAvailable": [
+    "Ponisio 2015 meta-analysis, organic yield gap: right (0.6, direct)",
+    "Clark and Tilman 2017, environmental impacts of farming systems: right (0.7, direct)",
+    "Clark and Tilman 2017, environmental impacts of farming systems: right (0.6, direct)",
+    "AAP 2012 clinical report on organic foods, abstract: right (0.3, direct)",
+    "Clark and Tilman 2017, environmental impacts of farming systems: partly (0.5, direct)",
+    "Clark and Tilman 2017, environmental impacts of farming systems: right (0.65, direct)"
+   ],
+   "gaps": [],
+   "premise": "Not clearly, per unit of food. In Clark and Tilman's meta-analysis of paired life-cycle studies, mostly from high-input farming in Europe and North America, organic systems needed 25 to 110% more land, used 15% less energy, had 37% higher eutrophication potential and similar greenhouse gas emissions, because manure releases nitrous oxide that offsets the savings from skipping synthetic fertiliser. The authors say this does not make conventional farming more sustainable, since they could not measure pesticide and other impacts, and organic may have benefits outside their data. What dwarfs both is the food itself: ruminant meat has 20 to 100 times the impacts of plant foods, while the two systems differ by tens of percent.",
+   "claims": [
+    "organic-food/organic-farming-needs-more-land-produce",
+    "organic-food/organic-conventional-farming-have-similar-greenhouse",
+    "organic-food/organic-farming-better-environment-conventional",
+    "organic-food/what-you-eat-matters-more-your"
+   ],
+   "related": [
+    "organic-food/organic-food-costs-more-mainly-because",
+    "organic-food/organic-farming-yields-less-food-per",
+    "organic-food/organic-meat-has-similar-higher-greenhouse",
+    "organic-food/organic-plant-foods-have-lower-greenhouse",
+    "organic-food/some-sellers-have-passed-off-conventional"
+   ],
+   "arc": {
+    "hook": "Per field, organic looks greener; per kilogram of food, the picture changes.",
+    "conflict": "The claims pulling in different directions: \"Organic food costs substantially more than conventional food\"; \"Organic food is worth its price premium for health reasons\"; \"Organic farming yields less food per acre than conventional farming\"; \"Organic farming needs more land to produce the same amount of food\"; \"Organic and conventional farming have similar greenhouse gas emissions per kilogram of food\"; \"Organic farming is better for the environment than conventional farming\"; \"What you eat matters more for your food's carbon footprint than whether it is organic\".",
+    "evidence": "Each claim's verdict, strongest study first.",
+    "resolution": "Organic trades less energy and fewer synthetic inputs for more land and more nutrient runoff, with similar emissions; for the planet, what you eat matters far more than whether it is organic.",
+    "takeaway": "A decision rule the viewer can apply."
+   },
+   "coherence": {
+    "score": 0.85,
+    "basis": "review",
+    "explanation": "Pruned to one question, is organic farming better for the environment, answered by one life-cycle meta-analysis per unit of food (land, greenhouse gases, the overall claim) and its finding that what you eat matters more. Price is its own story, and the health-premium claim has no deciding study."
+   },
+   "scores": {
+    "coherence": 0.85,
+    "relevance": 1,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.85,
+    "originality": 1,
+    "evidence": 0.81,
+    "editorial": 0.78,
+    "overall": 0.79,
+    "explanation": "editorial 0.78 = mean of coherence 0.85 (review), relevance 1 (30 sources, 27 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 0.85 (3 studies, 4 claims); evidence 0.81 = strongest Clark and Tilman 2017, environmental impacts of farming systems at 0.7 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.85), central conclusion supported, 4 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Organic farming needs more land to produce the same amount of food",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.7,
+     "independent": 2,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/organic-farming-needs-more-land-produce",
+        "cite": "organic-food/sources/ponisio-2015-yield-gap.txt#L95-L99"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Ponisio 2015 meta-analysis, organic yield gap",
+       "verdict": "right",
+       "confidence": 0.6,
+       "note": "Ponisio et al. put organic yields 15.5-22.9% lower per area (so more land per unit of food), but warn that a bias towards reporting higher conventional-to-organic yield ratios means even this estimate may overstate the gap, that over-represented cereals (53% of comparisons) pull it up, and that diversification cut it to 8-9%.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/organic-farming-needs-more-land-produce",
+        "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Clark and Tilman 2017, environmental impacts of farming systems",
+       "verdict": "right",
+       "confidence": 0.7,
+       "note": "Meta-analysis of within-publication LCA pairs found organic systems need 25-110% more land per unit of food (p<0.001, n=37), driven by mismatched manure nutrient release and lower yields; mostly high-input Europe/North America systems.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [],
+     "problems": [],
+     "limitations": [],
+     "suggestions": [],
+     "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.7)."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Organic farming needs more land to produce the same amount of food",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.7,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-farming-needs-more-land-produce",
+          "cite": "organic-food/sources/ponisio-2015-yield-gap.txt#L95-L99"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Ponisio 2015 meta-analysis, organic yield gap",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Ponisio et al. put organic yields 15.5-22.9% lower per area (so more land per unit of food), but warn that a bias towards reporting higher conventional-to-organic yield ratios means even this estimate may overstate the gap, that over-represented cereals (53% of comparisons) pull it up, and that diversification cut it to 8-9%.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-farming-needs-more-land-produce",
+          "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Clark and Tilman 2017, environmental impacts of farming systems",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "Meta-analysis of within-publication LCA pairs found organic systems need 25-110% more land per unit of food (p<0.001, n=37), driven by mismatched manure nutrient release and lower yields; mostly high-input Europe/North America systems.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.7)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "Organic and conventional farming have similar greenhouse gas emissions per kilogram of food",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.6,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-conventional-farming-have-similar-greenhouse",
+          "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Clark and Tilman 2017, environmental impacts of farming systems",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Per unit of food, organic and conventional greenhouse gas emissions did not differ significantly (4% lower in organic, p=0.59, n=44), because manure N2O offsets savings from avoiding synthetic fertilizer; cradle-to-farm-gate, mostly industrialized systems.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.6)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Organic farming is better for the environment than conventional farming",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.3,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-farming-better-environment-conventional",
+          "cite": "organic-food/sources/aap-2012-organic.txt#L24-L25"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "AAP 2012 clinical report on organic foods, abstract",
+         "verdict": "right",
+         "confidence": 0.3,
+         "note": "AAP clinical report (abstract only): organic farming has been demonstrated to have less environmental impact than conventional approaches.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/organic-farming-better-environment-conventional",
+          "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L286-L299"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Clark and Tilman 2017, environmental impacts of farming systems",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "Per unit of food, organic used 15% less energy but needed 25-110% more land and had 37% higher eutrophication, with similar GHG and acidification; the authors say this does not make conventional more sustainable given its pesticide and nutrient inputs, which they could not measure.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Clark and Tilman 2017, environmental impacts of farming systems: Per unit of food, organic used 15% less energy but needed 25-110% more land and had 37% higher eutrophication, with similar GHG and acidification; the authors say this does not make conventional more sustainable given its pesticide and nutrient inputs, which they could not measure."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.3), 1 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f3",
+       "text": "What you eat matters more for your food's carbon footprint than whether it is organic",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.65,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/what-you-eat-matters-more-your",
+          "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L461-L467"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Clark and Tilman 2017, environmental impacts of farming systems",
+         "verdict": "right",
+         "confidence": 0.65,
+         "note": "Differences between foods dwarf differences between production systems: ruminant meat has 20-100 times the impacts of plant foods on every indicator, whereas organic vs conventional differs by tens of percent and not at all on GHG.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.65)."
+      }
+     }
+    ]
+   },
+   "partOf": "conflict:organic-farming-yields-less-food-per"
+  },
+  {
    "id": "conflict:eating-organic-food-lowers-cancer-risk",
    "kind": "conflict",
    "title": "Does Organic Food Lower Your Cancer Risk?",
@@ -3196,292 +3515,6 @@
      }
     ]
    }
-  },
-  {
-   "id": "decision:price-and-the-planet",
-   "kind": "decision",
-   "title": "Is Organic Farming Better for the Planet?",
-   "alternates": [
-    "Organic Food's Environmental Footprint, Per Kilogram",
-    "Land, Emissions and Runoff: Organic Versus Conventional"
-   ],
-   "question": "Is organic farming actually better for the planet?",
-   "whyWatch": "Many people buy organic for the environment. Measured per kilogram of food, organic wins on some impacts and loses on others, and the choice of food turns out to matter far more than the label.",
-   "tension": "Organic avoids synthetic fertiliser and most synthetic pesticides, so it must be greener; but it needs more land for the same harvest. A meta-analysis of life-cycle studies finds both effects, and the authors refuse to call either system more sustainable.",
-   "evidenceNeeded": "Life-cycle comparisons of organic and conventional systems per unit of food across several environmental indicators, and the size of those differences against differences between foods.",
-   "evidenceAvailable": [
-    "Clark and Tilman 2017, environmental impacts of farming systems: right (0.7, direct)",
-    "Clark and Tilman 2017, environmental impacts of farming systems: right (0.6, direct)",
-    "AAP 2012 clinical report on organic foods, abstract: right (0.3, direct)",
-    "Clark and Tilman 2017, environmental impacts of farming systems: partly (0.5, direct)",
-    "Clark and Tilman 2017, environmental impacts of farming systems: right (0.65, direct)"
-   ],
-   "gaps": [],
-   "premise": "Not clearly, per unit of food. In Clark and Tilman's meta-analysis of paired life-cycle studies, mostly from high-input farming in Europe and North America, organic systems needed 25 to 110% more land, used 15% less energy, had 37% higher eutrophication potential and similar greenhouse gas emissions, because manure releases nitrous oxide that offsets the savings from skipping synthetic fertiliser. The authors say this does not make conventional farming more sustainable, since they could not measure pesticide and other impacts, and organic may have benefits outside their data. What dwarfs both is the food itself: ruminant meat has 20 to 100 times the impacts of plant foods, while the two systems differ by tens of percent.",
-   "claims": [
-    "organic-food/organic-farming-needs-more-land-produce",
-    "organic-food/organic-conventional-farming-have-similar-greenhouse",
-    "organic-food/organic-farming-better-environment-conventional",
-    "organic-food/what-you-eat-matters-more-your"
-   ],
-   "related": [
-    "organic-food/organic-food-costs-more-mainly-because",
-    "organic-food/organic-farming-yields-less-food-per",
-    "organic-food/organic-meat-has-similar-higher-greenhouse",
-    "organic-food/organic-plant-foods-have-lower-greenhouse",
-    "organic-food/some-sellers-have-passed-off-conventional"
-   ],
-   "arc": {
-    "hook": "Per field, organic looks greener; per kilogram of food, the picture changes.",
-    "conflict": "The claims pulling in different directions: \"Organic food costs substantially more than conventional food\"; \"Organic food is worth its price premium for health reasons\"; \"Organic farming yields less food per acre than conventional farming\"; \"Organic farming needs more land to produce the same amount of food\"; \"Organic and conventional farming have similar greenhouse gas emissions per kilogram of food\"; \"Organic farming is better for the environment than conventional farming\"; \"What you eat matters more for your food's carbon footprint than whether it is organic\".",
-    "evidence": "Each claim's verdict, strongest study first.",
-    "resolution": "Organic trades less energy and fewer synthetic inputs for more land and more nutrient runoff, with similar emissions; for the planet, what you eat matters far more than whether it is organic.",
-    "takeaway": "A decision rule the viewer can apply."
-   },
-   "coherence": {
-    "score": 0.85,
-    "basis": "review",
-    "explanation": "Pruned to one question, is organic farming better for the environment, answered by one life-cycle meta-analysis per unit of food (land, greenhouse gases, the overall claim) and its finding that what you eat matters more. Price is its own story, and the health-premium claim has no deciding study."
-   },
-   "scores": {
-    "coherence": 0.85,
-    "relevance": 1,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 0.72,
-    "originality": 1,
-    "evidence": 0.7,
-    "editorial": 0.75,
-    "overall": 0.73,
-    "explanation": "editorial 0.75 = mean of coherence 0.85 (review), relevance 1 (30 sources, 27 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 0.72 (2 studies, 4 claims); evidence 0.7 = strongest Clark and Tilman 2017, environmental impacts of farming systems at 0.7 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.85), central conclusion supported, 4 essential findings verified, no pending review.",
-   "blocking": [],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Organic farming needs more land to produce the same amount of food",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0.7,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "organic-food/organic-farming-needs-more-land-produce",
-        "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "Clark and Tilman 2017, environmental impacts of farming systems",
-       "verdict": "right",
-       "confidence": 0.7,
-       "note": "Meta-analysis of within-publication LCA pairs found organic systems need 25-110% more land per unit of food (p<0.001, n=37), driven by mismatched manure nutrient release and lower yields; mostly high-input Europe/North America systems.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.7)."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "Organic farming needs more land to produce the same amount of food",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.7,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/organic-farming-needs-more-land-produce",
-          "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Clark and Tilman 2017, environmental impacts of farming systems",
-         "verdict": "right",
-         "confidence": 0.7,
-         "note": "Meta-analysis of within-publication LCA pairs found organic systems need 25-110% more land per unit of food (p<0.001, n=37), driven by mismatched manure nutrient release and lower yields; mostly high-input Europe/North America systems.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.7)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f1",
-       "text": "Organic and conventional farming have similar greenhouse gas emissions per kilogram of food",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.6,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/organic-conventional-farming-have-similar-greenhouse",
-          "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Clark and Tilman 2017, environmental impacts of farming systems",
-         "verdict": "right",
-         "confidence": 0.6,
-         "note": "Per unit of food, organic and conventional greenhouse gas emissions did not differ significantly (4% lower in organic, p=0.59, n=44), because manure N2O offsets savings from avoiding synthetic fertilizer; cradle-to-farm-gate, mostly industrialized systems.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.6)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f2",
-       "text": "Organic farming is better for the environment than conventional farming",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0.3,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/organic-farming-better-environment-conventional",
-          "cite": "organic-food/sources/aap-2012-organic.txt#L24-L25"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "AAP 2012 clinical report on organic foods, abstract",
-         "verdict": "right",
-         "confidence": 0.3,
-         "note": "AAP clinical report (abstract only): organic farming has been demonstrated to have less environmental impact than conventional approaches.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/organic-farming-better-environment-conventional",
-          "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L286-L299"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Clark and Tilman 2017, environmental impacts of farming systems",
-         "verdict": "partly",
-         "confidence": 0.5,
-         "note": "Per unit of food, organic used 15% less energy but needed 25-110% more land and had 37% higher eutrophication, with similar GHG and acidification; the authors say this does not make conventional more sustainable given its pesticide and nutrient inputs, which they could not measure.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Clark and Tilman 2017, environmental impacts of farming systems: Per unit of food, organic used 15% less energy but needed 25-110% more land and had 37% higher eutrophication, with similar GHG and acidification; the authors say this does not make conventional more sustainable given its pesticide and nutrient inputs, which they could not measure."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.3), 1 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f3",
-       "text": "What you eat matters more for your food's carbon footprint than whether it is organic",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.65,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/what-you-eat-matters-more-your",
-          "cite": "organic-food/sources/clark-tilman-2017-lca.txt#L461-L467"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Clark and Tilman 2017, environmental impacts of farming systems",
-         "verdict": "right",
-         "confidence": 0.65,
-         "note": "Differences between foods dwarf differences between production systems: ruminant meat has 20-100 times the impacts of plant foods on every indicator, whereas organic vs conventional differs by tens of percent and not at all on GHG.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.65)."
-      }
-     }
-    ]
-   },
-   "partOf": "conflict:organic-farming-yields-less-food-per"
   },
   {
    "id": "conflict:dirty-dozen-list-reliable-guide-which",

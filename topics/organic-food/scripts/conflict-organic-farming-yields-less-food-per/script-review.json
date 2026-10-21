@@ -1,0 +1,180 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-21",
+  "revision": 2,
+  "packageFingerprint": "6688cc1dd7",
+  "approved": {
+    "s01": "cd0a5127c6",
+    "s02": "3618bb22ea",
+    "s03": "07ef0ea106",
+    "s04": "23716a0c7e",
+    "s05": "2c64e94dcc",
+    "s06": "6312d2273b",
+    "s07": "660e95538f",
+    "s08": "7185f688d3",
+    "s09": "f665cd45e1",
+    "s10": "b8febd57cc",
+    "s11": "feca554fce",
+    "s12": "13ea66646f",
+    "s13": "f578489076",
+    "s14": "36ba055bf3",
+    "s15": "15480006cf",
+    "s16": "31f1b8f772",
+    "s17": "97c20d851e",
+    "s18": "54a1605fab",
+    "s19": "1ff143f172",
+    "s20": "aac8ee0790",
+    "s21": "eb058f7a7b",
+    "s22": "509dbdb3c3",
+    "s23": "e34536ed23",
+    "s24": "1a26e9a1cb",
+    "s25": "2391c3264d",
+    "s26": "0416ece4ef"
+  },
+  "dispositions": {
+    "s01": {
+      "fingerprint": "cd0a5127c6",
+      "category": "figure-in-non-factual",
+      "reason": "The only number is 'two fields' in a thought experiment; no outcome or representative figure is stated."
+    },
+    "s07.a": {
+      "fingerprint": "660e95538f",
+      "category": "needs-qualification",
+      "reason": "The sentence names Ponisio as its source and carries the authors' overestimate warning; s11 and s12 present the AAP dissent in the same section."
+    },
+    "s08.a": {
+      "fingerprint": "7185f688d3",
+      "category": "needs-qualification",
+      "reason": "'Every crop type the study grouped' is the passage's own 'all crop types', scoped to the study; the AAP dissent is presented in s11-s12."
+    },
+    "s09.a": {
+      "fingerprint": "f665cd45e1",
+      "category": "needs-qualification",
+      "reason": "Attributed to the same meta-analysis named in s07; the AAP dissent is presented in s11-s12."
+    },
+    "s10.a": {
+      "fingerprint": "b8febd57cc",
+      "category": "needs-qualification",
+      "reason": "The sentence names the review and says it cites earlier work; the AAP dissent is about the size of the gap, not the nitrogen mechanism, and is presented in s11-s12."
+    },
+    "s11.a": {
+      "fingerprint": "feca554fce",
+      "category": "needs-qualification",
+      "reason": "The sentence is attributed to the AAP report and opens 'Not everyone agrees', directly after the Ponisio and Mie findings it disagrees with."
+    },
+    "s12.a": {
+      "fingerprint": "13ea66646f",
+      "category": "needs-qualification",
+      "reason": "The sentence describes what the AAP abstract contains, which the passage shows; both sides are already named in s07-s11."
+    },
+    "s13.a": {
+      "fingerprint": "f578489076",
+      "category": "needs-qualification",
+      "reason": "s11 and s12 present the AAP dissent and its thin basis immediately before this answer, which is scoped to the pooled data and names the overestimate warning."
+    },
+    "s16.a": {
+      "fingerprint": "31f1b8f772",
+      "category": "needs-qualification",
+      "reason": "Quoted and attributed; s17-s22 immediately give the per-unit-of-food comparison and the authors' caveats that qualify it."
+    },
+    "s19.a": {
+      "fingerprint": "1ff143f172",
+      "category": "needs-qualification",
+      "reason": "s22 carries the authors' warning that higher land use and eutrophication do not make conventional more sustainable, three sentences later in the same run."
+    },
+    "s22.a": {
+      "fingerprint": "509dbdb3c3",
+      "category": "needs-qualification",
+      "reason": "This sentence is itself the qualifying passage (L286-L299), attributed to the authors with its modality ('can harm')."
+    },
+    "s23.a": {
+      "fingerprint": "e34536ed23",
+      "category": "needs-qualification",
+      "reason": "'Every indicator they examined' is the passage's literal 'for all indicators examined', scoped to the study."
+    },
+    "s24.a": {
+      "fingerprint": "1a26e9a1cb",
+      "category": "needs-qualification",
+      "reason": "'Not clearly greener' matches the authors' refusal to rank the systems, and s21-s22 carry their scale and sustainability caveats just before it."
+    }
+  },
+  "findings": [
+    {
+      "sentence": "s13",
+      "assertion": "s13.a",
+      "fingerprint": "99d5261a63",
+      "revision": 1,
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "The answer gives a flat 'roughly a fifth', but the same Ponisio passage the script cites (L99) reports the gap fell to 9 +/- 4% with multi-cropping and 8 +/- 5% with crop rotations. The package arc asks for the conditions under which the claim holds, and this is the condition that changes the size of the answer.",
+      "refs": [
+        "organic-food/sources/ponisio-2015-yield-gap.txt#L95-L99"
+      ],
+      "suggestion": "Add after the answer: 'and on farms that rotated or mixed crops, the gap shrank to about 8 or 9%.' (new assertion citing L95-L99)."
+    },
+    {
+      "sentence": "s17",
+      "assertion": "s17.a",
+      "fingerprint": "97c20d851e",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "Clark and Tilman say most of the 742 LCA analyses are from high-input systems in Europe and North America, so the results reflect industrialised, high-input farming; the package premise lists this limit. The narration gives the land, energy and eutrophication figures (s18-s19) without it; s21's local-scale caveat is a different limit.",
+      "refs": [
+        "organic-food/sources/clark-tilman-2017-lca.txt#L461-L475"
+      ],
+      "suggestion": "Say 'using studies, mostly of high-input farms in Europe and North America, that assessed both systems within the same publication.'"
+    },
+    {
+      "sentence": "s26",
+      "fingerprint": "85865cae10",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'The question that changed the answer here: better per field, or per plate' tells the viewer that organic looks greener per field and that this is why the AAP and Harvard Health say it is greener. No cited passage gives a per-field (per-area) comparison, and neither source says its verdict is per field (Harvard gives practices, AAP gives no basis). The close smuggles a fact the script never established.",
+      "refs": [
+        "organic-food/sources/aap-2012-organic.txt#L24-L25",
+        "organic-food/sources/clark-tilman-2017-lca.txt#L224-L236"
+      ],
+      "suggestion": "Drop the claim about what changed the answer: 'And when something is sold as better for the planet, ask: better per what? Per plate of food, the answer here was mixed.'"
+    },
+    {
+      "sentence": "s13",
+      "assertion": "s13.c",
+      "fingerprint": "f578489076",
+      "revision": 2,
+      "category": "needs-human",
+      "severity": "warning",
+      "explanation": "The clause mirrors the authors' summary at L99, but the paper's results (L87, uncited) show the 9% and 8% gaps compare diversified organic fields with undiversified conventional ones; when both systems were polycultures the gap was 21 +/- 6%, and with similar rotations 20 +/- 2%. A viewer may hear that diversified farming in general nearly closes the gap. The writer cannot cite L87 without a person authorising a corpus change (one verdict per claim and document).",
+      "refs": [
+        "organic-food/sources/ponisio-2015-yield-gap.txt#L87-L87",
+        "organic-food/sources/ponisio-2015-yield-gap.txt#L95-L99"
+      ],
+      "suggestion": "Editor: either authorise widening the Ponisio citation to L87 and say 'where the organic farms rotated or mixed their crops and the conventional ones did not', or accept the authors' own summary wording as is."
+    },
+    {
+      "sentence": "s17",
+      "assertion": "s17.a",
+      "fingerprint": "97c20d851e",
+      "revision": 2,
+      "category": "needs-human",
+      "severity": "warning",
+      "explanation": "The revision-1 scope warning stands (Europe/North America, high-input systems, L468-L476), but the writer cannot cite it: the store already holds the one Clark and Tilman verdict for this claim. Approved because s21 carries a scope limit and the figures are not misleading for the viewer's likely context; only an editor can add the passage.",
+      "refs": [
+        "organic-food/sources/clark-tilman-2017-lca.txt#L461-L476"
+      ],
+      "suggestion": "Editor: authorise extending the cited range to L476 and add 'mostly of high-input farms in Europe and North America' to s17, or accept the omission."
+    },
+    {
+      "sentence": "s26",
+      "fingerprint": "0416ece4ef",
+      "revision": 2,
+      "category": "repetition",
+      "severity": "info",
+      "explanation": "'Per plate of food, the answer here was mixed' re-gives s24's answer in the close; short and it carries the 'better per what' lesson, so not held.",
+      "refs": [],
+      "suggestion": "Optionally end at 'ask: better per what?'."
+    }
+  ]
+}
