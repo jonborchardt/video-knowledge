@@ -1,7 +1,8 @@
 // Text-to-speech providers. One sentence in, one audio file and its word boundaries out. The provider is chosen by
 // render.json (voice.provider) or VK_TTS_PROVIDER; the voice and rate come from render.json so the choice is persisted
-// with the story. `edge` is free and draft-only; `openai` is paid under commercial terms.
+// with the story. `edge` is free and draft-only; `azure` (the same voices, official API) and `openai` are paid, commercial terms.
 import type { WordTiming } from '../types';
+import { azure } from './azure';
 import { edge } from './edge';
 import { openai } from './openai';
 
@@ -19,7 +20,7 @@ export interface TtsProvider {
   synthesize(text: string, voice: string, rate: string, outFile: string): Promise<TtsResult>;
 }
 
-const PROVIDERS: Record<string, TtsProvider> = { edge, openai };
+const PROVIDERS: Record<string, TtsProvider> = { edge, azure, openai };
 
 /** The caveats of the provider a manifest was narrated with; none for an unknown or fake provider. */
 export const providerLimitations = (id: string): string[] => PROVIDERS[id]?.limitations ?? [];

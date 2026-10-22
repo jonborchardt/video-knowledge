@@ -69,7 +69,11 @@ export function buildReport(
   const publishable = /^commercial/.test(manifest.licence);
   const musicCleared = mix ? mix.compositions.every((c) => c.licence.cleared) : null;
   const why = [
-    ...(publishable ? [] : [`narration is ${manifest.licence}`]),
+    ...(publishable
+      ? []
+      : [
+          `narration is ${manifest.licence}; when the draft is accepted, "npm run video -- final ${tl.topic} ${tl.story} --approved-by <name>" re-narrates it for release`,
+        ]),
     ...(mix?.compositions ?? [])
       .filter((c) => !c.licence.cleared)
       .map((c) => `music ${c.id} is not cleared${c.licence.notes ? `: ${c.licence.notes}` : ''}`),
@@ -110,7 +114,9 @@ export function buildReport(
       wordsPerMinute: Math.round((words / speech) * 60),
       sentences: manifest.sentences.map((s) => ({ id: s.id, seconds: s.duration, sha: s.sha, words: s.words.length })),
       cost:
-        manifest.provider === 'edge' ? '$0 (edge-tts, no key)' : `$${manifest.cost} (estimated from minutes of audio)`,
+        manifest.provider === 'edge'
+          ? '$0 (edge-tts, no key)'
+          : `$${manifest.cost} (estimated from ${manifest.provider === 'azure' ? 'characters' : 'minutes of audio'})`,
     },
     rendering: {
       architecture:
@@ -146,7 +152,7 @@ export function buildReport(
     limitations: [
       publishable
         ? `narration licence: ${manifest.licence}`
-        : `NOT FOR PUBLICATION: narration is ${manifest.licence}; re-narrate with a commercial provider (VK_TTS_PROVIDER=openai, OPENAI_API_KEY) before release`,
+        : `NOT FOR PUBLICATION: narration is ${manifest.licence}; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by <name>" re-narrates it with Azure for release`,
       ...providerLimitations(manifest.provider),
       ...RENDERER_LIMITATIONS,
       'automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision',

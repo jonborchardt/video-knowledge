@@ -34,3 +34,7 @@ Undertow (cleared): sc01-sc03, sc04-sc29, sc30. Music -20.8 dB under the voice, 
 
 - Narration is draft only (edge-tts: unofficial Microsoft Edge read-aloud API, no terms for published media).
 - Music: cleared.
+
+## Release build
+
+- 2026-10-22: `npm run video -- final heat-pumps decision:does-the-upfront-cost-eat-the-savings --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.

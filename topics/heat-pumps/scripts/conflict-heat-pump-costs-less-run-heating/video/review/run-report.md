@@ -36,3 +36,7 @@ Undertow (cleared): four cues, sc01-sc02, sc03-sc05, sc06-sc16, sc17-sc22. Music
 
 - Narration is draft only (edge-tts: unofficial Microsoft Edge read-aloud API, no terms for published media).
 - Music: cleared.
+
+## Release build
+
+- 2026-10-22: `npm run video -- final heat-pumps conflict:heat-pump-costs-less-run-heating --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.

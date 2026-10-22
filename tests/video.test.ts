@@ -28,6 +28,7 @@ import { buildTimeline } from '../src/video/timeline';
 import { type TtsProvider, provider, providerLimitations } from '../src/video/tts';
 import { RENDERER_LIMITATIONS } from '../src/video/remotion/limitations';
 import { openaiProvider, speedOf } from '../src/video/tts/openai';
+import { type Speak, azureProvider } from '../src/video/tts/azure';
 import type { TimelineScene } from '../src/video/types';
 import { alignLine, findWord, tokens } from '../src/video/words';
 import { DOC_D, pkg, read, scene } from './script-helpers';
@@ -403,10 +404,70 @@ describe('narration and ffmpeg', () => {
   it('knows its providers and their licences', () => {
     expect(provider('edge').licence).toMatch(/draft only/);
     expect(provider('openai').licence).toMatch(/^commercial/);
+    expect(provider('azure').licence).toMatch(/^commercial/);
     expect(() => provider('nope')).toThrow(/unknown TTS provider/);
     expect(speedOf('-20%')).toBeCloseTo(0.8);
     expect(speedOf('+0%')).toBe(1);
     expect(speedOf('junk')).toBe(1);
+  });
+  it('drives Azure Speech without a live call: escaped SSML at the edge rate, spoken words only', async () => {
+    const speak: Speak = async (ssml, outFile, on) => {
+      expect(ssml).toContain(
+        '<voice name="en-US-AndrewMultilingualNeural"><prosody rate="-10%">Fish &amp; chips &lt;3.</prosody>',
+      );
+      writeFileSync(outFile, wav(1));
+      on({ text: 'Fish', offset: 1e6, duration: 3e6, type: 'WordBoundary' });
+      on({ text: '&', offset: 4e6, duration: 1e6, type: 'WordBoundary' });
+      on({ text: '.', offset: 9e6, duration: 1e6, type: 'PunctuationBoundary' });
+    };
+    const r = await azureProvider(speak).synthesize(
+      'Fish & chips <3.',
+      'en-US-AndrewMultilingualNeural',
+      '-10%',
+      join(dir, 'az'),
+    );
+    expect(r.format).toBe('wav');
+    expect(r.words).toEqual([
+      { text: 'Fish', start: 0.1, end: 0.4 },
+      { text: '&', start: 0.4, end: 0.5 },
+    ]);
+    expect(r.cost).toBe(0.0002);
+    expect(existsSync(join(dir, 'az.wav'))).toBe(true);
+    // Azure sheds load with "No free synthesizer": retried after a pause, with the half-reported boundaries dropped
+    let calls = 0;
+    const flaky: Speak = async (_s, outFile, on) => {
+      on({ text: 'Half', offset: 0, duration: 1e6, type: 'WordBoundary' });
+      if (calls++ === 0)
+        throw new Error(
+          'Status(StatusCode="ResourceExhausted", Detail="No free synthesizer") websocket error code: 1013',
+        );
+      writeFileSync(outFile, wav(1));
+      on({ text: 'done', offset: 1e6, duration: 1e6, type: 'WordBoundary' });
+    };
+    const again = await azureProvider(flaky, [1]).synthesize('Half done.', 'v', '+0%', join(dir, 'az3'));
+    expect(calls).toBe(2);
+    expect(again.words.map((w) => w.text)).toEqual(['Half', 'done']);
+    // a sentence the SDK never answers is retried too
+    let hung = 0;
+    const hang: Speak = (_s, outFile, on) =>
+      hung++ === 0
+        ? new Promise(() => {})
+        : (async () => {
+            writeFileSync(outFile, wav(1));
+            on({ text: 'late', offset: 0, duration: 1e6, type: 'WordBoundary' });
+          })();
+    const late = await azureProvider(hang, [1], 20).synthesize('late', 'v', '+0%', join(dir, 'az5'));
+    expect(late.words.map((w) => w.text)).toEqual(['late']);
+    const broken: Speak = async () => {
+      throw new Error('azure speech failed: Unauthorized');
+    };
+    await expect(azureProvider(broken, [1]).synthesize('x', 'v', '+0%', join(dir, 'az4'))).rejects.toThrow(
+      /Unauthorized/,
+    );
+    const silent: Speak = async (_s, _o, on) => on({ text: '.', offset: 0, duration: 1, type: 'PunctuationBoundary' });
+    await expect(azureProvider(silent).synthesize('x', 'v', '+0%', join(dir, 'az2'))).rejects.toThrow(
+      /no word boundaries/,
+    );
   });
   it('drives the OpenAI speech and transcription endpoints without a live call', async () => {
     const seen: string[] = [];

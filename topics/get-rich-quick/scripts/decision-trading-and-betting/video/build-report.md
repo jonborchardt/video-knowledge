@@ -1,73 +1,73 @@
 # Build report: Do 97% of Day Traders Really Lose Money?
 
-get-rich-quick / decision:trading-and-betting, 2026-10-22T01:07:48.430Z. `npm run video -- qa get-rich-quick decision:trading-and-betting`
+get-rich-quick / decision:trading-and-betting, 2026-10-22T07:49:05.076Z. `npm run video -- final get-rich-quick decision:trading-and-betting --approved-by Jon`
 
 **Segment.** 24 of 24 storyboard scenes (sc01 to sc24), 27 sentences. Kinds: sc01 quote, sc02 question, sc03 title, sc04 quote, sc05 quote, sc06 quote, sc07 excerpt, sc08 bar, sc09 excerpt, sc10 stat-tiles, sc11 stat-tiles, sc12 stat-tiles, sc13 question, sc14 excerpt, sc15 excerpt, sc16 stat-tiles, sc17 question, sc18 excerpt, sc19 waffle, sc20 quote, sc21 stat-tiles, sc22 list, sc23 list, sc24 list.
 
-**Output.** topics/get-rich-quick/scripts/decision-trading-and-betting/video/segment.mp4: 234.24s, 1920x1080 @ 30 fps, h264 + aac, 7027 frames, rendered in 0s ($0 (local CPU)).
+**Output.** topics/get-rich-quick/scripts/decision-trading-and-betting/video/segment.mp4: 231.02s, 1920x1080 @ 30 fps, h264 + aac, 6930 frames, rendered in 923.4s ($0 (local CPU)).
 
-**Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 223.22s of speech at about 165 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
+**Narration.** azure / en-US-AndrewMultilingualNeural (rate +0%, neural), wav, 220.02s of speech at about 167 wpm, $0.0506 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
 
 | Sentence | Seconds | Boundaries | Audio sha |
 |---|---|---|---|
-| s01 | 11.352 | 27 | dddc1a9184 |
-| s02 | 5.088 | 17 | f008f1df9c |
-| s03 | 5.04 | 12 | db63c573ab |
-| s04 | 9.768 | 27 | 622d27d3ff |
-| s05 | 10.344 | 24 | ea9384d34f |
-| s06 | 7.32 | 18 | c87d5580a1 |
-| s08 | 11.448 | 27 | acaa287be6 |
-| s09 | 8.088 | 23 | 92b206b9d8 |
-| s10 | 5.28 | 17 | e6610a0e13 |
-| s11 | 10.584 | 21 | a9d060d16c |
-| s12 | 7.248 | 16 | 2d2e124326 |
-| s13 | 9.12 | 26 | 72e7ea5af0 |
-| s14 | 3.024 | 11 | 5dab532a61 |
-| s15 | 2.808 | 8 | c087081a7d |
-| s27 | 10.488 | 19 | 4acafd755f |
-| s16 | 11.376 | 33 | 368fd09ffc |
-| s17 | 2.616 | 7 | fa4962baa9 |
-| s18 | 10.032 | 31 | ffafbc93e5 |
-| s19 | 6.864 | 18 | b8975eae77 |
-| s20 | 10.488 | 27 | e702c2d783 |
-| s21 | 11.808 | 27 | 95649d33ac |
-| s22 | 7.608 | 24 | 9a23b2f41f |
-| s23 | 8.736 | 28 | bdb49407c7 |
-| s28 | 8.544 | 26 | feee968a39 |
-| s24 | 10.968 | 35 | a5af982c73 |
-| s25 | 8.808 | 22 | 12693d0ec4 |
-| s26 | 8.376 | 28 | 864cafb8ca |
+| s01 | 11.125 | 27 | 6fdd3ea636 |
+| s02 | 4.6875 | 17 | c78f20192a |
+| s03 | 4.95 | 12 | 8990a6d77b |
+| s04 | 9.65 | 27 | 31fb76eca1 |
+| s05 | 9.725 | 24 | 46afceac4a |
+| s06 | 7.2375 | 18 | 42986c55e2 |
+| s08 | 11.1625 | 27 | dc0eef177c |
+| s09 | 8.25 | 23 | 2e3b086fcd |
+| s10 | 5.325 | 17 | a83ccf31be |
+| s11 | 10.3875 | 21 | 6218468d58 |
+| s12 | 7.3 | 16 | 4ca07fa884 |
+| s13 | 9.0875 | 26 | 517492999d |
+| s14 | 3.05 | 11 | fcd6099352 |
+| s15 | 2.5125 | 8 | c335d46c42 |
+| s27 | 10.55 | 19 | c7e4022046 |
+| s16 | 11.3375 | 33 | 54f9b0e0c1 |
+| s17 | 2.5125 | 7 | 78902f29e3 |
+| s18 | 9.9125 | 31 | a0ac8a3c95 |
+| s19 | 7.35 | 18 | 4b91e907a5 |
+| s20 | 10.0125 | 27 | 88ea88d4f0 |
+| s21 | 11.6375 | 27 | 2b26ed8e12 |
+| s22 | 7.475 | 24 | 26fd7f183e |
+| s23 | 8.5375 | 28 | 3362e9153f |
+| s28 | 8.8125 | 26 | 4d2ed70ddd |
+| s24 | 10.9125 | 35 | efa9613999 |
+| s25 | 8.4875 | 22 | 2ec1bbb533 |
+| s26 | 8.0375 | 28 | 5292b4871b |
 
 **Architecture.** Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS).
 
-**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 83640bc3e9: music -19.4 dB under the voice while it speaks, peak -1.4 dB.
+**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 752f7678bf: music -19.4 dB under the voice while it speaks, peak -1.4 dB.
 
 | Cue | Asset | From | To | Gain | Level |
 |---|---|---|---|---|---|
-| opening | undertow/pulse | 0.0s | 23.1s | -11 dB | -37.4 dB |
-| setup | undertow/active | 23.1s | 51.6s | -13 dB | -38.0 dB |
-| evidence | undertow/texture | 51.6s | 178.1s | -13 dB | -40.4 dB |
-| ending | undertow/pulse | 178.1s | 234.2s | -11 dB | -37.1 dB |
+| opening | undertow/pulse | 0.0s | 22.4s | -11 dB | -37.4 dB |
+| setup | undertow/active | 22.4s | 50.1s | -13 dB | -38.0 dB |
+| evidence | undertow/texture | 50.1s | 175.7s | -13 dB | -40.4 dB |
+| ending | undertow/pulse | 175.7s | 231.0s | -11 dB | -37.1 dB |
 
-**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. A passing build is technical completion only; a person approves the release.
+**Clearance.** Narration and music are both cleared for publication. A passing build is technical completion only; a person approves the release.
 
-**Fingerprints.** script a1196b72ff, storyboard c2f52b25bb, narration aea9966848, config ddc2bfe9d2, music 83640bc3e9.
+**Fingerprints.** script a1196b72ff, storyboard c2f52b25bb, narration 8fd3c6b5be, config ddc2bfe9d2, music 752f7678bf.
 
 ## QA: passed (36 of 36)
 
 | Check | Result | Detail |
 |---|---|---|
-| mp4 decodable | ok | 234.240s |
+| mp4 decodable | ok | 231.018s |
 | video stream | ok | h264 1920x1080 @ 30 |
 | resolution | ok | 1920x1080 |
 | frame rate | ok | 30 |
 | h264 | ok | h264 |
-| frame count | ok | 7027 frames, timeline 7027 |
-| duration in range | ok | 234.24s in [233.2,235.2] |
-| duration matches timeline | ok | 234.240s vs 234.233s (7027 frames) |
+| frame count | ok | 6930 frames, timeline 6930 |
+| duration in range | ok | 231.02s in [230.0,232.0] |
+| duration matches timeline | ok | 231.018s vs 231.000s (6930 frames) |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
-| audio length matches video | ok | 0.007s apart |
+| audio length matches video | ok | 0.018s apart |
 | no clipping | ok | peak -1.5 dB, mean -19.5 dB |
 | no long silence | ok | none >= 3s |
 | narration not truncated | ok | 27 sentences fit their slots |
@@ -83,14 +83,14 @@ get-rich-quick / decision:trading-and-betting, 2026-10-22T01:07:48.430Z. `npm ru
 | excerpts resolve | ok | 5 excerpts with their highlights |
 | assets and kinds supported | ok | 8 kinds |
 | music cues resolve | ok | 4 cues over 1 compositions |
-| soundtrack mixed | ok | 4 cues, 2026-10-22T01:06:54.044Z |
-| mix is of this cue sheet | ok | mix 83640bc3e9, cue sheet 83640bc3e9 |
+| soundtrack mixed | ok | 4 cues, 2026-10-22T07:48:07.978Z |
+| mix is of this cue sheet | ok | mix 752f7678bf, cue sheet 752f7678bf |
 | every cue sounded | ok | 4 cues audible where placed |
 | music under the voice | ok | -19.4 dB relative to speech (want -40 to -10) |
 | mix under the ceiling | ok | peak -1.4 dB, ceiling -1 dB |
 | scene boundaries follow measured audio | ok | 24 scenes, 27 sentences |
 | cues inside their sentences | ok | 3 cues |
-| final scene complete | ok | ends 234.23s |
+| final scene complete | ok | ends 231.00s |
 | no blank sections | ok | none |
 | every scene has content | ok | mid-scene luma varies in every scene |
 
@@ -98,8 +98,7 @@ Inspection frames: 52 in video/frames/; contact sheet topics/get-rich-quick/scri
 
 ## Known limitations
 
-- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; re-narrate with a commercial provider (VK_TTS_PROVIDER=openai, OPENAI_API_KEY) before release
-- word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
+- narration licence: commercial: Azure AI Speech terms allow the generated audio in published media
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes
 - automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision

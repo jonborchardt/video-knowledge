@@ -37,3 +37,7 @@ Undertow (cleared): sc01-sc02, sc03-sc04, sc05-sc23, sc24-sc28. Music -19.8 dB u
 
 - Narration is draft only (edge-tts: unofficial Microsoft Edge read-aloud API, no terms for published media).
 - Music: cleared.
+
+## Release build
+
+- 2026-10-22: `npm run video -- final ai-coding decision:quality-and-understanding --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.
