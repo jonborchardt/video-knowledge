@@ -1,0 +1,287 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-21",
+  "revision": 2,
+  "packageFingerprint": "5315c81f0b",
+  "approved": {
+    "s01": "2e0730259b",
+    "s02": "0bece7e2b4",
+    "s03": "db09ddba62",
+    "s04": "1de01c562b",
+    "s05": "9dc077bf93",
+    "s06": "1fc8ef86c3",
+    "s07": "082608986f",
+    "s08": "3093870c73",
+    "s09": "9e4fb3e55e",
+    "s10": "d58809c7b6",
+    "s11": "ab8c44705c",
+    "s12": "dc757cbd21",
+    "s13": "ed66fc8aa9",
+    "s14": "472b11b078",
+    "s15": "df74bf0b52",
+    "s16": "38bb1699d9",
+    "s17": "d7ce930ed5",
+    "s18": "16e08815bf",
+    "s19": "0b76c7c36f",
+    "s20": "d64813dbbc",
+    "s21": "dd6f47de66",
+    "s22": "05aa49d2fd",
+    "s23": "97c34e0bb7",
+    "s24": "ba292b2523",
+    "s25": "e3e5dd86ca",
+    "s26": "5379646cf8",
+    "s27": "942ea74cbf",
+    "s28": "558e827f79",
+    "s29": "5c5191e188",
+    "s30": "a232533dc4",
+    "s31": "ba2bc82fd5",
+    "s32": "c1a5268e8a",
+    "s33": "1ef854007d",
+    "s34": "6a81e61dab",
+    "s35": "d95f3dd9a9",
+    "s36": "21b60c004e",
+    "s37": "2f64916061",
+    "s38": "36e483f0d5"
+  },
+  "findings": [
+    {
+      "sentence": "s06",
+      "fingerprint": "52d83b7d86",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "blocking",
+      "explanation": "Willison (s05) compares himself with 'somebody who's never written a line of code', while every trial the script then sets against him compares developers (or computing students) by experience; none included non-programmers. 'Both say experience multiplies what the tool gives you' folds his claim into the one the trials test, so s24's 'nothing shows AI multiplying experts far more than novices' reads as a rebuttal of Willison that the evidence cannot give.",
+      "refs": [
+        "ai-coding/sources/2302.06590.txt#L221-L225",
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+      ],
+      "suggestion": "Separate the two: say Willison's comparison is with someone who has never coded, which none of these trials included, and that the claim they can test is the first one, whether the best engineers gain more than the rest. Or drop s05."
+    },
+    {
+      "sentence": "s36",
+      "assertion": "s36.a",
+      "fingerprint": "f49c70bd61",
+      "revision": 1,
+      "category": "repetition",
+      "severity": "blocking",
+      "explanation": "Re-reads s27's acceptance share ('less than half') and s28's wasted checking before rejection without adding anything, and 'the time went into checking' turns low reliability into the explanation of the slowdown, though METR lists it as one of several contributing factors (s27 itself says 'the answer starts with').",
+      "refs": [
+        "ai-coding/sources/2507.09089v2.txt#L1004-L1012"
+      ],
+      "suggestion": "Cut s36, or replace it with a short callback that adds a step without re-reading the share, e.g. 'That checking is part of the price the veterans paid.'"
+    },
+    {
+      "sentence": "s38",
+      "fingerprint": "bec10fe3be",
+      "revision": 1,
+      "category": "omission",
+      "severity": "blocking",
+      "explanation": "The closing advice to 'point it at the work you couldn't already do' contradicts the script's own s35 (supervising Claude requires the coding skills) and the corpus on validation: the Anthropic study's security engineer says a dangerous proposal 'could only be recognised as problematic by users with judgment and experience'. METR's 'helpful on unfamiliar issues' comes from experienced developers on issues in their own projects, not from work they could not do.",
+      "refs": [
+        "ai-coding/sources/anthropic-work-at-anthropic.txt#L75-L75",
+        "ai-coding/sources/anthropic-work-at-anthropic.txt#L93-L94",
+        "ai-coding/sources/2507.09089v2.txt#L960-L984"
+      ],
+      "suggestion": "Say 'point it at the parts that are new to you, and keep enough of the skill to check what it hands back.'"
+    },
+    {
+      "sentence": "s04",
+      "assertion": "s04.a",
+      "fingerprint": "f4f66ddead",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "In the transcript context the speaker hedges right before the quote ('the same thing is maybe potentially true of vibe coding. it's like the ai agents are going to help...'), so 'the case was put plainly' overstates how firmly it was said.",
+      "refs": [],
+      "suggestion": "Drop 'plainly' (e.g. 'the case was put this way') or keep the hedge: 'one guest suggested the same might be true of AI coding: ...'."
+    },
+    {
+      "sentence": "s15",
+      "assertion": "s15.a",
+      "fingerprint": "4def86fcf2",
+      "revision": 1,
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "'Slowed down more' presupposes METR's headline result (these experienced developers took longer with AI allowed), which no sentence states; s20 ('the slowdown') and the whole of question 2 (s26 'leave an expert slower') rest on it.",
+      "refs": [
+        "ai-coding/sources/2507.09089v2.txt#L960-L984"
+      ],
+      "suggestion": "State the overall slowdown once, in s14 or s15, from a cited METR passage that carries it; if none is cited in the corpus, set generation.needsEvidence."
+    },
+    {
+      "sentence": "s22",
+      "assertion": "s22.a",
+      "fingerprint": "2e1ae668ee",
+      "revision": 1,
+      "category": "selective",
+      "severity": "warning",
+      "explanation": "The Google authors give four reasons beyond power; the sentence keeps only the one that undercuts the skill belief (low usability floor) and leaves out the one that supports it: Natural Language to Code 'requires familiarity with LLMs and prompting, skills which might not be universal'. 'Among the possible reasons' hedges it, but in a section asking whether tool use is a skill, the omitted reason is the relevant one.",
+      "refs": [
+        "ai-coding/sources/2410.12944.txt#L522-L543"
+      ],
+      "suggestion": "Add the other side: '... or that some features need prompting skills not everyone has yet.'"
+    },
+    {
+      "sentence": "s24",
+      "assertion": "s24.a",
+      "fingerprint": "a7f8169605",
+      "revision": 1,
+      "category": "selective",
+      "severity": "warning",
+      "explanation": "'The one hint the other way was not significant' qualifies only the Google side, so a viewer hears the junior-favouring results as firm; the Microsoft/Accenture estimates were also not significant (s08, far back) and Peng's are noisy ('suggest').",
+      "refs": [
+        "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770",
+        "ai-coding/sources/2302.06590.txt#L221-L225"
+      ],
+      "suggestion": "Qualify both sides alike: 'several leaned toward the less experienced, mostly with noisy estimates, and the one hint the other way was not significant either.'"
+    }
+  ],
+  "dispositions": {
+    "s07.a": {
+      "fingerprint": "082608986f",
+      "category": "needs-qualification",
+      "reason": "The listed limits are the claim-level dispute, which the script presents study by study (Google exception in s17, METR in s14-s16); this sentence reports one trial's own figures and s08 states they are not significant."
+    },
+    "s08.a": {
+      "fingerprint": "3093870c73",
+      "category": "needs-qualification",
+      "reason": "The sentence is itself the qualification (noisy, not significant); the other studies' limits belong to their own sentences."
+    },
+    "s09.a": {
+      "fingerprint": "9e4fb3e55e",
+      "category": "needs-qualification",
+      "reason": "Reports the authors' own caveat on attenuation from the cited passage; the claim-level dispute is presented in s17."
+    },
+    "s10.a": {
+      "fingerprint": "d58809c7b6",
+      "category": "needs-qualification",
+      "reason": "Reports one moderation analysis as 'a separate experiment'; the Google result that leans the other way is presented in s17."
+    },
+    "s11.a": {
+      "fingerprint": "ab8c44705c",
+      "category": "needs-qualification",
+      "reason": "Carries the authors' own condition (if it holds up in further studies); the opposing Google result is presented in s17."
+    },
+    "s12.a": {
+      "fingerprint": "dc757cbd21",
+      "category": "needs-qualification",
+      "reason": "Reports the code-ownership authors' own finding; s13 gives its task confound and s17 the trial that leaned the other way."
+    },
+    "s13.a": {
+      "fingerprint": "ed66fc8aa9",
+      "category": "needs-qualification",
+      "reason": "The sentence is the qualification of s12 (tasks suited to level); the METR/Google/Anthropic limits are presented in their own sentences."
+    },
+    "s14.a": {
+      "fingerprint": "472b11b078",
+      "category": "needs-qualification",
+      "reason": "States only METR's sample experience figures, which the passage gives; the Google contradiction is about the claim and is presented in s17."
+    },
+    "s15.a": {
+      "fingerprint": "df74bf0b52",
+      "category": "needs-qualification",
+      "reason": "Keeps METR's own strength (moderate evidence), states the slowdown without a figure, and s17 names the Google trial on the other side."
+    },
+    "s15.b": {
+      "fingerprint": "df74bf0b52",
+      "category": "needs-qualification",
+      "reason": "Framed as what the developers said, not a measurement; the Google counterpoint follows in s17."
+    },
+    "s16.a": {
+      "fingerprint": "38bb1699d9",
+      "category": "needs-qualification",
+      "reason": "A quoted developer's own view, framed as such; the Google counterpoint follows in s17."
+    },
+    "s17.a": {
+      "fingerprint": "d7ce930ed5",
+      "category": "needs-qualification",
+      "reason": "The sentence says 'if anything' and that the difference was not significant, and claims nothing like 'far more'."
+    },
+    "s18.a": {
+      "fingerprint": "16e08815bf",
+      "category": "needs-qualification",
+      "reason": "Attributed as the authors' suggestion ('may'), directly after s17 says the difference was not significant."
+    },
+    "s20.a": {
+      "fingerprint": "d64813dbbc",
+      "category": "needs-qualification",
+      "reason": "The sentence claims only the null over the first 50 hours, says prior hours were self-reported, and s21 gives the fragile over-50-hours result; no skill ceiling is asserted."
+    },
+    "s21.a": {
+      "fingerprint": "dd6f47de66",
+      "category": "needs-qualification",
+      "reason": "The sentence is the qualification itself: one developer, and the estimate fell to roughly 0 after the correction."
+    },
+    "s22.a": {
+      "fingerprint": "05aa49d2fd",
+      "category": "needs-qualification",
+      "reason": "The sentence says the effect was not significant, scopes it to full-time Googlers and gives the authors' reasons on both sides, including the prompting-skill one."
+    },
+    "s23.a": {
+      "fingerprint": "97c34e0bb7",
+      "category": "needs-qualification",
+      "reason": "Carries the study's own limit that Java proficiency mattered more; the effect size is not quoted so nothing overstates it."
+    },
+    "s24.a": {
+      "fingerprint": "ba292b2523",
+      "category": "needs-qualification",
+      "reason": "Qualifies both sides alike: the field experiments noisy and not significant, Peng conditional on further studies, the Google interaction not significant; claims nothing like 'far more'."
+    },
+    "s25.a": {
+      "fingerprint": "e3e5dd86ca",
+      "category": "needs-qualification",
+      "reason": "Both sides are named in the preceding sentences (s17 Google, s24), s08 says the Microsoft gaps were not significant, and the routine-code half is not claimed."
+    },
+    "s27.a": {
+      "fingerprint": "942ea74cbf",
+      "category": "needs-qualification",
+      "reason": "Scoped to METR's maintainers and Cursor; the Anthropic and review limits concern other sources presented in s30-s34."
+    },
+    "s28.a": {
+      "fingerprint": "558e827f79",
+      "category": "needs-qualification",
+      "reason": "Scoped to METR's developers and reported as the researchers' observation; other sources' limits are presented in their own sentences."
+    },
+    "s29.a": {
+      "fingerprint": "5c5191e188",
+      "category": "needs-qualification",
+      "reason": "Says 'said' (self-report) and is scoped to METR's developers; it makes no claim about less-skilled users."
+    },
+    "s30.a": {
+      "fingerprint": "a232533dc4",
+      "category": "needs-qualification",
+      "reason": "One engineer's quoted rule of thumb, framed as such; nothing is generalised."
+    },
+    "s31.a": {
+      "fingerprint": "ba2bc82fd5",
+      "category": "needs-qualification",
+      "reason": "One engineer's quoted account, framed as such; nothing is generalised."
+    },
+    "s32.a": {
+      "fingerprint": "c1a5268e8a",
+      "category": "needs-qualification",
+      "reason": "The code-ownership limit is about a different study's comprehension timing; the sentence is scoped to one company's migration report and matches its passage."
+    },
+    "s33.a": {
+      "fingerprint": "1ef854007d",
+      "category": "needs-qualification",
+      "reason": "Presented as a review's synthesis of what has been written, not a measurement; the code-ownership limit does not bear on it."
+    },
+    "s34.a": {
+      "fingerprint": "6a81e61dab",
+      "category": "needs-qualification",
+      "reason": "Attributed to the review's authors with 'may'; the METR limit about untested less-skilled users does not bear on it."
+    },
+    "s35.a": {
+      "fingerprint": "d95f3dd9a9",
+      "category": "needs-qualification",
+      "reason": "The study's own framing, attributed and quoted; it makes no claim about less-skilled users' measured outcomes."
+    },
+    "s36.a": {
+      "fingerprint": "21b60c004e",
+      "category": "needs-qualification",
+      "reason": "Scoped to METR's maintainers and says 'part of', keeping low reliability one listed factor among several; other sources' limits sit in their own sentences."
+    }
+  }
+}

@@ -1,0 +1,1410 @@
+{
+ "topic": "ai-coding",
+ "story": "decision:who-benefits",
+ "inputs": {
+  "stories": "be938efb9b",
+  "review": "36e8a6703d",
+  "report": "c4b59fd273"
+ },
+ "audience": "General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).",
+ "title": "Does AI Help Junior or Senior Developers More?",
+ "question": "Does AI help junior or senior developers more?",
+ "alternates": [
+  "Who Really Gets the AI Productivity Boost?",
+  "The Experience Paradox in AI Coding Studies"
+ ],
+ "premise": "The 'far more for experts' claim is not supported: Microsoft's field experiment (short-tenure 27-39% versus long-tenure 8-13%, mostly not significant), Shan's RCT, Peng's Copilot trial and the code-ownership experiment all found gains concentrated among less experienced developers, and METR found experienced maintainers slowed, more so on tasks they knew well. The Google trial is the exception: on code unfamiliar to everyone, seniors gained if anything more, not significantly. That pattern is the resolution: gains concentrate where the developer lacks context, which juniors usually do and seniors do on unfamiliar code. Skill in using the tools matters (habitual AI users' code scored better downstream in the Echoes trial) but the evidence for a steep skill curve is thin and partly self-reported, and METR saw no improvement over the first 50 hours.",
+ "whyWatch": "Influencers say AI is a multiplier for experts. Most trials found the opposite, one found a hint the other way, and the reason they differ says something about when the tools help anyone.",
+ "tension": "'Amplifies experts far more' against trials where juniors and short-tenure developers gained most and experienced maintainers were slowed.",
+ "arc": {
+  "hook": "Two engineers, one senior, one junior, both switch on the same tool. The influencers say the senior pulls ahead. The trials say otherwise.",
+  "conflict": "Five trials point one way, Google's points the other, and 'far more' for experts has no support anywhere.",
+  "evidence": "Microsoft/Accenture by tenure, Shan's moderation analysis, Peng's heterogeneity, the code-ownership experiment, METR's slowdown by task familiarity, and Google's unfamiliar-code design.",
+  "resolution": "The tools help most where the developer has the least context. Juniors have less of it everywhere; seniors have less of it on unfamiliar code. Using the tools well is a skill, but not yet a measured steep one.",
+  "takeaway": "Point the tools at unfamiliar work, expect less on code you know by heart, and treat '10x for experts' as marketing."
+ },
+ "readiness": "ready",
+ "central": {
+  "text": "The evidence does not support \"AI coding tools amplify experienced engineers far more than novices\"",
+  "status": "qualified",
+  "decision": "qualify",
+  "strength": 0.5,
+  "independent": 4
+ },
+ "claims": [
+  {
+   "id": "ai-coding/coding-tools-amplify-experienced-engineers-far",
+   "text": "AI coding tools amplify experienced engineers far more than novices",
+   "stance": "denies",
+   "verdict": "wrong",
+   "confidence": 0.6,
+   "decidedBy": "METR 2025 RCT",
+   "lean": "neutral",
+   "role": "evidence",
+   "guess": {
+    "verdict": "partly",
+    "confidence": 0.45,
+    "note": "Experts get more reliable results and catch errors, but several RCTs show larger measured speedups for juniors, and METR found experts slowed; contested."
+   },
+   "statements": [
+    {
+     "source": "PlyzvM--xbQ",
+     "title": "Open-source, complexity & AI coding 🔧 — with Salvatore \"Antirez\" Sanfilippo",
+     "channel": "Refactoring",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=PlyzvM--xbQ",
+     "stance": "asserts",
+     "quote": "for this kind of help, you have to be very good at prompting. I don't believe everybody is the same at using LLMs.",
+     "context": " still do the multiplication in the in-the-gear space and then adjust for the scaling of the quantization. i had this intuition. i understand the mathematical at a decent level, but this specific thing was complicated. i didn't know how to scompose something. and claude immediately did it. however, for this kind of help, you have to be very good at prompting. i don't believe everybody is the same at using llms. so sometimes people believe that if the ai doesn't work well enough, it's because ai is broken. but sometimes you have to understand very well how to in the way where you write a but sometimes you have to understand very well how to in the way where you write a but sometimes you have to understand "
+    },
+    {
+     "source": "PzWh9OJqRG4",
+     "title": "AI Coders Scored 17% Lower—Here's What They Did Wrong",
+     "channel": "DIY Smart Code",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=PzWh9OJqRG4",
+     "stance": "asserts",
+     "quote": "it makes good developers better. It doesn't make beginners good",
+     "context": "nderstand the code. two, get explanations with code. make ai teach you. three, try fixing bugs yourself first. struggle build skill. four, code without ai sometimes. keep your skills sharp on your own. the researchers put it perfectly. ai productivity is not a shortcut to skill. ai is powerful, but it makes good developers better. it doesn't make beginners good. if you use ai to avoid thinking, you're becoming a better prompter, not a better coder. so, which pattern are you using? be honest, drop a comment. i read them all. if this changed how you think about ai tools, hit like and subscribe for more on coding in the ai age."
+    },
+    {
+     "source": "buttondown-llms-are-bad-at-vibing-specifications",
+     "title": "LLMs are bad at vibing specifications",
+     "channel": "buttondown.com",
+     "kind": "post",
+     "href": "https://buttondown.com/hillelwayne/archive/llms-are-bad-at-vibing-specifications/",
+     "stance": "asserts",
+     "quote": "If you need to know formal methods to get the LLM to do formal methods, is that really helping?",
+     "context": "expert specifier, meaning he can get more out of an llm than an ordinary developer can. i've also noticed that i can usually coax an llm to do more interesting things than most of my clients can. which is good for my current livelihood, but bad for the hope of llms making formal methods mainstream. if you need to know formal methods to get the llm to do formal methods, is that really helping? (yes, if it lowers the skill threshold-- means you can apply fm with 20 hours of practice instead of 80. but the jury's still out on how much it lowers the threshold. what if it only lowers it from 80 to 75?) on the other hand, there also seem to be some properties that ai struggles with, even with"
+    },
+    {
+     "source": "htmx-yes-and",
+     "title": "</> htmx ~ Yes, and...",
+     "channel": "htmx.org",
+     "kind": "post",
+     "href": "https://htmx.org/essays/yes-and/",
+     "stance": "asserts",
+     "quote": "Senior programmers who already have a lot of experience from the pre-AI era are in a good spot to use LLMs effectively",
+     "context": "e the code. ## using llms effectively another skill that seems likely to increase in value (obviously) is knowing how to use llms effectively. i think that currently we are still in the process of figuring out what that means. i also think that what this means varies by experience level. ## seniors senior programmers who already have a lot of experience from the pre-ai era are in a good spot to use llms effectively: they know what \"good\" code looks like, they have experience with building larger systems and know what matters and what doesn't. the danger with senior programmers is that they stop programming entirely and start suffering from brain rot. particularly dangerous is firing off prompts and then getti"
+    },
+    {
+     "source": "l7JaE04t-ik",
+     "title": "AI Will Replace Software Engineers? Here’s What’s Actually Happening",
+     "channel": "Chris Schwenk | Tech Jobber",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=l7JaE04t-ik",
+     "stance": "asserts",
+     "quote": "For someone with no experience, AI gives you a toy ... for someone with real experience, AI is a rocket strapped to their back",
+     "context": "(quote not located) guys, so in the entire history of employment, no dying profession has ever seen its wages actually go up. typists didn't get raises when the computer showed up, neither did switchboard operators. salaries are the market's honest opinions of the job. so, here's a question. if you truly believed ai wa"
+    },
+    {
+     "source": "lf57tKke_XA",
+     "title": "12 Months of Unity Dev with Claude Code",
+     "channel": "Mythmatic",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=lf57tKke_XA",
+     "stance": "denies",
+     "quote": "So in my case if I'm starting at almost near zero and it bumps me into average code the multiplier is insane.",
+     "context": " an artist wouldn't jump into and this is a discussion that i've seen some very experienced developers talk about and it's always fascinating because i'm going to make some guesses here as an artist and if i'm wrong please correct me in the comments. i i'm making some guesses here educated guesses. so in my case if i'm starting at almost near zero and it bumps me into average code the multiplier is insane. i find that most games are perfectly fine with average code. look at any game if the game was actually outsourced to be made the code base is very likely to be average. they were making sacrifices with in quality for optimizing for cost but i think my game can definitely be fully functional being v"
+    },
+    {
+     "source": "newsletter-getdx-how-much-does-ai-impact-development-speed",
+     "title": "How much does AI impact development speed?",
+     "channel": "newsletter.getdx.com",
+     "kind": "post",
+     "href": "https://newsletter.getdx.com/p/how-much-does-ai-impact-development-speed",
+     "stance": "denies",
+     "quote": "More senior developers were faster overall, but they didn’t disproportionately benefit from AI.",
+     "context": "e the relationship between productivity gains and seniority. they also asked developers to self-report on their experience with ai usage prior to the study. contrary to some earlier studies, the researchers found that neither seniority nor frequency of ai tool use significantly impacted task speed. more senior developers were faster overall, but they didn't disproportionately benefit from ai. similarly, developers who had frequently used ai tools in the past didn't complete tasks significantly faster than those with less prior experience. ## final thoughts there's still much to learn about how ai impacts different aspects of developer productivity. this study contributes to that convers"
+    },
+    {
+     "source": "og8uWg6XwDY",
+     "title": "AI Isn't Replacing Developers - Here's Why",
+     "channel": "Stefan Mischook",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=og8uWg6XwDY",
+     "stance": "asserts",
+     "quote": "It's a power tool for competent users",
+     "context": "this is going to take time to play out, a few years, right? we're already a few years into it. we're still figuring out. you you see how ai is deployed and used. they've had some major mistakes where big companies have fired everybody and then they found out the ai is woof. ai is not a replacement. it's a power tool for competent users. so, when you're getting specifically into software development, you got to learn the foundations. i would say learn one or two languages. my top two choices are python and javascript, although any language doesn't really matter. the key is understanding how to read and write code, understanding cl"
+    },
+    {
+     "source": "qomQa_71P30",
+     "title": "AI Coding and Technical Debt",
+     "channel": "NT Productions",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=qomQa_71P30",
+     "stance": "asserts",
+     "quote": "If you're an experienced coder ... you're probably going to have a lot less technical debt",
+     "context": "(quote not located) hello everyone and welcome to today's video. today i'm going to be talking about ai coding and technical debt. this was suggested in one of my previous videos and is actually a very valid concept to talk about. obviously a lot more people are coding with ai these days. many of them have no experienc"
+    },
+    {
+     "source": "rCIZflYEpEk",
+     "title": "Coding with AI episode 3: fixing a real world bug in Redis vector sets with LLMs",
+     "channel": "Salvatore Sanfilippo",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=rCIZflYEpEk",
+     "stance": "asserts",
+     "quote": "if I was less experienced at working with LLMs, I could just drop the implementation here",
+     "context": "ushed my implementation and my patch. look at this - i stress this in every video i make about coding with ai - it's very important to provide as fast as possible the right context. so the stack trace i got from redis, the full implementation, what is the difference compared to the old one. because if i was less experienced at working with llms, i could just drop the implementation here saying \"it crashes, let's check what it is.\" however, here i'm providing the code and it has the version, the difference, so it knows the version of the code when it was correct and the version of the code modified with the bug. i very politely asked: \"i modified my hnsw implementation to factor th"
+    },
+    {
+     "source": "u-3IILWQPRM",
+     "title": "How AI is changing software engineering at Shopify with Farhan Thawar",
+     "channel": "The Pragmatic Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=u-3IILWQPRM",
+     "stance": "asserts",
+     "quote": "the AI agents are going to help the best engineers more than the mediocre engineer",
+     "context": "is that these phones actually benefited the experts more meaning the camera like bas you know like the being able to pull out your iphone and take a take a video actually benefited those who were really really good at it already and the same thing is maybe potentially true of vibe coding. it's like the ai agents are going to help the best engineers more than the mediocre engineer. mhm. so there was a memo that went around in the media about a month ago. toby sent uh a memo. it was meant for internal consumption. it was about reflexive ai usage and it got i guess it got leaked and then toby posted the whole thing. and this is about saying that hey everyone is expected to use"
+    },
+    {
+     "source": "uRuLgar5XZw",
+     "title": "AI tools for software engineers, but without the hype – with Simon Willison (Co-Creator of Django)",
+     "channel": "The Pragmatic Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=uRuLgar5XZw",
+     "stance": "asserts",
+     "quote": "when I combine it with these tools I will run circles around somebody who's never written a code line of code in their life",
+     "context": "ia than most other people and now you've got this machine that comes along and it's better at the trivia than i am i feel like there's a pessimistic in an optimistic way the optimistic version i can use these tools better than anyone else for programming i can take my existing program knowledge and when i combine it with these tools i will run circles around somebody who's never written a code line of code in their life i can just do the step better welcome to the pragmatic engineering podcast in this show we cover software engineering at big tech and startups from the inside you'll get deep tipes with experienced engineers and tech professionals who share their hard-earned lessons interesting stories and practica"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770",
+     "doc": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+     "by": "Microsoft/Accenture field RCTs",
+     "verdict": "wrong",
+     "confidence": 0.5,
+     "note": "Microsoft experiment: short-tenure developers raised output 27-39% and juniors 21-40%, versus 8-13% for long-tenure and 7-16% for seniors (directionally consistent, mostly not significant), the opposite of AI amplifying experienced engineers more.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/4859137.txt#L872-L878",
+     "doc": "ai-coding/sources/4859137.txt",
+     "by": "Shan et al. field study + RCT",
+     "verdict": "wrong",
+     "confidence": 0.45,
+     "note": "Moderation analysis in the 253-developer RCT: developers with fewer years of experience got the speed benefit and quality was unaffected, so gains concentrated among less-skilled coders, not experienced ones (easy tasks, ChatGPT-3.5 chat, appendix result).",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2302.06590.txt#L221-L225",
+     "doc": "ai-coding/sources/2302.06590.txt",
+     "by": "Copilot RCT (Peng)",
+     "verdict": "wrong",
+     "confidence": 0.4,
+     "note": "Copilot RCT heterogeneity analysis: developers with less programming experience benefited more, which the authors highlight as promise for novices (small sample, noisy estimates).",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L556-L569",
+     "doc": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt",
+     "by": "Code-ownership experiment (Martin-Lopez)",
+     "verdict": "wrong",
+     "confidence": 0.25,
+     "note": "Every group, BSc students included, gained significantly in completeness, and the authors say differences between groups were not related to experience. Professionals gained the most, but they had different tasks, and position is confounded with task and language.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L135-L141",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "wrong",
+     "confidence": 0.6,
+     "note": "METR 2025 cites prior work finding that AI benefits less-experienced workers more; in its own RCT, highly experienced developers were slowed down, and more so on tasks where they had high prior exposure.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "review",
+     "why": "METR's own trial had only experienced developers; the comparison with novices comes from prior work it cites",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2410.12944.txt#L490-L505",
+     "doc": "ai-coding/sources/2410.12944.txt",
+     "by": "Google RCT",
+     "verdict": "partly",
+     "confidence": 0.3,
+     "note": "Google RCT: more senior engineers and those coding 5+ hours/day were faster with AI, but the AI x seniority (p=0.706) and AI x hours interactions were not significant, so 'far more' is unsupported.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L75-L75",
+     "doc": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+     "by": "Anthropic internal study",
+     "verdict": "partly",
+     "confidence": 0.3,
+     "note": "Anthropic: experience is needed to spot subtly dangerous Claude proposals, yet a senior engineer says the tools make juniors 'more productive and more bold', so the gain isn't clearly skewed to seniors.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "The evidence does not support \"AI coding tools amplify experienced engineers far more than novices\"",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "METR 2025 RCT: METR 2025 cites prior work finding that AI benefits less-experienced workers more; in its own RCT, highly experienced developers were slowed down, and more so on tasks where they had high prior exposure. [partial: METR's own trial had only experienced developers; the comparison with novices comes from prior work it cites]",
+     "Google RCT: Google RCT: more senior engineers and those coding 5+ hours/day were faster with AI, but the AI x seniority (p=0.706) and AI x hours interactions were not significant, so 'far more' is unsupported.",
+     "Anthropic internal study: Anthropic: experience is needed to spot subtly dangerous Claude proposals, yet a senior engineer says the tools make juniors 'more productive and more bold', so the gain isn't clearly skewed to seniors."
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/productivity-gains-concentrate-among-developers-new",
+   "text": "AI productivity gains concentrate among developers new to a codebase and on routine, well-trodden code",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.6,
+   "decidedBy": "METR 2025 RCT",
+   "lean": "calibrating",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.6,
+    "note": "Field experiments (Microsoft/Accenture RCTs, Brynjolfsson) found the largest gains for less-experienced or less-familiar workers and routine tasks; METR found slowdowns for deep-familiarity experts."
+   },
+   "statements": [
+    {
+     "source": "9xoqlstC-W0",
+     "title": "AI Make Developers More Productive? Data from a 100k Engineer Stanford Study | Yegor Denisov",
+     "channel": "Toronto Machine Learning Society (TMLS)",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=9xoqlstC-W0",
+     "stance": "asserts",
+     "quote": "these participants were just deeply familiar with the repos ... which is where AI helps a bit less",
+     "context": "(quote not located) [music] all right. so, this is going to be one of the, let's call it, less technical talks of this conference, but hopefully equally as engaging. earlier this year, some tech ceos made some really bold predictions. zuck said that he was going to replace his mid-level engineers with ai by the end of "
+    },
+    {
+     "source": "RhfqQKe22ZA",
+     "title": "Why Agent Hype can fall short of reality – Joel Becker, METR",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=RhfqQKe22ZA",
+     "stance": "asserts",
+     "quote": "these developers are coming to these problems already knowing the solution",
+     "context": "at seems like an obvious one. you know, the developers even after the study is completed, they think that um uh that ai is going to be helpful to their work. it's it makes sense they might overuse ai um on that basis. um two more implicit repository context and high developer familiarity. you know, these developers are coming to these problems already knowing the solution to the problem. they don't they don't um they're so expert in this work. you know, i i i imagine them as as not trying to spend a bunch of time thinking through the solution that the the ai can can work through. instead, they're just limited by how fast they can type. um, which which means that, yo"
+    },
+    {
+     "source": "fuRmxFZ-umE",
+     "title": "AI Safety (CS 2881) Lecture 7: Lab vs Field: Guest lecture by Joel Becker",
+     "channel": "Boaz Barak",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=fuRmxFZ-umE",
+     "stance": "asserts",
+     "quote": "It seems totally plausible to me that by the channel that you're pointing at um junior developers will be will be sped up more.",
+     "context": "e positive estimates of ai speed up. i'm i'm slightly skeptical of of many papers in this in this literature for um for for some for some different reasons that that we can go over, but they are among other things using more junior developers and seeing these seeing these productivity improvements. it seems totally plausible to me that by the channel that you're pointing at um junior developers will be will be sped up more. >> there was another question somewhere. yeah. >> um what model were they given any advice on like what model to use in cursor or was this part of like the timing the cursor would like auto route uh to different models or >> um so we we have some data from the video recordings of what models they'r"
+    },
+    {
+     "source": "haWve-6WgW4",
+     "title": "The METR Paradox. Why AI Made Senior Devs 19% Slower",
+     "channel": "Macro Lens",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=haWve-6WgW4",
+     "stance": "asserts",
+     "quote": "New engineers in code bases they do not know yet. And routine code",
+     "context": "neer then spends 30 minutes explaining to themselves why the ai was wrong and deciding whether to revert it. that cost does not appear in a benchmark. it appears in a stopwatch. here is what the productivity narrative was actually measuring. ai delivers real documentable gains in exactly two cases. new engineers in code bases they do not know yet. and routine code, crud, boilerplate, form validation, tasks that training data has already seen 10 million times. both of those populations exist. both of those gains are real. meter is not disputing that. meter is the receipt that says those gains were never the senior engineer in their own code base. and that is "
+    },
+    {
+     "source": "j-ZEhEiHzjg",
+     "title": "Is AI making devs SLOWER? Yes, according to this study...",
+     "channel": "Native Notify",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=j-ZEhEiHzjg",
+     "stance": "asserts",
+     "quote": "26.08% increase in completed tasks ... specifically if they're less experienced developers",
+     "context": "(quote not located) is ai actually slowing down developers? there is a new meter study out claiming that experienced coders finish their work 19% slower even though they felt like they were finishing their work 20% faster using ai tools. meter, which is short for model evaluation and threat research, ran the first real"
+    },
+    {
+     "source": "jadarma-github-does-github-copilot-improve-code-quality-heres-how-we-lie-with-st",
+     "title": "Does GitHub Copilot Improve Code Quality? Here",
+     "channel": "Jadarma",
+     "kind": "post",
+     "href": "https://jadarma.github.io/blog/posts/2024/11/does-github-copilot-improve-code-quality-heres-how-we-lie-with-statistics/",
+     "stance": "asserts",
+     "quote": "improvements were observed in the place we'd most expect.",
+     "context": "ess is a worryingly large proportion of your jira backlog lol). and hey, let's be fair, that's what they want to automate with ai, the boring stuff, so we can do the cool stuff. right? although it's not as honest to draw the conclusion that ai improves your code in general, without mentioning these improvements were observed in the place we'd most expect. an api is a pretty complex thing when you consider all the different components you need to wire together! yes, it is extremely complicated when you actually do complex stuff; not the case here, later in the methodology section they elaborate: each group completed a coding exercise for a web server"
+    },
+    {
+     "source": "k1t2xyWMUdY",
+     "title": "How METR measures Long Tasks and Experienced Open Source Dev Productivity - Joel Becker, METR",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=k1t2xyWMUdY",
+     "stance": "asserts",
+     "quote": "some of the repos that I was helped the most with were ones that I was completely unfamiliar with",
+     "context": " bit different from like in an enterprise settings where things survive cuz they make money even if they're a pain to develop on. right? so the the context is a bit different. these are the the repos running. yeah. it's interesting. >> yeah, that that is a really interesting point cuz like actually some of the repos that i was helped the most with were ones that i was completely unfamiliar with and which had no decent documentation of any kind and where like i i had to come in on this legacy code base that had existed for years and like make a change and and like the developer who owned it was like only partially available to answer questions to me. and so in that case like quad coach was"
+    },
+    {
+     "source": "seangoedecke-impact-of-ai-study",
+     "title": "METR's AI productivity study is really good",
+     "channel": "seangoedecke.com",
+     "kind": "post",
+     "href": "https://www.seangoedecke.com/impact-of-ai-study/",
+     "stance": "asserts",
+     "quote": "the real niche of AI is when developers have to do tasks that are a little out of their comfort zone.",
+     "context": "study focused on developers doing work in open-source repositories that they've got an average of five years and 1,500 commits of experience with. these people are going to be very fast at doing normal issues on their own - it's possible that there's just not much room for ai to help here, and that the real niche of ai is when developers have to do tasks that are a little out of their comfort zone. third, the repositories in question are large, with a lot of implicit rules. ai isn't at its best in this environment. it might have done better in smaller projects. ## why i think ai wasn't faster of the authors' theories, i think the second hypothesis is most convincing. i use ai a lot in my own "
+    },
+    {
+     "source": "simonwillison-ai-open-source-productivity",
+     "title": "Measuring the Impact of Early-2025 AI on Experienced Open-Source Developer Productivity",
+     "channel": "Simon Willison’s Weblog",
+     "kind": "post",
+     "href": "https://simonwillison.net/2025/Jul/12/ai-open-source-productivity/",
+     "stance": "asserts",
+     "quote": "these developers were all working in repositories they have a deep understanding of already",
+     "context": "). here's their table of the most likely factors: i think nate's right that jumping straight to a conclusion about a single factor is a shallow and unproductive way to think about this report. that said, i can't resist the temptation to do exactly that! the factor that stands out most to me is that these developers were all working in repositories they have a deep understanding of already, presumably on non-trivial issues since any trivial issues are likely to have been resolved in the past. i think this is a really interesting paper. measuring developer productivity is notoriously difficult. i hope this paper inspires more work with a similar level of detail to analyzing how profes"
+    },
+    {
+     "source": "u-oOcKbgw0w",
+     "title": "Does AI Secretly Slow Developers Down?",
+     "channel": "The AI Daily Brief: Artificial Intelligence News",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=u-oOcKbgw0w",
+     "stance": "asserts",
+     "quote": "Expert developers working in large code bases is known to be the setting where AI can help least",
+     "context": "e authors wrote, \"we find evidence that the high developer familiarity with repositories and the size and maturity of the repositories both contributed to the observed slowdown and these factors do not apply in many software development settings.\" fellow ai podcaster nathan leb put it more simply, \"expert developers working in large code bases is known to be the setting where ai can help least.\" both of these factors matter. the fact that they're working in large code bases and that they are experts in those code bases is, as nathan points out, something of a mismatched use case for some of these ai coding tools, which does not mean at all, by the way, that it's not valuable to study the"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L960-L984",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "right",
+     "confidence": 0.6,
+     "note": "Slowdown is larger when developers have high prior task exposure. Developers report AI helps on unfamiliar issues and not where they're experts, and the paper expects speedups in unfamiliar or greenfield settings.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2410.12944.txt#L490-L505",
+     "doc": "ai-coding/sources/2410.12944.txt",
+     "by": "Google RCT",
+     "verdict": "wrong",
+     "confidence": 0.25,
+     "note": "Google RCT on code unfamiliar to all participants found, if anything, more senior engineers gained more from AI (non-significant interaction), contrary to gains concentrating among less experienced developers.",
+     "role": "contradicts",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770",
+     "doc": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+     "by": "Microsoft/Accenture field RCTs",
+     "verdict": "partly",
+     "confidence": 0.45,
+     "note": "Microsoft experiment: gains were larger for short-tenure (newer to the company and its code) and junior developers (27-39% vs 8-13%), but differences were not significant and the routine-code half of the claim was not tested.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2302.06590.txt#L174-L177",
+     "doc": "ai-coding/sources/2302.06590.txt",
+     "by": "Copilot RCT (Peng)",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "Copilot RCT: less experienced developers benefited more on a routine, well-trodden task (a basic HTTP server), consistent with the claim but from a small freelancer sample and without a codebase-familiarity test.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L70-L70",
+     "doc": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+     "by": "Anthropic internal study",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "Anthropic: staff delegate where they have low context and complexity is low, and avoid tasks needing tacit codebase knowledge, which mirrors METR's slowdown factors; this concerns task choice rather than measured gains.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"rather than\")",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/4859137.txt#L872-L878",
+     "doc": "ai-coding/sources/4859137.txt",
+     "by": "Shan et al. field study + RCT",
+     "verdict": "partly",
+     "confidence": 0.35,
+     "note": "Less-experienced developers gained more speed in the RCT, consistent with the claim, but a follow-up on harder APPS tasks suggested quantity gains were larger on complex tasks (0.283 vs 0.245), which does not fit 'routine code only'.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L240-L247",
+     "doc": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt",
+     "by": "Code-ownership experiment (Martin-Lopez)",
+     "verdict": "partly",
+     "confidence": 0.3,
+     "note": "Large completeness gains (+43 points) came on small, popular-domain tasks chosen so that LLMs could help, many of them greenfield. This fits gains on routine code, but the study had no mature codebases to compare against.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "AI productivity gains concentrate among developers new to a codebase and on routine, well-trodden code",
+    "status": "disputed",
+    "decision": "qualify",
+    "limitations": [
+     "Contradicted by Google RCT: Google RCT on code unfamiliar to all participants found, if anything, more senior engineers gained more from AI (non-significant interaction), contrary to gains concentrating among less experienced developers."
+    ],
+    "suggestions": [
+     "Present the disagreement: name the studies on each side instead of stating one side as fact."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/getting-good-results-coding-tools-takes",
+   "text": "Getting good results from AI coding tools takes significant skill, so outcomes vary widely with user expertise",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.5,
+   "decidedBy": "Echoes of AI maintainability RCT",
+   "lean": "neutral",
+   "role": "evidence",
+   "guess": {
+    "verdict": "partly",
+    "confidence": 0.55,
+    "note": "Practitioner reports and field studies suggest usage skill matters, but METR found no clear learning-curve effect and the basics are learned quickly."
+   },
+   "statements": [
+    {
+     "source": "MrfiUMm2Qxk",
+     "title": "Broken AI Discourse with Steve Klabnik",
+     "channel": "Software Unscripted Podcast",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=MrfiUMm2Qxk",
+     "stance": "asserts",
+     "quote": "I feel like there's a big to use gamer terms as a high skill ceiling basically",
+     "context": "need to like curate things. you need to pay attention to stuff. you need to like figure out if it's you or if it's it. like you know, could you be doing prompting in a better way? more general, less general, more context, less context. like all that stuff is like it's a lot of variabilities. and so i feel like there's a big to use gamer terms as a high skill ceiling basically. yeah. yeah. uh and you got to put in effort like and to like to bring the conversation full circle it's like that's why it's so frustrating that the discourse is so busted is that there's so much to talk about that like doesn't need to be heated that can just be like hey like where do these tools "
+    },
+    {
+     "source": "colton-curing-your-ai-10x-engineer-imposter-syndrome",
+     "title": "No, AI is not Making Engineers 10x as Productive",
+     "channel": "colton.dev",
+     "kind": "post",
+     "href": "https://colton.dev/blog/curing-your-ai-10x-engineer-imposter-syndrome/",
+     "stance": "denies",
+     "quote": "Using AI to code is not hard to learn.",
+     "context": "me they fail. thus, ai's best use case for me remains writing one-off scripts. especially when i have no interest in learning deeper fundamentals for a single script, like when writing a custom eslint rule. dark warnings that if i didn't start using ai now i'd be hopelessly behind proved unfounded. using ai to code is not hard to learn. obviously? well, the ai coding community seems split on whether ai makes coding so easy a caveman can do it or that it requires an advanced, dedicated prompt engineer skillset. there are a few things you need to learn but they come quickly. you learn how to split up tasks into smaller pieces so the"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2507.00788.txt#L2541-L2551",
+     "doc": "ai-coding/sources/2507.00788.txt",
+     "by": "Echoes of AI maintainability RCT",
+     "verdict": "right",
+     "confidence": 0.5,
+     "note": "Bayesian analysis: the more AI-skilled the original developer, the larger the downstream CodeHealth benefit (+0.10, about half an SD, for habitual users). The authors conclude developers vary in their ability to use AI well, though Java proficiency mattered even more.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"though\")",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2410.12944.txt#L522-L543",
+     "doc": "ai-coding/sources/2410.12944.txt",
+     "by": "Google RCT",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "Google RCT, 96 engineers: senior and heavy-coding developers were tentatively faster with AI and natural-language-to-code needs prompting skill, but how often people already used AI tools had no significant effect on their AI speed-up, so the authors point to a 'low usability floor'.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L40",
+     "doc": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+     "by": "Anthropic internal study",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "Anthropic survey (n=132): time-savings responses cluster at opposite ends, with some spending more time debugging AI code; authors attribute gains to learned 'strategic delegation skills' and task choice, supporting wide variation by user practice.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/4859137.txt#L1037-L1064",
+     "doc": "ai-coding/sources/4859137.txt",
+     "by": "Shan et al. field study + RCT",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "Results depended on how developers used ChatGPT: direct acceptance raised output but not accuracy, while ideation, improvement and debugging raised accuracy, and debugging lowered output. Outcomes vary with usage style, but usage was self-chosen, so the evidence is correlational.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L1217-L1234",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "partly",
+     "confidence": 0.35,
+     "note": "METR RCT: speedup did not improve over the first 50 hours of Cursor use, and the lone >50h developer's speedup (~25%) fell to ~0% once a second developer's misreported experience was corrected. The 'high skill ceiling' idea is plausible but underpowered.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770",
+     "doc": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+     "by": "Microsoft/Accenture field RCTs",
+     "verdict": "partly",
+     "confidence": 0.35,
+     "note": "Field RCTs, ~4,900 developers: Copilot gains varied with experience, but in the opposite direction from 'skill needed'. Short-tenure and junior developers gained 21-40% while senior and long-tenure developers gained 7-16% (noisy, not significant).",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2607.21652v1.txt#L1518-L1526",
+     "doc": "ai-coding/sources/2607.21652v1.txt",
+     "by": "Vibe-coding literature review",
+     "verdict": "right",
+     "confidence": 0.3,
+     "note": "Vibe-coding MLR (47 sources, mention counts): quality, maintainability and productivity outcomes are described as conditional on developer expertise, task complexity and verification practice, and outcome claims vary substantially by user expertise.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "review",
+     "why": "mention counts across sources, not a measurement of outcome variance by expertise",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L828-L835",
+     "doc": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt",
+     "by": "Code-ownership experiment (Martin-Lopez)",
+     "verdict": "unknown",
+     "confidence": null,
+     "note": "Gains appeared in every experience group, but the authors state they cannot separate experience effects from task and language effects, so the study cannot say whether outcomes depend on user expertise.",
+     "role": "context",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "Getting good results from AI coding tools takes significant skill, so outcomes vary widely with user expertise",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "Echoes of AI maintainability RCT: Bayesian analysis: the more AI-skilled the original developer, the larger the downstream CodeHealth benefit (+0.10, about half an SD, for habitual users). The authors conclude developers vary in their ability to use AI well, though Java proficiency mattered even more. [partial: the verdict note limits its own scope (\"though\")]",
+     "Google RCT: Google RCT, 96 engineers: senior and heavy-coding developers were tentatively faster with AI and natural-language-to-code needs prompting skill, but how often people already used AI tools had no significant effect on their AI speed-up, so the authors point to a 'low usability floor'.",
+     "Anthropic internal study: Anthropic survey (n=132): time-savings responses cluster at opposite ends, with some spending more time debugging AI code; authors attribute gains to learned 'strategic delegation skills' and task choice, supporting wide variation by user practice.",
+     "Shan et al. field study + RCT: Results depended on how developers used ChatGPT: direct acceptance raised output but not accuracy, while ideation, improvement and debugging raised accuracy, and debugging lowered output. Outcomes vary with usage style, but usage was self-chosen, so the evidence is correlational.",
+     "METR 2025 RCT: METR RCT: speedup did not improve over the first 50 hours of Cursor use, and the lone >50h developer's speedup (~25%) fell to ~0% once a second developer's misreported experience was corrected. The 'high skill ceiling' idea is plausible but underpowered.",
+     "Microsoft/Accenture field RCTs: Field RCTs, ~4,900 developers: Copilot gains varied with experience, but in the opposite direction from 'skill needed'. Short-tenure and junior developers gained 21-40% while senior and long-tenure developers gained 7-16% (noisy, not significant).",
+     "Vibe-coding literature review: Vibe-coding MLR (47 sources, mention counts): quality, maintainability and productivity outcomes are described as conditional on developer expertise, task complexity and verification practice, and outcome claims vary substantially by user expertise. [partial: mention counts across sources, not a measurement of outcome variance by expertise]"
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/assistance-must-reliable-save-experts-time",
+   "text": "AI assistance must be very reliable to save experts time, because checking and fixing its output is costly",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.6,
+   "decidedBy": "METR 2025 RCT",
+   "lean": "calibrating",
+   "role": "evidence",
+   "guess": {
+    "verdict": "partly",
+    "confidence": 0.5,
+    "note": "A reasonable explanation consistent with METR's 44% acceptance and review overhead; the specific threshold is conjecture."
+   },
+   "statements": [
+    {
+     "source": "EO3_qN_Ynsk",
+     "title": "Software engineering with LLMs in 2025: reality check (at LDX3 by LeadDev)",
+     "channel": "The Pragmatic Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=EO3_qN_Ynsk",
+     "stance": "asserts",
+     "quote": "It's still faster for us to write the correct code than to review the LM code",
+     "context": "ins. they've been founded three years ago. uh they have a team of about 50 to 100 people. they have a lot of automated numerical pipelines built on kubernetes. they're using python, huns, and so on. and an engineer told me this. we've experimented with several llms, but none of it has really stuck. it's still faster for us to write the correct code than to review the lm code that that will and have fixed all those problems. and even this is even using the latest models, even using like solid 3.7 or or maybe even solomon 4. given the hyperlms, i think we might just be in a weird niche. and this is why this engine didn't want to give their name to to this. they're like, "
+    },
+    {
+     "source": "RhfqQKe22ZA",
+     "title": "Why Agent Hype can fall short of reality – Joel Becker, METR",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=RhfqQKe22ZA",
+     "stance": "asserts",
+     "quote": "reliability needs to be very high to save time ... something like 95 99% of the time",
+     "context": "(quote not located) [music] hey guys, thank you so much for having me. my name is joel becker. i work as a researcher or member of technical staff at met, which stands for model evaluation and threat research. as we'll see in a second, i'm going to be talking about ai capabilities. how do we know how performant ais are"
+    },
+    {
+     "source": "Sf9vENm2GnE",
+     "title": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
+     "channel": "Stanford Digital Economy Lab",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=Sf9vENm2GnE",
+     "stance": "asserts",
+     "quote": "maybe you need 99% reliability at the one hour um time horizon to get uh to get speed up on on task an hour",
+     "context": "it can complete 100% of the time and 50% it can complete 0% of the time rather than for all of these tasks of some length maybe an hour it completes all of them uh 50% of the time. so so it's a little more complicated than it might seem at first flush but um that's that's one possibility. you know, maybe you need 99% reliability at the one hour um time horizon to get uh to get speed up on on task an hour, something like that. y >> they're very familiar with the repositories. had they been working with cursor? it was mostly cursor, right? have they been working has some have been working with it before or was it it was new to all of them or or what was their level of familiarity with the tool? >> ye"
+    },
+    {
+     "source": "fuRmxFZ-umE",
+     "title": "AI Safety (CS 2881) Lecture 7: Lab vs Field: Guest lecture by Joel Becker",
+     "channel": "Boaz Barak",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=fuRmxFZ-umE",
+     "stance": "asserts",
+     "quote": "you both need to verify whether they're right or wrong, and then if they're wrong, you need to redo the work.",
+     "context": "esting that um ais do do worse in sort of larger environments by lines of code or numbers of files or or something like that. and these repositories are just enormous. um the ais are not so reliable. they're often making sort of directionally correct suggestions, but then given they might be wrong, you both need to verify whether they're right or wrong, and then if they're wrong, you need to redo the work. that that obviously comes with a time cost. um and um and i'll skip over to the next one. okay, here are some factors with unclear effect. i'll skip over most of these except to talk about or or to at least touch on below average use of ai tools. this came up um a lot in the public conversation aro"
+    },
+    {
+     "source": "k1t2xyWMUdY",
+     "title": "How METR measures Long Tasks and Experienced Open Source Dev Productivity - Joel Becker, METR",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=k1t2xyWMUdY",
+     "stance": "asserts",
+     "quote": "the humans not only need to spend expensive time verifying, but also like clean up clean up all the stuff.",
+     "context": "s of like you know, how they've tried to solve the problem and you know, whether that's the typical way of solving the problem or like how various parts of the project speak to one another. these these kind of considerations, you know, they they haven't properly accounted for that. and so you know, the humans not only need to spend expensive time verifying, but also like clean up clean up all the stuff. and my sense is that someone who didn't have all that experience like basically wouldn't know how to do that step. and so wouldn't be able to submit a clean pr to these repositories. you know, that's that's it. like i relative to these people at least, i suck at software development. [laughter] and"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L1004-L1012",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "right",
+     "confidence": 0.6,
+     "note": "Developers accepted under 44% of Cursor generations and lost significant time reviewing, testing and modifying output before rejecting it. Low reliability is listed as a cause of the slowdown.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69",
+     "doc": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+     "by": "Anthropic internal study",
+     "verdict": "partly",
+     "confidence": 0.35,
+     "note": "Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2607.21652v1.txt#L1454-L1458",
+     "doc": "ai-coding/sources/2607.21652v1.txt",
+     "by": "Vibe-coding literature review",
+     "verdict": "partly",
+     "confidence": 0.25,
+     "note": "Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "AI assistance must be very reliable to save experts time, because checking and fixing its output is costly",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "Anthropic internal study: Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+     "Vibe-coding literature review: Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting."
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/speeds-generation-human-attention-review-understanding",
+   "text": "As AI speeds up generation, human attention for review and understanding becomes the bottleneck",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.55,
+   "decidedBy": "Google migrations report",
+   "lean": "neutral",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.65,
+    "note": "DORA and field reports show review and verification load growing with AI output, consistent with instability and persistent-debt findings."
+   },
+   "statements": [
+    {
+     "source": "M0--ZH1lOzg",
+     "title": "ICM 2026 Public Lectures - Terence Tao",
+     "channel": "Simons Foundation",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=M0--ZH1lOzg",
+     "stance": "asserts",
+     "quote": "proof review is now one of the most precious bottlenecks um scarce resources um in this new era.",
+     "context": "ow basically it's like if food was is scarce you will eat whatever is is delivered onto the table but um now we are flooded with proofs uh and more than more than we can we can review uh and we now have to pick and choose um and so we um we need to be convinced to uh to actually read proofs. now um proof review is now one of the most precious bottlenecks um scarce resources um in this new era. um now you can help you can induce people to uh to to read your work. um telling good stories helps having a narrative showing the process describing uh how you arrived at at at at a um at the result uh what didn't work and how how you went around it. uh people love stories. um we have in the past "
+    },
+    {
+     "source": "PkITOx9lIT8",
+     "title": "AI Makes Verifying the Bottleneck with Dave Farley @ModernSoftwareEngineeringYT",
+     "channel": "Aviator",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=PkITOx9lIT8",
+     "stance": "asserts",
+     "quote": "So, so verification becomes the bottleneck.",
+     "context": "velopment and acceptance test driven development using bdd is really important, it seems to me because then we can say we'd like to achieve this outcome. we don't really mind too much what the solution looks like underneath as long as it achieves the outcome and it continues to achieve the outcome. so, so verification becomes the bottleneck. so, i was talking to i i i had i had a great pleasure. i i'm going to name drop if you'll forgive me. >> go for it. >> i i i spoke to jean kim on my podcast and he invited me to pair programming with go pair programming with him. so so we did and it it was an absolute joy. but he was telling me abo"
+    },
+    {
+     "source": "Q81AzlA-VE8",
+     "title": "What We Learned Deploying AI within Bloomberg’s Engineering Organization – Lei Zhang, Bloomberg",
+     "channel": "AI Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=Q81AzlA-VE8",
+     "stance": "asserts",
+     "quote": "the average open pull requests increased and time to merge also increased",
+     "context": "ome detistic verification capability. uh oftentimes it's not so easy especially if you have test cases if you don't have good llinter if you don't have good verification the the patch can sometimes be uh uh difficult to to to be applied and uh one thing we also realized when we deploy ai tooling is the average open pull requests increased and time to merge also increased uh because you spin a lot of new code and then still we have to review the code and merge the code right so time to merge merge become a challenge sometimes and the last one is um i think it applies to any gen is the shift becomes what do we want to achieve rather than how we want to achieve right "
+    },
+    {
+     "source": "geoffreylitt-understanding-is-the-new-bottleneck",
+     "title": "Understanding is the new bottleneck",
+     "channel": "geoffreylitt.com",
+     "kind": "post",
+     "href": "https://www.geoffreylitt.com/2026/07/02/understanding-is-the-new-bottleneck",
+     "stance": "asserts",
+     "quote": "Agents are writing more and more code for us, and we all know it's getting harder to keep up.",
+     "context": "k i gave at the ai engineer conference in july 2026, also shared as a tweet thread. hot take: i think it's still important to understand the code that our agents write! in this talk i'll explain why that's the case, and show some ideas for how to efficiently understand code. alright, let's dive in. agents are writing more and more code for us, and we all know it's getting harder to keep up. but the good news is: there are many ways to understand code! reading diffs line by line is not the only way. most of this talk will be about techniques i have found helpful to understand systems my agents are building: - code explainer docs - quizzes to check my understanding - micro-worlds that i"
+    },
+    {
+     "source": "htmx-code-is-cheap",
+     "title": "</> htmx ~ Code is Cheap(er)",
+     "channel": "htmx.org",
+     "kind": "post",
+     "href": "https://htmx.org/essays/code-is-cheap/",
+     "stance": "asserts",
+     "quote": "the LLM can produce code far faster than you, or anyone else, can understand it.",
+     "context": "strained domain (machine code); llm output is not (generalized software) i maintain that, in most cases and certainly for mission-critical software, developers still need to understand the underlying code even if it is generated by an llm. and if code is generated by an llm there is a stark danger: the llm can produce code far faster than you, or anyone else, can understand it. this is why i recommend incremental use of llms rather than allowing them to generate massive changelists that neither you, nor anyone else, can understand. (there are times when this can be appropriate, such as in a mechanical refactor, but it is extremely dangerous when new semantics are being in"
+    },
+    {
+     "source": "rUYP4C29yCw",
+     "title": "Now more than ever: building reliable software in the age of agents | Ron Minsky | Bug Bash 2026",
+     "channel": "Antithesis",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=rUYP4C29yCw",
+     "stance": "asserts",
+     "quote": "the precious resource remains human attention.",
+     "context": "man achievement and productivity. and i think again, there's this super weird world where like no human cognitive effort of any kind is useful anymore, and like i i don't even know what to do in that world. but, in the world we have now, and i think the world we're going to see in the coming years, the precious resource remains human attention. right? what what can people do? how can they add to the process? and as such, we should be thinking about maximizing people's individual leverage, what they can do, what they can achieve, and and like the the building of tools should and the building of development processes should be focused aroun"
+    },
+    {
+     "source": "xyqim74uZtY",
+     "title": "Discussing the State of AI-assisted Software Development with DORA and EarnIn",
+     "channel": "Datadog Community",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=xyqim74uZtY",
+     "stance": "asserts",
+     "quote": "the real bottleneck isn't speed it's a confidence actually",
+     "context": "ing increasingly efficient right so that part i think we have covered the harder problem is ensuring that the code that is generated by ai aligns with the system expectations and quality standards and real world concerns right so that is the key part now so in that sense i'll try to keep this short the real bottleneck isn't speed it's a confidence actually that's how i'll put it here and give it to >> yeah that's really cool another thing that dora has been researching for a long time is this idea of user centric teams teams that are concerned with what are what are the goals of the users and are we able to deliver value to them and that really uh ki"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2501.06972.txt#L417-L423",
+     "doc": "ai-coding/sources/2501.06972.txt",
+     "by": "Google migrations report",
+     "verdict": "right",
+     "confidence": 0.55,
+     "note": "Google JUnit3->4 migration (5,359 files in 3 months): the bottleneck was how fast engineers could review, and change generation was deliberately throttled so reviewers were not overwhelmed.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2607.21652v1.txt#L1906-L1914",
+     "doc": "ai-coding/sources/2607.21652v1.txt",
+     "by": "Vibe-coding literature review",
+     "verdict": "right",
+     "confidence": 0.4,
+     "note": "The review's central synthesis is a 'verification gap': a mismatch between how fast AI workflows generate code and developers' capacity to verify it. This is an interpretive synthesis of mention-level evidence.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L736-L767",
+     "doc": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt",
+     "by": "Code-ownership experiment (Martin-Lopez)",
+     "verdict": "partly",
+     "confidence": 0.4,
+     "note": "AI users produced more, larger code but understood it less. Their median answering time was 3 min longer (+27%) and they switched back to the code more than twice as often, though the time effect was not robust. The authors suggest time saved may be offset later in the lifecycle.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"though\")",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "As AI speeds up generation, human attention for review and understanding becomes the bottleneck",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "Code-ownership experiment (Martin-Lopez): AI users produced more, larger code but understood it less. Their median answering time was 3 min longer (+27%) and they switched back to the code more than twice as often, though the time effect was not robust. The authors suggest time saved may be offset later in the lifecycle. [partial: the verdict note limits its own scope (\"though\")]"
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/developers-need-solid-programming-knowledge-validate",
+   "text": "Developers need solid programming knowledge to validate and correct AI-generated code",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.5,
+   "decidedBy": "Vibe-coding literature review",
+   "lean": "neutral",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.75,
+    "note": "Studies show novices accept incorrect AI code more often; verifying output requires domain and code literacy."
+   },
+   "statements": [
+    {
+     "source": "-G4H2DmhR28",
+     "title": "Can Agentic AI Develop Embedded Systems with Model-Based Design?",
+     "channel": "MATLAB",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=-G4H2DmhR28",
+     "stance": "asserts",
+     "quote": "this is something that Naren and I were able to verify was correct through our own expertise and understanding of the problem",
+     "context": ", it was able to do that more efficiently by using the linearization tools within simulink control design. and then the agent came back and helped us interpret the resulting linear model. it explained the four poles in the model and how each of those poles were typical for an inverted pendulum. and this is something that naren and i were able to verify was correct through our own expertise and understanding of the problem. all right, with a linear model, we now want to develop a controller. and in this case, we asked for a model predictive controller. and once again, i feel like i'm saying the same things over and over again, but here is where it doesn't make sense to have an agent invent an optimizer from scratch, "
+    },
+    {
+     "source": "3iRVNXCHcZk",
+     "title": "Aider Review — The Best AI Pair-Programmer in Your Terminal? (2025)",
+     "channel": "HMD Tech",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=3iRVNXCHcZk",
+     "stance": "asserts",
+     "quote": "You still need technical experience to review patches",
+     "context": "ght, and surprisingly natural, especially for developers who dislike bloated graphical tools. on the positive side, ader's transparency is a huge win. it shows every diff before applying changes, keeps your project local, and avoids the mystery box behavior of many ai editors, but it's not perfect. you still need technical experience to review patches, and the quality of code varies depending on the model you use. it's also less beginner friendly than gui based assistance. my final verdict, ader is one of the best ai pair programming tools for developers who love the terminal and want control, speed, and clarity. for more practical tech reviews,"
+    },
+    {
+     "source": "5tIvi1HuAUY",
+     "title": "AI Replaced 75% of Work for Software Engineers & Data Scientists - here's what's left",
+     "channel": "Sundas Khalid",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=5tIvi1HuAUY",
+     "stance": "asserts",
+     "quote": "in order to validate what AI is spitting out, you actually need to know if the code ... is correct",
+     "context": "(quote not located) or will ai replace the coding for software engineers and data scientists? i would say especially if you're a pm now, you actually don't need a software engineer to like build the first prototype. >> you can actually test it out real quick. >> yeah, you can test it out really quick and you can like b"
+    },
+    {
+     "source": "86UczUYjVQ0",
+     "title": "AI-Accelerated Development: Practical Applications for Embedded Systems Engineers (Christophe Conil)",
+     "channel": "BayLibre",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=86UczUYjVQ0",
+     "stance": "asserts",
+     "quote": "you definitely need an experienced software engineer in the back uh to be able to to create good code",
+     "context": " uh you still have the human knowledge and your human knowledge is 100% necessary if you rely on on on ai by itself. uh it will be good at some points but at some point it will be just bad and or misunderstand you or yeah try to yeah think on something new and hallucinate some new functions. and so you definitely need an experienced software engineer in the back uh to be able to to create good code. but i think it's yeah from my experience even complex code and i think uh i know a few people which also tried it out on kernel development and sometimes it can work. yes, i know. look at his face. have you tried it for reverse engineering? so you have some sorry do have you have somebody tried it"
+    },
+    {
+     "source": "9wF0n48k6JU",
+     "title": "Jensen Huang Said \"Stop Learning to Code\" — Then Hired 10,000 Developers",
+     "channel": "Olive Badger",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=9wF0n48k6JU",
+     "stance": "asserts",
+     "quote": "learn to code. Learn the fundamentals",
+     "context": " they still buy into the farce that ai can code and manage your infrastructure for you. so, it's a really tough time right now for software developers, but i feel a shift is coming and i feel like a lot of companies are going to regret the decisions that they made over the last couple of years. so, learn to code. learn the fundamentals. understand how systems work and then absolutely, it's okay to use ai tools to help make yourself more productive. and by that, what i mean is if i have a standard react ui component that has all of the same imports that i use in a bunch of other projects, has an a name convention, and you know, ha"
+    },
+    {
+     "source": "DgPr3HVp0eg",
+     "title": "SolveIt: The Thinking Developer's Environment w/Jeremy Howard & Johno Whitaker",
+     "channel": "Hamel Husain",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=DgPr3HVp0eg",
+     "stance": "asserts",
+     "quote": "any time an AI shows you a function library or an API you're not very familiar with you should stop",
+     "context": "et cetera et cetera but yeah just playing along right because otherwise if it's using a library function you're not familiar with you also won't know if it's using it the wrong way you won't need you don't know so we kind of have a bit of a rule of thumb at answer ai and also in the course which is any time an ai shows you a function library or an api you're not very familiar with you should stop and you should go and read the documentation for it you should then go back solveit and say oh i want to learn all about this and then you should try running a few different inputs see the outputs get solveit to help you understand the details and only then should you allow yourself to move on i th"
+    },
+    {
+     "source": "NRizG0tSGic",
+     "title": "Unpacking METR’s findings: Does AI slow developers down?",
+     "channel": "DX",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=NRizG0tSGic",
+     "stance": "asserts",
+     "quote": "what good code looks like makes it easier for me to realize when a model is producing, you know, bad code, bloated code",
+     "context": "final good kernel or a final good parallelism strategy like parallelism and distributed code is another one that models are really bad at. you almost need to being a good dev on whatever it is you're working on. knowing what a good gptox uh which was the repo i was working on um feature looks like, what good code looks like makes it easier for me to realize when a model is producing, you know, bad code, bloated code, code that will conflict with other parts of my own repo, which is requires my repo knowledge to recognize. and then in terms of like the human element, it's more am i fighting with this model for it to um or am i fighting more with the model or the problem is one way i could summarize it. if i'm t"
+    },
+    {
+     "source": "OfMAtaocvJw",
+     "title": "The third golden age of software engineering – thanks to AI, with Grady Booch",
+     "channel": "The Pragmatic Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=OfMAtaocvJw",
+     "stance": "asserts",
+     "quote": "I who know those fundamentals can begin nudging and cleaning out the pieces",
+     "context": "to be able to build executable artifacts? we call them programming languages. and it just so happens that english is a good enough programming language much like cobalt was in that if i give it those phrases in a domain that is well enough structured, it allows me to have good enough solutions that i who know those fundamentals can begin nudging and cleaning out the pieces. that's why the fundamentals are so important. and speaking of history rhyming, one thing that happened in both the first age and the the sec second golden age or as we jumped abstractions or every time we had an abstraction is some skills became obsolete and then there was a demand for for new ski"
+    },
+    {
+     "source": "QlsXxDXEXTY",
+     "title": "AI-Infused Development: Lessons Learned and Patterns from Esri Engineers",
+     "channel": "Esri Developers",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=QlsXxDXEXTY",
+     "stance": "asserts",
+     "quote": "how it can be risky to allow people new to teams to start using AI from day one without having the foundational knowledge",
+     "context": "code with this version. so you need to provide guidance and specify explicitly. please read this, keep it in memory these are the best practices to write code with this technology it's not only our code, the one that is being affected it's also us, i hear from a lot of people especially team leads, how it can be risky to allow people new to teams to start using ai from day one without having the foundational knowledge of the technology, because if you allow to do that, then it's going to be way more challenging for these developers to be able to properly review the code. they won't know all the nuances of the technology, so it's important for people to get that foundational knowledge. it's very important. when y"
+    },
+    {
+     "source": "VJU0rygO03A",
+     "title": "How Uber Uses AI to Move from Java to Kotlin",
+     "channel": "Kotlin by JetBrains",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=VJU0rygO03A",
+     "stance": "asserts",
+     "quote": "they still need the fundamentals because all the code that's being produced they need to be able to critique it properly",
+     "context": " the depth of all of this stuff and so if we do have a level of abstraction where our product folks aren't going as deep we'll still have you know the infra type of investments where they kind of have to understand that. so i think for new engineers that are learning today um in the short term it's they still need the fundamentals because all the code that's being produced they need to be able to critique it properly and have high quality that's represented for them but then i think it's figuring out that path that they want to go down like is that more product focusing they need to think about the bigger business and you know all the customers and everything else not just the code >> um or is it on the the dep"
+    },
+    {
+     "source": "XyQ4ZTS5dGw",
+     "title": "Agentic Engineering in Action with Mitchell Hashimoto",
+     "channel": "Zed Industries",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=XyQ4ZTS5dGw",
+     "stance": "asserts",
+     "quote": "still challenge yourself to understand how that works even if you're not going to write it",
+     "context": " think you got to keep up with it. and so my my advice to juniors would be like even though like especially for a lot of like cruddy apps like web apps and and a lot of javascript projects, python projects like ais are really good now at generating like really working applications. i would say like still challenge yourself to understand how that works even if you're not going to write it cuz uh that knowledge transfers to other projects to other languages to other environments and like i i don't know i just couldn't imagine working without that. i couldn't imagine just blindly trusting um and and sort of fully vibing my way through everything. yeah. yeah. same here. for sure. um wh"
+    },
+    {
+     "source": "YwVAutLjmxo",
+     "title": "AI Layoffs Don’t Add Up. Here’s the Data",
+     "channel": "HuMan Intelligence",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=YwVAutLjmxo",
+     "stance": "asserts",
+     "quote": "can you verify AI output? Can you apply domain expertise to catch when it's wrong?",
+     "context": "jobs. they don't exist. the frame isn't safe from ai versus at risk from ai. the frame is how do you work effectively with ai because that's the actual near-term future, not full replacement, augmented work, humans plus ai. so, the skills that matter aren't technical. they're judgment skills. like, can you verify ai output? can you apply domain expertise to catch when it's wrong? can you provide context ai doesn't have? can you make decisions when the answer isn't obvious? those are the skills companies will pay for. second, if you're in admin, finance, hr, customer service, basic marketing, uh roles in that hidden iceberg, it's really time to move up that value chain. don'"
+    },
+    {
+     "source": "antirez-news-169",
+     "title": "Control the ideas, not the code - <antirez>",
+     "channel": "antirez.com",
+     "kind": "post",
+     "href": "https://antirez.com/news/169",
+     "stance": "asserts",
+     "quote": "You have to understand how things work, what is the best design, how to reach a certain level of performance.",
+     "context": "d during recent years, before ai, is unbelievable. i'll say you another thing. what is slop? with dwarfstar i implemented an inference for two llms (deepseek v4 and glm 5.2) in a completely automated way, but: try it yourself, you will discover you can't just say \"implement xyz\" and see it working. you have to understand how things work, what is the best design, how to reach a certain level of performance. then i compared the implementation, for correctness, to other systems, finding that other implementations sometimes contained more errors. i researched more, and found that the local inference world is full of subtle errors that accumulate and damage the model output, issues in the attention implem"
+    },
+    {
+     "source": "fvBXIBLTwEM",
+     "title": "Will AI replace Software Engineers ? Raw & Honest Opinion",
+     "channel": "Apporva arya",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=fvBXIBLTwEM",
+     "stance": "asserts",
+     "quote": "we have to go through it and review it; we cannot follow everything blindly",
+     "context": "(quote not located) हेलो गाइस वेलकम बैक टू माय youtube चैनल। आज के टाइम पे जहां एआई इतना आ चुका है और इतना सारी जॉब्स का इंपैक्ट हो रहा है तो उसे एक चीज जो है सीखने लायक वो है कि हमें अपने टाइम की वैल्यू को समझना पड़ेगा। टाइम इज़ मनी लिटरली अब टाइम इज़ मनी। पहले एक टाइम था देखा जाए जो जो मुझसे पूछते भी हैं कि क्या सच में"
+    },
+    {
+     "source": "jadarma-github-does-github-copilot-improve-code-quality-heres-how-we-lie-with-st",
+     "title": "Does GitHub Copilot Improve Code Quality? Here",
+     "channel": "Jadarma",
+     "kind": "post",
+     "href": "https://jadarma.github.io/blog/posts/2024/11/does-github-copilot-improve-code-quality-heres-how-we-lie-with-statistics/",
+     "stance": "asserts",
+     "quote": "if you can't write good code without an AI, then you shouldn't use one in the first place.",
+     "context": ", but rather has the perfume of marketing, catered to the c-suites with buying power, trying to convince them that 470$/dev/yr4 is better spent with them, to squeeze out as much bang per buck from their human resources, instead of spending it on the employees as persons. and as for you, developers, if you can't write good code without an ai, then you shouldn't use one in the first place. no matter what space-age technology the ai over-fitters come at you with, nothing can substitute personal experience, and pride in your craft. - https://www.gitclear.com/coding_on_copilot_data_shows_ais_downward_pressure_on_code_quality ↩︎ - https://arc.dev/talent-blog/impact-of-ai-on-code/ ↩︎ - ht"
+    },
+    {
+     "source": "joelonsoftware-the-law-of-leaky-abstractions",
+     "title": "The Law of Leaky Abstractions",
+     "channel": "Joel on Software",
+     "kind": "post",
+     "href": "https://www.joelonsoftware.com/2002/11/11/the-law-of-leaky-abstractions/",
+     "stance": "asserts",
+     "quote": "the only way to deal with the leaks competently is to learn about how the abstractions work and what they are abstracting",
+     "context": "omes up with a wizzy new code-generation tool that is supposed to make us all ever-so-efficient, you hear a lot of people saying \"learn how to do it manually first, then use the wizzy tool to save time.\" code generation tools which pretend to abstract out something, like all abstractions, leak, and the only way to deal with the leaks competently is to learn about how the abstractions work and what they are abstracting. so the abstractions save us time working, but they don't save us time learning. and all this means that paradoxically, even as we have higher and higher level programming tools with better and better abstractions, becoming a proficient programmer is getting harder and harder. during my first micro"
+    },
+    {
+     "source": "larsfaye-agentic-coding-is-a-trap",
+     "title": "Agentic Coding is a Trap | Lars Faye",
+     "channel": "larsfaye.com",
+     "kind": "post",
+     "href": "https://larsfaye.com/articles/agentic-coding-is-a-trap",
+     "stance": "asserts",
+     "quote": "only a skilled developer who's thinking critically, and comfortable operating at the architectural level, can spot issues in the thousands of lines of generated code",
+     "context": "and entire teams (claude code outages have already had entire teams at a stand-still). - fluctuating and increasing costs to access the tools. an employee's cost is fixed; tokens are a constantly moving target. being successful with this approach to coding agents hinges on a rather crucial element: only a skilled developer who's thinking critically, and comfortable operating at the architectural level, can spot issues in the thousands of lines of generated code, before they become a problem. yet, in an ironic twist of fate, it's the individual's critical thinking skills and cognitive clarity that ai tooling has now been proven to impact negatively. ## not just another \"abstraction\" a common refrain we hear in the community is that programmers are just \"mo"
+    },
+    {
+     "source": "minimaxir-ai-agent-coding",
+     "title": "An AI agent coding skeptic tries AI agent coding, in excessive detail",
+     "channel": "Max Woolf",
+     "kind": "post",
+     "href": "https://minimaxir.com/2026/02/ai-agent-coding/",
+     "stance": "asserts",
+     "quote": "agents work best when you have approximate knowledge of many things with enough domain expertise to know what should and should not work",
+     "context": "onsequence of only using agentic coding for this workflow is that i cannot construct a minimal reproducible test case to file as a regression bug report or be able to isolate it as a side effect of a new api not well-known by opus 4.5. the main lesson i learnt from working on these projects is that agents work best when you have approximate knowledge of many things with enough domain expertise to know what should and should not work. opus 4.5 is good enough to let me finally do side projects where i know precisely what i want but not necessarily how to implement it. these specific projects aren't the next big thing™ that justifies the existence of an industry taking billions of dollars in venture capital, but they make my life"
+    },
+    {
+     "source": "neilmadden-a-look-at-cloudflares-ai-coded-oauth-library",
+     "title": "A look at CloudFlare’s AI-coded OAuth library",
+     "channel": "Neil Madden",
+     "kind": "post",
+     "href": "https://neilmadden.blog/2025/06/06/a-look-at-cloudflares-ai-coded-oauth-library/",
+     "stance": "asserts",
+     "quote": "What this interaction shows is how much knowledge you need to bring when you interact with an LLM.",
+     "context": "alt, which is fine and dandy for this use-case. the security property we're looking for here is that the two uses are independent random oracles, for which this is a decent design. i would maybe use the same approach for generating the token id too, with a different salt, but that's a minor tweak). what this interaction shows is how much knowledge you need to bring when you interact with an llm. the \"one big flaw\" claude produced in the middle would probably not have been spotted by someone less experienced with crypto code than this engineer obviously is. and likewise, many people would probably not have questioned the weird choice to move to pbkdf2 as a response: llms really do not \"reas"
+    },
+    {
+     "source": "newsletter-getdx-how-much-does-ai-impact-development-speed",
+     "title": "How much does AI impact development speed?",
+     "channel": "newsletter.getdx.com",
+     "kind": "post",
+     "href": "https://newsletter.getdx.com/p/how-much-does-ai-impact-development-speed",
+     "stance": "asserts",
+     "quote": "developers have to carefully check and fix the code the AI suggests",
+     "context": "peed gains from ai were observed among developers who code more hours per day. while not statistically significant, the interaction effect was large, suggesting that those coding daily may benefit more from ai tools. the authors hypothesize that this may be because ai tools still make mistakes, and developers have to carefully check and fix the code the ai suggests. so developers who spend more time coding in their daily work may be better at spotting issues and making quick edits-and in turn, may be more likely to benefit from using ai. ## seniority and prior ai usage didn't change outcomes the researchers wanted to explore whether other factors-in particula"
+    },
+    {
+     "source": "oESF5zYTOrk",
+     "title": "The AI-Native Data Engineer featuring Fabric, dbt, VSCode devcontainers and copilot",
+     "channel": "Microsoft Reactor",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=oESF5zYTOrk",
+     "stance": "asserts",
+     "quote": "First, you as the data engineer have to become competent of what you're trying to do.",
+     "context": "fits the right job. in this case, i'm trying to cook steak. so, sometimes i might use llm to do research on what a delicious steak should look like. you know, what are the right type of seasoning to put in or how to do scd type 2 and data engineer, right? like all these problem spaces are the same. first, you as the data engineer have to become competent of what you're trying to do. don't just go to llm and say, \"hey, do scd2, make no mistakes.\" don't do that, right? first, [snorts] use the llm to learn what scd2 is, how to cook a good steak, do it yourself, learn it, do some pocs, become good at it, and then when you yourself know what good looks like, then go ahead and scale"
+    },
+    {
+     "source": "val-2025-07-30-vibe-code-md",
+     "title": "Vibe code is legacy code",
+     "channel": "Val Town",
+     "kind": "post",
+     "href": "https://blog.val.town/vibe-code",
+     "stance": "asserts",
+     "quote": "They're going to have to learn to use their human eyes to read the code",
+     "context": "elevant! and i'm optimistic that ai will continue to make programming better in surprising ways. but if you know any non-programmers spending thousands of dollars vibe coding their billion dollar app idea today, please send them this post. vibe coding is not going to get them where they want to go. they're going to have to learn to use their human eyes to read the code 😱, and learn that sometimes it's easier to start over with building a well-written code base from scratch than to fix a legacy one that nobody understands. this essay is a distillation of a talk i gave last month, the role of the human brain in programming. thanks to my fiance emily for listening "
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/anthropic-work-at-anthropic.txt#L93-L94",
+     "doc": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+     "by": "Anthropic internal study",
+     "verdict": "right",
+     "confidence": 0.5,
+     "note": "Anthropic: the 'paradox of supervision' (supervising Claude needs the coding skills overuse may erode), and a security engineer saw a 'dangerously smart' proposal that only experienced judgment could catch.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2607.21652v1.txt#L1929-L1932",
+     "doc": "ai-coding/sources/2607.21652v1.txt",
+     "by": "Vibe-coding literature review",
+     "verdict": "right",
+     "confidence": 0.5,
+     "note": "The review concludes that skill in verification, constraint specification and review may matter as much as authoring skill, and that the central risk is a verification gap.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2410.12944.txt#L484-L493",
+     "doc": "ai-coding/sources/2410.12944.txt",
+     "by": "Google RCT",
+     "verdict": "right",
+     "confidence": 0.4,
+     "note": "Google RCT authors suggest heavier coders gain more from AI because current tools require spending much time verifying and editing generated code (interaction beta=-0.29, not significant), so coding skill conditions the benefit.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2507.00788.txt#L2549-L2556",
+     "doc": "ai-coding/sources/2507.00788.txt",
+     "by": "Echoes of AI maintainability RCT",
+     "verdict": "right",
+     "confidence": 0.4,
+     "note": "The Task 1 developer's Java proficiency influenced downstream outcomes more than AI use, and authors conclude human expertise still matters; qualitative quotes describe using experience to catch hacky AI suggestions.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2507.09089v2.txt#L1015-L1021",
+     "doc": "ai-coding/sources/2507.09089v2.txt",
+     "by": "METR 2025 RCT",
+     "verdict": "partly",
+     "confidence": 0.45,
+     "note": "METR 2025: 75% of experienced developers read every line of AI code, 56% often make major cleanups, and 100% report needing to modify it; this shows correction is routinely needed, but the study does not test less-skilled users.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "Developers need solid programming knowledge to validate and correct AI-generated code",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "METR 2025 RCT: METR 2025: 75% of experienced developers read every line of AI code, 56% often make major cleanups, and 100% report needing to modify it; this shows correction is routinely needed, but the study does not test less-skilled users."
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  }
+ ],
+ "documents": [
+  {
+   "file": "ai-coding/sources/2302.06590.txt",
+   "name": "Copilot RCT (Peng)",
+   "sha": "f4cdcf3e3c",
+   "lines": 351,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2302.06590.txt#L221-L225",
+    "ai-coding/sources/2302.06590.txt#L174-L177"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2410.12944.txt",
+   "name": "Google RCT",
+   "sha": "9c526cc1a6",
+   "lines": 724,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2410.12944.txt#L490-L505",
+    "ai-coding/sources/2410.12944.txt#L522-L543",
+    "ai-coding/sources/2410.12944.txt#L484-L493"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2501.06972.txt",
+   "name": "Google migrations report",
+   "sha": "e62062a6b4",
+   "lines": 776,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2501.06972.txt#L417-L423"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2507.00788.txt",
+   "name": "Echoes of AI maintainability RCT",
+   "sha": "c066966a89",
+   "lines": 3851,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2507.00788.txt#L2541-L2551",
+    "ai-coding/sources/2507.00788.txt#L2549-L2556"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2507.09089v2.txt",
+   "name": "METR 2025 RCT",
+   "sha": "3f351a2caa",
+   "lines": 2703,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2507.09089v2.txt#L135-L141",
+    "ai-coding/sources/2507.09089v2.txt#L960-L984",
+    "ai-coding/sources/2507.09089v2.txt#L1217-L1234",
+    "ai-coding/sources/2507.09089v2.txt#L1004-L1012",
+    "ai-coding/sources/2507.09089v2.txt#L1015-L1021"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2607.21652v1.txt",
+   "name": "Vibe-coding literature review",
+   "sha": "b918616264",
+   "lines": 2591,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2607.21652v1.txt#L1518-L1526",
+    "ai-coding/sources/2607.21652v1.txt#L1454-L1458",
+    "ai-coding/sources/2607.21652v1.txt#L1906-L1914",
+    "ai-coding/sources/2607.21652v1.txt#L1929-L1932"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/4859137.txt",
+   "name": "Shan et al. field study + RCT",
+   "sha": "8ca047452e",
+   "lines": 1775,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/4859137.txt#L872-L878",
+    "ai-coding/sources/4859137.txt#L1037-L1064"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt",
+   "name": "Code-ownership experiment (Martin-Lopez)",
+   "sha": "3be5045d2c",
+   "lines": 1064,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L556-L569",
+    "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L240-L247",
+    "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L828-L835",
+    "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L736-L767"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/anthropic-work-at-anthropic.txt",
+   "name": "Anthropic internal study",
+   "sha": "d1d3bffd06",
+   "lines": 179,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/anthropic-work-at-anthropic.txt#L75-L75",
+    "ai-coding/sources/anthropic-work-at-anthropic.txt#L70-L70",
+    "ai-coding/sources/anthropic-work-at-anthropic.txt#L36-L40",
+    "ai-coding/sources/anthropic-work-at-anthropic.txt#L67-L69",
+    "ai-coding/sources/anthropic-work-at-anthropic.txt#L93-L94"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+   "name": "Microsoft/Accenture field RCTs",
+   "sha": "bcf2933521",
+   "lines": 1215,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L758-L770"
+   ]
+  }
+ ],
+ "gaps": [
+  "Anthropic internal study differs: Anthropic: engineers skip Claude for short tasks or ones needing tacit team context ('I'm just going to go and do it myself') and find familiar work faster done by hand, consistent with checking costs eating the benefit.",
+  "Vibe-coding literature review differs: Sources often discuss defects alongside productivity gains, suggesting that faster development 'may introduce additional verification burdens', and the review calls gains conditional on verification; there is no time accounting."
+ ],
+ "chainWhy": "The answer is that experts on code they know gain least and were even slowed, which raises why help from the tool can cost an expert more time than it saves.",
+ "questions": [
+  {
+   "story": "decision:who-benefits",
+   "question": "Does AI help junior or senior developers more?",
+   "claims": [
+    "ai-coding/coding-tools-amplify-experienced-engineers-far",
+    "ai-coding/productivity-gains-concentrate-among-developers-new",
+    "ai-coding/getting-good-results-coding-tools-takes"
+   ],
+   "central": {
+    "text": "The evidence does not support \"AI coding tools amplify experienced engineers far more than novices\"",
+    "status": "qualified"
+   },
+   "premise": "The 'far more for experts' claim is not supported: Microsoft's field experiment (short-tenure 27-39% versus long-tenure 8-13%, mostly not significant), Shan's RCT, Peng's Copilot trial and the code-ownership experiment all found gains concentrated among less experienced developers, and METR found experienced maintainers slowed, more so on tasks they knew well. The Google trial is the exception: on code unfamiliar to everyone, seniors gained if anything more, not significantly. That pattern is the resolution: gains concentrate where the developer lacks context, which juniors usually do and seniors do on unfamiliar code. Skill in using the tools matters (habitual AI users' code scored better downstream in the Echoes trial) but the evidence for a steep skill curve is thin and partly self-reported, and METR saw no improvement over the first 50 hours.",
+   "tension": "'Amplifies experts far more' against trials where juniors and short-tenure developers gained most and experienced maintainers were slowed.",
+   "whyWatch": "Influencers say AI is a multiplier for experts. Most trials found the opposite, one found a hint the other way, and the reason they differ says something about when the tools help anyone.",
+   "arc": {
+    "hook": "Two engineers, one senior, one junior, both switch on the same tool. The influencers say the senior pulls ahead. The trials say otherwise.",
+    "conflict": "Five trials point one way, Google's points the other, and 'far more' for experts has no support anywhere.",
+    "evidence": "Microsoft/Accenture by tenure, Shan's moderation analysis, Peng's heterogeneity, the code-ownership experiment, METR's slowdown by task familiarity, and Google's unfamiliar-code design.",
+    "resolution": "The tools help most where the developer has the least context. Juniors have less of it everywhere; seniors have less of it on unfamiliar code. Using the tools well is a skill, but not yet a measured steep one.",
+    "takeaway": "Point the tools at unfamiliar work, expect less on code you know by heart, and treat '10x for experts' as marketing."
+   }
+  },
+  {
+   "story": "surprise:assistance-must-reliable-save-experts-time",
+   "question": "Why can AI assistance cost expert programmers more time than it saves?",
+   "claims": [
+    "ai-coding/assistance-must-reliable-save-experts-time",
+    "ai-coding/speeds-generation-human-attention-review-understanding",
+    "ai-coding/developers-need-solid-programming-knowledge-validate"
+   ],
+   "central": {
+    "text": "AI assistance must be very reliable to save experts time, because checking and fixing its output is costly",
+    "status": "qualified"
+   },
+   "premise": "METR's developers accepted under 44% of Cursor generations and lost significant time reviewing, testing and modifying output before rejecting it; low reliability is one of the listed causes of the 19% slowdown. Google's migration report describes throttling change generation so that reviewers could keep up, and the vibe-coding review names the 'verification gap' as its central synthesis. Anthropic's engineers skip the tool for short or context-heavy tasks and describe a paradox of supervision: checking needs the skills overuse may erode. Limits: the acceptance figure is from 16 developers with early-2025 tools; the bottleneck evidence is a company report and a review of reports; the skill claims are qualitative.",
+   "tension": "Generation got cheap; checking did not, and for people who could have written it themselves the check costs more than the typing saved.",
+   "whyWatch": "The slowdown result is famous; the mechanism is less known and more useful: experts accepted under half of the suggestions and paid for the rest in review.",
+   "arc": {
+    "hook": "A suggestion appears in the editor. For an expert, the cheapest move is often to delete it. Why?",
+    "conflict": "The tool saved typing; it created checking, and checking is the expensive part for someone who already knows the answer.",
+    "evidence": "METR's acceptance rate and review time; Google throttling generation to review capacity; the verification gap; Anthropic's supervision paradox.",
+    "resolution": "AI help pays when the check is cheaper than the work it replaces; for experts on familiar code it often is not, and the skill to check cannot be outsourced.",
+    "takeaway": "Measure your acceptance rate; if you delete most of what the tool writes, use it for the work you cannot already do."
+   }
+  }
+ ],
+ "fingerprint": "5315c81f0b",
+ "generatedAt": "2026-10-21T14:58:15.841Z"
+}
