@@ -1,0 +1,194 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-21",
+  "revision": 2,
+  "packageFingerprint": "984b59ea42",
+  "approved": {
+    "s01": "15e710948a",
+    "s02": "18570122de",
+    "s03": "03db811bb2",
+    "s04": "8faa81eb6d",
+    "s05": "1cf6840488",
+    "s06": "cdf123b5c7",
+    "s07": "dd7387e238",
+    "s08": "0fc86c1b40",
+    "s09": "86ce111c31",
+    "s10": "3d4a4daa68",
+    "s11": "e8c4346368",
+    "s12": "00556f3083",
+    "s13": "2dd78d1f43",
+    "s14": "08e0e21bda",
+    "s15": "69414475c5",
+    "s16": "c147bf371b",
+    "s17": "21deeb2014",
+    "s18": "440d735094",
+    "s19": "770a509c67",
+    "s20": "eca0fa7133",
+    "s21": "230d1cd995",
+    "s22": "bf68a2e05f",
+    "s23": "d8761439bb",
+    "s24": "77ef06c679",
+    "s25": "8aee250511",
+    "s26": "e5a9ea0a7e",
+    "s27": "de969c1861",
+    "s28": "41ceba22bd",
+    "s29": "7f7eab9578",
+    "s30": "4a22e005c1",
+    "s31": "329107a61e",
+    "s32": "14434a23d0",
+    "s33": "fb5c5aa33a",
+    "s34": "44f62cfa73",
+    "s35": "4b1ac0560a",
+    "s36": "bc14bf9927",
+    "s37": "823aee6b68",
+    "s38": "8a0ef56efd",
+    "s39": "257edbbd1b",
+    "s40": "285a4aca91",
+    "s41": "16862cb13b"
+  },
+  "findings": [
+    {
+      "sentence": "s02",
+      "fingerprint": "4edd6c229e",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "Typed rhetorical but states a fact about the plaintiff (she believed the bill settled the whole loan) with no assertion. The note points to a needsEvidence entry that script.json does not have.",
+      "refs": [
+        "sovereign-citizens/sources/bryant-v-washington-mutual-wdva-2007.txt#L16-L33"
+      ],
+      "suggestion": "Make s02 factual with an assertion on Bryant L16-L33, already cited for s01 (L23: she concluded 'this loan is paid off'). Or fold it into s01 as a clause covered by s01.a."
+    },
+    {
+      "sentence": "s12",
+      "assertion": "s12.a",
+      "fingerprint": "5484125dae",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'in a criminal case' is not in the passage. The IRS gives only the citation 'United States v. Anderson, 353 F.3d 490, 500 (6th Cir. 2003)', and a case captioned United States v. X can be civil. The writer's note admits this rests on the caption alone.",
+      "refs": [
+        "sovereign-citizens/sources/irs-truth-about-frivolous-tax-arguments.txt#L2277-L2290"
+      ],
+      "suggestion": "Drop 'in a criminal case': 'A federal appeals court, the Sixth Circuit, said the same: the Treasury \"does not maintain ...\"'."
+    },
+    {
+      "sentence": "s34",
+      "assertion": "s34.a",
+      "fingerprint": "a5528ff773",
+      "revision": 1,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "After s33, whose subject 'It' is the 1933 resolution, 'A 1939 ruling it cites' reads as the resolution citing a later ruling. In the passage it is the plaintiff who cited Henwood ('Plaintiff has also cited, without elaboration'), and the judge then explains what it held.",
+      "refs": [
+        "sovereign-citizens/sources/bryant-v-washington-mutual-wdva-2007.txt#L87-L87"
+      ],
+      "suggestion": "Say 'A 1939 ruling on the resolution, Guaranty Trust Co. v. Henwood, explained what Congress wanted: ...' (or 'A 1939 ruling she also cited')."
+    },
+    {
+      "sentence": "s26",
+      "fingerprint": "e5a9ea0a7e",
+      "revision": 1,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "Bryant L48 (not cited) says Buhtz's co-defendants 'just like Plaintiff, followed Mr. Buhtz's advice', and the judge warns that 'people frequently end up in prison for pursuing these sorts of schemes'. Neither is a count, so s26 stays true. They do show that the people convicted with Buhtz were followers, not only promoters.",
+      "refs": [
+        "sovereign-citizens/sources/bryant-v-washington-mutual-wdva-2007.txt#L48-L48"
+      ],
+      "suggestion": "Optional, and only through record-sources: note that Buhtz's co-defendants had followed his advice. No change is required."
+    }
+  ],
+  "dispositions": {
+    "s08.a": {
+      "fingerprint": "0fc86c1b40",
+      "category": "speaker-missing",
+      "reason": "The narration names no speaker on purpose ('one YouTube how-to video'). The package context confirms the quote and the red SSN stamp."
+    },
+    "s08": {
+      "fingerprint": "0fc86c1b40",
+      "category": "speaker-missing",
+      "reason": "The narration names no speaker on purpose ('one YouTube how-to video'). The package context confirms the quote and the red SSN stamp."
+    },
+    "s20.a": {
+      "fingerprint": "eca0fa7133",
+      "category": "needs-qualification",
+      "reason": "This is a verbatim Treasury quotation attributed to the Treasury, so 'All' is the Treasury's word. The Netolitzky qualifier concerns which prosecutions are cited, and s26 states that limit."
+    },
+    "s20.b": {
+      "fingerprint": "eca0fa7133",
+      "category": "needs-qualification",
+      "reason": "This is the Treasury's own legal characterisation, quoted and attributed. s26 states how often ordinary users are charged, which is the limit the qualifier raises."
+    },
+    "s20": {
+      "fingerprint": "eca0fa7133",
+      "category": "needs-qualification",
+      "reason": "Both assertions are attributed Treasury quotations, and s26 carries the prosecution-frequency limit."
+    },
+    "s23.a": {
+      "fingerprint": "d8761439bb",
+      "category": "needs-qualification",
+      "reason": "The court's finding in this one case is quoted. The qualifier (Quebec cases support 'worthless'; prosecutions concern tax filings) does not narrow it."
+    },
+    "s23.b": {
+      "fingerprint": "d8761439bb",
+      "category": "needs-qualification",
+      "reason": "The court's remark that her belief appeared genuine is unaffected by the prosecution qualifier."
+    },
+    "s23": {
+      "fingerprint": "d8761439bb",
+      "category": "needs-qualification",
+      "reason": "The sentence reports one court's finding in one case and is unaffected by the qualifier."
+    },
+    "s24.a": {
+      "fingerprint": "77ef06c679",
+      "category": "needs-qualification",
+      "reason": "It reports a single named conviction for bills of exchange, which is not a tax-filing case. s26 follows two sentences later with the frequency limit."
+    },
+    "s24": {
+      "fingerprint": "77ef06c679",
+      "category": "needs-qualification",
+      "reason": "This is one named conviction, and s26 carries the frequency limit."
+    },
+    "s25.a": {
+      "fingerprint": "8aee250511",
+      "category": "needs-qualification",
+      "reason": "The narration already says the bill was 'sent to the IRS', so the tax-context point is carried. s26 follows with the frequency limit."
+    },
+    "s25": {
+      "fingerprint": "8aee250511",
+      "category": "needs-qualification",
+      "reason": "The narration says the bill was sent to the IRS, and s26 follows with the frequency limit."
+    },
+    "s26.a": {
+      "fingerprint": "e5a9ea0a7e",
+      "category": "needs-qualification",
+      "reason": "s26 is itself the qualification: it says no source counts how often ordinary users are charged."
+    },
+    "s26.b": {
+      "fingerprint": "e5a9ea0a7e",
+      "category": "needs-qualification",
+      "reason": "s26 is itself the qualification: it says no source counts how often ordinary users are charged."
+    },
+    "s26": {
+      "fingerprint": "e5a9ea0a7e",
+      "category": "needs-qualification",
+      "reason": "s26 is itself the qualification sentence."
+    },
+    "s27.b": {
+      "fingerprint": "de969c1861",
+      "category": "needs-qualification",
+      "reason": "The worthlessness finding is the part the qualifier supports. The prosecution limit was stated in s26, one sentence earlier."
+    },
+    "s27.c": {
+      "fingerprint": "de969c1861",
+      "category": "needs-qualification",
+      "reason": "The NB Court of Appeal's 'frivolous, without merit' is unaffected by a qualifier about tax-filing prosecutions, and s26 states that limit."
+    },
+    "s27": {
+      "fingerprint": "de969c1861",
+      "category": "needs-qualification",
+      "reason": "The answer sentence follows s26 directly, which carries the limit."
+    }
+  }
+}
