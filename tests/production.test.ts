@@ -266,7 +266,8 @@ describe('next steps', () => {
       expect(stepsOf(t.next, t.topic.name).length).toBeGreaterThan(0);
       for (const r of t.stories) expect(stepsOf(r.next, t.topic.name, r.story.id).length).toBeGreaterThan(0);
     }
-  });
+    // walks every real production in the repo, which grows with each video
+  }, 60_000);
 });
 
 describe('upload values', () => {
