@@ -3,7 +3,7 @@
  "basis": {
   "claims": 385,
   "sources": 216,
-  "studies": 13,
+  "studies": 15,
   "candidates": 69
  },
  "stories": [
@@ -685,8 +685,10 @@
     "Echoes of AI maintainability RCT: right (0.7, direct)",
     "Shan et al. field study + RCT: wrong (0.3, partial)",
     "Vibe-coding literature review: wrong (0.2, partial)",
+    "2310.02059.txt: partly (0.55, direct)",
     "Debt study (302k AI commits): partly (0.5, partial)",
     "Vibe-coding literature review: partly (0.35, direct)",
+    "2601.20245v2.txt: partly (0.45, direct)",
     "Code-ownership experiment (Martin-Lopez): partly (0.45, direct)"
    ],
    "gaps": [
@@ -725,7 +727,7 @@
     "evidence": 0.91,
     "editorial": 0.83,
     "overall": 0.86,
-    "explanation": "editorial 0.83 = mean of coherence 0.85 (review), relevance 0.91 (15 sources, 14 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (5 studies, 3 claims, tension); evidence 0.91 = strongest Echoes of AI maintainability RCT at 0.7 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.83 = mean of coherence 0.85 (review), relevance 0.91 (15 sources, 14 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (7 studies, 3 claims, tension); evidence 0.91 = strongest Echoes of AI maintainability RCT at 0.7 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
@@ -974,6 +976,22 @@
          "ref": {
           "kind": "study",
           "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "2310.02059.txt",
+         "verdict": "partly",
+         "confidence": 0.55,
+         "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
           "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
          },
          "cited": true,
@@ -1006,13 +1024,14 @@
        "context": [],
        "problems": [],
        "limitations": [
+        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
         "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
         "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized."
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+       "explanation": "qualified (qualify): no direct support, 3 qualifying."
       }
      },
      {
@@ -1035,6 +1054,22 @@
          "ref": {
           "kind": "study",
           "claim": "ai-coding/developers-should-able-explain-generated-code",
+          "cite": "ai-coding/sources/2601.20245v2.txt#L468-L484"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "2601.20245v2.txt",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "Preregistered RCT, 52 crowd-recruited developers (mostly freelance or professional) learning a new Python library: those allowed AI scored 17% lower on a 27-point quiz on its concepts, code reading and debugging (d=0.74), with no significant time saving. Supports the reason behind the norm; no merge gate was tested.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-should-able-explain-generated-code",
           "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
          },
          "cited": true,
@@ -1051,12 +1086,13 @@
        "context": [],
        "problems": [],
        "limitations": [
+        "2601.20245v2.txt: Preregistered RCT, 52 crowd-recruited developers (mostly freelance or professional) learning a new Python library: those allowed AI scored 17% lower on a 27-point quiz on its concepts, code reading and debugging (d=0.74), with no significant time saving. Supports the reason behind the norm; no merge gate was tested.",
         "Code-ownership experiment (Martin-Lopez): Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested."
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
       }
      }
     ]

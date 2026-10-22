@@ -1,0 +1,516 @@
+{
+ "topic": "ai-coding",
+ "story": "decision:quality-and-understanding",
+ "inputs": {
+  "stories": "a0bd96c4a9",
+  "review": "36e8a6703d",
+  "report": "edfb1fb041"
+ },
+ "audience": "General YouTube audience with no prior knowledge of MLM pay plans or research methods (default; set audience in story-review.json to change).",
+ "title": "Is AI-Written Code Harder to Maintain?",
+ "question": "Is AI-written code harder to maintain?",
+ "alternates": [
+  "The Technical-Debt Fear, Tested in a Randomized Trial",
+  "More Code, Less Understanding: What AI Does to Code Ownership"
+ ],
+ "premise": "The Echoes trial (75 mostly professional developers manually evolving a small Java app written with or without AI, preregistered) found no reliable difference in completion time, CodeHealth or coverage, and was powered only to rule out large effects; that is the central finding and its limit. Against it: Shan's follow-up survey linked AI use to lower self-rated maintainability (self-reports), 11 of 47 review sources raise concerns (reports, not comparisons), and the 302k-commit study found 22.7% of AI-introduced issues persisting with no human-written baseline, most of them smells rather than vulnerabilities. The code-ownership experiment adds the mechanism that worries people: after AI-assisted tasks, authors answered fewer questions about their own code correctly (median 87.5% versus 100%). The claim that AI code 'accumulates more debt than hand-built' is therefore the belief the trial contradicts, not a finding the video can assert.",
+ "whyWatch": "Eight sources warn that fast AI code piles up debt. The one preregistered trial that handed AI-written code to new developers found no difference, and a 302k-commit study found persisting issues with no human baseline. The viewer gets to see what a null result does and does not prove.",
+ "tension": "Widespread fear of debt against a null trial, with self-reports and an uncontrolled commit study in between.",
+ "arc": {
+  "hook": "The warning everyone repeats: AI code is a debt bomb. One team ran the experiment.",
+  "conflict": "The null trial against the commit study, the survey and the review's concerns.",
+  "evidence": "Echoes design and result with its power limit; the 302k-commit persistence figures and the missing baseline; the security issue rates and what counts as an issue; the code-ownership understanding gap.",
+  "resolution": "No measured maintainability penalty yet, within the limits of one small trial; a measured understanding penalty for the author; and issue counts that need a baseline before they mean 'more'.",
+  "takeaway": "Review for understanding, not just correctness: the one measured harm is that authors know their AI-assisted code less well."
+ },
+ "readiness": "ready",
+ "central": {
+  "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
+  "status": "qualified",
+  "decision": "qualify",
+  "strength": 0.7,
+  "independent": 1
+ },
+ "claims": [
+  {
+   "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+   "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.65,
+   "decidedBy": "Echoes of AI maintainability RCT",
+   "lean": "pro",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.6,
+    "note": "The Echoes of AI controlled experiment found no significant maintainability penalty, though it covered one task and small changes."
+   },
+   "statements": [
+    {
+     "source": "PkITOx9lIT8",
+     "title": "AI Makes Verifying the Bottleneck with Dave Farley @ModernSoftwareEngineeringYT",
+     "channel": "Aviator",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=PkITOx9lIT8",
+     "stance": "asserts",
+     "quote": "The the AI didn't make it any better and it didn't make it any worse.",
+     "context": "ame only with ai assistance. so one group without, one group with, and then there was a a third group who blindly took one of the outputs and were asked to do some more changes on top of that. so how hard was it? the what to me was the really surprising answer was didn't really make any difference. the the ai didn't make it any better and it didn't make it any worse. m >> um so so i think that the scare the people that are scaremongers saying that a you know ai can't code and it can't write systems are are wrong. um and i think that the people that are claiming that you get tens or hundreds of times productivity are wrong too. um there were some improvements in"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524",
+     "doc": "ai-coding/sources/2507.00788.txt",
+     "by": "Echoes of AI maintainability RCT",
+     "verdict": "right",
+     "confidence": 0.7,
+     "note": "Preregistered RCT, 75 mostly professional developers manually evolving Java code written with or without AI: no reliable difference in completion time or perceived productivity, and the study is only powered to rule out large effects.",
+     "role": "supports",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/4859137.txt#L1219-L1229",
+     "doc": "ai-coding/sources/4859137.txt",
+     "by": "Shan et al. field study + RCT",
+     "verdict": "wrong",
+     "confidence": 0.3,
+     "note": "The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"self-reports\")",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452",
+     "doc": "ai-coding/sources/2607.21652v1.txt",
+     "by": "Vibe-coding literature review",
+     "verdict": "wrong",
+     "confidence": 0.2,
+     "note": "11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"rather than\")",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892",
+     "doc": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt",
+     "by": "Code-ownership experiment (Martin-Lopez)",
+     "verdict": "right",
+     "confidence": 0.3,
+     "note": "The related work cites Borg et al.'s 151-participant controlled experiment, which found no consistent sign that AI-assisted code was harder for later developers to maintain, while warning of cognitive debt. This is secondary evidence; the study's own data cover only the original author.",
+     "role": "context",
+     "applicability": "contextual",
+     "basis": "review",
+     "why": "a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2603.28592v3.txt#L1031-L1035",
+     "doc": "ai-coding/sources/2603.28592v3.txt",
+     "by": "Debt study (302k AI commits)",
+     "verdict": "unknown",
+     "confidence": null,
+     "note": "The mining study of 302k AI-authored commits explicitly has no human-written baseline, so its counts of surviving debt cannot show that AI code is harder to maintain than human code.",
+     "role": "context",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2507.00788.txt#L2581-L2587",
+     "doc": "ai-coding/sources/2507.00788.txt",
+     "by": "Echoes of AI maintainability RCT",
+     "verdict": "right",
+     "confidence": 0.65,
+     "note": "Same RCT on quality: no frequentist CodeHealth difference after a second developer evolved the code, a small Bayesian CodeHealth gain when a habitual AI user wrote the original, and identical test coverage. Scope is limited to a small app and short-term effects.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "heuristic",
+     "why": "the verdict note limits its own scope (\"limited to\")",
+     "audited": false
+    }
+   ],
+   "audit": {
+    "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "Shan et al. field study + RCT: The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers. [partial: the verdict note limits its own scope (\"self-reports\")]",
+     "Vibe-coding literature review: 11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code. [partial: the verdict note limits its own scope (\"rather than\")]",
+     "Context only, Code-ownership experiment (Martin-Lopez) (right): a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers."
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+   "text": "AI-generated code frequently contains security vulnerabilities",
+   "stance": "asserts",
+   "verdict": "partly",
+   "confidence": 0.55,
+   "decidedBy": "2310.02059.txt",
+   "lean": "skeptic",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.7,
+    "note": "Veracode 2025 found ~45% of AI-generated samples failed security tests; earlier academic studies of Copilot found similar rates."
+   },
+   "statements": [
+    {
+     "source": "fsFHu56V5ys",
+     "title": "The AI Code Problem Nobody's Talking About",
+     "channel": "Razorwire Cybersecurity",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=fsFHu56V5ys",
+     "stance": "asserts",
+     "quote": "46% of AI generated code is reportedly uh contain some form of security weakness",
+     "context": "this and utilizing this right now and today in doing what they do best in their day-to-day jobs. unfortunately, as with everything when you speed up a job, something has to kind of drop off and unfortunately, a lot of that is around the security side as i've already said. some data i've researched, 46% of ai generated code is reportedly uh contain some form of security weakness. 40% of generated snippets includes insecure patterns when prompted ambiguously. so, you know, you get your prompt slightly wrong and you can introduce all kinds of things. here's a nice one. developers admit that they often don't deeply review the ai output. they assume that it's fine. 80% of mode"
+    },
+    {
+     "source": "minimaxir-ai-agent-coding",
+     "title": "An AI agent coding skeptic tries AI agent coding, in excessive detail",
+     "channel": "Max Woolf",
+     "kind": "post",
+     "href": "https://minimaxir.com/2026/02/ai-agent-coding/",
+     "stance": "asserts",
+     "quote": "the logging is implemented naively such that the API key is leaked in the console",
+     "context": "0 videos (the max limit). the resulting python script has very pythonic code quality following the copious rules provided by the agents.md, and it's more robust than my old script from 2021. it is most definitely not the type of output i encountered with sonnet 4.5. there was a minor issue however: the logging is implemented naively such that the api key is leaked in the console. i added a rule to agents.md but really this is the youtube api's fault for encouraging api keys as parameters in a get request. i asked a more data-science-oriented followup prompt to test opus 4.5's skill at data-sciencing: create a jupyter notebook that, using `polars` to process the data, does "
+    },
+    {
+     "source": "neilmadden-a-look-at-cloudflares-ai-coded-oauth-library",
+     "title": "A look at CloudFlare’s AI-coded OAuth library",
+     "channel": "Neil Madden",
+     "kind": "post",
+     "href": "https://neilmadden.blog/2025/06/06/a-look-at-cloudflares-ai-coded-oauth-library/",
+     "stance": "asserts",
+     "quote": "the code that generates token IDs is not sound: it generates biased output",
+     "context": "has a secondary bug if you have a colon in the client secret (allowed by the spec). i don't think either of these are issues for this specific implementation, because it always generates client ids and secrets and so can control the format, but i haven't looked in detail. a more serious bug is that the code that generates token ids is not sound: it generates biased output. this is a classic bug when people naively try to generate random strings, and the llm spat it out in the very first commit as far as i can see. i don't think it's exploitable: it reduces the entropy of the tokens, but not far enough to be brute-forceable. but it somewhat gives the lie to the idea "
+    },
+    {
+     "source": "xUj4HQt_leg",
+     "title": "Let's put the AI in lots of little boxes - Kenton Varda, Cloudflare Connect 2025",
+     "channel": "Cloudflare Developers",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=xUj4HQt_leg",
+     "stance": "asserts",
+     "quote": "there's an important class of problems that you cannot see by just looking at it which is security bugs",
+     "context": "pp, play with it, see what's wrong, if anything's wrong, uh ask the to fix it and it usually works. you can you can get some uh uh cool stuff built that way and you see people building games and and things. um but the thing is through this approach you can only fix the problems that you can see and there's an important class of problems that you cannot see by just looking at it which is security bugs. and so in a in a if you're building a game that might not matter and so all that matters is what you can see. and so that's great. but if you're building your business or something and we see these people say, \"oh, i vibe coded my business. yay, it's making money.\" and oh, on day two, a hacker fin"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2310.02059.txt#L930-L936",
+     "doc": "ai-coding/sources/2310.02059.txt",
+     "by": "2310.02059.txt",
+     "verdict": "partly",
+     "confidence": 0.55,
+     "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933",
+     "doc": "ai-coding/sources/2603.28592v3.txt",
+     "by": "Debt study (302k AI commits)",
+     "verdict": "partly",
+     "confidence": 0.5,
+     "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+     "role": "qualifies",
+     "applicability": "partial",
+     "basis": "review",
+     "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803",
+     "doc": "ai-coding/sources/2607.21652v1.txt",
+     "by": "Vibe-coding literature review",
+     "verdict": "partly",
+     "confidence": 0.35,
+     "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "AI-generated code frequently contains security vulnerabilities",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+     "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+     "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized."
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  },
+  {
+   "id": "ai-coding/developers-should-able-explain-generated-code",
+   "text": "Developers should be able to explain AI-generated code without the AI's help before it is merged",
+   "stance": "asserts",
+   "verdict": "right",
+   "confidence": 0.5,
+   "decidedBy": null,
+   "lean": "neutral",
+   "role": "evidence",
+   "guess": {
+    "verdict": "right",
+    "confidence": 0.6,
+    "note": "Ownership and maintainability require understanding; it's a reasonable review standard rather than an empirical finding."
+   },
+   "statements": [
+    {
+     "source": "9wF0n48k6JU",
+     "title": "Jensen Huang Said \"Stop Learning to Code\" — Then Hired 10,000 Developers",
+     "channel": "Olive Badger",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=9wF0n48k6JU",
+     "stance": "asserts",
+     "quote": "It is unacceptable to say, Oh, the AI did it",
+     "context": "(quote not located) you know what wild here guys? well, in february of 2024 jensen huang on a stage in dubai tells the entire world that kids should stop learning to code because get this ai's got it covered guys. he says programming is dead. move along. nothing to see here. well, in case you didn't call it. i think we"
+    },
+    {
+     "source": "FoXHScf1mjA",
+     "title": "The AI-Native Software Engineer | Addy Osmani",
+     "channel": "JavaScript Conferences by GitNation",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=FoXHScf1mjA",
+     "stance": "asserts",
+     "quote": "never commit code that you can't explain to other people, or even to yourself",
+     "context": "(quote not located) so we are going through a pretty brief change in software engineering at the moment. uh ai and vibe coding are fundamentally reshaping our work and there is a lot of hype to sift through. so today i'm going to share some battle tested insights from the trenches um for making that transition successf"
+    },
+    {
+     "source": "M0--ZH1lOzg",
+     "title": "ICM 2026 Public Lectures - Terence Tao",
+     "channel": "Simons Foundation",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=M0--ZH1lOzg",
+     "stance": "asserts",
+     "quote": "if an author cannot give a talk like up here about the result and they cannot take questions about the result",
+     "context": "their importance. um and we need to uh attribute things properly. you know there's a debate you know if you push pushed a button and you got a proof do you get to be an author of the paper that came out. um so um the lighten declaration has some something to say about this. um my suggestion is that if an author cannot give a talk like up here about the result and they cannot take questions about the result that they generated um they should not be an author or at least um the paper is not ready to be published unless there is at least one person who can actually talk about the result properly. um yeah so so i've deconstructed one you know so i had this diagram of of all the goals of mathematics and i"
+    },
+    {
+     "source": "MrfiUMm2Qxk",
+     "title": "Broken AI Discourse with Steve Klabnik",
+     "channel": "Software Unscripted Podcast",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=MrfiUMm2Qxk",
+     "stance": "asserts",
+     "quote": "I feel like you still have a professional responsibility to understand the code that you're committing to master or main or trunk.",
+     "context": " do need to like you're sort of i this is why the vibe coding thing kind of like annoys me rhetorically because like a lot of people assume that like all of these things mean that you need to not pay attention to the outputed code and like you still have no matter what tool tools you're using. like i feel like you still have a professional responsibility to understand the code that you're committing to master or main or trunk. i've been a trunk guy lately. uh in order to uh you know like that's just that's like part of the job. and so on some level like the like where the diff comes from does not matter to me because like if i'm the person clicking merge i do need to understand it. and that doesn't you know like that's n"
+    },
+    {
+     "source": "S5kQRgJ-iug",
+     "title": "AI-Generated Code Is Creating a New Kind of Technical Debt",
+     "channel": "Imran Gardezi",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=S5kQRgJ-iug",
+     "stance": "asserts",
+     "quote": "can the developer who submitted this PR walk through the logic line by line with the AI's comments deleted",
+     "context": "ok like it was dropped in from a different project? if it doesn't match, refactor it before it ships. this catches convention violations. and then question three, can the developer explain it without reading the ai's comments? not does it work, not can they read the ai's explanation back to me, but can the developer who submitted this pr walk through the logic line by line with the ai's comments deleted? and if they're reading documentation, that's not understanding. if they can't explain why pkc flow works the way it works without, you know, the ai's annotations, the code isn't ready. send it back. now, this is going to catch broken workflows and suppressed errors. if the developer can't explain "
+    },
+    {
+     "source": "margaretstorey-cognitive-debt",
+     "title": "How Generative and Agentic AI Shift Concern from Technical Debt to Cognitive Debt",
+     "channel": "Margaret-Anne Storey",
+     "kind": "post",
+     "href": "https://margaretstorey.com/blog/2026/02/09/cognitive-debt/",
+     "stance": "asserts",
+     "quote": "require that at least one human on the team fully understands each AI-generated change before it ships",
+     "context": "standing across developers and teams rebuilt. but what can teams do concretely as ai and agents become more prevalent? first, they may need to recognize that velocity without understanding is not sustainable. teams should establish cognitive debt mitigation strategies. for example, they may wish to require that at least one human on the team fully understands each ai-generated change before it ships, document not just what changed but why, and create regular checkpoints where the team rebuilds shared understanding through code reviews, retrospectives, or knowledge-sharing sessions. second, we need better ways to detect cognitive debt before it becomes crippling. warning signs include: team mem"
+    },
+    {
+     "source": "rfd-shared-oxide-rfd-0576",
+     "title": "576 - Using LLMs at Oxide | RFD | Oxide",
+     "channel": "Oxide Computer Company",
+     "kind": "post",
+     "href": "https://rfd.shared.oxide.computer/rfd/0576#_llms_as_programmers",
+     "stance": "asserts",
+     "quote": "LLM-generated code should not be reviewed by others if the responsible engineer has not themselves reviewed it.",
+     "context": "t want to become as gavage geese, being force-fed unnecessary complexity in hopes that an llm will somehow spare us from asphyxiation. wherever llm-generated code is used, it becomes the responsibility of the engineer. as part of this process of taking responsibility, self-review becomes essential: llm-generated code should not be reviewed by others if the responsible engineer has not themselves reviewed it. moreover, once in the loop of peer review, generation should more or less be removed: if code review comments are addressed by wholesale re-generation, iterative review becomes impossible. in short, where llms are used to generate code, responsibility, rigor, empathy and teamwork must remain top of"
+    },
+    {
+     "source": "u-3IILWQPRM",
+     "title": "How AI is changing software engineering at Shopify with Farhan Thawar",
+     "channel": "The Pragmatic Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=u-3IILWQPRM",
+     "stance": "asserts",
+     "quote": "yes you can submit a PR but you have to understand the code you are writing yourself before exactly before you submit it",
+     "context": "think it should be a great thing. yes. i'll say yes with one caveat. and the caveat is the problem with vibe coding today is you might generate 10,000 lines of code for a very simple uh application feature that now the burden on engineering to read the 10,000 lines is there. yeah. so what we say is yes you can submit a pr but you have to understand the code you are writing yourself before exactly before you submit it because i could do the same thing and i can say hey i'm going to write a blog post generate 20 pages and then send it to you and be like hey edit this and post it on your blog and now you have the burden of having to now if i said i read it all and it is my voice and i agree with it then you might "
+    },
+    {
+     "source": "uRuLgar5XZw",
+     "title": "AI tools for software engineers, but without the hype – with Simon Willison (Co-Creator of Django)",
+     "channel": "The Pragmatic Engineer",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=uRuLgar5XZw",
+     "stance": "asserts",
+     "quote": "I don't think you should ever commit a line of code that a language model wrote If you don't understand it yourself",
+     "context": "ould use them as as supporting like tools to support support the decisions that you're making it's one of the reasons i love saying give me options for x and that's what we become software engineers we are the people making these the high level design decisions the people evaluating what's going on i don't think you should ever commit a line of code that a language model wrote if you don't understand it yourself that's sort of my personal line that i draw um and yeah i so so i do not feel threatened as a software engineer and honestly partly as a software engineer who's got good with this stuff i really don't feel threatened by it um but just generally like i i don't i think the bits of my job that these t"
+    },
+    {
+     "source": "u_k9cwDNPcM",
+     "title": "A Year of Agents | Armin Ronacher | CodeCrafts 2026",
+     "channel": "SQUER Solutions",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=u_k9cwDNPcM",
+     "stance": "asserts",
+     "quote": "I increasingly have a problem when infrastructure core components are being written with the power of AI and no human that understands that anymore",
+     "context": "ecause you can produce a lot of output doesn't mean it develop a lot of understanding of your stuff. and um that's a problem. this is a huge problem. um i really don't care if a sales engineer builds a prototype to show to their um customer. there's nothing wrong with that. it's very empowering. um i increasingly have a problem when infrastructure core components are being written with the power of ai and no human that understands that anymore. um there are um now organizations who are really supposed to produce something that a lot of people depend on and if this core infrastructure component is written by engineers that don't understand it anymore, not only is this concerning for me, but it also means that if they don't have access to "
+    },
+    {
+     "source": "xUj4HQt_leg",
+     "title": "Let's put the AI in lots of little boxes - Kenton Varda, Cloudflare Connect 2025",
+     "channel": "Cloudflare Developers",
+     "kind": "video",
+     "href": "https://www.youtube.com/watch?v=xUj4HQt_leg",
+     "stance": "asserts",
+     "quote": "you have to already understand as a human everything that it does uh and you are responsible if there's a problem",
+     "context": "u can have your ai write code for you. the one is what we do at cloudflare when we use ai coding tools. tell it to write code and then we review the code and make sure it's correct and tweak things and and so on before we we have a rule that if you put up a pull request with ai generated code in it you have to already understand as a human everything that it does uh and you are responsible if there's a problem there's no oh the ai did it it's not me that's you um but there are a lot of people who want to skip that review step and there are legitimate reasons you might want to do that if you're you know building something that uh where security isn't that important or whatever or like a little tool for yo"
+    }
+   ],
+   "evidence": [
+    {
+     "cite": "ai-coding/sources/2601.20245v2.txt#L468-L484",
+     "doc": "ai-coding/sources/2601.20245v2.txt",
+     "by": "2601.20245v2.txt",
+     "verdict": "partly",
+     "confidence": 0.45,
+     "note": "Preregistered RCT, 52 crowd-recruited developers (mostly freelance or professional) learning a new Python library: those allowed AI scored 17% lower on a 27-point quiz on its concepts, code reading and debugging (d=0.74), with no significant time saving. Supports the reason behind the norm; no merge gate was tested.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    },
+    {
+     "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721",
+     "doc": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt",
+     "by": "Code-ownership experiment (Martin-Lopez)",
+     "verdict": "partly",
+     "confidence": 0.45,
+     "note": "Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested.",
+     "role": "qualifies",
+     "applicability": "direct",
+     "basis": "heuristic",
+     "why": "the verdict bears on the claim as worded",
+     "audited": true
+    }
+   ],
+   "audit": {
+    "text": "Developers should be able to explain AI-generated code without the AI's help before it is merged",
+    "status": "qualified",
+    "decision": "qualify",
+    "limitations": [
+     "2601.20245v2.txt: Preregistered RCT, 52 crowd-recruited developers (mostly freelance or professional) learning a new Python library: those allowed AI scored 17% lower on a 27-point quiz on its concepts, code reading and debugging (d=0.74), with no significant time saving. Supports the reason behind the norm; no merge gate was tested.",
+     "Code-ownership experiment (Martin-Lopez): Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested."
+    ],
+    "suggestions": [
+     "Add the qualification: the evidence supports a narrower or weaker statement."
+    ]
+   }
+  }
+ ],
+ "documents": [
+  {
+   "file": "ai-coding/sources/2310.02059.txt",
+   "name": "2310.02059.txt",
+   "sha": "83f2f4c79e",
+   "lines": 1907,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2310.02059.txt#L930-L936"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2507.00788.txt",
+   "name": "Echoes of AI maintainability RCT",
+   "sha": "c066966a89",
+   "lines": 3851,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2507.00788.txt#L2519-L2524",
+    "ai-coding/sources/2507.00788.txt#L2581-L2587"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2601.20245v2.txt",
+   "name": "2601.20245v2.txt",
+   "sha": "7ed5259be4",
+   "lines": 1471,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2601.20245v2.txt#L468-L484"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2603.28592v3.txt",
+   "name": "Debt study (302k AI commits)",
+   "sha": "d705317e01",
+   "lines": 1261,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2603.28592v3.txt#L1031-L1035",
+    "ai-coding/sources/2603.28592v3.txt#L918-L933"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/2607.21652v1.txt",
+   "name": "Vibe-coding literature review",
+   "sha": "b918616264",
+   "lines": 2591,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/2607.21652v1.txt#L1434-L1452",
+    "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/4859137.txt",
+   "name": "Shan et al. field study + RCT",
+   "sha": "8ca047452e",
+   "lines": 1775,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/4859137.txt#L1219-L1229"
+   ]
+  },
+  {
+   "file": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt",
+   "name": "Code-ownership experiment (Martin-Lopez)",
+   "sha": "3be5045d2c",
+   "lines": 1064,
+   "sameStudyAs": null,
+   "cites": [
+    "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892",
+    "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
+   ]
+  }
+ ],
+ "gaps": [
+  "Code-ownership experiment (Martin-Lopez) is context only: a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers",
+  "No study strong enough to decide: \"Developers should be able to explain AI-generated code without the AI's help before it is merged\""
+ ],
+ "fingerprint": "38da9c6bef",
+ "generatedAt": "2026-10-21T15:13:37.891Z"
+}

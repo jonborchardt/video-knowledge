@@ -1,0 +1,817 @@
+{
+  "topic": "ai-coding",
+  "story": "decision:quality-and-understanding",
+  "title": "Is AI-Written Code Harder to Maintain?",
+  "revision": 3,
+  "generation": {
+    "model": "claude-opus-5-5",
+    "brief": "scripts/briefs/script.md",
+    "date": "2026-10-21",
+    "wordsPerMinute": 150,
+    "evidencePackage": "38da9c6bef"
+  },
+  "sections": [
+    {
+      "name": "hook",
+      "sentences": [
+        {
+          "id": "s01",
+          "text": "If an AI writes the code today, who pays for it when somebody has to change it next year?",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s02",
+          "text": "One research team stopped guessing and ran a randomised trial: code written with or without AI, then changed by hand.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s02.a",
+              "text": "The Echoes of AI study ran a randomised controlled trial on manually evolving code that was or was not developed with AI assistance.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "setup",
+      "sentences": [
+        {
+          "id": "s03",
+          "text": "The worry has a familiar shape: one study collected in a review of the research warns that code built up through conversation often \"lacks cohesive structure\", which makes later maintenance harder.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s03.a",
+              "text": "A vibe-coding literature review quotes a study noting that code generated through conversational flows often lacks cohesive structure, consistent patterns and documentation, complicating future maintenance.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
+                }
+              ],
+              "quote": {
+                "text": "lacks cohesive structure",
+                "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
+              },
+              "qualifications": [
+                "The sentence attributes the warning to one study the review collected; s13 says the review counts concerns."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s04",
+          "text": "And on security, the Razorwire Cybersecurity channel put it bluntly: \"46% of AI generated code is reportedly uh contain some form of security weakness\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s04.a",
+              "text": "Razorwire Cybersecurity said that 46% of AI-generated code reportedly contains some form of security weakness.",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "source": "fsFHu56V5ys"
+                }
+              ],
+              "quote": {
+                "text": "46% of AI generated code is reportedly uh contain some form of security weakness",
+                "source": "fsFHu56V5ys",
+                "speaker": "Razorwire Cybersecurity"
+              }
+            }
+          ],
+          "note": "Presented as a claim the video tests, not as true; the channel itself says 'reportedly'."
+        }
+      ]
+    },
+    {
+      "name": "investigation",
+      "sentences": [
+        {
+          "id": "s05",
+          "text": "So what happened in that trial when people had to change code an AI had helped write?",
+          "type": "transitional"
+        },
+        {
+          "id": "s06",
+          "text": "On speed, nothing reliable: their completion times were consistent with no effect at all.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s06.a",
+              "text": "The trial found no reliable evidence that AI-assisted code differs in manual evolution efficiency; completion times were consistent with a null effect.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
+                }
+              ],
+              "qualifications": [
+                "s07 gives the trial's own limit: any difference was at most small and highly uncertain."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s07",
+          "text": "The authors are careful about what that means: any difference was at most small, and highly uncertain, which is not the same as proof there is none.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s07.a",
+              "text": "The authors report at most small and highly uncertain differences between treatment and control.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s08",
+          "text": "On quality, the code's health score after the changes showed no reliable difference either, and test coverage was essentially identical.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s08.a",
+              "text": "The trial found no reliable frequentist evidence that prior AI-assisted development affects CodeHealth after continued manual evolution.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2507.00788.txt#L2581-L2587"
+                }
+              ]
+            },
+            {
+              "id": "s08.b",
+              "text": "Test coverage was essentially identical between the groups.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2507.00788.txt#L2581-L2587"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s09",
+          "text": "A second, Bayesian analysis even hinted at a small gain in code health when the original was written with AI by someone who uses it habitually.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s09.a",
+              "text": "Bayesian analysis suggests a small CodeHealth improvement when the original solution was co-developed with AI by a habitual AI user.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2507.00788.txt#L2581-L2587"
+                }
+              ],
+              "qualifications": [
+                "'hinted' and 'a second analysis' carry that the main frequentist test found no reliable difference (s08)."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s10",
+          "text": "Dave Farley, talking about the study, summed it up: \"The AI didn't make it any better and it didn't make it any worse.\"",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s10.a",
+              "text": "Dave Farley said of the experiment that the AI didn't make it any better and didn't make it any worse.",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "source": "PkITOx9lIT8"
+                }
+              ],
+              "quote": {
+                "text": "The AI didn't make it any better and it didn't make it any worse.",
+                "source": "PkITOx9lIT8",
+                "speaker": "Dave Farley"
+              }
+            }
+          ],
+          "note": "The context window describes the three-group experiment; the video title names Dave Farley."
+        },
+        {
+          "id": "s11",
+          "text": "So where does the debt fear get its evidence?",
+          "type": "transitional"
+        },
+        {
+          "id": "s12",
+          "text": "Partly from surveys: one study measured maintainability and technical debt through its respondents' answers to questionnaire scales, and AI use went with lower maintainability and more debt.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s12.a",
+              "text": "Shan et al. measured coding maintainability and technical debt with multi-item scales answered by respondents, and found AI use associated with decreased maintainability and increased technical debt.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/4859137.txt#L1219-L1229"
+                }
+              ],
+              "qualifications": [
+                "The sentence says the measures were respondents' questionnaire answers and that AI use 'went with' the outcome (association); s13 adds that nobody's later change was timed."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s13",
+          "text": "That is an association in people's answers, not a timed test of someone else changing the code.",
+          "type": "rhetorical",
+          "note": "Describes the measure named in s12 (respondents, multi-item scales, 'associated with'); adds no new fact."
+        },
+        {
+          "id": "s14",
+          "text": "The review of the research counted the worry too: maintainability concerns came up in 11 of its sources, 23 percent.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s14.a",
+              "text": "In the vibe-coding literature review, maintainability implications appear in 23% (11) of the sources.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
+                }
+              ],
+              "qualifications": [
+                "s15 says the count is of sources raising the concern, not a measurement."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s15",
+          "text": "That counts how often the concern is raised, which is not the same as measuring it.",
+          "type": "rhetorical",
+          "note": "The passage reports sources that 'note', 'caution' and 'discuss' maintainability; no comparison is described."
+        },
+        {
+          "id": "s16",
+          "text": "Then there is code out in the wild: a study that tracked commits made with AI coding assistants found that some of the issues they introduced still survive in the latest code.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s16.a",
+              "text": "A study of AI co-authored commits found that some AI-introduced issues still survive at HEAD.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+                }
+              ],
+              "qualifications": [
+                "s18 says the study had no human-only baseline."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s17",
+          "text": "The assistants fixed about as many code smells, surface problems like naming and formatting, as they introduced; but they introduced more correctness and security issues than they fixed.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s17.a",
+              "text": "AI co-authored commits fix a similar number of code smell issues as they introduce; code smells here are surface-level problems such as formatting and naming.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+                }
+              ]
+            },
+            {
+              "id": "s17.b",
+              "text": "AI commits introduce more correctness and security issues than they fix.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+                }
+              ],
+              "qualifications": [
+                "This is a net count of issues introduced versus fixed, not a rate of vulnerable code; s18 adds the missing baseline."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s18",
+          "text": "But the authors did not compare those commits with code written by people alone, so the study cannot say AI code leaves more debt than human code does.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s18.a",
+              "text": "The commit study does not compare AI-authored commits against a baseline of purely human-written commits.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2603.28592v3.txt#L1031-L1035"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s30",
+          "text": "And the security worry? One study did put a number on it: of 733 code snippets generated by AI, 27.3 percent contained security weaknesses.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s30.a",
+              "text": "Out of 733 generated code snippets, 27.3% contained security weaknesses.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
+                }
+              ],
+              "qualifications": [
+                "s31 says the count covers AI-generated code alone, with no hand-written code checked the same way."
+              ]
+            }
+          ],
+          "note": "Answers the claim quoted in s04 without re-reading its figure. The cited lines do not name the tools or the projects, so the sentence does not either."
+        },
+        {
+          "id": "s31",
+          "text": "That is a count of weaknesses in AI code alone; it cannot tell you whether code written by hand would score any better on the same check.",
+          "type": "rhetorical",
+          "note": "The cited lines count only generated snippets; the sentence says what that figure cannot show and adds no fact about the study."
+        },
+        {
+          "id": "s19",
+          "text": "The review of the research found security risk was the challenge its sources raised most, in 10 of them, half of those it tallied for that question.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s19.a",
+              "text": "In the vibe-coding literature review, the most frequently discussed open challenge is security risk in AI-generated code, appearing in 50% (10) of the sources in its table.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+                }
+              ]
+            }
+          ],
+          "note": "Answers the security claim quoted in s04; it does not repeat its figure."
+        },
+        {
+          "id": "s20",
+          "text": "What those sources agree on is narrower than a rate: generated code may contain weaknesses when developers rely on it without rigorous checking.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s20.a",
+              "text": "Peer-reviewed and practitioner sources agree that generated code may contain weaknesses when developers rely on automated generation without rigorous verification.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+                  "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s21",
+          "text": "There is one cost, though, that experiments did measure, and it lands on the person who wrote the code.",
+          "type": "transitional"
+        },
+        {
+          "id": "s32",
+          "text": "In one trial, crowd workers recruited online, most of them freelance or professional software developers, did a coding task with or without AI, then took a quiz on the skills the task should have built.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s32.a",
+              "text": "Participants, recruited as crowd workers and mostly freelance or professional software developers, completed a coding task with or without AI and took a quiz measuring the skill formation gained by completing it.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/developers-should-able-explain-generated-code",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/developers-should-able-explain-generated-code",
+                  "cite": "ai-coding/sources/2601.20245v2.txt#L468-L484"
+                }
+              ],
+              "qualifications": [
+                "The sentence names the population the cited lines give (crowd workers, mostly freelance or professional developers) and the measure (a quiz on skill formation from the task)."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s33",
+          "text": "Using AI did not make them significantly faster, and their scores came out lower by a gap worth 17 percent of the quiz.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s33.a",
+              "text": "Using AI to complete the coding task did not significantly improve task completion time.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/developers-should-able-explain-generated-code",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/developers-should-able-explain-generated-code",
+                  "cite": "ai-coding/sources/2601.20245v2.txt#L468-L484"
+                }
+              ]
+            },
+            {
+              "id": "s33.b",
+              "text": "Skill formation measured by the quiz was significantly reduced with AI; the 4.15-point gap on the 27-point quiz is a 17% score difference.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/developers-should-able-explain-generated-code",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/developers-should-able-explain-generated-code",
+                  "cite": "ai-coding/sources/2601.20245v2.txt#L468-L484"
+                }
+              ],
+              "qualifications": [
+                "The 17% is a share of the quiz, stated as such; the measure is the quiz from s32."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s22",
+          "text": "In a separate experiment with different participants, working with AI cut their chance of answering questions about their own code correctly by 5.95 percentage points.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s22.a",
+              "text": "In the code-ownership experiment, AI assistance was associated with a 5.95 percentage-point decrease in the probability of answering ownership questions correctly.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/developers-should-able-explain-generated-code",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/developers-should-able-explain-generated-code",
+                  "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
+                }
+              ],
+              "qualifications": [
+                "The sentence calls them participants and gives the measure (questions about their own code); the cited lines do not give the population."
+              ]
+            }
+          ],
+          "note": "The cited lines do not give this experiment's population and the participant lines cannot be recorded (the document is already cited for this claim), so the sentence calls them that study's participants, never developers or colleagues, and does not apply the result to professional code review."
+        },
+        {
+          "id": "s23",
+          "text": "The authors re-checked it other ways: each time the drop kept its direction, though in one it was too weak to be sure of.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s23.a",
+              "text": "The negative impact of AI assistance on code ownership was robust to alternative specifications, with fluctuations in significance but not in effect direction.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/developers-should-able-explain-generated-code",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/developers-should-able-explain-generated-code",
+                  "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "answer",
+      "sentences": [
+        {
+          "id": "s24",
+          "text": "So, is AI-written code harder to maintain? In the one trial that tested it, over the time it ran, no: no reliable difference in speed or code health, though one trial with that much uncertainty cannot rule out a small one.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s24.a",
+              "text": "The Echoes RCT found no reliable difference in manual evolution efficiency, with at most small and highly uncertain differences.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
+                }
+              ]
+            },
+            {
+              "id": "s24.b",
+              "text": "The Echoes RCT found no reliable frequentist evidence of a CodeHealth difference after manual evolution.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+                  "cite": "ai-coding/sources/2507.00788.txt#L2581-L2587"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "s25",
+          "text": "The louder warnings rest on questionnaires, counts of concern and issue tallies with nothing human to compare them to.",
+          "type": "rhetorical",
+          "note": "Points back in words to s12, s14 and s18 without new figures."
+        },
+        {
+          "id": "s26",
+          "text": "The cost that was measured is different: in both of those experiments, people working with AI learned less or understood their own code less well, and whether that makes it harder for those same people to change their code later is something none of these studies tested.",
+          "type": "factual",
+          "assertions": [
+            {
+              "id": "s26.b",
+              "text": "In the quiz trial, skill formation was significantly reduced when AI was used to complete the task.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/developers-should-able-explain-generated-code",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/developers-should-able-explain-generated-code",
+                  "cite": "ai-coding/sources/2601.20245v2.txt#L468-L484"
+                }
+              ]
+            },
+            {
+              "id": "s26.a",
+              "text": "AI assistance was associated with lower correctness on ownership questions about the participants' code.",
+              "kind": "fact",
+              "claims": [
+                {
+                  "id": "ai-coding/developers-should-able-explain-generated-code",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "study",
+                  "claim": "ai-coding/developers-should-able-explain-generated-code",
+                  "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
+                }
+              ]
+            }
+          ],
+          "note": "Points back in words to s33 and s22, scoped to those two experiments. The last clause is a statement about the package: no cited study measures later maintenance by the people whose understanding dropped."
+        }
+      ]
+    },
+    {
+      "name": "takeaway",
+      "sentences": [
+        {
+          "id": "s27",
+          "text": "Simon Willison draws his line here: \"I don't think you should ever commit a line of code that a language model wrote If you don't understand it yourself\".",
+          "type": "attributed",
+          "assertions": [
+            {
+              "id": "s27.a",
+              "text": "Simon Willison said he does not think you should ever commit a line of code a language model wrote if you don't understand it yourself.",
+              "kind": "attribution",
+              "claims": [
+                {
+                  "id": "ai-coding/developers-should-able-explain-generated-code",
+                  "stance": "asserts"
+                }
+              ],
+              "evidence": [
+                {
+                  "kind": "statement",
+                  "claim": "ai-coding/developers-should-able-explain-generated-code",
+                  "source": "uRuLgar5XZw"
+                }
+              ],
+              "quote": {
+                "text": "I don't think you should ever commit a line of code that a language model wrote If you don't understand it yourself",
+                "source": "uRuLgar5XZw",
+                "speaker": "Simon Willison"
+              }
+            }
+          ]
+        },
+        {
+          "id": "s28",
+          "text": "So when you review AI-assisted code, yours or a colleague's, don't stop at whether it works: ask the author to walk you through it with the AI closed.",
+          "type": "rhetorical"
+        },
+        {
+          "id": "s29",
+          "text": "If they can't, the code isn't finished yet.",
+          "type": "rhetorical"
+        }
+      ]
+    }
+  ]
+}
