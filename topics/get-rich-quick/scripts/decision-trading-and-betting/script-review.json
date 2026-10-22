@@ -1,0 +1,159 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-21",
+  "revision": 1,
+  "packageFingerprint": "c10ea75b99",
+  "approved": {
+    "s01": "9996b79668",
+    "s02": "aed18bf2da",
+    "s03": "fc37f22d61",
+    "s04": "c5a9dad609",
+    "s05": "b35327b8ef",
+    "s06": "7dbe5f4879",
+    "s08": "4f33490b16",
+    "s09": "8ec788e6b5",
+    "s10": "55385758fa",
+    "s11": "10186b9dc3",
+    "s12": "9be7343d73",
+    "s13": "bc1f785fdc",
+    "s14": "39b73aa508",
+    "s15": "f1b66d6628",
+    "s27": "bdf8fd2b09",
+    "s16": "595ae000e1",
+    "s17": "5081048a33",
+    "s18": "1cce6fba43",
+    "s19": "a740a55ab7",
+    "s20": "f6d221da0b",
+    "s21": "608ae60a11",
+    "s22": "99ca7f848c",
+    "s23": "05504f2f43",
+    "s28": "8ed265ddf5",
+    "s24": "7e1402d067",
+    "s25": "c57680aaba",
+    "s26": "f5859281b1"
+  },
+  "findings": [
+    {
+      "sentence": "s16",
+      "assertion": "s16.a",
+      "fingerprint": "595ae000e1",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "The 7 and 23.9 basis points are abnormal returns: the intercept of a regression against a value-weighted Taiwan market index (barber-odean L452-L458), weighted by the money invested. \"They lost 7 basis points a day\" reads as a raw loss on their accounts; it is a shortfall relative to simply holding the market.",
+      "refs": [
+        "get-rich-quick/sources/barber-odean-day-traders-learn.txt#L476-L479"
+      ],
+      "suggestion": "Say \"Taken as a group, they trailed the market by 7 basis points a day before costs, ... and trading costs more than tripled that shortfall, to 23.9.\""
+    },
+    {
+      "sentence": "s20",
+      "assertion": "s20.a",
+      "fingerprint": "f6d221da0b",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "warning",
+      "explanation": "In context Cameron explains why his own accuracy fell when he traded large caps against HFT algorithms; he is not explaining why the traders in the Brazil and Taiwan studies lost. \"Names one reason the rest struggle\" gives his remark a scope it does not have.",
+      "refs": [],
+      "suggestion": "Say \"Ross Cameron describes one obstacle he hit himself:\" before the quote."
+    },
+    {
+      "sentence": "s22",
+      "fingerprint": "99ca7f848c",
+      "revision": 1,
+      "category": "needs-human",
+      "severity": "info",
+      "explanation": "\"So yes:\" answers the title question (do most lose), but the viewer last heard s02, which asks \"how many ... actually end up ahead?\"; a yes does not answer a how-many question.",
+      "refs": [],
+      "suggestion": "Drop \"So yes:\" or start \"Very few:\"."
+    }
+  ],
+  "dispositions": {
+    "s08.a": {
+      "fingerprint": "4f33490b16",
+      "category": "needs-qualification",
+      "reason": "The ESMA warning is about CFDs, a different product; the sentence asserts only the cited study's own population and finding, named in s08/s27, and never mentions CFDs."
+    },
+    "s08.b": {
+      "fingerprint": "4f33490b16",
+      "category": "needs-qualification",
+      "reason": "The sentence only describes the grouping by days traded; it draws no conclusion about setup quality or fatigue, which the limit concerns."
+    },
+    "s09.a": {
+      "fingerprint": "8ec788e6b5",
+      "category": "needs-qualification",
+      "reason": "The sentence reports the shares the passage gives and the monotonic fall; it makes no claim about setup quality, and s10 frames it as the authors' roulette comparison."
+    },
+    "s10.a": {
+      "fingerprint": "55385758fa",
+      "category": "needs-qualification",
+      "reason": "Reports the authors' own comparison only; no claim about setup quality or why the share falls."
+    },
+    "s11.a": {
+      "fingerprint": "10186b9dc3",
+      "category": "needs-qualification",
+      "reason": "The ESMA warning is about CFDs, a different product; the sentence asserts only the cited study's own population and finding, named in s08/s27, and never mentions CFDs."
+    },
+    "s11.b": {
+      "fingerprint": "10186b9dc3",
+      "category": "needs-qualification",
+      "reason": "The narrower finding is exactly what the sentence says (47 of the 1,551 persistent traders), with the population named in s08 and the sentence itself."
+    },
+    "s12.a": {
+      "fingerprint": "9be7343d73",
+      "category": "needs-qualification",
+      "reason": "Figures are the passage's own (17 of 1,551 above minimum wage, best US$310 a day on average); s13 carries the volatility next to them."
+    },
+    "s13.a": {
+      "fingerprint": "bc1f785fdc",
+      "category": "needs-qualification",
+      "reason": "Restates the passage's volatility finding for the eight above a bank teller's pay; the limit adds nothing the sentence contradicts."
+    },
+    "s15.a": {
+      "fingerprint": "f1b66d6628",
+      "category": "needs-qualification",
+      "reason": "Attributed to the Brazil study only, which the passage states; s18-s19 give Taiwan's separate finding on past winners."
+    },
+    "s27.a": {
+      "fingerprint": "bdf8fd2b09",
+      "category": "needs-qualification",
+      "reason": "The ESMA warning is about CFDs, a different product; the sentence asserts only the cited study's own population and finding, named in s08/s27, and never mentions CFDs."
+    },
+    "s16.a": {
+      "fingerprint": "595ae000e1",
+      "category": "needs-qualification",
+      "reason": "The limit about fatigue and setup quality is not engaged: the sentence makes no claim about either (the market-adjusted measure is a separate reviewer finding)."
+    },
+    "s18.a": {
+      "fingerprint": "1cce6fba43",
+      "category": "needs-qualification",
+      "reason": "s19, the next sentence, says these predictably profitable traders were under 3% of day traders."
+    },
+    "s19.a": {
+      "fingerprint": "a740a55ab7",
+      "category": "needs-qualification",
+      "reason": "\"All day traders\" is the passage's own denominator (\"less than 3% of all day traders on an average day\"), not a universal claim the sentence adds."
+    },
+    "s21.a": {
+      "fingerprint": "608ae60a11",
+      "category": "needs-qualification",
+      "reason": "\"Futures\" and \"in a different market\" carry the venue limit, and \"when ... was higher\" reports an association, as the passage does."
+    },
+    "s22.a": {
+      "fingerprint": "99ca7f848c",
+      "category": "needs-qualification",
+      "reason": "Points back in words to s09-s11, scoped to Brazil; s28 limits the answer to these markets and years; no claim about setup quality."
+    },
+    "s22.b": {
+      "fingerprint": "99ca7f848c",
+      "category": "needs-qualification",
+      "reason": "The ESMA warning is about CFDs, a different product; the sentence asserts only the cited study's own population and finding, named in s08/s27, and never mentions CFDs."
+    },
+    "s23.a": {
+      "fingerprint": "05504f2f43",
+      "category": "needs-qualification",
+      "reason": "\"A sliver of everyone who tried\" points back to s19's under-3% figure stated beside the finding."
+    }
+  }
+}
