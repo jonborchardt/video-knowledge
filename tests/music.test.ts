@@ -43,6 +43,7 @@ import { buildTimeline } from '../src/video/timeline';
 import type { Timeline } from '../src/video/types';
 import {
   CHECKLIST,
+  DRAFT_CHECK,
   REVIEW_FILES,
   chapters,
   renderChecklist,
@@ -107,7 +108,28 @@ describe('review package chapters', () => {
     expect(renderDescription(pkg, s, t, report)).toContain('0:20 Two');
     expect(renderReadme(pkg, t, report)).toContain(made.mp4);
     expect(renderChecklist(pkg, t)).toContain(CHECKLIST[0]);
+    expect(pkg.status).toBe('private review build');
+    expect(pkg.title).toMatch(/^\[PRIVATE REVIEW\]/);
+    expect(pkg.checklist).toContain(DRAFT_CHECK);
+    expect(renderDescription(pkg, s, t, report)).toMatch(/^PRIVATE REVIEW BUILD/);
     expect(reviewMp4Name(join('t', 'scripts', 'x', 'video'))).toBe('x-review-private.mp4');
+    // a cleared build (what `final` produces) is the release package: no private banner, no draft-voice check
+    const cleared: BuildReport = {
+      ...report,
+      narration: { ...report.narration, publishable: true },
+      clearance: { narration: true, music: true, publishable: true, why: [] },
+    };
+    const rel = reviewData(s, t, cleared, { ...made, mp4: 'x.mp4' });
+    expect(rel.status).toBe('release build');
+    expect(rel.title).toBe(t.title);
+    expect(rel.checklist).not.toContain(DRAFT_CHECK);
+    const desc = renderDescription(rel, s, t, cleared);
+    expect(desc).not.toMatch(/PRIVATE|DRAFT|Narration|clearance/i);
+    expect(desc).toContain('0:20 Two');
+    expect(renderReadme(rel, t, cleared)).toMatch(/^# RELEASE BUILD/);
+    expect(renderReadme(rel, t, cleared)).toContain('**public**');
+    expect(renderChecklist(rel, t)).toContain('release build');
+    expect(reviewMp4Name(join('t', 'scripts', 'x', 'video'), true)).toBe('x.mp4');
     expect(thumbnailScene(t)).toBeNull(); // the fixture has no title card
   });
 });
@@ -536,7 +558,11 @@ describe('build report clearance and the board', () => {
       narration: false,
       music: true,
       publishable: false,
-      why: ['narration is draft only: test voice'],
+      why: [
+        expect.stringMatching(
+          /^narration is draft only: test voice; .*npm run video -- final demo decision:mlm-and-seminars --approved-by <name>/,
+        ),
+      ],
     });
     expect(r.clearance.music).toBe(true);
     expect(r.music?.compositions[0].licence.attribution).toEqual(['OpenAIR, University of York']);

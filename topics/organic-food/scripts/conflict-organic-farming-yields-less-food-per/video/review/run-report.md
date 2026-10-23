@@ -36,3 +36,7 @@ Undertow (cleared): opening sc01-sc03, evidence sc04-sc18, ending sc19-sc20. Mus
 
 - Narration is draft only (edge-tts: unofficial Microsoft Edge read-aloud API, no terms for published media).
 - Music: cleared.
+
+## Release build
+
+- 2026-10-22: `npm run video -- final organic-food conflict:organic-farming-yields-less-food-per --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.

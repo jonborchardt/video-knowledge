@@ -133,7 +133,7 @@ export interface Production {
   upload: Upload | null; // what the YouTube upload form takes, once the stage is packaged
   halt: { kind: HaltKind; stage: ProductionStage; why: string } | null; // the first halt, if any
 }
-/** The private review upload, read from the review package (video/review/). Paths are repo-relative. */
+/** The upload (private review, or public once cleared), read from the review package (video/review/). Paths are repo-relative. */
 export interface Upload {
   file: string;
   title: string;
@@ -653,7 +653,7 @@ const soundtrackStage: BoardStage = ({ topic, storyId, r, release, vr }, s) => {
 // 10. Review package: made from this very build report.
 const reviewPackageStage: BoardStage = ({ p, r, release, vr }, s) => {
   if (!vr || !release) return {};
-  const rp = readJson<{ generatedAt: string; buildReport: string; mp4: string }>(p(REVIEW_PACKAGE));
+  const rp = readJson<{ generatedAt: string; buildReport: string; mp4: string; status?: string }>(p(REVIEW_PACKAGE));
   if (!rp) return {};
   const current = rp.buildReport === fileSha(p(VIDEO_REPORT));
   return {
@@ -661,7 +661,9 @@ const reviewPackageStage: BoardStage = ({ p, r, release, vr }, s) => {
       {
         name: 'review package',
         health: current ? 'done' : 'stale',
-        detail: current ? `video/review/${rp.mp4}, private review build` : 'made from an earlier build; package again',
+        detail: current
+          ? `video/review/${rp.mp4}, ${rp.status ?? 'private review build'}`
+          : 'made from an earlier build; package again',
         file: r(REVIEW_PACKAGE),
         date: rp.generatedAt,
       },
@@ -670,7 +672,9 @@ const reviewPackageStage: BoardStage = ({ p, r, release, vr }, s) => {
       s.stage === 'scored' && current
         ? {
             stage: 'packaged',
-            next: `upload video/review/${rp.mp4} to YouTube as a private video, review it with video/review/checklist.md, then record {"decision": "reviewing", "url": ...} in production.json`,
+            next: vr.clearance.publishable
+              ? `release build: upload video/review/${rp.mp4} to YouTube as a public video with video/review/description.txt, then record {"decision": "published", "url": ...} in production.json`
+              : `upload video/review/${rp.mp4} to YouTube as a private video, review it with video/review/checklist.md, then record {"decision": "reviewing", "url": ...} in production.json`,
           }
         : undefined,
   };

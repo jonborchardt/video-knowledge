@@ -1,85 +1,85 @@
 # Build report: How High Is Inflation, Really?
 
-inflation-2026 / decision:how-high-is-inflation, 2026-10-21T14:49:12.306Z. `npm run video -- qa inflation-2026 decision:how-high-is-inflation`
+inflation-2026 / decision:how-high-is-inflation, 2026-10-22T17:49:24.730Z. `npm run video -- final inflation-2026 decision:how-high-is-inflation --approved-by Jon`
 
 **Segment.** 36 of 36 storyboard scenes (sc01 to sc36), 40 sentences. Kinds: sc01 quote, sc02 quote, sc03 question, sc04 quote, sc05 stat-tiles, sc06 question, sc07 quote, sc08 bar, sc09 quote, sc10 bar, sc11 bar, sc12 quote, sc13 stat-tiles, sc14 title, sc15 quote, sc16 stat-tiles, sc17 stat-tiles, sc18 question, sc19 quote, sc20 stat-tiles, sc21 list, sc22 bar, sc23 quote, sc24 stat-tiles, sc25 excerpt, sc26 quote, sc27 excerpt, sc28 stat-tiles, sc29 quote, sc30 bar, sc31 stat-tiles, sc32 excerpt, sc33 list, sc34 title, sc35 list, sc36 list.
 
-**Output.** topics/inflation-2026/scripts/decision-how-high-is-inflation/video/segment.mp4: 344.28s, 1920x1080 @ 30 fps, h264 + aac, 10328 frames, rendered in 0s ($0 (local CPU)).
+**Output.** topics/inflation-2026/scripts/decision-how-high-is-inflation/video/segment.mp4: 344.08s, 1920x1080 @ 30 fps, h264 + aac, 10322 frames, rendered in 1346.5s ($0 (local CPU)).
 
-**Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 332.33s of speech at about 158 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
+**Narration.** azure / en-US-AndrewMultilingualNeural (rate +0%, neural), wav, 332.2s of speech at about 158 wpm, $0.0745 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
 
 | Sentence | Seconds | Boundaries | Audio sha |
 |---|---|---|---|
-| s01 | 6.912 | 17 | d2b153a229 |
-| s02 | 7.032 | 19 | 5c0bec701f |
-| s03 | 6.144 | 16 | 29b1797f1a |
-| s04 | 5.928 | 14 | 3d4fdee815 |
-| s05 | 10.056 | 24 | 5098a6425e |
-| s06 | 6.072 | 20 | c28f30b11f |
-| s07 | 7.128 | 17 | bc5f9dc609 |
-| s08 | 11.712 | 28 | 31322d8f44 |
-| s09 | 10.152 | 28 | 84c4be07c8 |
-| s10 | 11.736 | 26 | f9ffaa8da6 |
-| s11 | 7.296 | 19 | 4ba938424f |
-| s12 | 10.44 | 24 | 4932139548 |
-| s13 | 7.368 | 19 | 365c034f82 |
-| s15 | 9.144 | 21 | 1697fe04cb |
-| s16 | 9.096 | 27 | b9cb0e54a1 |
-| s17 | 2.544 | 8 | a83f16058c |
-| s18 | 8.568 | 24 | 6490e93c20 |
-| s19 | 13.128 | 26 | d59f7314be |
-| s20 | 8.736 | 20 | c955582559 |
-| s21 | 2.592 | 9 | 76ed154107 |
-| s22 | 7.056 | 16 | 0120d24bf1 |
-| s23 | 13.176 | 24 | 22294b70e3 |
-| s24 | 6.528 | 22 | a3ddd5aab2 |
-| s25 | 8.784 | 21 | 6a8089384e |
-| s26 | 8.784 | 26 | 268eccda81 |
-| s27 | 3.936 | 13 | c480e12bec |
-| s41 | 13.584 | 38 | c6cd662f1e |
-| s28 | 9.552 | 22 | 1974e5b990 |
-| s29 | 8.088 | 22 | 36e3cf7a70 |
-| s30 | 8.304 | 21 | e094aed9f2 |
-| s31 | 11.184 | 27 | a303893062 |
-| s32 | 8.928 | 20 | 7ffd904d59 |
-| s33 | 10.488 | 28 | 0ec2b86024 |
-| s34 | 5.76 | 11 | d93b5375c4 |
-| s35 | 10.512 | 25 | 2ea8eb7c74 |
-| s36 | 9.264 | 27 | 64d1dd5f1c |
-| s37 | 7.392 | 21 | b599f490bb |
-| s38 | 6.288 | 16 | de392e752b |
-| s39 | 6.576 | 18 | 58bf4cf05a |
-| s40 | 6.36 | 22 | 9c0ac0eaf0 |
+| s01 | 6.4125 | 17 | 9af0d415f8 |
+| s02 | 6.95 | 19 | c544447d5c |
+| s03 | 6.1125 | 16 | 6d52071118 |
+| s04 | 6.075 | 14 | 730691cdf5 |
+| s05 | 9.95 | 24 | 4b1ecdf496 |
+| s06 | 6.075 | 20 | f87e87a012 |
+| s07 | 7.05 | 17 | 150db054f3 |
+| s08 | 11.7 | 28 | 146644fbc1 |
+| s09 | 10.05 | 28 | 6bc00a9b04 |
+| s10 | 11.5625 | 26 | 4115b8dba1 |
+| s11 | 7.2625 | 19 | f2952b815e |
+| s12 | 10.05 | 24 | a011485f3e |
+| s13 | 7.125 | 19 | f41c4309df |
+| s15 | 9.4375 | 21 | 14f36d1849 |
+| s16 | 9.2125 | 27 | 8dd28e7957 |
+| s17 | 2.425 | 8 | 832e7aa7e9 |
+| s18 | 8.625 | 24 | 7f7b43cc8c |
+| s19 | 13.425 | 26 | 9107ea4caf |
+| s20 | 9.1 | 20 | 1a9ca882e8 |
+| s21 | 2.5125 | 9 | 7f9d980c45 |
+| s22 | 7.325 | 16 | a6329ab5fa |
+| s23 | 12.875 | 24 | 3cf5a8e60c |
+| s24 | 6.625 | 22 | c51627d315 |
+| s25 | 8.975 | 21 | 72eb39d11e |
+| s26 | 8.825 | 26 | 5e44852ba8 |
+| s27 | 3.875 | 13 | 5abd5f0010 |
+| s41 | 13.7625 | 38 | 2dc2a0ac30 |
+| s28 | 9.9 | 22 | 217cc927d6 |
+| s29 | 8.3 | 22 | 82fd9da087 |
+| s30 | 7.6 | 21 | 42f0963ae4 |
+| s31 | 11.3625 | 27 | 080f48e53d |
+| s32 | 8.775 | 20 | c6944f174b |
+| s33 | 10.675 | 28 | 25af1cc294 |
+| s34 | 5.6 | 11 | 2a0315c40e |
+| s35 | 10.275 | 25 | ed00ace3fe |
+| s36 | 10.05 | 27 | 8a79a8507e |
+| s37 | 7.5625 | 21 | 26aab8ac7a |
+| s38 | 5.95 | 16 | 983539fe6e |
+| s39 | 6.425 | 18 | 5501e3cc7b |
+| s40 | 6.35 | 22 | 14096d5655 |
 
 **Architecture.** Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS).
 
-**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 68d56eec4d: music -20.6 dB under the voice while it speaks, peak -1.3 dB.
+**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 66312db39c: music -20.7 dB under the voice while it speaks, peak -1.4 dB.
 
 | Cue | Asset | From | To | Gain | Level |
 |---|---|---|---|---|---|
-| opening | undertow/pulse | 0.0s | 21.7s | -11 dB | -37.4 dB |
-| evidence | undertow/texture | 21.7s | 323.0s | -13 dB | -40.3 dB |
-| ending | undertow/pulse | 323.0s | 344.3s | -11 dB | -37.7 dB |
+| opening | undertow/pulse | 0.0s | 21.1s | -11 dB | -37.4 dB |
+| evidence | undertow/texture | 21.1s | 323.3s | -13 dB | -40.3 dB |
+| ending | undertow/pulse | 323.3s | 344.1s | -11 dB | -37.7 dB |
 
-**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. A passing build is technical completion only; a person approves the release.
+**Clearance.** Narration and music are both cleared for publication. A passing build is technical completion only; a person approves the release.
 
-**Fingerprints.** script 6f5502cfbd, storyboard de1ef636e3, narration ad2f5f71fe, config b633d8b037, music 68d56eec4d.
+**Fingerprints.** script 6f5502cfbd, storyboard de1ef636e3, narration 256b50c7f8, config b633d8b037, music 66312db39c.
 
 ## QA: passed (36 of 36)
 
 | Check | Result | Detail |
 |---|---|---|
-| mp4 decodable | ok | 344.277s |
+| mp4 decodable | ok | 344.085s |
 | video stream | ok | h264 1920x1080 @ 30 |
 | resolution | ok | 1920x1080 |
 | frame rate | ok | 30 |
 | h264 | ok | h264 |
-| frame count | ok | 10328 frames, timeline 10328 |
-| duration in range | ok | 344.28s in [343.3,345.3] |
-| duration matches timeline | ok | 344.277s vs 344.267s (10328 frames) |
+| frame count | ok | 10322 frames, timeline 10322 |
+| duration in range | ok | 344.08s in [343.1,345.1] |
+| duration matches timeline | ok | 344.085s vs 344.067s (10322 frames) |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
-| audio length matches video | ok | 0.010s apart |
+| audio length matches video | ok | 0.018s apart |
 | no clipping | ok | peak -1.4 dB, mean -19.3 dB |
 | no long silence | ok | none >= 3s |
 | narration not truncated | ok | 40 sentences fit their slots |
@@ -95,14 +95,14 @@ inflation-2026 / decision:how-high-is-inflation, 2026-10-21T14:49:12.306Z. `npm 
 | excerpts resolve | ok | 3 excerpts with their highlights |
 | assets and kinds supported | ok | 7 kinds |
 | music cues resolve | ok | 3 cues over 1 compositions |
-| soundtrack mixed | ok | 3 cues, 2026-10-21T14:47:36.832Z |
-| mix is of this cue sheet | ok | mix 68d56eec4d, cue sheet 68d56eec4d |
+| soundtrack mixed | ok | 3 cues, 2026-10-22T17:48:08.827Z |
+| mix is of this cue sheet | ok | mix 66312db39c, cue sheet 66312db39c |
 | every cue sounded | ok | 3 cues audible where placed |
-| music under the voice | ok | -20.6 dB relative to speech (want -40 to -10) |
-| mix under the ceiling | ok | peak -1.3 dB, ceiling -1 dB |
+| music under the voice | ok | -20.7 dB relative to speech (want -40 to -10) |
+| mix under the ceiling | ok | peak -1.4 dB, ceiling -1 dB |
 | scene boundaries follow measured audio | ok | 36 scenes, 40 sentences |
 | cues inside their sentences | ok | 3 cues |
-| final scene complete | ok | ends 344.27s |
+| final scene complete | ok | ends 344.07s |
 | no blank sections | ok | none |
 | every scene has content | ok | mid-scene luma varies in every scene |
 
@@ -110,8 +110,7 @@ Inspection frames: 76 in video/frames/; contact sheet topics/inflation-2026/scri
 
 ## Known limitations
 
-- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; re-narrate with a commercial provider (VK_TTS_PROVIDER=openai, OPENAI_API_KEY) before release
-- word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
+- narration licence: commercial: Azure AI Speech terms allow the generated audio in published media
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes
 - automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision

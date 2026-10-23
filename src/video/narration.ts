@@ -30,7 +30,7 @@ export async function narrate(seg: Segment, videoDir: string, opts: NarrateOptio
   let format = old?.provider === tts.id ? (old?.format ?? '') : '';
   const out: SentenceAudio[] = [];
   for (const s of seg.sentences) {
-    const key = narrationKey(voice, s.text);
+    const key = narrationKey({ ...voice, provider: tts.id }, s.text);
     const base = `${NARRATION_DIR}/${s.id}-${key}`;
     const hit = cached.find((c) => c.file.startsWith(base + '.') && c.text === s.text);
     if (hit && !opts.force && existsSync(join(videoDir, hit.file))) {

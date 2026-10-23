@@ -58,3 +58,7 @@ The music sits -20.5 dB under the voice, with a peak of -1.4 dB.
 
 - **Narration:** draft only, from the unofficial Microsoft Edge read-aloud API, with no terms for published media. It needs a licensed voice before public release.
 - **Music:** `undertow` is marked `licence.cleared: true` in its composition.json.
+
+## Release build
+
+- 2026-10-22: `npm run video -- final sovereign-citizens decision:courts-and-jurisdiction --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.

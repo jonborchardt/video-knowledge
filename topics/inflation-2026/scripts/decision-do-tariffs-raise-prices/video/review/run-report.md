@@ -33,3 +33,7 @@ Undertow (cleared): sc01-sc02, sc03-sc05, sc06-sc17, sc18-sc21. Music -19.7 dB u
 
 - Narration is draft only (edge-tts: unofficial Microsoft Edge read-aloud API, no terms for published media).
 - Music: cleared.
+
+## Release build
+
+- 2026-10-22: `npm run video -- final inflation-2026 decision:do-tariffs-raise-prices --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.

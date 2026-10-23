@@ -38,3 +38,7 @@ Undertow (cleared): opening sc01-sc02, evidence sc03-sc33, ending sc34. Music -2
 
 - Narration is draft only (edge-tts: unofficial Microsoft Edge read-aloud API, no terms for published media).
 - Music: cleared.
+
+## Release build
+
+- 2026-10-22: `npm run video -- final heat-pumps decision:is-it-cheaper-to-run-than-gas --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.

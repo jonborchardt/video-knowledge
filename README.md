@@ -183,8 +183,10 @@ bespoke `kinds` entry for scenes the storyboard category alone does not identify
 animation), and per-scene `options` (layout choices, never figures). Narration is one file per sentence, cached by
 voice, rate and text, with the measured duration and word boundaries in `narration.json`. Providers: `edge`
 (Microsoft neural voices through `pip install edge-tts`, free, draft only: no licence for published media) and
-`openai` (commercial terms; `OPENAI_API_KEY`, word timestamps from its transcription of the output, cost estimated
-in the manifest). The timeline tiles the scenes by the measured audio, never by the word-count estimate, resolves
+`azure` (the same neural voices through Azure AI Speech, commercial terms; `AZURE_SPEECH_KEY` and
+`AZURE_SPEECH_REGION` in the gitignored `.env`; this is the release voice: `npm run video -- final` re-narrates an
+accepted draft with it) and `openai` (commercial terms; `OPENAI_API_KEY`, word timestamps from its transcription of
+the output, cost estimated in the manifest). The timeline tiles the scenes by the measured audio, never by the word-count estimate, resolves
 every cue to the frame its word is spoken on, and reads each cited excerpt from the corpus. The composition is
 Remotion (React components in `src/video/remotion/scenes/`; the closed kind records in `src/video/kinds.ts`, with
 each video's bespoke kinds registered in `src/video/bespoke/`). Scenes render one at a time into cached chunks
@@ -276,8 +278,18 @@ glitches, conclusion, local vs YouTube playback), the build report, a `thumbnail
 other than the one QA checked (the build report records its sha), and chapters YouTube would ignore: fewer than
 three, one under 10 s, or a scene not in the timeline. Upload the mp4
 to YouTube as a **private** video by hand; there is no API call. Record the outcome in `production.json` with
-`decision: "reviewing"` and the URL. The package says in every file that it is a review build and whether public
-release is blocked; the Edge voice keeps it blocked until the video is re-narrated under commercial terms.
+`decision: "reviewing"` and the URL. The package says in every file that it is a review build and why public
+release is blocked; the Edge voice keeps it blocked. When you accept the draft, run
+
+```
+npm run video -- final <topic> <story-id> --approved-by "<name>"
+```
+
+which re-narrates the same words with Azure Speech (the same neural voice under commercial terms), re-renders, re-runs
+QA and writes the **release build** to the same `video/review/`: the mp4 as `<slug>.mp4`, the real title, a
+description without the review notice, the voice or the clearance line, no draft-voice item on the checklist, and a
+`## Release build` line appended to `run-report.md`. The board then asks for a public upload and
+`decision: "published"`. Any later edit renders a draft again, so `final` runs once more before a re-upload.
 
 ## Production board
 
@@ -350,7 +362,8 @@ A fresh checkout plus these makes a story's `topics/<topic>/scripts/<slug>/video
 - **Node 22+** (`npm ci`); Remotion downloads Chrome on the first render. The ffmpeg and ffprobe used everywhere
   are the ones in Remotion's compositor package; `FFMPEG_DIR` overrides the directory.
 - **Python 3 with `pip install edge-tts`** for the draft voice (`VK_PYTHON` names the interpreter, default
-  `python`). `VK_TTS_PROVIDER=openai` with `OPENAI_API_KEY` switches to the commercial voice; nothing needs it.
+  `python`). The release voice needs `AZURE_SPEECH_KEY=...` and `AZURE_SPEECH_REGION=...` in `.env` at the repo root
+  (gitignored; `scripts/video.ts` loads it); only `npm run video -- final` uses it.
 - **The music assets**: `music/undertow/*.wav` are not committed. Either copy `music/undertow/source.strudel` into a
   strudel-bench checkout as `songs/undertow.strudel`, run `npm run headless -- songs/undertow.strudel` there, and
   `STRUDEL_BENCH=<dir> npm run music -- render undertow` here; or delete `video/music.json` to build without music.

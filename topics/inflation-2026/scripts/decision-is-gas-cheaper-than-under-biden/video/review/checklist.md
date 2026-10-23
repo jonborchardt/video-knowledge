@@ -1,6 +1,6 @@
 # Review checklist
 
-Is Gas Cheaper Now Than Under Biden?, private review build 2026-10-21.
+Is Gas Cheaper Now Than Under Biden?, release build 2026-10-22.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?
@@ -13,4 +13,3 @@ Is Gas Cheaper Now Than Under Biden?, private review build 2026-10-21.
 - [ ] Visual glitches: any flicker, overlapping text, clipped labels or wrong fonts (compare the contact sheet)?
 - [ ] Conclusion: does the ending answer the question asked at the start, and does the black hold as the storyboard says?
 - [ ] Playback: compare the local MP4 with the YouTube transcode at 1080p and 480p for banding, blur on small text and audio level.
-- [ ] Release: the narration voice is draft-only until re-narrated under commercial terms; confirm nothing in this build is cleared for public release unless the build report says so.

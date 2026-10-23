@@ -13,19 +13,25 @@
 //   init <topic> <story-id> [--force]                draft video/render.json from the storyboard (kept unless --force); lists the scenes needing a graphic
 //   check <topic> <story-id>                         renderability and graphics approval before the lock: writes video/render-check.json
 //   frames <topic> <story-id> --scene <id>           render one scene on its own and write video/frames/<id>-start, -mid, -end.png
+//   final <topic> <story-id> --approved-by "<name>"  the release build of a packaged story: the same words through Azure Speech
+//                                                    (commercial terms; AZURE_SPEECH_KEY and AZURE_SPEECH_REGION from .env), then
+//                                                    timeline, render, qa and package again in place; the approver is in the report's command
 // Inputs: the validated script, storyboard and evidence package in topics/<topic>/scripts/<slug>/ and video/render.json
 // (scenes, voice, cues, kinds, options), plus video/music.json (cues over music/<composition>/ assets) when there is a
 // soundtrack. Media is written to topics/<topic>/scripts/<slug>/video/ and is not committed.
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, sha, toJson, ROOT } from '../src/lib/io';
+import { boardNext } from '../src/lib/production';
+import { approverProblem } from '../src/lib/release';
 import { extractFrame, probe } from '../src/video/ffmpeg';
 import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
 import { MIX_FILE, type MixReport, loadMusicConfig, resolveCues } from '../src/video/music';
 import { narrate } from '../src/video/narration';
+import { type TtsProvider, provider } from '../src/video/tts';
 import { REVIEW_DIR, buildReviewPackage } from '../src/video/package';
 import { DECODABLE, type QaResult, extractInspectionFrames, qaSegment } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
@@ -36,6 +42,7 @@ import { checkSegment, loadInputs, loadSegment } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import type { NarrationManifest, Timeline } from '../src/video/types';
 
+if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
   const i = rest.indexOf(name);
@@ -45,7 +52,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 18)
+      .slice(0, 21)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -62,9 +69,9 @@ const rel = (f: string) =>
 const command = `npm run video -- ${cmd} ${topic} ${storyId}${rest.length ? ' ' + rest.join(' ') : ''}`;
 const sec = (frames: number, fps: number) => (frames / fps).toFixed(2);
 
-async function stageNarrate() {
+async function stageNarrate(tts?: TtsProvider) {
   const seg = loadSegment(topic, storyId);
-  const m = await narrate(seg, dir, { force: rest.includes('--regenerate'), log: (l) => console.log(`  ${l}`) });
+  const m = await narrate(seg, dir, { force: rest.includes('--regenerate'), tts, log: (l) => console.log(`  ${l}`) });
   const total = m.sentences.reduce((n, s) => n + s.duration, 0);
   const words = seg.sentences.reduce((n, s) => n + s.text.split(/\s+/).length, 0);
   console.log(
@@ -201,6 +208,7 @@ async function stageQa(
   // the last line, whatever ran before it: a reader (or a loop) never has to find the verdict in the log
   console.log(qa.ok ? 'RESULT: PASSED' : `RESULT: FAILED (${failed} of ${qa.checks.length} checks failed)`);
   if (!qa.ok) process.exitCode = 2;
+  return qa;
 }
 
 function stagePackage() {
@@ -312,6 +320,27 @@ try {
     case 'package':
       stagePackage();
       break;
+    case 'final': {
+      // The release build: a person accepted the draft package, so the same words go through the commercial voice.
+      const problem = approverProblem(flag('--approved-by'));
+      if (problem) throw new Error(problem);
+      const n = boardNext(topic, storyId);
+      if (n.stage !== 'packaged') throw new Error(`final needs a packaged story; the board says ${n.stage}: ${n.next}`);
+      const { seg, m } = await stageNarrate(provider('azure'));
+      const { tl } = stageTimeline(seg, m);
+      const { seconds } = await stageRender(tl, m);
+      const qa = await stageQa(seg, m, tl, seconds);
+      if (!qa.ok) throw new Error('QA failed; the draft package stands');
+      stagePackage();
+      // the run report is the produce agent's prose and named the draft voice as a blocker: say what settled it
+      const runReport = p(`${REVIEW_DIR}/run-report.md`);
+      if (existsSync(runReport) && !readFileSync(runReport, 'utf8').includes('## Release build'))
+        appendFileSync(
+          runReport,
+          `\n## Release build\n\n- ${new Date().toISOString().slice(0, 10)}: \`${command}\` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.\n`,
+        );
+      break;
+    }
     case 'preview':
       preview();
       break;
@@ -329,6 +358,6 @@ try {
   }
 } catch (e) {
   console.error(e instanceof Error ? e.message : e);
-  if (['qa', 'spike', 'render'].includes(cmd)) console.log('RESULT: FAILED (stopped with an error, above)');
+  if (['qa', 'spike', 'render', 'final'].includes(cmd)) console.log('RESULT: FAILED (stopped with an error, above)');
   process.exit(2);
 }

@@ -55,3 +55,7 @@ ending sc16-sc18 `pulse`. Music sits 19.5 dB under the voice; peak -1.4 dB.
 
 - Narration is draft only (edge-tts: unofficial Microsoft Edge read-aloud API, no terms for published media).
 - Music: `undertow` is cleared.
+
+## Release build
+
+- 2026-10-22: `npm run video -- final inflation-2026 decision:is-the-economy-booming --approved-by Jon` re-narrated the same words with Azure Speech (commercial terms) and packaged the release build; the blockers above are history.

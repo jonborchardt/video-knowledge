@@ -1,81 +1,81 @@
 # Build report: How Much Faster Does AI Actually Make Programmers?
 
-ai-coding / decision:how-much-faster, 2026-10-21T09:12:46.659Z. `npm run video -- qa ai-coding decision:how-much-faster`
+ai-coding / decision:how-much-faster, 2026-10-22T07:09:19.148Z. `npm run video -- final ai-coding decision:how-much-faster --approved-by Jon`
 
 **Segment.** 27 of 27 storyboard scenes (sc01 to sc27), 35 sentences. Kinds: sc01 question, sc02 list, sc03 quote, sc04 quote, sc05 title, sc06 stat-tiles, sc07 stat-tiles, sc08 title, sc09 stat-tiles, sc10 stat-tiles, sc11 stat-tiles, sc12 question, sc13 excerpt, sc14 stat-tiles, sc15 excerpt, sc16 question, sc17 stat-tiles, sc18 list, sc19 transition, sc20 question, sc21 bar, sc22 question, sc23 bar, sc24 title, sc25 excerpt, sc26 title, sc27 list.
 
-**Output.** topics/ai-coding/scripts/decision-how-much-faster/video/segment.mp4: 345.34s, 1920x1080 @ 30 fps, h264 + aac, 10360 frames, rendered in 0s ($0 (local CPU)).
+**Output.** topics/ai-coding/scripts/decision-how-much-faster/video/segment.mp4: 342.51s, 1920x1080 @ 30 fps, h264 + aac, 10275 frames, rendered in 1477.6s ($0 (local CPU)).
 
-**Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 332.23s of speech at about 154 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
+**Narration.** azure / en-US-AndrewMultilingualNeural (rate +0%, neural), wav, 329.51s of speech at about 155 wpm, $0.075 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
 
 | Sentence | Seconds | Boundaries | Audio sha |
 |---|---|---|---|
-| s01 | 4.32 | 12 | 6cba575685 |
-| s02 | 6.936 | 16 | fe93982dcc |
-| s03 | 7.824 | 22 | 0c0b61c74f |
-| s04 | 12.648 | 34 | 0512c4cbcc |
-| s05 | 13.512 | 37 | 873b413d66 |
-| s06 | 2.28 | 4 | 3fa863f9c4 |
-| s07 | 17.352 | 40 | 68000f2cae |
-| s08 | 11.4 | 36 | 0041f31a97 |
-| s09 | 13.296 | 32 | 4e730d63c4 |
-| s10 | 3.048 | 9 | 614750ecde |
-| s11 | 16.296 | 35 | cd2f82273f |
-| s12 | 9.12 | 19 | 7d91990bf6 |
-| s13 | 4.416 | 9 | ac2d794a79 |
-| s14 | 14.784 | 33 | 5b1344657f |
-| s15 | 1.968 | 6 | c10fbe57a5 |
-| s16 | 10.584 | 25 | 4538f5b9df |
-| s17 | 13.416 | 32 | 0c948abc7d |
-| s18 | 13.392 | 39 | 3b784409cc |
-| s19 | 1.752 | 6 | d0e4c40d9e |
-| s20 | 16.968 | 44 | 74dea1def2 |
-| s21 | 9.672 | 28 | 12c158d465 |
-| s22 | 9.336 | 25 | 056a0d1bc9 |
-| s23 | 13.608 | 31 | 3ad76ea243 |
-| s24 | 6.984 | 18 | 325db98579 |
-| s25 | 4.368 | 15 | 819dc9e655 |
-| s26 | 7.704 | 16 | 4df86da020 |
-| s27 | 9.024 | 26 | 310d64a3d9 |
-| s28 | 9.816 | 16 | 1d765c4342 |
-| s29 | 3.432 | 7 | 984c0b74cb |
-| s30 | 17.112 | 37 | da3a4c534c |
-| s31 | 9.768 | 30 | 4bbbceb045 |
-| s32 | 11.4 | 26 | 9e6cebea41 |
-| s33 | 6.864 | 18 | 8e05a6dad2 |
-| s34 | 6.672 | 15 | 495db45663 |
-| s35 | 11.16 | 37 | 9327e54c8b |
+| s01 | 4.175 | 12 | 6a30002cf5 |
+| s02 | 7 | 16 | 057a27b19d |
+| s03 | 7.8 | 22 | f63801aaa1 |
+| s04 | 12.7625 | 34 | 445888faa8 |
+| s05 | 13.325 | 37 | 1ba282e575 |
+| s06 | 2.175 | 4 | 293884e6eb |
+| s07 | 17.0875 | 40 | 2a58873118 |
+| s08 | 11.3 | 36 | 339fc462a8 |
+| s09 | 13.775 | 32 | deb2381b9f |
+| s10 | 3.35 | 9 | 85efac0956 |
+| s11 | 16.025 | 35 | 6edecce6cc |
+| s12 | 8.9875 | 19 | cba4ab9c90 |
+| s13 | 4.525 | 9 | 197fa12511 |
+| s14 | 14.825 | 33 | 0f856c1069 |
+| s15 | 1.925 | 6 | b67046302a |
+| s16 | 10.4875 | 25 | 7d3ebde0c7 |
+| s17 | 13.3125 | 32 | 53e1cc17e8 |
+| s18 | 13.4375 | 39 | c94a25574b |
+| s19 | 1.82 | 6 | b4b8bad873 |
+| s20 | 16.475 | 44 | f78aae5d33 |
+| s21 | 9.1375 | 28 | baf3f88d0e |
+| s22 | 8.975 | 25 | e33ed0b516 |
+| s23 | 13.2625 | 31 | 2471a3072e |
+| s24 | 6.625 | 18 | 11ff6d4857 |
+| s25 | 4.4125 | 15 | af73bc84de |
+| s26 | 7.6625 | 16 | 11f1d66afb |
+| s27 | 9.15 | 26 | 47c95d29c0 |
+| s28 | 9.2625 | 16 | f41633c794 |
+| s29 | 3.3 | 7 | c2b5100f89 |
+| s30 | 16.675 | 37 | 608ca1d7cb |
+| s31 | 10.225 | 30 | 23ff474f48 |
+| s32 | 11.4875 | 26 | 5fadd1f987 |
+| s33 | 6.6375 | 18 | 98370cc1b3 |
+| s34 | 7.2125 | 15 | 90eb76df90 |
+| s35 | 10.9125 | 37 | fbc382b32b |
 
 **Architecture.** Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS).
 
-**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 0ab17b1580: music -20.8 dB under the voice while it speaks, peak -1.3 dB.
+**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix c1b0c410a4: music -20.8 dB under the voice while it speaks, peak -1.3 dB.
 
 | Cue | Asset | From | To | Gain | Level |
 |---|---|---|---|---|---|
-| opening | undertow/pulse | 0.0s | 20.5s | -11 dB | -37.4 dB |
-| evidence | undertow/texture | 20.5s | 325.7s | -13 dB | -40.3 dB |
-| ending | undertow/pulse | 325.7s | 345.3s | -11 dB | -37.8 dB |
+| opening | undertow/pulse | 0.0s | 20.4s | -11 dB | -37.4 dB |
+| evidence | undertow/texture | 20.4s | 322.5s | -13 dB | -40.3 dB |
+| ending | undertow/pulse | 322.5s | 342.5s | -11 dB | -37.8 dB |
 
-**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. A passing build is technical completion only; a person approves the release.
+**Clearance.** Narration and music are both cleared for publication. A passing build is technical completion only; a person approves the release.
 
-**Fingerprints.** script 2a63e0efe5, storyboard f2a4d88dff, narration 254fdaedad, config 12b33c540e, music 0ab17b1580.
+**Fingerprints.** script 2a63e0efe5, storyboard f2a4d88dff, narration 8877000f7f, config 12b33c540e, music c1b0c410a4.
 
 ## QA: passed (36 of 36)
 
 | Check | Result | Detail |
 |---|---|---|
-| mp4 decodable | ok | 345.344s |
+| mp4 decodable | ok | 342.506s |
 | video stream | ok | h264 1920x1080 @ 30 |
 | resolution | ok | 1920x1080 |
 | frame rate | ok | 30 |
 | h264 | ok | h264 |
-| frame count | ok | 10360 frames, timeline 10360 |
-| duration in range | ok | 345.34s in [344.3,346.3] |
-| duration matches timeline | ok | 345.344s vs 345.333s (10360 frames) |
+| frame count | ok | 10275 frames, timeline 10275 |
+| duration in range | ok | 342.51s in [341.5,343.5] |
+| duration matches timeline | ok | 342.506s vs 342.500s (10275 frames) |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
-| audio length matches video | ok | 0.011s apart |
-| no clipping | ok | peak -1.3 dB, mean -19.2 dB |
+| audio length matches video | ok | 0.006s apart |
+| no clipping | ok | peak -1.3 dB, mean -19.1 dB |
 | no long silence | ok | none >= 3s |
 | narration not truncated | ok | 35 sentences fit their slots |
 | scene order | ok | sc01 to sc27 (27) |
@@ -90,14 +90,14 @@ ai-coding / decision:how-much-faster, 2026-10-21T09:12:46.659Z. `npm run video -
 | excerpts resolve | ok | 3 excerpts with their highlights |
 | assets and kinds supported | ok | 8 kinds |
 | music cues resolve | ok | 3 cues over 1 compositions |
-| soundtrack mixed | ok | 3 cues, 2026-10-21T09:11:38.210Z |
-| mix is of this cue sheet | ok | mix 0ab17b1580, cue sheet 0ab17b1580 |
+| soundtrack mixed | ok | 3 cues, 2026-10-22T07:08:02.960Z |
+| mix is of this cue sheet | ok | mix c1b0c410a4, cue sheet c1b0c410a4 |
 | every cue sounded | ok | 3 cues audible where placed |
 | music under the voice | ok | -20.8 dB relative to speech (want -40 to -10) |
 | mix under the ceiling | ok | peak -1.3 dB, ceiling -1 dB |
 | scene boundaries follow measured audio | ok | 27 scenes, 35 sentences |
 | cues inside their sentences | ok | 5 cues |
-| final scene complete | ok | ends 345.33s |
+| final scene complete | ok | ends 342.50s |
 | no blank sections | ok | none |
 | every scene has content | ok | mid-scene luma varies in every scene |
 
@@ -105,8 +105,7 @@ Inspection frames: 60 in video/frames/; contact sheet topics/ai-coding/scripts/d
 
 ## Known limitations
 
-- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; re-narrate with a commercial provider (VK_TTS_PROVIDER=openai, OPENAI_API_KEY) before release
-- word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
+- narration licence: commercial: Azure AI Speech terms allow the generated audio in published media
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes
 - automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision

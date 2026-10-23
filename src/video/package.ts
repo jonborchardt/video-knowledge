@@ -1,9 +1,9 @@
-// The private review package: everything a person needs to upload the rendered MP4 to YouTube as a private video and
-// review it, written to topics/<topic>/scripts/<slug>/video/review/. No API call, no publishing: a folder with the file, the
+// The review package: everything a person needs to upload the rendered MP4 to YouTube (privately for a draft build, publicly
+// once the build report says narration and music are cleared, which `npm run video -- final` produces) and review it, written to topics/<topic>/scripts/<slug>/video/review/. No API call, no publishing: a folder with the file, the
 // paste-ready text (working title, description with measured chapter timestamps and the research sources), the
 // provenance of the voice and the music, the build report and the review checklist. The package says, in every file,
-// that it is a review build and whether it is cleared for public release.
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+// which of the two it is: a draft build carries the private banners and the draft-voice check, a release build carries none.
+import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileSha, sha, toJson } from '../lib/io';
 import { sectionTitle } from '../lib/script';
@@ -31,8 +31,8 @@ export interface Chapter {
 }
 export interface ReviewPackage {
   generatedAt: string;
-  status: 'private review build';
-  title: string; // the working title for the private upload
+  status: 'private review build' | 'release build';
+  title: string; // the working title for a private upload, the real title for a release
   mp4: string; // the file to upload, relative to the review dir (or the segment path when not copied)
   mp4Sha: string;
   seconds: number;
@@ -90,8 +90,10 @@ export const CHECKLIST = [
   'Visual glitches: any flicker, overlapping text, clipped labels or wrong fonts (compare the contact sheet)?',
   'Conclusion: does the ending answer the question asked at the start, and does the black hold as the storyboard says?',
   'Playback: compare the local MP4 with the YouTube transcode at 1080p and 480p for banding, blur on small text and audio level.',
-  'Release: the narration voice is draft-only until re-narrated under commercial terms; confirm nothing in this build is cleared for public release unless the build report says so.',
 ];
+/** The last question of a draft build's checklist; a release build (cleared narration and music) has no draft voice. */
+export const DRAFT_CHECK =
+  'Release: the narration voice is draft-only until re-narrated under commercial terms; confirm nothing in this build is cleared for public release unless the build report says so.';
 
 /** Why this build cannot be packaged, or null: QA must have passed on exactly this mp4. */
 export function reviewInputProblem(report: BuildReport, mp4Sha: string | null): string | null {
@@ -102,12 +104,12 @@ export function reviewInputProblem(report: BuildReport, mp4Sha: string | null): 
   return null;
 }
 
-/** The private upload's file name: the story slug, marked as a private review build. */
-export const reviewMp4Name = (videoDir: string) =>
+/** The upload's file name: the story slug, marked as a private review build unless this is the release build. */
+export const reviewMp4Name = (videoDir: string, release = false) =>
   `${videoDir
     .replace(/[\\/]video$/, '')
     .split(/[\\/]/)
-    .pop()}-review-private.mp4`;
+    .pop()}${release ? '' : '-review-private'}.mp4`;
 /** The title card a thumbnail is taken from, when the storyboard has one. */
 export const thumbnailScene = (tl: Timeline) => tl.scenes.find((s) => s.kind === 'title') ?? null;
 
@@ -126,10 +128,11 @@ export function reviewData(
         .map((s) => [s.href, { channel: s.channel, title: s.title, href: s.href }]),
     ).values(),
   ];
+  const release = report.clearance.publishable;
   return {
     generatedAt: made.generatedAt,
-    status: 'private review build',
-    title: `[PRIVATE REVIEW] ${tl.title}`,
+    status: release ? 'release build' : 'private review build',
+    title: release ? tl.title : `[PRIVATE REVIEW] ${tl.title}`,
     mp4: made.mp4,
     mp4Sha: made.mp4Sha,
     seconds: report.output?.seconds ?? tl.durationInFrames / tl.fps,
@@ -138,7 +141,7 @@ export function reviewData(
     sources: { studies, sources },
     provenance: { narration: report.narration, music: report.music, clearance: report.clearance },
     qa: { ok: report.qa.ok, passed: report.qa.checks.filter((c) => c.ok).length, total: report.qa.checks.length },
-    checklist: CHECKLIST,
+    checklist: release ? CHECKLIST : [...CHECKLIST, DRAFT_CHECK],
     files: [
       made.mp4,
       REVIEW_FILES.readme,
@@ -161,10 +164,15 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
         )
         .join('; ')
     : 'none';
+  const release = pkg.status === 'release build';
   return (
     [
-      `PRIVATE REVIEW BUILD, not for publication. Built ${report.generatedAt.slice(0, 10)} from script ${report.fingerprints.script} / storyboard ${report.fingerprints.storyboard}.`,
-      '',
+      ...(release
+        ? []
+        : [
+            `PRIVATE REVIEW BUILD, not for publication. Built ${report.generatedAt.slice(0, 10)} from script ${report.fingerprints.script} / storyboard ${report.fingerprints.storyboard}.`,
+            '',
+          ]),
       seg.pkg.question ?? tl.title,
       '',
       'Chapters',
@@ -176,10 +184,14 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
       'Sources discussed',
       ...pkg.sources.sources.map((s) => `- ${s.channel}: ${s.title} ${s.href}`),
       '',
-      `Narration: ${report.narration.provider} / ${report.narration.voice}. ${report.narration.publishable ? 'Commercial terms.' : 'DRAFT VOICE: ' + report.narration.licence + '.'}`,
-      `Music: ${musicLine}.`,
-      '',
-      `Release clearance: ${report.clearance.publishable ? 'cleared' : 'BLOCKED: ' + report.clearance.why.join('; ')}.`,
+      ...(release
+        ? [`Music: ${musicLine}.`]
+        : [
+            `Narration: ${report.narration.provider} / ${report.narration.voice}. ${report.narration.publishable ? 'Commercial terms.' : 'DRAFT VOICE: ' + report.narration.licence + '.'}`,
+            `Music: ${musicLine}.`,
+            '',
+            `Release clearance: BLOCKED: ${report.clearance.why.join('; ')}.`,
+          ]),
     ].join('\n') + '\n'
   );
 }
@@ -187,12 +199,15 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
 /** README.md: how to upload it, what it is made of, and what comes after the review. */
 export function renderReadme(pkg: ReviewPackage, tl: Timeline, report: BuildReport): string {
   const thumbnail = pkg.files.includes(REVIEW_FILES.thumbnail);
+  const release = pkg.status === 'release build';
   return [
-    `# PRIVATE REVIEW BUILD: ${tl.title}`,
+    release ? `# RELEASE BUILD: ${tl.title}` : `# PRIVATE REVIEW BUILD: ${tl.title}`,
     '',
-    `Upload \`${pkg.mp4}\` to YouTube as a **private** video for review. Do not publish. ${pkg.provenance.clearance.publishable ? 'The build report says narration and music are cleared.' : `Public release is blocked: ${pkg.provenance.clearance.why.join('; ')}.`}`,
+    release
+      ? `Upload \`${pkg.mp4}\` to YouTube as a **public** video: the build report says narration and music are cleared, and the person who ran the final build approved it (see its command line).`
+      : `Upload \`${pkg.mp4}\` to YouTube as a **private** video for review. Do not publish. Public release is blocked: ${pkg.provenance.clearance.why.join('; ')}.`,
     '',
-    `- Working title: ${pkg.title}`,
+    `- ${release ? 'Title' : 'Working title'}: ${pkg.title}`,
     `- Duration: ${stamp(pkg.seconds)} (${pkg.seconds.toFixed(1)}s), ${report.output?.width}x${report.output?.height} @ ${report.output?.fps} fps`,
     `- MP4 sha: ${pkg.mp4Sha}; build report ${pkg.buildReport}; QA ${pkg.qa.passed}/${pkg.qa.total}${pkg.qa.ok ? '' : ' FAILED'}`,
     `- Description: \`${REVIEW_FILES.description}\` (paste as is; chapters are measured from the timeline)`,
@@ -216,15 +231,24 @@ export function renderReadme(pkg: ReviewPackage, tl: Timeline, report: BuildRepo
           `- Mix: ${report.music.cues.length} cues, music ${report.music.levels.musicUnderSpeechDb} dB under the voice while it speaks, peak ${report.music.levels.peakDb} dB.`,
         ]
       : []),
-    `- Clearance: narration ${report.clearance.narration ? 'yes' : 'no'}, music ${report.clearance.music === null ? 'n/a' : report.clearance.music ? 'yes' : 'no'}. ${report.clearance.publishable ? 'Cleared for public release once a person approves the review.' : 'Not cleared for public release.'}`,
+    `- Clearance: narration ${report.clearance.narration ? 'yes' : 'no'}, music ${report.clearance.music === null ? 'n/a' : report.clearance.music ? 'yes' : 'no'}. ${report.clearance.publishable ? 'Cleared for public release.' : 'Not cleared for public release.'}`,
     '',
-    '## After the review',
-    '',
-    '1. Record the private URL and the review outcome in `production.json` (`decision: "reviewing"`, `url`).',
-    '2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.',
-    '3. Public release needs, besides approval: a commercial narration voice' +
-      (report.clearance.music === false ? ', cleared music' : '') +
-      ', and then a fresh package from that build.',
+    ...(release
+      ? [
+          '## After the upload',
+          '',
+          '1. Record the public URL in `production.json` (`decision: "published"`, `url`).',
+          '2. Any later edit renders a draft again; run `npm run video -- final` once more before re-uploading.',
+        ]
+      : [
+          '## After the review',
+          '',
+          '1. Record the private URL and the review outcome in `production.json` (`decision: "reviewing"`, `url`).',
+          '2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.',
+          '3. Public release needs, besides approval: `npm run video -- final <topic> <story-id> --approved-by "<name>"` (the commercial voice' +
+            (report.clearance.music === false ? '; music must be cleared too' : '') +
+            '), which packages the release build.',
+        ]),
     '',
   ].join('\n');
 }
@@ -234,7 +258,7 @@ export const renderChecklist = (pkg: ReviewPackage, tl: Timeline) =>
   [
     '# Review checklist',
     '',
-    `${tl.title}, private review build ${pkg.generatedAt.slice(0, 10)}.`,
+    `${tl.title}, ${pkg.status} ${pkg.generatedAt.slice(0, 10)}.`,
     '',
     ...pkg.checklist.map((c) => `- [ ] ${c}`),
     '',
@@ -255,13 +279,16 @@ export function buildReviewPackage(
   const dir = join(videoDir, REVIEW_DIR);
   mkdirSync(dir, { recursive: true });
   const card = thumbnailScene(tl);
+  const release = report.clearance.publishable;
   const pkg = reviewData(seg, tl, report, {
-    mp4: reviewMp4Name(videoDir),
+    mp4: reviewMp4Name(videoDir, release),
     mp4Sha: mp4Sha!,
     buildReport: fileSha(join(videoDir, VIDEO_FILES.report)),
     thumbnail: !!card,
     generatedAt: new Date().toISOString(),
   });
+  const other = join(dir, reviewMp4Name(videoDir, !release)); // one mp4 in the folder: the build this package describes
+  if (existsSync(other)) unlinkSync(other);
   copyFileSync(mp4, join(dir, pkg.mp4));
   if (card) extractFrame(mp4, (card.start + card.duration - 15) / tl.fps, join(dir, REVIEW_FILES.thumbnail));
   writeFileSync(join(dir, REVIEW_FILES.readme), renderReadme(pkg, tl, report));
