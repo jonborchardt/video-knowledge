@@ -327,6 +327,7 @@ try {
       const problem = approverProblem(flag('--approved-by'));
       if (problem) throw new Error(problem);
       const n = boardNext(topic, storyId);
+      if (n.halt?.kind === 'published') throw new Error(`final never rebuilds a live video; the board says: ${n.next}`);
       if (n.stage !== 'packaged') throw new Error(`final needs a packaged story; the board says ${n.stage}: ${n.next}`);
       const draft = currentBuild(scriptDir(topic, storyId)); // the build this run accepts, before the release build replaces it
       const { seg, m } = await stageNarrate(provider('azure'));
@@ -340,6 +341,7 @@ try {
         recordApproved(topic, storyId, {
           by: flag('--approved-by')!,
           build: draft.sha,
+          accepted: true,
           note: 'draft accepted by final',
         });
       // the run report is the produce agent's prose and named the draft voice as a blocker: say what settled it

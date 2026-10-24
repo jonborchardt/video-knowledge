@@ -767,7 +767,11 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     const metadata = Object.fromEntries(
       Object.entries(c.ledger.outputs).map(([id, o]) => [id, uploadMetadataOf(dir, c.r, o)]),
     );
-    const states = outputStates(c.ledger, c.build, (id) => metadata[id]?.sha ?? null, { topic, story: storyId });
+    const states = outputStates(c.ledger, c.build, (id) => metadata[id]?.sha ?? null, {
+      topic,
+      story: storyId,
+      root,
+    });
     c.publish = {
       main: mainOutput(c.ledger),
       outputs: Object.entries(c.ledger.outputs).map(([id, o]) => ({
@@ -860,15 +864,15 @@ export function boardNext(topic: string, storyId: string, root = ROOT): BoardNex
     ? `the story is a follow-up question in ${story.partOf}; produce that story instead`
     : 'the story is not ready in stories.json';
   const live = mainState(prod);
-  if (prod && live && (live.status === 'published' || live.status === 'scheduled')) {
-    const next = `stop: ${live.status === 'published' ? 'live' : 'scheduled'} at ${live.url}; a re-release is npm run publish -- add ${topic} ${storyId} youtube-2 --kind youtube-video`;
+  if (prod && live && (live.live || live.status === 'scheduled')) {
+    const next = `stop: ${live.live ? 'live' : 'scheduled'} at ${live.url}; a re-release is npm run publish -- add ${topic} ${storyId} youtube-2 --kind youtube-video`;
     return {
       topic,
       story: storyId,
       stage: prod.stage,
       next,
       steps: stepsOf(next, topic, storyId),
-      halt: { kind: 'published', stage: prod.stage, why: `the video is ${live.status} at ${live.url}` },
+      halt: { kind: 'published', stage: prod.stage, why: `the video is ${live.live ? 'live' : 'scheduled'} at ${live.url}` },
       done: true,
     };
   }
@@ -965,7 +969,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       const live = mainState(production);
       let n: string;
       if (decision?.decision === 'parked') n = `parked: ${decision.note}`;
-      else if (live?.status === 'published') n = `live: ${live.url}`;
+      else if (live?.live) n = `live: ${live.url}`;
       else if (live?.status === 'scheduled') n = live.next;
       else if (story.partOf) n = `part of ${story.partOf}: answered in that video`;
       else if (production) n = production.next;
@@ -1024,7 +1028,8 @@ export type Column = (typeof COLUMNS)[number];
 export function columnOf(r: StoryRow): Column | null {
   if (r.decision?.decision === 'parked') return 'parked';
   const main = mainState(r.production);
-  if (main?.status === 'published' || main?.status === 'scheduled' || main?.status === 'approved') return main.status;
+  if (main?.live) return 'published';
+  if (main?.status === 'scheduled' || main?.status === 'approved') return main.status;
   if (main?.status === 'uploaded' || main?.status === 'metadata-behind') return 'uploaded';
   if (r.story.partOf) return null;
   if (r.production) return r.production.stage === 'packaged' ? 'your-review' : 'producing';

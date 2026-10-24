@@ -5,7 +5,7 @@
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
 import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
-import { fileSha, lf, readJson, ROOT, sha, toJson } from './io';
+import { lf, readJson, ROOT, sha, toJson } from './io';
 import { approverProblem } from './release';
 import { scriptDir, storySlug } from './script';
 import { loadStories } from './stories';
@@ -86,7 +86,7 @@ const REQUIRED: Record<EventType, (keyof PublishEvent)[]> = {
 const isRecord = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
 
 /** Every way the file is not a ledger for `video`, as "where: what" lines; [] when valid. */
-export function ledgerProblems(x: unknown, video: string, root?: string): string[] {
+export function ledgerProblems(x: unknown, video: string): string[] {
   const out: string[] = [];
   if (!isRecord(x)) return ['not an object'];
   if (x.video !== video) out.push(`video: is ${JSON.stringify(x.video)}, expected ${video}`);
@@ -101,8 +101,6 @@ export function ledgerProblems(x: unknown, video: string, root?: string): string
     if (o.derivedFrom !== undefined && !(typeof o.derivedFrom === 'string' && o.derivedFrom in x.outputs))
       out.push(`${at}.derivedFrom: ${JSON.stringify(o.derivedFrom)} is not an output`);
     if (o.source !== undefined && typeof o.source !== 'string') out.push(`${at}.source: not a string`);
-    else if (typeof o.source === 'string' && root && !existsSync(join(root, o.source)))
-      out.push(`${at}.source: ${o.source} is not a file under the repo root`);
     if (!isRecord(o.metadata)) out.push(`${at}.metadata: missing (use {})`);
     else if (o.metadata.thumbnail !== undefined) {
       const t = o.metadata.thumbnail;
@@ -135,7 +133,7 @@ export function ledgerProblems(x: unknown, video: string, root?: string): string
 export function loadLedger(topic: string, storyId: string, root = ROOT): Ledger | null {
   const x = readJson<unknown>(publishPath(topic, storyId, root));
   if (x === null) return null;
-  const problems = ledgerProblems(x, `${topic}/${storyId}`, root);
+  const problems = ledgerProblems(x, `${topic}/${storyId}`);
   if (problems.length) throw new Error(`${PUBLISH_FILE}: ${problems.join('; ')}`);
   return x as Ledger;
 }
@@ -148,11 +146,12 @@ export function eventKey(e: PublishEvent): string | null {
     case 'approved':
       return `approved|${e.build}`;
     case 'scheduled':
+      return `scheduled|${e.id}|${e.publishAt}`;
     case 'published':
     case 'unpublished':
-      return `${e.type}|${e.id}`;
+      return `${e.type}|${e.id}`; // judged against the latest of the two for that id, see appendEvent
     case 'updated':
-      return `updated|${e.metadata}`;
+      return null; // recordUpdated refuses an unchanged sha; A, B, A is three honest events
     case 'retracted':
       return 'retracted';
     case 'failed':
@@ -169,7 +168,14 @@ export function appendEvent(
   const o = ledger.outputs[output];
   if (!o) throw new Error(`no output ${output} in the ledger (outputs: ${Object.keys(ledger.outputs).join(', ')})`);
   const key = eventKey(e);
-  const existing = key === null ? null : (o.events.find((x) => eventKey(x) === key) ?? null);
+  let existing: PublishEvent | null = null;
+  if (e.type === 'published' || e.type === 'unpublished') {
+    // publish, unpublish, publish again are three events; only a repeat of the latest of the pair is the same one
+    const latest = [...o.events]
+      .reverse()
+      .find((x) => (x.type === 'published' || x.type === 'unpublished') && x.id === e.id);
+    existing = latest?.type === e.type ? latest : null;
+  } else if (key !== null) existing = o.events.find((x) => eventKey(x) === key) ?? null;
   if (existing) return { ledger, existing };
   return {
     ledger: { ...ledger, outputs: { ...ledger.outputs, [output]: { ...o, events: [...o.events, e] } } },
@@ -221,6 +227,12 @@ export function currentBuild(dir: string): Build | null {
   return { sha: rp.mp4Sha, status: rp.status === 'release build' ? 'release' : 'draft' };
 }
 
+/** An output made from its own file (a short, a post): that file is its build. Null when the file is not on disk. */
+export function sourceBuild(root: string, source: string): Build | null {
+  const abs = join(root, source);
+  return existsSync(abs) ? { sha: sha(readFileSync(abs)), status: 'release' } : null;
+}
+
 export type OutputStatus =
   | 'not-uploaded'
   | 'uploaded'
@@ -232,6 +244,7 @@ export type OutputStatus =
   | 'retracted';
 export interface OutputState {
   status: OutputStatus;
+  live: boolean; // published and not since unpublished, whatever else the status says (metadata-behind keeps it live)
   failed: PublishEvent | null; // an overlay: the last event, when it is a failure
   id: string | null;
   url: string | null;
@@ -268,17 +281,21 @@ export function outputState(
   const id = upload?.id ?? null;
   const approved = !!upload && ev.some((e) => e.type === 'approved' && e.build === upload.build);
   const localApproved = !!build && ev.some((e) => e.type === 'approved' && e.build === build.sha);
-  const scheduled = id ? ev.filter((e) => e.type === 'scheduled' && e.id === id).at(-1) : undefined;
-  const published = id
-    ? ev.filter((e) => (e.type === 'published' || e.type === 'unpublished') && e.id === id).at(-1)
-    : undefined;
-  const live = published?.type === 'published';
+  // an unpublish closes a chapter: the schedule and publication before it are history
+  const cut = id ? ev.findLastIndex((e) => e.type === 'unpublished' && e.id === id) : -1;
+  const since = ev.slice(cut + 1);
+  const scheduled = id ? since.filter((e) => e.type === 'scheduled' && e.id === id).at(-1) : undefined;
+  const published = id ? since.filter((e) => e.type === 'published' && e.id === id).at(-1) : undefined;
+  const generic = flowOf(output.kind) === 'generic';
+  const out = generic ? [...ev].reverse().find((e) => e.type === 'published' || e.type === 'unpublished') : undefined;
+  const live = generic ? out?.type === 'published' : !!published;
   const url =
     [...ev].reverse().find((e) => e.url && (e.id === id || !id))?.url ?? (id ? `https://youtu.be/${id}` : null);
   const sentSha = [...ev]
     .reverse()
     .find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata)?.metadata;
   const base: Omit<OutputState, 'status' | 'next' | 'due'> = {
+    live,
     failed,
     id,
     url: id ? url : null,
@@ -297,11 +314,10 @@ export function outputState(
   const first = ctx.parentLive === false && output.derivedFrom ? `publish ${output.derivedFrom} first; then ` : '';
 
   if (ev.some((e) => e.type === 'retracted')) return done('retracted', 'retracted; nothing to do');
-  if (flowOf(output.kind) === 'generic') {
+  if (generic) {
     // No build, no private upload: the source file is made, a person approves it, it goes out. An upload is an optional
     // draft on the platform. Published needs approved; nothing is derived from the video's build.
     const anyApproved = ev.some((e) => e.type === 'approved');
-    const out = [...ev].reverse().find((e) => e.type === 'published' || e.type === 'unpublished');
     if (out?.type === 'published')
       return {
         ...done('published', `live${out.url ? ` at ${out.url}` : ''}`),
@@ -383,11 +399,15 @@ export function outputStates(
   ledger: Ledger,
   build: Build | null,
   metadataShaOf: (id: string, o: Output) => string | null,
-  ctx: { topic: string; story: string; now?: Date },
+  ctx: { topic: string; story: string; now?: Date; root?: string },
 ): Record<string, OutputState> {
   const states: Record<string, OutputState> = {};
-  const state = (id: string, parentLive?: boolean) =>
-    outputState(ledger.outputs[id], build, metadataShaOf(id, ledger.outputs[id]), { ...ctx, output: id, parentLive });
+  const { root = ROOT, ...rest } = ctx;
+  const state = (id: string, parentLive?: boolean) => {
+    const o = ledger.outputs[id];
+    const b = o.source ? sourceBuild(root, o.source) : build;
+    return outputState(o, b, metadataShaOf(id, o), { ...rest, output: id, parentLive });
+  };
   for (const id of Object.keys(ledger.outputs)) states[id] = state(id);
   for (const [id, o] of Object.entries(ledger.outputs))
     if (o.derivedFrom && states[o.derivedFrom]) states[id] = state(id, states[o.derivedFrom].status === 'published');
@@ -475,7 +495,7 @@ function open(topic: string, storyId: string, a: { output?: string; root?: strin
   const out = ledger.outputs[id];
   if (!out) throw new Refusal(`no output ${id} (outputs: ${Object.keys(ledger.outputs).join(', ')}); add it first`);
   const rel = (f: string) => `topics/${topic}/scripts/${storySlug(storyId)}/${f}`;
-  const build = currentBuild(dir);
+  const build = out.source ? sourceBuild(root, out.source) : currentBuild(dir);
   const metadata = uploadMetadataOf(dir, rel, out);
   const state = outputState(out, build, metadata?.sha ?? null, { topic, story: storyId, output: id });
   return { root, dir, path, ledger, id, out, rel, build, metadata, state };
@@ -500,11 +520,18 @@ export function recordUploaded(
     const m = /(?:v=|youtu\.be\/|shorts\/)([\w-]{11})/.exec(a.id);
     throw new Refusal(`not a YouTube video id: ${a.id}${m ? `; did you mean ${m[1]}?` : ''}`);
   }
-  if (!o.build || !o.metadata) throw new Refusal('no review package to upload; npm run video -- package first');
+  if (!o.build || !o.metadata)
+    throw new Refusal(
+      o.out.source ? `${o.out.source} is not on disk` : 'no review package to upload; npm run video -- package first',
+    );
   const mp4 = join(o.dir, 'video', 'review', o.metadata.file!.split('/').pop()!);
-  if (existsSync(mp4) && sha(readFileSync(mp4)) !== o.build.sha)
+  if (!o.out.source && existsSync(mp4) && sha(readFileSync(mp4)) !== o.build.sha)
     throw new Refusal(`${o.metadata.file} is not the build review.json describes (${o.build.sha}); package again`);
   const visibility = a.visibility ?? 'private';
+  if (!['private', 'unlisted', 'public'].includes(visibility))
+    throw new Refusal(`--visibility ${visibility}: private, unlisted or public`);
+  if (visibility === 'public' && o.build.status === 'draft')
+    throw new Refusal('a draft build (edge voice) never goes public; npm run video -- final makes the release build');
   const approved = o.out.events.some((e) => e.type === 'approved' && e.build === o.build!.sha);
   if (visibility === 'public' && !approved)
     throw new Refusal(`build ${o.build.sha} is not approved; a public upload needs npm run publish -- approve first`);
@@ -530,18 +557,24 @@ export function recordUploaded(
 export function recordApproved(
   topic: string,
   storyId: string,
-  a: VerbArgs & { note?: string; build?: string },
+  a: VerbArgs & { note?: string; build?: string; accepted?: boolean },
 ): VerbResult {
   const problem = approverProblem(a.by);
   if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
   const o = open(topic, storyId, a);
   // a generic output (blog post, page, post) is approved as its source file: that file's sha stands in for the build
   const generic = flowOf(o.out.kind) === 'generic';
-  const build = a.build ?? (generic ? (o.out.source ? fileSha(join(o.root, o.out.source)) : 'none') : o.build?.sha);
-  if (!build) throw new Refusal('nothing to approve: no review package and no build named');
+  const build = a.build ?? o.build?.sha ?? (generic ? 'none' : undefined);
+  if (!build) throw new Refusal('nothing to approve: no review package, no source file and no build named');
   const uploaded = o.out.events.find((e) => e.type === 'uploaded' && e.build === build);
-  const localRelease = o.build?.sha === build && o.build.status === 'release';
-  if (!generic && !uploaded && !localRelease)
+  const onDisk = o.build?.sha === build ? o.build : null;
+  // `accepted` is `npm run video -- final` naming the draft it accepted; nobody else approves a draft (edge voice)
+  if (!a.accepted && (uploaded?.buildStatus === 'draft' || onDisk?.status === 'draft'))
+    throw new Refusal(
+      `build ${build} is a draft (edge voice): a draft is accepted by npm run video -- final, never approved for publication`,
+    );
+  const localRelease = onDisk?.status === 'release';
+  if (!generic && !a.accepted && !uploaded && !localRelease)
     throw new Refusal(
       `build ${build} has no upload to approve and is not the release build on disk; upload it first (a draft is accepted by npm run video -- final)`,
     );
@@ -551,10 +584,17 @@ export function recordApproved(
   return write(o, e);
 }
 
+/** The last upload's build status: a draft (edge voice) is never scheduled or published. */
+const refuseDraft = (o: ReturnType<typeof open>) => {
+  if ([...o.out.events].reverse().find((e) => e.type === 'uploaded')?.buildStatus === 'draft')
+    throw new Refusal('the upload is a draft build (edge voice); npm run video -- final makes the release build');
+};
+
 export function recordScheduled(topic: string, storyId: string, a: VerbArgs & { at: string }): VerbResult {
   const o = open(topic, storyId, a);
-  if (o.state.status !== 'approved')
+  if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
     throw new Refusal(`the upload is ${o.state.status}, not approved: ${o.state.next}`);
+  refuseDraft(o);
   const t = Date.parse(a.at);
   if (Number.isNaN(t)) throw new Refusal(`--at ${a.at} is not an ISO date`);
   if (t <= (a.now ?? new Date()).getTime()) throw new Refusal(`--at ${a.at} is in the past`);
@@ -569,6 +609,7 @@ export function recordPublished(
   const o = open(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
     throw new Refusal(`the output is ${o.state.status}, not approved or scheduled: ${o.state.next}`);
+  refuseDraft(o);
   // a generic output has no platform id of its own: the url (or the output id) names what went live
   const id = o.state.id ?? a.id ?? a.url ?? o.id;
   const e: PublishEvent = { at: stamp(a), type: 'published', by: a.by, id };

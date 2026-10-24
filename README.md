@@ -277,8 +277,8 @@ glitches, conclusion, local vs YouTube playback), the build report, a `thumbnail
 `review.json` (which build report it was made from; the board calls it stale when that changes). It refuses an mp4
 other than the one QA checked (the build report records its sha), and chapters YouTube would ignore: fewer than
 three, one under 10 s, or a scene not in the timeline. Upload the mp4
-to YouTube as a **private** video by hand; there is no API call. Record the outcome in `production.json` with
-`decision: "reviewing"` and the URL. The package says in every file that it is a review build and why public
+to YouTube as a **private** video by hand; there is no API call. Record it with
+`npm run publish -- uploaded <topic> <story-id> --id <youtube id>`. The package says in every file that it is a review build and why public
 release is blocked; the Edge voice keeps it blocked. When you accept the draft, run
 
 ```
@@ -288,8 +288,9 @@ npm run video -- final <topic> <story-id> --approved-by "<name>"
 which re-narrates the same words with Azure Speech (the same neural voice under commercial terms), re-renders, re-runs
 QA and writes the **release build** to the same `video/review/`: the mp4 as `<slug>.mp4`, the real title, a
 description without the review notice, the voice or the clearance line, no draft-voice item on the checklist, and a
-`## Release build` line appended to `run-report.md`. The board then asks for a public upload and
-`decision: "published"`. Any later edit renders a draft again, so `final` runs once more before a re-upload.
+`## Release build` line appended to `run-report.md`, and records the acceptance in `publish.json`. The board then
+walks the release upload, approval and publication (see Publishing below). Any later edit renders a draft again, so
+`final` runs once more before a re-upload; a live video is never rebuilt or replaced.
 
 ## Production board
 

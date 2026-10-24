@@ -13,6 +13,7 @@ import {
   checkDecisions,
   columnOf,
   boardNext,
+  mainState,
   topicBoard,
   productionOf,
   runPromptOf,
@@ -34,7 +35,7 @@ import {
   type ScriptValidation,
   scriptDir,
 } from '../src/lib/script';
-import { addOutputTo, recordApproved, recordPublished, recordUploaded } from '../src/lib/publish';
+import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
 import { type Fixture, copyTopic, syntheticProduction } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
@@ -304,8 +305,8 @@ describe('board columns', () => {
     expect(columnOf(row({}, { stage: 'storyboard' }))).toBe('producing');
     expect(columnOf(row({}, { stage: 'packaged' }))).toBe('your-review');
     expect(columnOf(row({}, { stage: 'packaged' }, { decision: 'parked' }))).toBe('parked');
-    const at = (status: string, stage = 'packaged') =>
-      row({}, { stage, publish: { main: 'youtube', outputs: [{ id: 'youtube', state: { status } }] } });
+    const at = (status: string, stage = 'packaged', live = status === 'published') =>
+      row({}, { stage, publish: { main: 'youtube', outputs: [{ id: 'youtube', state: { status, live } }] } });
     expect(columnOf(at('not-uploaded'))).toBe('your-review');
     expect(columnOf(at('build-behind'))).toBe('your-review');
     expect(columnOf(at('uploaded'))).toBe('uploaded');
@@ -314,6 +315,7 @@ describe('board columns', () => {
     expect(columnOf(at('scheduled'))).toBe('scheduled');
     expect(columnOf(at('published'))).toBe('published');
     expect(columnOf(at('published', 'validate'))).toBe('published'); // live stays live when the script is edited
+    expect(columnOf(at('metadata-behind', 'validate', true))).toBe('published'); // and when its thumbnail changes
   });
 
   it('production.json holds queued and parked only', () => {
@@ -346,6 +348,14 @@ describe('publishing on the board', () => {
       const n = boardNext(topic, story, root);
       expect(n.next).toMatch(/^stop: live at https:\/\/youtu\.be\/aaaaaaaaaaa/);
       expect(n.halt?.kind).toBe('published');
+      // a new thumbnail on a live video is a metadata update, never a reason to leave the live column
+      mkdirSync(join(fx.dir, 'video', 'publish'), { recursive: true });
+      writeFileSync(join(fx.dir, 'video', 'publish', 'thumbnail.png'), 'png');
+      setThumbnail(topic, story, { root, file: join(fx.dir, 'video', 'publish', 'thumbnail.png') });
+      const behind = productionOf(topic, story, root)!;
+      expect(mainState(behind)!.status).toBe('metadata-behind');
+      expect(columnOf({ ...r, production: behind })).toBe('published');
+      expect(boardNext(topic, story, root).halt?.kind).toBe('published');
       // the script is edited: the stage drops, the video stays live and is not the topic's next step
       const f = join(fx.dir, 'script.json');
       const script = readJson<Script>(f)!;

@@ -1,11 +1,12 @@
 // The publishing ledger (publish.json): its shape, the idempotent append, the state an output's events derive to, the
 // composed upload metadata, the CLI's verbs and their refusals. Nothing here touches YouTube: the ledger records what a
 // person (or later an uploader) did.
-import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { readJson } from '../src/lib/io';
+import { readJson, sha } from '../src/lib/io';
+import { storySlug } from '../src/lib/script';
 import {
   type Ledger,
   type Output,
@@ -108,6 +109,25 @@ describe('ledger', () => {
     l = appendEvent(appendEvent(l, 'youtube', f).ledger, 'youtube', f).ledger;
     expect(l.outputs.youtube.events.filter((e) => e.type === 'failed')).toHaveLength(2);
     expect(eventKey(f)).toBeNull();
+    // publish, unpublish, publish again is three events; a repeat of the latest is not
+    const pub = ev('published', { id: 'id1' });
+    l = appendEvent(l, 'youtube', pub).ledger;
+    expect(appendEvent(l, 'youtube', pub).existing).toEqual(pub);
+    l = appendEvent(l, 'youtube', ev('unpublished', { id: 'id1', note: 'oops' })).ledger;
+    l = appendEvent(l, 'youtube', pub).ledger;
+    expect(l.outputs.youtube.events.filter((e) => e.type === 'published')).toHaveLength(2);
+    // metadata A, B, A: every update is its own event (the verb refuses an unchanged sha itself)
+    const upd = (m: string) => ev('updated', { id: 'id1', metadata: m, fields: ['thumbnail'] });
+    l = [upd('a'), upd('b'), upd('a')].reduce((x, e) => appendEvent(x, 'youtube', e).ledger, l);
+    expect(l.outputs.youtube.events.filter((e) => e.type === 'updated')).toHaveLength(3);
+    // a reschedule is a new event
+    const sch = (at: string) => ev('scheduled', { id: 'id1', publishAt: at });
+    l = appendEvent(
+      appendEvent(l, 'youtube', sch('2026-11-01T00:00:00Z')).ledger,
+      'youtube',
+      sch('2026-11-02T00:00:00Z'),
+    ).ledger;
+    expect(l.outputs.youtube.events.filter((e) => e.type === 'scheduled')).toHaveLength(2);
   });
 
   it('refuses an event for an output that does not exist', () => {
@@ -213,9 +233,38 @@ describe('outputState', () => {
     const o = out(up('r1', 'id1'), ev('approved', { build: 'r1' }), ev('published', { id: 'id1' }));
     const s = outputState(o, release, 'm2', ctx);
     expect(s.status).toBe('metadata-behind');
+    expect(s.live).toBe(true); // still live: the board keeps it in the published column
     expect(s.next).toContain('npm run publish -- updated');
     o.events.push(ev('updated', { id: 'id1', metadata: 'm2', fields: ['thumbnail'] }));
     expect(outputState(o, release, 'm2', ctx).status).toBe('published');
+  });
+
+  it('publish, unpublish, publish again', () => {
+    const o = out(
+      up('r1', 'id1'),
+      ev('approved', { build: 'r1' }),
+      ev('scheduled', { id: 'id1', publishAt: '2026-10-20T00:00:00Z' }),
+      ev('published', { id: 'id1' }),
+      ev('unpublished', { id: 'id1', note: 'typo' }),
+    );
+    const s = outputState(o, release, 'm1', ctx);
+    expect(s.status).toBe('approved'); // the old schedule is history
+    expect(s.live).toBe(false);
+    o.events.push(ev('published', { id: 'id1' }));
+    expect(outputState(o, release, 'm1', ctx).live).toBe(true);
+  });
+
+  it('an output with its own source file is judged against that file, not the video build', () => {
+    const src = join(tmp, 'shorts', 's1.mp4');
+    mkdirSync(join(tmp, 'shorts'), { recursive: true });
+    writeFileSync(src, 'short bytes');
+    const own = sha(readFileSync(src));
+    const l = addOutput(emptyLedger('t/s'), 'short-1', 'youtube-short', { source: 'shorts/s1.mp4' });
+    const c = { topic: 't', story: 's', root: tmp };
+    const behind = appendEvent(l, 'short-1', uploaded('r1', 'id9')).ledger; // recorded against the main video's build
+    expect(outputStates(behind, release, () => null, c)['short-1'].status).toBe('build-behind');
+    const right = appendEvent(l, 'short-1', uploaded(own, 'id9')).ledger;
+    expect(outputStates(right, release, () => null, c)['short-1'].status).toBe('uploaded');
   });
 
   it('a failure is an overlay on the state before it', () => {
@@ -344,7 +393,7 @@ describe('verbs', () => {
 
   it('approve needs a real name and a build it can stand on', () => {
     expect(() => recordApproved(rel2.topic, rel2.story, a(rel2, { by: '<your name>' }))).toThrow(/name/);
-    expect(() => recordApproved(draft.topic, draft.story, a(draft))).toThrow(/upload/); // a draft nobody has uploaded
+    expect(() => recordApproved(draft.topic, draft.story, a(draft))).toThrow(/draft|upload/); // a draft nobody has uploaded
     const r = recordApproved(rel2.topic, rel2.story, a(rel2)); // the local release build is enough
     expect(r.event).toMatchObject({ type: 'approved', build: 'releasesha' });
     expect(recordApproved(rel2.topic, rel2.story, a(rel2)).existing).toBe(true);
@@ -377,6 +426,36 @@ describe('verbs', () => {
     const r = recordUpdated(rel2.topic, rel2.story, a(rel2, { fields: ['thumbnail'] }));
     expect(r.existing).toBe(false);
     expect(r.event).toMatchObject({ type: 'updated', fields: ['thumbnail'] });
+  });
+
+  it('unpublish, then publish again', () => {
+    recordSimple(rel2.topic, rel2.story, 'unpublished', a(rel2, { note: 'typo in the title card' }));
+    const r = recordPublished(rel2.topic, rel2.story, a(rel2));
+    expect(r.existing).toBe(false);
+    expect(r.event!.type).toBe('published');
+  });
+
+  it('a draft build is accepted only by final and never goes public', () => {
+    const d2 = syntheticProduction('packaged');
+    const d3 = syntheticProduction('packaged');
+    try {
+      // final accepts a draft nobody uploaded
+      expect(recordApproved(d3.topic, d3.story, a(d3, { build: 'draftsha', accepted: true })).event).toMatchObject({
+        type: 'approved',
+        build: 'draftsha',
+      });
+      recordUploaded(d2.topic, d2.story, a(d2, { id: 'eeeeeeeeeee' }));
+      expect(() => recordApproved(d2.topic, d2.story, a(d2))).toThrow(/draft/);
+      expect(recordApproved(d2.topic, d2.story, a(d2, { build: 'draftsha', accepted: true })).existing).toBe(false);
+      expect(() => recordUploaded(d2.topic, d2.story, a(d2, { id: 'fffffffffff', visibility: 'public' }))).toThrow(
+        /draft/,
+      );
+      expect(() => recordScheduled(d2.topic, d2.story, a(d2, { at: '2026-11-01T00:00:00Z' }))).toThrow(/draft/);
+      expect(() => recordPublished(d2.topic, d2.story, a(d2))).toThrow(/draft/);
+    } finally {
+      d2.cleanup();
+      d3.cleanup();
+    }
   });
 
   it('refuses a missing or non-image thumbnail', () => {
@@ -463,12 +542,18 @@ describe('derivative flows', () => {
     expect(outputStates(live, null, () => null, { topic: 't', story: 's' })['short-1'].next).not.toMatch(/first/);
   });
 
-  it('names a source that is not on disk', () => {
-    const l = addOutput(emptyLedger('t/s'), 'blog', 'blog-post', { source: 'blog/post.md' });
-    expect(ledgerProblems(l, 't/s', tmp)[0]).toMatch(/blog\/post\.md/);
-    mkdirSync(join(tmp, 'blog'), { recursive: true });
-    writeFileSync(join(tmp, 'blog', 'post.md'), '# post');
-    expect(ledgerProblems(l, 't/s', tmp)).toEqual([]);
+  it('a short is uploaded and approved as its own file', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const src = `topics/${f.topic}/scripts/${storySlug(f.story)}/video/shorts/short-1.mp4`;
+      mkdirSync(join(f.dir, 'video', 'shorts'), { recursive: true });
+      writeFileSync(join(f.root, src), 'short bytes');
+      addOutputTo(f.topic, f.story, 'short-1', 'youtube-short', { root: f.root, derivedFrom: 'youtube', source: src });
+      const r = recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', output: 'short-1', id: 'ggggggggggg' });
+      expect(r.event!.build).toBe(sha(readFileSync(join(f.root, src))));
+    } finally {
+      f.cleanup();
+    }
   });
 
   it('approve and publish a generic output through the verbs', () => {
