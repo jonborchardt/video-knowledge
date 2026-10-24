@@ -24,7 +24,7 @@ import {
   emptyLedger,
   loadLedger,
   mainOutput,
-  outputState,
+  outputStates,
   publishPath,
   uploadMetadataOf,
 } from './publish';
@@ -763,19 +763,21 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     sb: null,
   };
   // The ledger view: every output's state against the build on disk and the metadata it would send.
-  if (c.build || existsSync(publishPath(topic, storyId, root)))
+  if (c.build || existsSync(publishPath(topic, storyId, root))) {
+    const metadata = Object.fromEntries(
+      Object.entries(c.ledger.outputs).map(([id, o]) => [id, uploadMetadataOf(dir, c.r, o)]),
+    );
+    const states = outputStates(c.ledger, c.build, (id) => metadata[id]?.sha ?? null, { topic, story: storyId });
     c.publish = {
       main: mainOutput(c.ledger),
-      outputs: Object.entries(c.ledger.outputs).map(([id, o]) => {
-        const metadata = uploadMetadataOf(dir, c.r, o);
-        return {
-          id,
-          kind: o.kind,
-          state: outputState(o, c.build, metadata?.sha ?? null, { topic, story: storyId, output: id }),
-          metadata,
-        };
-      }),
+      outputs: Object.entries(c.ledger.outputs).map(([id, o]) => ({
+        id,
+        kind: o.kind,
+        state: states[id],
+        metadata: metadata[id],
+      })),
     };
+  }
   const s: BoardState = { stage: 'package', next: `npm run script -- package ${topic} ${storyId}`, stopped: false };
   const checks: Check[] = [];
   const blockers: string[] = [];

@@ -17,10 +17,12 @@ import {
   currentBuild,
   emptyLedger,
   eventKey,
+  flowOf,
   ledgerProblems,
   loadLedger,
   mainOutput,
   outputState,
+  outputStates,
   recordApproved,
   recordFailed,
   recordPublished,
@@ -415,5 +417,74 @@ describe('verbs', () => {
     expect(() =>
       addOutputTo(draft.topic, draft.story, 'blog', 'blog-post', { root: draft.root, source: 'nope.md' }),
     ).toThrow(/nope\.md/);
+  });
+});
+
+describe('derivative flows', () => {
+  const ctx = { topic: 't', story: 's', output: 'blog', now: new Date('2026-10-26T00:00:00Z') };
+  const blog = (...events: PublishEvent[]): Output => ({
+    kind: 'blog-post',
+    source: 'blog/post.md',
+    metadata: {},
+    events,
+  });
+
+  it('a blog post needs no upload: made, approved, published', () => {
+    expect(flowOf('blog-post')).toBe('generic');
+    expect(flowOf('youtube-short')).toBe('youtube');
+    const made = outputState(blog(), null, null, ctx);
+    expect(made.status).toBe('not-uploaded');
+    expect(made.next).toContain('npm run publish -- approve t s --output blog');
+    expect(outputState(blog(ev('approved', { build: 'src1' })), null, null, ctx).status).toBe('approved');
+    const live = outputState(
+      blog(
+        ev('approved', { build: 'src1' }),
+        ev('published', { id: 'https://example.org/post', url: 'https://example.org/post' }),
+      ),
+      null,
+      null,
+      ctx,
+    );
+    expect(live.status).toBe('published');
+    expect(live.url).toBe('https://example.org/post');
+  });
+
+  it('a derivative waits for its parent to be live', () => {
+    const l = addOutput(emptyLedger('t/s'), 'short-1', 'youtube-short', { derivedFrom: 'youtube' });
+    const states = outputStates(l, null, () => null, { topic: 't', story: 's' });
+    expect(states['short-1'].status).toBe('not-uploaded');
+    expect(states['short-1'].next).toMatch(/publish youtube first/);
+    const live = appendEvent(
+      appendEvent(appendEvent(l, 'youtube', uploaded('r1', 'id1')).ledger, 'youtube', ev('approved', { build: 'r1' }))
+        .ledger,
+      'youtube',
+      ev('published', { id: 'id1' }),
+    ).ledger;
+    expect(outputStates(live, null, () => null, { topic: 't', story: 's' })['short-1'].next).not.toMatch(/first/);
+  });
+
+  it('names a source that is not on disk', () => {
+    const l = addOutput(emptyLedger('t/s'), 'blog', 'blog-post', { source: 'blog/post.md' });
+    expect(ledgerProblems(l, 't/s', tmp)[0]).toMatch(/blog\/post\.md/);
+    mkdirSync(join(tmp, 'blog'), { recursive: true });
+    writeFileSync(join(tmp, 'blog', 'post.md'), '# post');
+    expect(ledgerProblems(l, 't/s', tmp)).toEqual([]);
+  });
+
+  it('approve and publish a generic output through the verbs', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      mkdirSync(join(f.root, 'blog'), { recursive: true });
+      writeFileSync(join(f.root, 'blog', 'post.md'), '# post');
+      addOutputTo(f.topic, f.story, 'blog', 'blog-post', { root: f.root, source: 'blog/post.md' });
+      const a = { root: f.root, by: 'Jon', output: 'blog' };
+      expect(() => recordPublished(f.topic, f.story, { ...a, url: 'https://example.org/p' })).toThrow(Refusal);
+      const ok = recordApproved(f.topic, f.story, a);
+      expect(ok.event!.build).toMatch(/^[0-9a-f]{10}$/); // the source file's sha stands in for the build
+      const pub = recordPublished(f.topic, f.story, { ...a, url: 'https://example.org/p' });
+      expect(pub.event).toMatchObject({ type: 'published', id: 'https://example.org/p', url: 'https://example.org/p' });
+    } finally {
+      f.cleanup();
+    }
   });
 });

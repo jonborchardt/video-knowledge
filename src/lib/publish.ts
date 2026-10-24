@@ -5,7 +5,7 @@
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
 import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
-import { lf, readJson, ROOT, sha, toJson } from './io';
+import { fileSha, lf, readJson, ROOT, sha, toJson } from './io';
 import { approverProblem } from './release';
 import { scriptDir, storySlug } from './script';
 import { loadStories } from './stories';
@@ -86,7 +86,7 @@ const REQUIRED: Record<EventType, (keyof PublishEvent)[]> = {
 const isRecord = (x: unknown): x is Record<string, unknown> => !!x && typeof x === 'object' && !Array.isArray(x);
 
 /** Every way the file is not a ledger for `video`, as "where: what" lines; [] when valid. */
-export function ledgerProblems(x: unknown, video: string): string[] {
+export function ledgerProblems(x: unknown, video: string, root?: string): string[] {
   const out: string[] = [];
   if (!isRecord(x)) return ['not an object'];
   if (x.video !== video) out.push(`video: is ${JSON.stringify(x.video)}, expected ${video}`);
@@ -101,6 +101,8 @@ export function ledgerProblems(x: unknown, video: string): string[] {
     if (o.derivedFrom !== undefined && !(typeof o.derivedFrom === 'string' && o.derivedFrom in x.outputs))
       out.push(`${at}.derivedFrom: ${JSON.stringify(o.derivedFrom)} is not an output`);
     if (o.source !== undefined && typeof o.source !== 'string') out.push(`${at}.source: not a string`);
+    else if (typeof o.source === 'string' && root && !existsSync(join(root, o.source)))
+      out.push(`${at}.source: ${o.source} is not a file under the repo root`);
     if (!isRecord(o.metadata)) out.push(`${at}.metadata: missing (use {})`);
     else if (o.metadata.thumbnail !== undefined) {
       const t = o.metadata.thumbnail;
@@ -133,7 +135,7 @@ export function ledgerProblems(x: unknown, video: string): string[] {
 export function loadLedger(topic: string, storyId: string, root = ROOT): Ledger | null {
   const x = readJson<unknown>(publishPath(topic, storyId, root));
   if (x === null) return null;
-  const problems = ledgerProblems(x, `${topic}/${storyId}`);
+  const problems = ledgerProblems(x, `${topic}/${storyId}`, root);
   if (problems.length) throw new Error(`${PUBLISH_FILE}: ${problems.join('; ')}`);
   return x as Ledger;
 }
@@ -243,7 +245,10 @@ export interface StateContext {
   story: string;
   output: string;
   now?: Date;
+  parentLive?: boolean; // for a derivative: whether the output it derives from is published (default: yes)
 }
+/** The flow a kind follows: YouTube outputs are uploaded, watched and approved; anything else is made, approved, published. */
+export const flowOf = (kind: string): 'youtube' | 'generic' => (kind.startsWith('youtube') ? 'youtube' : 'generic');
 
 /** Where one output stands, from its events in file order, against the build on disk and the metadata it would send. */
 export function outputState(
@@ -289,8 +294,27 @@ export function outputState(
       : next,
   });
   const where = build ? `video/review/` : 'the review package (npm run video -- package, it is missing)';
+  const first = ctx.parentLive === false && output.derivedFrom ? `publish ${output.derivedFrom} first; then ` : '';
 
   if (ev.some((e) => e.type === 'retracted')) return done('retracted', 'retracted; nothing to do');
+  if (flowOf(output.kind) === 'generic') {
+    // No build, no private upload: the source file is made, a person approves it, it goes out. An upload is an optional
+    // draft on the platform. Published needs approved; nothing is derived from the video's build.
+    const anyApproved = ev.some((e) => e.type === 'approved');
+    const out = [...ev].reverse().find((e) => e.type === 'published' || e.type === 'unpublished');
+    if (out?.type === 'published')
+      return {
+        ...done('published', `live${out.url ? ` at ${out.url}` : ''}`),
+        id: out.id ?? null,
+        url: out.url ?? null,
+      };
+    if (anyApproved) return done('approved', `${first}publish it, then ${verb('published', ' --url <url>')}`);
+    if (upload) return done('uploaded', `${first}review the draft, then ${verb('approve', ' --by "<name>"')}`);
+    return done(
+      'not-uploaded',
+      `${first}make ${output.source ?? 'it'}, then ${verb('approve', ' --by "<name>"')} and ${verb('published', ' --url <url>')}`,
+    );
+  }
   if (!upload) {
     if (localApproved)
       return done(
@@ -299,7 +323,7 @@ export function outputState(
       );
     return done(
       'not-uploaded',
-      `upload the mp4 in ${where} privately, then ${verb('uploaded', ' --id <id> --visibility private')}`,
+      `${first}upload the mp4 in ${where} privately, then ${verb('uploaded', ' --id <id> --visibility private')}`,
     );
   }
   if (live) {
@@ -352,6 +376,22 @@ export function outputState(
     'approved',
     `set ${url} public or schedule it on YouTube, then ${verb('published')} or ${verb('scheduled', ' --at <ISO>')}`,
   );
+}
+
+/** Every output's state, derivatives gated on the output they derive from being live. */
+export function outputStates(
+  ledger: Ledger,
+  build: Build | null,
+  metadataShaOf: (id: string, o: Output) => string | null,
+  ctx: { topic: string; story: string; now?: Date },
+): Record<string, OutputState> {
+  const states: Record<string, OutputState> = {};
+  const state = (id: string, parentLive?: boolean) =>
+    outputState(ledger.outputs[id], build, metadataShaOf(id, ledger.outputs[id]), { ...ctx, output: id, parentLive });
+  for (const id of Object.keys(ledger.outputs)) states[id] = state(id);
+  for (const [id, o] of Object.entries(ledger.outputs))
+    if (o.derivedFrom && states[o.derivedFrom]) states[id] = state(id, states[o.derivedFrom].status === 'published');
+  return states;
 }
 
 // ---- metadata ---------------------------------------------------------------------------------------------------
@@ -495,11 +535,13 @@ export function recordApproved(
   const problem = approverProblem(a.by);
   if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
   const o = open(topic, storyId, a);
-  const build = a.build ?? o.build?.sha;
+  // a generic output (blog post, page, post) is approved as its source file: that file's sha stands in for the build
+  const generic = flowOf(o.out.kind) === 'generic';
+  const build = a.build ?? (generic ? (o.out.source ? fileSha(join(o.root, o.out.source)) : 'none') : o.build?.sha);
   if (!build) throw new Refusal('nothing to approve: no review package and no build named');
   const uploaded = o.out.events.find((e) => e.type === 'uploaded' && e.build === build);
   const localRelease = o.build?.sha === build && o.build.status === 'release';
-  if (!uploaded && !localRelease)
+  if (!generic && !uploaded && !localRelease)
     throw new Refusal(
       `build ${build} has no upload to approve and is not the release build on disk; upload it first (a draft is accepted by npm run video -- final)`,
     );
@@ -519,11 +561,17 @@ export function recordScheduled(topic: string, storyId: string, a: VerbArgs & { 
   return write(o, { at: stamp(a), type: 'scheduled', by: a.by, id: o.state.id!, publishAt: a.at });
 }
 
-export function recordPublished(topic: string, storyId: string, a: VerbArgs & { url?: string }): VerbResult {
+export function recordPublished(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { url?: string; id?: string },
+): VerbResult {
   const o = open(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
-    throw new Refusal(`the upload is ${o.state.status}, not approved or scheduled: ${o.state.next}`);
-  const e: PublishEvent = { at: stamp(a), type: 'published', by: a.by, id: o.state.id! };
+    throw new Refusal(`the output is ${o.state.status}, not approved or scheduled: ${o.state.next}`);
+  // a generic output has no platform id of its own: the url (or the output id) names what went live
+  const id = o.state.id ?? a.id ?? a.url ?? o.id;
+  const e: PublishEvent = { at: stamp(a), type: 'published', by: a.by, id };
   if (a.url) e.url = a.url;
   return write(o, e);
 }

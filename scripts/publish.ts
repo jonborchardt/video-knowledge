@@ -26,7 +26,7 @@ import {
   currentBuild,
   loadLedger,
   emptyLedger,
-  outputState,
+  outputStates,
   recordApproved,
   recordFailed,
   recordPublished,
@@ -96,9 +96,13 @@ function show() {
   const build = currentBuild(dir);
   const rel = (f: string) => `topics/${topic}/scripts/${storySlug(storyId)}/${f}`;
   const lines = [`build: ${build ? `${build.status} ${build.sha}` : 'none (no review package)'}`];
+  const metas = Object.fromEntries(
+    Object.entries(ledger.outputs).map(([id, o]) => [id, uploadMetadataOf(dir, rel, o)]),
+  );
+  const states = outputStates(ledger, build, (id) => metas[id]?.sha ?? null, { topic, story: storyId });
   for (const [id, out] of Object.entries(ledger.outputs)) {
-    const meta = uploadMetadataOf(dir, rel, out);
-    const s = outputState(out, build, meta?.sha ?? null, { topic, story: storyId, output: id });
+    const meta = metas[id];
+    const s = states[id];
     lines.push(
       '',
       `${id} (${out.kind}): ${s.status}${s.failed ? ' FAILED' : ''}${s.id ? ` ${s.url}` : ''}`,
