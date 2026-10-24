@@ -189,9 +189,15 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
     generatedAt: '2026-01-01',
     segment: { scenes: sb.scenes.map((s) => s.id) },
     output: { seconds: sb.runtime },
-    narration: { provider: 'edge', voice: 'en-US-AndrewMultilingualNeural', publishable: false },
+    narration: {
+      provider: opts.release ? 'azure' : 'edge',
+      voice: 'en-US-AndrewMultilingualNeural',
+      publishable: !!opts.release,
+    },
     music: { compositions: [{ title: 'Fixture' }] },
-    clearance: { narration: false, music: false, publishable: false, why: ['draft voice'] },
+    clearance: opts.release
+      ? { narration: true, music: true, publishable: true, why: [] }
+      : { narration: false, music: false, publishable: false, why: ['draft voice'] },
     fingerprints: { ...release.fingerprints, config: sha(JSON.stringify(config)) },
     qa: { ok: true, checks: [{ name: 'fixture', ok: true }] },
   };
