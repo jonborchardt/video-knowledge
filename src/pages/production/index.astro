@@ -423,11 +423,8 @@ const stripOf = (r: StoryRow) => {
     productions.length > 0 && (
       <section class="grid gap-6">
         <h2 class="text-featured font-semibold">Scripts: artifact inspection</h2>
-        {productions.map((r) => (
-          <article
-            id={`${r.production!.topic}-${r.production!.slug}`}
-            class="grid gap-3 rounded-lg border bg-card p-4 text-card-foreground"
-          >
+        {productions.map(({ production: p, ...r }) => (
+          <article id={`${p!.topic}-${p!.slug}`} class="grid gap-3 rounded-lg border bg-card p-4 text-card-foreground">
             <div class="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <div class="eyebrow text-muted-foreground">

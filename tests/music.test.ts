@@ -2,6 +2,7 @@
 // contract (anchors, cue sheet validation against the compositions on disk, fingerprints), the mix under a narration
 // track end to end (synthetic WAVs, no TTS, no strudel-bench), what it does not touch (the chunk cache), the report's
 // clearance and the production board's reading of it. The MLM cue sheet is checked against its committed timeline.
+import type { ShortBlock } from '../src/lib/script';
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
