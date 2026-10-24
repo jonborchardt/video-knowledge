@@ -1,0 +1,275 @@
+---
+// One generated script: the narration with its validation markers, the evidence behind every sentence, and the
+// storyboard. Built from topics/<topic>/scripts/<slug>/*.json (see src/lib/script.ts); static, no client script.
+import { join } from 'node:path';
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+import { passageReader } from '../lib/evidence';
+import { readJson } from '../lib/io';
+import { type EvidencePackage, FILES, type Issue, type Script, type ScriptValidation, scriptDirs } from '../lib/script';
+import type { Storyboard } from '../lib/storyboard';
+import { href } from '../lib/url';
+
+export function getStaticPaths() {
+  return scriptDirs().map(({ topic, slug, dir }) => ({
+    params: { topic, slug },
+    props: {
+      topic,
+      script: readJson<Script>(join(dir, FILES.script))!,
+      v: readJson<ScriptValidation>(join(dir, FILES.validation)),
+      pkg: readJson<EvidencePackage>(join(dir, FILES.pkg)),
+      sb: readJson<Storyboard>(join(dir, FILES.storyboard)),
+    },
+  }));
+}
+const { topic, script, v, pkg, sb } = Astro.props as {
+  topic: string;
+  script: Script;
+  v: ScriptValidation | null;
+  pkg: EvidencePackage | null;
+  sb: Storyboard | null;
+};
+const read = passageReader();
+const by = new Map((v?.sentences ?? []).map((s) => [s.id, s]));
+const docName = new Map((pkg?.documents ?? []).map((d) => [d.file, d.name]));
+const label = (cite: string) =>
+  `${docName.get(cite.split('#')[0]) ?? cite.split('#')[0]}, lines ${cite.split('#L')[1] ?? ''}`;
+const citeHref = (cite: string) => `${site.repo}/blob/main/${cite}`;
+const excerpt = (p: string | null, n = 240) => {
+  const one = (p ?? '').replace(/\s+/g, ' ').trim();
+  return one.length > n ? one.slice(0, n) + '…' : one;
+};
+const mmss = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.round(sec % 60)).padStart(2, '0')}`;
+const STATUS: Record<string, string> = {
+  passed: 'text-success',
+  ok: 'text-success',
+  'needs-review': 'text-warning',
+  blocked: 'text-destructive',
+  verified: 'text-success',
+};
+const SEV: Record<Issue['severity'], string> = {
+  blocking: 'text-destructive',
+  warning: 'text-warning',
+  info: 'text-muted-foreground',
+};
+const badge =
+  'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase';
+const small = 'text-sm text-muted-foreground';
+const h3 = 'mt-4 mb-1 text-title font-semibold';
+const open = (v?.issues ?? []).filter((i) => i.severity !== 'info' && !i.disposition);
+const facts = [
+  ['Validation', v ? `${v.status} (revision ${v.revision})` : 'not run'],
+  ['Runtime', v ? `${v.words} words, about ${v.minutes} min at ${v.wordsPerMinute} wpm` : ''],
+  ['Assertions', v ? `${v.counts.verified} of ${v.counts.assertions} verified` : ''],
+  ['Issues', v ? `${v.counts.blocking} blocking, ${v.counts.warnings} warnings` : ''],
+  ['Storyboard', sb ? `${sb.scenes.length} scenes, ${mmss(sb.runtime)} (${sb.status})` : 'none yet'],
+  ['Model', script.generation?.model ?? ''],
+].filter(([, x]) => x);
+---
+
+<Base
+  title={`Script · ${script.title}`}
+  description={`Narration script and storyboard for "${script.title}", with the evidence behind every sentence.`}
+>
+  <nav class={small} aria-label="Breadcrumb">
+    <a class="text-muted-foreground" href={href('/')}>All subjects</a> /{' '}
+    <a class="text-muted-foreground" href={href(`/${topic}/`)}>{topic}</a> /{' '}
+    <a class="text-muted-foreground" href={href(`/${topic}/stories/`)}>Story ideas</a> / Script
+  </nav>
+  <header class="grid gap-4">
+    <div>
+      <div class="eyebrow text-muted-foreground">{script.story}</div>
+      <h1 class="mt-1 text-display font-semibold text-balance">{script.title}</h1>
+      <p class="mt-3 max-w-prose text-muted-foreground">
+        Every factual sentence carries assertions checked against the recorded evidence: references must resolve,
+        figures and quotations must be in the cited passage, arithmetic must reproduce, and an independent reviewer must
+        approve the wording. Automated validation says whether the narration is ready for human editorial review; it
+        does not establish truth.
+      </p>
+    </div>
+    <dl class="grid gap-1 text-sm sm:grid-cols-2">
+      {
+        facts.map(([k, x]) => (
+          <div class="grid grid-cols-[7rem_1fr] gap-2">
+            <dt class="font-mono text-xs text-muted-foreground uppercase">{k}</dt>
+            <dd class:list={[k === 'Validation' && v ? STATUS[v.status] : '']}>{x}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </header>
+
+  <section id="script">
+    <h2 class="mb-3 text-featured font-semibold">Narration</h2>
+    <p class:list={[small, 'mb-3']}>
+      Open a sentence to see its assertions, their status and the passages behind them. Sentences without a marker make
+      no factual claim.
+    </p>
+    {
+      script.sections.map((sec) => (
+        <div class="mt-4">
+          <h3 class={h3}>{sec.name[0].toUpperCase() + sec.name.slice(1)}</h3>
+          <div class="max-w-prose leading-relaxed">
+            {sec.sentences.map((s) => {
+              const r = by.get(s.id);
+              const has =
+                (s.assertions?.length ?? 0) > 0 || (r?.issues.length ?? 0) > 0 || (r && r.status !== 'verified');
+              return has ? (
+                <details class="group inline">
+                  <summary class="inline cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                    {s.text}{' '}
+                    <span class:list={[badge, STATUS[r?.status ?? 'needs-review']]}>
+                      {s.id} {r?.status ?? ''}
+                    </span>{' '}
+                  </summary>
+                  <div class="my-2 rounded-md border bg-card p-3 text-sm">
+                    {r?.issues.map((i) => (
+                      <p class:list={['mt-1', SEV[i.severity]]}>
+                        {i.severity} {i.category} ({i.by}): {i.explanation}
+                      </p>
+                    ))}
+                    {r?.assertions.map((a) => (
+                      <div class="mt-2 border-t pt-2">
+                        <p>
+                          <span class:list={[badge, STATUS[a.status]]}>{a.status}</span> <strong>{a.id}</strong>{' '}
+                          {a.text}
+                        </p>
+                        <p class:list={[small, 'mt-1']}>{a.validation.explanation}</p>
+                        {a.issues.map((i) => (
+                          <p class:list={['mt-1', SEV[i.severity]]}>
+                            {i.severity} {i.category}: {excerpt(i.explanation, 400)}
+                          </p>
+                        ))}
+                        {a.calc && (
+                          <p class:list={[small, 'mt-1']}>
+                            Calculation: {a.calc.expression} = {a.calc.result}
+                          </p>
+                        )}
+                        <ul class="mt-1 grid gap-1 pl-0">
+                          {[
+                            ...a.validation.supporting,
+                            ...a.validation.qualifying,
+                            ...a.validation.contradicting,
+                            ...a.validation.context,
+                          ]
+                            .filter((x) => x.cited)
+                            .map((x) => (
+                              <li class="grid gap-0.5">
+                                <span>
+                                  <span class="font-mono text-xs text-muted-foreground uppercase">{x.role}</span>{' '}
+                                  {x.by ?? ''}{' '}
+                                  {x.verdict && (
+                                    <span class={small}>
+                                      {x.verdict}
+                                      {x.confidence != null ? ` ${Math.round(x.confidence * 100)}%` : ''}
+                                      {x.applicability ? `, ${x.applicability}` : ''}
+                                    </span>
+                                  )}{' '}
+                                  {x.ref.kind === 'study' && (
+                                    <a class={small} href={citeHref(x.ref.cite)}>
+                                      {label(x.ref.cite)}
+                                    </a>
+                                  )}
+                                </span>
+                                <span class={small}>
+                                  {x.ref.kind === 'study' ? excerpt(read(x.ref.cite)) : excerpt(x.note)}
+                                </span>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              ) : (
+                <span>{s.text} </span>
+              );
+            })}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  {
+    open.length > 0 && (
+      <section id="issues">
+        <h2 class="mb-3 text-featured font-semibold">Open issues</h2>
+        <ul class="grid list-disc gap-1 pl-[1.2em] text-sm">
+          {open.map((i) => (
+            <li>
+              <span class:list={[badge, SEV[i.severity]]}>{i.severity}</span> {i.sentence}
+              {i.assertion ? ` (${i.assertion})` : ''} {i.category} ({i.by}): {excerpt(i.explanation, 400)}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    sb && (
+      <section id="storyboard">
+        <h2 class="mb-3 text-featured font-semibold">Storyboard</h2>
+        <p class:list={[small, 'mb-3']}>
+          {sb.scenes.length} scenes, {mmss(sb.runtime)} at {sb.wordsPerMinute} words per minute including pauses.
+          Narration is copied from the script; every chart value and on-screen citation is checked against a passage.
+        </p>
+        {sb.scenes.map((s) => (
+          <article class="border-t py-3 text-sm">
+            <p>
+              <span class="font-mono text-xs text-muted-foreground">
+                {s.order}. {s.id} · {mmss(s.start)} to {mmss(s.end)}
+              </span>{' '}
+              <span class={badge}>{s.visual.category}</span>
+            </p>
+            <p class="mt-1 max-w-prose">{s.narration}</p>
+            <p class:list={[small, 'mt-1 max-w-prose']}>
+              <strong>Visual.</strong> {s.visual.description}
+            </p>
+            {s.visual.onScreenText?.length ? (
+              <p class:list={[small, 'mt-1']}>
+                <strong>On screen.</strong> {s.visual.onScreenText.join(' / ')}
+              </p>
+            ) : null}
+            {s.visual.chart && (
+              <table class="mt-1 text-xs">
+                <tbody>
+                  {(s.visual.chart.points ?? []).map((x) => (
+                    <tr>
+                      <td class="pr-3">{x.label}</td>
+                      <td class="pr-3 tabular-nums">{x.display}</td>
+                      <td class="pr-3 tabular-nums">
+                        {x.qualifier ? `${x.qualifier} ` : ''}
+                        {x.value}
+                      </td>
+                      <td class="pr-3">{x.unit}</td>
+                      <td class="text-muted-foreground">{label(x.cite)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {s.visual.assetIds?.length ? (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Assets.</strong>{' '}
+                {s.visual.assetIds
+                  .map(
+                    (id) =>
+                      `${id} (${sb.assets?.[id]?.kind ?? '?'}: ${sb.assets?.[id]?.description ?? 'unregistered'})`,
+                  )
+                  .join('; ')}
+              </p>
+            ) : null}
+            {s.citations?.length ? (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Cite.</strong>{' '}
+                {s.citations.map((c) => (c.cite ? <a href={citeHref(c.cite)}>{c.label}</a> : <span>{c.label}</span>))}
+              </p>
+            ) : null}
+          </article>
+        ))}
+      </section>
+    )
+  }
+</Base>

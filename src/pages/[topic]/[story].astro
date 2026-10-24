@@ -1,0 +1,137 @@
+---
+// One matter before an institution: a story from topics/<topic>/stories.json as its own page. The viewer-facing
+// parts of the candidate (title, question, tension, premise, takeaway) and the claims it turns on, each with its
+// verdict and sources from the inquiry. A chain lists its follow-up questions; a follow-up points at its first question.
+import Base from '../../layouts/Base.astro';
+import ClaimCard from '../../components/ClaimCard.astro';
+import SourceIcons from '../../components/SourceIcons.astro';
+import { type Commission, commissionKey, commissionOf, site } from '../../config/site';
+import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
+import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
+import { href } from '../../lib/url';
+
+export function getStaticPaths() {
+  return publicTopicNames().flatMap((name) => {
+    const t = loadTopic(name);
+    const stories = loadStories(name)?.stories ?? [];
+    return stories.map((s) => ({ params: { topic: name, story: storyUrlSlug(s) }, props: { t, s, stories } }));
+  });
+}
+const { t, s, stories } = Astro.props as { t: Topic; s: Story; stories: Story[] };
+const commission = commissionOf(t.name)!;
+const byId = new Map(stories.map((x) => [x.id, x]));
+const first = s.partOf ? byId.get(s.partOf) : undefined;
+const claims = s.claims.map((id) => t.claims.find((c) => c.id === id)).filter((c) => !!c);
+const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
+const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => commission.name.split(' ').includes(w))!;
+const h2 = 'mb-3 text-featured font-bold';
+const eyebrowLink = 'text-muted-foreground no-underline hover:underline';
+const commissionHref = (c: Commission) => href(`/commissions/${commissionKey(c)}/`);
+---
+
+<Base title={`${s.title} · ${commission.name}`} description={s.question} image={`/og/${commissionKey(commission)}.jpg`}>
+  <SourceIcons />
+  <header class="grid gap-4 border-y-4 border-double py-5">
+    <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
+      <div class="flex flex-wrap items-center gap-x-1 eyebrow text-muted-foreground">
+        <img
+          class="size-6"
+          src={href(`/commissions/${commissionKey(commission)}.png`)}
+          alt=""
+          width="256"
+          height="256"
+        />
+        <a class={eyebrowLink} href={href('/')}>{site.name}</a> ·{' '}
+        <a class={eyebrowLink} href={commissionHref(commission)}>{commission.ceremonialName}</a>
+      </div>
+      <div class="eyebrow text-gold">{s.readiness === 'ready' ? 'Matter' : 'Matter under examination'}</div>
+    </div>
+    <h1 class="text-display font-bold text-balance">{s.title}</h1>
+    <p class="max-w-prose text-lg text-muted-foreground">{s.question}</p>
+    <dl
+      class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 border-t pt-3 font-mono text-xs text-muted-foreground sm:grid-cols-[auto_1fr_auto_1fr]"
+    >
+      <dt class="uppercase">Inquiry</dt>
+      <dd class="text-foreground"><a href={href(`/${t.name}/`)}>{t.label}</a></dd>
+      <dt class="uppercase">Published by</dt>
+      <dd class="text-foreground">{commission.fullName}</dd>
+      <dt class="uppercase">Claims</dt>
+      <dd class="text-foreground">{claims.length} examined</dd>
+      <dt class="uppercase">Status</dt>
+      <dd class="text-foreground">
+        {
+          s.readiness === 'ready'
+            ? 'The central conclusion is settled by the evidence below'
+            : 'Evidence still being weighed; verdicts below are current'
+        }
+      </dd>
+    </dl>
+    {
+      first && (
+        <p class="text-sm text-muted-foreground">
+          A follow-up question to <a href={storyHref(first)}>{first.title}</a>.
+        </p>
+      )
+    }
+  </header>
+
+  <section aria-labelledby="dispute">
+    <div class="eyebrow text-gold">Section I</div>
+    <h2 class={h2} id="dispute">The dispute</h2>
+    <p class="max-w-prose">{s.tension}</p>
+  </section>
+
+  <section aria-labelledby="evidence">
+    <div class="eyebrow text-gold">Section II</div>
+    <h2 class={h2} id="evidence">What the evidence shows</h2>
+    <p class="max-w-prose">{s.premise}</p>
+    {
+      s.arc.takeaway && (
+        <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
+          <figcaption class="eyebrow text-muted-foreground">Takeaway</figcaption>
+          <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">{s.arc.takeaway}</p>
+        </figure>
+      )
+    }
+  </section>
+
+  <section aria-labelledby="claims">
+    <div class="eyebrow text-gold">Section III</div>
+    <h2 class={h2} id="claims">The claims examined</h2>
+    <p class="mb-3 text-sm text-muted-foreground">
+      Each claim as the sources make it, its verdict, and the quote or study lines it rests on.{' '}
+      <a href={href('/about/#verdicts')}>How to read the verdict labels.</a>
+    </p>
+    {claims.map((c) => <ClaimCard claim={c} group="story" />)}
+  </section>
+
+  {
+    s.chain && s.chain.length > 0 && (
+      <section aria-labelledby="chain">
+        <div class="eyebrow text-gold">Section IV</div>
+        <h2 class={h2} id="chain">
+          Questions that follow
+        </h2>
+        <ul class="grid list-none gap-2 p-0">
+          {s.chain.map((q) => (
+            <li class="grid gap-0.5 border-l-2 pl-3">
+              <a class="font-heading font-bold" href={storyHref(q)}>
+                {byId.get(q.id)?.title ?? q.question}
+              </a>
+              <span class="text-sm text-muted-foreground">{q.question}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <footer class="grid gap-2 border-y-4 border-double py-5 text-sm text-muted-foreground">
+    <div class="eyebrow text-gold">Entered into the Public Record</div>
+    <p class="font-heading text-[1.05rem] text-foreground">The matter is before the {body}.</p>
+    <p class="max-w-prose">
+      Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed.
+      Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
+    </p>
+  </footer>
+</Base>

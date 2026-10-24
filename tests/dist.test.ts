@@ -2,22 +2,24 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { scriptDirs } from '../src/lib/script';
-import { storyTopicNames } from '../src/lib/stories';
-import { topicNames } from '../src/lib/topics';
+import { commissions } from '../src/config/site';
+import { loadStories, storyUrlSlug } from '../src/lib/stories';
+import { publicTopicNames, topicNames } from '../src/lib/topics';
 
 const DIST = join(process.cwd(), 'dist');
 // Same switch as astro.config.mjs: the GitHub Pages mirror under a base path, else the root site.
 const PAGES = process.env.DEPLOY_TARGET === 'pages';
 const SITE = PAGES ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com';
 const BASE = PAGES ? '/video-knowledge/' : '/';
+const storyPages = publicTopicNames().flatMap((topic) =>
+  (loadStories(topic)?.stories ?? []).map((s) => ({ topic, slug: storyUrlSlug(s), s })),
+);
 const pages = [
   'index.html',
   'about/index.html',
-  'production/index.html',
-  ...topicNames().map((n) => `${n}/index.html`),
-  ...storyTopicNames().map((n) => `${n}/stories/index.html`),
-  ...scriptDirs().map((d) => `${d.topic}/scripts/${d.slug}/index.html`),
+  ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
+  ...publicTopicNames().map((n) => `${n}/index.html`),
+  ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
 ];
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
@@ -37,38 +39,74 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   });
 
   it('topic pages have their tab sections', () => {
-    for (const n of topicNames()) {
+    for (const n of publicTopicNames()) {
       const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
       for (const id of ['recap', 'top', 'claims', 'sources']) expect(html).toContain(`<section id="${id}"`);
       expect(html).toContain('data-verdict=');
     }
   });
 
-  it('only built pages for real topics', () => {
+  it('only built pages for topics an institution publishes; no admin pages', () => {
     const dirs = readdirSync(DIST, { withFileTypes: true }).filter(
       (d) => d.isDirectory() && !['_astro', 'og'].includes(d.name),
     );
-    expect(dirs.map((d) => d.name).sort()).toEqual(['about', 'admin', 'production', ...topicNames()].sort());
+    expect(dirs.map((d) => d.name).sort()).toEqual(['about', 'commissions', ...publicTopicNames()].sort());
+    for (const n of topicNames()) {
+      expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
+      expect(existsSync(join(DIST, n, 'scripts')), `${n}/scripts`).toBe(false);
+    }
+    expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain(`href="${BASE}production/"`);
   });
 
-  it('script pages carry the narration with sentence markers, and the story page links to them', () => {
-    for (const d of scriptDirs()) {
-      const html = readFileSync(join(DIST, d.topic, 'scripts', d.slug, 'index.html'), 'utf8');
-      expect(html).toContain('<section id="script"');
-      expect(html).toMatch(/s\d\d (verified|needs-review|blocked)/); // a sentence badge
-      expect(readFileSync(join(DIST, d.topic, 'stories', 'index.html'), 'utf8')).toContain(
-        `href="${BASE}${d.topic}/scripts/${d.slug}/"`,
-      );
+  it('the home page lists every institution, links only real channels and features a story', () => {
+    const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+    for (const c of Object.values(commissions)) {
+      expect(html).toContain(c.name);
+      if (c.youtube) expect(html).toContain(`href="${c.youtube}"`);
+    }
+    expect(html).toContain('Channel coming soon');
+    expect(html).toContain('Featured inquiry');
+    expect(html).toContain('The Commonwealth is fictional. The research is real.');
+  });
+
+  it('commission pages name the institution, its inquiries and their stories', () => {
+    for (const [k, c] of Object.entries(commissions)) {
+      const html = readFileSync(join(DIST, 'commissions', k, 'index.html'), 'utf8');
+      expect(html).toContain(c.ceremonialName);
+      expect(html).toContain(c.fullName);
+      const published = c.topics.filter((n) => publicTopicNames().includes(n));
+      for (const n of published) expect(html).toContain(`href="${BASE}${n}/"`);
+      if (published.length) expect(html).toContain('Matters before the');
+      else expect(html).toContain('no inquiry published yet');
     }
   });
 
-  it('story pages list every candidate with its readiness, and the topic page links to them', () => {
-    for (const n of storyTopicNames()) {
-      const html = readFileSync(join(DIST, n, 'stories', 'index.html'), 'utf8');
-      expect(html.match(/<details/g)?.length).toBeGreaterThanOrEqual(1);
-      expect(html).toMatch(/<span[^>]*>(Ready|Needs review|Needs research)<\/span>/);
-      expect(html).toContain('Evidence audit');
-      expect(readFileSync(join(DIST, n, 'index.html'), 'utf8')).toContain(`href="${BASE}${n}/stories/"`);
+  it('story pages carry the question and its claims, and the commission page links to them', () => {
+    for (const { topic, slug, s } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      expect(html).toContain('<section aria-labelledby="claims"');
+      expect(html).toContain('data-verdict=');
+      expect(html).toContain(`href="${BASE}${topic}/"`);
+      if (!s.partOf) {
+        const c = Object.entries(commissions).find(([, c]) => c.topics.includes(topic))![0];
+        expect(readFileSync(join(DIST, 'commissions', c, 'index.html'), 'utf8')).toContain(
+          `href="${BASE}${topic}/${slug}/"`,
+        );
+      }
+    }
+  });
+
+  it('topic pages are branded as the institution that publishes them', () => {
+    for (const n of publicTopicNames()) {
+      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
+      const [key, c] = Object.entries(commissions).find(([, c]) => c.topics.includes(n))!;
+      // The institution's brand kit: its share card and its seal (written by npm run brand).
+      expect(html).toContain(`/og/${key}.jpg"`);
+      expect(html).toContain(`src="${BASE}commissions/${key}.png"`);
+      expect(html).toContain('Published by');
+      expect(html).toContain(c.fullName);
+      expect(html).toContain(c.ceremonialName);
+      expect(html).toContain('Entered into the Public Record');
     }
   });
 
@@ -103,6 +141,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(sitemap).toContain(`<loc>${SITE}${BASE}${p.replace('index.html', '')}</loc>`);
     }
     expect(sitemap).not.toContain('404');
+    expect(sitemap).not.toContain('/production/');
   });
 
   it('about page marks its nav link as current', () => {
@@ -134,7 +173,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   });
 
   it('topic pages: tabs, table headers and the search box are wired up', () => {
-    for (const n of topicNames()) {
+    for (const n of publicTopicNames()) {
       const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
       expect(html).toContain('role="tablist"');
       for (const [tab] of html.matchAll(/<button[^>]*role="tab"[^>]*>/g)) {

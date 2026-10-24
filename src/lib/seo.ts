@@ -5,6 +5,9 @@ import { absoluteUrl } from './url';
 export interface PageMeta {
   title: string;
   description?: string;
+  /** The share card, a site path to a 1200x675 image: a brand's `og-default` (public/og/<brand>.jpg, written by
+   *  `npm run brand`). Defaults to the Commonwealth's. */
+  image?: string;
   /** Error and dev-only pages: emit noindex, no canonical, no structured data. */
   noindex?: boolean;
 }

@@ -1,12 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
 import VerdictBadge from '../components/VerdictBadge.astro';
-import { author, site } from '../config/site';
+import { author, commissionKey, commissions, site } from '../config/site';
+import { loadTopic, publicTopicNames } from '../lib/topics';
 import { href } from '../lib/url';
 
-const h2 = 'mt-10 mb-3 text-featured font-semibold';
+const h2 = 'mt-10 mb-3 text-featured font-bold';
 const p = 'mt-3 max-w-prose';
 const list = 'mt-3 grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
+const names = new Set(publicTopicNames());
+const label = (n: string) => loadTopic(n).label;
 // One row per confidence band; the three columns are the same band applied to each verdict.
 const rows = [
   { band: '90 to 100%', c: 0.95 },
@@ -18,28 +21,70 @@ const rows = [
 
 <Base
   title={`About · ${site.name}`}
-  description="How this site turns videos into judged claims, and how to read its verdict labels."
+  description="What the Commonwealth of Reason is, which institutions publish its inquiries, and how to read a verdict."
 >
-  <header>
-    <div class="eyebrow text-muted-foreground">{site.name}</div>
-    <h1 class="mt-1 text-display font-semibold">What this site does</h1>
+  <header class="grid gap-4 border-y-4 border-double py-5">
+    <div class="eyebrow text-muted-foreground">
+      <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a> · {
+        site.publicRecord
+      }
+    </div>
+    <h1 class="text-display font-bold">About the Commonwealth</h1>
     <p class={`${p} text-muted-foreground`}>
-      Videos and blog posts make claims. Most are never checked. This site collects the sources on a subject, pulls out
-      the distinct things they claim, and judges every claim against the best evidence available. The result is a page
-      per subject that says which claims hold up, which do not, and which sources are worth your time.
-    </p>
-    <p class={`${p} text-muted-foreground`}>
-      The site and its YouTube channels present themselves as {site.publicRecord} of the {site.name}, a fictional state
-      whose commissions and bureaus investigate everyday questions with full ceremony. {site.disclosure} No real government
-      is involved, and nothing here is endorsed by one.
+      The {site.name} publishes through its commissions, bureaus, offices and society, each a YouTube channel with a remit.
+      This site is their public record: every inquiry, with the sources it examined, the claims it pulled out of them, and
+      the verdict on each claim with the evidence that decided it. The institutions speak with the assurance of an established
+      civil service; the research under the ceremony is real, attributed and correctable, and no finding, seal or stamp claims
+      more than the verdicts do. Motto: <em>{site.motto}</em>
     </p>
   </header>
 
-  <h2 class={h2}>How a subject is built</h2>
+  <h2 class={h2}>The institutions</h2>
+  <p class={p}>
+    Each institution has a remit and publishes the inquiries that fall under it. Only one channel exists so far; the
+    others are named and waiting.
+  </p>
+  <ul class="mt-4 grid gap-3">
+    {
+      Object.values(commissions).map((c) => (
+        <li class="grid gap-1 rounded-md border bg-card p-4">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4">
+            <a class="flex items-center gap-2 font-heading font-bold" href={href(`/commissions/${commissionKey(c)}/`)}>
+              <img class="size-8" src={href(`/commissions/${commissionKey(c)}.png`)} alt="" width="256" height="256" />
+              {c.name}
+            </a>
+            {c.youtube ? (
+              <a href={c.youtube} rel="me" class="text-sm" title={c.fullName}>
+                YouTube {c.handle}
+              </a>
+            ) : (
+              <span class="eyebrow text-muted-foreground">Channel coming soon</span>
+            )}
+          </div>
+          <span class="text-sm text-muted-foreground">{c.remit}</span>
+          {c.topics.filter((n) => names.has(n)).length > 0 && (
+            <span class="text-sm">
+              Inquiries:{' '}
+              {c.topics
+                .filter((n) => names.has(n))
+                .map((n, i) => (
+                  <>
+                    {i > 0 && ', '}
+                    <a href={href(`/${n}/`)}>{label(n)}</a>
+                  </>
+                ))}
+            </span>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 class={h2}>How an inquiry is built</h2>
   <ol class={list}>
     <li>
       <strong>Collect.</strong> YouTube videos with captions and blog posts, chosen to cover the pitches, the critics and
-      the explainers on a subject, not just one side.
+      the explainers on a question, not just one side.
     </li>
     <li>
       <strong>Extract.</strong> From each source, the four to twelve claims a viewer would walk away believing, each tied
@@ -128,7 +173,7 @@ const rows = [
     something sound.
   </p>
 
-  <h2 class={h2}>What it does not do</h2>
+  <h2 class={h2}>What the Commonwealth does not do</h2>
   <ul class={list}>
     <li>
       It does not judge people or politics. Each verdict applies to one claim, in one period, against one body of
@@ -140,18 +185,22 @@ const rows = [
     </li>
     <li>
       It does not treat an AI guess as evidence. The guess is a starting point that a study can overturn, and the Recap
-      tab of each subject lists every claim where that happened.
+      tab of each inquiry lists every claim where that happened.
+    </li>
+    <li>
+      It does not invent. No citation, witness, authority or figure on this site is fictional; only the state that
+      publishes them is.
     </li>
   </ul>
 
   <h2 class={h2}>Who</h2>
   <p class={p}>
-    Built by <a href={author.links.GitHub}>{author.name}</a>. The data, the agent briefs and this site are open at <a
-      href={site.repo}>GitHub</a
-    >. Every claim links back to its quote and every study verdict to the lines it rests on, so you can check the
-    checking.
+    Published by <a href={author.links.GitHub}>{author.name}</a>, who writes about building things like this at{' '}
+    <a href={author.blog.url}>{author.blog.name}</a>. The data, the agent briefs, the brand charter and this site are
+    open at <a href={site.repo}>GitHub</a>. Every claim links back to its quote and every study verdict to the lines it
+    rests on, so you can check the checking.
   </p>
   <p class={`${p} text-sm text-muted-foreground`}>
-    <a href={href('/')}>See all subjects</a>.
+    <a href={href('/')}>Back to the Public Record</a>.
   </p>
 </Base>

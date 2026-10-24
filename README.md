@@ -59,8 +59,8 @@ The agent does the reading and judging; the scripts do the bookkeeping. Steps 3â
 `npm run stories -- discover <topic>` reads the topic's report and store (no watcher checkout needed), drafts
 candidate videos, audits each against the recorded evidence, evaluates and ranks them and writes
 `topics/<topic>/stories.json` (at most 12 videos listed, a chain's follow-up questions riding with their first question;
-rejected candidates are listed with a reason). The site shows them at
-`/<topic>/stories/`.
+rejected candidates are listed with a reason). The dev server shows them at
+`/<topic>/stories/` (the working pages in `src/admin/` are routed by `npm run dev` only, never built or deployed).
 
 ```
 npm run stories -- discover <topic>              # draft, audit, evaluate, rank; writes topics/<topic>/stories.json
@@ -206,7 +206,7 @@ npm run video -- preview <topic> <story-id>    # Remotion studio on the same com
 ```
 
 Commit `render.json`, `narration.json`, `timeline.json`, `music.json`, `mix.json` and the build report; the audio,
-chunks, frames, contact sheet and mp4 are ignored. The production board (`/production/`) reads the build report: a
+chunks, frames, contact sheet and mp4 are ignored. The production board (`/production/` on the dev server) reads the build report: a
 render of every storyboard scene that passes QA against the locked fingerprints is `rendered`, with a soundtrack
 mixed in it is `scored`, with a current review package `packaged`; anything less is `video`. QA is integrity and
 consistency only; a person reviews the contact sheet and the video before any publication decision.
@@ -294,7 +294,7 @@ walks the release upload, approval and publication (see Publishing below). Any l
 
 ## Production board
 
-`/production/` on the site shows what stage every topic, story and script is in. Everything on it is derived at
+`/production/` on the dev server (never on the public site) shows what stage every topic, story and script is in. Everything on it is derived at
 build time by `src/lib/production.ts` from the committed files: the research pipeline per topic (sources listed vs
 fetched, fetched vs extracted, documents vs recorded verdicts, report vs store, stories.json vs a fresh `discover`,
 candidates reviewed), each story's readiness, and for each `topics/<topic>/scripts/<slug>/` the health of every artifact.

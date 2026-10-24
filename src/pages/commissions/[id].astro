@@ -1,0 +1,134 @@
+---
+// One institution of the Commonwealth: what it is for, where it publishes, the inquiries it owns and every story in
+// them. Stories are candidates from stories.json (their pages are dev-only); a ready one links to its place in the
+// inquiry, the rest are listed as under examination. A chain's follow-ups ride with their first question.
+import Base from '../../layouts/Base.astro';
+import { type Commission, commissions, site } from '../../config/site';
+import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
+import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
+import { href } from '../../lib/url';
+
+export function getStaticPaths() {
+  const names = new Set(publicTopicNames());
+  return Object.entries(commissions).map(([id, c]) => ({
+    params: { id },
+    props: { c, topics: c.topics.filter((n) => names.has(n)).map(loadTopic) },
+  }));
+}
+const { c, topics } = Astro.props as { c: Commission; topics: Topic[] };
+const fmt = (n: number) => n.toLocaleString('en-US');
+const storyHref = (t: Topic, s: Story) => href(`/${t.name}/${storyUrlSlug(s)}/`);
+const docket = topics.map((t) => ({ t, stories: (loadStories(t.name)?.stories ?? []).filter((s) => !s.partOf) }));
+const total = docket.reduce((n, d) => n + d.stories.length, 0);
+const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => c.name.split(' ').includes(w))!;
+---
+
+<Base title={`${c.name} · ${site.name}`} description={c.remit} image={`/og/${Astro.params.id}.jpg`}>
+  <header class="grid gap-4 border-y-4 border-double py-5">
+    <div class="eyebrow text-muted-foreground">
+      <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <!-- The seal: a copy of brand/<id>/seal.png written by `npm run brand`. -->
+      <img class="size-20 shrink-0" src={href(`/commissions/${Astro.params.id}.png`)} alt="" width="256" height="256" />
+      <h1 class="text-display font-bold text-balance">{c.ceremonialName}</h1>
+    </div>
+    {c.slogan && <p class="font-heading text-lg italic">{c.slogan}</p>}
+    <p class="max-w-prose text-muted-foreground">{c.remit}</p>
+    <!-- The channel's link points here, so this greets a viewer arriving from a video. -->
+    <p class="max-w-prose">
+      This is the {body}'s entry in {site.publicRecord}. Every video it publishes rests on an inquiry here: the videos
+      and posts examined, each claim they make, and the verdict on it with the lines of evidence behind it.{' '}
+      <a href={href('/about/')}>How to read the record.</a>
+    </p>
+    <dl
+      class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 border-t pt-3 font-mono text-xs text-muted-foreground sm:grid-cols-[auto_1fr_auto_1fr]"
+    >
+      <dt class="uppercase">Channel</dt>
+      <dd class="text-foreground">
+        {
+          c.youtube ? (
+            <a href={c.youtube} rel="me" title={c.fullName}>
+              {c.fullName}
+            </a>
+          ) : (
+            `${c.fullName} · coming soon`
+          )
+        }
+      </dd>
+      <dt class="uppercase">Record</dt>
+      <dd class="text-foreground">
+        {
+          topics.length
+            ? `${topics.length} ${topics.length === 1 ? 'inquiry' : 'inquiries'} · ${total} stories`
+            : 'no inquiry published yet'
+        }
+      </dd>
+    </dl>
+  </header>
+
+  {
+    topics.length > 0 && (
+      <section aria-label="Inquiries">
+        <div class="eyebrow text-gold">Section I</div>
+        <h2 class="mb-3 text-featured font-bold">Public inquiries</h2>
+        <ul class="grid list-none grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3 p-0">
+          {topics.map((t) => (
+            <li>
+              <a
+                class="grid h-full grid-cols-[auto_1fr] content-start items-start gap-3 rounded-md border bg-card p-4 no-underline hover:border-primary"
+                href={href(`/${t.name}/`)}
+              >
+                {t.glyph && <span class="size-10 text-primary [&>svg]:size-full" set:html={t.glyph} />}
+                <span class="grid gap-1">
+                  <span class="font-heading text-title font-bold text-primary">{t.label}</span>
+                  <span class="font-mono text-xs text-muted-foreground">
+                    {fmt(t.counted)} sources · {fmt(t.claims.length)} claims · {t.studies} studies
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    total > 0 && (
+      <section aria-label="Stories">
+        <div class="eyebrow text-gold">Section II</div>
+        <h2 class="mb-3 text-featured font-bold">Matters before the {body}</h2>
+        <p class="mb-4 max-w-prose text-sm text-muted-foreground">
+          Every question the {c.name} has taken up, by inquiry. A matter under examination has its evidence still being
+          weighed; the rest answer to the findings in the record.
+        </p>
+        {docket
+          .filter((d) => d.stories.length)
+          .map(({ t, stories }) => (
+            <>
+              <h3 class="mt-5 mb-2 text-title font-bold">{t.label}</h3>
+              <ul class="grid list-none gap-2 p-0">
+                {stories.map((s) => (
+                  <li class="grid gap-0.5 border-l-2 pl-3">
+                    <a class="font-heading font-bold" href={storyHref(t, s)}>
+                      {s.title}
+                    </a>
+                    <span class="text-sm text-muted-foreground">{s.question}</span>
+                    {s.readiness !== 'ready' && <span class="eyebrow text-muted-foreground">Under examination</span>}
+                  </li>
+                ))}
+              </ul>
+            </>
+          ))}
+      </section>
+    )
+  }
+
+  <footer class="grid gap-2 border-y-4 border-double py-5 text-sm text-muted-foreground">
+    <div class="eyebrow text-gold">{site.publicRecord}</div>
+    <p class="max-w-prose">
+      {c.fullName}. <a href={href('/about/')}>How an inquiry is built</a> and how to read its verdicts.
+    </p>
+  </footer>
+</Base>

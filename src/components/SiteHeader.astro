@@ -2,7 +2,7 @@
 import { site } from '../config/site';
 import { href } from '../lib/url';
 import ThemeToggle from './ThemeToggle.astro';
-// The blog's logo, inlined (no extra request; theme-independent colours).
+// The seal, inlined (no extra request; theme-independent colours).
 import logo from '../assets/logo.svg?raw';
 
 const current = Astro.url.pathname;
@@ -11,9 +11,12 @@ const isActive = (path: string) => path.startsWith('/') && current.startsWith(hr
 
 <header class="border-b print:hidden">
   <div class="mx-auto flex max-w-page flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
-    <a href={href('/')} class="flex items-center gap-2 font-semibold tracking-tight no-underline">
-      <span class="inline-block h-8 w-8 [&>svg]:h-full [&>svg]:w-full" aria-hidden="true" set:html={logo} />
-      <span>{site.name}</span>
+    <a href={href('/')} class="flex items-center gap-3 no-underline">
+      <span class="inline-block h-9 w-9 [&>svg]:h-full [&>svg]:w-full" aria-hidden="true" set:html={logo} />
+      <span class="grid leading-tight">
+        <span class="font-heading text-[1.05rem] font-bold tracking-wide">{site.name}</span>
+        <span class="eyebrow text-muted-foreground max-sm:hidden">{site.publicRecord}</span>
+      </span>
     </a>
     <nav aria-label="Main">
       <ul class="flex items-center gap-1 text-sm">

@@ -7,11 +7,11 @@ import { absoluteUrl, href } from '../lib/url';
 import { websiteJsonLd, type PageMeta } from '../lib/seo';
 
 type Props = PageMeta;
-const { title, description = site.description, noindex = false } = Astro.props;
+const { title, description = site.description, noindex = false, image: imagePath = '/og/site.jpg' } = Astro.props;
 const siteUrl = Astro.site!;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
-// Social image: the share card public/og/site.jpg (1200x675, hand-made), on every page.
-const image = absoluteUrl('/og/site.jpg', siteUrl);
+// Social image: the brand kit's share card (1200x675), the Commonwealth's unless the page belongs to an institution.
+const image = absoluteUrl(imagePath, siteUrl);
 const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
 ---
 
@@ -22,8 +22,15 @@ const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcfcfd" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15171c" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f9f6ee" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#172a45" />
+    {/* Brand type (brand/design.md): Libre Baskerville for headings, IBM Plex Sans and Mono for the rest. Both OFL. */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+    />
     <link rel="icon" href={href('/favicon.svg')} type="image/svg+xml" />
     <link rel="icon" href={href('/favicon.png')} type="image/png" sizes="96x96" />
     <link rel="apple-touch-icon" href={href('/apple-touch-icon.png')} />

@@ -1,0 +1,290 @@
+---
+// Story ideas for a topic: the ranked candidates in topics/<topic>/stories.json, for someone choosing the next video. Each
+// card shows the question, readiness, why it ranks where it does, what blocks it, and the evidence audit.
+// Static, no client script: each story is a <details> card.
+import Base from '../layouts/Base.astro';
+import { site } from '../config/site';
+import type { EvidenceItem, Validation } from '../lib/evidence';
+import { scriptDirs, storySlug } from '../lib/script';
+import { loadStories, storyTopicNames, type Readiness, type StoriesFile } from '../lib/stories';
+import { loadTopic, type Topic } from '../lib/topics';
+import { href } from '../lib/url';
+
+export function getStaticPaths() {
+  return storyTopicNames().map((name) => ({
+    params: { topic: name },
+    props: { t: loadTopic(name), f: loadStories(name)! },
+  }));
+}
+const { t, f } = Astro.props as { t: Topic; f: StoriesFile };
+const claimText = new Map(t.claims.map((c) => [c.id, c.text]));
+const scripted = new Set(
+  scriptDirs()
+    .filter((d) => d.topic === t.name)
+    .map((d) => d.slug),
+);
+const sourceOf = (id: string) => t.sources.find((s) => s.id === id);
+
+const READY: Record<Readiness, { label: string; colour: string; help: string }> = {
+  ready: { label: 'Ready', colour: 'text-success', help: 'coherent, central conclusion verified, nothing pending' },
+  'needs-review': {
+    label: 'Needs review',
+    colour: 'text-warning',
+    help: 'usable once a reviewer settles the listed points',
+  },
+  'needs-research': {
+    label: 'Needs research',
+    colour: 'text-primary',
+    help: 'a good question with essential evidence missing',
+  },
+  rejected: { label: 'Rejected', colour: 'text-destructive', help: 'incoherent, redundant or contradicted' },
+};
+const STATUS: Record<Validation['status'], string> = {
+  supported: 'text-success',
+  qualified: 'text-warning',
+  disputed: 'text-primary',
+  unsupported: 'text-destructive',
+  unverified: 'text-muted-foreground',
+};
+const counts = (['ready', 'needs-review', 'needs-research'] as const).map((r) => ({
+  r,
+  n: f.stories.filter((s) => s.readiness === r).length,
+}));
+const badge =
+  'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase';
+const small = 'text-sm text-muted-foreground';
+const h3 = 'mt-4 mb-1 text-title font-semibold';
+const citeHref = (cite: string) => `${site.repo}/blob/main/${cite}`;
+const refLabel = (x: EvidenceItem) =>
+  x.ref.kind === 'study'
+    ? `lines ${x.ref.cite.split('#')[1]?.replace(/L/g, '') ?? ''}`
+    : x.ref.kind === 'statement'
+      ? 'source'
+      : 'AI guess';
+const groups = (v: Validation) =>
+  [
+    { label: 'Supports', items: v.supporting },
+    { label: 'Contradicts', items: v.contradicting },
+    { label: 'Qualifies', items: v.qualifying },
+    { label: 'Context', items: v.context.filter((x) => x.role === 'context') },
+    { label: 'Other', items: v.context.filter((x) => x.role !== 'context') },
+  ].filter((g) => g.items.length);
+const pct = (x: number | null) => (x == null ? '' : ` ${Math.round(x * 100)}%`);
+---
+
+<Base
+  title={`Story ideas · ${t.label}`}
+  description={`${f.stories.length} candidate videos on ${t.label}, ranked by editorial quality and evidence, each with an audit of what the evidence establishes.`}
+>
+  <nav class={small} aria-label="Breadcrumb">
+    <a class="text-muted-foreground" href={href('/')}>All subjects</a> /{' '}
+    <a class="text-muted-foreground" href={href(`/${t.name}/`)}>{t.label}</a> / Story ideas
+  </nav>
+  <header class="grid gap-4">
+    <div>
+      <div class="eyebrow text-muted-foreground">{t.name}</div>
+      <h1 class="mt-1 text-display font-semibold text-balance">Story ideas: {t.label}</h1>
+      <p class="mt-3 max-w-prose text-muted-foreground">
+        {f.stories.length} candidates kept from {f.basis.candidates} drafted, out of {f.basis.claims} claims, {
+          f.basis.sources
+        }{' '}
+        sources and {f.basis.studies} studies; {f.stories.filter((s) => s.reviewed).length} have been through editorial review.
+        The editorial score is a heuristic from coherence, how widely a claim is repeated, curiosity, stakes and depth; it
+        is not audience data. The evidence score is the strength of the studies behind the central conclusion, discounted
+        when they only partly apply. Readiness comes from the audit and the review, never from the scores.
+      </p>
+    </div>
+    <ul class="grid list-none grid-cols-3 gap-3 p-0" aria-label="Readiness">
+      {
+        counts.map((x) => (
+          <li class="grid gap-0.5 rounded-md border bg-card px-3.5 py-3">
+            <span class:list={['text-[1.75rem] leading-tight font-semibold tracking-tight', READY[x.r].colour]}>
+              {x.n}
+            </span>
+            <span class="text-[.8rem] text-muted-foreground">{READY[x.r].label.toLowerCase()}</span>
+            <span class="font-mono text-xs text-muted-foreground">{READY[x.r].help}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </header>
+
+  <section>
+    <h2 class="mb-3 text-featured font-semibold">Ranked candidates</h2>
+    <p class:list={[small, 'mb-3']}>
+      Ready means it can go to script generation now. Needs review means a person must settle the points listed under
+      "What blocks it". Needs research stays on the list as a question worth answering later.
+    </p>
+    {
+      f.stories.map((s, i) => (
+        <details class="group border-t py-3">
+          <summary class="grid cursor-pointer list-none gap-1 [&::-webkit-details-marker]:hidden">
+            <div class="flex items-baseline justify-between gap-2.5">
+              <p>
+                <span class="mr-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">
+                  ▸
+                </span>
+                <span class="font-mono text-xs text-muted-foreground">#{i + 1}</span> {s.title}
+              </p>
+              <span class:list={[badge, READY[s.readiness].colour]}>{READY[s.readiness].label}</span>
+            </div>
+            <p class:list={[small, 'ml-[1.4em]']}>{s.question}</p>
+            <span class="ml-[1.4em] font-mono text-xs text-muted-foreground tabular-nums">
+              overall {s.scores.overall.toFixed(2)} · editorial {s.scores.editorial.toFixed(2)} · evidence{' '}
+              {s.scores.evidence.toFixed(2)} · coherence {s.scores.coherence.toFixed(2)}
+              {s.reviewed ? ' · reviewed' : ''}
+            </span>
+          </summary>
+          <div class="ml-[1.4em] max-w-prose">
+            {scripted.has(storySlug(s.id)) && (
+              <p class="mt-2 text-sm">
+                <a href={href(`/${t.name}/scripts/${storySlug(s.id)}/`)}>Script and storyboard</a>
+              </p>
+            )}
+            <p class="mt-2">{s.whyWatch}</p>
+            <p class:list={[small, 'mt-2']}>
+              <strong>Tension:</strong> {s.tension}
+            </p>
+            <p class:list={[small, 'mt-1']}>
+              <strong>Other titles:</strong> {s.alternates.join(' · ')}
+            </p>
+            {s.partOf && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Part of:</strong> {s.partOf}, as a follow-up question; not produced on its own.
+              </p>
+            )}
+            {s.chain && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Then answers:</strong> {s.chain.map((c) => c.question || c.id).join(' → ')}
+              </p>
+            )}
+            {s.chainCandidates && (
+              <p class:list={[small, 'mt-1']}>
+                <strong>Could chain with:</strong> {s.chainCandidates.join(' · ')}
+              </p>
+            )}
+            {s.blocking.length > 0 && (
+              <>
+                <h3 class={h3}>What blocks it</h3>
+                <ul class="grid list-disc gap-1 pl-[1.2em] text-sm">
+                  {s.blocking.map((b) => (
+                    <li>{b}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <h3 class={h3}>Readiness</h3>
+            <p class={small}>
+              <span class:list={[badge, READY[s.readiness].colour]}>{READY[s.readiness].label}</span> {s.readinessWhy}
+            </p>
+            <h3 class={h3}>Coherence</h3>
+            <p class={small}>
+              {s.coherence.score.toFixed(2)} ({s.coherence.basis}): {s.coherence.explanation}
+            </p>
+            <h3 class={h3}>Why it ranks here</h3>
+            <p class={small}>{s.scores.explanation}</p>
+            <h3 class={h3}>Evidence</h3>
+            <p class={small}>
+              <strong>Needed:</strong> {s.evidenceNeeded}
+            </p>
+            <ul class="mt-1 grid list-disc gap-1 pl-[1.2em] text-sm">
+              {s.evidenceAvailable.map((e) => (
+                <li>{e}</li>
+              ))}
+              {s.evidenceAvailable.length === 0 && <li class="text-muted-foreground">No decisive study yet.</li>}
+            </ul>
+            {s.gaps.length > 0 && (
+              <>
+                <h3 class={h3}>Research gaps</h3>
+                <ul class="grid list-disc gap-1 pl-[1.2em] text-sm">
+                  {s.gaps.map((u) => (
+                    <li>{u}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <h3 class={h3}>Premise and arc</h3>
+            <p class="text-sm">{s.premise}</p>
+            <dl class="mt-2 grid gap-1 text-sm">
+              {Object.entries(s.arc).map(([k, v]) => (
+                <div class="grid grid-cols-[6rem_1fr] gap-2">
+                  <dt class="font-mono text-xs text-muted-foreground uppercase">{k}</dt>
+                  <dd>{v}</dd>
+                </div>
+              ))}
+            </dl>
+            <h3 class={h3}>Claims</h3>
+            <ul class="grid list-disc gap-1 pl-[1.2em] text-sm">
+              {s.claims.map((id) => (
+                <li>{claimText.get(id) ?? id}</li>
+              ))}
+              {s.related.map((id) => (
+                <li class="text-muted-foreground">left out: {claimText.get(id) ?? id}</li>
+              ))}
+            </ul>
+            <h3 class={h3}>Evidence audit</h3>
+            <p class={small}>
+              Status, then the publication decision: approved as written, qualify (needs the stated limitation), or
+              blocked. "Review" means a person must confirm the passages support the exact wording. Each study verdict
+              is marked direct, partial or contextual for this sentence; only direct and partial ones decide.
+            </p>
+            {[
+              { v: s.audit.central, label: 'Central conclusion' },
+              ...s.audit.findings.map((x, j) => ({ v: x.validation, label: `Finding ${j + 1} (${x.role})` })),
+            ].map(({ v, label }) => (
+              <div class="mt-3 border-t pt-2 text-sm">
+                <p>
+                  <span class="font-mono text-xs text-muted-foreground uppercase">{label}</span> {v.text}
+                </p>
+                <p class="mt-1">
+                  <span class:list={[badge, STATUS[v.status]]}>{v.status}</span> <span class={badge}>{v.decision}</span>{' '}
+                  {v.review && <span class={badge}>review</span>} <span class={small}>{v.explanation}</span>
+                </p>
+                {[
+                  ...v.problems.map((p) => `Problem: ${p}`),
+                  ...v.limitations,
+                  ...v.suggestions.map((x) => `Suggestion: ${x}`),
+                ].map((l) => (
+                  <p class:list={[small, 'mt-1']}>{l}</p>
+                ))}
+                {groups(v).map((g) => (
+                  <ul class="mt-1 grid gap-1 pl-0">
+                    {g.items.map((x) => (
+                      <li class="grid gap-0.5">
+                        <span>
+                          <span class="font-mono text-xs text-muted-foreground uppercase">{g.label}</span> {x.by ?? ''}{' '}
+                          {x.verdict && (
+                            <span class={small}>
+                              {x.verdict}
+                              {pct(x.confidence)}
+                              {x.applicability
+                                ? `, ${x.applicability}${x.basis === 'review' ? ' (reviewed)' : ''}`
+                                : ''}
+                            </span>
+                          )}{' '}
+                          {x.ref.kind === 'study' && (
+                            <a class={small} href={citeHref(x.ref.cite)}>
+                              {refLabel(x)}
+                            </a>
+                          )}
+                          {x.ref.kind === 'statement' && sourceOf(x.ref.source) && (
+                            <a class={small} href={sourceOf(x.ref.source)!.href}>
+                              {refLabel(x)}
+                            </a>
+                          )}
+                          {!x.cited && <span class={small}> (uncited)</span>}
+                        </span>
+                        {x.note && <span class={small}>{x.note}</span>}
+                        {x.why && x.applicability !== 'direct' && <span class={small}>Applicability: {x.why}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                ))}
+              </div>
+            ))}
+          </div>
+        </details>
+      ))
+    }
+  </section>
+</Base>
