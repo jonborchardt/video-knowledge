@@ -28,6 +28,8 @@ jobs:
       - run: npm ci
       # Typecheck, lint, format check, build dist/ from the committed topics/<topic>/report.json files, then test the build.
       - run: npm run validate
+        env:
+          DEPLOY_TARGET: pages # the GitHub Pages mirror under /video-knowledge/; Cloudflare builds the root site
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

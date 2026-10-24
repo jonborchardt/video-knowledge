@@ -197,7 +197,9 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
       ...pkg.sources.studies.map((s) => `- ${s.name}`),
       '',
       // YouTube allows 5000 bytes; the sources discussed (often forty) live on the topic page, one link replaces the list
-      `Every source discussed, and how each claim held up: ${site.url}${tl.topic}/`,
+      `${site.publicRecord}, with every source discussed and how each claim held up: ${site.url}${tl.topic}/`,
+      '',
+      `${site.name}. ${site.disclosure}`,
       '',
       ...(release
         ? [`Music: ${musicLine}.`]

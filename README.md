@@ -2,7 +2,7 @@
 
 What YouTube videos and blog posts claim, checked against the evidence. For each topic it collects sources, extracts the distinct testable claims, judges every claim (an AI guess, then studies where they exist), and publishes which claims hold up and which sources are worth your time. Stores are built with the `watcher` library.
 
-Site: https://jonborchardt.github.io/video-knowledge/
+Site: https://commonwealthofreason.com/ (Cloudflare, `wrangler.jsonc`), mirrored for now at https://jonborchardt.github.io/video-knowledge/ (GitHub Pages, built with `DEPLOY_TARGET=pages`). The public site is **Commonwealth of Reason**; its YouTube channels are commissions (`commissions` in `src/config/site.ts`), each owning the topics whose videos it publishes. The first is [Commonwealth of Reason: Commission on Spending](https://www.youtube.com/@CORSpending). `video-knowledge` is the name of this repo and of the production tooling, not of anything a viewer sees.
 
 The library lives in `../retire-sim/watcher`, which must be checked out next to this repo on a branch that has it (or point `WATCHER_DIR` at it).
 
@@ -451,7 +451,7 @@ An [Astro](https://astro.build) site with Tailwind. Each topic with a `report.js
 ```
 npm run report     # refresh topics/<topic>/report.json from the stores (needs the watcher checkout, so run locally)
 npm run stories -- discover <topic>   # refresh topics/<topic>/stories.json from the report and store
-npm run dev        # live preview at http://localhost:4321/video-knowledge/
+npm run dev        # live preview at http://localhost:4321/ (DEPLOY_TARGET=pages for the /video-knowledge/ mirror)
 npm run build      # build dist/
 npm run validate   # typecheck + lint + format check + build + tests (what CI runs)
 npm run format     # prettier --write

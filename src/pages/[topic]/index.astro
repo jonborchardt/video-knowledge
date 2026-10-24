@@ -8,6 +8,7 @@ import SurpriseItem from '../../components/SurpriseItem.astro';
 import VerdictBadge from '../../components/VerdictBadge.astro';
 import { loadStories } from '../../lib/stories';
 import { loadTopic, topicNames, type Topic } from '../../lib/topics';
+import { commissionOf } from '../../config/site';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -15,6 +16,7 @@ export function getStaticPaths() {
 }
 const { t } = Astro.props as { t: Topic };
 const stories = loadStories(t.name);
+const commission = commissionOf(t.name); // the YouTube channel this topic's videos publish to, if any
 
 const tabs = [
   { id: 'recap', label: 'Recap' },
@@ -105,7 +107,17 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
   </nav>
   <header class="grid gap-5">
     <div>
-      <div class="eyebrow text-muted-foreground">{t.name}</div>
+      <div class="eyebrow text-muted-foreground">
+        {
+          commission ? (
+            <a class="text-muted-foreground" href={commission.youtube}>
+              {commission.fullName}
+            </a>
+          ) : (
+            t.name
+          )
+        }
+      </div>
       <h1 class="mt-1 text-display font-semibold text-balance">
         {t.hero.title ?? `What ${t.counted} videos and posts claim about ${t.label}`}
       </h1>

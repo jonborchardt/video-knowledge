@@ -28,6 +28,11 @@ const rows = [
       the distinct things they claim, and judges every claim against the best evidence available. The result is a page
       per subject that says which claims hold up, which do not, and which sources are worth your time.
     </p>
+    <p class={`${p} text-muted-foreground`}>
+      The site and its YouTube channels present themselves as {site.publicRecord} of the {site.name}, a fictional state
+      whose commissions and bureaus investigate everyday questions with full ceremony. {site.disclosure} No real government
+      is involved, and nothing here is endorsed by one.
+    </p>
   </header>
 
   <h2 class={h2}>How a subject is built</h2>
@@ -141,9 +146,10 @@ const rows = [
 
   <h2 class={h2}>Who</h2>
   <p class={p}>
-    Built by <a href={author.links.GitHub}>{author.name}</a>, who writes at <a href={site.blog.url}>{site.blog.name}</a
-    >. The data, the agent briefs and this site are open at <a href={site.repo}>GitHub</a>. Every claim links back to
-    its quote and every study verdict to the lines it rests on, so you can check the checking.
+    Built by <a href={author.links.GitHub}>{author.name}</a>. The data, the agent briefs and this site are open at <a
+      href={site.repo}>GitHub</a
+    >. Every claim links back to its quote and every study verdict to the lines it rests on, so you can check the
+    checking.
   </p>
   <p class={`${p} text-sm text-muted-foreground`}>
     <a href={href('/')}>See all subjects</a>.

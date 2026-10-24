@@ -7,8 +7,10 @@ import { storyTopicNames } from '../src/lib/stories';
 import { topicNames } from '../src/lib/topics';
 
 const DIST = join(process.cwd(), 'dist');
-const SITE = 'https://jonborchardt.github.io';
-const BASE = '/video-knowledge/';
+// Same switch as astro.config.mjs: the GitHub Pages mirror under a base path, else the root site.
+const PAGES = process.env.DEPLOY_TARGET === 'pages';
+const SITE = PAGES ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com';
+const BASE = PAGES ? '/video-knowledge/' : '/';
 const pages = [
   'index.html',
   'about/index.html',
@@ -27,7 +29,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it.each(pages)('%s: internal links resolve', (p) => {
     const html = readFileSync(join(DIST, p), 'utf8');
-    for (const [, href] of html.matchAll(/href="(\/video-knowledge\/[^"#]*)"/g)) {
+    for (const [, href] of html.matchAll(new RegExp(`href="(${BASE}[^"#]*)"`, 'g'))) {
       const path = join(DIST, href.slice(BASE.length));
       const file = /\.\w+$/.test(path) ? path : join(path, 'index.html'); // a page is a folder with index.html
       expect(existsSync(file), href).toBe(true);
@@ -105,7 +107,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it('about page marks its nav link as current', () => {
     const html = readFileSync(join(DIST, 'about/index.html'), 'utf8');
-    expect(html).toMatch(/<a href="\/video-knowledge\/about\/" aria-current="page"/);
+    expect(html).toContain(`<a href="${BASE}about/" aria-current="page"`);
     expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain('aria-current="page"');
   });
 
