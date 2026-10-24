@@ -16,7 +16,10 @@ export const ShortStatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const pts = chart.points.slice(0, 4);
   const fills = pointFrames(scene, 40);
   const titleH = chart.title ? 70 : 0;
-  const H = (L.contentBottom - L.top - titleH - GAP * (pts.length - 1)) / pts.length;
+  const band = L.contentBottom - L.top;
+  // tiles share the band, never taller than a phone screen's third; the block sits centred in the band
+  const H = Math.min(480, (band - titleH - GAP * (pts.length - 1)) / pts.length);
+  const top0 = L.top + (band - (titleH + pts.length * H + GAP * (pts.length - 1))) / 2;
   const alert = Number(scene.options.alert ?? -1);
   const figure = Math.min(112, H * 0.5);
   return (
@@ -26,7 +29,7 @@ export const ShortStatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           style={{
             position: 'absolute',
             left: L.gutter,
-            top: L.top,
+            top: top0,
             width: W,
             fontFamily: brand.sans,
             fontSize: 32,
@@ -50,7 +53,7 @@ export const ShortStatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
             style={{
               position: 'absolute',
               left: L.gutter,
-              top: L.top + titleH + i * (H + GAP),
+              top: top0 + titleH + i * (H + GAP),
               width: W,
               height: H,
               boxSizing: 'border-box',

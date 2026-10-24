@@ -18,9 +18,11 @@ export const ShortBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const fills = pointFrames(scene, 36);
   const titleH = chart.title ? 80 : 0;
   const rows = bars.length + dots.length;
-  const rowH = Math.min(150, (L.contentBottom - L.top - titleH) / Math.max(1, rows));
+  const band = L.contentBottom - L.top;
+  const rowH = Math.min(150, (band - titleH) / Math.max(1, rows));
   const k = Math.min(1, rowH / 150);
   const track = W - 160;
+  const top0 = L.top + (band - titleH - rows * rowH) / 2; // the chart block sits centred in the band
   return (
     <AbsoluteFill>
       {chart.title ? (
@@ -28,7 +30,7 @@ export const ShortBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
           style={{
             position: 'absolute',
             left: L.gutter,
-            top: L.top,
+            top: top0,
             width: W,
             fontFamily: brand.sans,
             fontSize: 34,
@@ -49,7 +51,7 @@ export const ShortBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
             style={{
               position: 'absolute',
               left: L.gutter,
-              top: L.top + titleH + i * rowH,
+              top: top0 + titleH + i * rowH,
               width: W,
               opacity: ramp(t, scene.start + 10 + i * 6, 10),
             }}
@@ -107,7 +109,7 @@ export const ShortBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
             style={{
               position: 'absolute',
               left: L.gutter,
-              top: L.top + titleH + i * rowH,
+              top: top0 + titleH + i * rowH,
               width: W,
               opacity: ramp(t, at, 14),
             }}
