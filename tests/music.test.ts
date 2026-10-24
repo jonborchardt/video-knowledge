@@ -54,6 +54,7 @@ import {
   reviewMp4Name,
   thumbnailScene,
 } from '../src/video/package';
+import { site } from '../src/config/site';
 import { inputs, manifest } from './video-helpers';
 
 describe('review package chapters', () => {
@@ -99,12 +100,22 @@ describe('review package chapters', () => {
       mp4: 'x-review-private.mp4',
       mp4Sha: 'checked',
       buildReport: 'b',
-      thumbnail: false,
+      thumbnailSha: null,
+      captionsSha: null,
       generatedAt: 'd',
     };
     const pkg = reviewData(s, t, report, made);
     expect(pkg.chapters.map((c) => c.title)).toEqual(['One', 'Two', 'Three']);
     expect(pkg.files).not.toContain(REVIEW_FILES.thumbnail);
+    expect(pkg.thumbnailSha).toBeNull();
+    const withCard = reviewData(s, t, report, { ...made, thumbnailSha: 'card1' });
+    expect(withCard.thumbnailSha).toBe('card1');
+    expect(withCard.files).toContain(REVIEW_FILES.thumbnail);
+    expect(pkg.captionsSha).toBeNull();
+    expect(pkg.files).not.toContain(REVIEW_FILES.captions);
+    const withCaptions = reviewData(s, t, report, { ...made, captionsSha: 'cap1' });
+    expect(withCaptions.captionsSha).toBe('cap1');
+    expect(withCaptions.files).toContain('captions.en.srt');
     expect(renderDescription(pkg, s, t, report)).toContain('0:20 Two');
     expect(renderReadme(pkg, t, report)).toContain(made.mp4);
     expect(renderChecklist(pkg, t)).toContain(CHECKLIST[0]);
@@ -126,8 +137,16 @@ describe('review package chapters', () => {
     const desc = renderDescription(rel, s, t, cleared);
     expect(desc).not.toMatch(/PRIVATE|DRAFT|Narration|clearance/i);
     expect(desc).toContain('0:20 Two');
+    // the description fits YouTube's 5000 bytes: the sources live on the site, one link replaces the list
+    expect(desc).toContain(`${site.url}${t.topic}/`);
+    expect(desc).not.toContain('Sources discussed');
+    expect(Buffer.byteLength(desc, 'utf8')).toBeLessThan(5000);
+    expect(renderReadme(withCaptions, t, report)).toContain('captions.en.srt');
     expect(renderReadme(rel, t, cleared)).toMatch(/^# RELEASE BUILD/);
     expect(renderReadme(rel, t, cleared)).toContain('**public**');
+    expect(renderReadme(rel, t, cleared)).toContain('npm run publish -- approve');
+    expect(renderReadme(rel, t, cleared)).not.toContain('production.json');
+    expect(renderReadme(pkg, t, report)).toContain('npm run publish -- uploaded');
     expect(renderChecklist(rel, t)).toContain('release build');
     expect(reviewMp4Name(join('t', 'scripts', 'x', 'video'), true)).toBe('x.mp4');
     expect(thumbnailScene(t)).toBeNull(); // the fixture has no title card

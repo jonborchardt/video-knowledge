@@ -15,6 +15,20 @@ import {
   renderCheckStale,
   renderConfigSha,
 } from './render-check';
+import {
+  type Build,
+  type Ledger,
+  type OutputState,
+  type UploadMetadata,
+  currentBuild,
+  emptyLedger,
+  loadLedger,
+  mainOutput,
+  outputStates,
+  parentUrlOf,
+  publishPath,
+  uploadMetadataOf,
+} from './publish';
 import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
@@ -49,7 +63,8 @@ export type HaltKind =
   | 'graphics-review'
   | 'lock'
   | 'qa-failed'
-  | 'story-left';
+  | 'story-left'
+  | 'published'; // the main output is live or scheduled: nothing rebuilds it; a re-release is a new output
 /** A blocked validation: the writer revises, unless the pass has spent its revisions. */
 export const validationHaltKind = (live: ScriptValidation): 'revision-limit' | 'blocking-findings' =>
   live.revisionLimitReached ? 'revision-limit' : 'blocking-findings';
@@ -63,17 +78,25 @@ export interface Check {
   date?: string;
 }
 
-/** A person's decision about a story that no artifact records. Keyed `<topic>/<story-id>` in production.json. */
+/** A person's planning decision about a story that no artifact records. Keyed `<topic>/<story-id>` in production.json.
+ *  Publishing state (uploads, approvals, what is live) is not a decision here: it lives in the story's publish.json. */
 export interface Decision {
-  decision: 'queued' | 'parked' | 'reviewing' | 'published';
+  decision: 'queued' | 'parked';
   note: string;
   date: string; // ISO date
-  url?: string; // the private review upload (reviewing) or the published video (published)
 }
-export const DECISIONS = ['queued', 'parked', 'reviewing', 'published'] as const;
+export const DECISIONS = ['queued', 'parked'] as const;
 export const DECISIONS_FILE = 'production.json';
 export function loadDecisions(root = ROOT): Record<string, Decision> {
   return readJson<Record<string, Decision>>(join(root, DECISIONS_FILE)) ?? {};
+}
+/** Every decision must be queued or parked with a note and a date; anything else fails the build. */
+export function checkDecisions(decisions: Record<string, unknown>): void {
+  for (const [k, d] of Object.entries(decisions)) {
+    const x = d as Partial<Decision> | null;
+    if (!x || !DECISIONS.includes(x.decision as Decision['decision']) || typeof x.note !== 'string' || !x.date)
+      throw new Error(`${DECISIONS_FILE}: ${k} needs decision (${DECISIONS.join('|')}), note and date`);
+  }
 }
 
 export type ProductionStage =
@@ -130,16 +153,20 @@ export interface Production {
   fingerprints: { script: string | null; package: string | null; validation: string | null; storyboard: string | null };
   model: string | null;
   clearance: Clearance | null; // from the build report, once there is one
-  upload: Upload | null; // what the YouTube upload form takes, once the stage is packaged
+  publish: { main: string | null; outputs: OutputView[] } | null; // the ledger's outputs and their states, once there is a package or a ledger
+  upload: UploadMetadata | null; // what the upload form takes for the main output, once there is something to upload or update
   halt: { kind: HaltKind; stage: ProductionStage; why: string } | null; // the first halt, if any
 }
-/** The upload (private review, or public once cleared), read from the review package (video/review/). Paths are repo-relative. */
-export interface Upload {
-  file: string;
-  title: string;
-  description: string;
-  thumbnail: string | null;
+/** One output of the publishing ledger as the board shows it. */
+export interface OutputView {
+  id: string;
+  kind: string;
+  state: OutputState;
+  metadata: UploadMetadata | null; // composed upload metadata; null without a review package
 }
+/** The main output's state, or null when there is no ledger view or every youtube-video output is retracted. */
+export const mainState = (p: Production | null | undefined): OutputState | null =>
+  p?.publish?.outputs.find((o) => o.id === p.publish!.main)?.state ?? null;
 
 export interface StoryRow {
   story: Story;
@@ -190,6 +217,9 @@ interface BoardContext {
   plan: StoryboardPlan | null;
   release: Release | null;
   vr: BuildSummary | null;
+  ledger: Ledger;
+  build: Build | null;
+  publish: Production['publish'];
   live: ScriptValidation | null; // the validation re-run in memory (validation stage)
   sb: Storyboard | null; // the storyboard re-filled against it (storyboard stage)
 }
@@ -650,8 +680,17 @@ const soundtrackStage: BoardStage = ({ topic, storyId, r, release, vr }, s) => {
   };
 };
 
-// 10. Review package: made from this very build report.
-const reviewPackageStage: BoardStage = ({ p, r, release, vr }, s) => {
+/** What moves the main output on, from the ledger; or the way out when every youtube-video output is retracted. */
+const publishNext = (c: BoardContext) => {
+  const main = c.publish?.outputs.find((o) => o.id === c.publish!.main);
+  return main
+    ? main.state.next
+    : `every youtube-video output is retracted; npm run publish -- add ${c.topic} ${c.storyId} youtube-2 --kind youtube-video`;
+};
+
+// 10. Review package: made from this very build report. Past it, the publishing ledger says what is next.
+const reviewPackageStage: BoardStage = (c, s) => {
+  const { p, r, release, vr } = c;
   if (!vr || !release) return {};
   const rp = readJson<{ generatedAt: string; buildReport: string; mp4: string; status?: string }>(p(REVIEW_PACKAGE));
   if (!rp) return {};
@@ -668,15 +707,7 @@ const reviewPackageStage: BoardStage = ({ p, r, release, vr }, s) => {
         date: rp.generatedAt,
       },
     ],
-    advance:
-      s.stage === 'scored' && current
-        ? {
-            stage: 'packaged',
-            next: vr.clearance.publishable
-              ? `release build: upload video/review/${rp.mp4} to YouTube as a public video with video/review/description.txt, then record {"decision": "published", "url": ...} in production.json`
-              : `upload video/review/${rp.mp4} to YouTube as a private video, review it with video/review/checklist.md, then record {"decision": "reviewing", "url": ...} in production.json`,
-          }
-        : undefined,
+    advance: s.stage === 'scored' && current ? { stage: 'packaged', next: publishNext(c) } : undefined,
   };
 };
 
@@ -685,18 +716,6 @@ const clearanceStage: BoardStage = ({ release, vr }, s) =>
   vr && release && !vr.clearance.publishable && (s.stage === 'scored' || s.stage === 'packaged')
     ? { advance: { stage: s.stage, next: `${s.next}; public release is blocked: ${vr.clearance.why.join('; ')}` } }
     : {};
-
-const uploadOf = (p: (f: string) => string, r: (f: string) => string): Upload | null => {
-  const rp = readJson<{ title: string; mp4: string }>(p(REVIEW_PACKAGE));
-  const description = p('video/review/description.txt');
-  if (!rp || !existsSync(description)) return null;
-  return {
-    file: r(`video/review/${rp.mp4}`),
-    title: rp.title,
-    description: readFileSync(description, 'utf8').trim(),
-    thumbnail: existsSync(p('video/review/thumbnail.png')) ? r('video/review/thumbnail.png') : null,
-  };
-};
 
 /** The board's stages in pipeline order; productionOf folds over them. A new stage is a new function here. */
 const BOARD_STAGES: BoardStage[] = [
@@ -738,9 +757,32 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     plan: readJson<StoryboardPlan>(p(FILES.storyboard)),
     release: readJson<Release>(p(FILES.release)),
     vr: readJson<BuildSummary>(p(VIDEO_REPORT)),
+    ledger: loadLedger(topic, storyId, root) ?? emptyLedger(`${topic}/${storyId}`),
+    build: currentBuild(dir),
+    publish: null,
     live: null,
     sb: null,
   };
+  // The ledger view: every output's state against the build on disk and the metadata it would send.
+  if (c.build || existsSync(publishPath(topic, storyId, root))) {
+    const metadata = Object.fromEntries(
+      Object.entries(c.ledger.outputs).map(([id, o]) => [id, uploadMetadataOf(dir, c.r, o, parentUrlOf(c.ledger, o))]),
+    );
+    const states = outputStates(c.ledger, c.build, (id) => metadata[id]?.sha ?? null, {
+      topic,
+      story: storyId,
+      root,
+    });
+    c.publish = {
+      main: mainOutput(c.ledger),
+      outputs: Object.entries(c.ledger.outputs).map(([id, o]) => ({
+        id,
+        kind: o.kind,
+        state: states[id],
+        metadata: metadata[id],
+      })),
+    };
+  }
   const s: BoardState = { stage: 'package', next: `npm run script -- package ${topic} ${storyId}`, stopped: false };
   const checks: Check[] = [];
   const blockers: string[] = [];
@@ -765,8 +807,9 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     }
   }
 
-  const { v, sreview, release, pkg, plan, script, vr } = c;
+  const { v, sreview, release, pkg, plan, script, vr, publish } = c;
   const stage = s.stage;
+  const main = publish?.outputs.find((o) => o.id === publish.main);
   const versions: Version[] = (v?.history ?? []).map((h) => ({
     ...h,
     reviewed: sreview?.revision === h.revision,
@@ -790,7 +833,8 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     checks,
     versions,
     clearance: vr && release ? vr.clearance : null,
-    upload: stage === 'packaged' ? uploadOf(p, c.r) : null,
+    publish,
+    upload: main && (stage === 'packaged' || main.state.status !== 'not-uploaded') ? main.metadata : null,
     halt,
     fingerprints: {
       script: v?.scriptFingerprint ?? null,
@@ -820,6 +864,23 @@ export function boardNext(topic: string, storyId: string, root = ROOT): BoardNex
   const why = story?.partOf
     ? `the story is a follow-up question in ${story.partOf}; produce that story instead`
     : 'the story is not ready in stories.json';
+  const live = mainState(prod);
+  if (prod && live && (live.live || live.status === 'scheduled')) {
+    const next = `stop: ${live.live ? 'live' : 'scheduled'} at ${live.url}; a re-release is npm run publish -- add ${topic} ${storyId} youtube-2 --kind youtube-video`;
+    return {
+      topic,
+      story: storyId,
+      stage: prod.stage,
+      next,
+      steps: stepsOf(next, topic, storyId),
+      halt: {
+        kind: 'published',
+        stage: prod.stage,
+        why: `the video is ${live.live ? 'live' : 'scheduled'} at ${live.url}`,
+      },
+      done: true,
+    };
+  }
   const { stage, next, halt } = prod ?? {
     stage: 'package' as const,
     next: ready ? `npm run script -- package ${topic} ${storyId}` : `stop: ${why}`,
@@ -910,15 +971,11 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       const key = `${name}/${story.id}`;
       const decision = decisions[key] ?? null;
       const production = productionOf(name, story.id, root);
+      const live = mainState(production);
       let n: string;
-      if (decision?.decision === 'published') n = `published${decision.url ? `: ${decision.url}` : ''}`;
-      else if (decision?.decision === 'parked') n = `parked: ${decision.note}`;
-      else if (decision?.decision === 'reviewing')
-        n = `human review pending${decision.url ? ` at ${decision.url}` : ''}: ${decision.note}${
-          production?.clearance && !production.clearance.publishable
-            ? `; public release blocked: ${production.clearance.why.join('; ')}`
-            : ''
-        }`;
+      if (decision?.decision === 'parked') n = `parked: ${decision.note}`;
+      else if (live?.live) n = `live: ${live.url}`;
+      else if (live?.status === 'scheduled') n = live.next;
       else if (story.partOf) n = `part of ${story.partOf}: answered in that video`;
       else if (production) n = production.next;
       else if (story.readiness === 'ready') n = `npm run script -- package ${name} ${story.id}`;
@@ -934,7 +991,8 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
         s.production &&
         !s.story.partOf &&
         !['locked', 'rendered', 'scored', 'packaged'].includes(s.production.stage) &&
-        !['parked', 'reviewing'].includes(s.decision?.decision ?? ''),
+        s.decision?.decision !== 'parked' &&
+        !publishing(s),
     );
     const ready = stories.find((s) => !s.production && s.story.readiness === 'ready' && !s.story.partOf && !s.decision);
     next =
@@ -948,25 +1006,36 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
   return { topic, checks, stories, rejected: file?.rejected.length ?? 0, next };
 }
 
+/** A row whose main output has left the person's hands: uploaded or beyond. Never the topic's next `/produce` step. */
+const publishing = (s: StoryRow) => {
+  const st = mainState(s.production)?.status;
+  return !!st && !['not-uploaded', 'build-behind', 'retracted'].includes(st);
+};
+
 /** The board's columns, one card per video, grouped by who acts next: research, a person settling a story, a person
  *  starting `/produce`, `/produce` itself (every stage from package to scored; the card's strip shows which), a person
- *  reviewing the private package, then the decisions in production.json. */
+ *  uploading the package, then the publishing ledger's states (a live or scheduled video wins whatever its stage), and
+ *  the parked decision in production.json. */
 export const COLUMNS = [
   'needs-research',
   'needs-review',
   'ready',
   'producing',
   'your-review',
-  'reviewing',
+  'uploaded',
+  'approved',
+  'scheduled',
   'published',
   'parked',
 ] as const;
 export type Column = (typeof COLUMNS)[number];
 /** The card's column, or null for a chain's follow-up question, which is answered on its first question's card. */
 export function columnOf(r: StoryRow): Column | null {
-  if (r.decision?.decision === 'published') return 'published';
   if (r.decision?.decision === 'parked') return 'parked';
-  if (r.decision?.decision === 'reviewing') return 'reviewing';
+  const main = mainState(r.production);
+  if (main?.live) return 'published';
+  if (main?.status === 'scheduled' || main?.status === 'approved') return main.status;
+  if (main?.status === 'uploaded' || main?.status === 'metadata-behind') return 'uploaded';
   if (r.story.partOf) return null;
   if (r.production) return r.production.stage === 'packaged' ? 'your-review' : 'producing';
   return r.story.readiness === 'rejected' ? 'parked' : r.story.readiness;
@@ -974,10 +1043,7 @@ export function columnOf(r: StoryRow): Column | null {
 
 export function board(root = ROOT): TopicBoard[] {
   const decisions = loadDecisions(root);
-  for (const [k, d] of Object.entries(decisions)) {
-    if (!DECISIONS.includes(d.decision) || typeof d.note !== 'string' || !d.date)
-      throw new Error(`${DECISIONS_FILE}: ${k} needs decision (${DECISIONS.join('|')}), note and date`);
-  }
+  checkDecisions(decisions);
   return topicNames().map((n) => topicBoard(n, root, decisions));
 }
 

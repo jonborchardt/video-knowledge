@@ -74,7 +74,7 @@ const LINES: [SectionName, SentenceType, string][] = [
 ];
 
 /** A production for the first one-question ready story of heat-pumps, in a temp root, built up to `upTo`. */
-export function syntheticProduction(upTo: FixtureStage): Fixture {
+export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolean } = {}): Fixture {
   const c = copyTopic(TOPIC);
   const { root } = c;
   const stories = loadStories(TOPIC, root)!;
@@ -189,9 +189,15 @@ export function syntheticProduction(upTo: FixtureStage): Fixture {
     generatedAt: '2026-01-01',
     segment: { scenes: sb.scenes.map((s) => s.id) },
     output: { seconds: sb.runtime },
-    narration: { provider: 'edge', voice: 'en-US-AndrewMultilingualNeural', publishable: false },
+    narration: {
+      provider: opts.release ? 'azure' : 'edge',
+      voice: 'en-US-AndrewMultilingualNeural',
+      publishable: !!opts.release,
+    },
     music: { compositions: [{ title: 'Fixture' }] },
-    clearance: { narration: false, music: false, publishable: false, why: ['draft voice'] },
+    clearance: opts.release
+      ? { narration: true, music: true, publishable: true, why: [] }
+      : { narration: false, music: false, publishable: false, why: ['draft voice'] },
     fingerprints: { ...release.fingerprints, config: sha(JSON.stringify(config)) },
     qa: { ok: true, checks: [{ name: 'fixture', ok: true }] },
   };
@@ -199,10 +205,18 @@ export function syntheticProduction(upTo: FixtureStage): Fixture {
   mkdirSync(join(dir, 'video', 'review'), { recursive: true });
   write('video/review/review.json', {
     generatedAt: '2026-01-01',
+    status: opts.release ? 'release build' : 'private review build',
     buildReport: fileSha(join(dir, 'video', 'build-report.json')),
     mp4: 'fixture.mp4',
+    mp4Sha: opts.release ? 'releasesha' : 'draftsha',
+    thumbnailSha: 'thumbsha',
+    captionsSha: 'capsha',
     title: script.title,
   });
   write('video/review/description.txt', `${script.title}\n\nChapters\n0:00 Hook\n`);
+  write(
+    'video/review/captions.en.srt',
+    '1\n00:00:00,000 --> 00:00:02,000\nDoes a heat pump really cost less to run?\n',
+  );
   return fixture;
 }

@@ -25,7 +25,9 @@ import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, sha, toJson, ROOT } from '../src/lib/io';
 import { boardNext } from '../src/lib/production';
+import { currentBuild, recordApproved } from '../src/lib/publish';
 import { approverProblem } from '../src/lib/release';
+import { scriptDir } from '../src/lib/script';
 import { extractFrame, probe } from '../src/video/ffmpeg';
 import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
@@ -325,13 +327,23 @@ try {
       const problem = approverProblem(flag('--approved-by'));
       if (problem) throw new Error(problem);
       const n = boardNext(topic, storyId);
+      if (n.halt?.kind === 'published') throw new Error(`final never rebuilds a live video; the board says: ${n.next}`);
       if (n.stage !== 'packaged') throw new Error(`final needs a packaged story; the board says ${n.stage}: ${n.next}`);
+      const draft = currentBuild(scriptDir(topic, storyId)); // the build this run accepts, before the release build replaces it
       const { seg, m } = await stageNarrate(provider('azure'));
       const { tl } = stageTimeline(seg, m);
       const { seconds } = await stageRender(tl, m);
       const qa = await stageQa(seg, m, tl, seconds);
       if (!qa.ok) throw new Error('QA failed; the draft package stands');
       stagePackage();
+      // the acceptance goes into the publishing ledger too, so the audit trail shows who accepted which draft
+      if (draft?.status === 'draft')
+        recordApproved(topic, storyId, {
+          by: flag('--approved-by')!,
+          build: draft.sha,
+          accepted: true,
+          note: 'draft accepted by final',
+        });
       // the run report is the produce agent's prose and named the draft voice as a blocker: say what settled it
       const runReport = p(`${REVIEW_DIR}/run-report.md`);
       if (existsSync(runReport) && !readFileSync(runReport, 'utf8').includes('## Release build'))

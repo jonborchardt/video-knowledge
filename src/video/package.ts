@@ -5,8 +5,10 @@
 // which of the two it is: a draft build carries the private banners and the draft-voice check, a release build carries none.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { site } from '../config/site';
 import { fileSha, sha, toJson } from '../lib/io';
 import { sectionTitle } from '../lib/script';
+import { renderSrt } from './captions';
 import { extractFrame } from './ffmpeg';
 import type { BuildReport } from './report';
 import { VIDEO_FILES } from './files';
@@ -21,6 +23,7 @@ export const REVIEW_FILES = {
   checklist: 'checklist.md',
   report: 'build-report.md',
   thumbnail: 'thumbnail.png',
+  captions: 'captions.en.srt', // one cue per sentence from the measured timeline (src/video/captions.ts)
 } as const;
 
 export interface Chapter {
@@ -35,6 +38,8 @@ export interface ReviewPackage {
   title: string; // the working title for a private upload, the real title for a release
   mp4: string; // the file to upload, relative to the review dir (or the segment path when not copied)
   mp4Sha: string;
+  thumbnailSha: string | null; // of thumbnail.png (gitignored), so the board can tell a changed thumbnail in CI
+  captionsSha: string | null; // of captions.en.srt; the uploader sends the file, the ledger records the sha
   seconds: number;
   buildReport: string; // sha of video/build-report.json this package was made from; the board compares it
   chapters: Chapter[];
@@ -118,7 +123,14 @@ export function reviewData(
   seg: Segment,
   tl: Timeline,
   report: BuildReport,
-  made: { mp4: string; mp4Sha: string; buildReport: string; thumbnail: boolean; generatedAt: string },
+  made: {
+    mp4: string;
+    mp4Sha: string;
+    buildReport: string;
+    thumbnailSha: string | null;
+    captionsSha: string | null;
+    generatedAt: string;
+  },
 ): ReviewPackage {
   const studies = seg.pkg.documents.map((d) => ({ name: d.name, file: d.file }));
   const sources = [
@@ -135,6 +147,8 @@ export function reviewData(
     title: release ? tl.title : `[PRIVATE REVIEW] ${tl.title}`,
     mp4: made.mp4,
     mp4Sha: made.mp4Sha,
+    thumbnailSha: made.thumbnailSha,
+    captionsSha: made.captionsSha,
     seconds: report.output?.seconds ?? tl.durationInFrames / tl.fps,
     buildReport: made.buildReport,
     chapters: chapters(seg, tl),
@@ -148,7 +162,8 @@ export function reviewData(
       REVIEW_FILES.description,
       REVIEW_FILES.checklist,
       REVIEW_FILES.report,
-      made.thumbnail ? REVIEW_FILES.thumbnail : null,
+      made.thumbnailSha ? REVIEW_FILES.thumbnail : null,
+      made.captionsSha ? REVIEW_FILES.captions : null,
       REVIEW_FILES.json,
     ].filter((f): f is string => !!f),
   };
@@ -181,8 +196,8 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
       'Studies cited',
       ...pkg.sources.studies.map((s) => `- ${s.name}`),
       '',
-      'Sources discussed',
-      ...pkg.sources.sources.map((s) => `- ${s.channel}: ${s.title} ${s.href}`),
+      // YouTube allows 5000 bytes; the sources discussed (often forty) live on the topic page, one link replaces the list
+      `Every source discussed, and how each claim held up: ${site.url}${tl.topic}/`,
       '',
       ...(release
         ? [`Music: ${musicLine}.`]
@@ -211,7 +226,7 @@ export function renderReadme(pkg: ReviewPackage, tl: Timeline, report: BuildRepo
     `- Duration: ${stamp(pkg.seconds)} (${pkg.seconds.toFixed(1)}s), ${report.output?.width}x${report.output?.height} @ ${report.output?.fps} fps`,
     `- MP4 sha: ${pkg.mp4Sha}; build report ${pkg.buildReport}; QA ${pkg.qa.passed}/${pkg.qa.total}${pkg.qa.ok ? '' : ' FAILED'}`,
     `- Description: \`${REVIEW_FILES.description}\` (paste as is; chapters are measured from the timeline)`,
-    `- Checklist: \`${REVIEW_FILES.checklist}\`; build report: \`${REVIEW_FILES.report}\`${thumbnail ? `; thumbnail: \`${REVIEW_FILES.thumbnail}\` (the title card)` : ''}`,
+    `- Checklist: \`${REVIEW_FILES.checklist}\`; build report: \`${REVIEW_FILES.report}\`${thumbnail ? `; thumbnail: \`${REVIEW_FILES.thumbnail}\` (the title card)` : ''}${pkg.captionsSha ? `; captions: \`${REVIEW_FILES.captions}\`` : ''}`,
     '',
     '## Chapters',
     '',
@@ -237,13 +252,15 @@ export function renderReadme(pkg: ReviewPackage, tl: Timeline, report: BuildRepo
       ? [
           '## After the upload',
           '',
-          '1. Record the public URL in `production.json` (`decision: "published"`, `url`).',
-          '2. Any later edit renders a draft again; run `npm run video -- final` once more before re-uploading.',
+          `1. Record it: \`npm run publish -- uploaded ${tl.topic} ${tl.story} --id <youtube id> --visibility private\` (or \`public\` once approved).`,
+          `2. Watch the upload with the checklist, then approve this build: \`npm run publish -- approve ${tl.topic} ${tl.story} --by "<name>"\`.`,
+          `3. Set it public or schedule it on YouTube, then \`npm run publish -- published ${tl.topic} ${tl.story}\` (or \`scheduled --at <ISO>\`).`,
+          '4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).',
         ]
       : [
           '## After the review',
           '',
-          '1. Record the private URL and the review outcome in `production.json` (`decision: "reviewing"`, `url`).',
+          `1. Record the private upload: \`npm run publish -- uploaded ${tl.topic} ${tl.story} --id <youtube id> --visibility private\`.`,
           '2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.',
           '3. Public release needs, besides approval: `npm run video -- final <topic> <story-id> --approved-by "<name>"` (the commercial voice' +
             (report.clearance.music === false ? '; music must be cleared too' : '') +
@@ -280,17 +297,21 @@ export function buildReviewPackage(
   mkdirSync(dir, { recursive: true });
   const card = thumbnailScene(tl);
   const release = report.clearance.publishable;
+  const thumbnail = join(dir, REVIEW_FILES.thumbnail);
+  if (card) extractFrame(mp4, (card.start + card.duration - 15) / tl.fps, thumbnail);
+  const srt = renderSrt(tl);
+  writeFileSync(join(dir, REVIEW_FILES.captions), srt);
   const pkg = reviewData(seg, tl, report, {
     mp4: reviewMp4Name(videoDir, release),
     mp4Sha: mp4Sha!,
     buildReport: fileSha(join(videoDir, VIDEO_FILES.report)),
-    thumbnail: !!card,
+    thumbnailSha: card && existsSync(thumbnail) ? sha(readFileSync(thumbnail)) : null,
+    captionsSha: sha(srt),
     generatedAt: new Date().toISOString(),
   });
   const other = join(dir, reviewMp4Name(videoDir, !release)); // one mp4 in the folder: the build this package describes
   if (existsSync(other)) unlinkSync(other);
   copyFileSync(mp4, join(dir, pkg.mp4));
-  if (card) extractFrame(mp4, (card.start + card.duration - 15) / tl.fps, join(dir, REVIEW_FILES.thumbnail));
   writeFileSync(join(dir, REVIEW_FILES.readme), renderReadme(pkg, tl, report));
   writeFileSync(join(dir, REVIEW_FILES.description), renderDescription(pkg, seg, tl, report));
   writeFileSync(join(dir, REVIEW_FILES.checklist), renderChecklist(pkg, tl));

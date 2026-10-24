@@ -10,8 +10,11 @@ import { writeRenderCheck } from '../src/video/check';
 import {
   type StoryRow,
   board,
+  checkDecisions,
   columnOf,
   boardNext,
+  mainState,
+  topicBoard,
   productionOf,
   runPromptOf,
   sendBackPromptOf,
@@ -32,6 +35,7 @@ import {
   type ScriptValidation,
   scriptDir,
 } from '../src/lib/script';
+import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
 import { type Fixture, copyTopic, syntheticProduction } from './production-helpers';
 import { blockedScript, run } from './script-helpers';
 
@@ -278,11 +282,12 @@ describe('upload values', () => {
       expect(p.stage).toBe('packaged');
       expect(p.next).toContain('public release is blocked: draft voice');
       const title = readJson<Script>(join(fx.dir, 'script.json'))!.title;
-      expect(p.upload).toEqual({
+      expect(p.upload).toMatchObject({
         file: `${p.dir}/video/review/fixture.mp4`,
         title,
         description: `${title}\n\nChapters\n0:00 Hook`,
-        thumbnail: null,
+        tags: [],
+        thumbnail: { file: `${p.dir}/video/review/thumbnail.png`, sha: 'thumbsha' },
       });
     } finally {
       fx.cleanup();
@@ -299,7 +304,75 @@ describe('board columns', () => {
     expect(columnOf(row({ partOf: 'decision:first' }))).toBeNull(); // answered on its first question's card
     expect(columnOf(row({}, { stage: 'storyboard' }))).toBe('producing');
     expect(columnOf(row({}, { stage: 'packaged' }))).toBe('your-review');
-    expect(columnOf(row({}, { stage: 'packaged' }, { decision: 'reviewing' }))).toBe('reviewing');
-    expect(columnOf(row({ partOf: 'x' }, null, { decision: 'published' }))).toBe('published');
+    expect(columnOf(row({}, { stage: 'packaged' }, { decision: 'parked' }))).toBe('parked');
+    const at = (status: string, stage = 'packaged', live = status === 'published') =>
+      row({}, { stage, publish: { main: 'youtube', outputs: [{ id: 'youtube', state: { status, live } }] } });
+    expect(columnOf(at('not-uploaded'))).toBe('your-review');
+    expect(columnOf(at('build-behind'))).toBe('your-review');
+    expect(columnOf(at('uploaded'))).toBe('uploaded');
+    expect(columnOf(at('metadata-behind'))).toBe('uploaded');
+    expect(columnOf(at('approved'))).toBe('approved');
+    expect(columnOf(at('scheduled'))).toBe('scheduled');
+    expect(columnOf(at('published'))).toBe('published');
+    expect(columnOf(at('published', 'validate'))).toBe('published'); // live stays live when the script is edited
+    expect(columnOf(at('metadata-behind', 'validate', true))).toBe('published'); // and when its thumbnail changes
   });
+
+  it('production.json holds queued and parked only', () => {
+    expect(() => checkDecisions({ 'a/b': { decision: 'reviewing', note: '', date: '2026-01-01' } })).toThrow(
+      /queued\|parked/,
+    );
+    expect(() => checkDecisions({ 'a/b': { decision: 'parked', note: 'why', date: '2026-01-01' } })).not.toThrow();
+  });
+});
+
+describe('publishing on the board', () => {
+  const by = 'Jon';
+  it('reads the ledger, stops on a live video and lifts the stop for a new output', () => {
+    const fx = syntheticProduction('packaged', { release: true });
+    try {
+      const { topic, story, root } = fx;
+      const p0 = productionOf(topic, story, root)!;
+      expect(p0.publish!.outputs[0].state.status).toBe('not-uploaded');
+      expect(p0.upload!.title).toBe(readJson<Script>(join(fx.dir, 'script.json'))!.title);
+      expect(p0.next).toContain(`npm run publish -- upload ${topic} ${story}`);
+      expect(stepsOf(p0.next, topic, story).map((s) => s.kind)).toEqual(['run']);
+      recordUploaded(topic, story, { root, by, id: 'aaaaaaaaaaa' });
+      expect(productionOf(topic, story, root)!.next).toContain('npm run publish -- approve');
+      recordApproved(topic, story, { root, by });
+      recordPublished(topic, story, { root, by, url: 'https://youtu.be/aaaaaaaaaaa' });
+      const tb = topicBoard(topic, root, {});
+      const r = tb.stories.find((s) => s.story.id === story)!;
+      expect(columnOf(r)).toBe('published');
+      expect(r.next).toBe('live: https://youtu.be/aaaaaaaaaaa');
+      const n = boardNext(topic, story, root);
+      expect(n.next).toMatch(/^stop: live at https:\/\/youtu\.be\/aaaaaaaaaaa/);
+      expect(n.halt?.kind).toBe('published');
+      // a new thumbnail on a live video is a metadata update, never a reason to leave the live column
+      mkdirSync(join(fx.dir, 'video', 'publish'), { recursive: true });
+      writeFileSync(join(fx.dir, 'video', 'publish', 'thumbnail.png'), 'png');
+      setThumbnail(topic, story, { root, file: join(fx.dir, 'video', 'publish', 'thumbnail.png') });
+      const behind = productionOf(topic, story, root)!;
+      expect(mainState(behind)!.status).toBe('metadata-behind');
+      expect(columnOf({ ...r, production: behind })).toBe('published');
+      expect(boardNext(topic, story, root).halt?.kind).toBe('published');
+      // the script is edited: the stage drops, the video stays live and is not the topic's next step
+      const f = join(fx.dir, 'script.json');
+      const script = readJson<Script>(f)!;
+      writeFileSync(f, toJson({ ...script, revision: script.revision + 1 }));
+      const tb2 = topicBoard(topic, root, {});
+      const r2 = tb2.stories.find((s) => s.story.id === story)!;
+      expect(r2.production!.stage).not.toBe('packaged');
+      expect(columnOf(r2)).toBe('published');
+      expect(tb2.next).not.toMatch(/^live:/);
+      expect(boardNext(topic, story, root).halt?.kind).toBe('published');
+      // a re-release is a new output
+      addOutputTo(topic, story, 'youtube-2', 'youtube-video', { root });
+      const n2 = boardNext(topic, story, root);
+      expect(n2.halt?.kind).not.toBe('published');
+      expect(productionOf(topic, story, root)!.publish!.main).toBe('youtube-2');
+    } finally {
+      fx.cleanup();
+    }
+  }, 60_000); // two whole topic boards
 });

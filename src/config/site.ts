@@ -3,6 +3,7 @@ export const site = {
   name: 'Video knowledge',
   description: 'What YouTube videos and blog posts claim, checked against the evidence.',
   locale: 'en-US',
+  url: 'https://jonborchardt.github.io/video-knowledge/', // astro.config's site + base; used where Astro's href() is not available (the review package)
   blog: { name: 'Always Shippable', url: 'https://jonborchardt.github.io/blog/' },
   nav: [
     { label: 'Blog', href: 'https://jonborchardt.github.io/blog/' },

@@ -2,14 +2,15 @@
 // A board item's next move: a button that opens a native popover listing each step as a command to run, a
 // prompt to hand an agent, or a manual step. Each block has a Copy button (the only client script here). A story
 // with a stage gets the /produce prompt first: start or resume the whole run, or (once packaged) send it back.
-import { runPromptOf, sendBackPromptOf, type Step, stepsOf, type Upload } from '../lib/production';
+import { runPromptOf, sendBackPromptOf, type Step, stepsOf } from '../lib/production';
+import type { UploadMetadata } from '../lib/publish';
 
 interface Props {
   id: string;
   next: string;
   topic: string;
   story?: string;
-  upload?: Upload | null; // fills in the YouTube form when a step is the upload
+  upload?: UploadMetadata | null; // fills in the YouTube form when a step is the upload
   stage?: string; // the production stage, or 'ready' for a ready story with no production yet
 }
 const { id, next, topic, story, upload, stage } = Astro.props;
@@ -30,8 +31,9 @@ const fields = upload
       ['File', upload.file],
       ['Title', upload.title],
       ['Description', upload.description],
-      ...(upload.thumbnail ? [['Thumbnail', upload.thumbnail]] : []),
-      ['Visibility', 'Private'],
+      ...(upload.tags.length ? [['Tags', upload.tags.join(', ')]] : []),
+      ...(upload.thumbnail ? [['Thumbnail', `${upload.thumbnail.file} (${upload.thumbnail.sha})`]] : []),
+      ['Visibility', 'Private (public only once the build is approved: npm run publish -- approve)'],
       ['Audience', 'No, it is not made for kids'],
     ]
   : [];
