@@ -13,9 +13,12 @@ import {
   COLUMNS,
   columnOf,
   type Health,
+  mainState,
   PRODUCTION_STAGES,
   type StoryRow,
 } from '../../lib/production';
+import type { OutputView } from '../../lib/production';
+import { loadLedger } from '../../lib/publish';
 import { href } from '../../lib/url';
 
 const topics = board();
@@ -38,6 +41,7 @@ const SORTABLE = [
   ['Evidence', 'num'],
   ['Claims', 'num'],
   ['State', 'num'],
+  ['Outputs', ''],
   ['Next', ''],
   ['Notes', ''],
 ] as const;
@@ -48,9 +52,21 @@ const followUps = (r: Row) =>
     .map((c) => rows.find((x) => x.topic.name === r.topic.name && x.story.id === c.id)?.story)
     .filter((s) => s?.partOf === r.story.id);
 // Halts /produce stops on (.claude/skills/produce/SKILL.md): a person must act; every other halt is its next step.
+// A failed publishing step is the same kind of stop: the ledger's last event says what went wrong.
 const stopped = (r: StoryRow) =>
-  !!r.production &&
-  (['revision-limit', 'story-left'].includes(r.production.halt?.kind ?? '') || r.next.startsWith('stop:'));
+  (!!r.production &&
+    (['revision-limit', 'story-left'].includes(r.production.halt?.kind ?? '') || r.next.startsWith('stop:'))) ||
+  !!mainState(r.production)?.failed;
+const outputs = (r: StoryRow): OutputView[] => r.production?.publish?.outputs ?? [];
+// An output chip's colour: red when its last step failed, amber when the build or metadata on disk is ahead of the platform.
+const outputColour = (o: OutputView) =>
+  o.state.failed
+    ? 'text-destructive'
+    : o.state.status.endsWith('-behind') || o.state.due
+      ? 'text-warning'
+      : o.state.status === 'published'
+        ? 'text-success'
+        : '';
 const claimsOf = (r: Row) => new Set([r.story, ...followUps(r)].flatMap((s) => s?.claims ?? [])).size;
 const HEALTH: Record<Health, { label: string; colour: string }> = {
   done: { label: 'done', colour: 'text-success' },
@@ -75,15 +91,21 @@ const COLUMN: Record<Column, { label: string; help: string; colour: string }> = 
   },
   'your-review': {
     label: 'Your review',
-    help: 'private package made; upload it and watch',
+    help: 'package made; upload it privately and record the upload (publish.json)',
     colour: 'text-success',
   },
-  reviewing: {
-    label: 'In review',
-    help: 'uploaded privately; a person is reviewing (production.json)',
+  uploaded: {
+    label: 'Uploaded',
+    help: 'uploaded privately: watch it, then approve the release build or run final on a draft (publish.json)',
     colour: 'text-warning',
   },
-  published: { label: 'Published', help: 'production.json', colour: 'text-success' },
+  approved: {
+    label: 'Approved',
+    help: 'the uploaded build is approved: set it public or schedule it, then record that (publish.json)',
+    colour: 'text-success',
+  },
+  scheduled: { label: 'Scheduled', help: 'scheduled on YouTube (publish.json)', colour: 'text-success' },
+  published: { label: 'Published', help: 'live (publish.json)', colour: 'text-success' },
   parked: { label: 'Parked', help: 'production.json', colour: 'text-muted-foreground' },
 };
 const badge =
@@ -96,13 +118,16 @@ const mono = 'font-mono text-xs [overflow-wrap:anywhere]';
 const blob = (file: string) => `${site.repo}/blob/main/${file}`;
 const day = (iso?: string) => (iso ? iso.slice(0, 10) : '');
 const chip = (c: Check) => `${c.name}: ${c.health}`;
+// The ledger's events for one output, for the audit trail (the view carries states; the file carries the log).
+const ledgerEvents = (p: NonNullable<StoryRow['production']>, output: string) =>
+  loadLedger(p.topic, p.story)?.outputs[output]?.events ?? [];
 const rowHealth = (r: StoryRow): Health =>
   r.production ? r.production.health : r.story.readiness === 'ready' ? 'current' : 'pending';
 // The production stages in a row: what has run, the stage it is at, and what is still to come.
 const stripOf = (r: StoryRow) => {
   const col = columnOf(r);
   const at =
-    col === 'reviewing' || col === 'published'
+    col && ['uploaded', 'approved', 'scheduled', 'published'].includes(col)
       ? PRODUCTION_STAGES.length
       : r.production
         ? PRODUCTION_STAGES.indexOf(r.production.stage)
@@ -270,6 +295,7 @@ const stripOf = (r: StoryRow) => {
                     ...followUps(r).map((s) => s?.question),
                     COLUMN[c].label,
                     r.production?.stage,
+                    ...outputs(r).flatMap((o) => [o.id, o.kind, o.state.status, o.state.id]),
                     r.next,
                     ...notes,
                   ]
@@ -336,6 +362,25 @@ const stripOf = (r: StoryRow) => {
                         ))}
                       </ol>
                     </div>
+                  </td>
+                  <td class="py-2 pr-3">
+                    {outputs(r).length > 0 && (
+                      <ul class="grid gap-1" aria-label="Outputs">
+                        {outputs(r).map((o) => (
+                          <li>
+                            <span class:list={[badge, outputColour(o)]} title={o.state.next}>
+                              {o.kind}: {o.state.status}
+                              {o.state.failed ? ' failed' : o.state.due ? ' due' : ''}
+                            </span>
+                            {o.state.url && (
+                              <a class:list={[mono, 'ml-1 text-primary']} href={o.state.url}>
+                                {o.state.id}
+                              </a>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </td>
                   <td class="py-2 pr-3" title={r.next}>
                     <NextStep
@@ -500,6 +545,90 @@ const stripOf = (r: StoryRow) => {
                     </li>
                   ))}
                 </ol>
+              </div>
+            )}
+
+            {p!.publish && (
+              <div class="grid gap-2">
+                <h4 class="text-sm font-semibold">Publishing</h4>
+                {p!.publish.outputs.map((o) => (
+                  <details open={o.state.status !== 'not-uploaded'}>
+                    <summary class="cursor-pointer text-sm">
+                      <span class={mono}>{o.id}</span> <span class="text-muted-foreground">{o.kind}</span>{' '}
+                      <span class:list={[badge, outputColour(o)]}>{o.state.status}</span>
+                      {o.id === p!.publish!.main && <span class:list={[badge, 'ml-1']}>main</span>}
+                    </summary>
+                    <p class="mt-1 text-sm">
+                      <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{o.state.next}</code>
+                    </p>
+                    {o.metadata && (
+                      <dl class="mt-1 grid gap-x-4 gap-y-0.5 text-xs sm:grid-cols-[auto_1fr]">
+                        <dt class="text-muted-foreground">title</dt>
+                        <dd>{o.metadata.title}</dd>
+                        <dt class="text-muted-foreground">tags</dt>
+                        <dd>{o.metadata.tags.join(', ') || '—'}</dd>
+                        <dt class="text-muted-foreground">thumbnail</dt>
+                        <dd class={mono}>
+                          {o.metadata.thumbnail ? `${o.metadata.thumbnail.file} (${o.metadata.thumbnail.sha})` : '—'}
+                        </dd>
+                        <dt class="text-muted-foreground">metadata sha</dt>
+                        <dd class={mono}>{o.metadata.sha}</dd>
+                      </dl>
+                    )}
+                    {o.state.superseded.length > 0 && (
+                      <p class="mt-1 text-xs text-muted-foreground">
+                        superseded uploads: {o.state.superseded.join(', ')}
+                      </p>
+                    )}
+                    {(() => {
+                      const events = p!.publish!.outputs.find((x) => x.id === o.id) ? ledgerEvents(p!, o.id) : [];
+                      return events.length > 0 ? (
+                        <table class="mt-1 w-full text-xs">
+                          <thead class="text-left text-muted-foreground uppercase">
+                            <tr>
+                              <th class="py-0.5 pr-3 font-medium">When</th>
+                              <th class="py-0.5 pr-3 font-medium">Event</th>
+                              <th class="py-0.5 pr-3 font-medium">By</th>
+                              <th class="py-0.5 font-medium">Detail</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {events.map((e) => (
+                              <tr class="border-t">
+                                <td class:list={['py-0.5 pr-3 whitespace-nowrap', mono]}>{e.at.slice(0, 16)}</td>
+                                <td class="py-0.5 pr-3">{e.type}</td>
+                                <td class="py-0.5 pr-3">{e.by}</td>
+                                <td class="py-0.5 [overflow-wrap:anywhere]">
+                                  {[
+                                    e.id &&
+                                      (e.url ? (
+                                        <a class="text-primary" href={e.url}>
+                                          {e.id}
+                                        </a>
+                                      ) : (
+                                        e.id
+                                      )),
+                                    e.build && `build ${e.build}${e.buildStatus ? ` (${e.buildStatus})` : ''}`,
+                                    e.visibility,
+                                    e.publishAt && `at ${e.publishAt}`,
+                                    e.metadata && `metadata ${e.metadata}`,
+                                    e.fields && e.fields.join(', '),
+                                    e.error && `${e.step}: ${e.error}${e.retryable ? ' (retryable)' : ''}`,
+                                    e.note,
+                                  ]
+                                    .filter(Boolean)
+                                    .map((x) => (
+                                      <span class="mr-2">{x}</span>
+                                    ))}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      ) : null;
+                    })()}
+                  </details>
+                ))}
               </div>
             )}
 

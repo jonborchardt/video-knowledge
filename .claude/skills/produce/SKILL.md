@@ -47,8 +47,8 @@ Repeat, at most 60 times:
      notes for a notes pass. Never reuse an agent across briefs: the script writer and the script
      reviewer, the graphics builder and the visual reviewer, the writer and the evidence agent are
      always different agents. A reviewer sees only the artifacts, never the writer's reasoning.
-   - `do`: a manual step the board names after `packaged` (upload, decisions): not yours. Go to
-     Finish.
+   - `do`: a manual step the board names after `packaged` (the upload, recorded afterwards with
+     `npm run publish -- uploaded`): not yours. Go to Finish.
 4. Go to 1.
 
 What each halt kind means for you:
