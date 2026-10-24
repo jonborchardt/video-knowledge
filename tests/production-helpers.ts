@@ -74,7 +74,7 @@ const LINES: [SectionName, SentenceType, string][] = [
 ];
 
 /** A production for the first one-question ready story of heat-pumps, in a temp root, built up to `upTo`. */
-export function syntheticProduction(upTo: FixtureStage): Fixture {
+export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolean } = {}): Fixture {
   const c = copyTopic(TOPIC);
   const { root } = c;
   const stories = loadStories(TOPIC, root)!;
@@ -199,8 +199,11 @@ export function syntheticProduction(upTo: FixtureStage): Fixture {
   mkdirSync(join(dir, 'video', 'review'), { recursive: true });
   write('video/review/review.json', {
     generatedAt: '2026-01-01',
+    status: opts.release ? 'release build' : 'private review build',
     buildReport: fileSha(join(dir, 'video', 'build-report.json')),
     mp4: 'fixture.mp4',
+    mp4Sha: opts.release ? 'releasesha' : 'draftsha',
+    thumbnailSha: 'thumbsha',
     title: script.title,
   });
   write('video/review/description.txt', `${script.title}\n\nChapters\n0:00 Hook\n`);

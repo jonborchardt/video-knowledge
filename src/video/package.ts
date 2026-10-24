@@ -35,6 +35,7 @@ export interface ReviewPackage {
   title: string; // the working title for a private upload, the real title for a release
   mp4: string; // the file to upload, relative to the review dir (or the segment path when not copied)
   mp4Sha: string;
+  thumbnailSha: string | null; // of thumbnail.png (gitignored), so the board can tell a changed thumbnail in CI
   seconds: number;
   buildReport: string; // sha of video/build-report.json this package was made from; the board compares it
   chapters: Chapter[];
@@ -118,7 +119,7 @@ export function reviewData(
   seg: Segment,
   tl: Timeline,
   report: BuildReport,
-  made: { mp4: string; mp4Sha: string; buildReport: string; thumbnail: boolean; generatedAt: string },
+  made: { mp4: string; mp4Sha: string; buildReport: string; thumbnailSha: string | null; generatedAt: string },
 ): ReviewPackage {
   const studies = seg.pkg.documents.map((d) => ({ name: d.name, file: d.file }));
   const sources = [
@@ -135,6 +136,7 @@ export function reviewData(
     title: release ? tl.title : `[PRIVATE REVIEW] ${tl.title}`,
     mp4: made.mp4,
     mp4Sha: made.mp4Sha,
+    thumbnailSha: made.thumbnailSha,
     seconds: report.output?.seconds ?? tl.durationInFrames / tl.fps,
     buildReport: made.buildReport,
     chapters: chapters(seg, tl),
@@ -148,7 +150,7 @@ export function reviewData(
       REVIEW_FILES.description,
       REVIEW_FILES.checklist,
       REVIEW_FILES.report,
-      made.thumbnail ? REVIEW_FILES.thumbnail : null,
+      made.thumbnailSha ? REVIEW_FILES.thumbnail : null,
       REVIEW_FILES.json,
     ].filter((f): f is string => !!f),
   };
@@ -237,13 +239,15 @@ export function renderReadme(pkg: ReviewPackage, tl: Timeline, report: BuildRepo
       ? [
           '## After the upload',
           '',
-          '1. Record the public URL in `production.json` (`decision: "published"`, `url`).',
-          '2. Any later edit renders a draft again; run `npm run video -- final` once more before re-uploading.',
+          `1. Record it: \`npm run publish -- uploaded ${tl.topic} ${tl.story} --id <youtube id> --visibility private\` (or \`public\` once approved).`,
+          `2. Watch the upload with the checklist, then approve this build: \`npm run publish -- approve ${tl.topic} ${tl.story} --by "<name>"\`.`,
+          `3. Set it public or schedule it on YouTube, then \`npm run publish -- published ${tl.topic} ${tl.story}\` (or \`scheduled --at <ISO>\`).`,
+          '4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).',
         ]
       : [
           '## After the review',
           '',
-          '1. Record the private URL and the review outcome in `production.json` (`decision: "reviewing"`, `url`).',
+          `1. Record the private upload: \`npm run publish -- uploaded ${tl.topic} ${tl.story} --id <youtube id> --visibility private\`.`,
           '2. Fix what the checklist found; a re-render keeps every cached scene the fix does not touch.',
           '3. Public release needs, besides approval: `npm run video -- final <topic> <story-id> --approved-by "<name>"` (the commercial voice' +
             (report.clearance.music === false ? '; music must be cleared too' : '') +
@@ -280,17 +284,18 @@ export function buildReviewPackage(
   mkdirSync(dir, { recursive: true });
   const card = thumbnailScene(tl);
   const release = report.clearance.publishable;
+  const thumbnail = join(dir, REVIEW_FILES.thumbnail);
+  if (card) extractFrame(mp4, (card.start + card.duration - 15) / tl.fps, thumbnail);
   const pkg = reviewData(seg, tl, report, {
     mp4: reviewMp4Name(videoDir, release),
     mp4Sha: mp4Sha!,
     buildReport: fileSha(join(videoDir, VIDEO_FILES.report)),
-    thumbnail: !!card,
+    thumbnailSha: card && existsSync(thumbnail) ? sha(readFileSync(thumbnail)) : null,
     generatedAt: new Date().toISOString(),
   });
   const other = join(dir, reviewMp4Name(videoDir, !release)); // one mp4 in the folder: the build this package describes
   if (existsSync(other)) unlinkSync(other);
   copyFileSync(mp4, join(dir, pkg.mp4));
-  if (card) extractFrame(mp4, (card.start + card.duration - 15) / tl.fps, join(dir, REVIEW_FILES.thumbnail));
   writeFileSync(join(dir, REVIEW_FILES.readme), renderReadme(pkg, tl, report));
   writeFileSync(join(dir, REVIEW_FILES.description), renderDescription(pkg, seg, tl, report));
   writeFileSync(join(dir, REVIEW_FILES.checklist), renderChecklist(pkg, tl));

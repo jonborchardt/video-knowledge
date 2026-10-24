@@ -3,9 +3,9 @@
 // metadata choices. Events are written only by `npm run publish` (scripts/publish.ts); `metadata` may be hand-edited.
 // Builds are named by the mp4 sha the QA checked, upload metadata by the sha of the composed text and thumbnail sha, so
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
-import { existsSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { readJson, ROOT, toJson } from './io';
+import { lf, readJson, ROOT, sha, toJson } from './io';
 import { scriptDir } from './script';
 
 export const PUBLISH_FILE = 'publish.json';
@@ -350,4 +350,54 @@ export function outputState(
     'approved',
     `set ${url} public or schedule it on YouTube, then ${verb('published')} or ${verb('scheduled', ' --at <ISO>')}`,
   );
+}
+
+// ---- metadata ---------------------------------------------------------------------------------------------------
+
+/** What the upload form takes: the review package's text and thumbnail, then the output's overrides. */
+export interface UploadMetadata {
+  file: string | null; // repo-relative mp4 to upload (the main output), or the output's source
+  title: string;
+  description: string;
+  tags: string[];
+  thumbnail: { file: string; sha: string } | null;
+  category?: string;
+  language?: string;
+  playlist?: string;
+  sha: string; // of the composed text and the thumbnail sha: what an uploaded/updated event records
+}
+interface ReviewJson {
+  title: string;
+  mp4: string;
+  thumbnailSha?: string | null;
+  files?: string[];
+}
+/** Null without a review package. `rel` turns a path in the script directory into a repo-relative one. */
+export function uploadMetadataOf(dir: string, rel: (f: string) => string, output: Output): UploadMetadata | null {
+  const review = join(dir, 'video', 'review');
+  const rp = readJson<ReviewJson>(join(review, 'review.json'));
+  if (!rp) return null;
+  const desc = join(review, 'description.txt');
+  const m = output.metadata;
+  const packaged = existsSync(desc) ? lf(readFileSync(desc, 'utf8')).trim() : '';
+  const description = lf(m.description ?? packaged) + (m.descriptionAppend ? `\n\n${lf(m.descriptionAppend)}` : '');
+  const thumbnail = m.thumbnail
+    ? { file: m.thumbnail.file, sha: m.thumbnail.sha }
+    : rp.thumbnailSha
+      ? { file: rel('video/review/thumbnail.png'), sha: rp.thumbnailSha }
+      : null;
+  const text = {
+    title: m.title ?? rp.title,
+    description,
+    tags: m.tags ?? [],
+    category: m.category,
+    language: m.language,
+    playlist: m.playlist,
+  };
+  return {
+    file: output.source ?? rel(`video/review/${rp.mp4}`),
+    ...text,
+    thumbnail,
+    sha: sha(toJson({ ...text, thumbnail: thumbnail?.sha ?? null })),
+  };
 }

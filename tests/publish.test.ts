@@ -11,6 +11,7 @@ import {
   type Output,
   currentBuild,
   outputState,
+  uploadMetadataOf,
   type PublishEvent,
   addOutput,
   appendEvent,
@@ -238,5 +239,58 @@ describe('outputState', () => {
       JSON.stringify({ mp4Sha: 'abd', status: 'private review build' }),
     );
     expect(currentBuild(dir)).toEqual({ sha: 'abd', status: 'draft' });
+  });
+});
+
+describe('uploadMetadataOf', () => {
+  const dir = join(tmp, 'meta');
+  mkdirSync(join(dir, 'video', 'review'), { recursive: true });
+  writeFileSync(
+    join(dir, 'video', 'review', 'review.json'),
+    JSON.stringify({
+      title: 'How Fast?',
+      mp4: 'slug.mp4',
+      mp4Sha: 'r1',
+      status: 'release build',
+      thumbnailSha: 'card1',
+    }),
+  );
+  writeFileSync(join(dir, 'video', 'review', 'description.txt'), 'How fast?\n\nChapters\n0:00 Hook\n');
+  const rel = (f: string) => `topics/t/scripts/slug/${f}`;
+  const out = (metadata: Output['metadata'] = {}): Output => ({ kind: 'youtube-video', metadata, events: [] });
+
+  it('comes from the review package when nothing overrides it', () => {
+    const m = uploadMetadataOf(dir, rel, out())!;
+    expect(m.title).toBe('How Fast?');
+    expect(m.description).toBe('How fast?\n\nChapters\n0:00 Hook');
+    expect(m.file).toBe('topics/t/scripts/slug/video/review/slug.mp4');
+    expect(m.thumbnail).toEqual({ file: 'topics/t/scripts/slug/video/review/thumbnail.png', sha: 'card1' });
+    expect(m.tags).toEqual([]);
+  });
+
+  it('applies the overrides', () => {
+    const m = uploadMetadataOf(dir, rel, out({ title: 'Faster?', descriptionAppend: 'More.', tags: ['ai'] }))!;
+    expect(m.title).toBe('Faster?');
+    expect(m.description).toBe('How fast?\n\nChapters\n0:00 Hook\n\nMore.');
+    expect(m.tags).toEqual(['ai']);
+    expect(m.sha).not.toBe(uploadMetadataOf(dir, rel, out())!.sha);
+  });
+
+  it('a new thumbnail changes the sha and nothing else', () => {
+    const a = uploadMetadataOf(dir, rel, out())!;
+    const b = uploadMetadataOf(dir, rel, out({ thumbnail: { file: 'video/publish/thumbnail.png', sha: 'mine' } }))!;
+    expect(b.thumbnail).toEqual({ file: 'video/publish/thumbnail.png', sha: 'mine' });
+    expect(b.sha).not.toBe(a.sha);
+    expect({ ...a, sha: 0, thumbnail: 0 }).toEqual({ ...b, sha: 0, thumbnail: 0 });
+  });
+
+  it('hashes the same with CRLF and LF', () => {
+    const a = uploadMetadataOf(dir, rel, out())!.sha;
+    writeFileSync(join(dir, 'video', 'review', 'description.txt'), 'How fast?\r\n\r\nChapters\r\n0:00 Hook\r\n');
+    expect(uploadMetadataOf(dir, rel, out())!.sha).toBe(a);
+  });
+
+  it('is null without a review package', () => {
+    expect(uploadMetadataOf(join(tmp, 'nowhere'), rel, out())).toBeNull();
   });
 });
