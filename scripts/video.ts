@@ -25,9 +25,9 @@ import { join } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, sha, toJson, ROOT } from '../src/lib/io';
 import { boardNext } from '../src/lib/production';
-import { currentBuild, recordApproved } from '../src/lib/publish';
+import { addOutputTo, currentBuild, recordApproved } from '../src/lib/publish';
 import { approverProblem } from '../src/lib/release';
-import { scriptDir } from '../src/lib/script';
+import { scriptDir, shortOf } from '../src/lib/script';
 import { extractFrame, probe } from '../src/video/ffmpeg';
 import { writeRenderCheck } from '../src/video/check';
 import { initVideo } from '../src/video/init';
@@ -227,6 +227,20 @@ function stagePackage() {
   console.log(
     `wrote ${rel(p(REVIEW_DIR))}: ${r.title}, ${r.chapters.length} chapters, ${r.sources.studies.length} studies, ${r.sources.sources.length} sources; ${r.provenance.clearance.publishable ? 'cleared' : 'public release BLOCKED: ' + r.provenance.clearance.why.join('; ')}`,
   );
+  // A Short is an output of its parent's ledger (short:<slug>, derived from the main video, its folder the source).
+  const short = shortOf(storyId);
+  if (short) {
+    const id = `short:${short.slug}`;
+    try {
+      addOutputTo(topic, short.parent, id, 'youtube-short', {
+        derivedFrom: 'youtube',
+        source: rel(scriptDir(topic, storyId)),
+      });
+      console.log(`recorded ${id} in ${short.parent}'s publish.json`);
+    } catch (e) {
+      if (!/exists/.test(e instanceof Error ? e.message : String(e))) throw e;
+    }
+  }
 }
 
 function stageInit() {

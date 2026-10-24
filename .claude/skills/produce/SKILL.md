@@ -30,6 +30,8 @@ Notes:
   non-alphanumerics turned into `-`, e.g. `decision:when-does-it-pay-for-itself` ->
   `decision-when-does-it-pay-for-itself`). Create it from the current branch, or check it out if it
   exists. Never push.
+- A Short's story id is `<story-id>/shorts/<slug>` (a ready candidate in the parent's `shorts.json`); the loop
+  is the same, the briefs' short-format sections apply, and the branch slug comes from the whole id.
 - Note the start time; the report gives the wall-clock.
 
 ## Loop

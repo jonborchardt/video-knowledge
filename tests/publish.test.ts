@@ -35,6 +35,8 @@ import {
   saveLedger,
   setThumbnail,
   uploadMetadataOf,
+  sourceBuild,
+  nestedSource,
 } from '../src/lib/publish';
 import { type Fixture, syntheticProduction } from './production-helpers';
 
@@ -644,5 +646,49 @@ describe('captions and the parent link in the composed metadata', () => {
     const s = outputState(o, { sha: 's1', status: 'release' }, 'm1', { topic: 't', story: 's', output: 'short-1' });
     expect(s.status).toBe('published');
     expect(s.next).toMatch(/related video.*YouTube Studio/);
+  });
+});
+
+describe('a nested production as an output source (a Short)', () => {
+  const root = join(tmp, 'nested-root');
+  const parent = join(root, 'topics', 't', 'scripts', 'parent');
+  const shortDir = join(parent, 'shorts', 'x');
+  mkdirSync(join(parent, 'video', 'review'), { recursive: true });
+  mkdirSync(join(shortDir, 'video', 'review'), { recursive: true });
+  writeFileSync(
+    join(parent, 'video', 'review', 'review.json'),
+    JSON.stringify({ title: 'Parent', mp4: 'parent.mp4', mp4Sha: 'p1', status: 'release build', captionsSha: 'pc' }),
+  );
+  writeFileSync(join(parent, 'video', 'review', 'description.txt'), 'Parent description\n');
+  writeFileSync(
+    join(shortDir, 'video', 'review', 'review.json'),
+    JSON.stringify({
+      title: 'Short title',
+      mp4: 'parent-short-x.mp4',
+      mp4Sha: 's1',
+      status: 'private review build',
+      captionsSha: 'sc',
+      thumbnailSha: 'st',
+    }),
+  );
+  writeFileSync(join(shortDir, 'video', 'review', 'description.txt'), 'Hook\n\n#Shorts\n');
+  const source = 'topics/t/scripts/parent/shorts/x';
+  const rel = (f: string) => `topics/t/scripts/parent/${f}`;
+  const short = (): Output => ({ kind: 'youtube-short', derivedFrom: 'youtube', source, metadata: {}, events: [] });
+
+  it('is judged by its own package: build, title, description, captions and thumbnail from the nested folder', () => {
+    expect(nestedSource(root, short())).toBe(source);
+    expect(nestedSource(root, { source: 'topics/t/scripts/parent/nowhere' })).toBeNull();
+    expect(sourceBuild(root, source)).toEqual({ sha: 's1', status: 'draft' });
+    const m = uploadMetadataOf(parent, rel, short(), null, root)!;
+    expect(m.title).toBe('Short title');
+    expect(m.description).toBe('Hook\n\n#Shorts');
+    expect(m.file).toBe(`${source}/video/review/parent-short-x.mp4`);
+    expect(m.captions).toEqual({ file: `${source}/video/review/captions.en.srt`, sha: 'sc', language: 'en' });
+    expect(m.thumbnail).toEqual({ file: `${source}/video/review/thumbnail.png`, sha: 'st' });
+    // the parent's own output is untouched
+    const main = uploadMetadataOf(parent, rel, { kind: 'youtube-video', metadata: {}, events: [] }, null, root)!;
+    expect(main.title).toBe('Parent');
+    expect(main.file).toBe('topics/t/scripts/parent/video/review/parent.mp4');
   });
 });

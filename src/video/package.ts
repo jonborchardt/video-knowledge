@@ -7,6 +7,7 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFil
 import { join } from 'node:path';
 import { site } from '../config/site';
 import { fileSha, sha, toJson } from '../lib/io';
+import { loadLedger, mainOutput } from '../lib/publish';
 import { sectionTitle } from '../lib/script';
 import { renderSrt } from './captions';
 import { extractFrame } from './ffmpeg';
@@ -52,6 +53,8 @@ export interface ReviewPackage {
   qa: { ok: boolean; passed: number; total: number };
   checklist: string[];
   files: string[];
+  /** A Short: its parent story, slug and format, and the full video's live url when the parent is published. */
+  short: { parent: string; slug: string; format: string; fullVideo: string | null } | null;
 }
 
 const stamp = (s: number) => {
@@ -96,6 +99,9 @@ export const CHECKLIST = [
   'Conclusion: does the ending answer the question asked at the start, and does the black hold as the storyboard says?',
   'Playback: compare the local MP4 with the YouTube transcode at 1080p and 480p for banding, blur on small text and audio level.',
 ];
+/** A Short's extra question: YouTube draws its own controls over the bottom and the right edge of a vertical frame. */
+export const SHORT_CHECK =
+  'Short: at phone size, is nothing you need to read under the bottom fifth or the right edge, and do the captions keep up with the voice?';
 /** The last question of a draft build's checklist; a release build (cleared narration and music) has no draft voice. */
 export const DRAFT_CHECK =
   'Release: the narration voice is draft-only until re-narrated under commercial terms; confirm nothing in this build is cleared for public release unless the build report says so.';
@@ -109,14 +115,25 @@ export function reviewInputProblem(report: BuildReport, mp4Sha: string | null): 
   return null;
 }
 
-/** The upload's file name: the story slug, marked as a private review build unless this is the release build. */
-export const reviewMp4Name = (videoDir: string, release = false) =>
-  `${videoDir
-    .replace(/[\\/]video$/, '')
-    .split(/[\\/]/)
-    .pop()}${release ? '' : '-review-private'}.mp4`;
+/** The upload's file name: the story slug (a Short: `<parent slug>-short-<slug>`), marked as a private review build
+ *  unless this is the release build. */
+export const reviewMp4Name = (videoDir: string, release = false) => {
+  const parts = videoDir.replace(/[\\/]video$/, '').split(/[\\/]/);
+  const slug = parts.at(-2) === 'shorts' ? `${parts.at(-3)}-short-${parts.at(-1)}` : parts.at(-1);
+  return `${slug}${release ? '' : '-review-private'}.mp4`;
+};
 /** The title card a thumbnail is taken from, when the storyboard has one. */
-export const thumbnailScene = (tl: Timeline) => tl.scenes.find((s) => s.kind === 'title') ?? null;
+export const thumbnailScene = (tl: Timeline) =>
+  tl.scenes.find((s) => s.kind === 'title' || s.kind === 'short-title') ?? null;
+/** The parent video's live url for a Short's description, from the parent's ledger; null until it is published. */
+export function fullVideoUrl(topic: string, parent: string): string | null {
+  const ledger = loadLedger(topic, parent);
+  const main = ledger && mainOutput(ledger);
+  if (!main) return null;
+  const events = ledger.outputs[main].events;
+  const last = [...events].reverse().find((e) => e.type === 'published' || e.type === 'unpublished');
+  return last?.type === 'published' ? (last.url ?? (last.id ? `https://youtu.be/${last.id}` : null)) : null;
+}
 
 /** The package's data (review.json), pure: what the files below are rendered from. */
 export function reviewData(
@@ -130,8 +147,10 @@ export function reviewData(
     thumbnailSha: string | null;
     captionsSha: string | null;
     generatedAt: string;
+    fullVideo?: string | null;
   },
 ): ReviewPackage {
+  const short = seg.pkg.short;
   const studies = seg.pkg.documents.map((d) => ({ name: d.name, file: d.file }));
   const sources = [
     ...new Map(
@@ -151,11 +170,11 @@ export function reviewData(
     captionsSha: made.captionsSha,
     seconds: report.output?.seconds ?? tl.durationInFrames / tl.fps,
     buildReport: made.buildReport,
-    chapters: chapters(seg, tl),
+    chapters: short ? [] : chapters(seg, tl), // YouTube ignores chapters on a Short
     sources: { studies, sources },
     provenance: { narration: report.narration, music: report.music, clearance: report.clearance },
     qa: { ok: report.qa.ok, passed: report.qa.checks.filter((c) => c.ok).length, total: report.qa.checks.length },
-    checklist: release ? CHECKLIST : [...CHECKLIST, DRAFT_CHECK],
+    checklist: [...CHECKLIST, ...(short ? [SHORT_CHECK] : []), ...(release ? [] : [DRAFT_CHECK])],
     files: [
       made.mp4,
       REVIEW_FILES.readme,
@@ -166,6 +185,9 @@ export function reviewData(
       made.captionsSha ? REVIEW_FILES.captions : null,
       REVIEW_FILES.json,
     ].filter((f): f is string => !!f),
+    short: short
+      ? { parent: short.parent, slug: short.slug, format: short.format, fullVideo: made.fullVideo ?? null }
+      : null,
   };
 }
 
@@ -180,6 +202,10 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
         .join('; ')
     : 'none';
   const release = pkg.status === 'release build';
+  // a Short (brand/design.md 2.6): the hook, the link to the full inquiry, the studies, the record, #Shorts
+  const body = pkg.short
+    ? [seg.pkg.short?.hook ?? tl.title, '', `Full inquiry: ${pkg.short.fullVideo ?? `${site.url}${tl.topic}/`}`]
+    : [seg.pkg.question ?? tl.title, '', 'Chapters', ...pkg.chapters.map((c) => `${c.stamp} ${c.title}`)];
   return (
     [
       ...(release
@@ -188,10 +214,7 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
             `PRIVATE REVIEW BUILD, not for publication. Built ${report.generatedAt.slice(0, 10)} from script ${report.fingerprints.script} / storyboard ${report.fingerprints.storyboard}.`,
             '',
           ]),
-      seg.pkg.question ?? tl.title,
-      '',
-      'Chapters',
-      ...pkg.chapters.map((c) => `${c.stamp} ${c.title}`),
+      ...body,
       '',
       'Studies cited',
       ...pkg.sources.studies.map((s) => `- ${s.name}`),
@@ -200,6 +223,7 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
       `${site.publicRecord}, with every source discussed and how each claim held up: ${site.url}${tl.topic}/`,
       '',
       `${site.name}. ${site.disclosure}`,
+      ...(pkg.short ? ['', '#Shorts'] : []),
       '',
       ...(release
         ? [`Music: ${musicLine}.`]
@@ -310,6 +334,7 @@ export function buildReviewPackage(
     thumbnailSha: card && existsSync(thumbnail) ? sha(readFileSync(thumbnail)) : null,
     captionsSha: sha(srt),
     generatedAt: new Date().toISOString(),
+    fullVideo: seg.pkg.short ? fullVideoUrl(seg.script.topic, seg.pkg.short.parent) : null,
   });
   const other = join(dir, reviewMp4Name(videoDir, !release)); // one mp4 in the folder: the build this package describes
   if (existsSync(other)) unlinkSync(other);

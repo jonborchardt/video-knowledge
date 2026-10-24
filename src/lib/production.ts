@@ -333,7 +333,7 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
 // 1b. A Short's evidence package: shorts.json must be what discover writes now, the candidate must be ready, and the
 // package must be what buildShortPackage makes of the parent's package and the candidate (so a parent revised, re-locked
 // or re-reviewed since asks for the package again).
-const shortPackageStage: BoardStage = ({ topic, storyId, root, r, pkg, short }, s) => {
+const shortPackageStage: BoardStage = ({ topic, root, r, pkg, short }, s) => {
   const { parent, slug, shorts, parentPkg } = short!;
   const discover = `npm run shorts -- discover ${topic} ${parent}`;
   const name = 'evidence package';
@@ -342,7 +342,7 @@ const shortPackageStage: BoardStage = ({ topic, storyId, root, r, pkg, short }, 
     halt: { stage: 'package', kind, why, cmd },
   });
   if (!shorts) return halt('missing', `no shorts.json for ${parent}`, discover, 'missing');
-  let again: ShortsFile | null = null;
+  let again: ShortsFile;
   try {
     again = discoverShorts(loadShortParent(topic, parent, root), loadShortsReview(topic, parent, root));
   } catch (e) {
@@ -765,9 +765,11 @@ const soundtrackStage: BoardStage = ({ topic, storyId, r, release, vr, short }, 
 /** What moves the main output on, from the ledger; or the way out when every youtube-video output is retracted. */
 const publishNext = (c: BoardContext) => {
   const main = c.publish?.outputs.find((o) => o.id === c.publish!.main);
-  return main
-    ? main.state.next
-    : `every youtube-video output is retracted; npm run publish -- add ${c.topic} ${c.storyId} youtube-2 --kind youtube-video`;
+  if (main) return main.state.next;
+  // a packaged Short records itself in the parent's ledger when it is packaged; no entry means an older package
+  if (c.short)
+    return `npm run video -- package ${c.topic} ${c.storyId} (records short:${c.short.slug} in ${c.short.parent}'s publish.json)`;
+  return `every youtube-video output is retracted; npm run publish -- add ${c.topic} ${c.storyId} youtube-2 --kind youtube-video`;
 };
 
 // 10. Review package: made from this very build report. Past it, the publishing ledger says what is next.
@@ -1161,14 +1163,16 @@ function shortRows(
       next,
     };
   });
-  let current = true;
-  try {
-    current =
-      toJson(discoverShorts(loadShortParent(topic, storyId, root), loadShortsReview(topic, storyId, root))) ===
-      toJson(file);
-  } catch {
-    current = false;
-  }
+  const current = (() => {
+    try {
+      return (
+        toJson(discoverShorts(loadShortParent(topic, storyId, root), loadShortsReview(topic, storyId, root))) ===
+        toJson(file)
+      );
+    } catch {
+      return false;
+    }
+  })();
   return { shorts, shortsNext: current ? null : discover };
 }
 

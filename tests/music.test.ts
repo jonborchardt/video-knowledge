@@ -52,6 +52,7 @@ import {
   reviewData,
   reviewInputProblem,
   reviewMp4Name,
+  SHORT_CHECK,
   thumbnailScene,
 } from '../src/video/package';
 import { site } from '../src/config/site';
@@ -666,5 +667,65 @@ describe('cue sheet draft', () => {
     expect(pickComposition([{ ...u, licence: { ...u.licence, cleared: false } }])).toBeNull();
     expect(pickComposition([u])?.id).toBe('undertow');
     expect(pickComposition([u], 'undertoe')).toBeNull();
+  });
+});
+
+describe('a short review package', () => {
+  const short: ShortBlock = {
+    parent: 'decision:mlm-and-seminars',
+    key: 's02',
+    slug: 'my-short',
+    format: 'ONE FIGURE FROM THE RECORD',
+    sentences: ['s02'],
+    hook: 'Nearly half of them lost money.',
+    carries: [],
+    maxSeconds: 170,
+    parentFingerprints: { package: 'p', script: 's', release: 'r' },
+  };
+  const shortInputs = () => {
+    const inp = inputs({ config: { scenes: ['sc03'] } });
+    return { ...inp, pkg: { ...inp.pkg, short } };
+  };
+  it('has no chapters, the short check, a #Shorts description with the full inquiry, and its own file name', () => {
+    const s = checkSegment(shortInputs());
+    const t = buildTimeline(s, manifest(shortInputs()));
+    expect(t.height).toBeGreaterThan(t.width);
+    const built = buildReport(
+      s,
+      t,
+      manifest(shortInputs()),
+      { file: 'x.mp4', probe: null, renderSeconds: 1 },
+      { ok: true, checks: [], frames: [] },
+      'cmd',
+    );
+    const report: BuildReport = { ...built, output: { ...built.output!, sha: 'checked' } };
+    const made = {
+      mp4: 'parent-short-my-short-review-private.mp4',
+      mp4Sha: 'checked',
+      buildReport: 'b',
+      thumbnailSha: null,
+      captionsSha: 'c',
+      generatedAt: 'd',
+    };
+    const pkg = reviewData(s, t, report, made);
+    expect(pkg.chapters).toEqual([]);
+    expect(pkg.short).toEqual({ parent: short.parent, slug: 'my-short', format: short.format, fullVideo: null });
+    expect(pkg.checklist).toContain(SHORT_CHECK);
+    expect(pkg.checklist.at(-1)).toBe(DRAFT_CHECK);
+    const d = renderDescription(pkg, s, t, report);
+    expect(d).toContain('Nearly half of them lost money.');
+    expect(d).toContain('#Shorts');
+    expect(d).not.toContain('Chapters');
+    expect(d).toMatch(/Full inquiry: https?:\/\//);
+    const live = reviewData(s, t, report, { ...made, fullVideo: 'https://youtu.be/parent00001' });
+    expect(renderDescription(live, s, t, report)).toContain('Full inquiry: https://youtu.be/parent00001');
+    expect(reviewMp4Name(join('t', 'scripts', 'parent', 'shorts', 'my-short', 'video'), true)).toBe(
+      'parent-short-my-short.mp4',
+    );
+    expect(reviewMp4Name(join('t', 'scripts', 'parent', 'shorts', 'my-short', 'video'))).toBe(
+      'parent-short-my-short-review-private.mp4',
+    );
+    expect(thumbnailScene({ ...t, scenes: [{ ...t.scenes[0], kind: 'short-title' }] })?.kind).toBe('short-title');
+    expect(thumbnailScene(t)).toBeNull();
   });
 });

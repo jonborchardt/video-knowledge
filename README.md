@@ -292,6 +292,35 @@ description without the review notice, the voice or the clearance line, no draft
 walks the release upload, approval and publication (see Publishing below). Any later edit renders a draft again, so
 `final` runs once more before a re-upload; a live video is never rebuilt or replaced.
 
+## Shorts
+
+A produced video can spawn vertical Shorts: one finding each, with its own hook and a close that points at the full
+inquiry, rendered 1080x1920 in the Commonwealth look with the institution's badge, the format eyebrow and burned-in
+captions (`brand/design.md` 2.6). A Short is a nested production, `<story-id>/shorts/<slug>` in
+`topics/<topic>/scripts/<story slug>/shorts/<slug>/`, and goes through the same stages, briefs and CLIs as a video.
+
+```
+npm run shorts -- discover <topic> <story-id>     # shorts.json: one candidate per finding scene of the produced video
+# an agent writes shorts-review.json from scripts/briefs/shorts.md (keep, slug, format, hook, carries), then discover again
+npm run shorts -- show <topic> <story-id> [key]   # a candidate with its sentences, qualifications and passages
+/produce <topic> <story-id>/shorts/<slug>         # package, writer, reviewer, storyboard, lock, render, qa, package: the same loop
+```
+
+The Short's evidence package is a filter of the parent's: the claims its finding uses and a `short` block (the hook,
+the format, how each qualification the parent carried elsewhere is said inside the Short, the cap, the parent's
+fingerprints), so a parent revised, re-locked or re-reviewed stales the Short. The script has three sections (`hook`,
+`finding`, `close`); the validator blocks an assertion on a claim outside the package, a qualified assertion that no
+sentence of the Short carries, and a figure in the close; the storyboard blocks past 170 s and QA fails a measured
+Short over 180 s (YouTube's rule). Shorts draw with a closed portrait vocabulary (`short-title`, `short-question`,
+`short-list`, `short-quote`, `short-stat-tiles`, `short-bar`, `short-excerpt`); anything else fails the render
+check. The review package has no chapters, a `#Shorts` description with the full inquiry's link, and its own captions.
+
+Packaging records the Short as the output `short:<slug>` in the parent's `publish.json`, derived from the main video,
+so `npm run publish -- <verb> <topic> <story-id>/shorts/<slug>` works on it; it may be uploaded privately any time but
+goes public only after the parent is live. YouTube classifies any square or vertical upload up to three minutes as a
+Short; the related-video link has no API and is set in YouTube Studio, then recorded with
+`npm run publish -- updated ... --fields relatedVideo`.
+
 ## Production board
 
 `/production/` on the site shows what stage every topic, story and script is in. Everything on it is derived at

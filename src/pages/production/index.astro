@@ -423,8 +423,11 @@ const stripOf = (r: StoryRow) => {
     productions.length > 0 && (
       <section class="grid gap-6">
         <h2 class="text-featured font-semibold">Scripts: artifact inspection</h2>
-        {productions.map(({ production: p }) => (
-          <article id={`${p!.topic}-${p!.slug}`} class="grid gap-3 rounded-lg border bg-card p-4 text-card-foreground">
+        {productions.map((r) => (
+          <article
+            id={`${r.production!.topic}-${r.production!.slug}`}
+            class="grid gap-3 rounded-lg border bg-card p-4 text-card-foreground"
+          >
             <div class="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <div class="eyebrow text-muted-foreground">
@@ -629,6 +632,54 @@ const stripOf = (r: StoryRow) => {
                     })()}
                   </details>
                 ))}
+              </div>
+            )}
+
+            {(r.shorts.length > 0 || r.shortsNext) && (
+              <div class="grid gap-2">
+                <h4 class="text-sm font-semibold">Shorts</h4>
+                {r.shortsNext && (
+                  <p class="text-sm">
+                    <code class={mono}>{r.shortsNext}</code>
+                  </p>
+                )}
+                <ul class="grid gap-2 text-sm" aria-label="Shorts">
+                  {r.shorts.map((s) => (
+                    <li class="grid gap-1">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class={mono}>{s.slug ?? s.key}</span>
+                        <span
+                          class:list={[
+                            badge,
+                            s.production
+                              ? HEALTH[s.production.health].colour
+                              : s.readiness === 'ready'
+                                ? 'text-success'
+                                : s.readiness === 'rejected'
+                                  ? 'text-muted-foreground'
+                                  : 'text-warning',
+                          ]}
+                        >
+                          {s.production ? s.production.stage : s.readiness}
+                        </span>
+                        {s.format && <span class="text-muted-foreground">{s.format}</span>}
+                        {s.blocking.length > 0 && !s.production && (
+                          <span class="text-muted-foreground">{s.blocking[0]}</span>
+                        )}
+                      </div>
+                      {s.readiness !== 'rejected' && (
+                        <NextStep
+                          id={`next-short-${r.topic.name}-${(s.id ?? `${r.story.id}-${s.key}`).replace(/\W+/g, '-')}`}
+                          next={s.next}
+                          topic={r.topic.name}
+                          story={s.id ?? r.story.id}
+                          upload={s.production?.upload}
+                          stage={s.production?.stage ?? (s.readiness === 'ready' ? 'ready' : undefined)}
+                        />
+                      )}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
 

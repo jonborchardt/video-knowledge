@@ -19,7 +19,6 @@ import {
 import { readJson, ROOT } from '../lib/io';
 import type { Scene, Storyboard } from '../lib/storyboard';
 import {
-  GENERIC,
   type KindRegistry,
   type SceneKind,
   bespokeFor,

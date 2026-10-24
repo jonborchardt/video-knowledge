@@ -1,0 +1,153 @@
+{
+ "topic": "heat-pumps",
+ "story": "conflict:heat-pump-costs-less-run-heating",
+ "parentFingerprints": {
+  "script": "c8f01d495c",
+  "validation": "317dd927ef",
+  "storyboard": "5439813b6d",
+  "package": "5c7fc6ca95",
+  "release": "c033b18c31"
+ },
+ "candidates": [
+  {
+   "key": "s07",
+   "scene": "sc07",
+   "section": "investigation",
+   "sentences": [
+    "s07",
+    "s08"
+   ],
+   "claims": [
+    "heat-pumps/heat-pump-costs-less-run-heating"
+   ],
+   "cites": [
+    "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
+   ],
+   "figures": [
+    "95",
+    "100",
+    "300",
+    "650"
+   ],
+   "chart": {
+    "type": "stat-tiles",
+    "title": "Homes on electricity, oil or propane, with air conditioning",
+    "points": [
+     {
+      "label": "Would see lower bills",
+      "value": 95,
+      "unit": "percent",
+      "display": "95%–100%",
+      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
+     },
+     {
+      "label": "Median saving per year",
+      "value": 300,
+      "unit": "usd",
+      "display": "$300–$650",
+      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
+     }
+    ],
+    "note": "Modelled estimate across heat pump efficiency levels, not measured bills."
+   },
+   "qualifications": [
+    {
+     "assertion": "s07.a",
+     "text": "The sentence says 'estimated' and 'would see', and limits it to homes that already have air conditioning; s09 gives the weaker result without AC.",
+     "carriedBy": [
+      "s09"
+     ]
+    },
+    {
+     "assertion": "s08.a",
+     "text": "Same population as s07: homes on those fuels with AC.",
+     "carriedBy": []
+    }
+   ],
+   "reviewed": true,
+   "slug": "oil-propane-baseboard-with-ac",
+   "format": "ONE FIGURE FROM THE RECORD",
+   "hook": "Oil, propane or baseboards, plus AC? A national model says 95 to 100 percent of homes save.",
+   "carries": [
+    "a modelled estimate of what bills would be, not measured bills, and only for homes that already have air conditioning; without AC the same model says only 73 to 86 percent come out ahead",
+    "the $300 to $650 median saving is for those same homes: heating mainly with electricity, fuel oil or propane, with air conditioning, and it moves with the heat pump's efficiency"
+   ],
+   "readiness": "ready",
+   "blocking": []
+  },
+  {
+   "key": "s15",
+   "scene": "sc14",
+   "section": "investigation",
+   "sentences": [
+    "s15"
+   ],
+   "claims": [
+    "heat-pumps/heat-pumps-save-most-money-homes"
+   ],
+   "cites": [
+    "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
+   ],
+   "figures": [
+    "8",
+    "25"
+   ],
+   "chart": null,
+   "qualifications": [
+    {
+     "assertion": "s15.a",
+     "text": "The thresholds are tied to their year's prices in the sentence; the passage says they depend on energy prices and cold-temperature performance.",
+     "carriedBy": []
+    }
+   ],
+   "reviewed": true,
+   "slug": "oil-switch-off-temperature",
+   "format": "PUBLIC ADVISORY",
+   "hook": "Heat with oil? The evaluators said turn the heat pump off below 8 degrees. A year later, 25.",
+   "carries": [
+    "the thresholds were 8 degrees Fahrenheit in 2015 and 25 in 2016, set by that year's oil and electricity prices and how the heat pump performs in the cold; if oil gets dearer against electricity the switch-off point moves lower",
+    "one evaluation of ductless mini-split heat pumps in Massachusetts and Rhode Island homes, a recommendation for oil-heated homes only; against propane and electric resistance the same evaluation found the heat pump cheaper at every price and temperature it examined"
+   ],
+   "readiness": "ready",
+   "blocking": []
+  }
+ ],
+ "rejected": [
+  {
+   "key": "s09",
+   "reason": "'did worse' and 'only' depend on s07's with-AC figure; one chart with s07, so one Short"
+  },
+  {
+   "key": "s10",
+   "reason": "a 'for comparison' sentence: gas is outside the video's question and the point is the gap to s07-s08"
+  },
+  {
+   "key": "s12",
+   "reason": "stands alone, but repeats s07's finding (the heat pump saves) on a narrower population; held under the two-Short cap"
+  },
+  {
+   "key": "s13",
+   "reason": "no figure, and s14 gives its oil exception in the next breath; without s14 it reads as an absolute"
+  },
+  {
+   "key": "s14",
+   "reason": "a qualification of s13, not a finding on its own; s15 carries the same oil exception with its figures"
+  },
+  {
+   "key": "s22",
+   "reason": "a regional generality from a county model with no figure; a transition dressed as a fact"
+  },
+  {
+   "key": "s23",
+   "reason": "stands alone, but it is about electrification projects generally, not heat pumps; held under the two-Short cap"
+  },
+  {
+   "key": "s25",
+   "reason": "the answer's verdict, which only holds beside s13-s14's evidence; too qualified for THE COMMISSION FINDS"
+  },
+  {
+   "key": "s27",
+   "reason": "a caveat on the whole video, not a finding"
+  }
+ ]
+}
