@@ -4,7 +4,7 @@ Upload `conflict-heat-pump-costs-less-run-heating-short-oil-switch-off-temperatu
 
 - Working title: [PRIVATE REVIEW] Heat with oil? The evaluators said turn the heat pump off below 8 degrees. A year later, 25.
 - Duration: 1:11 (71.0s), 1080x1920 @ 30 fps
-- MP4 sha: 6f11b3eb59; build report 1c77be683d; QA 32/32
+- MP4 sha: 1acdd8ceb6; build report 60b434e834; QA 32/32
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
 - Checklist: `checklist.md`; build report: `build-report.md`; captions: `captions.en.srt`
 

@@ -1,10 +1,10 @@
 # Build report: Heat with oil? The evaluators said turn the heat pump off below 8 degrees. A year later, 25.
 
-heat-pumps / conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature, 2026-10-24T16:16:11.854Z. `npm run video -- spike heat-pumps conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature`
+heat-pumps / conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature, 2026-10-24T16:28:28.064Z. `npm run video -- spike heat-pumps conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature`
 
 **Segment.** 6 of 6 storyboard scenes (sc01 to sc06), 7 sentences. Kinds: sc01 short-question, sc02 short-stat-tiles, sc03 short-list, sc04 short-list, sc05 short-quote, sc06 short-list.
 
-**Output.** topics/heat-pumps/scripts/conflict-heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature/video/segment.mp4: 71.03s, 1080x1920 @ 30 fps, h264 + aac, 2131 frames, rendered in 157.3s ($0 (local CPU)).
+**Output.** topics/heat-pumps/scripts/conflict-heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature/video/segment.mp4: 71.03s, 1080x1920 @ 30 fps, h264 + aac, 2131 frames, rendered in 33.7s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 65.57s of speech at about 173 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 

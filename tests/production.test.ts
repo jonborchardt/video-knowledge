@@ -379,37 +379,42 @@ describe('publishing on the board', () => {
 });
 
 describe('shorts on the board', () => {
-  it('drives a packaged short through the same stages and stales its package when the parent is revised', () => {
-    const f = syntheticShort('packaged');
-    try {
-      const prod = productionOf(f.topic, f.story, f.root)!;
-      expect(prod.stage).toBe('packaged');
-      expect(prod.checks[0]).toMatchObject({ name: 'evidence package', health: 'current' });
-      expect(prod.checks.map((c) => c.name)).toContain('release');
-      // the parent is revised: a sentence changes, its validation is re-run and written; the short's package is stale
-      const pdir = scriptDir(f.topic, f.parent, f.root);
-      const ps = readJson<Script>(join(pdir, 'script.json'))!;
-      const first = ps.sections[0].sentences[0];
-      first.text = `${first.text} Revised.`;
-      ps.revision += 1;
-      writeFileSync(join(pdir, 'script.json'), toJson(ps));
-      const pv = validateScript(ps, corpusOf(loadTopic(f.topic)), passageReader(f.root), {
-        review: readJson<ScriptReviewFile>(join(pdir, 'script-review.json')),
-        judgments: loadReview(f.topic, f.root).applicability,
-        previous: readJson<ScriptValidation>(join(pdir, 'validation.json')),
-        pkg: readJson<EvidencePackage>(join(pdir, 'evidence-package.json')),
-        hashDoc: docHasher(docReader(f.root)),
-      });
-      writeFileSync(join(pdir, 'validation.json'), toJson(pv));
-      const again = productionOf(f.topic, f.story, f.root)!;
-      expect(again.stage).toBe('package');
-      expect(again.halt?.kind).toBe('stale');
-      expect(again.next).toBe(`npm run shorts -- discover ${f.topic} ${f.parent}`);
-    } finally {
-      f.cleanup();
-    }
-  });
-  it('answers boardNext for a short from its candidate and lists it under the parent', () => {
+  it(
+    'drives a packaged short through the same stages and stales its package when the parent is revised',
+    { timeout: 60_000 },
+    () => {
+      const f = syntheticShort('packaged');
+      try {
+        const prod = productionOf(f.topic, f.story, f.root)!;
+        expect(prod.stage).toBe('packaged');
+        expect(prod.checks[0]).toMatchObject({ name: 'evidence package', health: 'current' });
+        expect(prod.checks.map((c) => c.name)).toContain('release');
+        // the parent is revised: a sentence changes, its validation is re-run and written; the short's package is stale
+        const pdir = scriptDir(f.topic, f.parent, f.root);
+        const ps = readJson<Script>(join(pdir, 'script.json'))!;
+        const first = ps.sections[0].sentences[0];
+        first.text = `${first.text} Revised.`;
+        ps.revision += 1;
+        writeFileSync(join(pdir, 'script.json'), toJson(ps));
+        const pv = validateScript(ps, corpusOf(loadTopic(f.topic)), passageReader(f.root), {
+          review: readJson<ScriptReviewFile>(join(pdir, 'script-review.json')),
+          judgments: loadReview(f.topic, f.root).applicability,
+          previous: readJson<ScriptValidation>(join(pdir, 'validation.json')),
+          pkg: readJson<EvidencePackage>(join(pdir, 'evidence-package.json')),
+          hashDoc: docHasher(docReader(f.root)),
+        });
+        writeFileSync(join(pdir, 'validation.json'), toJson(pv));
+        const again = productionOf(f.topic, f.story, f.root)!;
+        expect(again.stage).toBe('package');
+        expect(again.halt?.kind).toBe('stale');
+        expect(again.next).toBe(`npm run shorts -- discover ${f.topic} ${f.parent}`);
+      } finally {
+        f.cleanup();
+      }
+    },
+  );
+  // topicBoard derives every video of the topic and every Short under them: well over the default 5 s budget
+  it('answers boardNext for a short from its candidate and lists it under the parent', { timeout: 60_000 }, () => {
     const f = syntheticShort('reviewed');
     try {
       const n = boardNext(f.topic, f.story, f.root);
@@ -429,16 +434,20 @@ describe('shorts on the board', () => {
       f.cleanup();
     }
   });
-  it('shows a packaged short under its parent with its own stage and no ledger view until it is added', () => {
-    const f = syntheticShort('packaged');
-    try {
-      const row = topicBoard(f.topic, f.root).stories.find((s) => s.story.id === f.parent)!;
-      const sr = row.shorts[0];
-      expect(sr.production?.stage).toBe('packaged');
-      expect(sr.production?.publish).toBeNull();
-      expect(sr.next).toBe(sr.production!.next);
-    } finally {
-      f.cleanup();
-    }
-  });
+  it(
+    'shows a packaged short under its parent with its own stage and no ledger view until it is added',
+    { timeout: 60_000 },
+    () => {
+      const f = syntheticShort('packaged');
+      try {
+        const row = topicBoard(f.topic, f.root).stories.find((s) => s.story.id === f.parent)!;
+        const sr = row.shorts[0];
+        expect(sr.production?.stage).toBe('packaged');
+        expect(sr.production?.publish).toBeNull();
+        expect(sr.next).toBe(sr.production!.next);
+      } finally {
+        f.cleanup();
+      }
+    },
+  );
 });
