@@ -3,6 +3,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, topicDir, TOPICS, ROOT } from './io';
+import { commissionOf } from '../config/site';
 
 import type { Verdict } from './corpus';
 export type { Verdict };
@@ -176,6 +177,10 @@ export function topicNames(): string[] {
     .map((d) => d.name)
     .filter((n) => (readJson<Report>(join(topicDir(n), 'report.json'))?.topics[0]?.claims.length ?? 0) > 0);
 }
+
+/** The topics the public site shows: those an institution has claimed (`commissions` in the site config). The rest
+ *  stay in the repo and on the dev server's working pages only. */
+export const publicTopicNames = (): string[] => topicNames().filter((n) => commissionOf(n));
 
 export function loadTopic(name: string): Topic {
   const dir = topicDir(name);

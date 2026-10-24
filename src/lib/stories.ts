@@ -88,6 +88,16 @@ const MIN_REPEATED = 3; // sources repeating a claim before it counts as popular
 const MIN_GAP = 5; // sources repeating an unchecked claim before the gap is a story
 const round = (n: number) => Math.round(n * 100) / 100;
 const slug = (id: string) => id.split('/').pop()!;
+/** A story's public page is `/<topic>/<storyUrlSlug>/`: the id without its kind (the kind is classification, never
+ *  shown). Unique within a topic today; `getStaticPaths` would collide loudly if that changed. */
+export const storyUrlSlug = (s: Pick<Story, 'id'>) => s.id.split(':')[1];
+/** A recap group's slug: the tail of its decision story's id, and the group's anchor on the topic page. */
+export const groupSlug = (title: string) =>
+  title
+    .replace(/\?$/, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
 const plain = (c: ClaimView) => c.text.replace(/\.$/, '');
 const q = (c: ClaimView) => `"${plain(c)}"`;
 const lc = (s: string) => (/^[A-Z][a-z]/.test(s) ? s[0].toLowerCase() + s.slice(1) : s);
@@ -349,10 +359,7 @@ function decisionDrafts(t: StoryInput): Draft[] {
     const title = g.title.replace(/\?$/, '');
     return [
       {
-        id: `decision:${title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/(^-|-$)/g, '')}`,
+        id: `decision:${groupSlug(g.title)}`,
         kind: 'decision',
         question: g.title.endsWith('?') ? g.title : `${title}: what should you do?`,
         alternates: [`What the research says about ${lc(title)}`, `${title}: a decision guide`],
