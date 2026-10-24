@@ -19,6 +19,7 @@ interface Account {
   url: string;
   avatar: string; // slot id in the kit
   banner?: string; // slot id in the kit
+  watermark?: string; // slot id in the kit (YouTube's branding watermark)
   description: string;
   keywords?: string[];
   links?: { title: string; url: string }[];
@@ -75,7 +76,7 @@ describe('brand kits', () => {
         expect(yt.description).toContain(site.disclosure);
       }
       for (const [platform, a] of Object.entries(acc.accounts)) {
-        for (const slot of [a.avatar, a.banner].filter(Boolean) as string[])
+        for (const slot of [a.avatar, a.banner, a.watermark].filter(Boolean) as string[])
           expect(kit.assets[slot], `${platform}: slot ${slot} not in the kit`).toBeDefined();
         expect(DESCRIPTION_LIMIT[platform], `no description limit for ${platform}`).toBeDefined();
         expect(a.description.length, platform).toBeLessThanOrEqual(DESCRIPTION_LIMIT[platform]);
