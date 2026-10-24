@@ -259,6 +259,12 @@ describe('next steps', () => {
   it('run and send-back prompts', () => {
     expect(runPromptOf('t', 's')).toBe('/produce t s\nApprover: <your name>');
     expect(sendBackPromptOf('t', 's')).toBe('/produce t s\nApprover: <your name>\nNotes:\n- ');
+    expect(
+      sendBackPromptOf('t', 's/shorts/x', [
+        { text: 'too fast', seconds: 239, scene: 'sc20', sentence: 's31' },
+        { text: 'plain' },
+      ]),
+    ).toBe('/produce t s/shorts/x\nApprover: <your name>\nNotes:\n- [3:59 sc20 s31] too fast\n- plain');
   });
 
   it('promptOf carries the notes and corrective modes', () => {
@@ -315,6 +321,7 @@ describe('board columns', () => {
     expect(columnOf(at('approved'))).toBe('approved');
     expect(columnOf(at('scheduled'))).toBe('scheduled');
     expect(columnOf(at('published'))).toBe('published');
+    expect(columnOf(at('changes-requested'))).toBe('changes-requested');
     expect(columnOf(at('published', 'validate'))).toBe('published'); // live stays live when the script is edited
     expect(columnOf(at('metadata-behind', 'validate', true))).toBe('published'); // and when its thumbnail changes
   });

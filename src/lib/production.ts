@@ -19,8 +19,10 @@ import {
   type Build,
   type Ledger,
   type OutputState,
+  type ReviewNote,
   type UploadMetadata,
   currentBuild,
+  noteLine,
   emptyLedger,
   loadLedger,
   mainOutput,
@@ -873,6 +875,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
       topic,
       story: ledgerStory,
       root,
+      titleOf: (id) => metadata[id]?.title ?? null,
     });
     const ids = own ? [own] : Object.keys(c.ledger.outputs);
     c.publish = {
@@ -1192,6 +1195,7 @@ export const COLUMNS = [
   'ready',
   'producing',
   'your-review',
+  'changes-requested',
   'uploaded',
   'approved',
   'scheduled',
@@ -1204,7 +1208,8 @@ export function columnOf(r: StoryRow): Column | null {
   if (r.decision?.decision === 'parked') return 'parked';
   const main = mainState(r.production);
   if (main?.live) return 'published';
-  if (main?.status === 'scheduled' || main?.status === 'approved') return main.status;
+  if (main?.status === 'scheduled' || main?.status === 'approved' || main?.status === 'changes-requested')
+    return main.status;
   if (main?.status === 'uploaded' || main?.status === 'metadata-behind') return 'uploaded';
   if (r.story.partOf) return null;
   if (r.production) return r.production.stage === 'packaged' ? 'your-review' : 'producing';
@@ -1226,7 +1231,8 @@ export interface Step {
 /** The prompt that starts or resumes a whole /produce run (.claude/skills/produce/SKILL.md) on one story. */
 export const runPromptOf = (topic: string, storyId: string) => `/produce ${topic} ${storyId}\nApprover: <your name>`;
 /** The same run as a send-back pass: the editor's notes go after the last line. */
-export const sendBackPromptOf = (topic: string, storyId: string) => `${runPromptOf(topic, storyId)}\nNotes:\n- `;
+export const sendBackPromptOf = (topic: string, storyId: string, notes: ReviewNote[] = []) =>
+  `${runPromptOf(topic, storyId)}\nNotes:\n${notes.length ? notes.map((n) => `- ${noteLine(n)}`).join('\n') : '- '}`;
 
 const MODES: Record<string, string> = {
   revise:

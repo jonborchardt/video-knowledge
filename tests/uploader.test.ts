@@ -1,10 +1,18 @@
 // The uploader verbs over the ledger with a fake YouTube client: what they send, what they record, what they refuse,
 // and how a crash or a lost session is recovered without a second upload.
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { readJson, sha, toJson } from '../src/lib/io';
-import { type Ledger, addOutputTo, loadLedger, recordApproved, saveLedger, publishPath } from '../src/lib/publish';
+import {
+  type Ledger,
+  addOutputTo,
+  loadLedger,
+  recordApproved,
+  recordUploaded,
+  saveLedger,
+  publishPath,
+} from '../src/lib/publish';
 import { Refusal } from '../src/lib/publish';
 import { storySlug } from '../src/lib/script';
 import {
@@ -19,7 +27,7 @@ import {
   uploadProblem,
 } from '../src/lib/uploader';
 import { type RemoteVideo, type YouTubeClient, YouTubeError } from '../src/lib/youtube';
-import { type Fixture, syntheticProduction } from './production-helpers';
+import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
 
 /** The packaged fixture has no media; give it an mp4 the review.json describes and the thumbnail it names. */
 function withMedia(f: Fixture): Fixture {
@@ -442,3 +450,21 @@ describe('sync', () => {
   });
 });
 void readFileSync;
+
+describe('goLive on a Short', () => {
+  it('refuses while the parent video is not live, and calls nothing', async () => {
+    const f = syntheticShort('packaged', { release: true });
+    fixtures.push(f);
+    const source = relative(f.root, f.dir).split(sep).join('/');
+    addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+      derivedFrom: 'youtube',
+      source,
+      root: f.root,
+    });
+    recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'bbbbbbbbbbb' });
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    const client = fakeClient();
+    await expect(goLive(f.topic, f.story, ctx(f, client))).rejects.toThrow(/youtube first/);
+    expect(client.calls).toEqual([]);
+  });
+});

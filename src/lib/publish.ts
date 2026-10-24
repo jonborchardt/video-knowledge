@@ -7,13 +7,14 @@ import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'n
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { lf, readJson, ROOT, sha, toJson } from './io';
 import { approverProblem } from './release';
-import { scriptDir, shortOf, storySlug } from './script';
+import { scriptDir, shortId, shortOf, storySlug } from './script';
 import { loadStories } from './stories';
 
 export const PUBLISH_FILE = 'publish.json';
 export const EVENT_TYPES = [
   'uploaded',
   'approved',
+  'changes-requested',
   'scheduled',
   'published',
   'unpublished',
@@ -26,6 +27,21 @@ export type EventType = (typeof EVENT_TYPES)[number];
 export const KNOWN_KINDS = ['youtube-video', 'youtube-short', 'blog-post', 'web-page', 'post'] as const;
 export type Visibility = 'private' | 'unlisted' | 'public';
 
+/** One reviewer note on a build: where in the video it is (any of the three, all optional) and what to change. */
+export interface ReviewNote {
+  text: string;
+  scene?: string;
+  sentence?: string;
+  seconds?: number;
+}
+/** m:ss of a time in seconds. */
+export const stampOf = (seconds: number) =>
+  `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, '0')}`;
+/** A note as one line, its place first: `[3:59 sc20 s31] too fast`, or just the text. */
+export const noteLine = (n: ReviewNote) => {
+  const at = [n.seconds === undefined ? '' : stampOf(n.seconds), n.scene ?? '', n.sentence ?? ''].filter(Boolean);
+  return at.length ? `[${at.join(' ')}] ${n.text}` : n.text;
+};
 export interface PublishEvent {
   at: string; // ISO
   type: EventType;
@@ -42,6 +58,8 @@ export interface PublishEvent {
   error?: string; // failed
   retryable?: boolean; // failed
   note?: string;
+  notes?: ReviewNote[]; // changes-requested
+  title?: string; // approved: the composed title the person approved with the build
 }
 export interface OutputMetadata {
   title?: string;
@@ -77,6 +95,7 @@ export const emptyLedger = (video: string): Ledger => ({
 const REQUIRED: Record<EventType, (keyof PublishEvent)[]> = {
   uploaded: ['build', 'metadata', 'id'],
   approved: ['build'],
+  'changes-requested': ['build', 'notes'],
   scheduled: ['id', 'publishAt'],
   published: ['id'],
   unpublished: ['id', 'note'],
@@ -152,6 +171,8 @@ export function eventKey(e: PublishEvent): string | null {
       return `uploaded|${e.build}|${e.id}`;
     case 'approved':
       return `approved|${e.build}`;
+    case 'changes-requested':
+      return `changes-requested|${e.build}|${sha(JSON.stringify(e.notes ?? []))}`;
     case 'scheduled':
       return `scheduled|${e.id}|${e.publishAt}`;
     case 'published':
@@ -182,6 +203,12 @@ export function appendEvent(
       .reverse()
       .find((x) => (x.type === 'published' || x.type === 'unpublished') && x.id === e.id);
     existing = latest?.type === e.type ? latest : null;
+  } else if (e.type === 'approved' || e.type === 'changes-requested') {
+    // approve, send back, approve again are three decisions; only a repeat of the latest decision on the build is one
+    const latest = o.events.findLast(
+      (x) => (x.type === 'approved' || x.type === 'changes-requested') && x.build === e.build,
+    );
+    existing = latest && eventKey(latest) === key ? latest : null;
   } else if (key !== null) existing = o.events.find((x) => eventKey(x) === key) ?? null;
   if (existing) return { ledger, existing };
   return {
@@ -252,6 +279,7 @@ export type OutputStatus =
   | 'not-uploaded'
   | 'uploaded'
   | 'approved'
+  | 'changes-requested'
   | 'scheduled'
   | 'published'
   | 'metadata-behind'
@@ -261,6 +289,7 @@ export interface OutputState {
   status: OutputStatus;
   live: boolean; // published and not since unpublished, whatever else the status says (metadata-behind keeps it live)
   failed: PublishEvent | null; // an overlay: the last event, when it is a failure
+  requested: PublishEvent | null; // the changes-requested event that holds the current build, if any
   id: string | null;
   url: string | null;
   uploadedBuild: string | null; // build of the last upload
@@ -274,6 +303,7 @@ export interface StateContext {
   output: string;
   now?: Date;
   parentLive?: boolean; // for a derivative: whether the output it derives from is published (default: yes)
+  title?: string | null; // the composed title now; an approval made with another title does not count (absent: any)
 }
 /** The flow a kind follows: YouTube outputs are uploaded, watched and approved; anything else is made, approved, published. */
 export const flowOf = (kind: string): 'youtube' | 'generic' => (kind.startsWith('youtube') ? 'youtube' : 'generic');
@@ -294,8 +324,15 @@ export function outputState(
   const uploads = ev.filter((e) => e.type === 'uploaded');
   const upload = uploads.at(-1) ?? null;
   const id = upload?.id ?? null;
-  const approved = !!upload && ev.some((e) => e.type === 'approved' && e.build === upload.build);
-  const localApproved = !!build && ev.some((e) => e.type === 'approved' && e.build === build.sha);
+  // The latest decision on a build decides it: an approval (with the title it was made with) or a change request.
+  const decision = (b: string) =>
+    ev.findLast((e) => (e.type === 'approved' || e.type === 'changes-requested') && e.build === b) ?? null;
+  const holds = (d: PublishEvent | null) =>
+    d?.type === 'approved' && (d.title === undefined || ctx.title == null || d.title === ctx.title);
+  const approved = !!upload && holds(decision(upload.build!));
+  const localApproved = !!build && holds(decision(build.sha));
+  const judged = upload && (!build || build.sha === upload.build) ? upload.build! : build?.sha;
+  const requested = judged ? decision(judged) : null;
   // an unpublish closes a chapter: the schedule and publication before it are history
   const cut = id ? ev.findLastIndex((e) => e.type === 'unpublished' && e.id === id) : -1;
   const since = ev.slice(cut + 1);
@@ -312,6 +349,7 @@ export function outputState(
   const base: Omit<OutputState, 'status' | 'next' | 'due'> = {
     live,
     failed,
+    requested: requested?.type === 'changes-requested' ? requested : null,
     id,
     url: id ? url : null,
     uploadedBuild: upload?.build ?? null,
@@ -325,6 +363,8 @@ export function outputState(
       ? `${failed.step} failed: ${failed.error}${failed.retryable ? `; retry it, then ${next}` : '; a person decides'}`
       : next,
   });
+  const short = ctx.output.startsWith('short:') ? shortId(ctx.story, ctx.output.slice('short:'.length)) : null;
+  const sendBack = `send it back with the reviewer's notes: /produce ${ctx.topic} ${short ?? ctx.story}`;
   const first = ctx.parentLive === false && output.derivedFrom ? `publish ${output.derivedFrom} first; then ` : '';
 
   if (ev.some((e) => e.type === 'retracted')) return done('retracted', 'retracted; nothing to do');
@@ -346,6 +386,7 @@ export function outputState(
     );
   }
   if (!upload) {
+    if (base.requested) return done('changes-requested', sendBack);
     if (localApproved) return done('approved', `${verb('upload')}, then ${verb('go-live')}`);
     return done(
       'not-uploaded',
@@ -367,6 +408,7 @@ export function outputState(
       'build-behind',
       `a new ${build.status} build ${build.sha} is packaged (uploaded: ${upload.build}), then ${verb('upload')}`,
     );
+  if (base.requested && !live) return done('changes-requested', sendBack);
   if (!build && !approved)
     return done(
       'uploaded',
@@ -400,14 +442,14 @@ export function outputStates(
   ledger: Ledger,
   build: Build | null,
   metadataShaOf: (id: string, o: Output) => string | null,
-  ctx: { topic: string; story: string; now?: Date; root?: string },
+  ctx: { topic: string; story: string; now?: Date; root?: string; titleOf?: (id: string, o: Output) => string | null },
 ): Record<string, OutputState> {
   const states: Record<string, OutputState> = {};
-  const { root = ROOT, ...rest } = ctx;
+  const { root = ROOT, titleOf, ...rest } = ctx;
   const state = (id: string, parentLive?: boolean) => {
     const o = ledger.outputs[id];
     const b = o.source ? sourceBuild(root, o.source) : build;
-    return outputState(o, b, metadataShaOf(id, o), { ...rest, output: id, parentLive });
+    return outputState(o, b, metadataShaOf(id, o), { ...rest, output: id, parentLive, title: titleOf?.(id, o) });
   };
   for (const id of Object.keys(ledger.outputs)) states[id] = state(id);
   for (const [id, o] of Object.entries(ledger.outputs))
@@ -533,8 +575,16 @@ export function openOutput(topic: string, storyId: string, a: { output?: string;
   const rel = (f: string) => `topics/${topic}/scripts/${storySlug(storyId)}/${f}`;
   const build = out.source ? sourceBuild(root, out.source) : currentBuild(dir);
   const metadata = uploadMetadataOf(dir, rel, out, parentUrlOf(ledger, out), root);
-  const state = outputState(out, build, metadata?.sha ?? null, { topic, story: storyId, output: id });
-  return { root, dir, path, ledger, id, out, rel, build, metadata, state };
+  // a derivative (a Short) goes live only after the output it derives from
+  const parentLive = out.derivedFrom ? parentUrlOf(ledger, out) !== null : true;
+  const state = outputState(out, build, metadata?.sha ?? null, {
+    topic,
+    story: storyId,
+    output: id,
+    parentLive,
+    title: metadata?.title ?? null,
+  });
+  return { root, dir, path, ledger, id, out, rel, build, metadata, state, parentLive };
 }
 function write(o: ReturnType<typeof openOutput>, e: PublishEvent, then?: (l: Ledger) => Ledger): VerbResult {
   const r = appendEvent(o.ledger, o.id, e);
@@ -593,11 +643,19 @@ export function recordUploaded(
 export function recordApproved(
   topic: string,
   storyId: string,
-  a: VerbArgs & { note?: string; build?: string; accepted?: boolean },
+  a: VerbArgs & { note?: string; build?: string; accepted?: boolean; checked?: number },
 ): VerbResult {
   const problem = approverProblem(a.by);
   if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
+  // publication is authorised by a person: an automated run may lock a script, never approve a build
+  if (!a.accepted && a.by.trim().startsWith('automated:'))
+    throw new Refusal('a build is approved by a person, never by an automated run');
   const o = openOutput(topic, storyId, a);
+  if (a.checked !== undefined) {
+    const list = reviewJsonOf(o)?.checklist ?? [];
+    if (a.checked < list.length)
+      throw new Refusal(`${a.checked} of ${list.length} checklist items ticked; every one is needed to approve`);
+  }
   // a generic output (blog post, page, post) is approved as its source file: that file's sha stands in for the build
   const generic = flowOf(o.out.kind) === 'generic';
   const build = a.build ?? o.build?.sha ?? (generic ? 'none' : undefined);
@@ -615,9 +673,36 @@ export function recordApproved(
       `build ${build} has no upload to approve and is not the release build on disk; upload it first (a draft is accepted by npm run video -- final)`,
     );
   const e: PublishEvent = { at: stamp(a), type: 'approved', by: a.by, build };
+  if (o.metadata?.title) e.title = o.metadata.title;
   if (uploaded?.id) e.id = uploaded.id;
   if (a.note) e.note = a.note;
   return write(o, e);
+}
+
+/** The output's review package (a Short's own, in its folder), or null. */
+const reviewJsonOf = (o: ReturnType<typeof openOutput>) => {
+  const nested = nestedSource(o.root, o.out);
+  return readJson<{ checklist?: string[] }>(
+    join(nested ? join(o.root, nested) : o.dir, 'video', 'review', 'review.json'),
+  );
+};
+
+/** A person sends the current build back with notes; a later approval of the same build (or a new build) moves on. */
+export function recordChangesRequested(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { build: string; notes: ReviewNote[] },
+): VerbResult {
+  const problem = approverProblem(a.by);
+  if (problem || a.by.trim().startsWith('automated:'))
+    throw new Refusal('a change request needs a person’s name (--by)');
+  const notes = a.notes.filter((n) => n.text?.trim());
+  if (!notes.length) throw new Refusal('a change request needs at least one note');
+  const o = openOutput(topic, storyId, a);
+  if (!o.build || o.build.sha !== a.build)
+    throw new Refusal(`build ${a.build} is not the current build (${o.build?.sha ?? 'none'}); reload and review it`);
+  if (o.state.live) throw new Refusal(`${o.id} is live; a re-release is a new output (npm run publish -- add)`);
+  return write(o, { at: stamp(a), type: 'changes-requested', by: a.by, build: a.build, notes });
 }
 
 /** The last upload's build status: a draft (edge voice) is never scheduled or published. */

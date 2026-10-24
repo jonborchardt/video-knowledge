@@ -3,7 +3,7 @@
 // person (or later an uploader) did.
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
 import { readJson, sha } from '../src/lib/io';
 import { storySlug } from '../src/lib/script';
@@ -37,8 +37,11 @@ import {
   uploadMetadataOf,
   sourceBuild,
   nestedSource,
+  openOutput,
+  publishPath,
+  recordChangesRequested,
 } from '../src/lib/publish';
-import { type Fixture, syntheticProduction } from './production-helpers';
+import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -690,5 +693,117 @@ describe('a nested production as an output source (a Short)', () => {
     const main = uploadMetadataOf(parent, rel, { kind: 'youtube-video', metadata: {}, events: [] }, null, root)!;
     expect(main.title).toBe('Parent');
     expect(main.file).toBe('topics/t/scripts/parent/video/review/parent.mp4');
+  });
+});
+
+describe('review decisions (the review page)', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const a = <T extends object>(f: Fixture, extra: T = {} as T) => ({ root: f.root, by: 'Jon', now, ...extra });
+  const note = { text: 'too fast here', scene: 'sc02', sentence: 's02', seconds: 4 };
+
+  it('approval binds the title: a hand-edited title asks for approval again', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const r = recordApproved(f.topic, f.story, a(f));
+      expect(r.event!.title).toBeTruthy();
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).toBe('approved');
+      const l = loadLedger(f.topic, f.story, f.root)!;
+      l.outputs.youtube.metadata.title = 'A different title';
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).not.toBe('approved');
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('an old approval without a title still counts', () => {
+    const out: Output = { kind: 'youtube-video', metadata: {}, events: [ev('approved', { build: 'r1' })] };
+    const ctx = { topic: 't', story: 's', output: 'youtube', title: 'Anything' };
+    expect(outputState(out, { sha: 'r1', status: 'release' }, 'm1', ctx).status).toBe('approved');
+  });
+
+  it('changes requested on the current build wins over an earlier approval, and a later approval wins back', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      recordApproved(f.topic, f.story, a(f));
+      const r = recordChangesRequested(f.topic, f.story, a(f, { build: 'releasesha', notes: [note] }));
+      expect(r.event).toMatchObject({ type: 'changes-requested', build: 'releasesha', notes: [note] });
+      const s = openOutput(f.topic, f.story, { root: f.root }).state;
+      expect(s.status).toBe('changes-requested');
+      expect(s.requested?.notes).toEqual([note]);
+      expect(s.next).toContain('/produce');
+      recordApproved(f.topic, f.story, a(f, { now: new Date('2026-10-27T00:00:00Z') }));
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).toBe('approved');
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('changes requested on an old build does not hold a new one', () => {
+    const out: Output = {
+      kind: 'youtube-video',
+      metadata: {},
+      events: [ev('changes-requested', { build: 'r1', notes: [note] })],
+    };
+    const ctx = { topic: 't', story: 's', output: 'youtube' };
+    expect(outputState(out, { sha: 'r1', status: 'release' }, 'm1', ctx).status).toBe('changes-requested');
+    expect(outputState(out, { sha: 'r2', status: 'release' }, 'm1', ctx).status).toBe('not-uploaded');
+  });
+
+  it('request changes refuses empty notes, a stale build and a placeholder name; it is idempotent', () => {
+    const f = syntheticProduction('packaged');
+    try {
+      expect(() => recordChangesRequested(f.topic, f.story, a(f, { build: 'draftsha', notes: [] }))).toThrow(Refusal);
+      expect(() => recordChangesRequested(f.topic, f.story, a(f, { build: 'old', notes: [note] }))).toThrow(
+        /current build/,
+      );
+      expect(() =>
+        recordChangesRequested(f.topic, f.story, a(f, { by: '<name>', build: 'draftsha', notes: [note] })),
+      ).toThrow(/name/);
+      // a draft can be sent back (it cannot be approved)
+      expect(recordChangesRequested(f.topic, f.story, a(f, { build: 'draftsha', notes: [note] })).existing).toBe(false);
+      expect(recordChangesRequested(f.topic, f.story, a(f, { build: 'draftsha', notes: [note] })).existing).toBe(true);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('approve refuses an automated approver and an unticked checklist', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      const rp = join(f.dir, 'video', 'review', 'review.json');
+      writeFileSync(rp, JSON.stringify({ ...readJson<object>(rp), checklist: ['one', 'two'] }));
+      expect(() => recordApproved(f.topic, f.story, a(f, { by: 'automated: /produce run started by Jon' }))).toThrow(
+        /person/,
+      );
+      expect(() => recordApproved(f.topic, f.story, a(f, { checked: 1 }))).toThrow(/checklist/);
+      expect(recordApproved(f.topic, f.story, a(f, { checked: 2 })).existing).toBe(false);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it("a Short's decisions land on short:<slug> in the parent's ledger, bound to the Short's own build and title", () => {
+    const f = syntheticShort('packaged', { release: true });
+    try {
+      const source = relative(f.root, f.dir).split(sep).join('/');
+      addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+        derivedFrom: 'youtube',
+        source,
+        root: f.root,
+      });
+      recordChangesRequested(f.topic, f.story, a(f, { build: 'shortreleasesha', notes: [note] }));
+      const l = loadLedger(f.topic, f.parent, f.root)!;
+      expect(l.outputs['short:fixture-short'].events.map((e) => e.type)).toEqual(['changes-requested']);
+      expect(l.outputs.youtube.events).toEqual([]);
+      const s = openOutput(f.topic, f.story, { root: f.root }).state;
+      expect(s.next).toContain(`/produce ${f.topic} ${f.story}`);
+      const r = recordApproved(f.topic, f.story, a(f, { now: new Date('2026-10-27T00:00:00Z') }));
+      expect(r.event).toMatchObject({ build: 'shortreleasesha' });
+      expect(r.event!.title).toBe(openOutput(f.topic, f.story, { root: f.root }).metadata!.title);
+      expect(openOutput(f.topic, f.story, { root: f.root }).parentLive).toBe(false);
+    } finally {
+      f.cleanup();
+    }
   });
 });

@@ -99,6 +99,11 @@ const COLUMN: Record<Column, { label: string; help: string; colour: string }> = 
     help: 'uploaded privately: watch it, then approve the release build or run final on a draft (publish.json)',
     colour: 'text-warning',
   },
+  'changes-requested': {
+    label: 'Changes requested',
+    help: 'a reviewer sent this build back: paste the send-back prompt (it carries the notes) into Claude Code',
+    colour: 'text-warning',
+  },
   approved: {
     label: 'Approved',
     help: 'the uploaded build is approved: set it public or schedule it, then record that (publish.json)',
@@ -389,6 +394,7 @@ const stripOf = (r: StoryRow) => {
                       topic={r.topic.name}
                       story={r.story.id}
                       upload={r.production?.upload}
+                      notes={mainState(r.production)?.requested?.notes}
                       stage={
                         r.decision
                           ? undefined
@@ -474,6 +480,7 @@ const stripOf = (r: StoryRow) => {
               topic={p!.topic}
               story={p!.story}
               upload={p!.upload}
+              notes={mainState(p)?.requested?.notes}
               stage={p!.stage}
             />
             {p!.blockers.length > 0 && (
@@ -671,6 +678,7 @@ const stripOf = (r: StoryRow) => {
                           topic={r.topic.name}
                           story={s.id ?? r.story.id}
                           upload={s.production?.upload}
+                          notes={mainState(s.production)?.requested?.notes}
                           stage={s.production?.stage ?? (s.readiness === 'ready' ? 'ready' : undefined)}
                         />
                       )}

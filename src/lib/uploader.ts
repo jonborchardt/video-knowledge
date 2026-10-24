@@ -232,6 +232,7 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
     return { event: null, existing: true, message: `${o.id} is already ${o.state.status}: ${o.state.next}` };
   if (o.state.status !== 'approved') throw new Refusal(`${o.id} is ${o.state.status}, not approved: ${o.state.next}`);
   if (!o.state.id) throw new Refusal(`${o.id} is approved but not uploaded yet: ${o.state.next}`);
+  if (!o.parentLive) throw new Refusal(`${o.id} derives from ${o.out.derivedFrom}: publish ${o.out.derivedFrom} first`);
   const id = o.state.id;
   if (c.at) {
     const t = Date.parse(c.at);

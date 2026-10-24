@@ -4,6 +4,8 @@
 //                                                             record an upload of the packaged build (public needs a prior approve; it also records published)
 //   approve <topic> <story-id> --by <name> [--note <text>]    approve the uploaded build, or the release build on disk (a draft is accepted by video final)
 //   thumbnail <topic> <story-id> <file>                       use this PNG/JPEG (under the script directory, e.g. video/publish/) as the output's thumbnail
+//   request-changes <topic> <story-id> --by <name> --note <text> [--note <text> ...]
+//                                                             send the current build back; a note may start [m:ss sc20 s31]
 //   scheduled <topic> <story-id> --at <ISO> [--by <name>]     the approved upload is scheduled on YouTube for that time
 //   published <topic> <story-id> [--url <u>] [--by <name>]    the approved or scheduled upload is live
 //   updated <topic> <story-id> --fields a,b [--by <name>]     title, description, tags or thumbnail were updated on YouTube to the current metadata
@@ -37,6 +39,8 @@ import {
   outputStates,
   parentUrlOf,
   recordApproved,
+  recordChangesRequested,
+  openOutput,
   recordFailed,
   recordPublished,
   recordScheduled,
@@ -158,6 +162,12 @@ async function main() {
     case 'approve':
       r = recordApproved(topic, storyId, { output, by: flag('--by') ?? '', note: flag('--note') });
       break;
+    case 'request-changes': {
+      const notes = rest.flatMap((x, i) => (rest[i - 1] === '--note' ? [{ text: x }] : []));
+      const build = openOutput(topic, storyId, { output }).build?.sha ?? '';
+      r = recordChangesRequested(topic, storyId, { output, by: flag('--by') ?? '', build, notes });
+      break;
+    }
     case 'thumbnail':
       console.log(`thumbnail sha ${setThumbnail(topic, storyId, { output, file: positional[0] ?? '' })}`);
       break;
