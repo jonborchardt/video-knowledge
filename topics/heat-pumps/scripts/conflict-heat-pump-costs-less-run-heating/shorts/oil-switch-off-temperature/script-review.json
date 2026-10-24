@@ -2,16 +2,13 @@
   "reviewer": "scripts/briefs/script-review.md",
   "model": "claude-fable-5-1",
   "date": "2026-10-24",
-  "revision": 1,
-  "packageFingerprint": "cf04f8a5d5",
+  "revision": 2,
+  "packageFingerprint": "1c3ed97505",
   "approved": {
     "s01": "e8fe470b7e",
-    "s02": "3a59df84d0",
-    "s03": "bdc986ddf8",
-    "s04": "43eabf7380",
-    "s05": "e9d7dbf76a",
-    "s06": "e1f11b43a3",
-    "s07": "630be5b176"
+    "s02": "ed80c90027",
+    "s04": "8096d0508d",
+    "s06": "8401e4c6c7"
   },
   "findings": [
     {
@@ -34,33 +31,56 @@
       "explanation": "Title and hook read alone: 'The evaluators said turn the heat pump off below 8 degrees. A year later, 25.' attributes the advice and the year-to-year jump signals it is not a fixed rule; s02 dates the thresholds, s03 ties them to that year's prices and cold COP in the next sentence, s04 scopes them to one evaluation of oil-heated homes. No figure is a rule a viewer could carry off.",
       "refs": ["heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"],
       "suggestion": "None."
+    },
+    {
+      "sentence": "s04",
+      "assertion": "s04.a",
+      "fingerprint": "8096d0508d",
+      "revision": 2,
+      "category": "missing-qualification",
+      "severity": "info",
+      "explanation": "The narration compresses the passage's 'nearly always less expensive than electric resistance' (L1188-L1191) and 'always less expensive than propane' (L1194-L1195) to 'found the heat pump cheaper'. The only exception the passage names for resistance is non-cold-climate units approaching a COP of 1.0, parity with resistance, for 'very few' hours; it names no case where resistance was cheaper, so 'cheaper' states the finding's direction without overstating it. Not misleading in a Short; the modality is lost, not reversed.",
+      "refs": ["heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"],
+      "suggestion": "If three words fit, 'it found the heat pump cheaper, nearly always against resistance'."
+    },
+    {
+      "sentence": "s04",
+      "assertion": "s04.a",
+      "fingerprint": "8096d0508d",
+      "revision": 2,
+      "category": "needs-human",
+      "severity": "info",
+      "explanation": "short.carries names 'Massachusetts and Rhode Island homes'; revision 2 dropped the states (on the revision-1 suggestion). The break points are a function of energy prices and measured COP only (L955-L961: a map of electricity and fuel prices with temperature contours), so the place limits the figures only through prices, which s02 states beside them ('set by that year's oil and electricity prices') and s06 repeats for the viewer's own case. Not treated as a carries qualification left unspoken.",
+      "refs": ["heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"],
+      "suggestion": "An editor who wants the place spoken can say 'one New England evaluation of ductless mini-splits' in s04."
+    },
+    {
+      "sentence": "s02",
+      "assertion": "s02.a",
+      "fingerprint": "ed80c90027",
+      "revision": 2,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "The report says of the balance points that 'these values do not account for zonal savings': a mini-split heating 30 percent less of the home would drop the balance point by 20F or more (L973-L975, outside the cited passage). The Short's thresholds are therefore the whole-house case; the omission runs in the heat pump's favour (the real switch-off point would be lower), and s02 already frames the figures as one year's price- and performance-dependent output rather than a rule.",
+      "refs": ["heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"],
+      "suggestion": "None needed for the Short; the parent video is the place for the zonal caveat."
     }
   ],
   "dispositions": {
     "s01.a": {
       "fingerprint": "e8fe470b7e",
       "category": "needs-qualification",
-      "reason": "The sentence reports one evaluation's switch-off advice, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil, and s04 says one evaluation, oil-heated homes only."
+      "reason": "The sentence reports one evaluation's switch-off advice, attributed as such, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil; s04 says one evaluation, oil-heated homes only, inside the Short."
     },
     "s02.a": {
-      "fingerprint": "3a59df84d0",
+      "fingerprint": "ed80c90027",
       "category": "needs-qualification",
-      "reason": "The thresholds are dated to 2015 and 2016 in the sentence, s03 ties them to that year's prices and cold COP, s04 scopes them to one evaluation; Deetjen and Bernard do not bear on an oil switchover temperature."
-    },
-    "s03.a": {
-      "fingerprint": "bdc986ddf8",
-      "category": "needs-qualification",
-      "reason": "The passage states the dependence on energy prices and cold-temperature COPs and the direction of movement in its own words; the Deetjen and Bernard limits concern whether oil homes save, not the switchover point."
+      "reason": "The thresholds are dated to 2015 and 2016 and tied in the same sentence to that year's oil and electricity prices and the heat pump's cold performance, with the direction of movement from L1201-L1202; s04 scopes them to one evaluation of oil-heated homes. Deetjen and Bernard do not bear on an oil switchover temperature."
     },
     "s04.a": {
-      "fingerprint": "43eabf7380",
+      "fingerprint": "8096d0508d",
       "category": "needs-qualification",
-      "reason": "'nearly always' and 'always' are the evaluation's own words (L1188-L1190, L1194-L1195), attributed with 'it found' and scoped to one evaluation in the same sentence; the sentence is the qualification."
-    },
-    "s05.a": {
-      "fingerprint": "e9d7dbf76a",
-      "category": "needs-qualification",
-      "reason": "'not every household' paraphrases the passage's 'may not appeal to all customer types' and is attributed to the evaluators; no claim about savings is made."
+      "reason": "'always' is the evaluation's own word for propane (L1194-L1195) and appears only in the assertion; the narration says 'it found the heat pump cheaper', attributed to and scoped by 'one evaluation of ductless mini-splits' in the same sentence. Deetjen (capital cost included) and Bernard (UK, no oil or propane) concern whether homes save overall, not this evaluation's operating-cost comparison."
     }
   }
 }

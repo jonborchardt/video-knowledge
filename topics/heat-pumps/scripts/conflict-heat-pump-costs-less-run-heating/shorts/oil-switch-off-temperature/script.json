@@ -2,14 +2,14 @@
  "topic": "heat-pumps",
  "story": "conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature",
  "title": "Heat with oil? The evaluators said turn the heat pump off below 8 degrees. A year later, 25.",
- "revision": 1,
+ "revision": 2,
  "passStartRevision": 1,
  "generation": {
   "model": "claude-fable-5-1",
   "brief": "scripts/briefs/script.md",
   "date": "2026-10-24",
   "wordsPerMinute": 150,
-  "evidencePackage": "cf04f8a5d5"
+  "evidencePackage": "1c3ed97505"
  },
  "sections": [
   {
@@ -38,7 +38,7 @@
         }
        ],
        "qualifications": [
-        "s02 gives the thresholds with their years; s03 says they are set by that year's prices and the heat pump's cold performance; s04 says this is one evaluation and the advice is for oil-heated homes only."
+        "s02 gives the thresholds with their years and ties them to that year's prices and the heat pump's cold performance; s04 says this is one evaluation of ductless mini-splits and the advice is for oil-heated homes only."
        ]
       }
      ]
@@ -50,12 +50,12 @@
    "sentences": [
     {
      "id": "s02",
-     "text": "Its switch-off point was 8 degrees Fahrenheit in 2015 and 25 degrees the year after: the outdoor temperature below which oil ran cheaper, not a saving figure.",
+     "text": "The switch-off point was 8 degrees Fahrenheit in 2015 and 25 the year after, set by that year's oil and electricity prices and the heat pump's cold performance; dearer oil moves it lower.",
      "type": "factual",
      "assertions": [
       {
        "id": "s02.a",
-       "text": "The evaluators recommended that oil-heated homeowners turn off the mini-split in very cold conditions, below 8F in 2015 and below 25F in 2016, when an oil-fired system would operate less expensively, depending on energy prices.",
+       "text": "The evaluators recommended that oil-heated homeowners turn off the mini-split in very cold conditions, below 8F in 2015 and below 25F in 2016, when an oil-fired system would operate less expensively, depending on energy prices and cold-temperature COPs; if oil prices increase against electric energy rates, the switchover temperature point may move lower.",
        "kind": "fact",
        "claims": [
         {
@@ -71,44 +71,15 @@
         }
        ],
        "qualifications": [
-        "s03 ties the thresholds to that year's energy prices and cold performance; s04 limits them to one evaluation of oil-heated homes."
+        "s02 itself ties the thresholds to that year's energy prices and the heat pump's cold performance and says dearer oil moves the point lower; s04 limits them to one evaluation of ductless mini-splits and to oil-heated homes."
        ]
       }
      ],
-     "note": "L1196-L1199: 'turn off a DMSHP during very cold outdoor conditions (below 8F in 2015 and below 25F in 2016), when an oil-fired system would operate less expensively (depending on energy prices and cold temperature COPs)'. Copied from the parent's s15.a."
-    },
-    {
-     "id": "s03",
-     "text": "The line moved because it is set by that year's oil and electricity prices and by how the heat pump performs in the cold; if oil gets dearer against electricity, the point may move lower.",
-     "type": "factual",
-     "assertions": [
-      {
-       "id": "s03.a",
-       "text": "The switch-off temperature depends on energy prices and cold-temperature COPs; if oil prices increase against electric energy rates, the switchover temperature point may move lower.",
-       "kind": "fact",
-       "claims": [
-        {
-         "id": "heat-pumps/heat-pumps-save-most-money-homes",
-         "stance": "asserts"
-        }
-       ],
-       "evidence": [
-        {
-         "kind": "study",
-         "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-         "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
-        }
-       ],
-       "qualifications": [
-        "s04 says this is one evaluation and the advice is for oil-heated homes only."
-       ]
-      }
-     ],
-     "note": "L1199-L1201: 'depending on energy prices and cold temperature COPs' and 'If oil prices increase against electric energy rates, the switchover temperature point for oil to DMSHP heat may move lower'."
+     "note": "L1196-L1201: 'turn off a DMSHP during very cold outdoor conditions (below 8F in 2015 and below 25F in 2016), when an oil-fired system would operate less expensively (depending on energy prices and cold temperature COPs)' and 'If oil prices increase against electric energy rates, the switchover temperature point for oil to DMSHP heat may move lower'. Copied from the parent's s15.a."
     },
     {
      "id": "s04",
-     "text": "This is one evaluation of ductless mini-splits in Massachusetts and Rhode Island homes, and the advice is for oil-heated homes only: against electric resistance it found the heat pump nearly always cheaper to run, and against propane, always.",
+     "text": "That is one evaluation of ductless mini-splits, and the advice is for oil-heated homes only: against propane and electric resistance it found the heat pump cheaper.",
      "type": "factual",
      "assertions": [
       {
@@ -129,40 +100,11 @@
         }
        ],
        "qualifications": [
-        "s04 itself carries the sample (one evaluation, MA and RI mini-splits) and the scope (oil-heated homes only) beside the propane and resistance results."
+        "s04 itself carries the sample (one evaluation of ductless mini-splits) and the scope (oil-heated homes only) beside the propane and resistance results."
        ]
       }
      ],
      "note": "L1188-L1190 and L1194-L1195 in the cited passage: 'nearly always be less expensive to operate than electric resistance heat' and 'always operate less expensively than propane heating systems'. The states are the document's population (package documents[].name: MA and RI)."
-    },
-    {
-     "id": "s05",
-     "text": "The evaluators allowed that not every household wishes to think about which heater to run and when.",
-     "type": "factual",
-     "assertions": [
-      {
-       "id": "s05.a",
-       "text": "The evaluators noted that this operating scheme may not appeal to all customer types, as many may not wish to concern themselves about which heating system to operate and when.",
-       "kind": "fact",
-       "claims": [
-        {
-         "id": "heat-pumps/heat-pumps-save-most-money-homes",
-         "stance": "asserts"
-        }
-       ],
-       "evidence": [
-        {
-         "kind": "study",
-         "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-         "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
-        }
-       ],
-       "qualifications": [
-        "s04 says this is one evaluation and the advice is for oil-heated homes only."
-       ]
-      }
-     ],
-     "note": "The one dry aside; L1199-L1201 of the cited passage."
     }
    ]
   },
@@ -171,12 +113,7 @@
    "sentences": [
     {
      "id": "s06",
-     "text": "If you heat with oil, check whether oil or the heat pump runs cheaper at this year's prices before the cold comes, and expect the answer to move.",
-     "type": "transitional"
-    },
-    {
-     "id": "s07",
-     "text": "Which homes a heat pump saves money in at all is the full inquiry; see the main video.",
+     "text": "If you heat with oil, ask which heater runs cheaper at this year's prices; the full inquiry asks where a heat pump pays at all.",
      "type": "transitional"
     }
    ]

@@ -1,23 +1,23 @@
 {
  "topic": "heat-pumps",
  "story": "conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature",
- "revision": 1,
- "date": "2026-10-24T16:05:55.949Z",
+ "revision": 2,
+ "date": "2026-10-24T18:33:56.806Z",
  "status": "passed",
- "scriptFingerprint": "9fe3615994",
- "packageFingerprint": "cf04f8a5d5",
+ "scriptFingerprint": "f72c0d2ac3",
+ "packageFingerprint": "1c3ed97505",
  "wordsPerMinute": 150,
- "words": 189,
- "spokenWords": 192,
- "minutes": 1.3,
+ "words": 110,
+ "spokenWords": 113,
+ "minutes": 0.8,
  "counts": {
-  "sentences": 7,
-  "factual": 5,
-  "assertions": 5,
-  "verified": 5,
+  "sentences": 4,
+  "factual": 3,
+  "assertions": 3,
+  "verified": 3,
   "blocking": 0,
   "warnings": 0,
-  "dispositioned": 5,
+  "dispositioned": 3,
   "unreviewed": 0
  },
  "revisionLimitReached": false,
@@ -121,8 +121,8 @@
        "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s01.a",
-       "suggestion": "The writer says the narration carries it: s02 gives the thresholds with their years; s03 says they are set by that year's prices and the heat pump's cold performance; s04 says this is one evaluation and the advice is for oil-heated homes only.",
-       "disposition": "The sentence reports one evaluation's switch-off advice, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil, and s04 says one evaluation, oil-heated homes only."
+       "suggestion": "The writer says the narration carries it: s02 gives the thresholds with their years and ties them to that year's prices and the heat pump's cold performance; s04 says this is one evaluation of ductless mini-splits and the advice is for oil-heated homes only.",
+       "disposition": "The sentence reports one evaluation's switch-off advice, attributed as such, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil; s04 says one evaluation, oil-heated homes only, inside the Short."
       }
      ]
     }
@@ -146,23 +146,23 @@
   {
    "id": "s02",
    "section": "finding",
-   "text": "Its switch-off point was 8 degrees Fahrenheit in 2015 and 25 degrees the year after: the outdoor temperature below which oil ran cheaper, not a saving figure.",
+   "text": "The switch-off point was 8 degrees Fahrenheit in 2015 and 25 the year after, set by that year's oil and electricity prices and the heat pump's cold performance; dearer oil moves it lower.",
    "type": "factual",
-   "fingerprint": "3a59df84d0",
-   "words": 27,
+   "fingerprint": "ed80c90027",
+   "words": 33,
    "status": "verified",
    "approved": true,
    "assertions": [
     {
      "id": "s02.a",
-     "text": "The evaluators recommended that oil-heated homeowners turn off the mini-split in very cold conditions, below 8F in 2015 and below 25F in 2016, when an oil-fired system would operate less expensively, depending on energy prices.",
+     "text": "The evaluators recommended that oil-heated homeowners turn off the mini-split in very cold conditions, below 8F in 2015 and below 25F in 2016, when an oil-fired system would operate less expensively, depending on energy prices and cold-temperature COPs; if oil prices increase against electric energy rates, the switchover temperature point may move lower.",
      "kind": "fact",
      "status": "verified",
      "validation": {
       "id": "s02.a",
-      "text": "The evaluators recommended that oil-heated homeowners turn off the mini-split in very cold conditions, below 8F in 2015 and below 25F in 2016, when an oil-fired system would operate less expensively, depending on energy prices.",
+      "text": "The evaluators recommended that oil-heated homeowners turn off the mini-split in very cold conditions, below 8F in 2015 and below 25F in 2016, when an oil-fired system would operate less expensively, depending on energy prices and cold-temperature COPs; if oil prices increase against electric energy rates, the switchover temperature point may move lower.",
       "kind": "fact",
-      "modality": "plain",
+      "modality": "possibility",
       "status": "qualified",
       "decision": "qualify",
       "review": true,
@@ -242,128 +242,36 @@
        "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s02.a",
-       "suggestion": "The writer says the narration carries it: s03 ties the thresholds to that year's energy prices and cold performance; s04 limits them to one evaluation of oil-heated homes.",
-       "disposition": "The thresholds are dated to 2015 and 2016 in the sentence, s03 ties them to that year's prices and cold COP, s04 scopes them to one evaluation; Deetjen and Bernard do not bear on an oil switchover temperature."
+       "suggestion": "The writer says the narration carries it: s02 itself ties the thresholds to that year's energy prices and the heat pump's cold performance and says dearer oil moves the point lower; s04 limits them to one evaluation of ductless mini-splits and to oil-heated homes.",
+       "disposition": "The thresholds are dated to 2015 and 2016 and tied in the same sentence to that year's oil and electricity prices and the heat pump's cold performance, with the direction of movement from L1201-L1202; s04 scopes them to one evaluation of oil-heated homes. Deetjen and Bernard do not bear on an oil switchover temperature."
       }
      ]
     }
    ],
-   "issues": []
-  },
-  {
-   "id": "s03",
-   "section": "finding",
-   "text": "The line moved because it is set by that year's oil and electricity prices and by how the heat pump performs in the cold; if oil gets dearer against electricity, the point may move lower.",
-   "type": "factual",
-   "fingerprint": "bdc986ddf8",
-   "words": 35,
-   "status": "verified",
-   "approved": true,
-   "assertions": [
+   "issues": [
     {
-     "id": "s03.a",
-     "text": "The switch-off temperature depends on energy prices and cold-temperature COPs; if oil prices increase against electric energy rates, the switchover temperature point may move lower.",
-     "kind": "fact",
-     "status": "verified",
-     "validation": {
-      "id": "s03.a",
-      "text": "The switch-off temperature depends on energy prices and cold-temperature COPs; if oil prices increase against electric energy rates, the switchover temperature point may move lower.",
-      "kind": "fact",
-      "modality": "possibility",
-      "status": "qualified",
-      "decision": "qualify",
-      "review": true,
-      "verbatim": false,
-      "strength": 0.45,
-      "independent": 1,
-      "supporting": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-         "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
-        },
-        "cited": true,
-        "role": "supports",
-        "by": "Cadmus 2016, ductless mini-split evaluation (MA and RI)",
-        "verdict": "right",
-        "confidence": 0.45,
-        "note": "Savings were highest against electric resistance, and the evaluators recommend targeting resistance-heated and propane-heated homes (always cheaper there) and, with caveats, oil homes; against gas there were essentially no running-cost savings.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "contradicting": [],
-      "qualifying": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-         "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
-        },
-        "cited": false,
-        "role": "qualifies",
-        "by": "Deetjen 2021, private economics of US residential heat pumps",
-        "verdict": "partly",
-        "confidence": 0.45,
-        "note": "Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       },
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-         "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1267-L1273"
-        },
-        "cited": false,
-        "role": "qualifies",
-        "by": "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff",
-        "verdict": "partly",
-        "confidence": 0.3,
-        "note": "UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases.",
-       "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed.",
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [
-       "Add the qualification: the evidence supports a narrower or weaker statement."
-      ],
-      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.45), 2 qualifying."
-     },
-     "issues": [
-      {
-       "sentence": "s03",
-       "category": "needs-qualification",
-       "severity": "warning",
-       "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.",
-       "by": "deterministic",
-       "assertion": "s03.a",
-       "suggestion": "The writer says the narration carries it: s04 says this is one evaluation and the advice is for oil-heated homes only.",
-       "disposition": "The passage states the dependence on energy prices and cold-temperature COPs and the direction of movement in its own words; the Deetjen and Bernard limits concern whether oil homes save, not the switchover point."
-      }
-     ]
+     "sentence": "s02",
+     "assertion": "s02.a",
+     "fingerprint": "ed80c90027",
+     "revision": 2,
+     "category": "omission",
+     "severity": "info",
+     "explanation": "The report says of the balance points that 'these values do not account for zonal savings': a mini-split heating 30 percent less of the home would drop the balance point by 20F or more (L973-L975, outside the cited passage). The Short's thresholds are therefore the whole-house case; the omission runs in the heat pump's favour (the real switch-off point would be lower), and s02 already frames the figures as one year's price- and performance-dependent output rather than a rule.",
+     "refs": [
+      "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
+     ],
+     "suggestion": "None needed for the Short; the parent video is the place for the zonal caveat.",
+     "by": "review"
     }
-   ],
-   "issues": []
+   ]
   },
   {
    "id": "s04",
    "section": "finding",
-   "text": "This is one evaluation of ductless mini-splits in Massachusetts and Rhode Island homes, and the advice is for oil-heated homes only: against electric resistance it found the heat pump nearly always cheaper to run, and against propane, always.",
+   "text": "That is one evaluation of ductless mini-splits, and the advice is for oil-heated homes only: against propane and electric resistance it found the heat pump cheaper.",
    "type": "factual",
-   "fingerprint": "43eabf7380",
-   "words": 38,
+   "fingerprint": "8096d0508d",
+   "words": 26,
    "status": "verified",
    "approved": true,
    "assertions": [
@@ -457,8 +365,8 @@
        "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. \"always\" is stronger than the evidence (strongest support 0.45). Add the qualification: the evidence supports a narrower or weaker statement.",
        "by": "deterministic",
        "assertion": "s04.a",
-       "suggestion": "The writer says the narration carries it: s04 itself carries the sample (one evaluation, MA and RI mini-splits) and the scope (oil-heated homes only) beside the propane and resistance results.",
-       "disposition": "'nearly always' and 'always' are the evaluation's own words (L1188-L1190, L1194-L1195), attributed with 'it found' and scoped to one evaluation in the same sentence; the sentence is the qualification."
+       "suggestion": "The writer says the narration carries it: s04 itself carries the sample (one evaluation of ductless mini-splits) and the scope (oil-heated homes only) beside the propane and resistance results.",
+       "disposition": "'always' is the evaluation's own word for propane (L1194-L1195) and appears only in the assertion; the narration says 'it found the heat pump cheaper', attributed to and scoped by 'one evaluation of ductless mini-splits' in the same sentence. Deetjen (capital cost included) and Bernard (UK, no oil or propane) concern whether homes save overall, not this evaluation's operating-cost comparison."
       }
      ]
     }
@@ -467,146 +375,40 @@
     {
      "sentence": "s04",
      "assertion": "s04.a",
-     "fingerprint": "43eabf7380",
-     "revision": 1,
-     "category": "needs-human",
+     "fingerprint": "8096d0508d",
+     "revision": 2,
+     "category": "missing-qualification",
      "severity": "info",
-     "explanation": "'Massachusetts and Rhode Island homes' is not in the cited passage (L1184-L1205, the recommendations); it comes from the document's provenance (source header L1 and L10: prepared for the Electric and Gas Program Administrators of Massachusetts and Rhode Island) and the package's document name, which is also how short.carries phrases the qualification. Treated as source attribution, not a claim needing its own passage; the ductless mini-split and oil-heated-home scope are in the passage.",
+     "explanation": "The narration compresses the passage's 'nearly always less expensive than electric resistance' (L1188-L1191) and 'always less expensive than propane' (L1194-L1195) to 'found the heat pump cheaper'. The only exception the passage names for resistance is non-cold-climate units approaching a COP of 1.0, parity with resistance, for 'very few' hours; it names no case where resistance was cheaper, so 'cheaper' states the finding's direction without overstating it. Not misleading in a Short; the modality is lost, not reversed.",
      "refs": [
       "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
      ],
-     "suggestion": "Keep; if provenance may not be spoken from the header, say 'one New England utility evaluation' or drop the states.",
+     "suggestion": "If three words fit, 'it found the heat pump cheaper, nearly always against resistance'.",
+     "by": "review"
+    },
+    {
+     "sentence": "s04",
+     "assertion": "s04.a",
+     "fingerprint": "8096d0508d",
+     "revision": 2,
+     "category": "needs-human",
+     "severity": "info",
+     "explanation": "short.carries names 'Massachusetts and Rhode Island homes'; revision 2 dropped the states (on the revision-1 suggestion). The break points are a function of energy prices and measured COP only (L955-L961: a map of electricity and fuel prices with temperature contours), so the place limits the figures only through prices, which s02 states beside them ('set by that year's oil and electricity prices') and s06 repeats for the viewer's own case. Not treated as a carries qualification left unspoken.",
+     "refs": [
+      "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
+     ],
+     "suggestion": "An editor who wants the place spoken can say 'one New England evaluation of ductless mini-splits' in s04.",
      "by": "review"
     }
    ]
   },
   {
-   "id": "s05",
-   "section": "finding",
-   "text": "The evaluators allowed that not every household wishes to think about which heater to run and when.",
-   "type": "factual",
-   "fingerprint": "e9d7dbf76a",
-   "words": 17,
-   "status": "verified",
-   "approved": true,
-   "assertions": [
-    {
-     "id": "s05.a",
-     "text": "The evaluators noted that this operating scheme may not appeal to all customer types, as many may not wish to concern themselves about which heating system to operate and when.",
-     "kind": "fact",
-     "status": "verified",
-     "validation": {
-      "id": "s05.a",
-      "text": "The evaluators noted that this operating scheme may not appeal to all customer types, as many may not wish to concern themselves about which heating system to operate and when.",
-      "kind": "fact",
-      "modality": "universal",
-      "status": "qualified",
-      "decision": "qualify",
-      "review": true,
-      "verbatim": false,
-      "strength": 0.45,
-      "independent": 1,
-      "supporting": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-         "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
-        },
-        "cited": true,
-        "role": "supports",
-        "by": "Cadmus 2016, ductless mini-split evaluation (MA and RI)",
-        "verdict": "right",
-        "confidence": 0.45,
-        "note": "Savings were highest against electric resistance, and the evaluators recommend targeting resistance-heated and propane-heated homes (always cheaper there) and, with caveats, oil homes; against gas there were essentially no running-cost savings.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "contradicting": [],
-      "qualifying": [
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-         "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L653-L665"
-        },
-        "cited": false,
-        "role": "qualifies",
-        "by": "Deetjen 2021, private economics of US residential heat pumps",
-        "verdict": "partly",
-        "confidence": 0.45,
-        "note": "Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       },
-       {
-        "ref": {
-         "kind": "study",
-         "claim": "heat-pumps/heat-pumps-save-most-money-homes",
-         "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1267-L1273"
-        },
-        "cited": false,
-        "role": "qualifies",
-        "by": "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff",
-        "verdict": "partly",
-        "confidence": 0.3,
-        "note": "UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed.",
-        "applicability": "direct",
-        "basis": "heuristic",
-        "why": "the verdict bears on the claim as worded"
-       }
-      ],
-      "context": [],
-      "problems": [],
-      "limitations": [
-       "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases.",
-       "Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed.",
-       "\"all\" is stronger than the evidence (strongest support 0.45).",
-       "Wording differs from the canonical claim; confirm the cited passages support this exact sentence."
-      ],
-      "suggestions": [
-       "Add the qualification: the evidence supports a narrower or weaker statement."
-      ],
-      "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.45), 2 qualifying."
-     },
-     "issues": [
-      {
-       "sentence": "s05",
-       "category": "needs-qualification",
-       "severity": "warning",
-       "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. \"all\" is stronger than the evidence (strongest support 0.45). Add the qualification: the evidence supports a narrower or weaker statement.",
-       "by": "deterministic",
-       "assertion": "s05.a",
-       "suggestion": "The writer says the narration carries it: s04 says this is one evaluation and the advice is for oil-heated homes only.",
-       "disposition": "'not every household' paraphrases the passage's 'may not appeal to all customer types' and is attributed to the evaluators; no claim about savings is made."
-      }
-     ]
-    }
-   ],
-   "issues": []
-  },
-  {
    "id": "s06",
    "section": "close",
-   "text": "If you heat with oil, check whether oil or the heat pump runs cheaper at this year's prices before the cold comes, and expect the answer to move.",
+   "text": "If you heat with oil, ask which heater runs cheaper at this year's prices; the full inquiry asks where a heat pump pays at all.",
    "type": "transitional",
-   "fingerprint": "e1f11b43a3",
-   "words": 28,
-   "status": "verified",
-   "approved": true,
-   "assertions": [],
-   "issues": []
-  },
-  {
-   "id": "s07",
-   "section": "close",
-   "text": "Which homes a heat pump saves money in at all is the full inquiry; see the main video.",
-   "type": "transitional",
-   "fingerprint": "630be5b176",
-   "words": 18,
+   "fingerprint": "8401e4c6c7",
+   "words": 25,
    "status": "verified",
    "approved": true,
    "assertions": [],
@@ -615,14 +417,35 @@
  ],
  "issues": [
   {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked script 9fe3615994; it is now f72c0d2ac3: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked package cf04f8a5d5; it is now 1c3ed97505: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked validation 048f176fd5; it is now 80a8637996: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
    "sentence": "s01",
    "category": "needs-qualification",
    "severity": "warning",
    "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s01.a",
-   "suggestion": "The writer says the narration carries it: s02 gives the thresholds with their years; s03 says they are set by that year's prices and the heat pump's cold performance; s04 says this is one evaluation and the advice is for oil-heated homes only.",
-   "disposition": "The sentence reports one evaluation's switch-off advice, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil, and s04 says one evaluation, oil-heated homes only."
+   "suggestion": "The writer says the narration carries it: s02 gives the thresholds with their years and ties them to that year's prices and the heat pump's cold performance; s04 says this is one evaluation of ductless mini-splits and the advice is for oil-heated homes only.",
+   "disposition": "The sentence reports one evaluation's switch-off advice, attributed as such, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil; s04 says one evaluation, oil-heated homes only, inside the Short."
   },
   {
    "sentence": "s02",
@@ -631,18 +454,8 @@
    "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s02.a",
-   "suggestion": "The writer says the narration carries it: s03 ties the thresholds to that year's energy prices and cold performance; s04 limits them to one evaluation of oil-heated homes.",
-   "disposition": "The thresholds are dated to 2015 and 2016 in the sentence, s03 ties them to that year's prices and cold COP, s04 scopes them to one evaluation; Deetjen and Bernard do not bear on an oil switchover temperature."
-  },
-  {
-   "sentence": "s03",
-   "category": "needs-qualification",
-   "severity": "warning",
-   "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.",
-   "by": "deterministic",
-   "assertion": "s03.a",
-   "suggestion": "The writer says the narration carries it: s04 says this is one evaluation and the advice is for oil-heated homes only.",
-   "disposition": "The passage states the dependence on energy prices and cold-temperature COPs and the direction of movement in its own words; the Deetjen and Bernard limits concern whether oil homes save, not the switchover point."
+   "suggestion": "The writer says the narration carries it: s02 itself ties the thresholds to that year's energy prices and the heat pump's cold performance and says dearer oil moves the point lower; s04 limits them to one evaluation of ductless mini-splits and to oil-heated homes.",
+   "disposition": "The thresholds are dated to 2015 and 2016 and tied in the same sentence to that year's oil and electricity prices and the heat pump's cold performance, with the direction of movement from L1201-L1202; s04 scopes them to one evaluation of oil-heated homes. Deetjen and Bernard do not bear on an oil switchover temperature."
   },
   {
    "sentence": "s04",
@@ -651,18 +464,8 @@
    "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. \"always\" is stronger than the evidence (strongest support 0.45). Add the qualification: the evidence supports a narrower or weaker statement.",
    "by": "deterministic",
    "assertion": "s04.a",
-   "suggestion": "The writer says the narration carries it: s04 itself carries the sample (one evaluation, MA and RI mini-splits) and the scope (oil-heated homes only) beside the propane and resistance results.",
-   "disposition": "'nearly always' and 'always' are the evaluation's own words (L1188-L1190, L1194-L1195), attributed with 'it found' and scoped to one evaluation in the same sentence; the sentence is the qualification."
-  },
-  {
-   "sentence": "s05",
-   "category": "needs-qualification",
-   "severity": "warning",
-   "explanation": "Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. \"all\" is stronger than the evidence (strongest support 0.45). Add the qualification: the evidence supports a narrower or weaker statement.",
-   "by": "deterministic",
-   "assertion": "s05.a",
-   "suggestion": "The writer says the narration carries it: s04 says this is one evaluation and the advice is for oil-heated homes only.",
-   "disposition": "'not every household' paraphrases the passage's 'may not appeal to all customer types' and is attributed to the evaluators; no claim about savings is made."
+   "suggestion": "The writer says the narration carries it: s04 itself carries the sample (one evaluation of ductless mini-splits) and the scope (oil-heated homes only) beside the propane and resistance results.",
+   "disposition": "'always' is the evaluation's own word for propane (L1194-L1195) and appears only in the assertion; the narration says 'it found the heat pump cheaper', attributed to and scoped by 'one evaluation of ductless mini-splits' in the same sentence. Deetjen (capital cost included) and Bernard (UK, no oil or propane) concern whether homes save overall, not this evaluation's operating-cost comparison."
   },
   {
    "sentence": "s01",
@@ -678,6 +481,50 @@
    "by": "review"
   },
   {
+   "sentence": "s02",
+   "assertion": "s02.a",
+   "fingerprint": "ed80c90027",
+   "revision": 2,
+   "category": "omission",
+   "severity": "info",
+   "explanation": "The report says of the balance points that 'these values do not account for zonal savings': a mini-split heating 30 percent less of the home would drop the balance point by 20F or more (L973-L975, outside the cited passage). The Short's thresholds are therefore the whole-house case; the omission runs in the heat pump's favour (the real switch-off point would be lower), and s02 already frames the figures as one year's price- and performance-dependent output rather than a rule.",
+   "refs": [
+    "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
+   ],
+   "suggestion": "None needed for the Short; the parent video is the place for the zonal caveat.",
+   "by": "review"
+  },
+  {
+   "sentence": "s04",
+   "assertion": "s04.a",
+   "fingerprint": "8096d0508d",
+   "revision": 2,
+   "category": "missing-qualification",
+   "severity": "info",
+   "explanation": "The narration compresses the passage's 'nearly always less expensive than electric resistance' (L1188-L1191) and 'always less expensive than propane' (L1194-L1195) to 'found the heat pump cheaper'. The only exception the passage names for resistance is non-cold-climate units approaching a COP of 1.0, parity with resistance, for 'very few' hours; it names no case where resistance was cheaper, so 'cheaper' states the finding's direction without overstating it. Not misleading in a Short; the modality is lost, not reversed.",
+   "refs": [
+    "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
+   ],
+   "suggestion": "If three words fit, 'it found the heat pump cheaper, nearly always against resistance'.",
+   "by": "review"
+  },
+  {
+   "sentence": "s04",
+   "assertion": "s04.a",
+   "fingerprint": "8096d0508d",
+   "revision": 2,
+   "category": "needs-human",
+   "severity": "info",
+   "explanation": "short.carries names 'Massachusetts and Rhode Island homes'; revision 2 dropped the states (on the revision-1 suggestion). The break points are a function of energy prices and measured COP only (L955-L961: a map of electricity and fuel prices with temperature contours), so the place limits the figures only through prices, which s02 states beside them ('set by that year's oil and electricity prices') and s06 repeats for the viewer's own case. Not treated as a carries qualification left unspoken.",
+   "refs": [
+    "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
+   ],
+   "suggestion": "An editor who wants the place spoken can say 'one New England evaluation of ductless mini-splits' in s04.",
+   "by": "review"
+  }
+ ],
+ "resolved": [
+  {
    "sentence": "s04",
    "assertion": "s04.a",
    "fingerprint": "43eabf7380",
@@ -689,14 +536,20 @@
     "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
    ],
    "suggestion": "Keep; if provenance may not be spoken from the header, say 'one New England utility evaluation' or drop the states.",
-   "by": "review"
+   "resolvedBy": 2
   }
  ],
- "resolved": [],
  "history": [
   {
    "revision": 1,
    "date": "2026-10-24T16:05:55.949Z",
+   "status": "passed",
+   "blocking": 0,
+   "warnings": 0
+  },
+  {
+   "revision": 2,
+   "date": "2026-10-24T18:33:56.806Z",
    "status": "passed",
    "blocking": 0,
    "warnings": 0

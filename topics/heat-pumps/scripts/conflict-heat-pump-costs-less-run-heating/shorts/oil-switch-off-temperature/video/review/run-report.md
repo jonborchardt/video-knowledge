@@ -1,10 +1,10 @@
 # Run report: conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature
 
 The second Short of the first video, 2026-10-24, driven by hand through the board's steps on branch `feat/shorts`.
-Format PUBLIC ADVISORY; the Commission on Spending's badge.
+Format PUBLIC ADVISORY; the Commission on Spending's seal and badge.
 
 - Package: `video/review/conflict-heat-pump-costs-less-run-heating-short-oil-switch-off-temperature-review-private.mp4`
-  (1080x1920, 71.0 s), `checklist.md`, `description.txt`, `captions.en.srt`. Private review build, draft voice.
+  (1080x1920, 42.6 s), `checklist.md`, `description.txt`, `captions.en.srt`. Private review build, draft voice.
 
 ## Evidence
 
@@ -19,15 +19,18 @@ evaluation found the heat pump cheaper throughout.
 
 ## Script revisions
 
-1. Revision 1 validated with 0 blocking (one wording change during validation: "which of the two" counted as a figure
-   in the close). The reviewer approved all seven sentences first time; five needs-qualification warnings dispositioned;
-   two info findings: "Massachusetts and Rhode Island homes" rests on the document's provenance rather than the cited
-   lines, and the propane/resistance "always" is the evaluation's own wording, attributed.
+1. Revision 1 (189 words): approved first time; five needs-qualification warnings dispositioned; two info findings
+   (the state names rest on the document's provenance; the propane/resistance "always" is the evaluation's wording).
+2. Revision 2 (110 words, about 44 s; a send-back pass with the editor's note "too long"): four sentences, the
+   thresholds and both qualifications in the finding, one close sentence for the end card. Approved by re-review;
+   three info findings (the compressed "cheaper" for resistance drops the passage's "nearly always", judged not
+   misleading; the state names now live in the assertion only; the balance points ignore zonal savings).
 
 ## Storyboard and graphics
 
-Six scenes, 81 s estimated: short-question ("Heat with oil?"), short-stat-tiles (8°F 2015, 25°F 2016), short-list,
-short-list, short-quote ("may not appeal to all"), short-list. No bespoke graphics.
+Four scenes, 49 s estimated: short-question ("Heat with oil?"), short-stat-tiles (8°F 2015, 25°F 2016), short-list
+(oil: watch the line; propane and resistance: heat pump), and the close as the end card with two small lines. No bespoke
+graphics.
 
 ## Music
 
@@ -35,9 +38,8 @@ None.
 
 ## QA
 
-RESULT: PASSED (32 of 32 checks). The first spike run hit edge-tts throttling twice on the sixth sentence; the
-narration loop now retries a throttled sentence after a pause, and the third run completed. Frames inspected after the
-caption and citation fixes.
+RESULT: PASSED (32 of 32 checks; measured 42.6 s). The first spike run hit edge-tts throttling on the sixth sentence;
+the narration loop now retries a throttled sentence after a pause.
 
 ## Release blockers
 

@@ -2,10 +2,10 @@
  "topic": "heat-pumps",
  "story": "conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature",
  "title": "Heat with oil? The evaluators said turn the heat pump off below 8 degrees. A year later, 25.",
- "scriptFingerprint": "9fe3615994",
+ "scriptFingerprint": "f72c0d2ac3",
  "scriptStatus": "passed",
  "wordsPerMinute": 150,
- "runtime": 81.3,
+ "runtime": 48.7,
  "generation": {
   "model": "claude-fable-5-1",
   "brief": "scripts/briefs/storyboard.md",
@@ -13,7 +13,36 @@
  },
  "assets": {},
  "status": "ok",
- "issues": [],
+ "issues": [
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked script 9fe3615994; it is now f72c0d2ac3: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked package cf04f8a5d5; it is now 1c3ed97505: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked validation 048f176fd5; it is now 80a8637996: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked storyboard 84cb0d0961; it is now 3274b21f80: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  }
+ ],
  "scenes": [
   {
    "id": "sc01",
@@ -51,7 +80,7 @@
    "sentences": [
     "s02"
    ],
-   "purpose": "Show the two switch-off temperatures side by side, each on its year.",
+   "purpose": "Show the two switch-off temperatures side by side, each on its year, while the narration names what set them.",
    "visual": {
     "category": "data-chart",
     "description": "Two stat tiles stacked in the portrait frame, 2015 above 2016; each tile's figure lands as it is spoken, 8°F first then 25°F; the note says these are switch-off temperatures, not savings.",
@@ -83,72 +112,33 @@
      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
     }
    ],
-   "direction": "First tile on \"8\", second on \"25\"; hold a beat after the sentence.",
+   "direction": "First tile on \"8\", second on \"25\"; both hold through \"dearer oil moves it lower\"; a beat after the sentence.",
    "pauseSeconds": 1,
    "order": 2,
-   "narration": "Its switch-off point was 8 degrees Fahrenheit in 2015 and 25 degrees the year after: the outdoor temperature below which oil ran cheaper, not a saving figure.",
-   "words": 27,
-   "spokenWords": 30,
+   "narration": "The switch-off point was 8 degrees Fahrenheit in 2015 and 25 the year after, set by that year's oil and electricity prices and the heat pump's cold performance; dearer oil moves it lower.",
+   "words": 33,
+   "spokenWords": 36,
    "timing": [
     {
      "id": "s02",
      "start": 10.9,
-     "duration": 12,
-     "end": 22.9
+     "duration": 14.4,
+     "end": 25.3
     }
    ],
    "start": 10.9,
-   "duration": 13,
-   "end": 23.9
+   "duration": 15.4,
+   "end": 26.3
   },
   {
    "id": "sc03",
    "sentences": [
-    "s03"
-   ],
-   "purpose": "Name what sets the line so the viewer sees why it moved.",
-   "visual": {
-    "category": "typography",
-    "description": "Three short lines build down the frame as each condition is spoken: oil price, electricity price, cold performance.",
-    "onScreenText": [
-     "Oil price",
-     "Electricity price",
-     "Cold performance"
-    ]
-   },
-   "citations": [
-    {
-     "label": "Cadmus 2016",
-     "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
-    }
-   ],
-   "direction": "Lines appear on \"oil\", \"electricity\" and \"performs\"; hold on the last.",
-   "pauseSeconds": 0.5,
-   "order": 3,
-   "narration": "The line moved because it is set by that year's oil and electricity prices and by how the heat pump performs in the cold; if oil gets dearer against electricity, the point may move lower.",
-   "words": 35,
-   "spokenWords": 35,
-   "timing": [
-    {
-     "id": "s03",
-     "start": 23.9,
-     "duration": 14,
-     "end": 37.9
-    }
-   ],
-   "start": 23.9,
-   "duration": 14.5,
-   "end": 38.4
-  },
-  {
-   "id": "sc04",
-   "sentences": [
     "s04"
    ],
-   "purpose": "Scope the advice: one evaluation, oil only; propane and resistance went the other way.",
+   "purpose": "Scope the advice: one evaluation, oil only; propane and resistance went to the heat pump.",
    "visual": {
     "category": "typography",
-    "description": "Three lines build as each fuel is named: oil watches the line, propane and electric resistance go to the heat pump.",
+    "description": "Three lines build down the frame as each fuel is named: oil watches the line, propane and electric resistance go to the heat pump.",
     "onScreenText": [
      "Oil: watch the line",
      "Propane: heat pump",
@@ -161,99 +151,55 @@
      "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
     }
    ],
-   "direction": "Lines on \"oil-heated\", \"electric resistance\" and \"propane\"; hold after the sentence.",
+   "direction": "Lines on \"oil-heated\", \"propane\" and \"resistance\"; \"watch the line\" is not spoken, so the first line lands with \"oil-heated homes only\"; hold after the sentence.",
    "pauseSeconds": 1,
-   "order": 4,
-   "narration": "This is one evaluation of ductless mini-splits in Massachusetts and Rhode Island homes, and the advice is for oil-heated homes only: against electric resistance it found the heat pump nearly always cheaper to run, and against propane, always.",
-   "words": 38,
-   "spokenWords": 38,
+   "order": 3,
+   "narration": "That is one evaluation of ductless mini-splits, and the advice is for oil-heated homes only: against propane and electric resistance it found the heat pump cheaper.",
+   "words": 26,
+   "spokenWords": 26,
    "timing": [
     {
      "id": "s04",
-     "start": 38.4,
-     "duration": 15.2,
-     "end": 53.6
+     "start": 26.3,
+     "duration": 10.4,
+     "end": 36.7
     }
    ],
-   "start": 38.4,
-   "duration": 16.2,
-   "end": 54.6
+   "start": 26.3,
+   "duration": 11.4,
+   "end": 37.7
   },
   {
-   "id": "sc05",
+   "id": "sc04",
    "sentences": [
-    "s05"
+    "s06"
    ],
-   "purpose": "The evaluators' own caveat, in their words.",
+   "purpose": "End card: the action for the oil-heated viewer and the pointer to the full inquiry.",
    "visual": {
     "category": "typography",
-    "description": "Quote card: the evaluators' phrase in quotation marks, the citation naming the source beneath.",
-    "onScreenText": [
-     "\"may not appeal to all\""
-    ]
-   },
-   "citations": [
-    {
-     "label": "Cadmus 2016",
-     "cite": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"
-    }
-   ],
-   "direction": "Quote fades in with the sentence; hold a beat.",
-   "pauseSeconds": 0.5,
-   "order": 5,
-   "narration": "The evaluators allowed that not every household wishes to think about which heater to run and when.",
-   "words": 17,
-   "spokenWords": 17,
-   "timing": [
-    {
-     "id": "s05",
-     "start": 54.6,
-     "duration": 6.8,
-     "end": 61.4
-    }
-   ],
-   "start": 54.6,
-   "duration": 7.3,
-   "end": 61.9
-  },
-  {
-   "id": "sc06",
-   "sentences": [
-    "s06",
-    "s07"
-   ],
-   "purpose": "Leave the viewer with the action and the pointer to the main video.",
-   "visual": {
-    "category": "typography",
-    "description": "Two lines, one per sentence: the action first, then the pointer to the main video.",
+    "description": "Two short lines, drawn as the end card: the action first, then the pointer to the full inquiry.",
     "onScreenText": [
      "Check this year's prices",
-     "Full answer: main video"
+     "Full inquiry: main video"
     ]
    },
-   "direction": "First line with s06, second with s07; hold to the end.",
+   "direction": "First line on \"this year's prices\", second on \"full inquiry\"; hold to the end.",
    "pauseSeconds": 1,
-   "order": 6,
-   "narration": "If you heat with oil, check whether oil or the heat pump runs cheaper at this year's prices before the cold comes, and expect the answer to move. Which homes a heat pump saves money in at all is the full inquiry; see the main video.",
-   "words": 46,
-   "spokenWords": 46,
+   "order": 4,
+   "narration": "If you heat with oil, ask which heater runs cheaper at this year's prices; the full inquiry asks where a heat pump pays at all.",
+   "words": 25,
+   "spokenWords": 25,
    "timing": [
     {
      "id": "s06",
-     "start": 61.9,
-     "duration": 11.2,
-     "end": 73.1
-    },
-    {
-     "id": "s07",
-     "start": 73.1,
-     "duration": 7.2,
-     "end": 80.3
+     "start": 37.7,
+     "duration": 10,
+     "end": 47.7
     }
    ],
-   "start": 61.9,
-   "duration": 19.4,
-   "end": 81.3
+   "start": 37.7,
+   "duration": 11,
+   "end": 48.7
   }
  ]
 }

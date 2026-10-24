@@ -3,36 +3,43 @@
 | | |
 |---|---|
 | Story | `conflict:heat-pump-costs-less-run-heating/shorts/oil-switch-off-temperature` (heat-pumps) |
-| Revision | 1 (1 of at most 3 in this pass) |
+| Revision | 2 (1 of at most 3 in this pass) |
 | Validation | **passed** (2026-10-24) |
-| Words / runtime | 189 words, about 1.3 min at 150 wpm |
-| Sentences | 7 (5 factual or attributed) |
-| Assertions | 5, 5 verified |
-| Issues | 0 blocking, 0 warnings, 5 dispositioned |
+| Words / runtime | 110 words, about 0.8 min at 150 wpm |
+| Sentences | 4 (3 factual or attributed) |
+| Assertions | 3, 3 verified |
+| Issues | 0 blocking, 0 warnings, 3 dispositioned |
 | Unreviewed sentences | 0 |
-| Scenes | 6, 1:21 (ok) |
-| Evidence package | cf04f8a5d5 (9 documents, 1 claims) |
+| Scenes | 4, 0:49 (ok) |
+| Evidence package | 1c3ed97505 (9 documents, 1 claims) |
 | Model | claude-fable-5-1 |
 
 Automated validation says whether the narration is eligible for human editorial review; it does not establish truth.
 
 ## Open issues
 
-None.
+- **warning** - release-stale (deterministic): release.json locked script 9fe3615994; it is now f72c0d2ac3: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked package cf04f8a5d5; it is now 1c3ed97505: the approved package has changed, lock it again after review
+- **warning** - release-stale (deterministic): release.json locked validation 048f176fd5; it is now 80a8637996: the approved package has changed, lock it again after review
+
+### Storyboard
+
+- **warning** - release-stale: release.json locked script 9fe3615994; it is now f72c0d2ac3: the approved package has changed, lock it again after review
+- **warning** - release-stale: release.json locked package cf04f8a5d5; it is now 1c3ed97505: the approved package has changed, lock it again after review
+- **warning** - release-stale: release.json locked validation 048f176fd5; it is now 80a8637996: the approved package has changed, lock it again after review
+- **warning** - release-stale: release.json locked storyboard 84cb0d0961; it is now 3274b21f80: the approved package has changed, lock it again after review
 
 ## Dispositions
 
 Deterministic warnings the reviewer judged false positives or already carried by the narration, at the current sentence fingerprint.
 
-- s01 (s01.a) needs-qualification: The sentence reports one evaluation's switch-off advice, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil, and s04 says one evaluation, oil-heated homes only. (warning was: Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.)
-- s02 (s02.a) needs-qualification: The thresholds are dated to 2015 and 2016 in the sentence, s03 ties them to that year's prices and cold COP, s04 scopes them to one evaluation; Deetjen and Bernard do not bear on an oil switchover temperature. (warning was: Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.)
-- s03 (s03.a) needs-qualification: The passage states the dependence on energy prices and cold-temperature COPs and the direction of movement in its own words; the Deetjen and Bernard limits concern whether oil homes save, not the switchover point. (warning was: Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.)
-- s04 (s04.a) needs-qualification: 'nearly always' and 'always' are the evaluation's own words (L1188-L1190, L1194-L1195), attributed with 'it found' and scoped to one evaluation in the same sentence; the sentence is the qualification. (warning was: Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. "always" is stronger than the evidence (strongest support 0.45). Add the qualification: the evidence supports a narrower or weaker statement.)
-- s05 (s05.a) needs-qualification: 'not every household' paraphrases the passage's 'may not appeal to all customer types' and is attributed to the evaluators; no claim about savings is made. (warning was: Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. "all" is stronger than the evidence (strongest support 0.45). Add the qualification: the evidence supports a narrower or weaker statement.)
+- s01 (s01.a) needs-qualification: The sentence reports one evaluation's switch-off advice, attributed as such, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil; s04 says one evaluation, oil-heated homes only, inside the Short. (warning was: Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.)
+- s02 (s02.a) needs-qualification: The thresholds are dated to 2015 and 2016 and tied in the same sentence to that year's oil and electricity prices and the heat pump's cold performance, with the direction of movement from L1201-L1202; s04 scopes them to one evaluation of oil-heated homes. Deetjen and Bernard do not bear on an oil switchover temperature. (warning was: Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. Add the qualification: the evidence supports a narrower or weaker statement.)
+- s04 (s04.a) needs-qualification: 'always' is the evaluation's own word for propane (L1194-L1195) and appears only in the assertion; the narration says 'it found the heat pump cheaper', attributed to and scoped by 'one evaluation of ductless mini-splits' in the same sentence. Deetjen (capital cost included) and Bernard (UK, no oil or propane) concern whether homes save overall, not this evaluation's operating-cost comparison. (warning was: Deetjen 2021, private economics of US residential heat pumps: Counting capital cost, resistance and propane homes usually gain, but oil-heated homes usually take a private loss (65% are in cold climates), so oil is not among the best cases. Bernard 2024 (NBER), UK heat pumps and a time-of-use tariff: UK households that previously used electric heating saw electricity use fall after a heat pump, while gas-boiler households paid slightly more to run one, which fits the claim for resistance heat; oil and propane are not analysed. "always" is stronger than the evidence (strongest support 0.45). Add the qualification: the evidence supports a narrower or weaker statement.)
 
 ## Resolved review findings
 
-None.
+- s04 (s04.a) needs-human (raised against revision 1, addressed in revision 2): 'Massachusetts and Rhode Island homes' is not in the cited passage (L1184-L1205, the recommendations); it comes from the document's provenance (source header L1 and L10: prepared for the Electric and Gas Program Administrators of Massachusetts and Rhode Island) and the package's document name, which is also how short.carries phrases the qualification. Treated as source attribution, not a claim needing its own passage; the ductless mini-split and oil-heated-home scope are in the passage.
 
 ## Research gaps
 
@@ -44,8 +51,11 @@ None.
 
 ## Outstanding editorial decisions
 
-None.
+- -: release.json locked script 9fe3615994; it is now f72c0d2ac3: the approved package has changed, lock it again after review
+- -: release.json locked package cf04f8a5d5; it is now 1c3ed97505: the approved package has changed, lock it again after review
+- -: release.json locked validation 048f176fd5; it is now 80a8637996: the approved package has changed, lock it again after review
 
 ## History
 
 - revision 1, 2026-10-24: passed, 0 blocking, 0 warnings
+- revision 2, 2026-10-24: passed, 0 blocking, 0 warnings

@@ -2,10 +2,10 @@
  "topic": "heat-pumps",
  "story": "conflict:heat-pump-costs-less-run-heating/shorts/oil-propane-baseboard-with-ac",
  "title": "Oil, propane or electric heat, plus AC? A national model says 95 to 100 percent of homes save.",
- "scriptFingerprint": "84774b08fe",
+ "scriptFingerprint": "4d7fae0bff",
  "scriptStatus": "passed",
  "wordsPerMinute": 150,
- "runtime": 80.1,
+ "runtime": 49.2,
  "generation": {
   "model": "claude-fable-5-1",
   "brief": "scripts/briefs/storyboard.md",
@@ -13,7 +13,36 @@
  },
  "assets": {},
  "status": "ok",
- "issues": [],
+ "issues": [
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked script 84774b08fe; it is now 4d7fae0bff: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked package 873c915512; it is now d4f2543cb2: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked validation 276c2ed8ec; it is now 729a17358a: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  },
+  {
+   "sentence": "-",
+   "category": "release-stale",
+   "severity": "warning",
+   "explanation": "release.json locked storyboard 72a23a544d; it is now 5145df1f10: the approved package has changed, lock it again after review",
+   "by": "deterministic"
+  }
+ ],
  "scenes": [
   {
    "id": "sc01",
@@ -23,13 +52,13 @@
    "purpose": "Land the figure first: the share of oil, propane and electric homes with AC that the model says save.",
    "visual": {
     "category": "data-chart",
-    "description": "One stat tile centred in the portrait frame; the figure 95%–100% lands on \"95\" and holds while the sentence names the homes it covers.",
+    "description": "One stat tile centred in the portrait frame; the figure 95%–100% lands on \"95\" and holds while the sentence names the homes it covers and attributes it to the study.",
     "chart": {
      "type": "stat-tiles",
      "title": "Oil, propane or electric",
      "points": [
       {
-       "label": "Would see lower bills",
+       "label": "Would pay less",
        "value": 95,
        "unit": "percent",
        "display": "95%–100%",
@@ -48,61 +77,30 @@
    "direction": "Cold open; the tile lands on \"95\" and holds to the end of the sentence.",
    "pauseSeconds": 0.5,
    "order": 1,
-   "narration": "95 to 100 percent: the share of homes heating mainly with oil, propane or electricity, and already running air conditioning, that a national study estimates would pay lower bills with a heat pump.",
-   "words": 33,
-   "spokenWords": 36,
+   "narration": "95 to 100 percent of homes heating with oil, propane or electricity, and already running air conditioning, would pay less with a heat pump, a national study estimates.",
+   "words": 28,
+   "spokenWords": 31,
    "timing": [
     {
      "id": "s01",
      "start": 0,
-     "duration": 14.4,
-     "end": 14.4
+     "duration": 12.4,
+     "end": 12.4
     }
    ],
    "start": 0,
-   "duration": 14.9,
-   "end": 14.9
+   "duration": 12.9,
+   "end": 12.9
   },
   {
    "id": "sc02",
-   "sentences": [
-    "s02"
-   ],
-   "purpose": "Turn the figure into the question the short answers.",
-   "visual": {
-    "category": "typography",
-    "description": "Dark field; one title line types on: what the figure is, and what it is not.",
-    "onScreenText": [
-     "What it is, and is not"
-    ]
-   },
-   "direction": "Title types on with the sentence; hold a beat.",
-   "pauseSeconds": 0.5,
-   "order": 2,
-   "narration": "The Commission has looked at what that figure is, and what it is not.",
-   "words": 14,
-   "spokenWords": 14,
-   "timing": [
-    {
-     "id": "s02",
-     "start": 14.9,
-     "duration": 5.6,
-     "end": 20.5
-    }
-   ],
-   "start": 14.9,
-   "duration": 6.1,
-   "end": 21
-  },
-  {
-   "id": "sc03",
    "sentences": [
     "s03"
    ],
    "purpose": "Say plainly that the figure is modelled, not metered.",
    "visual": {
     "category": "typography",
-    "description": "Three short lines build down the frame as the sentence moves: it is a model, the bills were simulated, nobody's meter was read.",
+    "description": "Dark field; three short lines build down the frame as the sentence moves: it is a model, the bills were simulated, nobody's meter was read.",
     "onScreenText": [
      "A model",
      "Simulated bills",
@@ -117,44 +115,44 @@
    ],
    "direction": "Lines on \"model\", \"simulated\" and \"meter\"; hold on the last.",
    "pauseSeconds": 0.5,
-   "order": 3,
-   "narration": "It is a model: the study simulated the bills of such homes across the country, so the figure is an estimate of what bills would be, not a reading from anyone's meter.",
-   "words": 32,
-   "spokenWords": 32,
+   "order": 2,
+   "narration": "Estimates, because it is a model: the study simulated those homes' bills, so the figure is not a reading from anyone's meter.",
+   "words": 22,
+   "spokenWords": 22,
    "timing": [
     {
      "id": "s03",
-     "start": 21,
-     "duration": 12.8,
-     "end": 33.8
+     "start": 12.9,
+     "duration": 8.8,
+     "end": 21.7
     }
    ],
-   "start": 21,
-   "duration": 13.3,
-   "end": 34.3
+   "start": 12.9,
+   "duration": 9.3,
+   "end": 22.2
   },
   {
-   "id": "sc04",
+   "id": "sc03",
    "sentences": [
     "s04"
    ],
    "purpose": "Pair the share with the median saving, both for the same homes, both moving with efficiency.",
    "visual": {
     "category": "data-chart",
-    "description": "Two stat tiles stacked in the portrait frame, reused from the main video: the share of homes with lower bills above, the median yearly saving below; the dollar tile lands on \"$300\".",
+    "description": "Two stat tiles stacked in the portrait frame, reused from the main video: the share of homes paying less above, the median yearly saving below; the dollar tile lands on \"$300\".",
     "chart": {
      "type": "stat-tiles",
      "title": "Oil, propane or electric",
      "points": [
       {
-       "label": "Would see lower bills",
+       "label": "Would pay less",
        "value": 95,
        "unit": "percent",
        "display": "95%–100%",
        "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
       },
       {
-       "label": "Median saving per year",
+       "label": "Median saving a year",
        "value": 300,
        "unit": "usd",
        "display": "$300–$650",
@@ -172,24 +170,24 @@
    ],
    "direction": "Top tile already in place from the hook; the saving tile lands on \"$300\"; hold a beat.",
    "pauseSeconds": 1,
-   "order": 4,
-   "narration": "The range moves with the heat pump's efficiency, and so does the saving: the median it estimated was $300 to $650 a year, for those same homes and no others.",
-   "words": 30,
-   "spokenWords": 36,
+   "order": 3,
+   "narration": "Its median saving, $300 to $650 a year, is for those same homes and moves with the heat pump's efficiency.",
+   "words": 20,
+   "spokenWords": 26,
    "timing": [
     {
      "id": "s04",
-     "start": 34.3,
-     "duration": 14.4,
-     "end": 48.7
+     "start": 22.2,
+     "duration": 10.4,
+     "end": 32.6
     }
    ],
-   "start": 34.3,
-   "duration": 15.4,
-   "end": 49.7
+   "start": 22.2,
+   "duration": 11.4,
+   "end": 33.6
   },
   {
-   "id": "sc05",
+   "id": "sc04",
    "sentences": [
     "s05"
    ],
@@ -199,7 +197,7 @@
     "description": "Two horizontal bars, with AC above, without AC below; the lower bar draws on \"only\" and stops visibly short of the upper one.",
     "chart": {
      "type": "bar",
-     "title": "Share with lower bills",
+     "title": "Share paying less",
      "points": [
       {
        "label": "With AC",
@@ -227,60 +225,50 @@
    ],
    "direction": "Upper bar in place at the cut; lower bar draws on \"only\"; hold after the sentence.",
    "pauseSeconds": 1,
-   "order": 5,
-   "narration": "The air conditioning is not a detail: in the same model, homes on those fuels without it do worse, with only 73 to 86 percent coming out ahead.",
-   "words": 28,
-   "spokenWords": 30,
+   "order": 4,
+   "narration": "Drop the air conditioning and the same model is weaker: only 73 to 86 percent come out ahead.",
+   "words": 18,
+   "spokenWords": 20,
    "timing": [
     {
      "id": "s05",
-     "start": 49.7,
-     "duration": 12,
-     "end": 61.7
+     "start": 33.6,
+     "duration": 8,
+     "end": 41.6
     }
    ],
-   "start": 49.7,
-   "duration": 13,
-   "end": 62.7
+   "start": 33.6,
+   "duration": 9,
+   "end": 42.6
   },
   {
-   "id": "sc06",
+   "id": "sc05",
    "sentences": [
-    "s06",
     "s07"
    ],
-   "purpose": "Leave the viewer with the Commission's note on models and the pointer to the full inquiry.",
+   "purpose": "Close: point to the full inquiry; the video draws this as the end card.",
    "visual": {
     "category": "typography",
-    "description": "Two lines, one per sentence: the note on what a model is exact about, then the pointer to the full inquiry.",
-    "onScreenText": [
-     "Exact in what it assumes",
-     "Full inquiry below"
-    ]
+    "description": "End card drawn by the video (seal, the full inquiry's question, the call to action); no lines of its own.",
+    "onScreenText": []
    },
-   "direction": "First line with s06, second with s07; hold to the end.",
+   "direction": "Hold the end card to the last word and a beat after.",
    "pauseSeconds": 1,
-   "order": 6,
-   "narration": "A model, the Commission notes, is exact about what it assumes. Whether metered homes in Minnesota and New England agree with the model, and whether oil holds the pattern, is the subject of the full inquiry, linked in the description below.",
-   "words": 41,
-   "spokenWords": 41,
+   "order": 5,
+   "narration": "Whether metered homes agree with the model is the subject of the full inquiry.",
+   "words": 14,
+   "spokenWords": 14,
    "timing": [
     {
-     "id": "s06",
-     "start": 62.7,
-     "duration": 4.4,
-     "end": 67.1
-    },
-    {
      "id": "s07",
-     "start": 67.1,
-     "duration": 12,
-     "end": 79.1
+     "start": 42.6,
+     "duration": 5.6,
+     "end": 48.2
     }
    ],
-   "start": 62.7,
-   "duration": 17.4,
-   "end": 80.1
+   "start": 42.6,
+   "duration": 6.6,
+   "end": 49.2
   }
  ]
 }
