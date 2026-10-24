@@ -5,7 +5,8 @@ holds the reasoning and the open items.
 
 ## 1. YouTube naming portfolio
 
-DECIDED. These supersede longer public names and earlier working names. All six use the explicit `Commonwealth of
+DECIDED: six permanent channels, one per institution, and no general Commonwealth channel (charter 6). These names
+supersede longer public names and earlier working names. All six use the explicit `Commonwealth of
 Reason:` prefix and fit YouTube's 50-character limit.
 
 | #   | Editorial vertical                                   | Exact YouTube display name                        | Chars | Status                                       |

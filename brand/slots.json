@@ -1,0 +1,176 @@
+{
+  "$comment": "Every brand asset slot, drawn by scripts/brand/draw.js and written by `npm run brand` into brand/<brand>/ as <slot>.svg (committed) and the raster `format` names (png keeps transparency, jpg for opaque artwork; gitignored, regenerated). A slot with `grounds` ships one file per ground (paper, ground) and one with `forms` one file per form (rect where there is room, round where it is small), named <slot>-<key>. A `template` is drawn per use, not exported.",
+  "slots": [
+    {
+      "id": "seal",
+      "group": "marks",
+      "size": "1024x1024",
+      "format": "svg, png",
+      "use": "Full-colour emblem: report covers, the site page header, the source of every derivative"
+    },
+    {
+      "id": "seal-mono",
+      "group": "marks",
+      "size": "1024x1024",
+      "format": "svg, png",
+      "use": "Single-colour seal (one ink): stamps, print, overlays on photography",
+      "grounds": ["paper", "ground"]
+    },
+    {
+      "id": "mark-small",
+      "group": "marks",
+      "size": "64x64",
+      "format": "svg, png",
+      "use": "Simplified mark that reads at 16-32 px: favicon, video watermark, inline badges"
+    },
+    {
+      "id": "lockup-horizontal",
+      "group": "marks",
+      "size": "1600x400",
+      "format": "svg, png",
+      "use": "Seal left of the parent line and ceremonial name: page headers, letterhead, end cards",
+      "grounds": ["paper", "ground"]
+    },
+    {
+      "id": "lockup-stacked",
+      "group": "marks",
+      "size": "800x1000",
+      "format": "svg, png",
+      "use": "Seal over the name: square placements, report covers, closing credits",
+      "grounds": ["paper", "ground"]
+    },
+    {
+      "id": "wordmark",
+      "group": "marks",
+      "size": "1600x240",
+      "format": "svg, png",
+      "use": "Name only, no seal: running heads, footers, tight horizontal space",
+      "grounds": ["paper", "ground"]
+    },
+    {
+      "id": "emboss",
+      "group": "stamps",
+      "size": "1024x1024",
+      "format": "svg, jpg",
+      "use": "Blind-embossed seal for paper grounds: page backgrounds, certificates, end cards",
+      "grounds": ["paper", "ground"]
+    },
+    {
+      "id": "stamp-record",
+      "group": "stamps",
+      "size": "1200x400",
+      "format": "svg, png",
+      "use": "ENTERED INTO THE PUBLIC RECORD: a published inquiry, the closing card (red ink)",
+      "forms": ["rect", "round"]
+    },
+    {
+      "id": "stamp-finding",
+      "group": "stamps",
+      "size": "800x400",
+      "format": "svg, png",
+      "use": "FINDING: marks the answer section; never decoration (charter 2.2) (the brand's ground ink)",
+      "forms": ["rect", "round"]
+    },
+    {
+      "id": "stamp-amended",
+      "group": "stamps",
+      "size": "800x400",
+      "format": "svg, png",
+      "use": "AMENDED: a dated correction (red ink)",
+      "forms": ["rect", "round"]
+    },
+    {
+      "id": "stamp-examination",
+      "group": "stamps",
+      "size": "1200x400",
+      "format": "svg, png",
+      "use": "UNDER EXAMINATION: a story not yet published (slate ink)",
+      "forms": ["rect", "round"]
+    },
+    {
+      "id": "youtube-banner",
+      "group": "headers",
+      "size": "2560x1440",
+      "format": "svg, jpg",
+      "use": "YouTube channel banner; masthead inside the central 1546x423 safe area"
+    },
+    {
+      "id": "x-header",
+      "group": "headers",
+      "size": "1500x500",
+      "format": "svg, jpg",
+      "use": "X / Twitter profile header"
+    },
+    {
+      "id": "page-band",
+      "group": "headers",
+      "size": "1600x320",
+      "format": "svg, jpg",
+      "use": "Site header band for the institution page"
+    },
+    {
+      "id": "og-default",
+      "group": "cards",
+      "size": "1200x675",
+      "format": "svg, jpg",
+      "use": "Share card for the brand's pages (og:image, twitter:image)"
+    },
+    {
+      "id": "og-inquiry",
+      "group": "cards",
+      "size": "1200x675",
+      "format": "svg",
+      "use": "Share-card template for one inquiry: the question as text over the brand's ground, seal and full name below (drawn per inquiry; not in the kit export)",
+      "template": true
+    },
+    {
+      "id": "cta-record",
+      "group": "cta",
+      "size": "1200x400",
+      "format": "svg, jpg",
+      "use": "Video to site: \"Read the full record\" (description header, end screen, posts)"
+    },
+    {
+      "id": "cta-watch",
+      "group": "cta",
+      "size": "1200x400",
+      "format": "svg, jpg",
+      "use": "Site to video: \"Watch the inquiry\""
+    },
+    {
+      "id": "endscreen-subscribe",
+      "group": "cta",
+      "size": "1920x1080",
+      "format": "svg, jpg",
+      "use": "YouTube end screen with slots for the subscribe element and two videos"
+    },
+    {
+      "id": "close-card",
+      "group": "cta",
+      "size": "1920x1080",
+      "format": "svg, jpg",
+      "use": "Closing card: \"The matter is now part of the public record.\""
+    },
+    {
+      "id": "avatar",
+      "group": "avatars",
+      "size": "800x800",
+      "format": "svg, jpg",
+      "use": "Profile picture on every platform (YouTube, X, Bluesky); usually the seal on a clean ground"
+    },
+    {
+      "id": "watermark",
+      "group": "video",
+      "size": "150x150",
+      "format": "svg, png",
+      "use": "YouTube branding watermark; derived from mark-small, not the avatar scaled down"
+    },
+    {
+      "id": "thumbnail-badge",
+      "group": "video",
+      "size": "240x240",
+      "format": "svg, png",
+      "use": "Small emblem in a thumbnail corner"
+    }
+  ]
+}

@@ -1,7 +1,6 @@
 import type { FC } from 'react';
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, Img, staticFile, useCurrentFrame } from 'remotion';
 import { SHORT_LAYOUT as L, type Timeline, type TimelineScene } from '../types';
-import { MARKS } from './marks';
 import { brand, ramp } from './theme';
 
 /** The Short's field (brand/design.md 1.1, 2.3): Treasury Navy with a faint lift behind the content band and the
@@ -42,15 +41,14 @@ export const Seal: FC<{ size: number }> = ({ size }) => (
   </svg>
 );
 
-/** The institution's seal (brand/<institution>/profile.png, embedded in marks.ts), or the placeholder mark. */
-export const Mark: FC<{ short: NonNullable<Timeline['short']>; size: number }> = ({ short, size }) => {
-  const src = short.commissionKey ? MARKS[short.commissionKey] : undefined;
-  return src ? (
-    <img src={src} width={size} height={size} style={{ borderRadius: '50%', display: 'block' }} alt="" />
+/** The institution's seal from its brand kit (staged into the video folder's brand/ by src/video/brand.ts), or the
+ *  placeholder mark for a Short no institution publishes. */
+export const Mark: FC<{ short: NonNullable<Timeline['short']>; size: number }> = ({ short, size }) =>
+  short.commissionKey ? (
+    <Img src={staticFile('brand/seal.png')} width={size} height={size} style={{ display: 'block' }} alt="" />
   ) : (
     <Seal size={size} />
   );
-};
 
 /** The smallest institutional badge (brand/design.md 2.6): the seal, the publisher, the institution, a gold rule and
  *  the format eyebrow, in the band above the content. Static: it is the frame, not a scene. */

@@ -250,6 +250,10 @@ Reject a video if any of the following fails.
 - The Official Public Record is the shared website metaphor; evidence belongs with each inquiry.
 - Video Knowledge remains the internal engineering/production name unless separately changed.
 - The goal is a reusable multi-institution system, initially proving one channel rather than launching six.
+- Six permanent YouTube channels, one per institution, and no general-purpose Commonwealth channel (reconsidered and
+  confirmed 2026-10-24): one production method does not mean one audience, so each channel builds its own subscribers
+  and commercial fit. No plan to merge or split them later. The site, the research and production platform and the
+  shared design system stay one; each institution's channel is its own upload destination.
 
 **Recommended, not irrevocably approved**
 
@@ -269,7 +273,8 @@ Reject a video if any of the following fails.
 - Approval of finalized visual assets versus current generated references.
 - Final Commonwealth parent seal / coat of arms.
 - Exact path taxonomy, legal publisher attribution.
-- The five future channel handles and whether all are available.
+- The five future channel handles and whether all are available; their launch order, cadence and upload credentials.
+- Whether other social platforms (X, Bluesky, ...) use one Commonwealth account or one per institution.
 - Complete palettes, seals, banners, descriptions, slogans, playlists and voices for future channels.
 - Whether Sounds Good on Paper, Catch Included, Commonly Untrue, and Pattern Behavior are adopted as series.
 - Replacement series name for Office of Code Pending; whether Plausibility Commission needs a distinct series name.

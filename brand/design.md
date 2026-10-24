@@ -61,35 +61,21 @@ Black + IBM Plex Mono.
 - Captions, charts, and phone-sized frames work without zooming.
 - Use licensed, redistributable fonts; never assume a font exists on the rendering system.
 
-### 1.4 Commission seal and profile mark
+### 1.4 Seals and marks
 
-RECOMMENDED, first produced concept: a circular navy and gold seal with a balanced scale, a ledger or stack of documents
-on one side and a stack of coins on the other, in a laurel ring. It works at avatar size and at high resolution on cover
-sheets.
+DECIDED 2026-10-24, drawn by `npm run brand` (README.md, Brand kits): one engraved-ring seal for every brand, the name
+over the top, the brand's own motto along the bottom, its emblem in the centre, in engraved gold on its ground. The
+small mark (favicon, watermark, inline badges) is the emblem in a gold roundel; the watermark is the emblem in white at
+60%, not the avatar scaled down. Emblems: the Commonwealth a compass star, Spending a balance scale with a ledger and
+coins, and the institutions the motifs in [institutions.md](institutions.md) section 3.
 
-Profile mark rule: symbol first, small text second. The full institutional name is unreadable on mobile avatars; omit it
-at avatar scale. Keep a single-color and minimal-size derivative.
+### 1.5 Banners, headers and cards
 
-Earlier alternates, none approved over the balance scale: Examined Coin (magnifier), CSE Monogram, Pillar of Prudence,
-Commonwealth Auditor (heraldic bird).
-
-### 1.5 Commission banner
-
-RECOMMENDED: official letterhead / national treasury: navy perimeter, gold rules, cream field, large formal Commission
-name, balance-scale seal, public-inquiry documents, fine ledger details, fictional neoclassical architecture. Center what
-must survive YouTube cropping.
-
-Banner copy: small parent COMMONWEALTH OF REASON; main ceremonial name COMMISSION ON SENSIBLE EXPENDITURE; slogan AN
-INQUIRY INTO WHAT THINGS ACTUALLY COST.; motto ALL MATTERS THOROUGHLY CONSIDERED. The YouTube display name stays
-Commonwealth of Reason: Commission on Spending.
-
-Delivery: 16:9, at least 2048 x 1152 px, 2560 x 1440 preferred, at most 6 MB; essential words and marks inside the
-central safe area; preview desktop, TV, and mobile crops.
-
-Generated reference assets (not final vectors, not in this repository; obtain them from the design session):
-`CORSpending_banner_2560x1440.png` (2.1 MB), `CORSpending_profile.png` (800 x 800), `commonwealth_of_reason_commission_banner.png`
-(1672 x 941, below the recommended size; rebuild before use), `wide_mockup_branding_image_layout_for_a_youtube_ch.png`
-(composition mockup only).
+DECIDED 2026-10-24: the YouTube banner is a paper letterhead strip across the ground, seal, parent line, name and motto
+inside the central 1546 x 423 safe area; the X header a ruled ground with the name set right, clear of the avatar; the
+site band, share card, calls to action, end screen and closing card follow in `slots.json`. The earlier generated
+rasters (the Spending seal and banners) are retired; the channel shows them until the kit's avatar and banner are
+uploaded, and `spending/accounts.json` is updated then.
 
 ### 1.6 Thumbnail direction
 

@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
 import { sha } from '../lib/io';
+import { stageBrand } from './brand';
 import { ALL_KINDS } from './kinds';
 import { COMPOSITION, CONTACT } from './remotion/Root';
 import type { Timeline, TimelineScene } from './types';
@@ -21,7 +22,6 @@ const SHARED = [
   'Citation.tsx',
   'Portrait.tsx',
   'fonts.ts',
-  'marks.ts',
   'theme.ts',
   'glyphs.tsx',
   'index.ts',
@@ -120,6 +120,7 @@ export async function renderScenes(
   const out: Chunk[] = plan.map((p) => ({ ...p, cached: !todo.includes(p) }));
   if (!todo.length) return out;
   const inputProps = tl as unknown as Record<string, unknown>;
+  stageBrand(tl.topic, publicDir);
   const serveUrl = await bundle({ entryPoint: ENTRY, publicDir });
   const browser = await openBrowser('chrome');
   try {

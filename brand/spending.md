@@ -15,8 +15,8 @@ Version 1.0, consolidated 2026-10-23. The first and only live channel.
 
 ## 2. YouTube About description
 
-RECOMMENDED draft, not confirmation of what YouTube currently holds. If no public record page exists yet, change "is
-entered" to "is intended to be entered" or withhold that sentence until the companion pages are live.
+DECIDED: the text below is what the channel shows. The machine record is [spending/accounts.json](spending/accounts.json)
+(`accounts.youtube.description`); change it there, on YouTube and here together.
 
 > Does a heat pump actually save money? Is the premium model worth it? When does an investment really pay for itself?
 >
@@ -43,7 +43,7 @@ spending, cost analysis, cost benefit analysis, home economics, homeownership, h
 costs, home improvements, consumer advice, savings, value for money, evidence based research, financial decisions,
 consumer investigations, public inquiry
 
-Channel-level discovery cues, not tags for every upload; titles, descriptions, and metadata stay story-specific.
+DECIDED, recorded in `accounts.youtube.keywords`. Channel-level discovery cues, not tags for every upload; titles, descriptions, and metadata stay story-specific.
 
 ## 4. Channel links and contact
 
@@ -56,6 +56,9 @@ Channel-level discovery cues, not tags for every upload; titles, descriptions, a
   Reports, Exhibits & Findings.
 
 ## 5. Artwork and upload checklist
+
+The artwork is the brand kit in [spending/](spending/), indexed by its `kit.json` and written by `npm run brand`: upload
+`avatar.jpg` and `youtube-banner.jpg` (and `watermark.png` as the branding watermark), then update `accounts.json`.
 
 - Final banner at 2560 x 1440 or equivalent 16:9, <= 6 MB, key elements inside the safe crop; preview desktop, mobile, TV.
 - Avatar readable at small sizes; clean 1:1 export.
