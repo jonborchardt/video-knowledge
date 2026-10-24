@@ -1,0 +1,82 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-fable-5-1",
+  "date": "2026-10-24",
+  "revision": 3,
+  "packageFingerprint": "873c915512",
+  "approved": {
+    "s01": "878d1764d5",
+    "s02": "4aa819a3f8",
+    "s03": "7c6ebfc372",
+    "s04": "d39f775fd9",
+    "s05": "97278b2f30",
+    "s06": "5751bd8d93",
+    "s07": "6e7a8dd015"
+  },
+  "dispositions": {
+    "s01.a": {
+      "fingerprint": "878d1764d5",
+      "category": "needs-qualification",
+      "reason": "The listed limits are other studies' results that narrow the canonical claim, not Wilson's modelled figure; the sentence attributes the figure to the model ('a national study estimates'), names the passage's own population (oil, propane or electricity) and limits it to homes already running AC; s03 says it is a model and s05 gives the no-AC result."
+    },
+    "s03.a": {
+      "fingerprint": "7c6ebfc372",
+      "category": "needs-qualification",
+      "reason": "This sentence is the qualification itself: it says the figure is modelled, not metered; the listed limits belong to the field studies and do not narrow what the model found."
+    },
+    "s04.a": {
+      "fingerprint": "d39f775fd9",
+      "category": "needs-qualification",
+      "reason": "The median is read as the passage gives it, tied to the same homes and to heat pump efficiency; s03 says it is modelled. The listed limits (Minnesota, New England, UK, Canada) do not bear on the model's median."
+    },
+    "s05.a": {
+      "fingerprint": "97278b2f30",
+      "category": "needs-qualification",
+      "reason": "The sentence limits the 73 to 86 percent to homes on those fuels without AC and places it in the same model; it is the narrower statement the warning asks for."
+    }
+  },
+  "findings": [
+    {
+      "sentence": "s01",
+      "assertion": "s01.a",
+      "fingerprint": "7c51ef684a",
+      "revision": 1,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "The passage's population is homes that 'heat primarily with electricity', which includes electric furnaces and existing heat pumps, not only baseboards; the parent's s07 says 'electricity'. The 95 to 100 percent is the share of that wider group, and the Short gives no figure for baseboard homes alone. Not misleading in direction (resistance heat is the clearest case) but the population is stated narrower than the study's.",
+      "refs": ["heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"],
+      "suggestion": "Say 'oil, propane or electric heat' (or 'electricity', as the parent does) instead of 'electric baseboards'. The package hook and title carry the same 'baseboards'; the shorts review owns those."
+    },
+    {
+      "sentence": "s07",
+      "fingerprint": "ca74457b49",
+      "revision": 1,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'where oil breaks the pattern' presupposes that oil breaks the pattern. That fact rests on the New England meters (Cadmus break-even temperatures), a claim outside this Short's package that the Short never spoke; in a Short the viewer has nothing else, so the close asserts a second finding without evidence.",
+      "refs": ["heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3611-L3619"],
+      "suggestion": "Make it a question, not a presupposition: 'Whether metered homes in Minnesota and New England agree with the model, and whether oil holds the pattern, is the subject of the full inquiry'."
+    },
+    {
+      "sentence": "s07",
+      "fingerprint": "ca74457b49",
+      "revision": 1,
+      "category": "misdirection",
+      "severity": "warning",
+      "explanation": "'linked above' points the viewer nowhere: on a YouTube Short the full video is linked in the description and as the related video below the player, not above it.",
+      "refs": [],
+      "suggestion": "Say 'linked below' or 'in the description', or drop the location and say 'the full inquiry' alone."
+    },
+    {
+      "sentence": "s01",
+      "assertion": "s01.a",
+      "fingerprint": "878d1764d5",
+      "revision": 3,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "The study states that its bill results use winter 2021-22 energy prices and are 'very sensitive' to them: at 2019 prices the share of oil-heated homes with positive bill savings falls to 66 to 100 percent (propane 87 to 99 percent). The Short attributes the figure to the model, s06 says a model is exact about what it assumes, and the price year is not among the package's carried qualifications, so the sentence is accurate as spoken; but the 95 to 100 percent is the main case at one winter's prices, not a figure that holds at any price.",
+      "refs": ["heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L381-L382", "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L531-L545"],
+      "suggestion": "No change needed for the Short; the full video is the place to say the figure moves with the price year, if an editor wants it said."
+    }
+  ]
+}

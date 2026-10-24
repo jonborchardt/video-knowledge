@@ -19,7 +19,7 @@ export const SHORT_LAYOUT = {
   top: 280, // the content band starts here (badge and format eyebrow above)
   contentBottom: 1150,
   captionTop: 1180,
-  captionBottom: 1280,
+  captionBottom: 1290,
   citationBottom: 1480,
 } as const;
 /** YouTube's limit for a Short, in measured seconds; the storyboard's estimate is capped lower (SHORT_MAX_SECONDS). */

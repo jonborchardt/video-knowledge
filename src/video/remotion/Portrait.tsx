@@ -84,16 +84,29 @@ export const PortraitBadge: FC<{ short: NonNullable<Timeline['short']> }> = ({ s
 );
 
 const CARD_WORDS = 6;
-/** Caption cards: a sentence's spoken words in groups of at most six (a short last group joins the one before),
- *  each card shown from its first word's frame until the next card's, the spoken word in gold. */
-export function captionCards(scene: TimelineScene): { words: { text: string; frame: number; end: number }[] }[] {
-  const cards: { words: { text: string; frame: number; end: number }[] }[] = [];
+const MIN_BREAK = 3; // a card breaks early at punctuation only once it holds this many words
+type Word = { text: string; frame: number; end: number };
+/** Caption cards: a sentence's spoken words in groups of at most six, breaking early after a comma, colon or full
+ *  stop once a card holds three words; a token the provider split at a hyphen ("oil-" + "heated") is rejoined. Each
+ *  card is shown from its first word's frame until the next card's, the spoken word in gold. */
+export function captionCards(scene: TimelineScene): { words: Word[] }[] {
+  const cards: { words: Word[] }[] = [];
   for (const s of scene.sentences) {
-    const ws = s.words;
-    if (!ws.length) continue;
-    const n = Math.max(1, Math.ceil(ws.length / CARD_WORDS));
-    const per = Math.ceil(ws.length / n);
-    for (let i = 0; i < ws.length; i += per) cards.push({ words: ws.slice(i, i + per) });
+    const ws: Word[] = [];
+    for (const w of s.words) {
+      const prev = ws.at(-1);
+      if (prev && /-$/.test(prev.text)) ws[ws.length - 1] = { text: prev.text + w.text, frame: prev.frame, end: w.end };
+      else ws.push({ text: w.text, frame: w.frame, end: w.end });
+    }
+    let card: Word[] = [];
+    for (const w of ws) {
+      card.push(w);
+      if (card.length >= CARD_WORDS || (card.length >= MIN_BREAK && /[.,;:?!]$/.test(w.text))) {
+        cards.push({ words: card });
+        card = [];
+      }
+    }
+    if (card.length) cards.push({ words: card });
   }
   return cards;
 }
@@ -123,13 +136,13 @@ export const Captions: FC<{ scene: TimelineScene }> = ({ scene }) => {
         textAlign: 'center',
         fontFamily: brand.sans,
         fontWeight: 600,
-        fontSize: 44,
+        fontSize: 42,
         lineHeight: 1.15,
         color: brand.fg,
         opacity: a,
       }}
     >
-      <div>
+      <div style={{ maxWidth: '100%' }}>
         {card.words.map((w, k) => (
           <span key={k} style={{ color: t >= w.frame && t < w.end + 3 ? brand.gold : brand.fg, marginRight: 12 }}>
             {w.text}

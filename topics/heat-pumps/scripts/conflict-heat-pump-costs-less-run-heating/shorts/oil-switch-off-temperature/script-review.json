@@ -1,0 +1,66 @@
+{
+  "reviewer": "scripts/briefs/script-review.md",
+  "model": "claude-fable-5-1",
+  "date": "2026-10-24",
+  "revision": 1,
+  "packageFingerprint": "cf04f8a5d5",
+  "approved": {
+    "s01": "e8fe470b7e",
+    "s02": "3a59df84d0",
+    "s03": "bdc986ddf8",
+    "s04": "43eabf7380",
+    "s05": "e9d7dbf76a",
+    "s06": "e1f11b43a3",
+    "s07": "630be5b176"
+  },
+  "findings": [
+    {
+      "sentence": "s04",
+      "assertion": "s04.a",
+      "fingerprint": "43eabf7380",
+      "revision": 1,
+      "category": "needs-human",
+      "severity": "info",
+      "explanation": "'Massachusetts and Rhode Island homes' is not in the cited passage (L1184-L1205, the recommendations); it comes from the document's provenance (source header L1 and L10: prepared for the Electric and Gas Program Administrators of Massachusetts and Rhode Island) and the package's document name, which is also how short.carries phrases the qualification. Treated as source attribution, not a claim needing its own passage; the ductless mini-split and oil-heated-home scope are in the passage.",
+      "refs": ["heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"],
+      "suggestion": "Keep; if provenance may not be spoken from the header, say 'one New England utility evaluation' or drop the states."
+    },
+    {
+      "sentence": "s01",
+      "fingerprint": "e8fe470b7e",
+      "revision": 1,
+      "category": "needs-human",
+      "severity": "info",
+      "explanation": "Title and hook read alone: 'The evaluators said turn the heat pump off below 8 degrees. A year later, 25.' attributes the advice and the year-to-year jump signals it is not a fixed rule; s02 dates the thresholds, s03 ties them to that year's prices and cold COP in the next sentence, s04 scopes them to one evaluation of oil-heated homes. No figure is a rule a viewer could carry off.",
+      "refs": ["heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L1184-L1205"],
+      "suggestion": "None."
+    }
+  ],
+  "dispositions": {
+    "s01.a": {
+      "fingerprint": "e8fe470b7e",
+      "category": "needs-qualification",
+      "reason": "The sentence reports one evaluation's switch-off advice, not that oil homes save money; the Deetjen limit (oil homes usually a private loss) points the same way and Bernard does not analyse oil, and s04 says one evaluation, oil-heated homes only."
+    },
+    "s02.a": {
+      "fingerprint": "3a59df84d0",
+      "category": "needs-qualification",
+      "reason": "The thresholds are dated to 2015 and 2016 in the sentence, s03 ties them to that year's prices and cold COP, s04 scopes them to one evaluation; Deetjen and Bernard do not bear on an oil switchover temperature."
+    },
+    "s03.a": {
+      "fingerprint": "bdc986ddf8",
+      "category": "needs-qualification",
+      "reason": "The passage states the dependence on energy prices and cold-temperature COPs and the direction of movement in its own words; the Deetjen and Bernard limits concern whether oil homes save, not the switchover point."
+    },
+    "s04.a": {
+      "fingerprint": "43eabf7380",
+      "category": "needs-qualification",
+      "reason": "'nearly always' and 'always' are the evaluation's own words (L1188-L1190, L1194-L1195), attributed with 'it found' and scoped to one evaluation in the same sentence; the sentence is the qualification."
+    },
+    "s05.a": {
+      "fingerprint": "e9d7dbf76a",
+      "category": "needs-qualification",
+      "reason": "'not every household' paraphrases the passage's 'may not appeal to all customer types' and is attributed to the evaluators; no claim about savings is made."
+    }
+  }
+}

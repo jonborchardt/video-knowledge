@@ -41,7 +41,22 @@ export async function narrate(seg: Segment, videoDir: string, opts: NarrateOptio
         continue;
       }
     }
-    const r = await tts.synthesize(s.text, voice.voice, voice.rate, join(videoDir, base));
+    // edge-tts answers a burst of requests with "No audio was received": a pause and a retry clears it, so one
+    // throttled sentence does not throw away the sentences before it.
+    let r: Awaited<ReturnType<typeof tts.synthesize>>;
+    for (let attempt = 1; ; attempt++) {
+      try {
+        r = await tts.synthesize(s.text, voice.voice, voice.rate, join(videoDir, base));
+        break;
+      } catch (e) {
+        if (attempt >= 3) throw e;
+        const wait = attempt * 10;
+        log(
+          `${s.id}: synthesis failed (${e instanceof Error ? e.message.split('\n').at(-1) : e}); retry ${attempt} of 2 in ${wait}s`,
+        );
+        await new Promise((res) => setTimeout(res, wait * 1000));
+      }
+    }
     const file = `${base}.${r.format}`;
     const bytes = readFileSync(join(videoDir, file));
     const duration = probe(join(videoDir, file)).duration;

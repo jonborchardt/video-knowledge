@@ -10,6 +10,8 @@ const MAX = WIDTH - 2 * GUTTER - 23; // the frame between the gutters, less the 
 const ROW_P = 76;
 const MAX_P = SHORT_LAYOUT.width - SHORT_LAYOUT.gutter - SHORT_LAYOUT.right - 23;
 const isPortrait = (frame?: { width: number; height: number }) => !!frame && frame.height > frame.width;
+/** A phone has no room for the file name beside the document's name: keep the name and the lines. */
+const shortDetail = (detail: string) => detail.replace(/ \(([^()]*\.txt), lines ([^)]*)\)$/, ', lines $2');
 // ponytail: width estimated at 0.5em a character (Segoe UI averages under that); measure when a font runs wider.
 /** One unwrapped line that fits MAX: the font shrinks for a long line (never below `min`, never taller than ROW
  *  allows), and an ellipsis clips whatever still does not fit. */
@@ -61,8 +63,15 @@ export const Citation: FC<{ scene: TimelineScene; frame: number }> = ({ scene, f
               <div style={{ ...fitP(c.label, 34, 26), fontFamily: brand.sans, color: brand.fg, lineHeight: 1.2 }}>
                 {c.label}
               </div>
-              <div style={{ ...fitP(c.detail, 24, 18), fontFamily: brand.mono, color: brand.muted, lineHeight: 1.3 }}>
-                {c.detail}
+              <div
+                style={{
+                  ...fitP(shortDetail(c.detail), 24, 18),
+                  fontFamily: brand.mono,
+                  color: brand.muted,
+                  lineHeight: 1.3,
+                }}
+              >
+                {shortDetail(c.detail)}
               </div>
             </div>
           ))}

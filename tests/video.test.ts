@@ -749,9 +749,28 @@ describe('shorts: portrait frame and kinds', () => {
     const tl = buildTimeline(checkSegment(inp), manifest(inp), 30, read);
     const cards = captionCards(tl.scenes[0]);
     const words = tl.scenes[0].sentences.flatMap((s) => s.words);
-    expect(cards.flatMap((c) => c.words)).toEqual(words);
+    expect(cards.flatMap((c) => c.words.map((w) => w.text))).toEqual(words.map((w) => w.text));
     for (const c of cards) expect(c.words.length).toBeLessThanOrEqual(6);
-    expect(cards.length).toBe(Math.ceil(words.length / 6));
     expect(cards[0].words[0].frame).toBe(words[0].frame);
+    // a provider token split at a hyphen is rejoined; a card breaks early after punctuation once it has three words
+    const split = {
+      ...tl.scenes[0],
+      sentences: [
+        {
+          ...tl.scenes[0].sentences[0],
+          words: ['For', 'oil-', 'heated', 'homes,', 'the', 'line', 'moved', 'lower.'].map((text, i) => ({
+            text,
+            frame: i * 10,
+            end: i * 10 + 8,
+          })),
+        },
+      ],
+    };
+    const sc = captionCards(split);
+    expect(sc.map((c) => c.words.map((w) => w.text))).toEqual([
+      ['For', 'oil-heated', 'homes,'],
+      ['the', 'line', 'moved', 'lower.'],
+    ]);
+    expect(sc[0].words[1]).toMatchObject({ frame: 10, end: 28 });
   });
 });
