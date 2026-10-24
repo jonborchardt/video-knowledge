@@ -872,7 +872,11 @@ export function boardNext(topic: string, storyId: string, root = ROOT): BoardNex
       stage: prod.stage,
       next,
       steps: stepsOf(next, topic, storyId),
-      halt: { kind: 'published', stage: prod.stage, why: `the video is ${live.live ? 'live' : 'scheduled'} at ${live.url}` },
+      halt: {
+        kind: 'published',
+        stage: prod.stage,
+        why: `the video is ${live.live ? 'live' : 'scheduled'} at ${live.url}`,
+      },
       done: true,
     };
   }
