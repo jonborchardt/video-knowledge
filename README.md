@@ -305,9 +305,9 @@ machine: the stage is the first artifact that is missing or not current.
 The board has one card per video (a chain is one card listing its follow-up questions and total claims; follow-ups get
 no card), in a column for whoever acts next: needs research, needs review, ready to produce, in production (`/produce`
 is on it; the strip on the card shows the stage, red means it stopped and a person must act), your review (a private
-package is made), in review, published and parked.
+package is made), uploaded, approved, scheduled, published and parked.
 
-The one hand-written input is `production.json` at the repo root, for decisions no artifact records:
+The one hand-written input is `production.json` at the repo root, for planning decisions no artifact records:
 
 ```json
 {
@@ -319,11 +319,33 @@ The one hand-written input is `production.json` at the repo root, for decisions 
 }
 ```
 
-`decision` is `queued` (produce this next), `parked` (with the reason), `reviewing` (uploaded privately for human
-review, with `url`) or `published` (with `url`). Keys must name a story in that topic's `stories.json`; the build
-fails otherwise. The board keeps three things apart: technical readiness (the stage, from the artifacts), editorial
-approval (`reviewing` and `published`, from this file) and licensing clearance (from the build report: the voice's
+`decision` is `queued` (produce this next) or `parked` (with the reason). Keys must name a story in that topic's
+`stories.json`; the build fails otherwise. The board keeps three things apart: technical readiness (the stage, from the
+artifacts), publishing state (from `publish.json`, below) and licensing clearance (from the build report: the voice's
 licence and each composition's `cleared`), so a card can be `packaged` and still say "public release blocked".
+
+## Publishing
+
+Publishing adds things no production artifact records: who approved which build, what was uploaded where, what is
+scheduled, what is live, what failed. They live in `topics/<topic>/scripts/<slug>/publish.json`, one per video: per
+output (the YouTube video, later a short, a blog post, a page) an append-only event log and a person's metadata choices
+(tags, a better title, a hand-made thumbnail). `npm run publish -- <verb> <topic> <story-id>` writes the events; the
+`metadata` block may be hand-edited. Builds are named by the mp4 sha the QA checked, metadata by the sha of the
+composed title, description, tags and thumbnail sha, so a thumbnail swap is an `updated` event, never a re-render.
+
+The flow, as the board's next step walks it:
+
+1. Draft packaged: upload `video/review/<slug>-review-private.mp4` privately, `publish -- uploaded --id <id>`.
+2. Watch it with `checklist.md`; `npm run video -- final --approved-by "<name>"` accepts the draft (recorded as
+   `approved` for the draft build) and packages the release build.
+3. Upload the release build privately and record it, or approve the local file: `publish -- approve --by "<name>"`.
+   Only an approved build may go public.
+4. Set it public or schedule it on YouTube, then `publish -- published` or `publish -- scheduled --at <ISO>`.
+5. Later changes to title, tags or thumbnail: change them on YouTube, `publish -- updated --fields thumbnail`.
+   A live video is never replaced: a re-release is a new output, `publish -- add <id> --kind youtube-video`.
+
+`publish -- show` prints the state, the composed upload metadata and the event log. Every verb is idempotent (an event
+already recorded prints and exits 0) and refuses, without writing, what the files do not support (exit 2).
 
 ## Producing a story
 

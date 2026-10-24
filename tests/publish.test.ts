@@ -9,18 +9,30 @@ import { readJson } from '../src/lib/io';
 import {
   type Ledger,
   type Output,
-  currentBuild,
-  outputState,
-  uploadMetadataOf,
   type PublishEvent,
+  Refusal,
   addOutput,
+  addOutputTo,
   appendEvent,
+  currentBuild,
   emptyLedger,
   eventKey,
   ledgerProblems,
+  loadLedger,
   mainOutput,
+  outputState,
+  recordApproved,
+  recordFailed,
+  recordPublished,
+  recordScheduled,
+  recordSimple,
+  recordUpdated,
+  recordUploaded,
   saveLedger,
+  setThumbnail,
+  uploadMetadataOf,
 } from '../src/lib/publish';
+import { type Fixture, syntheticProduction } from './production-helpers';
 
 const tmp = mkdtempSync(join(tmpdir(), 'vk-publish-'));
 afterAll(() => rmSync(tmp, { recursive: true, force: true }));
@@ -292,5 +304,116 @@ describe('uploadMetadataOf', () => {
 
   it('is null without a review package', () => {
     expect(uploadMetadataOf(join(tmp, 'nowhere'), rel, out())).toBeNull();
+  });
+});
+
+describe('verbs', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const rel = syntheticProduction('packaged', { release: true });
+  const rel2 = syntheticProduction('packaged', { release: true });
+  const draft = syntheticProduction('packaged');
+  afterAll(() => [rel, rel2, draft].forEach((f) => f.cleanup()));
+  const a = <T extends object>(f: Fixture, extra: T = {} as T) => ({ root: f.root, by: 'Jon', now, ...extra });
+  const events = (f: Fixture, output = 'youtube') => loadLedger(f.topic, f.story, f.root)!.outputs[output].events;
+
+  it('records an upload once per build and id, with the build and the metadata it sent', () => {
+    const r = recordUploaded(rel.topic, rel.story, a(rel, { id: 'dQw4w9WgXcQ', visibility: 'private' }));
+    expect(r.existing).toBe(false);
+    expect(r.event).toMatchObject({ type: 'uploaded', build: 'releasesha', buildStatus: 'release', id: 'dQw4w9WgXcQ' });
+    const meta = uploadMetadataOf(rel.dir, (f) => f, loadLedger(rel.topic, rel.story, rel.root)!.outputs.youtube)!;
+    expect(r.event!.metadata).toBe(meta.sha);
+    expect(recordUploaded(rel.topic, rel.story, a(rel, { id: 'dQw4w9WgXcQ' })).existing).toBe(true);
+    expect(events(rel)).toHaveLength(1);
+  });
+
+  it('a public upload needs the build approved first, and lands as published', () => {
+    const pub = () => recordUploaded(rel.topic, rel.story, a(rel, { id: 'aaaaaaaaaaa', visibility: 'public' }));
+    expect(pub).toThrow(Refusal);
+    expect(pub).toThrow(/approved/);
+    recordApproved(rel.topic, rel.story, a(rel, { note: 'checklist clean' }));
+    recordUploaded(
+      rel.topic,
+      rel.story,
+      a(rel, { id: 'aaaaaaaaaaa', visibility: 'public', url: 'https://youtu.be/aaaaaaaaaaa' }),
+    );
+    expect(events(rel).map((e) => e.type)).toEqual(['uploaded', 'approved', 'uploaded', 'published']);
+    expect(events(rel).at(-1)).toMatchObject({ id: 'aaaaaaaaaaa', url: 'https://youtu.be/aaaaaaaaaaa' });
+  });
+
+  it('approve needs a real name and a build it can stand on', () => {
+    expect(() => recordApproved(rel2.topic, rel2.story, a(rel2, { by: '<your name>' }))).toThrow(/name/);
+    expect(() => recordApproved(draft.topic, draft.story, a(draft))).toThrow(/upload/); // a draft nobody has uploaded
+    const r = recordApproved(rel2.topic, rel2.story, a(rel2)); // the local release build is enough
+    expect(r.event).toMatchObject({ type: 'approved', build: 'releasesha' });
+    expect(recordApproved(rel2.topic, rel2.story, a(rel2)).existing).toBe(true);
+  });
+
+  it('scheduled needs an approved upload and a future time; published follows', () => {
+    expect(() => recordScheduled(draft.topic, draft.story, a(draft, { at: '2026-11-01T00:00:00Z' }))).toThrow(Refusal);
+    recordUploaded(rel2.topic, rel2.story, a(rel2, { id: 'bbbbbbbbbbb' }));
+    expect(() => recordScheduled(rel2.topic, rel2.story, a(rel2, { at: '2026-10-01T00:00:00Z' }))).toThrow(/past/);
+    expect(recordScheduled(rel2.topic, rel2.story, a(rel2, { at: '2026-11-01T00:00:00Z' })).event).toMatchObject({
+      type: 'scheduled',
+      id: 'bbbbbbbbbbb',
+      publishAt: '2026-11-01T00:00:00Z',
+    });
+    expect(recordPublished(rel2.topic, rel2.story, a(rel2)).event).toMatchObject({
+      type: 'published',
+      id: 'bbbbbbbbbbb',
+    });
+    expect(() => recordPublished(draft.topic, draft.story, a(draft))).toThrow(Refusal);
+  });
+
+  it('updated records a changed metadata sha and nothing when unchanged', () => {
+    expect(recordUpdated(rel2.topic, rel2.story, a(rel2, { fields: ['title'] })).existing).toBe(true);
+    const png = join(rel2.dir, 'video', 'publish', 'thumbnail.png');
+    mkdirSync(join(rel2.dir, 'video', 'publish'), { recursive: true });
+    writeFileSync(png, 'not really a png');
+    expect(setThumbnail(rel2.topic, rel2.story, { root: rel2.root, file: png })).toMatch(/^[0-9a-f]{10}$/);
+    const t = loadLedger(rel2.topic, rel2.story, rel2.root)!.outputs.youtube.metadata.thumbnail!;
+    expect(t.file).toMatch(/^topics\/.*\/video\/publish\/thumbnail\.png$/);
+    const r = recordUpdated(rel2.topic, rel2.story, a(rel2, { fields: ['thumbnail'] }));
+    expect(r.existing).toBe(false);
+    expect(r.event).toMatchObject({ type: 'updated', fields: ['thumbnail'] });
+  });
+
+  it('refuses a missing or non-image thumbnail', () => {
+    expect(() => setThumbnail(rel2.topic, rel2.story, { root: rel2.root, file: join(rel2.dir, 'nope.png') })).toThrow(
+      Refusal,
+    );
+    expect(() =>
+      setThumbnail(rel2.topic, rel2.story, { root: rel2.root, file: join(rel2.dir, 'script.json') }),
+    ).toThrow(/png|jpe?g/i);
+  });
+
+  it('refuses a follow-up story and a YouTube URL in place of an id', () => {
+    expect(() =>
+      recordUploaded('heat-pumps', 'decision:when-does-it-pay-for-itself', a(rel, { id: 'ccccccccccc' })),
+    ).toThrow(/follow-up/);
+    expect(() => recordUploaded(draft.topic, draft.story, a(draft, { id: 'https://youtu.be/dQw4w9WgXcQ' }))).toThrow(
+      /dQw4w9WgXcQ/,
+    );
+    expect(() => recordUploaded(draft.topic, draft.story, a(draft, { id: 'short' }))).toThrow(/id/);
+  });
+
+  it('a draft upload waits for final; failures and simple events append', () => {
+    recordUploaded(draft.topic, draft.story, a(draft, { id: 'ddddddddddd' }));
+    expect(events(draft)[0]).toMatchObject({ buildStatus: 'draft', build: 'draftsha' });
+    recordFailed(draft.topic, draft.story, a(draft, { step: 'upload', error: 'quota', retryable: true }));
+    recordFailed(draft.topic, draft.story, a(draft, { step: 'upload', error: 'quota', retryable: true }));
+    expect(events(draft).filter((e) => e.type === 'failed')).toHaveLength(2);
+    recordSimple(draft.topic, draft.story, 'retracted', a(draft, { note: 'wrong channel' }));
+    expect(events(draft).at(-1)!.type).toBe('retracted');
+  });
+
+  it('adds an output', () => {
+    addOutputTo(draft.topic, draft.story, 'short-1', 'youtube-short', { root: draft.root, derivedFrom: 'youtube' });
+    expect(loadLedger(draft.topic, draft.story, draft.root)!.outputs['short-1'].derivedFrom).toBe('youtube');
+    expect(() => addOutputTo(draft.topic, draft.story, 'short-1', 'youtube-short', { root: draft.root })).toThrow(
+      /exists/,
+    );
+    expect(() =>
+      addOutputTo(draft.topic, draft.story, 'blog', 'blog-post', { root: draft.root, source: 'nope.md' }),
+    ).toThrow(/nope\.md/);
   });
 });

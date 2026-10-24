@@ -4,9 +4,11 @@
 // Builds are named by the mp4 sha the QA checked, upload metadata by the sha of the composed text and thumbnail sha, so
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
 import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { isAbsolute, join, relative, resolve } from 'node:path';
 import { lf, readJson, ROOT, sha, toJson } from './io';
-import { scriptDir } from './script';
+import { approverProblem } from './release';
+import { scriptDir, storySlug } from './script';
+import { loadStories } from './stories';
 
 export const PUBLISH_FILE = 'publish.json';
 export const EVENT_TYPES = [
@@ -400,4 +402,206 @@ export function uploadMetadataOf(dir: string, rel: (f: string) => string, output
     thumbnail,
     sha: sha(toJson({ ...text, thumbnail: thumbnail?.sha ?? null })),
   };
+}
+
+// ---- verbs (what `npm run publish` does) ------------------------------------------------------------------------
+
+/** A verb the files do not support; the CLI prints the message and exits 2 without writing. */
+export class Refusal extends Error {}
+export interface VerbResult {
+  event: PublishEvent | null;
+  existing: boolean; // the key was already in the ledger: nothing written
+  message: string;
+}
+interface VerbArgs {
+  output?: string;
+  by: string;
+  root?: string;
+  now?: Date;
+}
+const YOUTUBE_ID = /^[\w-]{11}$/;
+
+/** The ledger (or a fresh one), the output, the build and the metadata the verbs judge; refuses a follow-up story. */
+function open(topic: string, storyId: string, a: { output?: string; root?: string }) {
+  const root = a.root ?? ROOT;
+  const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
+  if (story?.partOf)
+    throw new Refusal(`${storyId} is a follow-up in ${story.partOf}; its video is that story's, record it there`);
+  const dir = scriptDir(topic, storyId, root);
+  if (!existsSync(dir)) throw new Refusal(`no script directory for ${topic} ${storyId}`);
+  const path = publishPath(topic, storyId, root);
+  const ledger = loadLedger(topic, storyId, root) ?? emptyLedger(`${topic}/${storyId}`);
+  const id = a.output ?? 'youtube';
+  const out = ledger.outputs[id];
+  if (!out) throw new Refusal(`no output ${id} (outputs: ${Object.keys(ledger.outputs).join(', ')}); add it first`);
+  const rel = (f: string) => `topics/${topic}/scripts/${storySlug(storyId)}/${f}`;
+  const build = currentBuild(dir);
+  const metadata = uploadMetadataOf(dir, rel, out);
+  const state = outputState(out, build, metadata?.sha ?? null, { topic, story: storyId, output: id });
+  return { root, dir, path, ledger, id, out, rel, build, metadata, state };
+}
+function write(o: ReturnType<typeof open>, e: PublishEvent, then?: (l: Ledger) => Ledger): VerbResult {
+  const r = appendEvent(o.ledger, o.id, e);
+  if (r.existing) return { event: r.existing, existing: true, message: `already recorded: ${describe(r.existing)}` };
+  saveLedger(o.path, then ? then(r.ledger) : r.ledger);
+  return { event: e, existing: false, message: `recorded ${describe(e)}` };
+}
+const describe = (e: PublishEvent) =>
+  `${e.type}${e.id ? ` ${e.id}` : ''}${e.build ? ` (build ${e.build})` : ''} at ${e.at} by ${e.by}`;
+const stamp = (a: { now?: Date }) => (a.now ?? new Date()).toISOString();
+
+export function recordUploaded(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { id: string; url?: string; visibility?: Visibility },
+): VerbResult {
+  const o = open(topic, storyId, a);
+  if (o.out.kind.startsWith('youtube') && !YOUTUBE_ID.test(a.id)) {
+    const m = /(?:v=|youtu\.be\/|shorts\/)([\w-]{11})/.exec(a.id);
+    throw new Refusal(`not a YouTube video id: ${a.id}${m ? `; did you mean ${m[1]}?` : ''}`);
+  }
+  if (!o.build || !o.metadata) throw new Refusal('no review package to upload; npm run video -- package first');
+  const mp4 = join(o.dir, 'video', 'review', o.metadata.file!.split('/').pop()!);
+  if (existsSync(mp4) && sha(readFileSync(mp4)) !== o.build.sha)
+    throw new Refusal(`${o.metadata.file} is not the build review.json describes (${o.build.sha}); package again`);
+  const visibility = a.visibility ?? 'private';
+  const approved = o.out.events.some((e) => e.type === 'approved' && e.build === o.build!.sha);
+  if (visibility === 'public' && !approved)
+    throw new Refusal(`build ${o.build.sha} is not approved; a public upload needs npm run publish -- approve first`);
+  const at = stamp(a);
+  const e: PublishEvent = {
+    at,
+    type: 'uploaded',
+    by: a.by,
+    build: o.build.sha,
+    buildStatus: o.build.status,
+    metadata: o.metadata.sha,
+    id: a.id,
+    visibility,
+  };
+  if (a.url) e.url = a.url;
+  return write(o, e, (l) =>
+    visibility === 'public'
+      ? appendEvent(l, o.id, { at, type: 'published', by: a.by, id: a.id, ...(a.url ? { url: a.url } : {}) }).ledger
+      : l,
+  );
+}
+
+export function recordApproved(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { note?: string; build?: string },
+): VerbResult {
+  const problem = approverProblem(a.by);
+  if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
+  const o = open(topic, storyId, a);
+  const build = a.build ?? o.build?.sha;
+  if (!build) throw new Refusal('nothing to approve: no review package and no build named');
+  const uploaded = o.out.events.find((e) => e.type === 'uploaded' && e.build === build);
+  const localRelease = o.build?.sha === build && o.build.status === 'release';
+  if (!uploaded && !localRelease)
+    throw new Refusal(
+      `build ${build} has no upload to approve and is not the release build on disk; upload it first (a draft is accepted by npm run video -- final)`,
+    );
+  const e: PublishEvent = { at: stamp(a), type: 'approved', by: a.by, build };
+  if (uploaded?.id) e.id = uploaded.id;
+  if (a.note) e.note = a.note;
+  return write(o, e);
+}
+
+export function recordScheduled(topic: string, storyId: string, a: VerbArgs & { at: string }): VerbResult {
+  const o = open(topic, storyId, a);
+  if (o.state.status !== 'approved')
+    throw new Refusal(`the upload is ${o.state.status}, not approved: ${o.state.next}`);
+  const t = Date.parse(a.at);
+  if (Number.isNaN(t)) throw new Refusal(`--at ${a.at} is not an ISO date`);
+  if (t <= (a.now ?? new Date()).getTime()) throw new Refusal(`--at ${a.at} is in the past`);
+  return write(o, { at: stamp(a), type: 'scheduled', by: a.by, id: o.state.id!, publishAt: a.at });
+}
+
+export function recordPublished(topic: string, storyId: string, a: VerbArgs & { url?: string }): VerbResult {
+  const o = open(topic, storyId, a);
+  if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
+    throw new Refusal(`the upload is ${o.state.status}, not approved or scheduled: ${o.state.next}`);
+  const e: PublishEvent = { at: stamp(a), type: 'published', by: a.by, id: o.state.id! };
+  if (a.url) e.url = a.url;
+  return write(o, e);
+}
+
+export function recordUpdated(topic: string, storyId: string, a: VerbArgs & { fields: string[] }): VerbResult {
+  const o = open(topic, storyId, a);
+  if (!o.state.id) throw new Refusal('nothing uploaded yet; there is nothing on YouTube to update');
+  if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
+  const sent = [...o.out.events].reverse().find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
+  if (sent?.metadata === o.metadata.sha)
+    return { event: sent, existing: true, message: `the metadata is unchanged since ${describe(sent)}` };
+  return write(o, {
+    at: stamp(a),
+    type: 'updated',
+    by: a.by,
+    id: o.state.id,
+    metadata: o.metadata.sha,
+    fields: a.fields,
+  });
+}
+
+export function recordFailed(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { step: string; error: string; retryable?: boolean },
+): VerbResult {
+  const o = open(topic, storyId, a);
+  const e: PublishEvent = { at: stamp(a), type: 'failed', by: a.by, step: a.step, error: a.error };
+  if (a.retryable !== undefined) e.retryable = a.retryable;
+  if (o.state.id) e.id = o.state.id;
+  return write(o, e);
+}
+
+export function recordSimple(
+  topic: string,
+  storyId: string,
+  type: 'unpublished' | 'retracted',
+  a: VerbArgs & { note: string },
+): VerbResult {
+  const o = open(topic, storyId, a);
+  if (!a.note) throw new Refusal(`${type} needs --note`);
+  if (type === 'unpublished' && !o.state.id) throw new Refusal('nothing uploaded, nothing to unpublish');
+  const e: PublishEvent = { at: stamp(a), type, by: a.by, note: a.note };
+  if (o.state.id) e.id = o.state.id;
+  return write(o, e);
+}
+
+/** Records a person's thumbnail as the output's: repo-relative path and sha (the file itself is gitignored). */
+export function setThumbnail(
+  topic: string,
+  storyId: string,
+  a: { output?: string; file: string; root?: string },
+): string {
+  const o = open(topic, storyId, a);
+  const abs = resolve(a.file);
+  if (!existsSync(abs)) throw new Refusal(`${a.file} does not exist`);
+  if (!/\.(png|jpe?g)$/i.test(abs)) throw new Refusal(`${a.file} is not a PNG or JPEG`);
+  const inside = relative(o.dir, abs);
+  if (inside.startsWith('..') || isAbsolute(inside))
+    throw new Refusal(`${a.file} is outside ${o.rel('')}; put it under video/publish/`);
+  const thumbSha = sha(readFileSync(abs));
+  const out: Output = {
+    ...o.out,
+    metadata: { ...o.out.metadata, thumbnail: { file: o.rel(inside.replaceAll('\\', '/')), sha: thumbSha } },
+  };
+  saveLedger(o.path, { ...o.ledger, outputs: { ...o.ledger.outputs, [o.id]: out } });
+  return thumbSha;
+}
+
+export function addOutputTo(
+  topic: string,
+  storyId: string,
+  id: string,
+  kind: string,
+  opts: { derivedFrom?: string; source?: string; root?: string } = {},
+): void {
+  const o = open(topic, storyId, { root: opts.root });
+  if (opts.source && !existsSync(join(o.root, opts.source)))
+    throw new Refusal(`--source ${opts.source} is not a file under the repo root`);
+  saveLedger(o.path, addOutput(o.ledger, id, kind, opts));
 }
