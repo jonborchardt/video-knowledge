@@ -247,6 +247,23 @@ describe('qa check groups (no ffmpeg)', () => {
     expect(check.ok).toBe(false);
     expect(check.detail).toContain('in sc01');
     expect(check.detail).toContain('in sc03');
+    expect(check.scene).toBe('sc01'); // the review page seeks to the first place
+  });
+
+  it('a failing check names the scene and sentence it is about', () => {
+    const sc = tl.scenes[1];
+    const s0 = sc.sentences[0];
+    const edited = {
+      ...tl,
+      scenes: tl.scenes.map((x) =>
+        x.id === sc.id
+          ? { ...x, sentences: x.sentences.map((y) => (y.id === s0.id ? { ...y, text: 'changed' } : y)) }
+          : x,
+      ),
+    };
+    const c = contentChecks(edited, seg).find((x) => x.name === 'narration matches script')!;
+    expect(c).toMatchObject({ ok: false, scene: sc.id, sentence: s0.id });
+    expect(contentChecks(tl, seg).every((x) => x.scene === undefined && x.sentence === undefined)).toBe(true);
   });
 
   it('blank checks read luma samples: a flat stretch fails, varied content passes', () => {

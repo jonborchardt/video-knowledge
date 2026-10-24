@@ -17,6 +17,8 @@ export interface Check {
   name: string;
   ok: boolean;
   detail: string;
+  scene?: string; // a failing check about one place names the first one, so the review page can seek to it
+  sentence?: string;
 }
 export interface QaVerdict {
   ok: boolean;
@@ -56,7 +58,20 @@ export const MUSIC_TOLERANCE = {
 /** The check that says the mp4 opened at all; inspection frames are extracted only after it passed. */
 export const DECODABLE = 'mp4 decodable';
 type Luma = { mean: number; sd: number }[];
-const check = (name: string, ok: boolean, detail: string): Check => ({ name, ok, detail });
+interface Place {
+  scene?: string;
+  sentence?: string;
+}
+const check = (name: string, ok: boolean, detail: string, at?: Place): Check =>
+  ok || !at ? { name, ok, detail } : { name, ok, detail, ...at };
+/** A sentence's place in the timeline: its id and its scene's, or undefined for none. */
+const placeOf = (tl: Pick<Timeline, 'scenes'>, sentence?: string): Place | undefined =>
+  sentence ? { scene: tl.scenes.find((x) => x.sentences.some((y) => y.id === sentence))?.id, sentence } : undefined;
+/** The scene a `<scene id> <what>` problem line names. */
+const sceneOfProblem = (problems: string[], re: RegExp): Place | undefined => {
+  const p = problems.find((x) => re.test(x));
+  return p ? { scene: p.split(' ')[0] } : undefined;
+};
 const expectedSeconds = (tl: Timeline) => tl.durationInFrames / tl.fps;
 
 export function qaSegment(
@@ -177,6 +192,7 @@ export function audioChecks(p: Probe, a: AudioStats | null, tl: Timeline, manife
       'narration not truncated',
       truncated.length === 0,
       truncated.length ? truncated.map((s) => s.id).join(', ') : `${all.length} sentences fit their slots`,
+      placeOf(tl, truncated[0]?.id),
     ),
   );
   return out;
@@ -214,6 +230,7 @@ export function contentChecks(tl: Timeline, seg: Segment): Check[] {
         'every script sentence narrated',
         missing.length === 0,
         missing.length ? `missing ${missing.join(', ')}` : `${all.length} sentences in script order`,
+        missing[0] ? { sentence: missing[0] } : undefined,
       ),
     );
     const order = tl.scenes.flatMap((x) => x.sentences.map((s) => s.id));
@@ -227,6 +244,7 @@ export function contentChecks(tl: Timeline, seg: Segment): Check[] {
       'narration matches script',
       mismatched.length === 0,
       mismatched.length ? mismatched.map((s) => s.id).join(', ') : 'every sentence verbatim',
+      placeOf(tl, mismatched[0]?.id),
     ),
     check(
       'fingerprints',
@@ -256,22 +274,26 @@ export function contentChecks(tl: Timeline, seg: Segment): Check[] {
       'citations present',
       !problems.some((p) => p.endsWith('citations')),
       `${tl.scenes.reduce((n, s) => n + s.citations.length, 0)} on-screen citations resolved`,
+      sceneOfProblem(problems, /citations$/),
     ),
     check(
       'chart data matches storyboard',
       !problems.some((p) => p.endsWith('chart data')),
       `${tl.scenes.filter((s) => s.chart).length} charts`,
+      sceneOfProblem(problems, /chart data$/),
     ),
     check(
       'excerpts resolve',
       !problems.some((p) => /excerpt|highlight/.test(p)),
       `${tl.scenes.filter((s) => s.excerpt).length} excerpts with their highlights`,
+      sceneOfProblem(problems, /excerpt|highlight/),
     ),
     check(
       'assets and kinds supported',
       !problems.some((p) => /assets|unsupported/.test(p)),
       problems.filter((p) => /assets|unsupported/.test(p)).join(', ') ||
         `${new Set(tl.scenes.map((s) => s.kind)).size} kinds`,
+      sceneOfProblem(problems, /assets|unsupported/),
     ),
   );
   return out;
@@ -345,7 +367,12 @@ export function syncChecks(p: Probe, tl: Timeline, seg: Segment, manifest: Narra
       again.scenes.every((s, i) => s.start === tl.scenes[i]?.start && s.duration === tl.scenes[i]?.duration),
       `${tl.scenes.length} scenes, ${tl.scenes.flatMap((s) => s.sentences).length} sentences`,
     ),
-    check('cues inside their sentences', badCues.length === 0, badCues.join(', ') || `${cues} cues`),
+    check(
+      'cues inside their sentences',
+      badCues.length === 0,
+      badCues.join(', ') || `${cues} cues`,
+      badCues[0] ? { scene: badCues[0].split('.')[0] } : undefined,
+    ),
     check(
       'final scene complete',
       last.start + last.duration === tl.durationInFrames && p.duration + TOLERANCE.frameSlack >= expectedSeconds(tl),
@@ -389,11 +416,13 @@ export function blankChecks(samples: Luma, tl: Timeline): Check[] {
         : worst
           ? `longest flat run ${worst / sps}s ending at ${worstAt.toFixed(1)}s`
           : 'none',
+      blank[0] ? { scene: sceneAt(blank[0].from / sps).id } : undefined,
     ),
     check(
       'every scene has content',
       notRendered.length === 0,
       notRendered.length ? notRendered.map((s) => s.id).join(', ') : 'mid-scene luma varies in every scene',
+      notRendered[0] ? { scene: notRendered[0].id } : undefined,
     ),
   ];
 }

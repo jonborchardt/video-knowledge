@@ -17,5 +17,5 @@ export interface BuildSummary {
   music: { compositions: { title: string }[] } | null;
   clearance: Clearance;
   fingerprints: { script: string; storyboard: string; config: string }; // config: sha of the parsed render.json
-  qa: { ok: boolean; checks: { name: string; ok: boolean }[] };
+  qa: { ok: boolean; checks: { name: string; ok: boolean; detail?: string; scene?: string; sentence?: string }[] };
 }
