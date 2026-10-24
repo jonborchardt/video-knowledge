@@ -19,15 +19,18 @@ export interface KindSpec {
   percent?: boolean; // draws percentages: every point is a percent and the points total at most 100
   fadesOut?: boolean; // ends on an intentional fade to black, which QA's blank check allows at the end
   passage?: boolean; // reads its figures from the scene's first cited passage (TimelineScene.excerpt), not chart points
+  /** The typography shape this kind draws, so the inference (one line a title, a question mark a question, quotes a
+   *  quote, several lines a list) finds it in whichever registry is in force. */
+  shape?: 'title' | 'question' | 'list' | 'quote';
 }
 
 export const GENERIC = {
   phone: { component: 'Phone', accepts: ['animation'], assets: ['phone-ui'] }, // a message arrives
   tree: { component: 'Tree', accepts: ['diagram'], assets: ['node-tree'], cues: ['tier2'] }, // YOU, what you sell, a second tier
-  quote: { component: 'Quote', accepts: ['typography'] }, // quoted lines appear as spoken, one citation per line
-  title: { component: 'Text', accepts: ['typography'] }, // one line, large
-  question: { component: 'Text', accepts: ['typography'] }, // a question, typed on
-  list: { component: 'Text', accepts: ['typography'] }, // lines build one per cue or sentence
+  quote: { component: 'Quote', accepts: ['typography'], shape: 'quote' }, // quoted lines appear as spoken, one citation per line
+  title: { component: 'Text', accepts: ['typography'], shape: 'title' }, // one line, large
+  question: { component: 'Text', accepts: ['typography'], shape: 'question' }, // a question, typed on
+  list: { component: 'Text', accepts: ['typography'], shape: 'list' }, // lines build one per cue or sentence
   'evidence-cards': { component: 'EvidenceCards', accepts: ['diagram'], assets: ['evidence-cards'] }, // three source cards
   transition: { component: 'Transition', accepts: ['transition'] }, // split field, wipe
   disclosures: { component: 'Excerpt', accepts: ['document-excerpt'], assets: ['disclosure-thumbnails'] }, // thumbnails, one opens
@@ -63,13 +66,36 @@ export const GENERIC = {
   waterfall: { component: 'Waterfall', accepts: ['diagram'] }, // paid out, then costs, then what is kept
 } as const satisfies Record<string, KindSpec>;
 
+/** The vertical kinds a Short (a package with a `short` block) draws with: the same inference over a smaller, portrait
+ *  vocabulary (brand/design.md 2.6). Names are distinct from the landscape ones because the render cache, ALL_KINDS and
+ *  the scene map are keyed by kind. Anything else in a Short is unsupported and fails the render check. */
+export const SHORT_GENERIC = {
+  'short-quote': { component: 'ShortText', accepts: ['typography'], shape: 'quote' },
+  'short-title': { component: 'ShortText', accepts: ['typography'], shape: 'title' },
+  'short-question': { component: 'ShortText', accepts: ['typography'], shape: 'question' },
+  'short-list': { component: 'ShortText', accepts: ['typography'], shape: 'list' },
+  'short-stat-tiles': { component: 'ShortStatTiles', accepts: ['data-chart'], chart: 'stat-tiles' },
+  'short-bar': { component: 'ShortBar', accepts: ['data-chart'], chart: 'bar' },
+  'short-excerpt': { component: 'ShortExcerpt', accepts: ['document-excerpt'] },
+} as const satisfies Record<string, KindSpec>;
+
 export type GenericKind = keyof typeof GENERIC;
+export type ShortKind = keyof typeof SHORT_GENERIC;
 export type BespokeKind = { [V in keyof typeof BESPOKE]: keyof (typeof BESPOKE)[V] }[keyof typeof BESPOKE];
-export type SceneKind = GenericKind | BespokeKind;
+export type SceneKind = GenericKind | ShortKind | BespokeKind;
 export type KindRegistry = Readonly<Record<string, KindSpec>>;
 
+/** The generic registry a package draws with: the portrait one for a Short, else the landscape one. */
+export const registryFor = (pkg: { short?: unknown } | null | undefined): KindRegistry =>
+  pkg?.short ? SHORT_GENERIC : GENERIC;
+
 /** Every kind any video registers, for the renderer: a scene's kind was already checked against its own video. */
-export const ALL_KINDS: Record<SceneKind, KindSpec> = Object.assign({}, GENERIC, ...Object.values(BESPOKE));
+export const ALL_KINDS: Record<SceneKind, KindSpec> = Object.assign(
+  {},
+  GENERIC,
+  SHORT_GENERIC,
+  ...Object.values(BESPOKE),
+);
 /** The bespoke kinds registered for one video (<topic>/<story slug>); empty when it has none. */
 export const bespokeFor = (videoKey: string): KindRegistry => (BESPOKE as Record<string, KindRegistry>)[videoKey] ?? {};
 
@@ -78,31 +104,45 @@ export const SUPPORTED_ASSETS = new Set(GENERIC_SPECS.flatMap(([, k]) => k.asset
 /** The assets no renderer draws for a scene of this kind: a bespoke kind is the scene's own graphic and draws the
  *  assets the storyboard registered for it; a generic kind draws only the supported ones. */
 export const unsupportedAssets = (kind: string, assets: string[]) =>
-  Object.hasOwn(GENERIC, kind) ? assets.filter((a) => !SUPPORTED_ASSETS.has(a)) : [];
+  Object.hasOwn(GENERIC, kind) || Object.hasOwn(SHORT_GENERIC, kind)
+    ? assets.filter((a) => !SUPPORTED_ASSETS.has(a))
+    : [];
 
 /** The kind for a scene: the render.json override when this video knows it and it accepts the category, else the
- *  generic inference. */
-export function kindOf(s: Pick<Scene, 'visual'>, override?: string, bespoke: KindRegistry = {}): SceneKind | null {
+ *  inference over `generic` (the landscape registry, or a Short's). */
+export function kindOf(
+  s: Pick<Scene, 'visual'>,
+  override?: string,
+  bespoke: KindRegistry = {},
+  generic: KindRegistry = GENERIC,
+): SceneKind | null {
   const v = s.visual;
+  const specs = Object.entries(generic) as [SceneKind, KindSpec][];
   if (override) {
     const own = (r: KindRegistry) => (Object.hasOwn(r, override) ? r[override] : undefined);
-    const spec = own(GENERIC) ?? own(bespoke);
+    const spec = own(generic) ?? own(bespoke);
     return spec?.accepts.includes(v.category) ? (override as SceneKind) : null;
   }
+  const one = (f: (k: KindSpec) => boolean) => specs.find(([, k]) => f(k))?.[0] ?? null;
   for (const a of v.assetIds ?? []) {
-    const hit = GENERIC_SPECS.find(([, k]) => k.assets?.includes(a) && k.accepts.includes(v.category));
-    if (hit) return hit[0];
+    const hit = one((k) => !!k.assets?.includes(a) && k.accepts.includes(v.category));
+    if (hit) return hit;
   }
-  if (v.category === 'data-chart')
-    return (v.chart?.type && GENERIC_SPECS.find(([, k]) => k.chart === v.chart!.type)?.[0]) || null;
-  if (v.category === 'document-excerpt') return v.excerpt ? 'excerpt' : null;
-  if (v.category === 'transition') return 'transition';
+  if (v.category === 'data-chart') return v.chart?.type ? one((k) => k.chart === v.chart!.type) : null;
+  if (v.category === 'document-excerpt')
+    return v.excerpt ? one((k) => k.accepts.includes('document-excerpt') && !k.assets) : null;
+  if (v.category === 'transition') return one((k) => k.accepts.includes('transition'));
   if (v.category === 'typography') {
     const lines = v.onScreenText ?? [];
     if (!lines.length) return null;
-    if (lines.every((l) => /^["“]/.test(l))) return 'quote';
-    if (lines.length === 1) return /\?\s*$/.test(lines[0]) ? 'question' : 'title';
-    return 'list';
+    const shape = lines.every((l) => /^["“]/.test(l))
+      ? 'quote'
+      : lines.length === 1
+        ? /\?\s*$/.test(lines[0])
+          ? 'question'
+          : 'title'
+        : 'list';
+    return one((k) => k.shape === shape);
   }
   return null;
 }

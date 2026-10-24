@@ -24,6 +24,7 @@ import {
   type SceneKind,
   bespokeFor,
   kindOf,
+  registryFor,
   unsupportedAssets,
   unsupportedWhy,
 } from './kinds';
@@ -78,7 +79,8 @@ export function checkSegment(
   bespoke: KindRegistry = bespokeFor(`${inp.script.topic}/${storySlug(inp.script.story)}`),
 ): Segment {
   const { script, storyboard, validation, release, config, pkg } = inp;
-  const specs: KindRegistry = { ...GENERIC, ...bespoke };
+  const generic = registryFor(pkg); // a Short draws with the portrait registry
+  const specs: KindRegistry = { ...generic, ...bespoke };
   const problems: string[] = [];
   const bad = (p: string) => problems.push(p);
   const fp = { script: scriptFingerprint(script), storyboard: storyboardFingerprint(storyboard) };
@@ -129,7 +131,7 @@ export function checkSegment(
       out.push({ id, text: s.text, fingerprint: sentenceFingerprint(s), scene: scene.id });
     }
     const override = config.kinds?.[scene.id];
-    const kind = kindOf(scene, override, bespoke);
+    const kind = kindOf(scene, override, bespoke, generic);
     if (!kind) {
       bad(unsupportedWhy(scene, override));
       continue;
@@ -147,8 +149,8 @@ export function checkSegment(
         if (!known.has(p.cite)) bad(`${scene.id}: chart point "${p.label}" cites ${p.cite}, not in the package`);
         if (spec.percent && p.unit !== 'percent')
           bad(`${scene.id}: ${kind} draws percentages; "${p.label}" is ${p.unit}`);
-        if (kind === 'bar' && p.unit !== 'percent' && p.unit !== 'count')
-          bad(`${scene.id}: bar draws percent and count points; "${p.label}" is ${p.unit}`);
+        if (spec.chart === 'bar' && p.unit !== 'percent' && p.unit !== 'count')
+          bad(`${scene.id}: ${kind} draws percent and count points; "${p.label}" is ${p.unit}`);
       }
       if (spec.percent) {
         const total = pts.reduce((n, p) => n + (Number.isFinite(p.value) ? p.value : 0), 0);

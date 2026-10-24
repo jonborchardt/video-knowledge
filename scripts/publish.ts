@@ -46,13 +46,16 @@ import {
   setThumbnail,
   uploadMetadataOf,
 } from '../src/lib/publish';
-import { scriptDir, storySlug } from '../src/lib/script';
+import { scriptDir, shortOf, storySlug } from '../src/lib/script';
 import { goLive, push, sync, upload } from '../src/lib/uploader';
 import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from '../src/lib/youtube';
 
 if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
 
-const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
+const [cmd, topic, rawStory, ...rest] = process.argv.slice(2);
+// A Short (<story-id>/shorts/<slug>) is recorded in its parent's ledger as the output short:<slug>.
+const shortArg = rawStory ? shortOf(rawStory) : null;
+const storyId = shortArg ? shortArg.parent : rawStory;
 const flag = (name: string) => {
   const i = rest.indexOf(name);
   return i >= 0 ? rest[i + 1] : undefined;
@@ -100,7 +103,7 @@ const need = (name: string) => {
   if (!v) throw new Refusal(`${cmd} needs ${name}`);
   return v;
 };
-const output = flag('--output');
+const output = flag('--output') ?? (shortArg ? `short:${shortArg.slug}` : undefined);
 const common = () => ({ output, by: by() });
 const api = () => ({ ...common(), client: youtubeClient(loadCredentials()) });
 

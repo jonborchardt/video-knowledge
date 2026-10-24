@@ -1,6 +1,7 @@
 // Timeline: the measured narration durations tile the scenes; the storyboard's word-count estimates are not used.
 // Deterministic given the segment, the manifest, render.json and the cited passages. Every cue resolves to the frame
 // its word is spoken on, and every excerpt to its passage, or the build fails.
+import { commissionOf, site } from '../config/site';
 import type { PassageReader } from '../lib/evidence';
 import { sha } from '../lib/io';
 import { narrationFingerprint } from './files';
@@ -10,6 +11,7 @@ import {
   FPS,
   HEIGHT,
   type NarrationManifest,
+  PORTRAIT,
   type Timeline,
   type TimelineScene,
   type TimelineSentence,
@@ -101,13 +103,14 @@ export function buildTimeline(
       options: seg.config.options?.[scene.id] ?? {},
     };
   });
+  const short = seg.pkg.short;
   return {
     topic: seg.script.topic,
     story: seg.script.story,
     title: seg.script.title,
     fps,
-    width: WIDTH,
-    height: HEIGHT,
+    width: short ? PORTRAIT.width : WIDTH,
+    height: short ? PORTRAIT.height : HEIGHT,
     durationInFrames: cursor,
     fingerprints: {
       ...seg.fingerprints,
@@ -115,6 +118,15 @@ export function buildTimeline(
       config: sha(JSON.stringify(seg.config)),
     },
     narration: { provider: manifest.provider, voice: manifest.voice, rate: manifest.rate, licence: manifest.licence },
+    ...(short
+      ? {
+          short: {
+            format: short.format,
+            commission: commissionOf(seg.script.topic)?.name ?? site.name,
+            parent: short.parent,
+          },
+        }
+      : {}),
     scenes,
   };
 }

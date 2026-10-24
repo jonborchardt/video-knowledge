@@ -3,11 +3,11 @@
 // metadata choices. Events are written only by `npm run publish` (scripts/publish.ts); `metadata` may be hand-edited.
 // Builds are named by the mp4 sha the QA checked, upload metadata by the sha of the composed text and thumbnail sha, so
 // nothing new is versioned here. Library layer: it reads video/review/review.json by path and never imports src/video/.
-import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, renameSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve } from 'node:path';
 import { lf, readJson, ROOT, sha, toJson } from './io';
 import { approverProblem } from './release';
-import { scriptDir, storySlug } from './script';
+import { scriptDir, shortOf, storySlug } from './script';
 import { loadStories } from './stories';
 
 export const PUBLISH_FILE = 'publish.json';
@@ -234,11 +234,19 @@ export function currentBuild(dir: string): Build | null {
   return { sha: rp.mp4Sha, status: rp.status === 'release build' ? 'release' : 'draft' };
 }
 
-/** An output made from its own file (a short, a post): that file is its build. Null when the file is not on disk. */
+/** An output made from its own file (a post): that file is its build; or from its own production (a Short: a folder
+ *  with video/review/review.json): that package's build. Null when neither is on disk. */
 export function sourceBuild(root: string, source: string): Build | null {
   const abs = join(root, source);
-  return existsSync(abs) ? { sha: sha(readFileSync(abs)), status: 'release' } : null;
+  if (!existsSync(abs)) return null;
+  if (statSync(abs).isDirectory()) return currentBuild(abs);
+  return { sha: sha(readFileSync(abs)), status: 'release' };
 }
+/** A source that is a nested production (a Short's folder under its parent's), or null. */
+export const nestedSource = (root: string, output: Pick<Output, 'source'>): string | null =>
+  output.source && existsSync(join(root, output.source)) && statSync(join(root, output.source)).isDirectory()
+    ? output.source
+    : null;
 
 export type OutputStatus =
   | 'not-uploaded'
@@ -445,10 +453,15 @@ export function uploadMetadataOf(
   rel: (f: string) => string,
   output: Output,
   parentUrl: string | null = null,
+  root = ROOT,
 ): UploadMetadata | null {
-  const review = join(dir, 'video', 'review');
+  // a nested production (a Short) has its own package: its title, description, thumbnail and captions, not the parent's
+  const nested = nestedSource(root, output);
+  const base = nested ? join(root, nested) : dir;
+  const review = join(base, 'video', 'review');
   const rp = readJson<ReviewJson>(join(review, 'review.json'));
   if (!rp) return null;
+  const at = (f: string) => (nested ? `${nested}/${f}` : rel(f));
   const desc = join(review, 'description.txt');
   const m = output.metadata;
   const packaged = existsSync(desc) ? lf(readFileSync(desc, 'utf8')).trim() : '';
@@ -458,11 +471,11 @@ export function uploadMetadataOf(
   const thumbnail = m.thumbnail
     ? { file: m.thumbnail.file, sha: m.thumbnail.sha }
     : rp.thumbnailSha
-      ? { file: rel('video/review/thumbnail.png'), sha: rp.thumbnailSha }
+      ? { file: at('video/review/thumbnail.png'), sha: rp.thumbnailSha }
       : null;
   const captions =
-    rp.captionsSha && !output.source // the package's captions are timed for the full video, never for a derivative
-      ? { file: rel(`video/review/captions.en.srt`), sha: rp.captionsSha, language: m.language ?? 'en' }
+    rp.captionsSha && (!output.source || nested) // the package's captions are timed for its own video, never a derivative's
+      ? { file: at(`video/review/captions.en.srt`), sha: rp.captionsSha, language: m.language ?? 'en' }
       : null;
   const text = {
     title: m.title ?? rp.title,
@@ -473,7 +486,7 @@ export function uploadMetadataOf(
     playlist: m.playlist,
   };
   return {
-    file: output.source ?? rel(`video/review/${rp.mp4}`),
+    file: nested ? `${nested}/video/review/${rp.mp4}` : (output.source ?? rel(`video/review/${rp.mp4}`)),
     ...text,
     thumbnail,
     captions,
@@ -501,6 +514,12 @@ const YOUTUBE_ID = /^[\w-]{11}$/;
 /** The ledger (or a fresh one), the output, the build and the metadata the verbs judge; refuses a follow-up story. */
 export function openOutput(topic: string, storyId: string, a: { output?: string; root?: string }) {
   const root = a.root ?? ROOT;
+  // A Short's ledger entry is the output short:<slug> in its parent's publish.json.
+  const short = shortOf(storyId);
+  if (short) {
+    storyId = short.parent;
+    a = { ...a, output: a.output ?? `short:${short.slug}` };
+  }
   const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
   if (story?.partOf)
     throw new Refusal(`${storyId} is a follow-up in ${story.partOf}; its video is that story's, record it there`);
@@ -513,7 +532,7 @@ export function openOutput(topic: string, storyId: string, a: { output?: string;
   if (!out) throw new Refusal(`no output ${id} (outputs: ${Object.keys(ledger.outputs).join(', ')}); add it first`);
   const rel = (f: string) => `topics/${topic}/scripts/${storySlug(storyId)}/${f}`;
   const build = out.source ? sourceBuild(root, out.source) : currentBuild(dir);
-  const metadata = uploadMetadataOf(dir, rel, out, parentUrlOf(ledger, out));
+  const metadata = uploadMetadataOf(dir, rel, out, parentUrlOf(ledger, out), root);
   const state = outputState(out, build, metadata?.sha ?? null, { topic, story: storyId, output: id });
   return { root, dir, path, ledger, id, out, rel, build, metadata, state };
 }

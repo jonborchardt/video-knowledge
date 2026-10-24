@@ -11,7 +11,7 @@ import { ALL_KINDS, unsupportedAssets } from './kinds';
 import { type MixReport, type MusicConfig, musicFingerprint, resolveCues } from './music';
 import type { Segment } from './select';
 import { buildTimeline } from './timeline';
-import type { NarrationManifest, Timeline } from './types';
+import { type NarrationManifest, SHORT_HARD_SECONDS, type Timeline } from './types';
 
 export interface Check {
   name: string;
@@ -77,6 +77,7 @@ export function qaSegment(
   return verdict([
     check(DECODABLE, true, `${p.duration.toFixed(3)}s`),
     ...videoChecks(p, tl, opts.duration),
+    ...shortChecks(p, tl),
     ...audioChecks(p, audio, tl, manifest),
     ...contentChecks(tl, seg),
     ...soundtrackChecks(tl, opts),
@@ -85,6 +86,18 @@ export function qaSegment(
   ]);
 }
 const verdict = (checks: Check[]): QaVerdict => ({ ok: checks.every((c) => c.ok), checks });
+
+/** A portrait timeline is a Short: YouTube's three-minute rule, on the measured file. */
+export function shortChecks(p: Pick<Probe, 'duration'>, tl: Pick<Timeline, 'width' | 'height'>): Check[] {
+  if (tl.height <= tl.width) return [];
+  return [
+    check(
+      'short length',
+      p.duration <= SHORT_HARD_SECONDS,
+      `${p.duration.toFixed(1)}s of at most ${SHORT_HARD_SECONDS}s (YouTube classifies longer uploads as videos)`,
+    ),
+  ];
+}
 
 /** Container, stream, resolution, frame rate and length against the timeline. */
 export function videoChecks(p: Probe, tl: Timeline, duration?: [number, number]): Check[] {

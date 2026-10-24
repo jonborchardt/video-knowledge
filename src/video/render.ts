@@ -15,7 +15,16 @@ import type { Timeline, TimelineScene } from './types';
 export const ENTRY = fileURLToPath(new URL('./remotion/index.ts', import.meta.url));
 const REMOTION_DIR = fileURLToPath(new URL('./remotion/', import.meta.url));
 const SRC_DIR = fileURLToPath(new URL('./', import.meta.url));
-const SHARED = ['Root.tsx', 'Video.tsx', 'Citation.tsx', 'theme.ts', 'glyphs.tsx', 'index.ts'];
+const SHARED = [
+  'Root.tsx',
+  'Video.tsx',
+  'Citation.tsx',
+  'Portrait.tsx',
+  'fonts.ts',
+  'theme.ts',
+  'glyphs.tsx',
+  'index.ts',
+];
 const SHARED_LIB = ['types.ts', 'words.ts'];
 
 const resolve = (f: string) => [f + '.ts', f + '.tsx'].find((x) => existsSync(x)) ?? null;

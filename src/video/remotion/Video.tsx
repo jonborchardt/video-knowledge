@@ -1,7 +1,19 @@
-import { type FC, useLayoutEffect, useRef } from 'react';
-import { AbsoluteFill, Audio, Sequence, interpolate, staticFile, useCurrentFrame } from 'remotion';
-import type { Timeline, TimelineScene } from '../types';
+import { type FC, useEffect, useLayoutEffect, useRef } from 'react';
+import {
+  AbsoluteFill,
+  Audio,
+  Sequence,
+  continueRender,
+  delayRender,
+  interpolate,
+  staticFile,
+  useCurrentFrame,
+  useVideoConfig,
+} from 'remotion';
+import { WIDTH, type Timeline, type TimelineScene } from '../types';
 import { Citation } from './Citation';
+import { FONT_FACES, fontCss } from './fonts';
+import { Captions, PortraitBackdrop, PortraitBadge } from './Portrait';
 import { SCENES } from './scenes';
 import { easeOut, theme } from './theme';
 
@@ -11,10 +23,10 @@ const TOL = 2; // px at full size
 /** The first visible line of text that leaves the frame or runs into the citation block, or null. Opacity and
  *  overflow clipping are taken from the ancestors up to (not including) `root`, so a faded or clipped word is judged
  *  as the viewer sees it. Text in SVG is judged by its element's box, text in HTML by the glyphs' own box. */
-export function misfit(root: HTMLElement): string | null {
+export function misfit(root: HTMLElement, width = WIDTH): string | null {
   const frame = root.getBoundingClientRect();
   if (frame.width < 1) return null; // not laid out yet (the page is still mounting): nothing to judge
-  const tol = (TOL * frame.width) / 1920;
+  const tol = (TOL * frame.width) / width;
   const cite = root.querySelector('[data-citation]')?.getBoundingClientRect();
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   for (let n = walker.nextNode(); n; n = walker.nextNode()) {
@@ -44,7 +56,7 @@ export function misfit(root: HTMLElement): string | null {
       }
     }
     if (alpha < 0.05 || r.right - r.left < 1 || r.bottom - r.top < 1) continue;
-    const k = 1920 / frame.width; // report in frame pixels
+    const k = width / frame.width; // report in frame pixels
     const at = `"${text.slice(0, 40)}" at x ${Math.round((r.left - frame.left) * k)}-${Math.round((r.right - frame.left) * k)}, y ${Math.round((r.top - frame.top) * k)}-${Math.round((r.bottom - frame.top) * k)}`;
     if (
       r.left < frame.left - tol ||
@@ -85,11 +97,13 @@ function camera(scene: TimelineScene, frame: number): number {
  *  scene with one citation per line places its own); the camera moves both. Every frame is checked for
  *  text that does not fit, and a misfit fails the render: what is drawn must fit on the screen, the citation
  *  included. */
-const SceneView: FC<{ scene: TimelineScene }> = ({ scene }) => {
+const SceneView: FC<{ scene: TimelineScene; short: Timeline['short'] }> = ({ scene, short }) => {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const portrait = height > width;
   const ref = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
-    const bad = ref.current && misfit(ref.current);
+    const bad = ref.current && misfit(ref.current, width);
     if (bad) throw new Error(`${scene.id} (${scene.kind}) frame ${frame}: ${bad}`);
   });
   const Component = SCENES[scene.kind];
@@ -103,8 +117,10 @@ const SceneView: FC<{ scene: TimelineScene }> = ({ scene }) => {
     <AbsoluteFill style={{ opacity }}>
       <AbsoluteFill ref={ref} style={{ transform: `scale(${camera(scene, frame)})`, transformOrigin: '50% 40%' }}>
         <Component scene={scene} />
+        {portrait ? <Captions scene={scene} /> : null}
         {ownCitations ? null : <Citation scene={scene} frame={scene.start + frame} />}
       </AbsoluteFill>
+      {portrait && short ? <PortraitBadge short={short} /> : null}
     </AbsoluteFill>
   );
 };
@@ -140,12 +156,23 @@ const Backdrop: FC = () => {
 /** The whole segment: scenes and their narration placed by the timeline's measured frames. The studio plays the
  *  narration from here; the renderer mutes it and lays one continuous track at assembly. */
 export const Video: FC<Timeline> = (tl) => {
+  const portrait = tl.height > tl.width;
+  // the embedded brand faces: hold the render until the browser has them (a fallback face would shift every layout)
+  useEffect(() => {
+    const handle = delayRender('brand fonts');
+    const families = [...new Set(FONT_FACES.map((f) => f.family))];
+    Promise.all(families.map((f) => document.fonts.load(`16px "${f}"`)))
+      .then(() => document.fonts.ready)
+      .then(() => continueRender(handle))
+      .catch(() => continueRender(handle));
+  }, []);
   return (
-    <AbsoluteFill style={{ background: theme.bg }}>
-      <Backdrop />
+    <AbsoluteFill style={{ background: portrait ? '#172A45' : theme.bg }}>
+      <style>{fontCss()}</style>
+      {portrait ? <PortraitBackdrop /> : <Backdrop />}
       {tl.scenes.map((s) => (
         <Sequence key={s.id} name={s.id} from={s.start} durationInFrames={s.duration}>
-          <SceneView scene={s} />
+          <SceneView scene={s} short={tl.short} />
         </Sequence>
       ))}
       {tl.scenes

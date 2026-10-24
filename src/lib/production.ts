@@ -40,9 +40,20 @@ import {
   type ScriptReviewFile,
   type ScriptValidation,
   scriptDir,
+  shortId,
+  shortOf,
   storySlug,
 } from './script';
 import { validateScript } from './script-validation';
+import {
+  type ShortsFile,
+  buildShortPackage,
+  discoverShorts,
+  loadShortParent,
+  loadShorts,
+  loadShortsReview,
+  shortsPath,
+} from './shorts';
 import { chainOf, discover, loadStories, storiesPath, type Story } from './stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
@@ -173,6 +184,19 @@ export interface StoryRow {
   decision: Decision | null;
   production: Production | null;
   next: string;
+  shorts: ShortRow[]; // the video's Short candidates (shorts.json), each with its production when started
+  shortsNext: string | null; // the discover command when a packaged video has no current shorts.json, else null
+}
+/** One Short candidate of a video as the board shows it, under the video's row; never the topic's next step. */
+export interface ShortRow {
+  key: string;
+  id: string | null; // <story-id>/shorts/<slug> once the review gave it a slug
+  slug: string | null;
+  format: string | null;
+  readiness: 'ready' | 'needs-review' | 'rejected';
+  blocking: string[];
+  production: Production | null;
+  next: string;
 }
 export interface TopicBoard {
   topic: Topic;
@@ -220,6 +244,8 @@ interface BoardContext {
   ledger: Ledger;
   build: Build | null;
   publish: Production['publish'];
+  /** Set for a Short: its parent, the parent's shorts.json and package, which its own package stage rebuilds from. */
+  short: { parent: string; slug: string; shorts: ShortsFile | null; parentPkg: EvidencePackage | null } | null;
   live: ScriptValidation | null; // the validation re-run in memory (validation stage)
   sb: Storyboard | null; // the storyboard re-filled against it (storyboard stage)
 }
@@ -301,6 +327,57 @@ const packageStage: BoardStage = ({ topic, storyId, root, r, read, t, review, st
   return {
     checks: [check],
     blocker: story.readiness !== 'ready' ? `story is ${story.readiness}: ${story.readinessWhy}` : undefined,
+  };
+};
+
+// 1b. A Short's evidence package: shorts.json must be what discover writes now, the candidate must be ready, and the
+// package must be what buildShortPackage makes of the parent's package and the candidate (so a parent revised, re-locked
+// or re-reviewed since asks for the package again).
+const shortPackageStage: BoardStage = ({ topic, storyId, root, r, pkg, short }, s) => {
+  const { parent, slug, shorts, parentPkg } = short!;
+  const discover = `npm run shorts -- discover ${topic} ${parent}`;
+  const name = 'evidence package';
+  const halt = (kind: HaltKind, why: string, cmd: string, health: Health = 'blocked'): StageResult => ({
+    checks: [{ name, health, detail: why, file: r(FILES.pkg), date: pkg?.generatedAt }],
+    halt: { stage: 'package', kind, why, cmd },
+  });
+  if (!shorts) return halt('missing', `no shorts.json for ${parent}`, discover, 'missing');
+  let again: ShortsFile | null = null;
+  try {
+    again = discoverShorts(loadShortParent(topic, parent, root), loadShortsReview(topic, parent, root));
+  } catch (e) {
+    return halt('stale', `the parent cannot be rediscovered: ${e instanceof Error ? e.message : e}`, discover);
+  }
+  if (toJson(again) !== toJson(shorts)) return halt('stale', `shorts.json is not what discover writes now`, discover);
+  const c = shorts.candidates.find((x) => x.slug === slug);
+  if (!c) return halt('story-left', `no candidate with slug ${slug} in shorts.json`, `stop: no candidate ${slug}`);
+  if (c.readiness !== 'ready')
+    return halt(
+      'story-left',
+      `candidate ${c.key} is ${c.readiness}: ${c.blocking.join('; ')}`,
+      `stop: candidate ${c.key} is ${c.readiness}: ${c.blocking.join('; ')}`,
+    );
+  if (!pkg) return halt('missing', 'not built', s.next, 'missing');
+  if (!parentPkg) return halt('stale', `the parent ${parent} has no evidence package`, s.next);
+  const rebuilt = buildShortPackage(parentPkg, c, shorts);
+  const current = rebuilt.fingerprint === pkg.fingerprint;
+  if (!current)
+    return halt(
+      'stale',
+      `rebuilds to ${rebuilt.fingerprint}, file is ${pkg.fingerprint} (the parent or the review changed)`,
+      s.next,
+      'stale',
+    );
+  return {
+    checks: [
+      {
+        name,
+        health: 'current',
+        detail: `${pkg.fingerprint}: short ${c.key} of ${parent} (${c.format}), ${pkg.claims.length} claims, ${pkg.documents.length} documents`,
+        file: r(FILES.pkg),
+        date: pkg.generatedAt,
+      },
+    ],
   };
 };
 
@@ -663,8 +740,13 @@ const videoStage: BoardStage = ({ topic, storyId, p, r, release, vr, sb }, s) =>
 };
 
 // 9. Soundtrack: mixed into this build (the QA already checked the mix is of the committed cue sheet).
-const soundtrackStage: BoardStage = ({ topic, storyId, r, release, vr }, s) => {
-  if (!vr || !release || !vr.music) return {};
+const soundtrackStage: BoardStage = ({ topic, storyId, r, release, vr, short }, s) => {
+  if (!vr || !release) return {};
+  // A Short is narration only (brand/design.md 2.6: no ceremonial intro, no bed): no soundtrack stage to wait for.
+  if (!vr.music)
+    return short && s.stage === 'rendered'
+      ? { advance: { stage: 'scored', next: `npm run video -- package ${topic} ${storyId}` } }
+      : {};
   return {
     checks: [
       {
@@ -738,7 +820,11 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
   if (!existsSync(dir)) return null;
   const p = (f: string) => join(dir, f);
   const stories = loadStories(topic, root);
-  const story = stories?.stories.find((s) => s.id === storyId);
+  const short = shortOf(storyId);
+  const story = stories?.stories.find((s) => s.id === (short ? short.parent : storyId));
+  // A Short's ledger entry lives in its parent's publish.json as the output short:<slug>.
+  const ledgerStory = short ? short.parent : storyId;
+  const ledgerDir = short ? scriptDir(topic, short.parent, root) : dir;
   const c: BoardContext = {
     topic,
     storyId,
@@ -749,7 +835,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     t: corpusOf(loadTopic(topic)),
     review: loadReview(topic, root),
     story,
-    chain: story ? chainOf(story, stories) : [],
+    chain: story && !short ? chainOf(story, stories) : [],
     pkg: readJson<EvidencePackage>(p(FILES.pkg)),
     script: readJson<Script>(p(FILES.script)),
     sreview: readJson<ScriptReviewFile>(p(FILES.review)),
@@ -757,27 +843,41 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     plan: readJson<StoryboardPlan>(p(FILES.storyboard)),
     release: readJson<Release>(p(FILES.release)),
     vr: readJson<BuildSummary>(p(VIDEO_REPORT)),
-    ledger: loadLedger(topic, storyId, root) ?? emptyLedger(`${topic}/${storyId}`),
-    build: currentBuild(dir),
+    ledger: loadLedger(topic, ledgerStory, root) ?? emptyLedger(`${topic}/${ledgerStory}`),
+    build: short ? currentBuild(ledgerDir) : currentBuild(dir),
     publish: null,
+    short: short
+      ? {
+          ...short,
+          shorts: loadShorts(topic, short.parent, root),
+          parentPkg: readJson<EvidencePackage>(join(scriptDir(topic, short.parent, root), FILES.pkg)),
+        }
+      : null,
     live: null,
     sb: null,
   };
-  // The ledger view: every output's state against the build on disk and the metadata it would send.
-  if (c.build || existsSync(publishPath(topic, storyId, root))) {
+  // The ledger view: every output's state against the build on disk and the metadata it would send. A Short's view is
+  // its own output in the parent's ledger (present once it is packaged), judged against its own build.
+  const own = short ? `short:${short.slug}` : null;
+  if ((own ? own in c.ledger.outputs : c.build) || (!own && existsSync(publishPath(topic, storyId, root)))) {
+    const lrel = (f: string) => rel(join(ledgerDir, f), root);
     const metadata = Object.fromEntries(
-      Object.entries(c.ledger.outputs).map(([id, o]) => [id, uploadMetadataOf(dir, c.r, o, parentUrlOf(c.ledger, o))]),
+      Object.entries(c.ledger.outputs).map(([id, o]) => [
+        id,
+        uploadMetadataOf(ledgerDir, lrel, o, parentUrlOf(c.ledger, o), root),
+      ]),
     );
     const states = outputStates(c.ledger, c.build, (id) => metadata[id]?.sha ?? null, {
       topic,
-      story: storyId,
+      story: ledgerStory,
       root,
     });
+    const ids = own ? [own] : Object.keys(c.ledger.outputs);
     c.publish = {
-      main: mainOutput(c.ledger),
-      outputs: Object.entries(c.ledger.outputs).map(([id, o]) => ({
+      main: own ?? mainOutput(c.ledger),
+      outputs: ids.map((id) => ({
         id,
-        kind: o.kind,
+        kind: c.ledger.outputs[id].kind,
         state: states[id],
         metadata: metadata[id],
       })),
@@ -787,7 +887,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
   const checks: Check[] = [];
   const blockers: string[] = [];
   let halt: Production['halt'] = null;
-  for (const stage of BOARD_STAGES) {
+  for (const stage of c.short ? [shortPackageStage, ...BOARD_STAGES.slice(1)] : BOARD_STAGES) {
     const res = stage(c, s);
     checks.push(...(res.checks ?? []));
     if (res.live) c.live = res.live;
@@ -857,13 +957,20 @@ export interface BoardNext {
   done: boolean;
 }
 export function boardNext(topic: string, storyId: string, root = ROOT): BoardNext {
+  const short = shortOf(storyId);
   const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
   // A follow-up question in another story's chain is produced inside that story's video, never on its own.
   const prod = story?.partOf ? null : productionOf(topic, storyId, root);
-  const ready = story?.readiness === 'ready' && !story.partOf;
-  const why = story?.partOf
-    ? `the story is a follow-up question in ${story.partOf}; produce that story instead`
-    : 'the story is not ready in stories.json';
+  // A Short starts from a ready candidate in its parent's shorts.json.
+  const cand = short ? loadShorts(topic, short.parent, root)?.candidates.find((c) => c.slug === short.slug) : null;
+  const ready = short ? cand?.readiness === 'ready' : story?.readiness === 'ready' && !story.partOf;
+  const why = short
+    ? cand
+      ? `candidate ${cand.key} is ${cand.readiness}: ${cand.blocking.join('; ')}`
+      : `no candidate with slug ${short.slug} in shorts.json (npm run shorts -- discover ${topic} ${short.parent})`
+    : story?.partOf
+      ? `the story is a follow-up question in ${story.partOf}; produce that story instead`
+      : 'the story is not ready in stories.json';
   const live = mainState(prod);
   if (prod && live && (live.live || live.status === 'scheduled')) {
     const next = `stop: ${live.live ? 'live' : 'scheduled'} at ${live.url}; a re-release is npm run publish -- add ${topic} ${storyId} youtube-2 --kind youtube-video`;
@@ -982,7 +1089,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       else if (story.readiness === 'needs-review')
         n = `settle in story-review.json: ${story.blocking[0] ?? story.readinessWhy}`;
       else n = `research: ${story.blocking[0] ?? story.readinessWhy}`;
-      stories.push({ story, decision, production, next: n });
+      stories.push({ story, decision, production, next: n, ...shortRows(name, story.id, production, root) });
     }
     // A follow-up question is produced inside its chain's video, so it is never the topic's next step.
     const queued = stories.find((s) => s.decision?.decision === 'queued' && !s.story.partOf);
@@ -1004,6 +1111,65 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
     if (key.startsWith(`${name}/`) && !file?.stories.some((s) => `${name}/${s.id}` === key))
       throw new Error(`${DECISIONS_FILE}: ${key} is not a story in topics/${name}/stories.json`);
   return { topic, checks, stories, rejected: file?.rejected.length ?? 0, next };
+}
+
+/** A video's Short candidates as rows under it, each with its production when its folder exists, and the discover
+ *  command when a packaged video has no current shorts.json. Shorts never become the topic's next step: a person
+ *  starts /produce on one. */
+function shortRows(
+  topic: string,
+  storyId: string,
+  production: Production | null,
+  root: string,
+): Pick<StoryRow, 'shorts' | 'shortsNext'> {
+  const file = loadShorts(topic, storyId, root);
+  const discover = `npm run shorts -- discover ${topic} ${storyId}`;
+  if (!file) return { shorts: [], shortsNext: production?.stage === 'packaged' ? discover : null };
+  const reviewFile = rel(shortsPath(topic, storyId, root), root).replace(/shorts\.json$/, 'shorts-review.json');
+  const shorts: ShortRow[] = [...file.candidates, ...file.rejected.map((r) => ({ ...r, rejected: true }))].map((c) => {
+    if ('rejected' in c)
+      return {
+        key: c.key,
+        id: null,
+        slug: null,
+        format: null,
+        readiness: 'rejected' as const,
+        blocking: [c.reason],
+        production: null,
+        next: `rejected: ${c.reason}`,
+      };
+    const id = c.slug ? shortId(storyId, c.slug) : null;
+    const prod = id && existsSync(scriptDir(topic, id, root)) ? productionOf(topic, id, root) : null;
+    const live = mainState(prod);
+    const next = prod
+      ? live?.live
+        ? `live: ${live.url}`
+        : prod.next
+      : c.readiness === 'ready'
+        ? `npm run script -- package ${topic} ${id}`
+        : c.reviewed
+          ? `stop: candidate ${c.key} is ${c.readiness}: ${c.blocking.join('; ')}`
+          : `agent: scripts/briefs/shorts.md -> ${reviewFile}`;
+    return {
+      key: c.key,
+      id,
+      slug: c.slug,
+      format: c.format,
+      readiness: c.readiness,
+      blocking: c.blocking,
+      production: prod,
+      next,
+    };
+  });
+  let current = true;
+  try {
+    current =
+      toJson(discoverShorts(loadShortParent(topic, storyId, root), loadShortsReview(topic, storyId, root))) ===
+      toJson(file);
+  } catch {
+    current = false;
+  }
+  return { shorts, shortsNext: current ? null : discover };
 }
 
 /** A row whose main output has left the person's hands: uploaded or beyond. Never the topic's next `/produce` step. */

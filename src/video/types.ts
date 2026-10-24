@@ -7,6 +7,23 @@ import type { SceneKind } from './kinds';
 export const FPS = 30;
 export const WIDTH = 1920;
 export const HEIGHT = 1080;
+/** A Short's frame (a package with a `short` block): a phone held upright. */
+export const PORTRAIT = { width: 1080, height: 1920 } as const;
+/** Where a Short's parts sit, in frame pixels: the badge band above `top`, the content band, the caption band, the
+ *  citation block ending above YouTube's own overlay (the bottom 440 px and the right 120 px are left to it). */
+export const SHORT_LAYOUT = {
+  width: 1080,
+  height: 1920,
+  gutter: 72,
+  right: 120, // left clear for the like, comment and share buttons
+  top: 280, // the content band starts here (badge and format eyebrow above)
+  contentBottom: 1150,
+  captionTop: 1180,
+  captionBottom: 1280,
+  citationBottom: 1480,
+} as const;
+/** YouTube's limit for a Short, in measured seconds; the storyboard's estimate is capped lower (SHORT_MAX_SECONDS). */
+export const SHORT_HARD_SECONDS = 180;
 
 /** One spoken token with its time within the sentence audio, in seconds, as the provider reported it. */
 export interface WordTiming {
@@ -110,5 +127,7 @@ export type Timeline = {
   durationInFrames: number;
   fingerprints: { script: string; storyboard: string; narration: string; config: string };
   narration: { provider: string; voice: string; rate: string; licence: string };
+  /** A Short: the format eyebrow, the institution that publishes it and the parent story (drawn by the frame). */
+  short?: { format: string; commission: string; parent: string };
   scenes: TimelineScene[];
 };

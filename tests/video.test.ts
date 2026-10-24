@@ -15,12 +15,15 @@ import { cue, lineFrames, spokenAt } from '../src/video/cues';
 import { excerptWindow, flowPassage } from '../src/video/excerpt';
 import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
 import { BESPOKE } from '../src/video/bespoke';
-import { ALL_KINDS, GENERIC, kindOf, unsupportedWhy } from '../src/video/kinds';
+import { ALL_KINDS, GENERIC, SHORT_GENERIC, kindOf, registryFor, unsupportedWhy } from '../src/video/kinds';
+import { citationTop } from '../src/video/remotion/Citation';
+import { captionCards } from '../src/video/remotion/Portrait';
+import type { ShortBlock } from '../src/lib/script';
 import { COMPONENTS } from '../src/video/remotion/scenes';
 import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
 import { countUp, theme } from '../src/video/remotion/theme';
 import { narrate } from '../src/video/narration';
-import { TOLERANCE, blankChecks, contentChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
+import { TOLERANCE, blankChecks, contentChecks, shortChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
 import { deepImports, relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail } from '../src/video/select';
@@ -29,7 +32,7 @@ import { type TtsProvider, provider, providerLimitations } from '../src/video/tt
 import { RENDERER_LIMITATIONS } from '../src/video/remotion/limitations';
 import { openaiProvider, speedOf } from '../src/video/tts/openai';
 import { type Speak, azureProvider } from '../src/video/tts/azure';
-import type { TimelineScene } from '../src/video/types';
+import { PORTRAIT, SHORT_LAYOUT, type TimelineScene } from '../src/video/types';
 import { alignLine, findWord, tokens } from '../src/video/words';
 import { DOC_D, pkg, read, scene } from './script-helpers';
 import { POINTS, inputs, manifest, scenes } from './video-helpers';
@@ -644,5 +647,111 @@ describe('look', () => {
     expect(countUp('79.6', 79.6, 1)).toBe('79.6');
     expect(countUp('$300-$650', 300, 0.5)).toBe('$300-$650'); // not one plain figure
     expect(countUp('80', 79.6, 0.5)).toBe('80'); // a rounded display is never recomputed
+  });
+});
+
+describe('shorts: portrait frame and kinds', () => {
+  const short: ShortBlock = {
+    parent: 'decision:mlm-and-seminars',
+    key: 's02',
+    slug: 'half-lost-money',
+    format: 'ONE FIGURE FROM THE RECORD',
+    sentences: ['s02'],
+    hook: 'Nearly half of them lost money.',
+    carries: [],
+    maxSeconds: 170,
+    parentFingerprints: { package: 'p', script: 's', release: 'r' },
+  };
+  const shortInputs = (over: Parameters<typeof inputs>[0] = {}) => {
+    const inp = inputs({ release: true, ...over });
+    return { ...inp, pkg: { ...inp.pkg, short } };
+  };
+  it('infers the portrait kinds from the same rules and keeps every name unique', () => {
+    const q = { visual: { category: 'typography' as const, description: 'q', onScreenText: ['Why?'] } };
+    expect(kindOf(q, undefined, {}, SHORT_GENERIC)).toBe('short-question');
+    expect(kindOf(q)).toBe('question');
+    const tiles = {
+      visual: {
+        category: 'data-chart' as const,
+        description: 't',
+        chart: { type: 'stat-tiles' as const, points: [] },
+      },
+    };
+    expect(kindOf(tiles, undefined, {}, SHORT_GENERIC)).toBe('short-stat-tiles');
+    expect(kindOf({ visual: { category: 'diagram', description: 'd' } }, undefined, {}, SHORT_GENERIC)).toBeNull();
+    expect(registryFor({ short })).toBe(SHORT_GENERIC);
+    expect(registryFor(null)).toBe(GENERIC);
+    for (const k of Object.keys(SHORT_GENERIC)) {
+      expect(GENERIC).not.toHaveProperty(k);
+      for (const reg of Object.values(BESPOKE)) expect(reg).not.toHaveProperty(k);
+      expect(COMPONENTS).toHaveProperty(SHORT_GENERIC[k as keyof typeof SHORT_GENERIC].component);
+    }
+  });
+  it('selects the portrait registry for a short package and judges bar units by the chart, not the name', () => {
+    const inp = shortInputs({ config: { scenes: ['sc03'] } });
+    const seg = checkSegment(inp);
+    expect(seg.problems).toEqual([]);
+    expect(seg.scenes[0].kind).toBe('short-question');
+    const whole = checkSegment(shortInputs());
+    expect(whole.problems.join()).toMatch(/sc01: no renderer/);
+    const usd = [{ label: 'participants', value: 601, unit: 'usd' as const, display: '$601', cite: DOC_D }];
+    const bar = scenes();
+    bar[1] = scene('sc02', ['s02'], {
+      visual: { category: 'data-chart', description: 'bar', chart: { type: 'bar', points: usd } },
+      citations: [{ label: 'Survey D', cite: DOC_D }],
+    });
+    const b = checkSegment(shortInputs({ plan: bar, config: { scenes: ['sc02'] } }));
+    expect(b.problems.join()).toMatch(/short-bar draws percent and count/);
+    bar[1] = scene('sc02', ['s02'], {
+      visual: { category: 'data-chart', description: 'tiles', chart: { type: 'stat-tiles', points: usd } },
+      citations: [{ label: 'Survey D', cite: DOC_D }],
+    });
+    const tiles = checkSegment(shortInputs({ plan: bar, config: { scenes: ['sc02'] } }));
+    expect(tiles.problems).toEqual([]);
+    expect(tiles.scenes[0].kind).toBe('short-stat-tiles');
+  });
+  it('builds a portrait timeline that names the format and the institution', () => {
+    const inp = shortInputs({ config: { scenes: ['sc03'] } });
+    const tl = buildTimeline(checkSegment(inp), manifest(inp), 30, read);
+    expect([tl.width, tl.height]).toEqual([1080, 1920]);
+    expect(tl.short).toMatchObject({ format: 'ONE FIGURE FROM THE RECORD', parent: 'decision:mlm-and-seminars' });
+    expect(tl.short!.commission).toBeTruthy();
+    const video = buildTimeline(checkSegment(inputs()), manifest(inputs()), 30, read);
+    expect([video.width, video.height]).toEqual([1920, 1080]);
+    expect(video.short).toBeUndefined();
+    expect(sceneKey(tl.scenes[0], tl)).not.toBe(sceneKey(tl.scenes[0], { ...tl, width: 1920, height: 1080 }));
+  });
+  it('checks the three-minute rule on portrait builds only', () => {
+    expect(shortChecks({ duration: 181 }, { width: 1080, height: 1920 })[0]).toMatchObject({
+      name: 'short length',
+      ok: false,
+    });
+    expect(shortChecks({ duration: 120 }, { width: 1080, height: 1920 })[0].ok).toBe(true);
+    expect(shortChecks({ duration: 600 }, { width: 1920, height: 1080 })).toEqual([]);
+  });
+  it('lays the citation block above the overlay in portrait and leaves landscape alone', () => {
+    const inp = shortInputs({ config: { scenes: ['sc03'] } });
+    const tl = buildTimeline(checkSegment(inp), manifest(inp), 30, read);
+    const two = {
+      ...tl.scenes[0],
+      citations: [
+        { label: 'a', detail: 'b' },
+        { label: 'c', detail: 'd' },
+      ],
+    };
+    expect(citationTop(two, 28, PORTRAIT)).toBe(SHORT_LAYOUT.citationBottom - 76 * 2 - 28);
+    expect(citationTop(two)).toBe(1080 - 56 - 72 * 2 - 28);
+    expect(citationTop(tl.scenes[0], 28, PORTRAIT)).toBe(SHORT_LAYOUT.citationBottom);
+    expect(SHORT_LAYOUT.captionBottom).toBeLessThan(citationTop(two, 28, PORTRAIT));
+  });
+  it('cuts captions into cards of at most six words from the measured timings', () => {
+    const inp = inputs({ config: { scenes: ['sc02'] } });
+    const tl = buildTimeline(checkSegment(inp), manifest(inp), 30, read);
+    const cards = captionCards(tl.scenes[0]);
+    const words = tl.scenes[0].sentences.flatMap((s) => s.words);
+    expect(cards.flatMap((c) => c.words)).toEqual(words);
+    for (const c of cards) expect(c.words.length).toBeLessThanOrEqual(6);
+    expect(cards.length).toBe(Math.ceil(words.length / 6));
+    expect(cards[0].words[0].frame).toBe(words[0].frame);
   });
 });

@@ -5,10 +5,10 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, toJson, ROOT } from '../lib/io';
-import { FILES, type Script, scriptDir, sectionTitle, sentences, storySlug } from '../lib/script';
+import { type EvidencePackage, FILES, type Script, scriptDir, sectionTitle, sentences, storySlug } from '../lib/script';
 import type { Storyboard } from '../lib/storyboard';
 import { VIDEO_DIR, VIDEO_FILES } from './files';
-import { type SceneKind, bespokeFor, kindOf } from './kinds';
+import { GENERIC, type KindRegistry, type SceneKind, bespokeFor, kindOf, registryFor } from './kinds';
 import type { RenderConfig } from './types';
 
 const firstWord = (text: string) =>
@@ -17,22 +17,26 @@ const firstWord = (text: string) =>
 export function draftRenderConfig(
   storyboard: Storyboard,
   script: Script,
+  generic: KindRegistry = GENERIC,
 ): { config: RenderConfig; needsGraphics: string[] } {
   const text = new Map(sentences(script).map((s) => [s.id, s.text]));
   const kinds: Record<string, SceneKind> = {};
   const cues: RenderConfig['cues'] = {};
   const needsGraphics: string[] = [];
+  const tiles = Object.entries(generic).find(([, k]) => k.chart === 'stat-tiles')?.[0] as SceneKind | undefined;
   for (const s of storyboard.scenes) {
     const v = s.visual;
     const c = v.chart;
     // stat tiles draw any unit; a rank table and a bar would drop dollars
     if (
+      tiles &&
       v.category === 'data-chart' &&
       c &&
       (c.type === 'table' || (c.type === 'bar' && c.points.some((p) => p.unit !== 'percent' && p.unit !== 'count')))
     )
-      kinds[s.id] = 'stat-tiles';
-    if (v.category === 'diagram' || v.category === 'animation' || !kindOf(s, kinds[s.id])) needsGraphics.push(s.id);
+      kinds[s.id] = tiles;
+    if (v.category === 'diagram' || v.category === 'animation' || !kindOf(s, kinds[s.id], {}, generic))
+      needsGraphics.push(s.id);
     const lines = v.onScreenText ?? [];
     if (v.category === 'typography' && lines.length === 1 && /\?\s*$/.test(lines[0])) {
       const sentence = s.sentences[0];
@@ -71,7 +75,8 @@ export function initVideo(
   const sb = readJson<Storyboard>(join(dir, FILES.storyboard));
   const script = readJson<Script>(join(dir, FILES.script));
   if (!sb?.scenes || !script) throw new Error(`no storyboard.json or script.json in ${dir}`);
-  const { config, needsGraphics } = draftRenderConfig(sb, script);
+  const generic = registryFor(readJson<EvidencePackage>(join(dir, FILES.pkg)));
+  const { config, needsGraphics } = draftRenderConfig(sb, script, generic);
   const file = join(dir, VIDEO_DIR, VIDEO_FILES.config);
   const kept = !opts.force ? readJson<RenderConfig>(file) : null;
   if (kept) {
@@ -79,7 +84,7 @@ export function initVideo(
     const missing = sb.scenes.filter(
       (s) =>
         (s.visual.category === 'diagram' || s.visual.category === 'animation') &&
-        !kindOf(s, kept.kinds?.[s.id], bespoke),
+        !kindOf(s, kept.kinds?.[s.id], bespoke, generic),
     );
     return { written: false, needsGraphics: missing.map((s) => s.id) };
   }

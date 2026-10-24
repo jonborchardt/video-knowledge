@@ -19,6 +19,29 @@ export const theme = {
 };
 export const GUTTER = 120;
 
+/** The Commonwealth of Reason look (brand/design.md 1.2, 1.3): Treasury Navy, archival gold rules, paper, slate
+ *  annotations; Libre Baskerville for display, IBM Plex Sans for data and captions, IBM Plex Mono for citations (the
+ *  faces are embedded by fonts.ts). Read at render time by the Short components and the portrait frame. The landscape
+ *  videos keep `theme` until they are rebranded; then `theme` takes these values and this object goes. */
+export const brand = {
+  navy: '#172A45',
+  gold: '#C5A46A',
+  paper: '#F2EBDD',
+  slate: '#444E59',
+  ink: '#101D30', // text on paper
+  fg: '#F2EBDD', // text on navy
+  muted: 'rgba(242,235,221,0.68)',
+  rule: 'rgba(197,164,106,0.55)',
+  raised: 'rgba(242,235,221,0.08)',
+  // restrained semantic data colours: semantic colour outweighs brand uniformity (design.md 2.3)
+  data: '#8FB8D6',
+  loss: '#D0603F',
+  gain: '#7AA874',
+  serif: '"Libre Baskerville", Georgia, "Times New Roman", serif',
+  sans: '"IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif',
+  mono: '"IBM Plex Mono", Consolas, "Courier New", monospace',
+};
+
 export const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 export const easeOut = (t: number) => 1 - Math.pow(1 - clamp01(t), 3);
 /** Ease out with a small overshoot past 1 before settling (easeOutBack): for sizes and positions, never for figures. */

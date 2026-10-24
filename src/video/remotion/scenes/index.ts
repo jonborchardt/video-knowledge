@@ -29,6 +29,10 @@ import { Phone } from './Phone';
 import { Quote } from './Quote';
 import { RankTable } from './RankTable';
 import { RealPayColumns } from './RealPayColumns';
+import { ShortBar } from './ShortBar';
+import { ShortExcerpt } from './ShortExcerpt';
+import { ShortStatTiles } from './ShortStatTiles';
+import { ShortText } from './ShortText';
 import { StackedBar } from './StackedBar';
 import { StatTiles } from './StatTiles';
 import { Text } from './Text';
@@ -65,6 +69,10 @@ export const COMPONENTS = {
   Quote,
   RankTable,
   RealPayColumns,
+  ShortBar,
+  ShortExcerpt,
+  ShortStatTiles,
+  ShortText,
   StackedBar,
   StatTiles,
   Text,
