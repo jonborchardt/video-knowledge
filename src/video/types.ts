@@ -127,7 +127,8 @@ export type Timeline = {
   durationInFrames: number;
   fingerprints: { script: string; storyboard: string; narration: string; config: string };
   narration: { provider: string; voice: string; rate: string; licence: string };
-  /** A Short: the format eyebrow, the institution that publishes it and the parent story (drawn by the frame). */
-  short?: { format: string; commission: string; parent: string };
+  /** A Short: the format eyebrow, the institution that publishes it (and its key for the seal), the parent story and
+   *  its question (the end card's call to action), drawn by the frame. */
+  short?: { format: string; commission: string; commissionKey: string | null; question: string; parent: string };
   scenes: TimelineScene[];
 };

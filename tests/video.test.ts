@@ -18,7 +18,9 @@ import { BESPOKE } from '../src/video/bespoke';
 import { ALL_KINDS, GENERIC, SHORT_GENERIC, kindOf, registryFor, unsupportedWhy } from '../src/video/kinds';
 import { citationTop } from '../src/video/remotion/Citation';
 import { captionCards } from '../src/video/remotion/Portrait';
-import type { ShortBlock } from '../src/lib/script';
+import { SHORT_MAX_SECONDS, type Script, type ShortBlock, sentences } from '../src/lib/script';
+import { buildStoryboard } from '../src/lib/storyboard';
+import { approveAll, good, plan, run } from './script-helpers';
 import { COMPONENTS } from '../src/video/remotion/scenes';
 import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
 import { countUp, theme } from '../src/video/remotion/theme';
@@ -772,5 +774,51 @@ describe('shorts: portrait frame and kinds', () => {
       ['the', 'line', 'moved', 'lower.'],
     ]);
     expect(sc[0].words[1]).toMatchObject({ frame: 10, end: 28 });
+  });
+});
+
+describe('shorts: end card and length', () => {
+  it('init names the end card for the close scene of a short and never for a video', () => {
+    const g = good();
+    const s: Script = {
+      ...g,
+      sections: [
+        { name: 'hook', sentences: [sentences(g)[0]] },
+        { name: 'finding', sentences: [sentences(g)[1]] },
+        { name: 'close', sentences: [sentences(g)[2]] },
+      ],
+    };
+    const v = run(s, approveAll(s));
+    const sb = buildStoryboard(
+      { ...plan(scenes(), s), assets: { 'phone-ui': { kind: 'animation', description: 'phone' } } },
+      s,
+      v,
+      pkg(),
+      read,
+    );
+    expect(draftRenderConfig(sb, s, SHORT_GENERIC).config.kinds).toMatchObject({ sc03: 'short-endcard' });
+    expect(draftRenderConfig(sb, s).config.kinds?.sc03).toBeUndefined();
+    expect(kindOf(sb.scenes[2], 'short-endcard', {}, SHORT_GENERIC)).toBe('short-endcard');
+    expect(kindOf(sb.scenes[2], undefined, {}, SHORT_GENERIC)).toBe('short-question');
+  });
+  it('caps a short at a minute and carries the institution and question for the end card', () => {
+    expect(SHORT_MAX_SECONDS).toBe(60);
+    const short: ShortBlock = {
+      parent: 'decision:mlm-and-seminars',
+      key: 's02',
+      slug: 'x',
+      format: 'ONE FIGURE FROM THE RECORD',
+      sentences: ['s02'],
+      hook: 'h',
+      carries: [],
+      maxSeconds: SHORT_MAX_SECONDS,
+      parentFingerprints: { package: 'p', script: 's', release: 'r' },
+    };
+    const inp = inputs({ release: true, config: { scenes: ['sc03'] } });
+    const tl = buildTimeline(checkSegment({ ...inp, pkg: { ...inp.pkg, short } }), manifest(inp), 30, read);
+    expect(tl.short?.question).toBe(inp.pkg.question);
+    expect(tl.short).toHaveProperty('commissionKey');
+    const other = { ...tl, short: { ...tl.short!, question: 'Another?' } };
+    expect(sceneKey(tl.scenes[0], tl)).not.toBe(sceneKey(other.scenes[0], other));
   });
 });

@@ -30,6 +30,7 @@ import { Quote } from './Quote';
 import { RankTable } from './RankTable';
 import { RealPayColumns } from './RealPayColumns';
 import { ShortBar } from './ShortBar';
+import { ShortEndCard } from './ShortEndCard';
 import { ShortExcerpt } from './ShortExcerpt';
 import { ShortStatTiles } from './ShortStatTiles';
 import { ShortText } from './ShortText';
@@ -70,6 +71,7 @@ export const COMPONENTS = {
   RankTable,
   RealPayColumns,
   ShortBar,
+  ShortEndCard,
   ShortExcerpt,
   ShortStatTiles,
   ShortText,

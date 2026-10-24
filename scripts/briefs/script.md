@@ -200,13 +200,15 @@ least sure the evidence supports as worded.
 ## Short format
 
 When the package has a `short` block, you are writing a vertical Short, not a video: one finding out of a
-produced video, under a minute and a half (aim for 45 to 75 seconds), with its own opening and a close that
-points at the full video (brand/design.md 2.6). The rule that outranks the rest: a conditional result never
+produced video, aimed at 30 to 45 seconds of narration (the storyboard blocks past 60), with its own opening and
+a close that points at the full video (brand/design.md 2.6). The rule that outranks the rest: a conditional result never
 becomes an absolute one. The viewer sees nothing but this Short.
 
-- Sections, in order: `hook` (one or two sentences, may be rhetorical, opened from `short.hook`), `finding`
-  (two to six sentences: the figure, whom it was measured on, under what conditions), `close` (one or two
-  sentences pointing at the full inquiry; no figure, no second finding).
+- Sections, in order: `hook` (one sentence, may be rhetorical, opened from `short.hook`), `finding` (two to
+  four sentences: the figure, whom it was measured on, under what conditions, each qualification beside its
+  figure), `close` (one sentence pointing at the full inquiry; no figure, no second finding). The close is drawn
+  as the end card (the institution's seal, the full inquiry's question, "tap the video linked below"), so it
+  need not describe where the link is.
 - `short.carries` lists how each qualification the parent carried elsewhere must be said here. Say every one
   inside `finding`, beside the figure it limits, and name the sentence that carries it in the assertion's
   `qualifications` ("s03 says the sample is one survey"). The validator blocks a qualified assertion that

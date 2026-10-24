@@ -21,6 +21,7 @@ const SHARED = [
   'Citation.tsx',
   'Portrait.tsx',
   'fonts.ts',
+  'marks.ts',
   'theme.ts',
   'glyphs.tsx',
   'index.ts',
@@ -88,6 +89,7 @@ export const sceneKey = (s: TimelineScene, tl: Timeline) =>
       fps: tl.fps,
       w: tl.width,
       h: tl.height,
+      short: tl.short ?? null, // the frame and the end card draw the institution and the question
       code: rendererVersion(s.kind),
     }),
   );

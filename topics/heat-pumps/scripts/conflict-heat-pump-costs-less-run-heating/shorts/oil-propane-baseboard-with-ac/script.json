@@ -1,161 +1,162 @@
 {
-  "topic": "heat-pumps",
-  "story": "conflict:heat-pump-costs-less-run-heating/shorts/oil-propane-baseboard-with-ac",
-  "title": "Oil, propane or electric heat, plus AC? A national model says 95 to 100 percent of homes save.",
-  "revision": 3,
-  "generation": {
-    "model": "claude-fable-5-1",
-    "brief": "scripts/briefs/script.md",
-    "date": "2026-10-24",
-    "wordsPerMinute": 150,
-    "evidencePackage": "873c915512"
-  },
-  "sections": [
+ "topic": "heat-pumps",
+ "story": "conflict:heat-pump-costs-less-run-heating/shorts/oil-propane-baseboard-with-ac",
+ "title": "Oil, propane or electric heat, plus AC? A national model says 95 to 100 percent of homes save.",
+ "revision": 3,
+ "passStartRevision": 3,
+ "generation": {
+  "model": "claude-fable-5-1",
+  "brief": "scripts/briefs/script.md",
+  "date": "2026-10-24",
+  "wordsPerMinute": 150,
+  "evidencePackage": "873c915512"
+ },
+ "sections": [
+  {
+   "name": "hook",
+   "sentences": [
     {
-      "name": "hook",
-      "sentences": [
+     "id": "s01",
+     "text": "95 to 100 percent: the share of homes heating mainly with oil, propane or electricity, and already running air conditioning, that a national study estimates would pay lower bills with a heat pump.",
+     "type": "factual",
+     "assertions": [
+      {
+       "id": "s01.a",
+       "text": "For homes heating primarily with electricity, fuel oil or propane and with central or room AC, the study found 95% to 100% nationally would have positive bill savings, depending on heat pump efficiency.",
+       "kind": "fact",
+       "claims": [
         {
-          "id": "s01",
-          "text": "95 to 100 percent: the share of homes heating mainly with oil, propane or electricity, and already running air conditioning, that a national study estimates would pay lower bills with a heat pump.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s01.a",
-              "text": "For homes heating primarily with electricity, fuel oil or propane and with central or room AC, the study found 95% to 100% nationally would have positive bill savings, depending on heat pump efficiency.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
-                }
-              ],
-              "qualifications": [
-                "s03 says the figure is a modelled estimate of bills, not measured bills; s05 gives the weaker result for the same fuels without air conditioning; the sentence itself limits it to homes that already have AC."
-              ]
-            }
-          ],
-          "note": "Copied from parent s07.a with the passage's own population: 'electricity', not 'electric baseboards' (the passage covers every home heating primarily with electricity)."
-        },
-        {
-          "id": "s02",
-          "text": "The Commission has looked at what that figure is, and what it is not.",
-          "type": "rhetorical"
+         "id": "heat-pumps/heat-pump-costs-less-run-heating",
+         "stance": "asserts"
         }
-      ]
+       ],
+       "evidence": [
+        {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-less-run-heating",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
+        }
+       ],
+       "qualifications": [
+        "s03 says the figure is a modelled estimate of bills, not measured bills; s05 gives the weaker result for the same fuels without air conditioning; the sentence itself limits it to homes that already have AC."
+       ]
+      }
+     ],
+     "note": "Copied from parent s07.a with the passage's own population: 'electricity', not 'electric baseboards' (the passage covers every home heating primarily with electricity)."
     },
     {
-      "name": "finding",
-      "sentences": [
-        {
-          "id": "s03",
-          "text": "It is a model: the study simulated the bills of such homes across the country, so the figure is an estimate of what bills would be, not a reading from anyone's meter.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s03.a",
-              "text": "The study modelled the national stock of homes that heat primarily with electricity, fuel oil or propane and have central or window/room AC, estimating their bill savings rather than measuring them.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
-                }
-              ],
-              "qualifications": [
-                "s03 itself says the result is modelled, not measured."
-              ]
-            }
-          ],
-          "note": "The modelled nature comes from the study's method (sample homes per PUMA, L385-L388) and the parent's accepted reading of s07 (\"estimated\", \"would see\"); the passage's home count is left out so no figure is read that the validator cannot match."
-        },
-        {
-          "id": "s04",
-          "text": "The range moves with the heat pump's efficiency, and so does the saving: the median it estimated was $300 to $650 a year, for those same homes and no others.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s04.a",
-              "text": "For those homes the median bill saving was $300 to $650 per year, depending on efficiency.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
-                }
-              ],
-              "qualifications": [
-                "s04 itself says the median is for those same homes (the fuels and AC named in s01) and moves with the heat pump's efficiency; s03 says it is modelled."
-              ]
-            }
-          ],
-          "note": "Copied from parent s08.a."
-        },
-        {
-          "id": "s05",
-          "text": "The air conditioning is not a detail: in the same model, homes on those fuels without it do worse, with only 73 to 86 percent coming out ahead.",
-          "type": "factual",
-          "assertions": [
-            {
-              "id": "s05.a",
-              "text": "Only 73% to 86% of the homes heating with those fuels but without central or room AC would have positive bill savings.",
-              "kind": "fact",
-              "claims": [
-                {
-                  "id": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "stance": "asserts"
-                }
-              ],
-              "evidence": [
-                {
-                  "kind": "study",
-                  "claim": "heat-pumps/heat-pump-costs-less-run-heating",
-                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
-                }
-              ],
-              "qualifications": [
-                "s05 itself limits the figure to homes on those fuels without AC; s03 says it is modelled."
-              ]
-            }
-          ],
-          "note": "Copied from parent s09.a. The parent's s09.b (why those homes lose: new cooling in hot climates) rests on a claim outside this Short's package and is not asserted here."
-        },
-        {
-          "id": "s06",
-          "text": "A model, the Commission notes, is exact about what it assumes.",
-          "type": "rhetorical"
-        }
-      ]
-    },
-    {
-      "name": "close",
-      "sentences": [
-        {
-          "id": "s07",
-          "text": "Whether metered homes in Minnesota and New England agree with the model, and whether oil holds the pattern, is the subject of the full inquiry, linked in the description below.",
-          "type": "transitional"
-        }
-      ]
+     "id": "s02",
+     "text": "The Commission has looked at what that figure is, and what it is not.",
+     "type": "rhetorical"
     }
-  ]
+   ]
+  },
+  {
+   "name": "finding",
+   "sentences": [
+    {
+     "id": "s03",
+     "text": "It is a model: the study simulated the bills of such homes across the country, so the figure is an estimate of what bills would be, not a reading from anyone's meter.",
+     "type": "factual",
+     "assertions": [
+      {
+       "id": "s03.a",
+       "text": "The study modelled the national stock of homes that heat primarily with electricity, fuel oil or propane and have central or window/room AC, estimating their bill savings rather than measuring them.",
+       "kind": "fact",
+       "claims": [
+        {
+         "id": "heat-pumps/heat-pump-costs-less-run-heating",
+         "stance": "asserts"
+        }
+       ],
+       "evidence": [
+        {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-less-run-heating",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
+        }
+       ],
+       "qualifications": [
+        "s03 itself says the result is modelled, not measured."
+       ]
+      }
+     ],
+     "note": "The modelled nature comes from the study's method (sample homes per PUMA, L385-L388) and the parent's accepted reading of s07 (\"estimated\", \"would see\"); the passage's home count is left out so no figure is read that the validator cannot match."
+    },
+    {
+     "id": "s04",
+     "text": "The range moves with the heat pump's efficiency, and so does the saving: the median it estimated was $300 to $650 a year, for those same homes and no others.",
+     "type": "factual",
+     "assertions": [
+      {
+       "id": "s04.a",
+       "text": "For those homes the median bill saving was $300 to $650 per year, depending on efficiency.",
+       "kind": "fact",
+       "claims": [
+        {
+         "id": "heat-pumps/heat-pump-costs-less-run-heating",
+         "stance": "asserts"
+        }
+       ],
+       "evidence": [
+        {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-less-run-heating",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
+        }
+       ],
+       "qualifications": [
+        "s04 itself says the median is for those same homes (the fuels and AC named in s01) and moves with the heat pump's efficiency; s03 says it is modelled."
+       ]
+      }
+     ],
+     "note": "Copied from parent s08.a."
+    },
+    {
+     "id": "s05",
+     "text": "The air conditioning is not a detail: in the same model, homes on those fuels without it do worse, with only 73 to 86 percent coming out ahead.",
+     "type": "factual",
+     "assertions": [
+      {
+       "id": "s05.a",
+       "text": "Only 73% to 86% of the homes heating with those fuels but without central or room AC would have positive bill savings.",
+       "kind": "fact",
+       "claims": [
+        {
+         "id": "heat-pumps/heat-pump-costs-less-run-heating",
+         "stance": "asserts"
+        }
+       ],
+       "evidence": [
+        {
+         "kind": "study",
+         "claim": "heat-pumps/heat-pump-costs-less-run-heating",
+         "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L393-L401"
+        }
+       ],
+       "qualifications": [
+        "s05 itself limits the figure to homes on those fuels without AC; s03 says it is modelled."
+       ]
+      }
+     ],
+     "note": "Copied from parent s09.a. The parent's s09.b (why those homes lose: new cooling in hot climates) rests on a claim outside this Short's package and is not asserted here."
+    },
+    {
+     "id": "s06",
+     "text": "A model, the Commission notes, is exact about what it assumes.",
+     "type": "rhetorical"
+    }
+   ]
+  },
+  {
+   "name": "close",
+   "sentences": [
+    {
+     "id": "s07",
+     "text": "Whether metered homes in Minnesota and New England agree with the model, and whether oil holds the pattern, is the subject of the full inquiry, linked in the description below.",
+     "type": "transitional"
+    }
+   ]
+  }
+ ]
 }

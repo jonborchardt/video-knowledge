@@ -114,7 +114,7 @@ images, footage, and the three visuals that most need a designer's judgment.
 When the package has a `short` block, the frame is vertical (1080 x 1920) and the renderer draws from a
 smaller vocabulary; a scene outside it fails the render check, never gets a placeholder.
 
-- Three to eight scenes; the storyboard blocks past `short.maxSeconds` of estimated narration.
+- Three to six scenes; the storyboard blocks past `short.maxSeconds` (60) of estimated narration.
 - Categories: `typography` (one line is a title, a line ending in `?` a question, lines in quotation marks
   a quote, several lines a list), `data-chart` with `chart.type` `bar` (percent and count points) or
   `stat-tiles` (any unit; at most four points), `document-excerpt` with `visual.excerpt`. No diagrams,
@@ -123,4 +123,5 @@ smaller vocabulary; a scene outside it fails the render check, never gets a plac
 - The parent's chart for the extracted scene may be reused as it is (its points already cite passages).
 - One citation per scene at most; the label is read at phone size, so keep it to a study name and year.
 - The video draws the institutional badge, the format eyebrow and the captions itself; plan no scene for
-  them and no ceremonial intro.
+  them and no ceremonial intro. The `close` section's scene is drawn as the end card (seal, the full inquiry's
+  question, the call to action): give it `typography` with at most two short lines, or none.

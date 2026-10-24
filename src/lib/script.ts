@@ -32,8 +32,9 @@ export const sectionsFor = (pkg: Pick<EvidencePackage, 'questions' | 'short'> | 
     : pkg?.questions
       ? ['hook', ...pkg.questions.map((_, i) => `question-${i + 1}` as SectionName), 'close']
       : SECTIONS;
-/** A Short's storyboard may not estimate longer than this (YouTube's limit is 180 s of measured audio). */
-export const SHORT_MAX_SECONDS = 170;
+/** A Short's storyboard may not estimate longer than this. YouTube allows 180 s, but a Short is watched on a phone
+ *  with a thumb on the screen: the brief aims at 30 to 45 s and this is the editorial ceiling. */
+export const SHORT_MAX_SECONDS = 60;
 /** Ready Short candidates per video; the reviewer picks by leaving the rest unkept. */
 export const MAX_SHORTS = 3;
 /** The Short formats the brand allows as an eyebrow line (brand/design.md 2.6). */

@@ -9,9 +9,9 @@ the parent's `script.md` and `validation.json`, and the cited passages (`npm run
 asserts a fact); this pass supplies the judgment the code cannot make. Nothing here changes a verdict, adds
 evidence or edits the parent.
 
-A Short is one finding out of the video, with its own hook and a close that points at the full video
-(brand/design.md 2.6): the smallest institutional badge, one question, one useful insight, no ceremonial
-intro. The rule that outranks the rest: **every Short carries the qualifications of the extracted claim;
+A Short is one finding out of the video, 30 to 45 seconds, with its own hook and a close that points at the
+full video (brand/design.md 2.6): the smallest institutional badge, one question, one useful insight, no
+ceremonial intro. The rule that outranks the rest: **every Short carries the qualifications of the extracted claim;
 a conditional result never becomes an absolute one.** A viewer who sees only the Short must not be misled.
 
 ## What to judge

@@ -24,9 +24,14 @@ export function draftRenderConfig(
   const cues: RenderConfig['cues'] = {};
   const needsGraphics: string[] = [];
   const tiles = Object.entries(generic).find(([, k]) => k.chart === 'stat-tiles')?.[0] as SceneKind | undefined;
+  // a Short's close scenes are its end card: the seal, the full inquiry and the call to action
+  const endcard = Object.hasOwn(generic, 'short-endcard') ? ('short-endcard' as SceneKind) : null;
+  const close = new Set(script.sections.filter((x) => x.name === 'close').flatMap((x) => x.sentences.map((y) => y.id)));
   for (const s of storyboard.scenes) {
     const v = s.visual;
     const c = v.chart;
+    if (endcard && v.category === 'typography' && s.sentences.length && s.sentences.every((id) => close.has(id)))
+      kinds[s.id] = endcard;
     // stat tiles draw any unit; a rank table and a bar would drop dollars
     if (
       tiles &&

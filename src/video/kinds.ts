@@ -77,6 +77,8 @@ export const SHORT_GENERIC = {
   'short-stat-tiles': { component: 'ShortStatTiles', accepts: ['data-chart'], chart: 'stat-tiles' },
   'short-bar': { component: 'ShortBar', accepts: ['data-chart'], chart: 'bar' },
   'short-excerpt': { component: 'ShortExcerpt', accepts: ['document-excerpt'] },
+  // never inferred: `init` names it for the close scenes (the seal, the full inquiry and the call to action)
+  'short-endcard': { component: 'ShortEndCard', accepts: ['typography'] },
 } as const satisfies Record<string, KindSpec>;
 
 export type GenericKind = keyof typeof GENERIC;
