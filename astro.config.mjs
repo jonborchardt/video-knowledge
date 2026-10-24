@@ -17,6 +17,8 @@ const admin = {
       injectRoute({ pattern: '/production', entrypoint: './src/admin/production.astro' });
       injectRoute({ pattern: '/[topic]/stories', entrypoint: './src/admin/stories.astro' });
       injectRoute({ pattern: '/[topic]/scripts/[slug]', entrypoint: './src/admin/script.astro' });
+      // the review page's media: the packaged build streamed from disk, never copied into public/ or dist/
+      injectRoute({ pattern: '/[topic]/review-media/[file]/[...path]', entrypoint: './src/admin/media.ts' });
     },
   },
 };

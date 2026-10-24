@@ -14,8 +14,9 @@ import {
   Refusal,
   openOutput,
 } from './publish';
-import { FILES, type ScriptValidation, scriptDir, shortId, shortOf } from './script';
+import { FILES, type ScriptValidation, scriptDir, shortId, shortOf, storySlug } from './script';
 import { loadShorts } from './shorts';
+import { loadStories } from './stories';
 
 export interface Moment {
   label: string;
@@ -274,4 +275,15 @@ export function parseNotes(text: string, v: Pick<ReviewView, 'sentences' | 'scen
       const at = m ? place(m[1].trim().split(/\s+/)) : null;
       return at && m![2] ? { text: m![2], ...at } : { text: line };
     });
+}
+
+/** The story (or Short) id a review page's folder path names, or null: only `<slug>` or `<slug>/shorts/<slug>` of a
+ *  story in stories.json, so a path never reaches outside the topic's scripts. */
+export function storyIdOfPath(topic: string, path: string, root = ROOT): string | null {
+  const m = /^([a-z0-9]+(?:-[a-z0-9]+)*)(?:\/shorts\/([a-z0-9]+(?:-[a-z0-9]+)*))?$/.exec(path);
+  if (!m || !/^[a-z0-9-]+$/.test(topic)) return null;
+  const story = loadStories(topic, root)?.stories.find((s) => storySlug(s.id) === m[1]);
+  if (!story) return null;
+  const id = m[2] ? shortId(story.id, m[2]) : story.id;
+  return existsSync(scriptDir(topic, id, root)) ? id : null;
 }

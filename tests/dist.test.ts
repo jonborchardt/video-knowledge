@@ -54,7 +54,15 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     for (const n of topicNames()) {
       expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
       expect(existsSync(join(DIST, n, 'scripts')), `${n}/scripts`).toBe(false);
+      for (const r of ['review', 'review-media', 'review-action'])
+        expect(existsSync(join(DIST, n, r)), `${n}/${r}`).toBe(false);
     }
+    // the review builds are streamed by the dev server only: no video is ever part of the site
+    const files = (d: string): string[] =>
+      readdirSync(d, { withFileTypes: true }).flatMap((e) =>
+        e.isDirectory() ? files(join(d, e.name)) : [join(d, e.name)],
+      );
+    expect(files(DIST).filter((f) => f.endsWith('.mp4'))).toEqual([]);
     expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain(`href="${BASE}production/"`);
   });
 
