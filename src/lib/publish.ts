@@ -52,6 +52,7 @@ export interface OutputMetadata {
   category?: string;
   language?: string;
   playlist?: string;
+  containsSyntheticMedia?: boolean; // YouTube's altered-or-synthetic disclosure; default false (a synthetic narrator over diagrams)
 }
 export interface Output {
   kind: string;
@@ -107,6 +108,12 @@ export function ledgerProblems(x: unknown, video: string): string[] {
       if (!isRecord(t) || typeof t.file !== 'string' || typeof t.sha !== 'string')
         out.push(`${at}.metadata.thumbnail: needs { file, sha }`);
     }
+    if (
+      isRecord(o.metadata) &&
+      o.metadata.containsSyntheticMedia !== undefined &&
+      typeof o.metadata.containsSyntheticMedia !== 'boolean'
+    )
+      out.push(`${at}.metadata.containsSyntheticMedia: not a boolean`);
     if (!Array.isArray(o.events)) {
       out.push(`${at}.events: missing (use [])`);
       continue;
@@ -310,7 +317,6 @@ export function outputState(
       ? `${failed.step} failed: ${failed.error}${failed.retryable ? `; retry it, then ${next}` : '; a person decides'}`
       : next,
   });
-  const where = build ? `video/review/` : 'the review package (npm run video -- package, it is missing)';
   const first = ctx.parentLive === false && output.derivedFrom ? `publish ${output.derivedFrom} first; then ` : '';
 
   if (ev.some((e) => e.type === 'retracted')) return done('retracted', 'retracted; nothing to do');
@@ -332,32 +338,26 @@ export function outputState(
     );
   }
   if (!upload) {
-    if (localApproved)
-      return done(
-        'approved',
-        `upload the approved release build in ${where} as public, then ${verb('uploaded', ' --id <id> --visibility public')}`,
-      );
+    if (localApproved) return done('approved', `${verb('upload')}, then ${verb('go-live')}`);
     return done(
       'not-uploaded',
-      `${first}upload the mp4 in ${where} privately, then ${verb('uploaded', ' --id <id> --visibility private')}`,
+      `${first}${build ? '' : `npm run video -- package ${ctx.topic} ${ctx.story}, then `}${verb('upload')}`,
     );
   }
+  const behind = `the title, description, tags, thumbnail or captions changed since they were sent (${verb('push')})`;
   if (live) {
-    if (metadataSha && sentSha && metadataSha !== sentSha)
-      return done(
-        'metadata-behind',
-        `the title, description, tags or thumbnail changed since the upload: update them on YouTube, then ${verb('updated', ' --fields <a,b>')}`,
-      );
+    if (metadataSha && sentSha && metadataSha !== sentSha) return done('metadata-behind', behind);
     const moved =
       build && build.sha !== upload.build
         ? `; the build on disk is ${build.sha}, a re-release is ${verb('add', ' youtube-2 --kind youtube-video')}`
         : '';
-    return done('published', `live at ${url}${moved}`);
+    const studio = output.kind === 'youtube-short' ? '; set the related video in YouTube Studio (not in the API)' : '';
+    return done('published', `live at ${url}${moved}${studio}`);
   }
   if (build && build.sha !== upload.build)
     return done(
       'build-behind',
-      `a new ${build.status} build ${build.sha} is packaged (uploaded: ${upload.build}): upload it privately, then ${verb('uploaded', ' --id <id> --visibility private')}`,
+      `a new ${build.status} build ${build.sha} is packaged (uploaded: ${upload.build}), then ${verb('upload')}`,
     );
   if (!build && !approved)
     return done(
@@ -378,20 +378,13 @@ export function outputState(
     return done(
       'scheduled',
       due
-        ? `was due ${scheduled.publishAt}: confirm it is live on YouTube and record published (${verb('published')})`
+        ? `was due ${scheduled.publishAt} (${verb('sync')})`
         : `scheduled for ${scheduled.publishAt}; nothing until then`,
       due,
     );
   }
-  if (metadataSha && sentSha && metadataSha !== sentSha)
-    return done(
-      'metadata-behind',
-      `the title, description, tags or thumbnail changed since the upload: update them on YouTube, then ${verb('updated', ' --fields <a,b>')}`,
-    );
-  return done(
-    'approved',
-    `set ${url} public or schedule it on YouTube, then ${verb('published')} or ${verb('scheduled', ' --at <ISO>')}`,
-  );
+  if (metadataSha && sentSha && metadataSha !== sentSha) return done('metadata-behind', behind);
+  return done('approved', verb('go-live', ' [--at <ISO>]'));
 }
 
 /** Every output's state, derivatives gated on the output they derive from being live. */
@@ -423,6 +416,7 @@ export interface UploadMetadata {
   description: string;
   tags: string[];
   thumbnail: { file: string; sha: string } | null;
+  captions: { file: string; sha: string; language: string } | null; // the package's captions.en.srt
   category?: string;
   language?: string;
   playlist?: string;
@@ -432,22 +426,43 @@ interface ReviewJson {
   title: string;
   mp4: string;
   thumbnailSha?: string | null;
+  captionsSha?: string | null;
   files?: string[];
 }
-/** Null without a review package. `rel` turns a path in the script directory into a repo-relative one. */
-export function uploadMetadataOf(dir: string, rel: (f: string) => string, output: Output): UploadMetadata | null {
+/** The parent output's live url for a derivative (its description links the full video), else null. */
+export function parentUrlOf(ledger: Ledger, output: Output): string | null {
+  const parent = output.derivedFrom ? ledger.outputs[output.derivedFrom] : null;
+  if (!parent) return null;
+  const last = [...parent.events].reverse().find((e) => e.type === 'published' || e.type === 'unpublished');
+  if (last?.type !== 'published') return null;
+  return last.url ?? (last.id ? `https://youtu.be/${last.id}` : null);
+}
+
+/** Null without a review package. `rel` turns a path in the script directory into a repo-relative one; `parentUrl`
+ *  (a derivative's live parent) is appended to the description as the full video's link. */
+export function uploadMetadataOf(
+  dir: string,
+  rel: (f: string) => string,
+  output: Output,
+  parentUrl: string | null = null,
+): UploadMetadata | null {
   const review = join(dir, 'video', 'review');
   const rp = readJson<ReviewJson>(join(review, 'review.json'));
   if (!rp) return null;
   const desc = join(review, 'description.txt');
   const m = output.metadata;
   const packaged = existsSync(desc) ? lf(readFileSync(desc, 'utf8')).trim() : '';
-  const description = lf(m.description ?? packaged) + (m.descriptionAppend ? `\n\n${lf(m.descriptionAppend)}` : '');
+  const link = parentUrl && output.derivedFrom && output.kind !== 'youtube-video' ? `\n\nFull video: ${parentUrl}` : '';
+  const description =
+    lf(m.description ?? packaged) + (m.descriptionAppend ? `\n\n${lf(m.descriptionAppend)}` : '') + link;
   const thumbnail = m.thumbnail
     ? { file: m.thumbnail.file, sha: m.thumbnail.sha }
     : rp.thumbnailSha
       ? { file: rel('video/review/thumbnail.png'), sha: rp.thumbnailSha }
       : null;
+  const captions = rp.captionsSha
+    ? { file: rel(`video/review/captions.en.srt`), sha: rp.captionsSha, language: m.language ?? 'en' }
+    : null;
   const text = {
     title: m.title ?? rp.title,
     description,
@@ -460,7 +475,8 @@ export function uploadMetadataOf(dir: string, rel: (f: string) => string, output
     file: output.source ?? rel(`video/review/${rp.mp4}`),
     ...text,
     thumbnail,
-    sha: sha(toJson({ ...text, thumbnail: thumbnail?.sha ?? null })),
+    captions,
+    sha: sha(toJson({ ...text, thumbnail: thumbnail?.sha ?? null, captions: captions?.sha ?? null })),
   };
 }
 
@@ -482,7 +498,7 @@ interface VerbArgs {
 const YOUTUBE_ID = /^[\w-]{11}$/;
 
 /** The ledger (or a fresh one), the output, the build and the metadata the verbs judge; refuses a follow-up story. */
-function open(topic: string, storyId: string, a: { output?: string; root?: string }) {
+export function openOutput(topic: string, storyId: string, a: { output?: string; root?: string }) {
   const root = a.root ?? ROOT;
   const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
   if (story?.partOf)
@@ -496,11 +512,11 @@ function open(topic: string, storyId: string, a: { output?: string; root?: strin
   if (!out) throw new Refusal(`no output ${id} (outputs: ${Object.keys(ledger.outputs).join(', ')}); add it first`);
   const rel = (f: string) => `topics/${topic}/scripts/${storySlug(storyId)}/${f}`;
   const build = out.source ? sourceBuild(root, out.source) : currentBuild(dir);
-  const metadata = uploadMetadataOf(dir, rel, out);
+  const metadata = uploadMetadataOf(dir, rel, out, parentUrlOf(ledger, out));
   const state = outputState(out, build, metadata?.sha ?? null, { topic, story: storyId, output: id });
   return { root, dir, path, ledger, id, out, rel, build, metadata, state };
 }
-function write(o: ReturnType<typeof open>, e: PublishEvent, then?: (l: Ledger) => Ledger): VerbResult {
+function write(o: ReturnType<typeof openOutput>, e: PublishEvent, then?: (l: Ledger) => Ledger): VerbResult {
   const r = appendEvent(o.ledger, o.id, e);
   if (r.existing) return { event: r.existing, existing: true, message: `already recorded: ${describe(r.existing)}` };
   saveLedger(o.path, then ? then(r.ledger) : r.ledger);
@@ -515,7 +531,7 @@ export function recordUploaded(
   storyId: string,
   a: VerbArgs & { id: string; url?: string; visibility?: Visibility },
 ): VerbResult {
-  const o = open(topic, storyId, a);
+  const o = openOutput(topic, storyId, a);
   if (o.out.kind.startsWith('youtube') && !YOUTUBE_ID.test(a.id)) {
     const m = /(?:v=|youtu\.be\/|shorts\/)([\w-]{11})/.exec(a.id);
     throw new Refusal(`not a YouTube video id: ${a.id}${m ? `; did you mean ${m[1]}?` : ''}`);
@@ -561,7 +577,7 @@ export function recordApproved(
 ): VerbResult {
   const problem = approverProblem(a.by);
   if (problem) throw new Refusal(problem.replace('--approved-by', '--by'));
-  const o = open(topic, storyId, a);
+  const o = openOutput(topic, storyId, a);
   // a generic output (blog post, page, post) is approved as its source file: that file's sha stands in for the build
   const generic = flowOf(o.out.kind) === 'generic';
   const build = a.build ?? o.build?.sha ?? (generic ? 'none' : undefined);
@@ -585,13 +601,13 @@ export function recordApproved(
 }
 
 /** The last upload's build status: a draft (edge voice) is never scheduled or published. */
-const refuseDraft = (o: ReturnType<typeof open>) => {
+const refuseDraft = (o: ReturnType<typeof openOutput>) => {
   if ([...o.out.events].reverse().find((e) => e.type === 'uploaded')?.buildStatus === 'draft')
     throw new Refusal('the upload is a draft build (edge voice); npm run video -- final makes the release build');
 };
 
 export function recordScheduled(topic: string, storyId: string, a: VerbArgs & { at: string }): VerbResult {
-  const o = open(topic, storyId, a);
+  const o = openOutput(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
     throw new Refusal(`the upload is ${o.state.status}, not approved: ${o.state.next}`);
   refuseDraft(o);
@@ -606,7 +622,7 @@ export function recordPublished(
   storyId: string,
   a: VerbArgs & { url?: string; id?: string },
 ): VerbResult {
-  const o = open(topic, storyId, a);
+  const o = openOutput(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
     throw new Refusal(`the output is ${o.state.status}, not approved or scheduled: ${o.state.next}`);
   refuseDraft(o);
@@ -618,7 +634,7 @@ export function recordPublished(
 }
 
 export function recordUpdated(topic: string, storyId: string, a: VerbArgs & { fields: string[] }): VerbResult {
-  const o = open(topic, storyId, a);
+  const o = openOutput(topic, storyId, a);
   if (!o.state.id) throw new Refusal('nothing uploaded yet; there is nothing on YouTube to update');
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
   const sent = [...o.out.events].reverse().find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
@@ -639,7 +655,7 @@ export function recordFailed(
   storyId: string,
   a: VerbArgs & { step: string; error: string; retryable?: boolean },
 ): VerbResult {
-  const o = open(topic, storyId, a);
+  const o = openOutput(topic, storyId, a);
   const e: PublishEvent = { at: stamp(a), type: 'failed', by: a.by, step: a.step, error: a.error };
   if (a.retryable !== undefined) e.retryable = a.retryable;
   if (o.state.id) e.id = o.state.id;
@@ -652,7 +668,7 @@ export function recordSimple(
   type: 'unpublished' | 'retracted',
   a: VerbArgs & { note: string },
 ): VerbResult {
-  const o = open(topic, storyId, a);
+  const o = openOutput(topic, storyId, a);
   if (!a.note) throw new Refusal(`${type} needs --note`);
   if (type === 'unpublished' && !o.state.id) throw new Refusal('nothing uploaded, nothing to unpublish');
   const e: PublishEvent = { at: stamp(a), type, by: a.by, note: a.note };
@@ -666,7 +682,7 @@ export function setThumbnail(
   storyId: string,
   a: { output?: string; file: string; root?: string },
 ): string {
-  const o = open(topic, storyId, a);
+  const o = openOutput(topic, storyId, a);
   const abs = resolve(a.file);
   if (!existsSync(abs)) throw new Refusal(`${a.file} does not exist`);
   if (!/\.(png|jpe?g)$/i.test(abs)) throw new Refusal(`${a.file} is not a PNG or JPEG`);
@@ -689,7 +705,7 @@ export function addOutputTo(
   kind: string,
   opts: { derivedFrom?: string; source?: string; root?: string } = {},
 ): void {
-  const o = open(topic, storyId, { root: opts.root });
+  const o = openOutput(topic, storyId, { root: opts.root });
   if (opts.source && !existsSync(join(o.root, opts.source)))
     throw new Refusal(`--source ${opts.source} is not a file under the repo root`);
   saveLedger(o.path, addOutput(o.ledger, id, kind, opts));

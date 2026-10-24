@@ -24,6 +24,7 @@ import {
   mainOutput,
   outputState,
   outputStates,
+  parentUrlOf,
   recordApproved,
   recordFailed,
   recordPublished,
@@ -94,6 +95,9 @@ describe('ledger', () => {
     expect(bad((l) => delete l.outputs.youtube.events[2].publishAt)[0]).toMatch(/publishAt/);
     expect(bad((l) => delete l.outputs['short-1'].events[0].error)[0]).toMatch(/error/);
     expect(bad((l) => (l.outputs.youtube.events[3].at = '2026-01-01T00:00:00Z'))[0]).toMatch(/at .* before/);
+    expect(
+      bad((l) => ((l.outputs.youtube.metadata as Record<string, unknown>).containsSyntheticMedia = 'yes'))[0],
+    ).toMatch(/containsSyntheticMedia/);
   });
 
   it('appends once per key', () => {
@@ -175,7 +179,8 @@ describe('outputState', () => {
   it('starts not uploaded', () => {
     const s = outputState(out(), release, 'm1', ctx);
     expect(s.status).toBe('not-uploaded');
-    expect(s.next).toContain('npm run publish -- uploaded ai-coding decision:how-much-faster');
+    expect(s.next).toContain('npm run publish -- upload ai-coding decision:how-much-faster');
+    expect(s.next).not.toContain('uploaded');
   });
 
   it('an uploaded draft waits for final, an uploaded release for approve', () => {
@@ -189,6 +194,7 @@ describe('outputState', () => {
   it('a new build after an upload is build-behind; the old upload is superseded once the new one lands', () => {
     const s = outputState(out(up('d1', 'id1', 'draft')), release, 'm1', ctx);
     expect(s.status).toBe('build-behind');
+    expect(s.next).toContain('npm run publish -- upload ai-coding');
     expect(s.superseded).toEqual([]);
     const s2 = outputState(out(up('d1', 'id1', 'draft'), up('r1', 'id2')), release, 'm1', ctx);
     expect(s2.status).toBe('uploaded');
@@ -199,6 +205,7 @@ describe('outputState', () => {
   it('approved, then scheduled, which falls due', () => {
     const base = [up('r1', 'id1'), ev('approved', { build: 'r1', id: 'id1' })];
     expect(outputState(out(...base), release, 'm1', ctx).status).toBe('approved');
+    expect(outputState(out(...base), release, 'm1', ctx).next).toContain('npm run publish -- go-live ai-coding');
     const soon = outputState(
       out(...base, ev('scheduled', { id: 'id1', publishAt: '2026-10-28T15:00:00Z' })),
       release,
@@ -214,7 +221,7 @@ describe('outputState', () => {
       ctx,
     );
     expect(due.due).toBe(true);
-    expect(due.next).toContain('record published');
+    expect(due.next).toContain('npm run publish -- sync ai-coding');
   });
 
   it('published stays published when the build on disk moves on', () => {
@@ -234,7 +241,7 @@ describe('outputState', () => {
     const s = outputState(o, release, 'm2', ctx);
     expect(s.status).toBe('metadata-behind');
     expect(s.live).toBe(true); // still live: the board keeps it in the published column
-    expect(s.next).toContain('npm run publish -- updated');
+    expect(s.next).toContain('npm run publish -- push ai-coding');
     o.events.push(ev('updated', { id: 'id1', metadata: 'm2', fields: ['thumbnail'] }));
     expect(outputState(o, release, 'm2', ctx).status).toBe('published');
   });
@@ -571,5 +578,70 @@ describe('derivative flows', () => {
     } finally {
       f.cleanup();
     }
+  });
+});
+
+describe('captions and the parent link in the composed metadata', () => {
+  const dir = join(tmp, 'meta2');
+  mkdirSync(join(dir, 'video', 'review'), { recursive: true });
+  const review = (extra: Record<string, unknown>) =>
+    writeFileSync(
+      join(dir, 'video', 'review', 'review.json'),
+      JSON.stringify({ title: 'T', mp4: 'slug.mp4', mp4Sha: 'r1', status: 'release build', ...extra }),
+    );
+  const rel = (f: string) => `topics/t/scripts/slug/${f}`;
+  const out = (kind = 'youtube-video', extra: Partial<Output> = {}): Output => ({
+    kind,
+    metadata: {},
+    events: [],
+    ...extra,
+  });
+
+  it('carries the package captions and hashes them', () => {
+    review({});
+    const none = uploadMetadataOf(dir, rel, out())!;
+    expect(none.captions).toBeNull();
+    review({ captionsSha: 'c1' });
+    const m = uploadMetadataOf(dir, rel, out())!;
+    expect(m.captions).toEqual({
+      file: 'topics/t/scripts/slug/video/review/captions.en.srt',
+      sha: 'c1',
+      language: 'en',
+    });
+    expect(m.sha).not.toBe(none.sha);
+  });
+
+  it('a derivative links the full video once its parent is live; a main output never does', () => {
+    review({});
+    const short = out('youtube-short', { derivedFrom: 'youtube' });
+    const linked = uploadMetadataOf(dir, rel, short, 'https://youtu.be/parent00001')!;
+    expect(linked.description.endsWith('\n\nFull video: https://youtu.be/parent00001')).toBe(true);
+    expect(linked.sha).not.toBe(uploadMetadataOf(dir, rel, short, null)!.sha);
+    expect(uploadMetadataOf(dir, rel, out(), 'https://youtu.be/parent00001')!.description).not.toContain('Full video');
+  });
+
+  it('parentUrlOf is the parent output live url, or null', () => {
+    let l = addOutput(emptyLedger('t/s'), 'short-1', 'youtube-short', { derivedFrom: 'youtube' });
+    expect(parentUrlOf(l, l.outputs['short-1'])).toBeNull();
+    expect(parentUrlOf(l, l.outputs.youtube)).toBeNull();
+    l = appendEvent(l, 'youtube', uploaded('r1', 'parent00001')).ledger;
+    expect(parentUrlOf(l, l.outputs['short-1'])).toBeNull();
+    l = appendEvent(l, 'youtube', ev('published', { id: 'parent00001' })).ledger;
+    expect(parentUrlOf(l, l.outputs['short-1'])).toBe('https://youtu.be/parent00001');
+    l = appendEvent(l, 'youtube', ev('unpublished', { id: 'parent00001', note: 'x' })).ledger;
+    expect(parentUrlOf(l, l.outputs['short-1'])).toBeNull();
+  });
+
+  it('a published short tells the person to set the related video in Studio', () => {
+    const o: Output = {
+      kind: 'youtube-short',
+      derivedFrom: 'youtube',
+      source: 'x.mp4',
+      metadata: {},
+      events: [uploaded('s1', 'short000001'), ev('approved', { build: 's1' }), ev('published', { id: 'short000001' })],
+    };
+    const s = outputState(o, { sha: 's1', status: 'release' }, 'm1', { topic: 't', story: 's', output: 'short-1' });
+    expect(s.status).toBe('published');
+    expect(s.next).toMatch(/related video.*YouTube Studio/);
   });
 });

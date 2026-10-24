@@ -11,21 +11,16 @@ import {
   type Output,
   type PublishEvent,
   Refusal,
+  openOutput,
   type UploadMetadata,
   type VerbResult,
-  currentBuild,
-  emptyLedger,
   loadLedger,
-  outputState,
   recordFailed,
   recordPublished,
   recordScheduled,
   recordUpdated,
   recordUploaded,
-  uploadMetadataOf,
 } from './publish';
-import { scriptDir, storySlug } from './script';
-import { loadStories } from './stories';
 import { type RemoteVideo, type Snippet, type YouTubeClient, YouTubeError } from './youtube';
 
 export const SESSION_FILE = (output: string) =>
@@ -61,24 +56,6 @@ export function uploadProblem(m: Pick<UploadMetadata, 'title' | 'description' | 
   return null;
 }
 
-/** The ledger, output, build, composed metadata and state the verbs judge (publish.ts keeps its own `open`). */
-function inspect(topic: string, storyId: string, c: { output?: string; root?: string }) {
-  const root = c.root ?? ROOT;
-  const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
-  if (story?.partOf) throw new Refusal(`${storyId} is a follow-up in ${story.partOf}; its video is that story's`);
-  const dir = scriptDir(topic, storyId, root);
-  if (!existsSync(dir)) throw new Refusal(`no script directory for ${topic} ${storyId}`);
-  const ledger = loadLedger(topic, storyId, root) ?? emptyLedger(`${topic}/${storyId}`);
-  const id = c.output ?? 'youtube';
-  const out = ledger.outputs[id];
-  if (!out) throw new Refusal(`no output ${id} (outputs: ${Object.keys(ledger.outputs).join(', ')}); add it first`);
-  const rel = (f: string) => `topics/${topic}/scripts/${storySlug(storyId)}/${f}`;
-  const build = currentBuild(dir);
-  const metadata = uploadMetadataOf(dir, rel, out);
-  const state = outputState(out, build, metadata?.sha ?? null, { topic, story: storyId, output: id });
-  return { root, dir, ledger, id, out, rel, build, metadata, state };
-}
-
 const snippetOf = (m: UploadMetadata): Snippet => ({
   title: m.title,
   description: m.description,
@@ -86,8 +63,7 @@ const snippetOf = (m: UploadMetadata): Snippet => ({
   categoryId: m.category ?? CATEGORY_DEFAULT,
   defaultLanguage: m.language ?? LANGUAGE_DEFAULT,
 });
-const syntheticMedia = (out: Output) =>
-  (out.metadata as { containsSyntheticMedia?: boolean }).containsSyntheticMedia ?? false;
+const syntheticMedia = (out: Output) => out.metadata.containsSyntheticMedia ?? false;
 const lastSentSha = (out: Output) =>
   [...out.events].reverse().find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata)?.metadata ??
   null;
@@ -123,7 +99,7 @@ async function guarded<T>(
 /** Uploads the packaged build (or a derivative's source) as a private video, then its thumbnail and captions. One
  *  result per step done; a thumbnail or captions failure is recorded and the verb goes on. */
 export async function upload(topic: string, storyId: string, c: Ctx): Promise<VerbResult[]> {
-  const o = inspect(topic, storyId, c);
+  const o = openOutput(topic, storyId, c);
   if (o.state.status !== 'not-uploaded' && o.state.status !== 'build-behind')
     throw new Refusal(`${o.id} is ${o.state.status}: ${o.state.next}`);
   if (!o.metadata || !o.metadata.file || !o.build)
@@ -140,7 +116,7 @@ export async function upload(topic: string, storyId: string, c: Ctx): Promise<Ve
   const thumbnail = o.metadata.thumbnail ? join(o.root, o.metadata.thumbnail.file) : null;
   if (thumbnail && !existsSync(thumbnail))
     throw new Refusal(`${o.metadata.thumbnail!.file} is missing on disk; package again or set another thumbnail`);
-  const captions = (o.metadata as { captions?: { file: string; sha: string; language: string } }).captions ?? null;
+  const captions = o.metadata.captions;
   if (captions && !existsSync(join(o.root, captions.file)))
     throw new Refusal(`${captions.file} is missing on disk; npm run video -- package writes it`);
 
@@ -204,7 +180,7 @@ const lastEvent = (topic: string, storyId: string, c: Ctx): PublishEvent | null 
 
 /** Sends the composed metadata to YouTube when it changed since the last upload or update, then records it. */
 export async function push(topic: string, storyId: string, c: Ctx): Promise<VerbResult> {
-  const o = inspect(topic, storyId, c);
+  const o = openOutput(topic, storyId, c);
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; there is nothing on YouTube to update`);
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
   if (lastSentSha(o.out) === o.metadata.sha)
@@ -220,7 +196,7 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
     await guarded(topic, storyId, c, 'thumbnail', () => c.client.setThumbnail(id, file));
     fields.push('thumbnail');
   }
-  const captions = (o.metadata as { captions?: { file: string; language: string } }).captions;
+  const captions = o.metadata.captions;
   if (captions) {
     await guarded(topic, storyId, c, 'captions', () =>
       c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English'),
@@ -232,7 +208,7 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
 
 /** Makes the approved upload public now, or schedules it (private with a publishAt) for `at`. */
 export async function goLive(topic: string, storyId: string, c: Ctx & { at?: string }): Promise<VerbResult> {
-  const o = inspect(topic, storyId, c);
+  const o = openOutput(topic, storyId, c);
   if (o.state.status === 'scheduled' || o.state.status === 'published')
     return { event: null, existing: true, message: `${o.id} is already ${o.state.status}: ${o.state.next}` };
   if (o.state.status !== 'approved') throw new Refusal(`${o.id} is ${o.state.status}, not approved: ${o.state.next}`);
@@ -255,7 +231,7 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
 /** Reads the video back: a rejection or a deletion is a final failure, a scheduled video gone public is recorded,
  *  anything else is returned for the CLI to print. */
 export async function sync(topic: string, storyId: string, c: Ctx): Promise<VerbResult | RemoteVideo> {
-  const o = inspect(topic, storyId, c);
+  const o = openOutput(topic, storyId, c);
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; nothing on YouTube to read`);
   const id = o.state.id;
   const v = await guarded(topic, storyId, c, 'sync', () => c.client.getVideo(id));

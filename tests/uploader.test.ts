@@ -107,6 +107,7 @@ describe('upload', () => {
     expect(results.map((r) => r.message)).toEqual([
       expect.stringMatching(/recorded uploaded vid00000001/),
       'thumbnail set',
+      'captions uploaded',
     ]);
     const [ev] = events(f);
     expect(ev).toMatchObject({ type: 'uploaded', id: 'vid00000001', build: BUILD, buildStatus: 'release', by: 'Jon' });
@@ -131,7 +132,10 @@ describe('upload', () => {
       method: 'setThumbnail',
       args: ['vid00000001', expect.stringMatching(/thumbnail\.png$/)],
     });
-    expect(client.calls.some((c) => c.method === 'insertCaptions')).toBe(false); // the package has none yet
+    expect(client.calls[2]).toMatchObject({
+      method: 'insertCaptions',
+      args: ['vid00000001', expect.stringMatching(/captions\.en\.srt$/), 'en', 'English'],
+    });
     expect(existsSync(sessionPath(f))).toBe(false);
   });
 
@@ -216,7 +220,8 @@ describe('upload', () => {
     const results = await upload(f.topic, f.story, ctx(f, client));
     expect(events(f).map((e) => e.type)).toEqual(['uploaded', 'failed']);
     expect(events(f)[1]).toMatchObject({ step: 'thumbnail', retryable: false, id: 'vid00000001' });
-    expect(results.at(-1)!.event!.type).toBe('failed');
+    expect(results[1].event!.type).toBe('failed');
+    expect(client.calls.some((c) => c.method === 'insertCaptions')).toBe(true); // the verb went on
   });
 
   it('refuses metadata over a YouTube limit before any call', async () => {
@@ -280,7 +285,7 @@ describe('push', () => {
     saveLedger(path, l);
     const r = await push(f.topic, f.story, ctx(f, client));
     expect(r.event).toMatchObject({ type: 'updated', id: 'vid00000001' });
-    expect(r.event!.fields).toEqual(expect.arrayContaining(['snippet', 'thumbnail']));
+    expect(r.event!.fields).toEqual(['snippet', 'thumbnail', 'captions']);
     const u = client.calls.find((c) => c.method === 'updateVideo')!;
     expect((u.args[1] as { snippet: { title: string } }).snippet.title).toBe('A better title');
   });

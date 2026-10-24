@@ -210,8 +210,13 @@ export function syntheticProduction(upTo: FixtureStage, opts: { release?: boolea
     mp4: 'fixture.mp4',
     mp4Sha: opts.release ? 'releasesha' : 'draftsha',
     thumbnailSha: 'thumbsha',
+    captionsSha: 'capsha',
     title: script.title,
   });
   write('video/review/description.txt', `${script.title}\n\nChapters\n0:00 Hook\n`);
+  write(
+    'video/review/captions.en.srt',
+    '1\n00:00:00,000 --> 00:00:02,000\nDoes a heat pump really cost less to run?\n',
+  );
   return fixture;
 }

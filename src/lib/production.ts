@@ -25,6 +25,7 @@ import {
   loadLedger,
   mainOutput,
   outputStates,
+  parentUrlOf,
   publishPath,
   uploadMetadataOf,
 } from './publish';
@@ -765,7 +766,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
   // The ledger view: every output's state against the build on disk and the metadata it would send.
   if (c.build || existsSync(publishPath(topic, storyId, root))) {
     const metadata = Object.fromEntries(
-      Object.entries(c.ledger.outputs).map(([id, o]) => [id, uploadMetadataOf(dir, c.r, o)]),
+      Object.entries(c.ledger.outputs).map(([id, o]) => [id, uploadMetadataOf(dir, c.r, o, parentUrlOf(c.ledger, o))]),
     );
     const states = outputStates(c.ledger, c.build, (id) => metadata[id]?.sha ?? null, {
       topic,

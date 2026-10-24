@@ -335,8 +335,8 @@ describe('publishing on the board', () => {
       const p0 = productionOf(topic, story, root)!;
       expect(p0.publish!.outputs[0].state.status).toBe('not-uploaded');
       expect(p0.upload!.title).toBe(readJson<Script>(join(fx.dir, 'script.json'))!.title);
-      expect(p0.next).toContain(`npm run publish -- uploaded ${topic} ${story}`);
-      expect(stepsOf(p0.next, topic, story).map((s) => s.kind)).toEqual(['do', 'run']);
+      expect(p0.next).toContain(`npm run publish -- upload ${topic} ${story}`);
+      expect(stepsOf(p0.next, topic, story).map((s) => s.kind)).toEqual(['run']);
       recordUploaded(topic, story, { root, by, id: 'aaaaaaaaaaa' });
       expect(productionOf(topic, story, root)!.next).toContain('npm run publish -- approve');
       recordApproved(topic, story, { root, by });
