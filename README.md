@@ -273,12 +273,12 @@ writes `video/review/`: the mp4 copied as `<slug>-review-private.mp4` (gitignore
 (the paste-ready description: a review-build notice, chapters at measured timestamps from `render.json`'s
 `chapters` or the script's sections, the studies and sources, the voice and music provenance, the clearance line),
 `checklist.md` (opening, intelligibility, music balance and continuity, citations, charts, pacing, transitions,
-glitches, conclusion, local vs YouTube playback), the build report, a `thumbnail.png` from the title card, and
-`review.json` (which build report it was made from; the board calls it stale when that changes). It refuses an mp4
+glitches, conclusion, local vs YouTube playback), the build report, a `thumbnail.png` from the title card, `captions.en.srt`
+(one cue per sentence from the measured timeline), and `review.json` (which build report it was made from; the board calls it stale when that changes). It refuses an mp4
 other than the one QA checked (the build report records its sha), and chapters YouTube would ignore: fewer than
-three, one under 10 s, or a scene not in the timeline. Upload the mp4
-to YouTube as a **private** video by hand; there is no API call. Record it with
-`npm run publish -- uploaded <topic> <story-id> --id <youtube id>`. The package says in every file that it is a review build and why public
+three, one under 10 s, or a scene not in the timeline. The description fits YouTube's 5000 bytes: the sources
+discussed are one link to the topic page. Upload it privately with `npm run publish -- upload <topic> <story-id>`
+(or by hand, then `npm run publish -- uploaded <topic> <story-id> --id <youtube id>`). The package says in every file that it is a review build and why public
 release is blocked; the Edge voice keeps it blocked. When you accept the draft, run
 
 ```
@@ -334,19 +334,54 @@ output (the YouTube video, later a short, a blog post, a page) an append-only ev
 `metadata` block may be hand-edited. Builds are named by the mp4 sha the QA checked, metadata by the sha of the
 composed title, description, tags and thumbnail sha, so a thumbnail swap is an `updated` event, never a re-render.
 
-The flow, as the board's next step walks it:
+The flow, as the board's next step walks it (every step is one `npm run publish -- <verb> <topic> <story-id>`):
 
-1. Draft packaged: upload `video/review/<slug>-review-private.mp4` privately, `publish -- uploaded --id <id>`.
+1. Draft packaged: `upload` sends `video/review/<slug>-review-private.mp4` to YouTube **privately** with the title-card
+   thumbnail and the captions, and records `uploaded`.
 2. Watch it with `checklist.md`; `npm run video -- final --approved-by "<name>"` accepts the draft (recorded as
    `approved` for the draft build) and packages the release build.
-3. Upload the release build privately and record it, or approve the local file: `publish -- approve --by "<name>"`.
-   Only an approved build may go public.
-4. Set it public or schedule it on YouTube, then `publish -- published` or `publish -- scheduled --at <ISO>`.
-5. Later changes to title, tags or thumbnail: change them on YouTube, `publish -- updated --fields thumbnail`.
-   A live video is never replaced: a re-release is a new output, `publish -- add <id> --kind youtube-video`.
+3. `upload` again (the release build is a new private video; the draft's id is kept as superseded), watch it, then
+   `approve --by "<name>"`. Only an approved build may go public.
+4. `go-live` makes it public now; `go-live --at <ISO>` schedules it (YouTube keeps it private until then; at least
+   five minutes ahead). After the time, `sync` reads YouTube and records `published`.
+5. Later changes to the title, tags, thumbnail (`thumbnail <file>`) or the `metadata` block: `push` sends them and
+   records `updated`. A live video is never replaced: a re-release is a new output, `add <id> --kind youtube-video`.
 
-`publish -- show` prints the state, the composed upload metadata and the event log. Every verb is idempotent (an event
-already recorded prints and exits 0) and refuses, without writing, what the files do not support (exit 2).
+A Short is another output of the same ledger: `add short-1 --kind youtube-short --from youtube --source <file>`,
+then the same `upload`, `approve`, `go-live`. Its description links the full video once that is live; the related
+video is set in YouTube Studio (the API has no field for it).
+
+`show` prints the state, the composed upload metadata and the event log. Every verb is idempotent (an event already
+recorded prints and exits 0) and refuses, without writing, what the files do not support (exit 2). The hand verbs
+(`uploaded --id`, `scheduled --at`, `published`, `updated --fields`) record what was done in the browser instead.
+
+### YouTube
+
+Once, by a person (Google's console; nothing here can do it):
+
+1. Create or pick a Google Cloud project and enable the YouTube Data API v3.
+2. OAuth consent screen: external, publishing status **In production** (a screen left in Testing issues refresh
+   tokens that expire after 7 days), scope `https://www.googleapis.com/auth/youtube.force-ssl`. Verification is
+   not needed for one channel owner; accept the unverified-app warning once.
+3. Create an OAuth client of type **Desktop app**; put its id and secret in `.env` as `YOUTUBE_CLIENT_ID` and
+   `YOUTUBE_CLIENT_SECRET`.
+4. Verify the channel by phone (youtube.com/verify) so custom thumbnails are allowed.
+5. `npm run publish -- auth <topic> <story-id>` opens the consent page and writes `.youtube-token.json` (gitignored,
+   mode 0600); or put a refresh token in `.env` as `YOUTUBE_REFRESH_TOKEN`.
+
+What the API does and costs (checked 2026-10-23): `videos.insert` is 1 of 100 uploads per project per day in its own
+quota bucket; `thumbnails.set` 50, `captions.insert` 400, `videos.update` 50 and `videos.list` 1 unit of the 10,000 a
+day for everything else, so one video is about 500 units and all 18 fit in a day. Google's `videos.insert` reference
+says uploads from unverified API projects are **not** restricted to private viewing; if YouTube locks one anyway, set
+it public in Studio and record `published` by hand. `publishAt` only works on a never-published private video; a past
+time publishes immediately, which is why `go-live --at` refuses anything under five minutes ahead. There is no Shorts
+flag: a vertical or square video up to three minutes is a Short.
+
+Recovery: every API success is recorded before the next call, and `upload` writes `video/upload-session.json` (the
+resumable session) before the first byte and deletes it after the ledger has the id, so a crash, a quota refusal or
+a network drop is a `failed` event with `retryable` and the same `upload` resumes the same YouTube video. A session
+YouTube no longer knows is a final failure: look for the title in Studio and record it with `uploaded --id`, or delete
+the session file to upload again. `sync` reconciles what happened on YouTube (rejected, deleted, gone public).
 
 ## Producing a story
 

@@ -11,13 +11,21 @@
 //   unpublished | retracted <topic> <story-id> --note <text> [--by <name>]
 //   add <topic> <story-id> <output-id> --kind <kind> [--from <output>] [--source <file>]
 //                                                             a new output (youtube-video, youtube-short, blog-post, web-page, post, ...)
+// Through the YouTube Data API (YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET and YOUTUBE_REFRESH_TOKEN or .youtube-token.json; README, Publishing):
+//   auth <topic> <story-id>                                   one-time consent in the browser; writes .youtube-token.json (gitignored)
+//   upload <topic> <story-id> [--output <id>] [--by <name>]   upload the packaged build (or the output's source) PRIVATELY with its thumbnail and
+//                                                             captions, and record it; resumes an interrupted upload, never uploads the same build twice
+//   push <topic> <story-id> [--output <id>]                   send the composed title, description, tags, thumbnail and captions when they changed
+//   go-live <topic> <story-id> [--at <ISO>] [--output <id>]   make the APPROVED upload public now, or schedule it (private until --at); records it
+//   sync <topic> <story-id> [--output <id>]                   read the video back: records a scheduled video gone public, a rejection, a deletion
 // Every verb is idempotent: a key already in the ledger prints the existing event and exits 0. A refusal prints one line and
 // exits 2 without writing. --by defaults to $PUBLISH_BY, else git's user.name; approve needs it explicitly.
 // The ledger is topics/<topic>/scripts/<slug>/publish.json (src/lib/publish.ts); events are written only here, metadata may
 // be hand-edited.
-import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { toJson } from '../src/lib/io';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { ROOT, toJson } from '../src/lib/io';
 import {
   Refusal,
   type VerbResult,
@@ -39,6 +47,10 @@ import {
   uploadMetadataOf,
 } from '../src/lib/publish';
 import { scriptDir, storySlug } from '../src/lib/script';
+import { goLive, push, sync, upload } from '../src/lib/uploader';
+import { TOKEN_FILE, YouTubeError, authorize, loadCredentials, youtubeClient } from '../src/lib/youtube';
+
+if (existsSync(join(ROOT, '.env'))) process.loadEnvFile(join(ROOT, '.env')); // keys only; never committed
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
 const flag = (name: string) => {
@@ -66,7 +78,7 @@ const usage = () => {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 18)
+      .slice(0, 25)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -90,6 +102,7 @@ const need = (name: string) => {
 };
 const output = flag('--output');
 const common = () => ({ output, by: by() });
+const api = () => ({ ...common(), client: youtubeClient(loadCredentials()) });
 
 function show() {
   const dir = scriptDir(topic, storyId);
@@ -113,6 +126,7 @@ function show() {
       lines.push(`  title: ${meta.title}`, `  file: ${meta.file}`, `  tags: ${meta.tags.join(', ') || '(none)'}`);
       lines.push(
         `  thumbnail: ${meta.thumbnail ? `${meta.thumbnail.file} (${meta.thumbnail.sha})` : 'none'}`,
+        `  captions: ${meta.captions ? `${meta.captions.file} (${meta.captions.sha})` : 'none'}`,
         `  metadata sha: ${meta.sha}`,
       );
     }
@@ -124,7 +138,7 @@ function show() {
   console.log(lines.join('\n'));
 }
 
-try {
+async function main() {
   let r: VerbResult | null = null;
   switch (cmd) {
     case 'show':
@@ -173,14 +187,53 @@ try {
       });
       console.log(`added ${positional[0]} (${flag('--kind')})`);
       break;
+    case 'auth': {
+      const creds = loadCredentials(ROOT, process.env, { requireToken: false });
+      await authorize(creds, ROOT, (url) => {
+        console.log(`Grant access in the browser (opening it now):\n${url}`);
+        if (process.platform === 'win32') spawnSync('cmd', ['/c', 'start', '', url]);
+      });
+      console.log(`wrote ${TOKEN_FILE} (gitignored); or copy its refresh_token into .env as YOUTUBE_REFRESH_TOKEN`);
+      break;
+    }
+    case 'upload': {
+      const results = await upload(topic, storyId, api());
+      for (const x of results) console.log(x.message);
+      if (results.some((x) => x.event?.type === 'failed')) process.exitCode = 1;
+      break;
+    }
+    case 'push':
+      r = await push(topic, storyId, api());
+      break;
+    case 'go-live':
+      r = await goLive(topic, storyId, { ...api(), at: flag('--at') });
+      break;
+    case 'sync': {
+      const x = await sync(topic, storyId, api());
+      if ('event' in x) r = x;
+      else
+        console.log(
+          `${x.id}: ${x.privacyStatus}, upload ${x.uploadStatus}, processing ${x.processingStatus ?? 'n/a'}${x.publishAt ? `, publishAt ${x.publishAt}` : ''}`,
+        );
+      break;
+    }
     default:
       usage();
   }
   if (r) console.log(r.message + (r.event && !r.existing ? `\n${toJson(r.event).trim()}` : ''));
-} catch (e) {
+}
+
+main().catch((e: unknown) => {
   if (e instanceof Refusal) {
     console.error(`refused: ${e.message}`);
     process.exit(2);
   }
-  throw e;
-}
+  if (e instanceof YouTubeError) {
+    console.error(
+      `YouTube ${e.reason} (${e.retryable ? 'retryable: run the verb again' : 'a person decides'}): ${e.message}; recorded in publish.json`,
+    );
+    process.exit(1);
+  }
+  console.error(e instanceof Error ? e.message : e);
+  process.exit(1);
+});
