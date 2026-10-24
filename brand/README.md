@@ -43,12 +43,17 @@ on its seal, lockups and banners; the closing card keeps the Commonwealth line).
 Where the kit is used:
 
 - **Site** (copies written by `npm run brand`, committed): the share card of every page is a kit `og-default`
-  (`public/og/site.jpg` for the Commonwealth, `public/og/<key>.jpg` on an institution's commission, topic and story
-  pages, through Base's `image`); the favicon set and the header logo are the Commonwealth's `mark-small`; an
+  (`public/og/site.jpg` for the Commonwealth, `public/og/<key>.jpg` on an institution's commission and topic pages,
+  through Base's `image`), and a story page shares its own `og-inquiry` card with its question on it
+  (`public/og/stories/<topic>/<story slug>.jpg`; `brand/og-inquiry.json` records the questions drawn, and the kit test
+  fails when one has changed since); the favicon set and the header logo are the Commonwealth's `mark-small`; an
   institution's `seal` (`public/commissions/<key>.png`) stands beside its name on the home page, About, and its
   commission, topic and story pages.
 - **Video**: every render copies the story's institution's kit into the video folder's `brand/` (`src/video/brand.ts`,
-  gitignored), so a scene loads a slot with `staticFile('brand/<slot>.png')`. The channel's avatar, banner and
+  gitignored), so a scene loads a slot with `staticFile('brand/<slot>.png')`. A landscape video of a published topic ends on
+  an unnarrated scene `end` (kind `close-card`, appended by `src/video/timeline.ts`): the kit's `close-card` for 4 s,
+  then its `endscreen-subscribe` for the 12 s YouTube's end-screen elements sit on. Its render cache key includes
+  those two SVGs, so a redrawn kit re-renders it. The channel's avatar, banner and
   watermark are uploaded from the kit by hand and recorded in `accounts.json`.
 
 `tests/accounts.test.ts` checks that every kit has every slot with its files, the site's seal copies exist, and every

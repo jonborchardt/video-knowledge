@@ -87,6 +87,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(html).toContain('<section aria-labelledby="claims"');
       expect(html).toContain('data-verdict=');
       expect(html).toContain(`href="${BASE}${topic}/"`);
+      // its own share card, the question drawn on it (npm run brand)
+      expect(html).toContain(`<meta property="og:image" content="${SITE}${BASE}og/stories/${topic}/${slug}.jpg"`);
+      expect(existsSync(join(DIST, 'og/stories', topic, `${slug}.jpg`)), `${topic}/${slug} card`).toBe(true);
       if (!s.partOf) {
         const c = Object.entries(commissions).find(([, c]) => c.topics.includes(topic))![0];
         expect(readFileSync(join(DIST, 'commissions', c, 'index.html'), 'utf8')).toContain(

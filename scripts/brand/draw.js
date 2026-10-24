@@ -1,4 +1,4 @@
-/* global window */
+/* global window, document */
 // The brand kit's drawings: one design per slot in brand/slots.json, the same for the Commonwealth and every institution,
 // drawn from the brand's kit.json (palette, emblem, slogan) and its names in src/config/site.ts. Runs in the browser
 // that scripts/brand.ts opens, so text is measured in the real fonts (fitText) before the SVGs are saved.
@@ -48,6 +48,37 @@
   const fitN = (t, w, max, ls) => Math.min(max, (w / t.length - ls) / 0.72);
   const fit = (t, w, max, r = 0.56) => `${Math.min(max, w / (t.length * r)).toFixed(1)}" data-maxw="${w}`;
   function fitText(root) {
+    // A wrapped block (data-wrap: at most that many lines inside data-maxw, centred in data-box below data-top) shrinks
+    // one step at a time until it fits, then becomes one tspan per line.
+    for (const el of root.querySelectorAll('text[data-wrap]')) {
+      const max = +el.dataset.maxw,
+        most = +el.dataset.wrap,
+        lh = 1.22,
+        words = el.textContent.split(/\s+/).filter(Boolean);
+      const len = (s) => ((el.textContent = s), el.getComputedTextLength());
+      let size = +el.getAttribute('font-size'),
+        lines;
+      for (; ; size -= 1) {
+        el.setAttribute('font-size', size);
+        lines = [];
+        for (const w of words) {
+          const next = lines.length ? `${lines[lines.length - 1]} ${w}` : w;
+          if (lines.length && len(next) <= max) lines[lines.length - 1] = next;
+          else lines.push(w);
+        }
+        if ((lines.length <= most && lines.every((l) => len(l) <= max)) || size <= 12) break;
+      }
+      const top = +el.dataset.top + (+el.dataset.box - lines.length * size * lh) / 2 + size * 0.8;
+      el.textContent = '';
+      lines.forEach((l, i) => {
+        const span = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        span.setAttribute('x', el.getAttribute('x'));
+        span.setAttribute('y', (top + i * size * lh).toFixed(1));
+        span.textContent = l;
+        el.appendChild(span);
+      });
+      for (const k of ['wrap', 'maxw', 'top', 'box']) el.removeAttribute(`data-${k}`);
+    }
     for (const el of root.querySelectorAll('text[data-maxw]')) {
       const max = +el.dataset.maxw;
       const len = el.getComputedTextLength();
@@ -389,5 +420,41 @@
     return out;
   }
 
-  window.BrandKit = { assets, fitText };
+  // The og-inquiry template, "Ground, question first": one story's question in large serif on the brand's ground, a
+  // gold rule, the seal, the full institution name and THE OFFICIAL PUBLIC RECORD. fitText wraps the question.
+  function inquiryCard(B, question) {
+    const k = B.palette;
+    return {
+      w: 1200,
+      h: 675,
+      svg:
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">${defs(k)}` +
+        `<rect width="1200" height="675" fill="${k.ground}"/>` +
+        frame(1200, 675, k.accent, 28) +
+        T(96, 128, 22, 'THE OFFICIAL PUBLIC RECORD', k.accent, `${MONO} letter-spacing="8"`) +
+        T(
+          96,
+          0,
+          `62" data-wrap="4" data-maxw="1008" data-top="150" data-box="350`,
+          question,
+          k.paper,
+          `${SERIF} font-weight="700"`,
+        ) +
+        `<path d="M96 524 H420" stroke="${k.accent}" stroke-width="3"/>` +
+        place(
+          assets(B)
+            .find((a) => a.slot === 'seal')
+            .svg.replace(/^<svg[^>]*>|<\/svg>$/g, '')
+            .replace(/<defs>[\s\S]*?<\/defs>/, ''),
+          96,
+          546,
+          68,
+        ) +
+        T(184, 586, fit(B.fullName, 900, 28), B.fullName, k.paper, SERIF) +
+        T(186, 618, 18, SITE, k.accent, MONO) +
+        '</svg>',
+    };
+  }
+
+  window.BrandKit = { assets, inquiryCard, fitText };
 })();

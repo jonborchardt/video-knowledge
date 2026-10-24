@@ -10,7 +10,7 @@ import { type AudioStats, type Probe, audioStats, extractFrame, lumaSamples, pro
 import { ALL_KINDS, unsupportedAssets } from './kinds';
 import { type MixReport, type MusicConfig, musicFingerprint, resolveCues } from './music';
 import type { Segment } from './select';
-import { buildTimeline } from './timeline';
+import { END_SCENE, buildTimeline } from './timeline';
 import { type NarrationManifest, SHORT_HARD_SECONDS, type Timeline } from './types';
 
 export interface Check {
@@ -155,15 +155,19 @@ export function audioChecks(p: Probe, a: AudioStats | null, tl: Timeline, manife
     const d = Math.abs((p.audio.duration || p.duration) - (p.video?.duration || p.duration));
     out.push(check('audio length matches video', d <= TOLERANCE.avSyncSeconds, `${d.toFixed(3)}s apart`));
   }
+  // the appended end scene is unnarrated: a silence that runs into it is the close card, not a gap
+  const last = tl.scenes.at(-1);
+  const tail = last?.id === END_SCENE ? last.start / tl.fps - TOLERANCE.silenceSeconds : Infinity;
+  const silences = a?.silences.filter((s) => s.start < tail) ?? [];
   if (a)
     out.push(
       check('no clipping', a.maxVolumeDb <= TOLERANCE.peakDb, `peak ${a.maxVolumeDb} dB, mean ${a.meanVolumeDb} dB`),
       check(
         'no long silence',
-        a.silences.length === 0,
-        a.silences.length
-          ? a.silences.map((s) => `${s.start.toFixed(1)}-${s.end.toFixed(1)}s`).join(', ')
-          : `none >= ${TOLERANCE.silenceSeconds}s`,
+        silences.length === 0,
+        silences.length
+          ? silences.map((s) => `${s.start.toFixed(1)}-${s.end.toFixed(1)}s`).join(', ')
+          : `none >= ${TOLERANCE.silenceSeconds}s${tail < Infinity ? ' before the end scene' : ''}`,
       ),
     );
   const all = tl.scenes.flatMap((x) => x.sentences);
@@ -185,7 +189,7 @@ export function audioChecks(p: Probe, a: AudioStats | null, tl: Timeline, manife
 /** Scenes, sentences, citations, chart data, excerpts and kinds against the storyboard and the script. */
 export function contentChecks(tl: Timeline, seg: Segment): Check[] {
   const out: Check[] = [];
-  const ids = tl.scenes.map((s) => s.id);
+  const ids = tl.scenes.filter((s) => s.id !== END_SCENE).map((s) => s.id); // the appended end scene is no storyboard's
   out.push(check('scene order', ids.join() === seg.config.scenes.join(), `${ids[0]} to ${ids.at(-1)} (${ids.length})`));
   const sb = seg.storyboard.scenes.map((s) => s.id);
   const k = sb.indexOf(ids[0]);

@@ -25,7 +25,15 @@ import { COMPONENTS } from '../src/video/remotion/scenes';
 import { headlineNumber, segmentColors } from '../src/video/remotion/scenes/StackedBar';
 import { countUp, theme } from '../src/video/remotion/theme';
 import { narrate } from '../src/video/narration';
-import { TOLERANCE, blankChecks, contentChecks, shortChecks, soundtrackChecks, syncChecks } from '../src/video/qa';
+import {
+  TOLERANCE,
+  audioChecks,
+  blankChecks,
+  contentChecks,
+  shortChecks,
+  soundtrackChecks,
+  syncChecks,
+} from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
 import { deepImports, relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail } from '../src/video/select';
@@ -89,7 +97,7 @@ describe('segment selection', () => {
     const names = [GENERIC, ...Object.values(BESPOKE as Record<string, object>)].flatMap((r) => Object.keys(r));
     expect(new Set(names).size).toBe(names.length);
     for (const [k, spec] of Object.entries(ALL_KINDS)) {
-      expect(spec.accepts.length, k).toBeGreaterThan(0);
+      if (k !== 'close-card') expect(spec.accepts.length, k).toBeGreaterThan(0); // the end scene is the timeline's own
       expect(COMPONENTS[spec.component], k).toBeTypeOf('function');
     }
   });
@@ -147,6 +155,35 @@ describe('timeline', () => {
     expect(tl.fingerprints.script).toBe(scriptFingerprint(inp.script));
     expect(tl.scenes[1].options).toEqual({});
     expect(buildTimeline(seg, m)).toEqual(tl); // deterministic
+  });
+  it('ends a published story on the close card and end screen, after its last storyboard scene only', () => {
+    const inp = inputs();
+    const seg = checkSegment(inp);
+    const m = manifest(inp);
+    const published = { ...seg, script: { ...seg.script, topic: 'heat-pumps' } };
+    const tl = buildTimeline(published, m);
+    const end = tl.scenes.at(-1)!;
+    expect(tl.scenes.map((s) => s.id)).toEqual(['sc01', 'sc02', 'sc03', 'end']);
+    expect(end).toMatchObject({ kind: 'close-card', sentences: [], duration: 16 * 30, options: { closeFrames: 120 } });
+    expect(tl.durationInFrames).toBe(end.start + end.duration);
+    expect(contentChecks(tl, published).find((c) => c.name === 'scene order')?.ok).toBe(true);
+    // the unnarrated tail is no silence QA objects to; a gap before it still is
+    const silent = (start: number, end: number) =>
+      audioChecks(
+        { duration: end, audio: null, video: null } as unknown as Probe,
+        {
+          maxVolumeDb: -3,
+          meanVolumeDb: -20,
+          silences: [{ start, end }],
+        },
+        tl,
+        m,
+      ).find((c) => c.name === 'no long silence')?.ok;
+    expect(silent(end.start / 30 - 1, tl.durationInFrames / 30)).toBe(true);
+    expect(silent(1, 5)).toBe(false);
+    // a range that stops before the last scene, an unpublished topic: no end scene
+    expect(buildTimeline({ ...published, scenes: seg.scenes.slice(0, 2) }, m).scenes.at(-1)!.id).toBe('sc02');
+    expect(buildTimeline(seg, m).scenes.at(-1)!.id).toBe('sc03');
   });
   it('carries options and reads excerpts from the corpus, refusing a missing passage', () => {
     const p = scenes();

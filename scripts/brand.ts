@@ -4,15 +4,18 @@
 //   kit.json (palette, emblem, slogan). Text is fitted in the real fonts (brand/fonts) inside Remotion's headless Chrome,
 //   then each SVG is saved (committed) and rasterized to the PNG or JPG its slot names (gitignored, for uploads). Writes
 //   each kit's `assets` and the site's copies: share cards public/og/, seals public/commissions/, the favicon set and
-//   src/assets/logo.svg (the Commonwealth's small mark). Re-run after changing a drawing or a kit.
+//   src/assets/logo.svg (the Commonwealth's small mark), and one inquiry card per public story (template og-inquiry,
+//   public/og/stories/). Re-run after changing a drawing, a kit or a story's question.
 import { execFile } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
-import { commissions, site } from '../src/config/site';
+import { commissionKey, commissionOf, commissions, site } from '../src/config/site';
 import { ROOT, readJson } from '../src/lib/io';
+import { loadStories, storyUrlSlug } from '../src/lib/stories';
+import { publicTopicNames } from '../src/lib/topics';
 
 interface Slot {
   id: string;
@@ -120,20 +123,18 @@ const unescape = (s: string) =>
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&');
 const fileOf = (a: Asset) => `${a.slot}${a.key ? '-' + a.key : ''}`;
-const tmp = join(tmpdir(), 'brand-kit');
+const tmp = join(tmpdir(), `brand-kit-${process.pid}`); // per run: another checkout may be drawing too
 mkdirSync(tmp, { recursive: true });
 const draw = readFileSync(join(ROOT, 'scripts/brand/draw.js'), 'utf8');
 
-for (const key of ['cor', ...Object.keys(commissions)]) {
-  const kitPath = join(BRAND, key, 'kit.json');
-  const kit = readJson<Kit>(kitPath)!;
-  // 1. Draw every asset, fit its text in the real fonts and read the fitted SVGs back out of the page.
-  const page = join(tmp, `${key}.html`);
+/** Draws `list` (a BrandKit expression) in a page, fits its text in the real fonts and reads the fitted SVGs back. */
+async function drawn<T extends { svg: string }>(name: string, list: string): Promise<T[]> {
+  const page = join(tmp, `${name}.html`);
   writeFileSync(
     page,
     `<!doctype html><meta charset="utf-8"><style>${FONTS}</style><div id="kit"></div><pre id="out"></pre>
 <script>${draw}</script><script>
-const list = BrandKit.assets(${JSON.stringify(brandData(key, kit))});
+const list = ${list};
 const root = document.getElementById('kit');
 root.innerHTML = list.map((a) => a.svg).join('');
 ${LOAD_FONTS}.then(() => {
@@ -146,8 +147,33 @@ ${LOAD_FONTS}.then(() => {
   );
   const dom = await run(['--dump-dom', pathToFileURL(page).href]);
   const m = /<pre id="out">([\s\S]*?)<\/pre>/.exec(dom);
-  if (!m || !m[1]) throw new Error(`${key}: the page did not finish drawing (fonts not loaded?)`);
-  const assets = JSON.parse(unescape(m[1])) as Asset[];
+  if (!m || !m[1]) throw new Error(`${name}: the page did not finish drawing (fonts not loaded?)`);
+  return JSON.parse(unescape(m[1])) as T[];
+}
+/** Rasterizes one fitted SVG in the same fonts to `png` (transparent where the drawing is). */
+async function shoot(name: string, a: { svg: string; w: number; h: number }, png: string) {
+  const shot = join(tmp, `${name}.html`);
+  writeFileSync(
+    shot,
+    `<!doctype html><meta charset="utf-8"><style>${FONTS}</style>${a.svg}<script>${LOAD_FONTS}</script>`,
+  );
+  await run([
+    `--window-size=${a.w},${a.h}`,
+    '--default-background-color=00000000',
+    `--screenshot=${png}`,
+    pathToFileURL(shot).href,
+  ]);
+}
+const toJpg = async (png: string, jpg: string) => {
+  await sharp(png).flatten({ background: '#ffffff' }).jpeg({ quality: 90, mozjpeg: true }).toFile(jpg);
+  rmSync(png);
+};
+
+for (const key of ['cor', ...Object.keys(commissions)]) {
+  const kitPath = join(BRAND, key, 'kit.json');
+  const kit = readJson<Kit>(kitPath)!;
+  // 1. Draw every asset, fit its text in the real fonts and read the fitted SVGs back out of the page.
+  const assets = await drawn<Asset>(key, `BrandKit.assets(${JSON.stringify(brandData(key, kit))})`);
 
   // 2. Save the SVGs, rasterize each in the same fonts, and record them in the kit.
   const dir = join(BRAND, key);
@@ -169,25 +195,9 @@ ${LOAD_FONTS}.then(() => {
   await pool(assets, 6, async (a) => {
     const name = fileOf(a);
     writeFileSync(join(dir, `${name}.svg`), a.svg + '\n');
-    const shot = join(tmp, `${key}-${name}.html`);
-    writeFileSync(
-      shot,
-      `<!doctype html><meta charset="utf-8"><style>${FONTS}</style>${a.svg}<script>${LOAD_FONTS}</script>`,
-    );
     const png = join(dir, `${name}.png`);
-    await run([
-      `--window-size=${a.w},${a.h}`,
-      '--default-background-color=00000000',
-      `--screenshot=${png}`,
-      pathToFileURL(shot).href,
-    ]);
-    if (slots.find((s) => s.id === a.slot)!.format.includes('jpg')) {
-      await sharp(png)
-        .flatten({ background: '#ffffff' })
-        .jpeg({ quality: 90, mozjpeg: true })
-        .toFile(join(dir, `${name}.jpg`));
-      rmSync(png);
-    }
+    await shoot(`${key}-${name}`, a, png);
+    if (slots.find((s) => s.id === a.slot)!.format.includes('jpg')) await toJpg(png, join(dir, `${name}.jpg`));
   });
   writeFileSync(kitPath, JSON.stringify({ ...kit, assets: recorded, concepts: undefined }, null, 2) + '\n');
   // The site's copies: the share card (public/og/<key>.jpg, the Commonwealth's is site.jpg) and an institution's seal.
@@ -202,6 +212,35 @@ ${LOAD_FONTS}.then(() => {
   }
   console.log(`${key}: ${assets.length} files`);
 }
+// The per-inquiry share cards (template og-inquiry): one per public story at public/og/stories/<topic>/<story slug>.jpg,
+// all rewritten each run so a removed story's card goes too. brand/og-inquiry.json records the question each was drawn
+// from; tests/accounts.test.ts fails when a story's question has changed since.
+const CARDS = join(ROOT, 'public/og/stories');
+rmSync(CARDS, { recursive: true, force: true });
+const cardQuestions: Record<string, string> = {};
+for (const topic of publicTopicNames()) {
+  const key = commissionKey(commissionOf(topic)!);
+  const stories = loadStories(topic)?.stories ?? [];
+  if (!stories.length) continue;
+  const data = JSON.stringify(brandData(key, readJson<Kit>(join(BRAND, key, 'kit.json'))!));
+  const cards = await drawn<{ svg: string; w: number; h: number }>(
+    `cards-${topic}`,
+    `${JSON.stringify(stories.map((s) => s.question))}.map((q) => BrandKit.inquiryCard(${data}, q))`,
+  );
+  mkdirSync(join(CARDS, topic), { recursive: true });
+  await pool(
+    stories.map((s, i) => [s, cards[i]] as const),
+    6,
+    async ([s, card]) => {
+      const png = join(tmp, `card-${topic}-${storyUrlSlug(s)}.png`);
+      await shoot(`card-${topic}-${storyUrlSlug(s)}`, card, png);
+      await toJpg(png, join(CARDS, topic, `${storyUrlSlug(s)}.jpg`));
+    },
+  );
+  for (const s of stories) cardQuestions[`${topic}/${storyUrlSlug(s)}`] = s.question;
+  console.log(`${topic}: ${stories.length} inquiry cards`);
+}
+writeFileSync(join(BRAND, 'og-inquiry.json'), JSON.stringify(cardQuestions, null, 2) + '\n');
 // The site's mark: the Commonwealth's small mark as the favicon set and the header logo (no text, so sharp can draw it).
 const mark = readFileSync(join(BRAND, 'cor/mark-small.svg'), 'utf8')
   .replace(/<defs>[\s\S]*?<\/defs>/, '')

@@ -7,6 +7,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { commissions, site } from '../src/config/site';
 import { readJson, ROOT } from '../src/lib/io';
+import { loadStories, storyUrlSlug } from '../src/lib/stories';
+import { publicTopicNames } from '../src/lib/topics';
 
 interface Kit {
   brand: string;
@@ -84,4 +86,16 @@ describe('brand kits', () => {
       }
     });
   }
+
+  it('every public story has an inquiry card drawn from its current question', () => {
+    const want = Object.fromEntries(
+      publicTopicNames().flatMap((topic) =>
+        (loadStories(topic)?.stories ?? []).map((s) => [`${topic}/${storyUrlSlug(s)}`, s.question]),
+      ),
+    );
+    // brand/og-inquiry.json is what `npm run brand` drew; a changed or new question needs a re-run
+    expect(readJson(join(BRAND, 'og-inquiry.json')), 'stale inquiry cards: run npm run brand').toEqual(want);
+    for (const card of Object.keys(want))
+      expect(existsSync(join(ROOT, 'public/og/stories', `${card}.jpg`)), card).toBe(true);
+  });
 });

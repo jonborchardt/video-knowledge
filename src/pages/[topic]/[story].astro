@@ -2,12 +2,15 @@
 // One matter before an institution: a story from topics/<topic>/stories.json as its own page. The viewer-facing
 // parts of the candidate (title, question, tension, premise, takeaway) and the claims it turns on, each with its
 // verdict and sources from the inquiry. A chain lists its follow-up questions; a follow-up points at its first question.
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
 import { type Commission, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
+import { ROOT } from '../../lib/io';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -27,9 +30,12 @@ const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => commissio
 const h2 = 'mb-3 text-featured font-bold';
 const eyebrowLink = 'text-muted-foreground no-underline hover:underline';
 const commissionHref = (c: Commission) => href(`/commissions/${commissionKey(c)}/`);
+// The story's own share card (npm run brand), else its institution's.
+const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
+const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 ---
 
-<Base title={`${s.title} · ${commission.name}`} description={s.question} image={`/og/${commissionKey(commission)}.jpg`}>
+<Base title={`${s.title} · ${commission.name}`} description={s.question} image={image}>
   <SourceIcons />
   <header class="grid gap-4 border-y-4 border-double py-5">
     <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">

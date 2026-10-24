@@ -5,6 +5,7 @@ import { ALL_KINDS, type SceneKind } from '../../kinds';
 import type { TimelineScene } from '../../types';
 import { Bar } from './Bar';
 import { Choices } from './Choices';
+import { CloseCard } from './CloseCard';
 import { Stamp } from './Stamp';
 import { Steps } from './Steps';
 import { Scorecard } from './Scorecard';
@@ -45,6 +46,7 @@ import { Waterfall } from './Waterfall';
 
 export const COMPONENTS = {
   Choices,
+  CloseCard,
   Stamp,
   Steps,
   Scorecard,
