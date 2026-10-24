@@ -14,6 +14,9 @@ import {
   revisionsInPass,
   sectionsFor,
   scriptDir,
+  shortId,
+  shortOf,
+  storySlug,
   sentenceFingerprint,
   sentences,
   words,
@@ -1105,5 +1108,29 @@ describe('lock guards', () => {
       renderCheckProblems({ ...rc, graphics: [{ scene: 'sc18', kind: 'k', key: 'x', approved: false }] }, now),
     ).toEqual(['graphic sc18 is not approved by the visual review']);
     expect(renderCheckProblems({ ...rc, ok: false, needsGraphics: ['sc18'] }, now)).toEqual(['sc18 needs a graphic']);
+  });
+});
+
+describe('short ids', () => {
+  const short = 'decision:who-benefits/shorts/slower-not-faster';
+  it('parses a short id and leaves a story id alone', () => {
+    expect(shortOf(short)).toEqual({ parent: 'decision:who-benefits', slug: 'slower-not-faster' });
+    expect(shortOf('decision:who-benefits')).toBeNull();
+    expect(shortOf('a/shorts/Bad_Slug')).toBeNull();
+    expect(shortId('decision:who-benefits', 'x')).toBe('decision:who-benefits/shorts/x');
+  });
+  it('nests the short folder in its parent and slugs the whole id', () => {
+    const norm = (p: string) => p.replaceAll('\\', '/');
+    expect(norm(scriptDir('ai-coding', short, '/r'))).toMatch(
+      /topics\/ai-coding\/scripts\/decision-who-benefits\/shorts\/slower-not-faster$/,
+    );
+    expect(norm(scriptDir('ai-coding', 'decision:who-benefits', '/r'))).toMatch(
+      /topics\/ai-coding\/scripts\/decision-who-benefits$/,
+    );
+    expect(storySlug(short)).toBe('decision-who-benefits-shorts-slower-not-faster');
+  });
+  it('selects the short sections from the package', () => {
+    expect(sectionsFor({ short: {} as never })).toEqual(['hook', 'finding', 'close']);
+    expect(sectionsFor(null)).toEqual(['hook', 'setup', 'investigation', 'answer', 'takeaway']);
   });
 });

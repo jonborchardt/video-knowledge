@@ -27,8 +27,10 @@ import {
   scriptDir,
   sentenceFingerprint,
   sentences,
+  shortOf,
 } from '../src/lib/script';
 import { renderReviewMd, renderScriptMd } from '../src/lib/script-md';
+import { buildShortPackage, loadShorts, shortsPath } from '../src/lib/shorts';
 import { validateScript } from '../src/lib/script-validation';
 import { chainOf, loadStories, storiesPath } from '../src/lib/stories';
 import { type Storyboard, type StoryboardPlan, buildStoryboard, renderStoryboardMd } from '../src/lib/storyboard';
@@ -60,7 +62,35 @@ const rel = (f: string) =>
     .replace(ROOT + '/', '')
     .replaceAll('\\', '/');
 
+/** A Short's package is a filter of its parent's (src/lib/shorts.ts), never built from the story. */
+function stageShortPackage(short: { parent: string; slug: string }): EvidencePackage {
+  const shorts = loadShorts(topic, short.parent);
+  if (!shorts)
+    throw new Error(
+      `no ${rel(shortsPath(topic, short.parent))}; run npm run shorts -- discover ${topic} ${short.parent}`,
+    );
+  const c = shorts.candidates.find((x) => x.slug === short.slug);
+  if (!c)
+    throw new Error(
+      `no candidate with slug ${short.slug} in ${rel(shortsPath(topic, short.parent))} (${shorts.candidates.map((x) => x.slug ?? x.key).join(', ')})`,
+    );
+  const parentPkg = readJson<EvidencePackage>(join(scriptDir(topic, short.parent), FILES.pkg));
+  if (!parentPkg) throw new Error(`the parent ${short.parent} has no evidence package`);
+  const old = readJson<EvidencePackage>(p(FILES.pkg));
+  const pkg = buildShortPackage(parentPkg, c, shorts);
+  if (old?.fingerprint === pkg.fingerprint) console.log(`${rel(p(FILES.pkg))} unchanged (${pkg.fingerprint})`);
+  else {
+    writeArtifact(dir, FILES.pkg, toJson(pkg));
+    console.log(
+      `wrote ${rel(p(FILES.pkg))} (${pkg.fingerprint}): short ${c.key} of ${short.parent}, ${pkg.claims.length} claims, format ${c.format}`,
+    );
+  }
+  return pkg;
+}
+
 function stagePackage(): EvidencePackage {
+  const short = shortOf(storyId);
+  if (short) return stageShortPackage(short);
   const file = loadStories(topic);
   if (!file) throw new Error(`no ${storiesPath(topic)}; run npm run stories -- discover ${topic}`);
   const story = file.stories.find((s) => s.id === storyId);

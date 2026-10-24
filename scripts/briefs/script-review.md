@@ -101,3 +101,12 @@ the sheet prints; a later edit changes it and the approval lapses.
   blocking finding on unless the finding was wrong.
 - Final reply: sentences approved, findings by severity, and the three findings that most change
   what the video can claim.
+
+## Short format
+
+When the package has a `short` block, judge the script as the only thing the viewer will ever see: no
+earlier scene qualified it, no later one corrects it. Two findings are blocking in a Short that would be
+warnings in a video: a sentence that points back to a figure the Short never spoke ("that 47 percent"), and
+a finding whose qualification (`short.carries`) is not said in the Short itself, beside the figure it
+limits. Check the close promises no more than the finding and carries no figure, and that the title and the
+hook would not mislead someone who never watches the full video.

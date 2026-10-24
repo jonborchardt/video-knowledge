@@ -21,10 +21,30 @@ export const MAX_REVISIONS = 3;
 export const SECTIONS = ['hook', 'setup', 'investigation', 'answer', 'takeaway'] as const;
 /** A video that answers a chain of questions (EvidencePackage.questions): one hook, a block per question, one close. */
 export const CHAIN_SECTIONS = ['hook', 'question-1', 'question-2', 'question-3', 'close'] as const;
-export type SectionName = (typeof SECTIONS)[number] | (typeof CHAIN_SECTIONS)[number];
+/** A Short (EvidencePackage.short): one finding out of a produced video, with its own hook and a close that points at
+ *  the full video. The finding carries its qualifications; the close carries no figure. */
+export const SHORT_SECTIONS = ['hook', 'finding', 'close'] as const;
+export type SectionName = (typeof SECTIONS)[number] | (typeof CHAIN_SECTIONS)[number] | (typeof SHORT_SECTIONS)[number];
 /** The sections a script written from this package has, in order. */
-export const sectionsFor = (pkg: Pick<EvidencePackage, 'questions'> | null): readonly SectionName[] =>
-  pkg?.questions ? ['hook', ...pkg.questions.map((_, i) => `question-${i + 1}` as SectionName), 'close'] : SECTIONS;
+export const sectionsFor = (pkg: Pick<EvidencePackage, 'questions' | 'short'> | null): readonly SectionName[] =>
+  pkg?.short
+    ? SHORT_SECTIONS
+    : pkg?.questions
+      ? ['hook', ...pkg.questions.map((_, i) => `question-${i + 1}` as SectionName), 'close']
+      : SECTIONS;
+/** A Short's storyboard may not estimate longer than this (YouTube's limit is 180 s of measured audio). */
+export const SHORT_MAX_SECONDS = 170;
+/** Ready Short candidates per video; the reviewer picks by leaving the rest unkept. */
+export const MAX_SHORTS = 3;
+/** The Short formats the brand allows as an eyebrow line (brand/design.md 2.6). */
+export const SHORT_FORMATS = [
+  'ONE FIGURE FROM THE RECORD',
+  'THE COMMISSION FINDS',
+  'EXHIBIT IN BRIEF',
+  'CLAIM UNDER EXAMINATION',
+  'PUBLIC ADVISORY',
+] as const;
+export type ShortFormat = (typeof SHORT_FORMATS)[number];
 export type SentenceType = 'factual' | 'attributed' | 'hypothetical' | 'rhetorical' | 'transitional';
 export type Severity = 'blocking' | 'warning' | 'info';
 export type ScriptStatus = 'passed' | 'needs-review' | 'blocked';
@@ -103,6 +123,8 @@ export interface EvidencePackage {
   /** A chained video's questions in order, the first the story's own, each with its own framing; absent for a
    *  one-question video. `chainWhy` says why each answer raises the next question. */
   chainWhy?: string;
+  /** A Short's package: a filter of its parent's with the finding it extracts; absent for a video. */
+  short?: ShortBlock;
   questions?: {
     story: string;
     question: string;
@@ -113,6 +135,20 @@ export interface EvidencePackage {
     whyWatch: string;
     arc: Story['arc'];
   }[];
+}
+
+/** What makes a package a Short's (src/lib/shorts.ts builds it): the parent, the candidate it came from, what the
+ *  writer must open from and carry, the cap, and the parent fingerprints it is bound to. */
+export interface ShortBlock {
+  parent: string; // the parent story id
+  key: string; // the candidate key in shorts.json (its scene's first sentence id)
+  slug: string; // the folder and the id's tail
+  format: ShortFormat;
+  sentences: string[]; // the parent sentences the finding comes from
+  hook: string; // the reviewer's opening line
+  carries: string[]; // how each parent qualification is said inside the Short
+  maxSeconds: number;
+  parentFingerprints: { package: string; script: string; release: string };
 }
 
 export const docOf = (cite: string) => cite.split('#')[0];
@@ -315,8 +351,20 @@ export interface Release {
 // ---- files -------------------------------------------------------------------------------------------------------
 
 export const storySlug = (storyId: string) => storyId.replace(/[^a-z0-9]+/gi, '-').replace(/(^-|-$)/g, '');
-export const scriptDir = (topic: string, storyId: string, root = ROOT) =>
-  join(topicDir(topic, root), 'scripts', storySlug(storyId));
+/** A Short's id is `<story-id>/shorts/<slug>`: the parent and the slug, or null for a story. */
+export function shortOf(storyId: string): { parent: string; slug: string } | null {
+  const m = /^(.+)\/shorts\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(storyId);
+  return m ? { parent: m[1], slug: m[2] } : null;
+}
+export const shortId = (parent: string, slug: string) => `${parent}/shorts/${slug}`;
+/** A story's folder, or a Short's nested in its parent's: the id carries the nesting, so every CLI keyed by
+ *  (topic, storyId) works on a Short unchanged. */
+export const scriptDir = (topic: string, storyId: string, root = ROOT) => {
+  const s = shortOf(storyId);
+  return s
+    ? join(topicDir(topic, root), 'scripts', storySlug(s.parent), 'shorts', s.slug)
+    : join(topicDir(topic, root), 'scripts', storySlug(storyId));
+};
 export const FILES = {
   pkg: 'evidence-package.json',
   script: 'script.json',

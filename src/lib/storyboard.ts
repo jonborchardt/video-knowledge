@@ -344,6 +344,14 @@ export function buildStoryboard(
       'warning',
       `${images} of ${scenes.length} scenes are images; prefer programmatic graphics where the evidence is numeric`,
     );
+  // A Short may not estimate past its cap (YouTube's limit is 180 s of measured audio; the cap leaves a margin).
+  if (pkg.short && t > pkg.short.maxSeconds)
+    issue(
+      '-',
+      'too-long',
+      'blocking',
+      `the storyboard estimates ${Math.round(t)} s; a Short may not exceed ${pkg.short.maxSeconds} s (cut scenes or sentences)`,
+    );
   return {
     topic: plan.topic,
     story: plan.story,

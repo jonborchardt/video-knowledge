@@ -196,3 +196,27 @@ get past the revision limit.
 
 Final reply: word count and runtime, the deterministic result, and the three sentences you are
 least sure the evidence supports as worded.
+
+## Short format
+
+When the package has a `short` block, you are writing a vertical Short, not a video: one finding out of a
+produced video, under a minute and a half (aim for 45 to 75 seconds), with its own opening and a close that
+points at the full video (brand/design.md 2.6). The rule that outranks the rest: a conditional result never
+becomes an absolute one. The viewer sees nothing but this Short.
+
+- Sections, in order: `hook` (one or two sentences, may be rhetorical, opened from `short.hook`), `finding`
+  (two to six sentences: the figure, whom it was measured on, under what conditions), `close` (one or two
+  sentences pointing at the full inquiry; no figure, no second finding).
+- `short.carries` lists how each qualification the parent carried elsewhere must be said here. Say every one
+  inside `finding`, beside the figure it limits, and name the sentence that carries it in the assertion's
+  `qualifications` ("s03 says the sample is one survey"). The validator blocks a qualified assertion that
+  names no sentence of this Short.
+- `short.sentences` are the parent sentences the finding comes from. Copy their assertions (claims, cites,
+  calc, quote) wherever you keep the wording; the Short's package holds only those claims, and an assertion
+  on any other claim blocks (`scope`).
+- `short.format` is the eyebrow the video draws over the opening; write to it (`ONE FIGURE FROM THE RECORD`
+  opens on the number; `CLAIM UNDER EXAMINATION` opens on the belief, then the evidence; `PUBLIC ADVISORY`
+  ends on what to do).
+- `title`: under 100 characters, the hook in the viewer's words, promising no more than the finding.
+- Never point back to a figure the Short has not spoken ("that 47 percent" with no 47 percent before it).
+- The storyboard will block past `short.maxSeconds` of estimated narration: say each thing once.

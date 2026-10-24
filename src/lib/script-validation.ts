@@ -197,6 +197,18 @@ function scriptIssues(script: Script, all: ScriptSentence[], pkg: EvidencePackag
       ),
     );
   if (!script.generation?.model) top.push(issue('-', 'provenance', 'warning', 'generation.model is missing'));
+  // A Short's close points at the full video and carries no figure: a number there is a second finding.
+  if (pkg?.short)
+    for (const s of all)
+      if (s.section === 'close' && nums(s.text).length)
+        top.push(
+          issue(
+            s.id,
+            'figure-in-close',
+            'blocking',
+            `a Short's close carries a figure ("${nums(s.text)[0]}"); say it in the finding`,
+          ),
+        );
   // Every cited document must still be the bytes the package recorded: a changed source invalidates every approval
   // that rested on it, so the package is rebuilt and the script re-reviewed.
   if (pkg) {
@@ -356,6 +368,7 @@ interface AssertionContext {
   judgments: ReviewFile['applicability'];
   byId: Map<string, CorpusClaim>;
   pkg: EvidencePackage | null;
+  ids: Set<string>; // every sentence id in the script (a Short's qualifications must name one)
 }
 
 /** The calculation: inputs from cited passages, arithmetic that reproduces, the result as written. Returns the
@@ -494,6 +507,13 @@ function checkAssertion(a: ScriptAssertion, s: ScriptSentence, ctx: AssertionCon
     ctx.judgments,
   );
   for (const p of v.problems) add('bad-reference', 'blocking', p);
+  // A Short asserts only the finding it extracts: its package holds those claims and no other.
+  if (ctx.pkg?.short)
+    for (const c of a.claims)
+      if (!ctx.pkg.claims.some((x) => x.id === c.id))
+        add('scope', 'blocking', `claim ${c.id} is not in the Short's package; a Short asserts only its own finding`, {
+          suggestion: 'Drop the claim, or have the shorts review widen the candidate.',
+        });
   if (v.decision === 'blocked' && !v.problems.length)
     add(
       v.limitations.some((l) => /figure/.test(l))
@@ -512,11 +532,19 @@ function checkAssertion(a: ScriptAssertion, s: ScriptSentence, ctx: AssertionCon
       ? citedQ.map((x) => `${x.by}: ${x.note}`)
       : v.limitations.filter((l) => !l.startsWith('Wording differs') && !/is stronger than the evidence/.test(l));
     const universal = v.limitations.find((l) => /is stronger than the evidence/.test(l));
-    add('needs-qualification', 'warning', [...why, ...(universal ? [universal] : []), ...v.suggestions].join(' '), {
-      suggestion: a.qualifications?.length
-        ? `The writer says the narration carries it: ${a.qualifications.join(' ')}`
-        : 'Say where the narration carries this limitation (qualifications), or narrow the sentence.',
-    });
+    // In a Short the viewer never hears the rest of the video: the limitation must be placed on a sentence of the
+    // Short itself, or the assertion blocks (a video leaves the warning to the reviewer).
+    const placed = (a.qualifications ?? []).some((q) => [...q.matchAll(/\bs\d+\b/g)].some((m) => ctx.ids.has(m[0])));
+    add(
+      'needs-qualification',
+      ctx.pkg?.short && !placed ? 'blocking' : 'warning',
+      [...why, ...(universal ? [universal] : []), ...v.suggestions].join(' '),
+      {
+        suggestion: a.qualifications?.length
+          ? `The writer says the narration carries it: ${a.qualifications.join(' ')}`
+          : 'Say where the narration carries this limitation (qualifications), or narrow the sentence.',
+      },
+    );
   } else if (v.review)
     add('wording', 'info', 'Wording differs from the canonical claim; the reviewer confirms the passages entail it.');
   // Attribution figures come from what the source actually said.
@@ -593,6 +621,7 @@ export function validateScript(
     judgments,
     byId: new Map<string, CorpusClaim>(t.claims.map((c) => [c.id, c])),
     pkg,
+    ids: new Set(all.map((s) => s.id)),
   };
   const top = scriptIssues(script, all, pkg, hashDoc);
   const merge = mergeReview(script, all, review, pkg, previous);
