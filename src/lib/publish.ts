@@ -203,3 +203,151 @@ export function saveLedger(path: string, ledger: Ledger): void {
   renameSync(tmp, path);
   if (existsSync(tmp)) throw new Error(`${tmp} still exists after rename`);
 }
+
+// ---- state ------------------------------------------------------------------------------------------------------
+
+/** The build packaged in video/review/: what an upload would send. */
+export interface Build {
+  sha: string; // mp4 sha, as review.json records it (the sha QA checked)
+  status: 'draft' | 'release';
+}
+export function currentBuild(dir: string): Build | null {
+  const rp = readJson<{ mp4Sha?: string; status?: string }>(join(dir, 'video', 'review', 'review.json'));
+  if (!rp?.mp4Sha) return null;
+  return { sha: rp.mp4Sha, status: rp.status === 'release build' ? 'release' : 'draft' };
+}
+
+export type OutputStatus =
+  | 'not-uploaded'
+  | 'uploaded'
+  | 'approved'
+  | 'scheduled'
+  | 'published'
+  | 'metadata-behind'
+  | 'build-behind'
+  | 'retracted';
+export interface OutputState {
+  status: OutputStatus;
+  failed: PublishEvent | null; // an overlay: the last event, when it is a failure
+  id: string | null;
+  url: string | null;
+  uploadedBuild: string | null; // build of the last upload
+  superseded: string[]; // ids of earlier uploads of other builds
+  due: boolean; // scheduled and publishAt has passed
+  next: string; // the board's next line
+}
+export interface StateContext {
+  topic: string;
+  story: string;
+  output: string;
+  now?: Date;
+}
+
+/** Where one output stands, from its events in file order, against the build on disk and the metadata it would send. */
+export function outputState(
+  output: Output,
+  build: Build | null,
+  metadataSha: string | null,
+  ctx: StateContext,
+): OutputState {
+  const now = ctx.now ?? new Date();
+  const verb = (v: string, flags = '') =>
+    `npm run publish -- ${v} ${ctx.topic} ${ctx.story}${ctx.output === 'youtube' ? '' : ` --output ${ctx.output}`}${flags}`;
+  const ev = output.events;
+  const last = ev.at(-1) ?? null;
+  const failed = last?.type === 'failed' ? last : null;
+  const uploads = ev.filter((e) => e.type === 'uploaded');
+  const upload = uploads.at(-1) ?? null;
+  const id = upload?.id ?? null;
+  const approved = !!upload && ev.some((e) => e.type === 'approved' && e.build === upload.build);
+  const localApproved = !!build && ev.some((e) => e.type === 'approved' && e.build === build.sha);
+  const scheduled = id ? ev.filter((e) => e.type === 'scheduled' && e.id === id).at(-1) : undefined;
+  const published = id
+    ? ev.filter((e) => (e.type === 'published' || e.type === 'unpublished') && e.id === id).at(-1)
+    : undefined;
+  const live = published?.type === 'published';
+  const url =
+    [...ev].reverse().find((e) => e.url && (e.id === id || !id))?.url ?? (id ? `https://youtu.be/${id}` : null);
+  const sentSha = [...ev]
+    .reverse()
+    .find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata)?.metadata;
+  const base: Omit<OutputState, 'status' | 'next' | 'due'> = {
+    failed,
+    id,
+    url: id ? url : null,
+    uploadedBuild: upload?.build ?? null,
+    superseded: upload ? uploads.filter((u) => u.build !== upload.build && u.id).map((u) => u.id!) : [],
+  };
+  const done = (status: OutputStatus, next: string, due = false): OutputState => ({
+    ...base,
+    status,
+    due,
+    next: failed
+      ? `${failed.step} failed: ${failed.error}${failed.retryable ? `; retry it, then ${next}` : '; a person decides'}`
+      : next,
+  });
+  const where = build ? `video/review/` : 'the review package (npm run video -- package, it is missing)';
+
+  if (ev.some((e) => e.type === 'retracted')) return done('retracted', 'retracted; nothing to do');
+  if (!upload) {
+    if (localApproved)
+      return done(
+        'approved',
+        `upload the approved release build in ${where} as public, then ${verb('uploaded', ' --id <id> --visibility public')}`,
+      );
+    return done(
+      'not-uploaded',
+      `upload the mp4 in ${where} privately, then ${verb('uploaded', ' --id <id> --visibility private')}`,
+    );
+  }
+  if (live) {
+    if (metadataSha && sentSha && metadataSha !== sentSha)
+      return done(
+        'metadata-behind',
+        `the title, description, tags or thumbnail changed since the upload: update them on YouTube, then ${verb('updated', ' --fields <a,b>')}`,
+      );
+    const moved =
+      build && build.sha !== upload.build
+        ? `; the build on disk is ${build.sha}, a re-release is ${verb('add', ' youtube-2 --kind youtube-video')}`
+        : '';
+    return done('published', `live at ${url}${moved}`);
+  }
+  if (build && build.sha !== upload.build)
+    return done(
+      'build-behind',
+      `a new ${build.status} build ${build.sha} is packaged (uploaded: ${upload.build}): upload it privately, then ${verb('uploaded', ' --id <id> --visibility private')}`,
+    );
+  if (!build && !approved)
+    return done(
+      'uploaded',
+      `the review package is missing: npm run video -- package, then watch ${url} and record what follows`,
+    );
+  if (!approved) {
+    const status = upload.buildStatus ?? build?.status ?? 'release';
+    return done(
+      'uploaded',
+      status === 'draft'
+        ? `watch ${url} with video/review/checklist.md, then npm run video -- final ${ctx.topic} ${ctx.story} --approved-by "<name>"`
+        : `watch ${url} with video/review/checklist.md, then ${verb('approve', ' --by "<name>"')}`,
+    );
+  }
+  if (scheduled) {
+    const due = Date.parse(scheduled.publishAt!) <= now.getTime();
+    return done(
+      'scheduled',
+      due
+        ? `was due ${scheduled.publishAt}: confirm it is live on YouTube and record published (${verb('published')})`
+        : `scheduled for ${scheduled.publishAt}; nothing until then`,
+      due,
+    );
+  }
+  if (metadataSha && sentSha && metadataSha !== sentSha)
+    return done(
+      'metadata-behind',
+      `the title, description, tags or thumbnail changed since the upload: update them on YouTube, then ${verb('updated', ' --fields <a,b>')}`,
+    );
+  return done(
+    'approved',
+    `set ${url} public or schedule it on YouTube, then ${verb('published')} or ${verb('scheduled', ' --at <ISO>')}`,
+  );
+}
