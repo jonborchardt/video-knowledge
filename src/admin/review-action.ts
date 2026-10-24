@@ -12,8 +12,6 @@ import { type ReviewView, parseNotes, reviewView, storyIdOfPath } from '../lib/r
 import { scriptDir } from '../lib/script';
 import { href } from '../lib/url';
 
-export const prerender = false;
-
 /** The request comes from a page this server served: its Origin header is the server's own origin. */
 export const sameOrigin = (req: Request) => req.headers.get('origin') === new URL(req.url).origin;
 
@@ -65,7 +63,7 @@ export async function handle(
       case 'approve':
         return back(
           'ok',
-          recordApproved(topic, storyId, { by, root, build: field('build'), checked: Number(field('checked') || 0) })
+          recordApproved(topic, storyId, { by, root, build: field('build'), checked: form.getAll('check').length })
             .message,
         );
       case 'request-changes':

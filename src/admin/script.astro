@@ -74,7 +74,9 @@ const facts = [
   <nav class={small} aria-label="Breadcrumb">
     <a class="text-muted-foreground" href={href('/')}>All subjects</a> /{' '}
     <a class="text-muted-foreground" href={href(`/${topic}/`)}>{topic}</a> /{' '}
-    <a class="text-muted-foreground" href={href(`/${topic}/stories/`)}>Story ideas</a> / Script
+    <a class="text-muted-foreground" href={href(`/${topic}/stories/`)}>Story ideas</a> / Script (<a
+      href={href(`/${topic}/review/${Astro.params.slug}`)}>watch and review</a
+    >)
   </nav>
   <header class="grid gap-4">
     <div>

@@ -1,0 +1,414 @@
+---
+// The review page for one output: the landscape video or one of its Shorts (`path` is its folder under
+// topics/<topic>/scripts/). A person watches the packaged build, sees every QA and script finding at its moment, and
+// decides: approve, send back with notes, accept a draft, upload privately, push metadata, go live now or at a time.
+// Dev server only (astro.config.mjs). Rendered per request so it shows the ledger as it is; the forms post to
+// review-action.ts and come back here. The video streams from disk through media.ts and is never part of the site.
+import { execFileSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+import Base from '../layouts/Base.astro';
+import { noteLine, stampOf } from '../lib/publish';
+import { jobStatus } from '../lib/review-job';
+import { type Finding, reviewView, storyIdOfPath } from '../lib/review-view';
+import { scriptDir, storySlug } from '../lib/script';
+import { href } from '../lib/url';
+
+const { topic = '', path = '' } = Astro.params;
+const storyId = storyIdOfPath(topic, path);
+if (!storyId) return new Response('not found', { status: 404 });
+const v = reviewView(topic, storyId);
+const job = jobStatus(scriptDir(topic, storyId));
+const ok = Astro.url.searchParams.get('ok');
+const error = Astro.url.searchParams.get('error');
+let me = '';
+try {
+  me = execFileSync('git', ['config', 'user.name'], { encoding: 'utf8' }).trim();
+} catch {
+  // no git name: the person types it
+}
+const media = (file: string) => href(`/${topic}/review-media/${file}/${path}`);
+const action = (a: string) => href(`/${topic}/review-action/${a}/${path}`);
+const page = (p: string) => href(`/${topic}/review/${p}`);
+const title = v.pkg?.title ?? storyId;
+const SEV: Record<Finding['severity'], string> = {
+  blocking: 'text-destructive',
+  warning: 'text-warning',
+  info: 'text-muted-foreground',
+};
+const card = 'grid gap-3 rounded-lg border bg-card p-4 text-card-foreground';
+const h2 = 'text-title font-semibold';
+const small = 'text-sm text-muted-foreground';
+const mono = 'font-mono text-xs [overflow-wrap:anywhere]';
+const button =
+  'justify-self-start rounded-sm border px-3 py-1 text-sm font-medium hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50';
+const input = 'rounded-sm border bg-background px-2 py-1 text-sm';
+const seek = 'font-mono text-xs text-primary underline-offset-2 hover:underline';
+const why = (c: string | true) => (c === true ? null : c);
+const sentenceStarts = JSON.stringify(v.sentences.map((s) => [s.at.seconds, s.at.scene, s.id]));
+---
+
+<Base title={`Review · ${title}`} noindex>
+  <nav class={small} aria-label="Breadcrumb">
+    <a class="text-muted-foreground" href={href('/production/')}>Production board</a> /{' '}
+    <a class="text-muted-foreground" href={href(`/${topic}/scripts/${storySlug(v.parent?.storyId ?? storyId)}/`)}
+      >Script</a
+    > / Review
+  </nav>
+  <header class="mt-2 grid gap-1">
+    <div class="eyebrow text-muted-foreground">
+      {v.kind === 'youtube-short' ? 'Short' : 'Video'} review · {topic}
+    </div>
+    <h1 class="text-display font-semibold">{title}</h1>
+    {
+      v.parent && (
+        <p class={small}>
+          Short of <a href={page(v.parent.path)}>{v.parent.title}</a> ({v.parent.status}). It goes live only after the
+          video.
+        </p>
+      )
+    }
+    {
+      v.pkg && (
+        <p class={small}>
+          Build <code class={mono}>{v.pkg.mp4Sha}</code> ·{' '}
+          {v.pkg.status === 'release' ? 'release build' : 'draft (edge voice)'} · {stampOf(v.pkg.seconds)} ·{' '}
+          {v.state ? `${v.output}: ${v.state.status}` : 'no ledger entry yet'}
+        </p>
+      )
+    }
+    {v.state && <p class={small}>Next: {v.state.next}</p>}
+  </header>
+
+  {
+    ok && (
+      <p role="status" class="mt-3 rounded-sm border border-success p-2 text-sm text-success">
+        {ok}
+      </p>
+    )
+  }
+  {
+    error && (
+      <p role="alert" class="mt-3 rounded-sm border border-destructive p-2 text-sm text-destructive">
+        {error}
+      </p>
+    )
+  }
+  {
+    job && (
+      <div
+        class={`mt-3 rounded-sm border p-2 text-sm ${job.state === 'failed' || job.state === 'lost' ? 'border-destructive' : ''}`}
+        data-job={job.state}
+      >
+        <p>
+          <strong>{job.label}</strong>: {job.state}
+          {job.state === 'running' && ' (this page refreshes until it ends)'}
+          {job.state === 'lost' &&
+            ' (the dev server stopped while it ran; an upload resumes its own session when you start it again)'}
+        </p>
+        {job.tail && <pre class={`${mono} mt-1 max-h-48 overflow-auto whitespace-pre-wrap`}>{job.tail}</pre>}
+      </div>
+    )
+  }
+
+  {
+    !v.pkg ? (
+      <p class="mt-6">No review package yet: the production board says what comes first.</p>
+    ) : (
+      <>
+        <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          <div class="grid content-start gap-3">
+            <video
+              id="player"
+              controls
+              preload="metadata"
+              src={media('review.mp4')}
+              poster={
+                existsSync(join(scriptDir(topic, storyId), 'video', 'review', 'thumbnail.png'))
+                  ? media('thumbnail.png')
+                  : undefined
+              }
+              data-sentences={sentenceStarts}
+              class={`w-full rounded-lg bg-black ${v.pkg.portrait ? 'mx-auto max-h-[80vh] w-auto' : ''}`}
+            />
+            {v.pkg.chapters.length > 0 && (
+              <ol class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                {v.pkg.chapters.map((c) => (
+                  <li>
+                    <button type="button" class={seek} data-seek={c.seconds}>
+                      {stampOf(c.seconds)}
+                    </button>{' '}
+                    {c.label}
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+
+          <section class={card} aria-labelledby="findings">
+            <h2 id="findings" class={h2}>
+              Findings ({v.findings.filter((f) => f.severity !== 'info').length} open)
+            </h2>
+            {v.findings.length === 0 ? (
+              <p class={small}>QA passed and the script has no open issue.</p>
+            ) : (
+              <ul class="grid max-h-[60vh] gap-2 overflow-y-auto text-sm">
+                {v.findings.map((f) => (
+                  <li class="grid gap-0.5">
+                    <span>
+                      <span class={`${SEV[f.severity]} font-medium`}>{f.severity}</span>{' '}
+                      <span class={small}>{f.source}</span>{' '}
+                      {f.at && (
+                        <button type="button" class={seek} data-seek={f.at.seconds}>
+                          {stampOf(f.at.seconds)} {f.at.scene}
+                          {f.at.sentence ? ` ${f.at.sentence}` : ''}
+                        </button>
+                      )}
+                    </span>
+                    <span class="[overflow-wrap:anywhere]">{f.text}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        </div>
+
+        <section class={`${card} mt-6`} aria-labelledby="decide">
+          <h2 id="decide" class={h2}>
+            Decide
+          </h2>
+          <div class="grid gap-6 md:grid-cols-2">
+            <form method="post" action={action('approve')} class="grid gap-2">
+              <h3 class="font-semibold">Approve this build</h3>
+              <input type="hidden" name="build" value={v.pkg.mp4Sha} />
+              <fieldset class="grid gap-1 text-sm" disabled={!!why(v.can.approve)}>
+                <legend class={small}>Every item, watched on this build:</legend>
+                {v.pkg.checklist.map((item, i) => (
+                  <label class="flex gap-2">
+                    <input type="checkbox" name="check" value={String(i)} required />
+                    <span>{item.replace(/^- \[ \] /, '')}</span>
+                  </label>
+                ))}
+                <label class="mt-1 grid gap-1">
+                  Your name
+                  <input class={input} name="by" value={me} required autocomplete="name" />
+                </label>
+                <button class={button}>Approve build {v.pkg.mp4Sha}</button>
+              </fieldset>
+              {why(v.can.approve) && <p class={small}>{why(v.can.approve)}</p>}
+            </form>
+
+            <form method="post" action={action('request-changes')} class="grid gap-2">
+              <h3 class="font-semibold">Request changes</h3>
+              <input type="hidden" name="build" value={v.pkg.mp4Sha} />
+              <fieldset class="grid gap-1 text-sm" disabled={!!why(v.can.requestChanges)}>
+                <label class="grid gap-1">
+                  One note per line; a line may start with [m:ss sc20 s31]
+                  <textarea id="notes" class={`${input} min-h-32 font-mono`} name="notes" required />
+                </label>
+                <button type="button" class={button} id="stamp">
+                  Note at current time
+                </button>
+                <label class="grid gap-1">
+                  Your name
+                  <input class={input} name="by" value={me} required autocomplete="name" />
+                </label>
+                <button class={button}>Send it back</button>
+              </fieldset>
+              {why(v.can.requestChanges) && <p class={small}>{why(v.can.requestChanges)}</p>}
+            </form>
+          </div>
+        </section>
+
+        <section class={`${card} mt-6`} aria-labelledby="publish">
+          <h2 id="publish" class={h2}>
+            Publish
+          </h2>
+          <div class="grid gap-6 md:grid-cols-2">
+            {[
+              [
+                'accept-draft',
+                'Accept draft',
+                'Re-narrates the same words with the release voice and rebuilds the package (video final).',
+                v.can.acceptDraft,
+              ],
+              [
+                'upload',
+                'Upload privately',
+                'Sends this build to YouTube as private, with its thumbnail and captions.',
+                v.can.upload,
+              ],
+              [
+                'push',
+                'Push metadata',
+                'Sends a changed title, description, tags or thumbnail to the upload.',
+                v.state?.id ? true : 'nothing uploaded yet',
+              ],
+              ['sync', 'Sync', 'Reads the video back from YouTube.', v.state?.id ? true : 'nothing uploaded yet'],
+            ].map(([a, label, help, can]) => (
+              <form method="post" action={action(a as string)} class="grid gap-1 text-sm">
+                <input type="hidden" name="build" value={v.pkg!.mp4Sha} />
+                <fieldset class="grid gap-1" disabled={can !== true || job?.state === 'running'}>
+                  <p class={small}>{help}</p>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <input class={input} name="by" value={me} required aria-label="Your name" />
+                    <button class={button}>{label}</button>
+                  </div>
+                </fieldset>
+                {can !== true && <p class={small}>{can}</p>}
+              </form>
+            ))}
+            <form method="post" action={action('go-live')} class="grid gap-2 text-sm md:col-span-2">
+              <h3 class="font-semibold">Go live</h3>
+              <input type="hidden" name="build" value={v.pkg.mp4Sha} />
+              <fieldset class="grid gap-2" disabled={!!why(v.can.goLive) || job?.state === 'running'}>
+                <label class="flex items-center gap-2">
+                  <input type="radio" name="when" value="now" required /> Public now
+                </label>
+                <label class="flex flex-wrap items-center gap-2">
+                  <input type="radio" name="when" value="at" /> Scheduled for
+                  <input class={input} type="datetime-local" name="at" />
+                </label>
+                <label class="flex gap-2">
+                  <input type="checkbox" name="confirm" value="yes" required />
+                  <span>
+                    I am publishing "{title}" (build {v.pkg.mp4Sha}) publicly.
+                  </span>
+                </label>
+                <div class="flex flex-wrap items-center gap-2">
+                  <input class={input} name="by" value={me} required aria-label="Your name" />
+                  <button class={button}>Go live</button>
+                </div>
+              </fieldset>
+              {why(v.can.goLive) && <p class={small}>{why(v.can.goLive)}</p>}
+            </form>
+          </div>
+        </section>
+      </>
+    )
+  }
+
+  {
+    v.shorts.length > 0 && (
+      <section class={`${card} mt-6`} aria-labelledby="shorts">
+        <h2 id="shorts" class={h2}>
+          Shorts of this video
+        </h2>
+        <ul class="grid gap-1 text-sm">
+          {v.shorts.map((s) => (
+            <li>
+              {s.status === 'not-packaged' ? s.title : <a href={page(s.path)}>{s.title}</a>}{' '}
+              <span class={small}>({s.status})</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class={`${card} mt-6`} aria-labelledby="history">
+    <h2 id="history" class={h2}>History</h2>
+    {
+      v.history.length === 0 ? (
+        <p class={small}>Nothing recorded yet.</p>
+      ) : (
+        v.history.map((h) => (
+          <div class="grid gap-1">
+            <h3 class="text-sm font-semibold">
+              Build <code class={mono}>{h.build || '(none)'}</code>
+              {h.current && ' (current)'}
+            </h3>
+            <ul class="grid gap-1 text-sm">
+              {h.events.map((e) => (
+                <li>
+                  <span class="font-medium">{e.type}</span>{' '}
+                  <span class={small}>
+                    {e.at.slice(0, 16).replace('T', ' ')} by {e.by}
+                  </span>
+                  {e.title && <span class={small}> · title "{e.title}"</span>}
+                  {e.publishAt && <span class={small}> · for {e.publishAt}</span>}
+                  {e.error && <span class="text-destructive"> · {e.error}</span>}
+                  {e.note && <span class={small}> · {e.note}</span>}
+                  {e.notes && (
+                    <ul class="mt-1 list-disc pl-5">
+                      {e.notes.map((n) => (
+                        <li>
+                          {h.current && n.seconds !== undefined ? (
+                            <>
+                              <button type="button" class={seek} data-seek={n.seconds}>
+                                {stampOf(n.seconds)}
+                              </button>{' '}
+                              {n.text}
+                            </>
+                          ) : (
+                            noteLine(n)
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      )
+    }
+  </section>
+
+  {
+    v.pkg && (
+      <section class={`${card} mt-6`} aria-labelledby="sheet">
+        <h2 id="sheet" class={h2}>
+          Contact sheet
+        </h2>
+        <img
+          src={media('contact-sheet.png')}
+          alt="QA contact sheet: a frame from every scene"
+          class="w-full"
+          loading="lazy"
+        />
+      </section>
+    )
+  }
+</Base>
+
+<script>
+  // Seek links, the note stamp, the remembered name, and a refresh while a job runs: the only client script here.
+  const player = document.querySelector<HTMLVideoElement>('#player');
+  document.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLElement>('[data-seek]');
+    if (!b || !player) return;
+    player.currentTime = Number(b.dataset.seek);
+    void player.play();
+  });
+  document.querySelector('#stamp')?.addEventListener('click', () => {
+    const notes = document.querySelector<HTMLTextAreaElement>('#notes');
+    if (!player || !notes) return;
+    const t = player.currentTime;
+    const starts: [number, string, string][] = JSON.parse(player.dataset.sentences ?? '[]');
+    const at = starts.findLast(([s]) => s <= t);
+    const mmss = `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
+    const line = `[${[mmss, at?.[1], at?.[2]].filter(Boolean).join(' ')}] `;
+    notes.value = `${notes.value.trimEnd()}${notes.value.trim() ? '\n' : ''}${line}`;
+    notes.focus();
+  });
+  const KEY = 'review-approver';
+  const names = document.querySelectorAll<HTMLInputElement>('input[name="by"]');
+  try {
+    const saved = localStorage.getItem(KEY);
+    if (saved) names.forEach((n) => (n.value = saved));
+  } catch {
+    // storage blocked: the field keeps git's name
+  }
+  names.forEach((n) =>
+    n.addEventListener('change', () => {
+      try {
+        localStorage.setItem(KEY, n.value);
+      } catch {
+        // storage blocked
+      }
+    }),
+  );
+  if (document.querySelector('[data-job="running"]')) setTimeout(() => location.reload(), 5000);
+</script>

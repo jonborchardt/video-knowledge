@@ -1,6 +1,6 @@
 // The review page's actions (POST, dev server only) and the job runner behind the long ones: a foreign page cannot
 // post, a stale build is refused, a decision is written through the publish verbs, a long verb starts one job at a time.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { addOutputTo, loadLedger, recordApproved, recordUploaded } from '../src/lib/publish';
@@ -10,7 +10,7 @@ import { storySlug } from '../src/lib/script';
 import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
 
 const ORIGIN = 'http://localhost:4321';
-const post = (path: string, fields: Record<string, string>, origin: string | null = ORIGIN) => {
+const post = (path: string, fields: Record<string, string> | [string, string][], origin: string | null = ORIGIN) => {
   const body = new URLSearchParams(fields);
   return new Request(`${ORIGIN}${path}`, {
     method: 'POST',
@@ -56,7 +56,7 @@ describe('review actions', () => {
   it('approving a build that is no longer the current one is refused and writes nothing', () =>
     run(syntheticProduction('packaged', { release: true }), async (f) => {
       const params = { topic: f.topic, action: 'approve', path: pathOf(f) };
-      const res = await handle(post('/', { by: 'Jon', build: 'oldsha', checked: '0' }), params, { root: f.root });
+      const res = await handle(post('/', { by: 'Jon', build: 'oldsha' }), params, { root: f.root });
       expect(res.status).toBe(303);
       expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=.*reload/);
       expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? []).toEqual([]);
@@ -71,13 +71,29 @@ describe('review actions', () => {
         { root: f.root },
       );
       expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
-      res = await handle(post('/', { by: 'Jon', build: 'releasesha', checked: '0' }), params('approve'), {
+      res = await handle(post('/', { by: 'Jon', build: 'releasesha' }), params('approve'), {
         root: f.root,
       });
       expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
       const ev = loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events;
       expect(ev.map((e) => e.type)).toEqual(['changes-requested', 'approved']);
       expect(ev[0].notes).toEqual([{ text: 'slower', seconds: 2 }, { text: 'keep the end' }]);
+    }));
+
+  it('approve counts the ticked checklist items', () =>
+    run(syntheticProduction('packaged', { release: true }), async (f) => {
+      const rp = join(f.dir, 'video', 'review', 'review.json');
+      writeFileSync(rp, JSON.stringify({ ...JSON.parse(readFileSync(rp, 'utf8')), checklist: ['a', 'b'] }));
+      const params = { topic: f.topic, action: 'approve', path: pathOf(f) };
+      const one: [string, string][] = [
+        ['by', 'Jon'],
+        ['build', 'releasesha'],
+        ['check', '0'],
+      ];
+      let res = await handle(post('/', one), params, { root: f.root });
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=.*checklist/);
+      res = await handle(post('/', [...one, ['check', '1']]), params, { root: f.root });
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/ok=/);
     }));
 
   it('go-live needs the confirmation and a person', () =>

@@ -9,8 +9,6 @@ import { readJson } from '../lib/io';
 import { storyIdOfPath } from '../lib/review-view';
 import { scriptDir } from '../lib/script';
 
-export const prerender = false;
-
 /** The byte range a Range header asks for (end inclusive, clamped to the file), null for the whole file, or 'invalid'
  *  for one this server cannot satisfy (several ranges, a start past the end, a malformed header). */
 export function parseRange(header: string | null, size: number): { start: number; end: number } | null | 'invalid' {

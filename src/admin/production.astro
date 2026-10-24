@@ -19,6 +19,7 @@ import {
 } from '../lib/production';
 import type { OutputView } from '../lib/production';
 import { loadLedger } from '../lib/publish';
+import { storySlug } from '../lib/script';
 import { href } from '../lib/url';
 
 const topics = board();
@@ -344,6 +345,11 @@ const stripOf = (r: StoryRow) => {
                       <span class:list={['font-medium', COLUMN[c].colour]} title={COLUMN[c].help}>
                         {COLUMN[c].label}
                       </span>
+                      {r.production?.stage === 'packaged' && (
+                        <a class="text-sm text-primary" href={href(`/${r.topic.name}/review/${storySlug(r.story.id)}`)}>
+                          Watch and review
+                        </a>
+                      )}
                       {r.production && (
                         <span class:list={[badge, 'justify-self-start', HEALTH[h].colour]}>
                           {r.production.stage} · {HEALTH[h].label} · r{r.production.versions.length || '0'}
@@ -666,6 +672,14 @@ const stripOf = (r: StoryRow) => {
                         >
                           {s.production ? s.production.stage : s.readiness}
                         </span>
+                        {s.production?.stage === 'packaged' && s.slug && (
+                          <a
+                            class="text-primary"
+                            href={href(`/${r.topic.name}/review/${storySlug(r.story.id)}/shorts/${s.slug}`)}
+                          >
+                            Watch and review
+                          </a>
+                        )}
                         {s.format && <span class="text-muted-foreground">{s.format}</span>}
                         {s.blocking.length > 0 && !s.production && (
                           <span class="text-muted-foreground">{s.blocking[0]}</span>

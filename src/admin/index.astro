@@ -24,7 +24,8 @@ const scripts = scriptDirs();
               .filter((d) => d.topic === name)
               .map((d) => (
                 <li>
-                  <a href={href(`/${name}/scripts/${d.slug}/`)}>{d.slug}</a>
+                  <a href={href(`/${name}/scripts/${d.slug}/`)}>{d.slug}</a> (
+                  <a href={href(`/${name}/review/${d.slug}`)}>review</a>)
                 </li>
               ))}
           </ul>
