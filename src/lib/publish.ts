@@ -460,9 +460,10 @@ export function uploadMetadataOf(
     : rp.thumbnailSha
       ? { file: rel('video/review/thumbnail.png'), sha: rp.thumbnailSha }
       : null;
-  const captions = rp.captionsSha
-    ? { file: rel(`video/review/captions.en.srt`), sha: rp.captionsSha, language: m.language ?? 'en' }
-    : null;
+  const captions =
+    rp.captionsSha && !output.source // the package's captions are timed for the full video, never for a derivative
+      ? { file: rel(`video/review/captions.en.srt`), sha: rp.captionsSha, language: m.language ?? 'en' }
+      : null;
   const text = {
     title: m.title ?? rp.title,
     description,

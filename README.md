@@ -363,11 +363,13 @@ Once, by a person (Google's console; nothing here can do it):
 2. OAuth consent screen: external, publishing status **In production** (a screen left in Testing issues refresh
    tokens that expire after 7 days), scope `https://www.googleapis.com/auth/youtube.force-ssl`. Verification is
    not needed for one channel owner; accept the unverified-app warning once.
-3. Create an OAuth client of type **Desktop app**; put its id and secret in `.env` as `YOUTUBE_CLIENT_ID` and
-   `YOUTUBE_CLIENT_SECRET`.
+3. Create an OAuth client of type **Desktop app** and download its JSON. Save it as `.secrets/youtube-oauth.json`
+   (`.secrets/` is gitignored) and point `.env` at it: `YOUTUBE_OAUTH_CREDENTIALS_PATH=./.secrets/youtube-oauth.json`.
+   (`YOUTUBE_CLIENT_ID` and `YOUTUBE_CLIENT_SECRET` in `.env` work too.)
 4. Verify the channel by phone (youtube.com/verify) so custom thumbnails are allowed.
-5. `npm run publish -- auth <topic> <story-id>` opens the consent page and writes `.youtube-token.json` (gitignored,
-   mode 0600); or put a refresh token in `.env` as `YOUTUBE_REFRESH_TOKEN`.
+5. `npm run publish -- auth <topic> <story-id>` opens the consent page and stores the refresh token in that same
+   JSON file (mode 0600; without the path variable, in `.youtube-token.json`). A refresh token in `.env` as
+   `YOUTUBE_REFRESH_TOKEN` is used instead when set.
 
 What the API does and costs (checked 2026-10-23): `videos.insert` is 1 of 100 uploads per project per day in its own
 quota bucket; `thumbnails.set` 50, `captions.insert` 400, `videos.update` 50 and `videos.list` 1 unit of the 10,000 a

@@ -1,6 +1,6 @@
 // The YouTube Data API client over a scripted fetch: credentials, the token refresh, the resumable upload protocol,
 // thumbnails, captions, update, list, the error classification and the one-time desktop consent. No network.
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
@@ -83,6 +83,48 @@ describe('credentials', () => {
     expect(loadCredentials(tmp, { ...env, YOUTUBE_REFRESH_TOKEN: 'rt-env' }).refreshToken).toBe('rt-env');
     writeFileSync(join(tmp, TOKEN_FILE), JSON.stringify({ refresh_token: 'rt-file' }));
     expect(loadCredentials(tmp, env).refreshToken).toBe('rt-file');
+  });
+});
+
+describe('credentials file', () => {
+  const root = join(tmp, 'creds-root');
+  mkdirSync(join(root, 'secrets'), { recursive: true });
+  const file = join(root, 'secrets', 'youtube-oauth.json');
+  const env = { YOUTUBE_OAUTH_CREDENTIALS_PATH: './secrets/youtube-oauth.json' };
+  it('reads the Desktop client JSON Google hands out, and the refresh token stored next to it', () => {
+    expect(() => loadCredentials(root, env)).toThrow(/does not exist/);
+    writeFileSync(
+      file,
+      JSON.stringify({ installed: { client_id: 'gid', client_secret: 'gsec', redirect_uris: ['http://localhost'] } }),
+    );
+    const c = loadCredentials(root, env, { requireToken: false });
+    expect(c).toMatchObject({ clientId: 'gid', clientSecret: 'gsec', refreshToken: null, store: file });
+    expect(() => loadCredentials(root, env)).toThrow(/publish -- auth/);
+    writeFileSync(
+      file,
+      JSON.stringify({ installed: { client_id: 'gid', client_secret: 'gsec' }, refresh_token: 'rtf' }),
+    );
+    expect(loadCredentials(root, env).refreshToken).toBe('rtf');
+    expect(loadCredentials(root, { ...env, YOUTUBE_REFRESH_TOKEN: '' }).refreshToken).toBe('rtf'); // an empty .env line is unset
+    expect(loadCredentials(root, { ...env, YOUTUBE_REFRESH_TOKEN: 'rte' }).refreshToken).toBe('rte');
+  });
+  it('auth writes the refresh token into that file and keeps the client in it', async () => {
+    writeFileSync(file, JSON.stringify({ installed: { client_id: 'gid', client_secret: 'gsec' } }));
+    const f = fakeFetch([
+      { match: /token/, reply: () => json({ access_token: 'a', refresh_token: 'rt-store', expires_in: 3600 }) },
+    ]);
+    await authorize(
+      loadCredentials(root, env, { requireToken: false }),
+      root,
+      (url) => void globalThis.fetch(`${new URL(url).searchParams.get('redirect_uri')}?code=abc`),
+      f.fn,
+    );
+    expect(JSON.parse(readFileSync(file, 'utf8'))).toEqual({
+      installed: { client_id: 'gid', client_secret: 'gsec' },
+      refresh_token: 'rt-store',
+    });
+    expect(loadCredentials(root, env).refreshToken).toBe('rt-store');
+    expect(existsSync(join(root, TOKEN_FILE))).toBe(false);
   });
 });
 

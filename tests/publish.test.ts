@@ -609,6 +609,7 @@ describe('captions and the parent link in the composed metadata', () => {
       language: 'en',
     });
     expect(m.sha).not.toBe(none.sha);
+    expect(uploadMetadataOf(dir, rel, out('youtube-short', { source: 'x.mp4' }))!.captions).toBeNull();
   });
 
   it('a derivative links the full video once its parent is live; a main output never does', () => {

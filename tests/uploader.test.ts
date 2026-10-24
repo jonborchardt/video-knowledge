@@ -139,6 +139,14 @@ describe('upload', () => {
     expect(existsSync(sessionPath(f))).toBe(false);
   });
 
+  it('accepts a release build a person approved on disk before uploading it', async () => {
+    const f = fresh();
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    const client = fakeClient();
+    await upload(f.topic, f.story, ctx(f, client));
+    expect(events(f).map((e) => e.type)).toEqual(['approved', 'uploaded']);
+  });
+
   it('refuses a second upload of the same build', async () => {
     const f = fresh();
     const client = fakeClient();
@@ -266,6 +274,7 @@ describe('upload', () => {
     const a = client.calls[0].args[0] as { file: string };
     expect(a.file.replaceAll('\\', '/')).toMatch(/video\/shorts\/short-1\.mp4$/);
     expect(events(f, 'short-1')[0]).toMatchObject({ type: 'uploaded', id: 'short000001' });
+    expect(client.calls.some((c) => c.method === 'insertCaptions')).toBe(false); // the full video's captions are not the Short's
     expect(existsSync(sessionPath(f, 'short-1'))).toBe(false);
   });
 });
@@ -288,6 +297,28 @@ describe('push', () => {
     expect(r.event!.fields).toEqual(['snippet', 'thumbnail', 'captions']);
     const u = client.calls.find((c) => c.method === 'updateVideo')!;
     expect((u.args[1] as { snippet: { title: string } }).snippet.title).toBe('A better title');
+  });
+
+  it('an asset failure during push is recorded after the update that landed', async () => {
+    const f = fresh();
+    const client = fakeClient({
+      setThumbnail: async () => {
+        throw err(403, 'forbidden', false);
+      },
+    });
+    await upload(f.topic, f.story, ctx(f, client));
+    const path = publishPath(f.topic, f.story, f.root);
+    const l = readJson<Ledger>(path)!;
+    l.outputs.youtube.metadata.title = 'Renamed';
+    saveLedger(path, l);
+    const r = await push(f.topic, f.story, ctx(f, client));
+    expect(r.event).toMatchObject({ type: 'updated', fields: ['snippet', 'captions'] });
+    expect(
+      events(f)
+        .slice(-2)
+        .map((e) => e.type),
+    ).toEqual(['updated', 'failed']);
+    expect(events(f).at(-1)).toMatchObject({ step: 'thumbnail', retryable: false });
   });
 
   it('a failed update leaves the metadata behind so the next push resends', async () => {
@@ -325,11 +356,29 @@ describe('goLive', () => {
     expect(r.event).toMatchObject({ type: 'scheduled', publishAt: at, id: 'vid00000001' });
     expect(client.calls.at(-1)).toMatchObject({
       method: 'updateVideo',
-      args: ['vid00000001', { status: { privacyStatus: 'private', publishAt: at } }],
+      args: [
+        'vid00000001',
+        {
+          status: {
+            privacyStatus: 'private',
+            publishAt: at,
+            selfDeclaredMadeForKids: false,
+            containsSyntheticMedia: false,
+          },
+        },
+      ],
     });
     const again = await goLive(f.topic, f.story, ctx(f, client, { at }));
     expect(again.existing).toBe(true);
     expect(client.calls.filter((c) => c.method === 'updateVideo')).toHaveLength(1);
+  });
+
+  it('refuses before an upload even when the local build is approved', async () => {
+    const f = fresh();
+    recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+    const client = fakeClient();
+    await expect(goLive(f.topic, f.story, ctx(f, client))).rejects.toThrow(/upload/);
+    expect(client.calls).toHaveLength(0);
   });
 
   it('without --at it goes public now', async () => {
@@ -341,7 +390,10 @@ describe('goLive', () => {
     expect(r.event).toMatchObject({ type: 'published', id: 'vid00000001', url: 'https://youtu.be/vid00000001' });
     expect(client.calls.at(-1)).toMatchObject({
       method: 'updateVideo',
-      args: ['vid00000001', { status: { privacyStatus: 'public' } }],
+      args: [
+        'vid00000001',
+        { status: { privacyStatus: 'public', selfDeclaredMadeForKids: false, containsSyntheticMedia: false } },
+      ],
     });
   });
 });

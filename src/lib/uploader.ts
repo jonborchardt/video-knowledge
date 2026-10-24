@@ -21,7 +21,7 @@ import {
   recordUpdated,
   recordUploaded,
 } from './publish';
-import { type RemoteVideo, type Snippet, type YouTubeClient, YouTubeError } from './youtube';
+import { type RemoteVideo, type Snippet, type VideoStatus, type YouTubeClient, YouTubeError } from './youtube';
 
 export const SESSION_FILE = (output: string) =>
   output === 'youtube' ? 'video/upload-session.json' : `video/upload-session.${output}.json`;
@@ -63,7 +63,13 @@ const snippetOf = (m: UploadMetadata): Snippet => ({
   categoryId: m.category ?? CATEGORY_DEFAULT,
   defaultLanguage: m.language ?? LANGUAGE_DEFAULT,
 });
-const syntheticMedia = (out: Output) => out.metadata.containsSyntheticMedia ?? false;
+/** Every status write carries the declarations: videos.update replaces the whole part it names, so a status with
+ *  only privacyStatus would reset selfDeclaredMadeForKids and containsSyntheticMedia. */
+const statusOf = (out: Output): VideoStatus => ({
+  privacyStatus: 'private',
+  selfDeclaredMadeForKids: false,
+  containsSyntheticMedia: out.metadata.containsSyntheticMedia ?? false,
+});
 const lastSentSha = (out: Output) =>
   [...out.events].reverse().find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata)?.metadata ??
   null;
@@ -100,7 +106,7 @@ async function guarded<T>(
  *  result per step done; a thumbnail or captions failure is recorded and the verb goes on. */
 export async function upload(topic: string, storyId: string, c: Ctx): Promise<VerbResult[]> {
   const o = openOutput(topic, storyId, c);
-  if (o.state.status !== 'not-uploaded' && o.state.status !== 'build-behind')
+  if (o.state.status === 'retracted' || (o.state.id && o.state.status !== 'build-behind'))
     throw new Refusal(`${o.id} is ${o.state.status}: ${o.state.next}`);
   if (!o.metadata || !o.metadata.file || !o.build)
     throw new Refusal('no review package to upload; npm run video -- package first');
@@ -136,11 +142,7 @@ export async function upload(topic: string, storyId: string, c: Ctx): Promise<Ve
       c.client.insertVideo({
         file,
         snippet: snippetOf(o.metadata!),
-        status: {
-          privacyStatus: 'private',
-          selfDeclaredMadeForKids: false,
-          containsSyntheticMedia: syntheticMedia(o.out),
-        },
+        status: statusOf(o.out),
         session: session?.uri ?? null,
         onSession: (uri) =>
           writeFileSync(sessionPath, toJson({ build: fileSha, uri, startedAt: (c.now ?? new Date()).toISOString() })),
@@ -188,22 +190,39 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   const problem = uploadProblem(o.metadata);
   if (problem) throw new Refusal(problem);
   const id = o.state.id;
-  const fields = ['snippet'];
-  await guarded(topic, storyId, c, 'update', () => c.client.updateVideo(id, { snippet: snippetOf(o.metadata!) }));
-  if (o.metadata.thumbnail) {
-    const file = join(o.root, o.metadata.thumbnail.file);
-    if (!existsSync(file)) throw new Refusal(`${o.metadata.thumbnail.file} is missing on disk`);
-    await guarded(topic, storyId, c, 'thumbnail', () => c.client.setThumbnail(id, file));
-    fields.push('thumbnail');
-  }
+  const thumbnail = o.metadata.thumbnail ? join(o.root, o.metadata.thumbnail.file) : null;
+  if (thumbnail && !existsSync(thumbnail)) throw new Refusal(`${o.metadata.thumbnail!.file} is missing on disk`);
   const captions = o.metadata.captions;
-  if (captions) {
-    await guarded(topic, storyId, c, 'captions', () =>
+  await guarded(topic, storyId, c, 'update', () => c.client.updateVideo(id, { snippet: snippetOf(o.metadata!) }));
+  // the snippet landed: record it even if an asset fails, so the board does not stay metadata-behind and resend it
+  const landed = ['snippet'];
+  const failures: { step: string; e: YouTubeError }[] = [];
+  const asset = async (step: string, fn: () => Promise<void>) => {
+    try {
+      await fn();
+      landed.push(step);
+    } catch (e) {
+      if (!(e instanceof YouTubeError)) throw e;
+      failures.push({ step, e });
+    }
+  };
+  if (thumbnail) await asset('thumbnail', () => c.client.setThumbnail(id, thumbnail));
+  if (captions)
+    await asset('captions', () =>
       c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English'),
     );
-    fields.push('captions');
-  }
-  return recordUpdated(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, fields });
+  const r = recordUpdated(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, fields: landed });
+  for (const f of failures)
+    recordFailed(topic, storyId, {
+      output: c.output,
+      by: c.by,
+      root: c.root,
+      now: c.now,
+      step: f.step,
+      error: `${f.e.reason}: ${f.e.message}`,
+      retryable: f.e.retryable,
+    });
+  return r;
 }
 
 /** Makes the approved upload public now, or schedules it (private with a publishAt) for `at`. */
@@ -212,7 +231,8 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
   if (o.state.status === 'scheduled' || o.state.status === 'published')
     return { event: null, existing: true, message: `${o.id} is already ${o.state.status}: ${o.state.next}` };
   if (o.state.status !== 'approved') throw new Refusal(`${o.id} is ${o.state.status}, not approved: ${o.state.next}`);
-  const id = o.state.id!;
+  if (!o.state.id) throw new Refusal(`${o.id} is approved but not uploaded yet: ${o.state.next}`);
+  const id = o.state.id;
   if (c.at) {
     const t = Date.parse(c.at);
     if (Number.isNaN(t)) throw new Refusal(`--at ${c.at} is not an ISO date`);
@@ -220,11 +240,13 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
       throw new Refusal(`--at ${c.at} must be at least 5 minutes ahead; a past publishAt publishes immediately`);
     const at = new Date(t).toISOString();
     await guarded(topic, storyId, c, 'go-live', () =>
-      c.client.updateVideo(id, { status: { privacyStatus: 'private', publishAt: at } }),
+      c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'private', publishAt: at } }),
     );
     return recordScheduled(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, at });
   }
-  await guarded(topic, storyId, c, 'go-live', () => c.client.updateVideo(id, { status: { privacyStatus: 'public' } }));
+  await guarded(topic, storyId, c, 'go-live', () =>
+    c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'public' } }),
+  );
   return recordPublished(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, url: urlOf(id) });
 }
 

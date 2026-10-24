@@ -3,13 +3,14 @@
 // for tests; no googleapis. Every failure is a YouTubeError the uploader records as a `failed` ledger event.
 // Credentials: YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET in the environment (.env), the refresh token from
 // YOUTUBE_REFRESH_TOKEN or <root>/.youtube-token.json (written by `npm run publish -- auth`). Library layer.
-import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
-import { extname, join } from 'node:path';
+import { dirname, extname, join, resolve } from 'node:path';
 import { ROOT, readJson } from './io';
 
 export const SCOPE = 'https://www.googleapis.com/auth/youtube.force-ssl';
-export const TOKEN_FILE = '.youtube-token.json';
+export const TOKEN_FILE = '.youtube-token.json'; // the token store when YOUTUBE_OAUTH_CREDENTIALS_PATH is not set
+export const CREDENTIALS_PATH_VAR = 'YOUTUBE_OAUTH_CREDENTIALS_PATH';
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const API = 'https://www.googleapis.com/youtube/v3';
@@ -20,6 +21,15 @@ export interface Credentials {
   clientId: string;
   clientSecret: string;
   refreshToken: string | null;
+  store?: string; // the file auth writes the refresh token into (merged into what is there)
+}
+/** Google's downloaded Desktop client JSON ({ installed: {...} }), or a flat file; refresh_token is what auth adds. */
+interface CredentialsFile {
+  installed?: { client_id?: string; client_secret?: string };
+  web?: { client_id?: string; client_secret?: string };
+  client_id?: string;
+  client_secret?: string;
+  refresh_token?: string;
 }
 
 export function loadCredentials(
@@ -27,16 +37,24 @@ export function loadCredentials(
   env: Record<string, string | undefined> = process.env,
   opts: { requireToken?: boolean } = {},
 ): Credentials {
-  for (const k of ['YOUTUBE_CLIENT_ID', 'YOUTUBE_CLIENT_SECRET'])
-    if (!env[k])
-      throw new Error(
-        `${k} is not set: put the Desktop OAuth client's id and secret in .env (README, Publishing: YouTube)`,
-      );
-  const file = readJson<{ refresh_token?: string }>(join(root, TOKEN_FILE));
-  const refreshToken = env.YOUTUBE_REFRESH_TOKEN ?? file?.refresh_token ?? null;
+  const named = env[CREDENTIALS_PATH_VAR];
+  const store = named ? resolve(root, named) : join(root, TOKEN_FILE);
+  const file = readJson<CredentialsFile>(store);
+  if (named && !file)
+    throw new Error(
+      `${CREDENTIALS_PATH_VAR} names ${named}, which does not exist: save the Desktop OAuth client's JSON from the Google Cloud console there (README, Publishing: YouTube)`,
+    );
+  const app = file?.installed ?? file?.web ?? file ?? {};
+  const clientId = env.YOUTUBE_CLIENT_ID || app.client_id;
+  const clientSecret = env.YOUTUBE_CLIENT_SECRET || app.client_secret;
+  if (!clientId || !clientSecret)
+    throw new Error(
+      `no OAuth client: set ${CREDENTIALS_PATH_VAR} to the Desktop client's JSON, or YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET, in .env (README, Publishing: YouTube)`,
+    );
+  const refreshToken = env.YOUTUBE_REFRESH_TOKEN || file?.refresh_token || null; // an empty .env line is unset
   if (!refreshToken && opts.requireToken !== false)
-    throw new Error(`no refresh token: set YOUTUBE_REFRESH_TOKEN in .env or ${AUTH_HELP}`);
-  return { clientId: env.YOUTUBE_CLIENT_ID!, clientSecret: env.YOUTUBE_CLIENT_SECRET!, refreshToken };
+    throw new Error(`no refresh token: ${AUTH_HELP}, or set YOUTUBE_REFRESH_TOKEN in .env`);
+  return { clientId, clientSecret, refreshToken, store };
 }
 
 export class YouTubeError extends Error {
@@ -158,7 +176,10 @@ export function authorize(
           throw new Error(
             'Google returned no refresh token; revoke the app at myaccount.google.com/permissions and run auth again',
           );
-        writeFileSync(join(root, TOKEN_FILE), JSON.stringify({ refresh_token: t.refresh_token }) + '\n', {
+        const store = creds.store ?? join(root, TOKEN_FILE);
+        mkdirSync(dirname(store), { recursive: true });
+        const kept = readJson<Record<string, unknown>>(store) ?? {};
+        writeFileSync(store, JSON.stringify({ ...kept, refresh_token: t.refresh_token }, null, 1) + '\n', {
           mode: 0o600,
         });
         resolve();

@@ -191,9 +191,9 @@ async function main() {
       const creds = loadCredentials(ROOT, process.env, { requireToken: false });
       await authorize(creds, ROOT, (url) => {
         console.log(`Grant access in the browser (opening it now):\n${url}`);
-        if (process.platform === 'win32') spawnSync('cmd', ['/c', 'start', '', url]);
+        if (process.platform === 'win32') spawnSync('rundll32', ['url.dll,FileProtocolHandler', url]); // no shell parsing of &
       });
-      console.log(`wrote ${TOKEN_FILE} (gitignored); or copy its refresh_token into .env as YOUTUBE_REFRESH_TOKEN`);
+      console.log(`stored the refresh token in ${creds.store ?? TOKEN_FILE} (gitignored)`);
       break;
     }
     case 'upload': {
