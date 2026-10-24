@@ -1,0 +1,8 @@
+{
+  // Cloudflare Workers static-asset deploy of the Astro build. Without this file `wrangler deploy` auto-configures
+  // the @astrojs/cloudflare adapter, whose prerender server runs getStaticPaths inside workerd (no node:fs) and fails.
+  "name": "video-knowledge",
+  "compatibility_date": "2026-10-23",
+  "build": { "command": "npm run build" },
+  "assets": { "directory": "./dist" },
+}
