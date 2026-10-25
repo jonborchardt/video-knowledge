@@ -1,36 +1,109 @@
 ---
-// Links to the working pages the public nav leaves out: the production board, each topic's story ideas, each script.
+// Every working page the public nav leaves out, all dev-only (astro.config.mjs): the production board, each topic's
+// story ideas, and per script its script page, the review page of its video and the review page of each of its Shorts.
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import Base from '../layouts/Base.astro';
-import { scriptDirs } from '../lib/script';
+import { readJson } from '../lib/io';
+import { FILES, type Script, scriptDirs } from '../lib/script';
 import { storyTopicNames } from '../lib/stories';
 import { href } from '../lib/url';
 
-const scripts = scriptDirs();
+/** The review package's title and build kind, or null when nothing is packaged yet. */
+const packageOf = (dir: string) => {
+  const rp = readJson<{ title: string; status: string }>(join(dir, 'video', 'review', 'review.json'));
+  // a draft's working title carries a [PRIVATE REVIEW] prefix; the kind already says it is a draft
+  return rp
+    ? {
+        title: rp.title.replace(/^\[[^\]]*\]\s*/, ''),
+        kind: rp.status === 'release build' ? 'release build' : 'draft build',
+      }
+    : null;
+};
+const scripts = scriptDirs().map((d) => {
+  const shortsDir = join(d.dir, 'shorts');
+  return {
+    ...d,
+    title: readJson<Script>(join(d.dir, FILES.script))?.title ?? d.slug,
+    pkg: packageOf(d.dir),
+    shorts: existsSync(shortsDir)
+      ? readdirSync(shortsDir, { withFileTypes: true })
+          .filter((e) => e.isDirectory())
+          .map((e) => ({ slug: e.name, pkg: packageOf(join(shortsDir, e.name)) }))
+      : [],
+  };
+});
+const small = 'text-sm text-muted-foreground';
 ---
 
 <Base title="Admin" noindex>
   <header>
     <div class="eyebrow text-muted-foreground">Admin</div>
     <h1 class="mt-1 text-display font-semibold">Working pages</h1>
+    <p class={`mt-2 max-w-prose ${small}`}>
+      Dev server only: none of these pages is part of the built site. Each script has up to three kinds of page:
+      <strong>Script</strong> (the narration, the evidence behind every sentence, the storyboard),
+      <strong>Review video</strong> (watch the packaged landscape video, see its QA and script findings at their moment, approve
+      it or send it back, upload and publish it) and <strong>Review Short</strong> (the same review page for one of the video's
+      vertical Shorts, which is approved on its own and goes live only after the video).
+    </p>
   </header>
-  <ul class="mt-6 list-disc space-y-2 pl-5">
-    <li><a href={href('/production/')}>Production board</a></li>
-    {
-      storyTopicNames().map((name) => (
-        <li>
-          <a href={href(`/${name}/stories/`)}>{name}: story ideas</a>
-          <ul class="mt-1 list-disc pl-5">
-            {scripts
-              .filter((d) => d.topic === name)
-              .map((d) => (
-                <li>
-                  <a href={href(`/${name}/scripts/${d.slug}/`)}>{d.slug}</a> (
-                  <a href={href(`/${name}/review/${d.slug}`)}>review</a>)
-                </li>
-              ))}
-          </ul>
-        </li>
-      ))
-    }
+
+  <ul class="mt-6 list-disc space-y-1 pl-5">
+    <li>
+      <a href={href('/production/')}>Production board</a>
+      <span class={small}>: every video, who acts next, and the next step's command or prompt</span>
+    </li>
   </ul>
+
+  {
+    storyTopicNames().map((name) => (
+      <section class="mt-8" aria-labelledby={`topic-${name}`}>
+        <h2 id={`topic-${name}`} class="text-title font-semibold">
+          {name}
+        </h2>
+        <p class="mt-1">
+          <a href={href(`/${name}/stories/`)}>Story ideas</a>
+          <span class={small}>: the topic's story candidates and their evidence check</span>
+        </p>
+        <ul class="mt-3 grid gap-3">
+          {scripts
+            .filter((d) => d.topic === name)
+            .map((d) => (
+              <li class="rounded-lg border bg-card p-3 text-card-foreground">
+                <div class="font-medium">{d.title}</div>
+                <div class={`${small} font-mono text-xs`}>{d.slug}</div>
+                <ul class="mt-2 grid gap-1 text-sm">
+                  <li>
+                    <a href={href(`/${name}/scripts/${d.slug}/`)}>Script</a>
+                  </li>
+                  <li>
+                    {d.pkg ? (
+                      <>
+                        <a href={href(`/${name}/review/${d.slug}`)}>Review video</a>{' '}
+                        <span class={small}>({d.pkg.kind})</span>
+                      </>
+                    ) : (
+                      <span class={small}>Review video: not packaged yet</span>
+                    )}
+                  </li>
+                  {d.shorts.map((s) => (
+                    <li>
+                      {s.pkg ? (
+                        <>
+                          <a href={href(`/${name}/review/${d.slug}/shorts/${s.slug}`)}>Review Short: {s.pkg.title}</a>{' '}
+                          <span class={small}>({s.pkg.kind})</span>
+                        </>
+                      ) : (
+                        <span class={small}>Review Short {s.slug}: not packaged yet</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+        </ul>
+      </section>
+    ))
+  }
 </Base>
