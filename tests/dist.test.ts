@@ -188,6 +188,15 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('matter pages list their exhibits by number', () => {
+    for (const { topic, slug } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      expect(html).toContain('aria-labelledby="exhibits"');
+      const nums = [...html.matchAll(/Exhibit (\d+)/g)].map((m) => Number(m[1]));
+      expect(nums).toEqual([...nums].sort((a, b) => a - b));
+    }
+  });
+
   it('serves a 404 page', () => {
     expect(readFileSync(join(DIST, '404.html'), 'utf8')).toContain('<h1');
   });

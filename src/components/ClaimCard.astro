@@ -7,6 +7,7 @@ import SourceLink from './SourceLink.astro';
 import VerdictBadge from './VerdictBadge.astro';
 import FindingLabel from './FindingLabel.astro';
 import { findingLabel } from '../lib/finding-label';
+import { revisionLine } from '../lib/public-record';
 
 interface Props {
   claim: ClaimView;
@@ -48,6 +49,13 @@ const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
       </span>
     </span>
     {c.note && <span class:list={[small, 'ml-[1.4em]']}>{c.note}</span>}
+    {
+      c.revisions.map((r) => (
+        <span class:list={[small, 'ml-[1.4em] font-semibold']} data-revised={r.at}>
+          {revisionLine(r)}
+        </span>
+      ))
+    }
     <span class="ml-[1.4em] font-mono text-xs text-muted-foreground tabular-nums">
       {
         chips.map((x, i) => (

@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { topicDir } from '../src/lib/io';
-import { loadTopic, topicNames } from '../src/lib/topics';
+import { loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
 
 describe('topics', () => {
   const names = topicNames();
@@ -10,6 +10,14 @@ describe('topics', () => {
   it('finds topics with claims and skips empty ones', () => {
     expect(names).toContain('ai-coding');
     expect(names).not.toContain('glp1'); // has a report.json but no claims yet
+  });
+
+  it('every counted source carries its exhibit number, unique within the topic', () => {
+    for (const n of publicTopicNames()) {
+      const nums = loadTopic(n).sources.map((s) => s.exhibit);
+      expect(nums.every((x) => typeof x === 'number')).toBe(true);
+      expect(new Set(nums).size).toBe(nums.length);
+    }
   });
 
   it.each(names)('%s: page data is consistent', (name) => {

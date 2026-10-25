@@ -8,6 +8,7 @@ import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
 import LabelStrip from '../../components/LabelStrip.astro';
+import { revisionLine } from '../../lib/public-record';
 import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
 import SourceIcons from '../../components/SourceIcons.astro';
 import Stamp from '../../components/Stamp.astro';
@@ -33,6 +34,13 @@ const groups = FINDING_LABELS.map((label) => ({
   label,
   claims: claims.filter((c) => findingLabel(c) === label),
 })).filter((g) => g.claims.length);
+// The sources this matter rests on: every source that asserts or denies one of its claims, by exhibit number.
+const exhibitIds = new Set(claims.flatMap((c) => c.sources.map((x) => x.id)));
+const exhibits = t.sources.filter((x) => exhibitIds.has(x.id) && x.exhibit).sort((a, b) => a.exhibit! - b.exhibit!);
+const revisions = claims
+  .flatMap((c) => c.revisions.map((r) => ({ r, text: c.text })))
+  .sort((a, b) => a.r.at.localeCompare(b.r.at));
+const revised = revisions.at(-1)?.r.at ?? null;
 const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
 const body = commissionBody(commission);
 const h2 = 'mb-3 text-featured font-bold';
@@ -57,6 +65,7 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
     ]}
     title={s.title}
     lede={s.question}
+    revised={revised}
     facts={[
       { term: 'Inquiry', value: t.label, href: href(`/${t.name}/`) },
       { term: 'Published by', value: commission.fullName },
@@ -144,6 +153,24 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
     }
   </section>
 
+  <section aria-labelledby="exhibits">
+    <div class="eyebrow text-gold">Exhibits</div>
+    <h2 class={h2} id="exhibits">The sources this matter rests on</h2>
+    <p class="mb-3 text-sm text-muted-foreground">
+      Numbered as in the inquiry; <a href={href(`/${t.name}/#sources`)}>every exhibit is listed in the full report</a>.
+    </p>
+    <ul class="grid list-none gap-1.5 p-0">
+      {
+        exhibits.map((x) => (
+          <li>
+            <span class="font-mono text-xs text-muted-foreground">Exhibit {x.exhibit}</span> ·{' '}
+            <a href={x.href}>{x.title}</a> <span class="text-sm text-muted-foreground">· {x.channel}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
   {
     s.chain && s.chain.length > 0 && (
       <section aria-labelledby="chain">
@@ -175,6 +202,20 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
         Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed.
         Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
       </p>
+      {
+        revisions.length > 0 && (
+          <>
+            <h2 class="eyebrow text-gold">Revisions</h2>
+            <ul class="grid list-none gap-1 p-0">
+              {revisions.map(({ r, text }) => (
+                <li>
+                  {revisionLine(r)} <span class="text-muted-foreground">({text})</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
     </div>
     {
       s.readiness === 'ready' && (

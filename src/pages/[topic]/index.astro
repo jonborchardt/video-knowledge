@@ -3,6 +3,7 @@ import TabBar from '../../components/TabBar.astro';
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
+import { revisionLine } from '../../lib/public-record';
 import SourceIcons from '../../components/SourceIcons.astro';
 import Stamp from '../../components/Stamp.astro';
 import SourceDetails from '../../components/SourceDetails.astro';
@@ -119,6 +120,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
     <ReportHeader
       brand={commissionKey(commission)}
       kind="Public inquiry"
+      revised={t.revised}
       trail={[
         { label: site.name, href: href('/') },
         { label: commission.ceremonialName, href: href(`/commissions/${commissionKey(commission)}/`) },
@@ -453,6 +455,21 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
         {commission.fullName}. Every verdict links to the quote it judges and the lines of evidence it rests on.
         Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
       </p>
+      {
+        t.revisions.length > 0 && (
+          <>
+            <h2 class="eyebrow text-gold">Revisions</h2>
+            <ul class="grid list-none gap-1 p-0">
+              {t.revisions.map((r) => (
+                <li>
+                  {revisionLine(r)}{' '}
+                  <span class="text-muted-foreground">({t.claims.find((c) => c.id === r.id)?.text ?? r.id})</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
     </div>
     <Stamp brand={commissionKey(commission)} slot="stamp-record" form="rect" class="w-44 shrink-0 sm:w-52" />
   </footer>

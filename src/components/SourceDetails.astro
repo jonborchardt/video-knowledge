@@ -31,6 +31,7 @@ const chips = [
 <details class="group" data-source>
   <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
     <span class="mr-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">▸</span>
+    {s.exhibit && <span class="font-mono text-xs text-muted-foreground">Exhibit {s.exhibit} </span>}
     <SourceLink source={s} />
     {
       meta && (
