@@ -11,6 +11,8 @@ import LabelStrip from '../../components/LabelStrip.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import ArticleBody from '../../components/ArticleBody.astro';
 import Tool from '../../components/Tool.astro';
+import MatterList from '../../components/MatterList.astro';
+import { contentGraph, matterItem, related, storyNode } from '../../lib/content-graph';
 import { toolOf } from '../../tools';
 import { loadArticleRelease } from '../../lib/article';
 import { articleView, type FigureDraw } from '../../lib/article-view';
@@ -129,6 +131,8 @@ const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/
 const body = commissionBody(commission);
 const h2 = 'mb-3 text-featured font-bold';
 const tool = toolOf(t.name, s.id);
+const graph = contentGraph();
+const relatedItems = related(graph, storyNode(t.name, s.id)).map((n) => matterItem(graph, n.id));
 ---
 
 <Base
@@ -313,6 +317,18 @@ const tool = toolOf(t.name, s.id);
             </li>
           ))}
         </ul>
+      </section>
+    )
+  }
+
+  {
+    relatedItems.length > 0 && (
+      <section aria-labelledby="related">
+        <div class="eyebrow text-gold">See also</div>
+        <h2 class={h2} id="related">
+          Related matters
+        </h2>
+        <MatterList items={relatedItems} />
       </section>
     )
   }

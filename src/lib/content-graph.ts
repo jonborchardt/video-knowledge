@@ -163,3 +163,104 @@ export const absoluteOf = (g: Graph, id: string): string | null => {
   const u = urlOf(g, id);
   return u && (u.startsWith('/') ? new URL(u.slice(1), site.url).toString() : u);
 };
+
+/** Whether a story has a live video (a follow-up's video is its first question's). */
+export const hasVideo = (g: Graph, story: string) => {
+  const s = g.stories.get(story);
+  const first = s?.partOf ? story.replace(/[^/]+$/, s.partOf) : story;
+  return !!g.nodes.get(`${first}#youtube`)?.public;
+};
+
+/** The one order of matters in every list (D9): a live video first, then ready before under examination, then the
+ *  overall score, then the id. */
+export function matterOrder(g: Graph, a: Node, b: Node): number {
+  const sa = g.stories.get(a.id)!;
+  const sb = g.stories.get(b.id)!;
+  return (
+    Number(hasVideo(g, b.id)) - Number(hasVideo(g, a.id)) ||
+    Number(sb.readiness === 'ready') - Number(sa.readiness === 'ready') ||
+    sb.scores.overall - sa.scores.overall ||
+    a.id.localeCompare(b.id)
+  );
+}
+
+/** Related matters (D7): pins, then chain members, then stories sharing the most claims, then the same inquiry, then
+ *  the same institution; within a tier `matterOrder`. Ready stories only, never the story itself or an exclusion. */
+export function related(
+  g: Graph,
+  story: string,
+  opts: { pin?: string[]; exclude?: string[]; limit?: number } = {},
+): Node[] {
+  const self = g.stories.get(story);
+  const me = g.nodes.get(story);
+  if (!self || !me) return [];
+  const chainOf = (id: string) => {
+    const s = g.stories.get(id)!;
+    return s.partOf ? id.replace(/[^/]+$/, s.partOf) : id;
+  };
+  const shared = new Map(
+    g.edges.filter((e) => e.kind === 'shares-claims' && e.from === story).map((e) => [e.to, e.weight ?? 0]),
+  );
+  const inst = (topic: string | null) => g.edges.find((e) => e.kind === 'publishes' && e.to === topic)?.from;
+  const tier = (n: Node) =>
+    opts.pin?.includes(n.id)
+      ? 0
+      : chainOf(n.id) === chainOf(story)
+        ? 1
+        : shared.has(n.id)
+          ? 2
+          : n.topic === me.topic
+            ? 3
+            : inst(n.topic) === inst(me.topic)
+              ? 4
+              : 5;
+  const pinAt = (n: Node) => opts.pin?.indexOf(n.id) ?? 0;
+  return [...g.nodes.values()]
+    .filter((n) => n.kind === 'story' && n.public && n.id !== story && !opts.exclude?.includes(n.id))
+    .filter((n) => tier(n) < 5)
+    .sort(
+      (a, b) =>
+        tier(a) - tier(b) ||
+        (tier(a) === 0 ? pinAt(a) - pinAt(b) : 0) ||
+        (tier(a) === 2 ? shared.get(b.id)! - shared.get(a.id)! : 0) ||
+        matterOrder(g, a, b),
+    )
+    .slice(0, opts.limit ?? 4);
+}
+
+export interface MatterItem {
+  title: string;
+  question: string;
+  href: string; // root-relative; the component wraps it in href()
+  video: boolean;
+  ready: boolean;
+  follow: MatterItem[]; // a chain's follow-up questions, listed under their first
+}
+/** A story node as a list entry. */
+export function matterItem(g: Graph, id: string, follow: string[] = []): MatterItem {
+  const n = g.nodes.get(id)!;
+  const s = g.stories.get(id)!;
+  return {
+    title: s.title,
+    question: s.question,
+    href: matterPath(n.topic!, s),
+    video: hasVideo(g, id),
+    ready: s.readiness === 'ready',
+    follow: follow.map((f) => matterItem(g, f)),
+  };
+}
+
+/** Every matter of an inquiry in `matterOrder`, each follow-up under its first question. */
+export function inquiryMatters(g: Graph, topic: string): MatterItem[] {
+  const stories = [...g.nodes.values()].filter((n) => n.kind === 'story' && n.topic === topic);
+  return stories
+    .filter((n) => !g.stories.get(n.id)!.partOf)
+    .sort((a, b) => matterOrder(g, a, b))
+    .map((n) =>
+      matterItem(
+        g,
+        n.id,
+        (g.stories.get(n.id)!.chain ?? []).map((c) => storyNode(topic, c.id)).filter((id) => g.stories.has(id)),
+      ),
+    );
+}

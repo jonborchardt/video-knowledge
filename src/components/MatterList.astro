@@ -1,0 +1,47 @@
+---
+// A list of matters (D9), on the inquiry, institution and matter pages: the title as the link, the question under it,
+// "Video" (with its icon) when the matter has a live video, "Under examination" when it is not ready. A chain's
+// follow-up questions sit under their first. The page includes SourceIcons for the icon.
+import KindIcon from './KindIcon.astro';
+import type { MatterItem } from '../lib/content-graph';
+import { href } from '../lib/url';
+
+interface Props {
+  items: MatterItem[];
+}
+const { items } = Astro.props;
+---
+
+<ul class="grid list-none gap-3 p-0" data-matters>
+  {
+    items.map((m) => (
+      <li class="grid gap-0.5 border-l-2 pl-3">
+        <a class="font-heading font-bold" href={href(m.href)}>
+          {m.title}
+        </a>
+        <span class="text-sm text-muted-foreground">{m.question}</span>
+        {(m.video || !m.ready) && (
+          <span class="flex flex-wrap gap-x-3 eyebrow text-muted-foreground">
+            {m.video && (
+              <span class="inline-flex items-center gap-1 text-foreground">
+                <KindIcon kind="video" />
+                Video
+              </span>
+            )}
+            {!m.ready && <span>Under examination</span>}
+          </span>
+        )}
+        {m.follow.length > 0 && (
+          <ul class="mt-1 grid list-none gap-1 p-0 pl-3 text-sm">
+            {m.follow.map((f) => (
+              <li>
+                <span class="text-muted-foreground">Follow-up: </span>
+                <a href={href(f.href)}>{f.title}</a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  }
+</ul>

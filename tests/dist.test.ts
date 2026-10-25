@@ -402,4 +402,19 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       }
     }
   });
+
+  it('ready matters list related matters that exist, never themselves', () => {
+    let seen = 0;
+    for (const { topic, slug, s } of storyPages.filter((p) => p.s.readiness === 'ready')) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const sec = html.match(/<section aria-labelledby="related">([\s\S]*?)<\/section>/)?.[1];
+      if (!sec) continue;
+      seen++;
+      for (const [, h] of sec.matchAll(/href="([^"#]*)"/g)) {
+        expect(existsSync(join(DIST, h.slice(BASE.length), 'index.html')), h).toBe(true);
+        expect(h, s.id).not.toBe(`${BASE}${topic}/${slug}/`);
+      }
+    }
+    expect(seen).toBeGreaterThan(0);
+  });
 });

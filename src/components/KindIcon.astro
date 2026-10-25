@@ -1,0 +1,14 @@
+---
+// The icon for the kind of page a link leads to, from the SourceIcons sprite (the page must include it). Decorative:
+// the kind is always said in text beside it, never by the icon alone.
+export type LinkKind = 'matter' | 'video' | 'article' | 'data' | 'tool' | 'inquiry' | 'institution' | 'external';
+interface Props {
+  kind: LinkKind;
+  class?: string;
+}
+const { kind, class: cls } = Astro.props;
+---
+
+<svg class:list={['inline size-[1em] shrink-0 align-[-0.15em]', cls]} aria-hidden="true"
+  ><use href={`#icon-${kind}`}></use></svg
+>

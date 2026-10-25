@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { commissionKey, commissionOf } from '../src/config/site';
-import { contentGraph, urlOf } from '../src/lib/content-graph';
+import { contentGraph, matterOrder, related, urlOf } from '../src/lib/content-graph';
 import { toJson, topicDir } from '../src/lib/io';
 import { addOutput, appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../src/lib/publish';
 import { scriptDir } from '../src/lib/script';
@@ -129,5 +129,73 @@ describe('content graph', () => {
     rmSync(root, { recursive: true, force: true });
     const b = graphOf([{ id: 'decision:a', claims: [], title: 'Another title' }]);
     expect(urlOf(b, `${T}/decision:a`)).toBe('/heat-pumps/a/');
+  });
+
+  it('chain first, never itself', () => {
+    const g = graphOf([
+      { id: 'decision:a', claims: ['c1'], chain: [{ id: 'decision:b', question: '' }] },
+      { id: 'decision:b', claims: ['c1'], partOf: 'decision:a' },
+      { id: 'decision:c', claims: ['c1'], scores: { overall: 0.99 } as Story['scores'] },
+    ]);
+    const r = related(g, `${T}/decision:a`).map((n) => n.id);
+    expect(r[0]).toBe(`${T}/decision:b`);
+    expect(r).not.toContain(`${T}/decision:a`);
+  });
+
+  it('more shared claims rank higher; ties prefer a live video, then the overall score', () => {
+    const sc = (overall: number) => ({ overall }) as Story['scores'];
+    const g = graphOf(
+      [
+        { id: 'decision:a', claims: ['c1', 'c2', 'c3', 'c4', 'c5'] },
+        { id: 'decision:b', claims: ['c1', 'c2', 'c3'] },
+        { id: 'decision:c', claims: ['c1'] },
+        { id: 'decision:d', claims: ['c4', 'c5'], scores: sc(0.9) },
+        { id: 'decision:e', claims: ['c4', 'c5'], scores: sc(0.1) },
+        { id: 'decision:f', claims: ['c4', 'c5'], scores: sc(0.95) },
+      ],
+      { 'decision:e': (l) => live(l, 'youtube', 'vid00000001') },
+    );
+    expect(related(g, `${T}/decision:a`, { limit: 9 }).map((n) => n.id.split(':')[1])).toEqual([
+      'b',
+      'e',
+      'f',
+      'd',
+      'c',
+    ]);
+  });
+
+  it('a pin leads and an exclusion is honoured', () => {
+    const g = graphOf([
+      { id: 'decision:a', claims: ['c1'] },
+      { id: 'decision:b', claims: ['c1'] },
+      { id: 'decision:c', claims: ['c9'] },
+    ]);
+    const r = related(g, `${T}/decision:a`, { pin: [`${T}/decision:c`], exclude: [`${T}/decision:b`] }).map(
+      (n) => n.id,
+    );
+    expect(r[0]).toBe(`${T}/decision:c`);
+    expect(r).not.toContain(`${T}/decision:b`);
+  });
+
+  it('a story that is not ready is never recommended', () => {
+    const g = graphOf([
+      { id: 'decision:a', claims: ['c1'] },
+      { id: 'decision:b', claims: ['c1'], readiness: 'needs-research' },
+    ]);
+    expect(related(g, `${T}/decision:a`)).toEqual([]);
+  });
+
+  it('matterOrder puts a public video first, then ready, then the score', () => {
+    const sc = (overall: number) => ({ overall }) as Story['scores'];
+    const g = graphOf(
+      [
+        { id: 'decision:a', claims: [], scores: sc(0.9) },
+        { id: 'decision:b', claims: [], scores: sc(0.1) },
+        { id: 'decision:c', claims: [], scores: sc(1), readiness: 'needs-research' },
+      ],
+      { 'decision:b': (l) => live(l, 'youtube', 'vid00000001') },
+    );
+    const nodes = ['a', 'b', 'c'].map((x) => g.nodes.get(`${T}/decision:${x}`)!);
+    expect(nodes.sort((x, y) => matterOrder(g, x, y)).map((n) => n.id.split(':')[1])).toEqual(['b', 'a', 'c']);
   });
 });
