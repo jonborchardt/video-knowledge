@@ -16,7 +16,7 @@ import NextSteps from '../../components/NextSteps.astro';
 import { loadCta, resolveCtas } from '../../lib/cta';
 import { contentGraph, matterItem, matterPath, related, storyNode } from '../../lib/content-graph';
 import { toolOf } from '../../tools';
-import { loadArticleRelease } from '../../lib/article';
+import { articleModified, loadArticleRelease } from '../../lib/article';
 import { articleView, type FigureDraw } from '../../lib/article-view';
 import { chartProblems, datasetChart } from '../../lib/chart-geometry';
 import { dataRef, loadDatasets } from '../../lib/datasets';
@@ -109,7 +109,7 @@ const jsonLd = [
       image,
       series: commission.fullName,
       datePublished: outputs.video?.publishedAt,
-      dateModified: release?.history.at(-1)?.date ?? revised ?? undefined,
+      dateModified: (release && articleModified(release)) ?? revised ?? undefined,
     },
     Astro.site!,
   ),

@@ -5,7 +5,14 @@ import { ROOT } from '../src/lib/io';
 import { passageReader } from '../src/lib/evidence';
 import { loadStories } from '../src/lib/stories';
 import { TOOLS, toolOf } from '../src/tools';
-import { type Result, estimate, fromCentsPerKwh, fromDollarsPerMcf } from '../src/tools/heating-cost/model';
+import {
+  type Result,
+  convertPrice,
+  estimate,
+  fromCentsPerKwh,
+  fromDollarsPerMcf,
+} from '../src/tools/heating-cost/model';
+import { heatingCost } from '../src/tools/heating-cost/spec';
 
 // Every file under dir, as repo-relative paths with '/' separators.
 const walk = (dir: string) =>
@@ -47,6 +54,18 @@ describe('heating-cost model', () => {
     expect(r.annual!.heatPump[0]).toBeCloseTo(((600 * 0.1 * 0.95) / 2.5) * worked.elec, 6);
     expect(r.annual!.heatPump[1]).toBeCloseTo(((600 * 0.1 * 0.95) / 3.0) * worked.elec, 6);
     expect((estimate({ ...worked, afue: 0.95, cops: [2.5, 3.0] }) as Result).annual).toBeNull();
+  });
+});
+
+describe('heating-cost units and limits', () => {
+  it('converts a price between units, not re-reading the number', () => {
+    expect(round2(convertPrice(48.3, 'mmbtu', 'kwh'))).toBe(16.48);
+    expect(round2(convertPrice(14.5, 'mcf', 'mmbtu'))).toBe(14);
+    expect(round2(convertPrice(1.4, 'therm', 'mcf'))).toBe(14.5);
+    expect(convertPrice(convertPrice(3.21, 'kwh', 'therm'), 'therm', 'kwh')).toBeCloseTo(3.21, 9);
+  });
+  it('says the annual figures count every therm entered as heating', () => {
+    expect(heatingCost.limitations.join(' ')).toMatch(/annual figures assume all the therms entered are for heating/);
   });
 });
 

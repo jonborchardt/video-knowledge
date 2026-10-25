@@ -5,6 +5,9 @@ export function href(path: string): string {
   return `${base}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
+/** The URLs in plain text (a video description), without the punctuation that closes the sentence around them. */
+export const textUrls = (text: string) => [...text.matchAll(/https?:\/\/\S+/g)].map(([u]) => u.replace(/[),.;]+$/, ''));
+
 /** Absolute URL for canonical and social tags. Requires `site` in astro.config. */
 export function absoluteUrl(path: string, site: URL | string): string {
   return new URL(href(path), site).toString();

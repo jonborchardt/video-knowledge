@@ -21,6 +21,12 @@ describe('chart geometry', () => {
     expect(chartProblems({ type: 'bar', points: [pt('a', 1, 'usd'), pt('b', 1, 'percent')] })).toEqual([
       'mixed units: usd, percent',
     ]));
+  it('a ratio point in a chart drawn to length is a problem (its value is a denominator); stat tiles only print it', () => {
+    const ratio: ChartPoint = { label: 'odds', value: 238, unit: 'ratio', display: '1 in 238', cite: 'x#L1' };
+    for (const type of ['bar', 'stacked-bar', 'dot-plot'] as const)
+      expect(chartProblems({ type, points: [ratio] })).toEqual(['"odds": a ratio cannot be drawn to length']);
+    expect(chartProblems({ type: 'stat-tiles', points: [ratio] })).toEqual([]);
+  });
   it('a percent over 100 and an empty chart are problems', () => {
     expect(chartProblems({ type: 'bar', points: [pt('a', 120, 'percent')] })).toHaveLength(1);
     expect(chartProblems({ type: 'bar', points: [] })).toEqual(['no points']);

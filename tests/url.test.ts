@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { datasetSource } from '../src/lib/url';
+import { datasetSource, textUrls } from '../src/lib/url';
 
 describe('datasetSource', () => {
   it('names each document once with its overall line range and the period', () => {
@@ -17,5 +17,15 @@ describe('datasetSource', () => {
     expect(datasetSource({ 'a.txt': 'A' }, ['h/sources/a.txt#L1-L2', 'h/sources/b.txt#L5-L9'], '2024')).toBe(
       'A, lines 1-2; b.txt, lines 5-9 (2024)',
     );
+  });
+});
+
+describe('textUrls', () => {
+  it('leaves trailing punctuation off each url in prose', () => {
+    expect(
+      textUrls(
+        'Made with Strudel Bench (https://github.com/x/strudel-bench), see https://a.org/p; or https://b.org/q.',
+      ),
+    ).toEqual(['https://github.com/x/strudel-bench', 'https://a.org/p', 'https://b.org/q']);
   });
 });

@@ -845,7 +845,7 @@ function articleOf({
   const a = readJson<Article>(p(ARTICLE_FILES.article));
   const out = loadArticleRelease(topic, storyId, root);
   // The released text stands until article.json differs from it (or is gone); a revised text takes the live path.
-  if (out && (!a || out.fingerprints.article === articleFingerprint(a))) {
+  if (out && (!a || articleFingerprint(out.article) === articleFingerprint(a))) {
     const stale = articleStale(out, loadPublicRecord(topic, root));
     return stale
       ? {

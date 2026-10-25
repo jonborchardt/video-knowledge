@@ -37,9 +37,12 @@ export function articleStale(r: ArticleRelease, record: PublicRecord): Revision 
     ...articleSentences(r.article).flatMap((s) => (s.assertions ?? []).flatMap((a) => a.claims.map((c) => c.id))),
     ...r.article.sections.flatMap((s) => s.blocks.flatMap((b) => (b.kind === 'prose' && b.claim ? [b.claim] : []))),
   ]);
+  // The record is append-only: a release that counted it knows exactly which revisions came after, even the same day.
+  // An older release falls back to whole days.
+  const seen = r.recordSeen;
   return (
     record.revisions
-      .filter((v) => isClaimRevision(v) && claims.has(v.id) && v.at > r.date)
+      .filter((v, i) => isClaimRevision(v) && claims.has(v.id) && (seen === undefined ? v.at > r.date : i >= seen))
       .sort((a, b) => a.at.localeCompare(b.at))
       .at(-1) ?? null
   );

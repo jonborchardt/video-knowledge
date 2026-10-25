@@ -28,6 +28,7 @@ export type Revision =
       to: null;
       sentences: string[]; // the corrected sentence ids
       note: string;
+      release?: number; // the article release this correction made (absent on revisions recorded before it was kept)
     };
 export type ClaimRevision = Extract<Revision, { kind: 'claim' }>;
 export const isClaimRevision = (r: Revision): r is ClaimRevision => r.kind === 'claim';
@@ -95,7 +96,8 @@ export function publicRecordProblems(x: unknown): string[] {
           v.to === null &&
           Array.isArray(v.sentences) &&
           v.sentences.length > 0 &&
-          v.sentences.every((x) => typeof x === 'string' && x);
+          v.sentences.every((x) => typeof x === 'string' && x) &&
+          (v.release === undefined || (Number.isInteger(v.release) && v.release > 1));
     if (typeof v?.at !== 'string' || !v.at || typeof v.id !== 'string' || !shape) out.push(`revision ${i}: malformed`);
     else if (!v.note?.trim()) out.push(`revision ${i} (${v.id}, ${v.at}): no note`);
   });
@@ -109,16 +111,17 @@ export function noteRevision(rec: PublicRecord, id: string, note: string): Publi
   return { ...rec, revisions: rec.revisions.map((v, j) => (j === i ? { ...v, note } : v)) };
 }
 
-/** The record with an article correction appended, unless the same one is already there (a re-run of correct after
- *  its release write failed). */
+/** The record with an article correction appended, unless it is already there (a re-run of correct after its release
+ *  write failed): the same release of the story, or for a revision without a release number the same day, note and
+ *  sentences. */
 export const withArticleRevision = (rec: PublicRecord, r: Extract<Revision, { kind: 'article' }>): PublicRecord =>
   rec.revisions.some(
     (x) =>
       x.kind === 'article' &&
       x.id === r.id &&
-      x.at === r.at &&
-      x.note === r.note &&
-      JSON.stringify(x.sentences) === JSON.stringify(r.sentences),
+      (x.release !== undefined && r.release !== undefined
+        ? x.release === r.release
+        : x.at === r.at && x.note === r.note && JSON.stringify(x.sentences) === JSON.stringify(r.sentences)),
   )
     ? rec
     : { ...rec, revisions: [...rec.revisions, r] };

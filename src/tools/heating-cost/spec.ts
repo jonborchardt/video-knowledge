@@ -32,6 +32,7 @@ export const heatingCost: ToolSpec = {
     'A household that keeps its gas connection keeps the fixed gas charge; one that disconnects saves it.',
     'Ignores installation cost.',
     'Ignores cooling.',
+    'The annual figures assume all the therms entered are for heating: gas for water heating, cooking or drying, left in, makes both annual costs too high.',
   ],
   whyDefaults:
     'The efficiencies are the source’s own illustrative values: furnace AFUE 0.95 and 0.80, heat pump seasonal COP 2.5 and 3.0. Prices are the state averages from the same source, starting from the U.S. average. None was chosen to favour either machine.',

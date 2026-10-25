@@ -96,7 +96,8 @@ function run() {
       const prev = loadArticleRelease(topic, storyId);
       const r = lockArticle(prev, a, v, flag('--approved-by') ?? '', today);
       if (r === prev) return console.log(`${rel(p(ARTICLE_FILES.release))} unchanged: revision ${r.revision}`);
-      writeArtifact(dir, ARTICLE_FILES.release, toJson(r));
+      // the revisions it has seen: any appended later makes it stale, the same day too
+      writeArtifact(dir, ARTICLE_FILES.release, toJson({ ...r, recordSeen: loadPublicRecord(topic).revisions.length }));
       console.log(`released ${rel(p(ARTICLE_FILES.release))}: revision ${r.revision}, approved by ${r.approvedBy}`);
       return;
     }
@@ -117,7 +118,7 @@ function run() {
       // re-run finds its revision already recorded
       const next = withArticleRevision(record, revision);
       if (next !== record) writeFileSync(publicRecordPath(topic), toJson(next));
-      writeArtifact(dir, ARTICLE_FILES.release, toJson(release));
+      writeArtifact(dir, ARTICLE_FILES.release, toJson({ ...release, recordSeen: next.revisions.length }));
       console.log(
         `released ${rel(p(ARTICLE_FILES.release))}: revision ${release.revision}, changed ${revision.sentences.join(', ')}; recorded in ${rel(publicRecordPath(topic))}`,
       );
@@ -127,9 +128,10 @@ function run() {
       const { a, v } = releasable();
       const prev = loadArticleRelease(topic, storyId);
       if (!prev) throw new Refusal(`nothing released yet: npm run article -- lock ${topic} ${storyId}`);
-      const stale = articleStale(prev, loadPublicRecord(topic));
+      const record = loadPublicRecord(topic);
+      const stale = articleStale(prev, record);
       const r = reaffirmArticle(prev, !!stale, a, v, flag('--approved-by') ?? '', flag('--note') ?? '', today);
-      writeArtifact(dir, ARTICLE_FILES.release, toJson(r));
+      writeArtifact(dir, ARTICLE_FILES.release, toJson({ ...r, recordSeen: record.revisions.length }));
       console.log(`reaffirmed ${rel(p(ARTICLE_FILES.release))}: revision ${r.revision} stands, dated ${r.date}`);
     }
   }

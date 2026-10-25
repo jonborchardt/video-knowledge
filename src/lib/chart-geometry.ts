@@ -4,13 +4,17 @@ import type { ChartPoint, ChartSpec } from './storyboard';
 
 export type Bar = ChartPoint & { y: number; w: number; h: number };
 
-/** What would make the chart mislead: no points, one scale over mixed units, a percent over 100. */
+/** What would make the chart mislead: no points, one scale over mixed units, a percent over 100, a ratio drawn to
+ *  length (its value is the denominator of "1 in 238", so a longer bar is a smaller share). */
 export function chartProblems(spec: ChartSpec): string[] {
   if (!spec.points.length) return ['no points'];
   const out: string[] = [];
   const units = [...new Set(spec.points.map((p) => p.unit))];
   if (units.length > 1) out.push(`mixed units: ${units.join(', ')}`);
-  for (const p of spec.points) if (p.unit === 'percent' && p.value > 100) out.push(`"${p.label}": ${p.value} percent`);
+  for (const p of spec.points) {
+    if (p.unit === 'percent' && p.value > 100) out.push(`"${p.label}": ${p.value} percent`);
+    if (p.unit === 'ratio' && spec.type !== 'stat-tiles') out.push(`"${p.label}": a ratio cannot be drawn to length`);
+  }
   return out;
 }
 

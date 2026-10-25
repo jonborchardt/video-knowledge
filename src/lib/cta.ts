@@ -155,7 +155,7 @@ export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root 
   let primary: ResolvedCta | null;
   if (file.primary.type === 'commercial' && (tool || unasserted)) {
     dropped.push({ cta: file.primary, why: 'not primary over a tool or evidence' });
-    primary = tool ? (resolve({ type: 'tool', text: 'Run the numbers yourself' }) as ResolvedCta) : null;
+    primary = tool ? kept({ type: 'tool', text: 'Run the numbers yourself' }) : null;
   } else primary = kept(file.primary);
   const secondary = (file.secondary ?? []).slice(0, 2).flatMap((c) => kept(c) ?? []);
   return { primary: primary ?? fallback, secondary, dropped, problems };

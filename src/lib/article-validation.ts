@@ -54,14 +54,17 @@ export function articleIssues(
   const blocks = a.sections.flatMap((s) => s.blocks);
   const prose = blocks.flatMap((b) => (b.kind === 'prose' ? [b] : []));
 
-  // A claim the evidence only qualifies, or leaves open, is carried by a callout or a qualified assertion.
+  // A claim the evidence only qualifies, or leaves open, is carried by a callout or a qualified assertion. A
+  // qualification counts only when placed: it names a sentence of the article that carries it (as a Short's must).
+  const ids = new Set(all.map((s) => s.id));
+  const placed = (qs: string[] = []) => qs.some((q) => [...q.matchAll(/\bs\d+\b/g)].some((m) => ids.has(m[0])));
   for (const c of pkg.claims) {
     const label = findingLabel({ ...c, verdict: c.verdict as Verdict | null }); // the package keeps the verdict as a string
     if (label !== 'qualification' && label !== 'unresolved') continue;
     const covered =
       prose.some((b) => b.callout && b.claim === c.id) ||
       all.some((s) =>
-        (s.assertions ?? []).some((x) => x.qualifications?.length && x.claims.some((y) => y.id === c.id)),
+        (s.assertions ?? []).some((x) => placed(x.qualifications) && x.claims.some((y) => y.id === c.id)),
       );
     if (!covered)
       out.push(

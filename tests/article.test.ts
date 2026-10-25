@@ -7,6 +7,7 @@ import {
   type Block,
   articleAsScript,
   articleFingerprint,
+  articleModified,
   articleReviewUnits,
   correctArticle,
   lockArticle,
@@ -114,6 +115,22 @@ describe('article validation', () => {
       bare,
     );
     expect(cats(check(called, { pkg: q }))).not.toContain('qualification-coverage');
+  });
+  it('a qualified assertion covers a claim only when its qualification names a sentence of the article', () => {
+    const q = structuredClone(pkg());
+    q.claims[0].verdict = 'partly';
+    q.claims[0].decidedBy = 'S';
+    q.claims[0].confidence = 0.9;
+    const qualified = (qualifications: string[]) => {
+      const x = structuredClone(article());
+      x.sections[1].blocks = x.sections[1].blocks.filter((b) => b.kind !== 'prose' || !b.callout);
+      (x.sections[1].blocks[0] as { sentences: Sentence[] }).sentences[0].assertions![0].qualifications =
+        qualifications;
+      return cats(check(x, { pkg: q }));
+    };
+    expect(qualified(['.'])).toContain('qualification-coverage');
+    expect(qualified(['s99 says so.'])).toContain('qualification-coverage');
+    expect(qualified(['s01 says it is one survey.'])).not.toContain('qualification-coverage');
   });
   it('an uncovered gap warns; an unresolved callout naming it clears it', () => {
     const q: EvidencePackage = { ...pkg(), gaps: ['no second survey'] };
@@ -340,6 +357,7 @@ describe('article release', () => {
       to: null,
       sentences: ['s03'],
       note: 'Fixed the 2024 price',
+      release: 2,
     });
     expect(release.revision).toBe(2);
     expect(release.article).toEqual(edited);
@@ -378,7 +396,12 @@ describe('article release', () => {
     const once = withArticleRevision({ exhibits: {}, revisions: [] }, revision);
     expect(once.revisions).toEqual([revision]);
     expect(withArticleRevision(once, structuredClone(revision))).toBe(once);
-    expect(withArticleRevision(once, { ...revision, note: 'other' }).revisions).toHaveLength(2);
+    // a revision recorded before release numbers were kept dedupes on day, note and sentences
+    const { release: _r, ...legacy } = revision;
+    void _r;
+    const old = withArticleRevision({ exhibits: {}, revisions: [] }, legacy);
+    expect(withArticleRevision(old, structuredClone(legacy))).toBe(old);
+    expect(withArticleRevision(old, { ...legacy, note: 'other' }).revisions).toHaveLength(2);
   });
   it('reaffirm keeps a stale text with a note and moves the release date', () => {
     expect(() => reaffirmArticle(r, false, a, passed, 'Jon', 'stands', '2026-11-09')).toThrow(/not stale/);
@@ -401,6 +424,36 @@ describe('article release', () => {
   });
   it('correct refuses an unchanged article', () => {
     expect(() => correctArticle(r, a, passed, 'Jon', 'n', '2026-11-05')).toThrow(Refusal);
+  });
+  it('an edit no reader sees (a note, a qualification, whitespace) leaves the release standing', () => {
+    const quiet = structuredClone(a);
+    const s02 = (quiet.sections[1].blocks[0] as { sentences: Sentence[] }).sentences[0];
+    s02.note = 'writer note';
+    s02.assertions![0].qualifications = ['s03 says it is one survey.'];
+    s02.text = s02.text.replace(' ', '  ');
+    expect(articleFingerprint(quiet)).toBe(articleFingerprint(a));
+    expect(lockArticle(r, quiet, passed, 'Jon', '2026-11-02')).toBe(r);
+    expect(() => correctArticle(r, quiet, passed, 'Jon', 'n', '2026-11-05')).toThrow(/unchanged/);
+    // a release whose stored fingerprint predates the unit fingerprint still matches its own snapshot
+    const legacy = { ...r, fingerprints: { ...r.fingerprints, article: 'legacy' } };
+    expect(lockArticle(legacy, a, passed, 'Jon', '2026-11-02')).toBe(legacy);
+  });
+  it('the last text change dates the article; a reaffirmation does not', () => {
+    const x = reaffirmArticle(r, true, a, passed, 'Jon', 'stands', '2026-11-09');
+    expect(articleModified(x)).toBe('2026-11-01');
+    expect(articleModified(correctArticle(x, edited, passedEdited, 'Jon', 'n', '2026-11-12').release)).toBe(
+      '2026-11-12',
+    );
+  });
+  it('a correction carries its release number, and the record dedupes on it', () => {
+    const one = correctArticle(r, edited, passedEdited, 'Jon', 'n', '2026-11-05').revision;
+    expect(one.release).toBe(2);
+    const rec = withArticleRevision({ exhibits: {}, revisions: [] }, one);
+    // a re-run on a later day finds it
+    expect(withArticleRevision(rec, { ...one, at: '2026-11-06' })).toBe(rec);
+    // a second, identical correction the same day is a new release: both are recorded
+    expect(withArticleRevision(rec, { ...one, release: 3 }).revisions).toHaveLength(2);
+    expect(publicRecordProblems(rec)).toEqual([]);
   });
   it('the markdown shows headings, sentence states and open issues', () => {
     const md = renderArticleMd(a, check(a));

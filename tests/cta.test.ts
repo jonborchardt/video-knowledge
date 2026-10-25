@@ -145,6 +145,22 @@ describe('calls to action', () => {
     expect(resolveCtas({ primary: ev, secondary: [ok] }, g, TOOL_STORY).secondary[0].disclosure).toBe('We are paid');
   });
 
+  it('a commercial primary over a tool that is not public falls back to the matter page', () => {
+    const id = 'decision:is-it-cheaper-to-run-than-gas';
+    const g = graphOf([{ id, claims: ['c1'], readiness: 'needs-review' }]);
+    const ok: Cta = {
+      type: 'commercial',
+      url: 'https://example.com/x',
+      text: 'A product',
+      approvedBy: 'Jon',
+      disclosure: 'We are paid',
+    };
+    const r = resolveCtas({ primary: ok }, g, storyNode(T, id), root);
+    expect(r.primary.type).toBe('evidence');
+    expect(typeof r.primary.url).toBe('string');
+    expect(r.dropped.map((d) => d.why)).toEqual(['not primary over a tool or evidence', 'not public']);
+  });
+
   it('a reference url must be https', () => {
     const r = resolveCtas(
       { primary: ev, secondary: [{ type: 'reference', url: 'http://x.gov', text: 'The programme' }] },

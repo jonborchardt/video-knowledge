@@ -74,7 +74,10 @@ export function articleAsScript(a: Article): Script {
   };
 }
 
-export const articleFingerprint = (a: Article) => sha(JSON.stringify({ meta: a.meta, sections: a.sections }));
+/** The release fingerprint: the units a correction names, so an edit no reader sees (a writer's note, a sentence type,
+ *  an assertion's id or qualifications, whitespace) is no change. Compare against articleFingerprint(release.article),
+ *  never the stored one: releases before this fingerprint stored a hash of the raw JSON. */
+export const articleFingerprint = (a: Article) => sha(JSON.stringify(unitsOf(a)));
 
 /** What the site renders: the article as approved, with every correction since. */
 export interface ArticleRelease {
@@ -83,6 +86,7 @@ export interface ArticleRelease {
   approvedBy: string;
   date: string;
   revision: number;
+  recordSeen?: number; // how many public-record revisions existed at release: any at a later index is newer
   fingerprints: { article: string; package: string; validation: string };
   article: Article;
   history: {
@@ -95,6 +99,9 @@ export interface ArticleRelease {
     reaffirmed?: true; // the text stands unchanged after a finding it relies on was revised
   }[];
 }
+
+/** When the released text last changed: the newest history entry that is not a reaffirmation. */
+export const articleModified = (r: ArticleRelease) => r.history.findLast((h) => !h.reaffirmed)?.date;
 
 export const loadArticleRelease = (topic: string, storyId: string, root = ROOT) =>
   readJson<ArticleRelease>(join(scriptDir(topic, storyId, root), ARTICLE_FILES.release));
@@ -128,7 +135,7 @@ export function lockArticle(
 ): ArticleRelease {
   releasable(v, approvedBy);
   const fp = articleFingerprint(a);
-  if (prev?.fingerprints.article === fp) return prev;
+  if (prev && articleFingerprint(prev.article) === fp) return prev;
   if (prev) throw new Refusal(`released at revision ${prev.revision} with other text: use correct, with a note`);
   return { ...snapshot(a, v, approvedBy, date, 1), history: [{ revision: 1, date, approvedBy, fingerprint: fp }] };
 }
@@ -173,7 +180,7 @@ export function correctArticle(
   if (!note.trim()) throw new Refusal('a correction needs a --note');
   releasable(v, approvedBy);
   const fp = articleFingerprint(a);
-  if (prev.fingerprints.article === fp) throw new Refusal('the article is unchanged since its release');
+  if (articleFingerprint(prev.article) === fp) throw new Refusal('the article is unchanged since its release');
   const before = new Map(unitsOf(prev.article));
   const now = unitsOf(a);
   const ids = new Set(now.map(([id]) => id));
@@ -188,7 +195,16 @@ export function correctArticle(
       ...snapshot(a, v, approvedBy, date, revision),
       history: [...prev.history, { revision, date, approvedBy, fingerprint: fp, note: note.trim(), sentences }],
     },
-    revision: { at: date, kind: 'article', id: a.story, from: null, to: null, sentences, note: note.trim() },
+    revision: {
+      at: date,
+      kind: 'article',
+      id: a.story,
+      from: null,
+      to: null,
+      sentences,
+      note: note.trim(),
+      release: revision,
+    },
   };
 }
 
@@ -207,7 +223,7 @@ export function reaffirmArticle(
   if (!note.trim()) throw new Refusal('a reaffirmation needs a --note saying why the text stands');
   releasable(v, approvedBy);
   const fp = articleFingerprint(a);
-  if (prev.fingerprints.article !== fp) throw new Refusal('the article changed since its release: use correct');
+  if (articleFingerprint(prev.article) !== fp) throw new Refusal('the article changed since its release: use correct');
   return {
     ...prev,
     date,

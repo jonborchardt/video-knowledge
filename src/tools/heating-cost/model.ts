@@ -8,12 +8,18 @@ export const fromCentsPerKwh = (c: number) => (c * KWH_PER_MMBTU) / 100;
 export const fromDollarsPerMcf = (d: number) => d / MMBTU_PER_MCF;
 export const fromDollarsPerTherm = (d: number) => d / MMBTU_PER_THERM;
 
+/** A price in $ per MMBtu times this is the price per unit: c/kWh, $/therm, $/Mcf, $/MMBtu. */
+const PER_MMBTU = { kwh: 100 / KWH_PER_MMBTU, therm: MMBTU_PER_THERM, mcf: MMBTU_PER_MCF, mmbtu: 1 };
+export type PriceUnit = keyof typeof PER_MMBTU;
+/** A price restated in another unit: the same money for the same energy. */
+export const convertPrice = (x: number, from: PriceUnit, to: PriceUnit) => (x / PER_MMBTU[from]) * PER_MMBTU[to];
+
 export interface Inputs {
   elec: number; // $ per MMBtu
   gas: number; // $ per MMBtu
   afue: number; // 0-1
   cops: [number, number]; // low, high seasonal COP
-  therms?: number; // annual gas use from a bill
+  therms?: number; // annual gas used for heating (a year's bills, less the summer months' use)
 }
 export type Side = 'heat-pump' | 'furnace' | 'depends';
 export interface Result {
