@@ -14,7 +14,7 @@ export type ViewBlock =
   | {
       kind: 'p';
       callout?: Callout;
-      sentences: { id: string; text: string; refs: number[]; corrected: boolean }[];
+      sentences: { id: string; text: string; refs: number[]; corrected: boolean; correctedOn?: string }[];
     }
   | { kind: 'table'; caption: string; columns: string[]; rows: { label: string; cells: string[] }[] }
   | { kind: 'figure'; ref: string; caption: string; table?: FigureTable }; // the chart's points until plan 3 draws it
@@ -48,7 +48,8 @@ export function articleView(
   figures?: Map<string, FigureTable>,
 ): ArticleView {
   const a = r.article;
-  const corrected = new Set(r.history.flatMap((h) => h.sentences ?? []));
+  // each corrected sentence's newest correction date (history is oldest first)
+  const correctedOn = new Map(r.history.flatMap((h) => (h.sentences ?? []).map((id) => [id, h.date] as const)));
   const sources = new Map(t.sources.map((x) => [x.id, x]));
   const refs: ArticleView['refs'] = [];
   const numbers = new Map<string, number>();
@@ -91,7 +92,8 @@ export function articleView(
               id: s.id,
               text: s.text,
               refs: refsOf(s),
-              corrected: corrected.has(s.id),
+              corrected: correctedOn.has(s.id),
+              ...(correctedOn.has(s.id) && { correctedOn: correctedOn.get(s.id) }),
             })),
           };
         if (b.kind === 'table')

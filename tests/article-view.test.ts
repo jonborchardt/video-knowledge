@@ -90,6 +90,22 @@ describe('article view', () => {
     expect(b.kind === 'p' && b.sentences.map((s) => s.corrected)).toEqual([false, false, true]);
   });
 
+  it('a corrected sentence carries the date of the newest correction that names it', () => {
+    const fix = (revision: number, date: string, sentences: string[]) => ({
+      revision,
+      date,
+      approvedBy: 'Jon',
+      fingerprint: `f${revision}`,
+      note: `n${revision}`,
+      sentences,
+    });
+    const history = [...release().history, fix(2, '2026-11-03', ['s1', 's3']), fix(3, '2026-11-05', ['s3'])];
+    const v = articleView(release({ history }), topic, empty, REPO);
+    expect(v.corrections.map((c) => c.date)).toEqual(['2026-11-05', '2026-11-03']);
+    const b = v.sections[0].blocks[0];
+    expect(b.kind === 'p' && b.sentences.map((s) => s.correctedOn)).toEqual(['2026-11-03', undefined, '2026-11-05']);
+  });
+
   it('a figure with a known ref carries its points; an unknown one only its caption', () => {
     const a = article({
       sections: [

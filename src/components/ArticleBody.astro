@@ -95,6 +95,14 @@ const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
                   ))}
                 </sup>
               )}
+              {s.correctedOn && (
+                <>
+                  {' '}
+                  <small class="text-muted-foreground" data-correction>
+                    (Corrected {s.correctedOn})
+                  </small>
+                </>
+              )}
             </>
           ));
           return b.callout ? (
