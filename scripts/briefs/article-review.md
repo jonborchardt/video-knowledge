@@ -1,0 +1,111 @@
+# Brief: review the companion article
+
+Give an agent that did not write the article this file plus the topic id and story id. The `<slug>` is the story
+id with `:` replaced by `-`. The agent runs `npm run article -- validate <topic> <story-id>`, then reads
+`npm run article -- show <topic> <story-id>` (the article as a reader sees it, each sentence's state, the open
+issues), `topics/<topic>/scripts/<slug>/article.json` (every sentence with its assertions and cites, every
+callout, table and figure), `article-validation.json` beside it (each sentence's `fingerprint` and result), the
+`evidence-package.json` (claims, verdict notes, passages, gaps), and the source documents in
+`topics/<topic>/sources/` where a passage needs its surroundings. It writes
+`topics/<topic>/scripts/<slug>/article-review.json` and validates again. It never edits `article.json`: a
+sentence that needs changing is a finding, and the writer changes it. The code has already checked references,
+figures, quotations, arithmetic, table cells, figure refs, URLs, metadata length and coverage; this pass supplies
+the judgment it cannot make. It never adds evidence and never approves on plausibility.
+
+## For every sentence
+
+Including `meta.dek` and `meta.description`, which are sentences like any other.
+
+1. **Coverage.** List the claims the sentence makes to a reader, including those carried by a clause, a
+   comparison or a number. Is each one an assertion with evidence? An uncovered claim is a blocking
+   `unsupported` finding. A `hypothetical`, `rhetorical` or `transitional` sentence that smuggles a fact is the
+   same finding.
+2. **Entailment.** Do the cited passages establish each assertion's wording, with its population, measure,
+   denominator, modality and causal force? Read the passage, not the verdict note. A narrower or different
+   thing is `overgeneralization`, `incompatible-comparison`, `causation` or `missing-qualification`, as fits.
+   A Reported claim (no study decided it) stated as `factual` rather than `attributed` is blocking.
+3. **Qualification.** Is the limitation the package lists for the claim stated beside the figure it limits?
+   Missing is `missing-qualification`: blocking when the figure would mislead without it.
+4. **Omission and selection.** Does the package hold something that changes the sentence's meaning (a
+   contradicting verdict, a source that denies the claim, a limit the study states about itself) that the
+   article leaves out? `selective` or `omission`.
+5. **Strength.** Contextual-only evidence (`contextual-only`), one study presented as general (`overclaim`), a
+   summary and its original counted as two (`double-counting`).
+6. **Numbers.** Each figure means what the sentence says it means (percent of whom, money of what, over what
+   period), and a calculation's inputs are the right inputs.
+
+Approve a sentence only when every check passes. Approval is by fingerprint: copy the sentence's `fingerprint`
+from `article-validation.json`; a later edit changes it and the approval lapses.
+
+## What only an article has
+
+- **Callouts.** Each `qualification` or `unresolved` callout names a claim (`claim`) or a gap (`gap`, its index in
+  the package's `gaps`). Read that claim's verdict note and passages: does the callout state the condition the
+  note states (under what conditions it holds, what is not known and why), no wider and no narrower? A callout
+  that names the claim but drops the condition is a blocking `missing-qualification` on its first sentence.
+- **Headline, SEO title, dek and description.** None may claim more than the claims' labels: a Qualification
+  summarised as a flat yes or no, an Unresolved question summarised as settled, or a Reported claim summarised
+  as true is `overclaim`, blocking. The headline and SEO title are not sentences and cannot be approved or
+  found against by id; put a finding about either on `meta.dek` (category `overclaim`, the explanation naming
+  the field) so the writer sees it.
+- **Tables.** The code checked that each cell's figures are in its passage. Check that the row label's
+  population and year are the passage's, that the cells in one column measure the same thing on the same
+  baseline, and that the caption claims no more than the cells. A finding goes on the first sentence of the
+  section that holds the table, naming the table id.
+- **Figures.** The caption describes the storyboard chart it names and adds no figure.
+- **Chains.** When the package has `questions`: each question section answers its own question with its own
+  claims, and the `close` answers nothing again.
+- **Repetition and the narration.** Read the article end to end once before judging sentences. A restatement
+  that adds nothing is a blocking `repetition` finding. A `transcript-overlap` warning (keyed on the section's
+  first sentence) says the section reads the narration back: make it a finding unless the shared wording is
+  unavoidable (a quotation, a claim's fixed phrasing), and retire it only with a disposition saying which.
+
+## Output
+
+```json
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "<model id>",
+  "date": "<ISO date>",
+  "revision": 1,
+  "packageFingerprint": "<evidence-package.json fingerprint>",
+  "approved": { "meta.dek": "<fingerprint>", "meta.description": "<fingerprint>", "s01": "<fingerprint>" },
+  "findings": [
+    {
+      "sentence": "s12",
+      "assertion": "s12.a",
+      "fingerprint": "<fingerprint of s12>",
+      "revision": 1,
+      "category": "overgeneralization",
+      "severity": "blocking",
+      "explanation": "The passage reports homes on one tariff; the sentence says 'most households'.",
+      "refs": ["<topic>/sources/<file>.txt#L40-L44"],
+      "suggestion": "Say 'households on that tariff'."
+    }
+  ],
+  "dispositions": {
+    "s20": { "fingerprint": "<fp>", "category": "transcript-overlap", "reason": "the shared run is the quoted claim" }
+  }
+}
+```
+
+- `revision` is the article's `revision` you reviewed. Copy `packageFingerprint` from `evidence-package.json`; a
+  review of another package keeps its findings but its approvals and dispositions count for nothing.
+- A disposition retires one deterministic warning (`transcript-overlap`, `needs-qualification`,
+  `speaker-missing`, `figure-in-non-factual`) at that sentence's fingerprint, keyed by the assertion id or the
+  sentence id; give a list under one id to retire two categories. A warning you judge real becomes a finding
+  instead. Blocking issues cannot be dispositioned. A `gap-coverage` warning has no sentence and cannot be
+  retired: if the gap matters, make a finding on the sentence nearest it.
+- Severity: `blocking` (a reader would come away believing something the evidence does not establish),
+  `warning` (true but imprecise, or a limitation stated too far away), `info`. `needs-human` with `warning` when
+  only an editor can decide.
+- On a later revision, keep earlier findings (the validator marks those whose sentence changed as resolved),
+  append new ones with the new `revision`, re-read every changed sentence before approving it, and do not
+  re-approve an unchanged sentence you had a blocking finding on unless the finding was wrong. Editing a
+  callout's `claim` or `gap`, or an assertion's `qualifications`, does not change a sentence's fingerprint:
+  re-read every callout on a new revision.
+- The article passes when nothing blocks and every sentence is approved; `validate` then prints
+  `RESULT: PASSED`.
+
+Final reply: sentences approved, findings by severity, and the three findings that most change what the article
+can claim.
