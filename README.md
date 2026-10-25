@@ -335,7 +335,7 @@ machine: the stage is the first artifact that is missing or not current.
 The board has one card per video (a chain is one card listing its follow-up questions and total claims; follow-ups get
 no card), in a column for whoever acts next: needs research, needs review, ready to produce, in production (`/produce`
 is on it; the strip on the card shows the stage, red means it stopped and a person must act), your review (a private
-package is made), uploaded, approved, scheduled, published and parked.
+package is made), changes requested, uploaded, approved, scheduled, published and parked.
 
 The one hand-written input is `production.json` at the repo root, for planning decisions no artifact records:
 
@@ -363,6 +363,17 @@ output (the YouTube video, later a short, a blog post, a page) an append-only ev
 `metadata` block may be hand-edited. Builds are named by the mp4 sha the QA checked, metadata by the sha of the
 composed title, description, tags and thumbnail sha, so a thumbnail swap is an `updated` event, never a re-render.
 
+**The review page.** On the dev server, `/<topic>/review/<slug>` (or `/<topic>/review/<slug>/shorts/<short>` for a
+Short; the board's "Watch and review" link) plays the packaged build streamed from disk (it is never copied into the
+site or git), lists every failed QA check, validation issue, review finding and pacing warning with a link to its moment,
+and does every step below from buttons: approve (every checklist item ticked, a person's name), request changes (one
+note per line, `[m:ss sc20 s31]` places it; "Note at current time" stamps the player's position), accept a draft
+(`video final`), upload privately, push, sync, go live now or at a time (a confirmation box). Each form carries the
+build it judged and is refused if a newer build was packaged since. Long verbs run the CLI in the background; the page
+shows the job and its log. A change request (`request-changes`) moves the card to "changes requested" and its
+send-back prompt carries the notes; an approval binds the build **and** the title, so a new render or a changed title
+asks again. No automated run approves or goes live.
+
 The flow, as the board's next step walks it (every step is one `npm run publish -- <verb> <topic> <story-id>`):
 
 1. Draft packaged: `upload` sends `video/review/<slug>-review-private.mp4` to YouTube **privately** with the title-card
@@ -377,7 +388,8 @@ The flow, as the board's next step walks it (every step is one `npm run publish 
    records `updated`. A live video is never replaced: a re-release is a new output, `add <id> --kind youtube-video`.
 
 A Short is another output of the same ledger: `add short-1 --kind youtube-short --from youtube --source <file>`,
-then the same `upload`, `approve`, `go-live`. Its description links the full video once that is live; the related
+then the same `upload`, `approve`, `go-live`; it goes live only after the full video. Its description links the full
+video once that is live (so its metadata is pushed once more); the related
 video is set in YouTube Studio (the API has no field for it).
 
 `show` prints the state, the composed upload metadata and the event log. Every verb is idempotent (an event already

@@ -81,6 +81,9 @@ sentence because evidence is missing when evidence could be gathered, and never 
 
 ## Notes pass (send-back)
 
+A reviewer's change request on the review page (`changes-requested` in `publish.json`) puts its notes in the board's
+send-back prompt, each `[m:ss scene sentence]` placed; treat them like any other notes.
+
 Route each note to the artifact that owns it, then run the Loop:
 
 - wording, cuts, order: set `passStartRevision` in `script.json` to its current `revision` (the pass
