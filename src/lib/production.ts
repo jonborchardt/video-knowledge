@@ -5,6 +5,9 @@
 // queue, park or mark a story published, which no artifact records.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { ARTICLE_FILES, type Article, articleFingerprint, loadArticleRelease } from './article';
+import { figuresOf, validateArticle } from './article-validation';
+import { articleStale } from './article-view';
 import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
 import { fileSha, lf, readJson, sha, toJson, topicDir, ROOT } from './io';
@@ -33,6 +36,7 @@ import {
 } from './publish';
 import { type ReviewFile, loadReview, reviewPath } from './review';
 import { buildPackage, docHasher, docReader } from './evidence-package';
+import { loadPublicRecord } from './public-record';
 import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
 import {
   type EvidencePackage,
@@ -169,7 +173,9 @@ export interface Production {
   publish: { main: string | null; outputs: OutputView[] } | null; // the ledger's outputs and their states, once there is a package or a ledger
   upload: UploadMetadata | null; // what the upload form takes for the main output, once there is something to upload or update
   halt: { kind: HaltKind; stage: ProductionStage; why: string } | null; // the first halt, if any
+  article: { state: ArticleState; next: string } | null; // the companion article, a side track once the script is locked
 }
+export type ArticleState = 'none' | 'writing' | 'review' | 'blocked' | 'released' | 'changed' | 'stale';
 /** One output of the publishing ledger as the board shows it. */
 export interface OutputView {
   id: string;
@@ -818,6 +824,54 @@ const BOARD_STAGES: BoardStage[] = [
   clearanceStage,
 ];
 
+/** The article beside a locked script: never a stage or a halt of the video. Its validation re-runs live, as the
+ *  script's does, so review and blocked mean what npm run article -- validate would say now. */
+function articleOf({ topic, storyId, root, p, r, read, t, review, pkg, script, release, short }: BoardContext) {
+  if (!release || short) return null;
+  const writer = `agent: scripts/briefs/article.md (revise) -> ${r(ARTICLE_FILES.article)}`;
+  const a = readJson<Article>(p(ARTICLE_FILES.article));
+  const out = loadArticleRelease(topic, storyId, root);
+  const stale = out && articleStale(out, loadPublicRecord(topic, root));
+  if (stale)
+    return { state: 'stale' as const, next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}` };
+  if (out && a)
+    return out.fingerprints.article === articleFingerprint(a)
+      ? { state: 'released' as const, next: 'none' }
+      : {
+          state: 'changed' as const,
+          next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
+        };
+  if (!a) return { state: 'none' as const, next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}` };
+  if (a.generation?.needsEvidence?.length)
+    return { state: 'writing' as const, next: 'agent: scripts/briefs/evidence.md' };
+  if (!pkg) return { state: 'blocked' as const, next: `npm run script -- package ${topic} ${storyId}` };
+  const areview = readJson<ScriptReviewFile>(p(ARTICLE_FILES.review));
+  const live = validateArticle(a, t, read, {
+    review: areview,
+    judgments: review.applicability,
+    previous: readJson<ScriptValidation>(p(ARTICLE_FILES.validation)),
+    pkg,
+    script,
+    figures: figuresOf(topic, storyId, root),
+  });
+  if (live.status === 'blocked')
+    return {
+      state: 'blocked' as const,
+      next: live.revisionLimitReached ? 'stop: revision limit reached with blocking findings' : writer,
+    };
+  // A review of this revision that still holds sentences is the writer's to answer, not another review's.
+  const covered = areview?.revision === a.revision && areview.packageFingerprint === pkg.fingerprint;
+  return {
+    state: 'review' as const,
+    next:
+      live.status === 'passed'
+        ? `npm run article -- lock ${topic} ${storyId} --approved-by "<your name>"`
+        : covered
+          ? writer
+          : `agent: scripts/briefs/article-review.md -> ${r(ARTICLE_FILES.review)}`,
+  };
+}
+
 /** One script directory, checked artifact by artifact against what the library would produce now. */
 export function productionOf(topic: string, storyId: string, root = ROOT): Production | null {
   const dir = scriptDir(topic, storyId, root);
@@ -942,6 +996,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     publish,
     upload: main && (stage === 'packaged' || main.state.status !== 'not-uploaded') ? main.metadata : null,
     halt,
+    article: articleOf(c),
     fingerprints: {
       script: v?.scriptFingerprint ?? null,
       package: pkg?.fingerprint ?? null,

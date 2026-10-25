@@ -7,6 +7,7 @@ import Base from '../layouts/Base.astro';
 import NextStep from '../components/NextStep.astro';
 import { site } from '../config/site';
 import {
+  type ArticleState,
   board,
   type Check,
   type Column,
@@ -43,6 +44,7 @@ const SORTABLE = [
   ['Claims', 'num'],
   ['State', 'num'],
   ['Outputs', ''],
+  ['Article', ''],
   ['Next', ''],
   ['Notes', ''],
 ] as const;
@@ -76,6 +78,16 @@ const HEALTH: Record<Health, { label: string; colour: string }> = {
   stale: { label: 'stale', colour: 'text-warning' },
   blocked: { label: 'blocked', colour: 'text-destructive' },
   missing: { label: 'missing', colour: 'text-muted-foreground' },
+};
+// The article's side track: never red, since it never stops /produce.
+const ARTICLE: Record<ArticleState, string> = {
+  none: 'text-muted-foreground',
+  writing: 'text-warning',
+  review: 'text-warning',
+  blocked: 'text-warning',
+  released: 'text-success',
+  changed: 'text-warning',
+  stale: 'text-warning',
 };
 const COLUMN: Record<Column, { label: string; help: string; colour: string }> = {
   'needs-research': {
@@ -391,6 +403,23 @@ const stripOf = (r: StoryRow) => {
                           </li>
                         ))}
                       </ul>
+                    )}
+                  </td>
+                  <td class="py-2 pr-3" title={r.production?.article?.next}>
+                    {r.production?.article && (
+                      <div class="grid justify-items-start gap-1">
+                        <span class:list={[badge, ARTICLE[r.production.article.state]]}>
+                          {r.production.article.state}
+                        </span>
+                        {r.production.article.next !== 'none' && (
+                          <NextStep
+                            id={`article-${r.topic.name}-${r.story.id.replace(/\W+/g, '-')}`}
+                            next={r.production.article.next}
+                            topic={r.topic.name}
+                            story={r.story.id}
+                          />
+                        )}
+                      </div>
                     )}
                   </td>
                   <td class="py-2 pr-3" title={r.next}>

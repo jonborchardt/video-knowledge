@@ -21,6 +21,7 @@ import {
   stepsOf,
   validationHaltKind,
 } from '../src/lib/production';
+import { type Article, type ArticleRelease, articleFingerprint, articleSentences } from '../src/lib/article';
 import { corpusOf } from '../src/lib/corpus';
 import { loadStories } from '../src/lib/stories';
 import { passageReader } from '../src/lib/evidence';
@@ -34,6 +35,7 @@ import {
   type ScriptReviewFile,
   type ScriptValidation,
   scriptDir,
+  sentenceFingerprint,
   shortId,
 } from '../src/lib/script';
 import { addOutputTo, recordApproved, recordPublished, recordUploaded, setThumbnail } from '../src/lib/publish';
@@ -477,5 +479,129 @@ describe('shorts on the board', () => {
     } finally {
       f.cleanup();
     }
+  });
+});
+
+describe('the article on the board', () => {
+  // An article over the fixture's script: its sentences as prose, a callout for every claim so coverage holds.
+  const articleOf = (fx: Fixture): Article => {
+    const s = readJson<Script>(join(fx.dir, 'script.json'))!;
+    const pkg = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!;
+    const say = (id: string, text: string) => ({ id, text, type: 'rhetorical' as const });
+    return {
+      topic: fx.topic,
+      story: fx.story,
+      revision: 1,
+      generation: { ...s.generation, brief: 'scripts/briefs/article.md' },
+      meta: {
+        headline: 'Is a heat pump cheaper to run?',
+        seoTitle: 'Heat pump running costs',
+        dek: say('meta.dek', 'What do the sources say?'),
+        description: say('meta.description', 'A look at the running costs.'),
+      },
+      sections: s.sections.map((x, i) => ({
+        name: x.name,
+        heading: x.name,
+        blocks: [
+          { kind: 'prose' as const, sentences: x.sentences },
+          ...(i === 0
+            ? pkg.claims.map((c, j) => ({
+                kind: 'prose' as const,
+                callout: 'qualification' as const,
+                claim: c.id,
+                sentences: [say(`q${j}`, 'The sources disagree here.')],
+              }))
+            : []),
+        ],
+      })),
+    };
+  };
+  const write = (fx: Fixture, f: string, x: unknown) => writeFileSync(join(fx.dir, f), toJson(x));
+  const articleState = (fx: Fixture) => productionOf(fx.topic, fx.story, fx.root)!.article;
+  const released = (a: Article): ArticleRelease => ({
+    topic: a.topic,
+    story: a.story,
+    approvedBy: 'fixture approver',
+    date: '2026-01-02',
+    revision: 1,
+    fingerprints: { article: articleFingerprint(a), package: '', validation: '' },
+    article: a,
+    history: [],
+  });
+
+  it('no article state before the script lock', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('graphics');
+    try {
+      expect(articleState(fx)).toBeNull();
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('none, review, released, changed, stale', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      expect(articleState(fx)).toEqual({
+        state: 'none',
+        next: `agent: scripts/briefs/article.md -> ${relative(fx.root, join(fx.dir, 'article.json')).replaceAll(sep, '/')}`,
+      });
+      const a = articleOf(fx);
+      write(fx, 'article.json', a);
+      expect(articleState(fx)).toMatchObject({ state: 'review', next: expect.stringContaining('article-review.md') });
+      write(fx, 'article-review.json', {
+        reviewer: 'fixture reviewer',
+        date: '2026-01-02',
+        revision: 1,
+        packageFingerprint: a.generation.evidencePackage,
+        approved: Object.fromEntries(articleSentences(a).map((x) => [x.id, sentenceFingerprint(x)])),
+        findings: [],
+      });
+      expect(articleState(fx)).toEqual({
+        state: 'review',
+        next: `npm run article -- lock ${fx.topic} ${fx.story} --approved-by "<your name>"`,
+      });
+      const r = released(a);
+      write(fx, 'article-release.json', r);
+      expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
+      write(fx, 'article.json', { ...a, meta: { ...a.meta, headline: 'Is a heat pump cheaper to run than gas?' } });
+      expect(articleState(fx)).toEqual({
+        state: 'changed',
+        next: `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`,
+      });
+      // a claim the release asserts is revised after it: stale wins over released and changed
+      const claim = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!.claims[0].id;
+      r.article.meta.dek.assertions = [
+        { id: 'meta.dek.a', text: 'x', claims: [{ id: claim, role: 'supports' }] } as never,
+      ];
+      write(fx, 'article-release.json', r);
+      write(fx, '../../public-record.json', {
+        exhibits: {},
+        revisions: [{ at: '2026-02-01', kind: 'claim', id: claim, from: null, to: null, note: 'a new study' }],
+      });
+      const stale = articleState(fx)!;
+      expect(stale.state).toBe('stale');
+      expect(stale.next).toContain('2026-02-01');
+      expect(stale.next).toContain('a new study');
+      expect(stale.next).toContain('scripts/briefs/article.md (revise)');
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('the article never changes the video stage or halt', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const before = productionOf(fx.topic, fx.story, fx.root)!;
+      write(fx, 'article.json', { ...articleOf(fx), meta: { ...articleOf(fx).meta, headline: 'x'.repeat(200) } });
+      const after = productionOf(fx.topic, fx.story, fx.root)!;
+      expect(after.article?.state).toBe('blocked');
+      expect([after.stage, after.halt, after.next]).toEqual([before.stage, before.halt, before.next]);
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  it('the first released article reads released', () => {
+    expect(productionOf('heat-pumps', 'decision:is-it-cheaper-to-run-than-gas')?.article?.state).toBe('released');
   });
 });
