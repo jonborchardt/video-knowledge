@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { author, commissions, site } from '../src/config/site';
 import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
+import { loadArticleRelease } from '../src/lib/article';
 import { ROOT } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames, topicNames } from '../src/lib/topics';
@@ -125,6 +126,16 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('a matter with a released article shows it with its headline and sources', () => {
+    for (const { topic, slug, s } of storyPages) {
+      const r = loadArticleRelease(topic, s.partOf ?? s.id);
+      if (!r) continue;
+      const html = decode(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8'));
+      expect(html).toContain('data-article');
+      expect(html).toContain(r.article.meta.headline);
+    }
+  });
+
   it('topic pages are branded as the institution that publishes them', () => {
     for (const n of publicTopicNames()) {
       const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
@@ -197,7 +208,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     for (const { topic, slug } of storyPages) {
       const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
       expect(html).toContain('aria-labelledby="exhibits"');
-      const nums = [...html.matchAll(/Exhibit (\d+)/g)].map((m) => Number(m[1]));
+      // the exhibits list only: an article's sources are numbered in reading order
+      const list = html.slice(html.indexOf('aria-labelledby="exhibits"'));
+      const nums = [...list.matchAll(/Exhibit (\d+)/g)].map((m) => Number(m[1]));
       expect(nums).toEqual([...nums].sort((a, b) => a - b));
     }
   });

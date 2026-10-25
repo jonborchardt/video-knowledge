@@ -58,6 +58,14 @@ export function representativePages(all = distPages()): string[] {
     smallest(all.filter((p) => p.startsWith('commissions/') && depth(p) === 3)),
     smallest(all.filter((p) => !/^(about|commissions|institutions)\//.test(p) && depth(p) === 2)), // topic page
     smallest(all.filter((p) => !p.startsWith('commissions/') && depth(p) === 3)), // story page
+    smallest(
+      all.filter(
+        (p) =>
+          !p.startsWith('commissions/') &&
+          depth(p) === 3 &&
+          readFileSync(join(DIST, p), 'utf8').includes('data-article'),
+      ),
+    ), // a matter with its article
     '404.html',
   ];
   return picks.filter((p) => p && all.includes(p));

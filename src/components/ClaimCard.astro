@@ -8,6 +8,7 @@ import VerdictBadge from './VerdictBadge.astro';
 import FindingLabel from './FindingLabel.astro';
 import { findingLabel } from '../lib/finding-label';
 import { revisionLine } from '../lib/public-record';
+import { citeHref, citeLines } from '../lib/url';
 
 interface Props {
   claim: ClaimView;
@@ -31,9 +32,6 @@ const chips = [
 const first = chips.findIndex((f) => f.n);
 const slug = c.id.split('/').pop();
 const small = 'text-sm text-muted-foreground';
-// Study citations point at the committed sources text in the repo; GitHub honours the #L10-L24 anchor.
-const citeHref = (cite: string) => `${site.repo}/blob/main/${cite}`;
-const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
 ---
 
 <details class="group border-t py-3" data-verdict={c.verdict ?? 'unknown'} data-label={findingLabel(c)} data-claim>
@@ -118,7 +116,7 @@ const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
               {v.cite && (
                 <>
                   {' '}
-                  <a class={small} href={citeHref(v.cite)}>
+                  <a class={small} href={citeHref(site.repo, v.cite)}>
                     lines {citeLines(v.cite)}
                   </a>
                 </>

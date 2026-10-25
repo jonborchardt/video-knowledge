@@ -9,16 +9,21 @@ import ClaimCard from '../../components/ClaimCard.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
 import LabelStrip from '../../components/LabelStrip.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
+import ArticleBody from '../../components/ArticleBody.astro';
+import { loadArticleRelease } from '../../lib/article';
+import { articleView, type FigureTable } from '../../lib/article-view';
+import { FILES } from '../../lib/script';
+import type { Storyboard } from '../../lib/storyboard';
 import { storyOutputs } from '../../lib/outputs';
 import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
-import { revisionLine } from '../../lib/public-record';
+import { loadPublicRecord, revisionLine } from '../../lib/public-record';
 import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
 import SourceIcons from '../../components/SourceIcons.astro';
 import Stamp from '../../components/Stamp.astro';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
-import { ROOT } from '../../lib/io';
+import { readJson, ROOT, topicDir } from '../../lib/io';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -50,16 +55,30 @@ const outputs = storyOutputs(t.name, s.partOf ?? s.id);
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 const path = `/${t.name}/${storyUrlSlug(s)}/`;
+// The released companion article (a follow-up shows its first question's), each figure as its storyboard chart's
+// points: a figure ref is '<story slug>/<scene id>'.
+const release = loadArticleRelease(t.name, s.partOf ?? s.id);
+const figures = new Map<string, FigureTable>();
+for (const b of release?.article.sections.flatMap((x) => x.blocks) ?? []) {
+  if (b.kind !== 'figure') continue;
+  const [slug, scene] = b.ref.split('/');
+  const sb = readJson<Storyboard>(join(topicDir(t.name), 'scripts', slug, FILES.storyboard));
+  const points = sb?.scenes.find((x) => x.id === scene)?.visual.chart?.points;
+  if (points?.length)
+    figures.set(b.ref, { columns: ['Value'], rows: points.map((p) => ({ label: p.label, cells: [p.display] })) });
+}
+const view = release && articleView(release, t, loadPublicRecord(t.name), site.repo, figures);
+const meta = release?.article.meta;
 const jsonLd = [
   articleJsonLd(
     {
-      headline: s.title,
-      description: s.question,
+      headline: meta?.headline ?? s.title,
+      description: meta?.description.text ?? s.question,
       path,
       image,
       series: commission.fullName,
       datePublished: outputs.video?.publishedAt,
-      dateModified: revised ?? undefined,
+      dateModified: release?.history.at(-1)?.date ?? revised ?? undefined,
     },
     Astro.site!,
   ),
@@ -80,8 +99,8 @@ const h2 = 'mb-3 text-featured font-bold';
 ---
 
 <Base
-  title={`${s.title} · ${commission.name}`}
-  description={s.question}
+  title={`${meta?.seoTitle ?? s.title} · ${commission.name}`}
+  description={meta?.description.text ?? s.question}
   image={image}
   noindex={s.readiness !== 'ready'}
   jsonLd={jsonLd}
@@ -155,25 +174,35 @@ const h2 = 'mb-3 text-featured font-bold';
   }
 
   <section id="article">
-    <section aria-labelledby="dispute">
-      <div class="eyebrow text-gold">Section I</div>
-      <h2 class={h2} id="dispute">The dispute</h2>
-      <p class="max-w-prose">{s.tension}</p>
-    </section>
+    {
+      view ? (
+        <ArticleBody view={view} />
+      ) : (
+        <>
+          <section aria-labelledby="dispute">
+            <div class="eyebrow text-gold">Section I</div>
+            <h2 class={h2} id="dispute">
+              The dispute
+            </h2>
+            <p class="max-w-prose">{s.tension}</p>
+          </section>
 
-    <section aria-labelledby="evidence">
-      <div class="eyebrow text-gold">Section II</div>
-      <h2 class={h2} id="evidence">What the evidence shows</h2>
-      <p class="max-w-prose">{s.premise}</p>
-      {
-        s.arc.takeaway && (
-          <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
-            <figcaption class="eyebrow text-muted-foreground">Takeaway</figcaption>
-            <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">{s.arc.takeaway}</p>
-          </figure>
-        )
-      }
-    </section>
+          <section aria-labelledby="evidence">
+            <div class="eyebrow text-gold">Section II</div>
+            <h2 class={h2} id="evidence">
+              What the evidence shows
+            </h2>
+            <p class="max-w-prose">{s.premise}</p>
+            {s.arc.takeaway && (
+              <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
+                <figcaption class="eyebrow text-muted-foreground">Takeaway</figcaption>
+                <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">{s.arc.takeaway}</p>
+              </figure>
+            )}
+          </section>
+        </>
+      )
+    }
   </section>
 
   <section aria-labelledby="claims">
