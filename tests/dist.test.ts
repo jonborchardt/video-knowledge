@@ -141,6 +141,25 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('an article figure is an svg with a text alternative and its data table', () => {
+    let drawn = 0;
+    for (const { topic, slug, s } of storyPages) {
+      const r = s.partOf ? null : loadArticleRelease(topic, s.id);
+      const figures = (r?.article.sections.flatMap((x) => x.blocks) ?? []).filter((b) => b.kind === 'figure');
+      if (!figures.length) continue;
+      const html = decode(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8'));
+      const charts = html.match(/<figure[^>]*>[\s\S]*?<\/figure>/g) ?? [];
+      expect(charts, `${topic}/${slug}`).toHaveLength(figures.length);
+      for (const c of charts) {
+        expect(c).toMatch(/<svg[^>]*role="img"[^>]*aria-label="[^"]+"/);
+        expect(c).toMatch(/<details[\s\S]*<table[\s\S]*<td/);
+        expect(c).toContain('Source:');
+        drawn++;
+      }
+    }
+    expect(drawn).toBeGreaterThan(0);
+  });
+
   it('no two story pages share a title', () => {
     const titles = storyPages.map(
       ({ topic, slug }) =>

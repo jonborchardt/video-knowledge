@@ -5,6 +5,7 @@
 import { join } from 'node:path';
 import { type Article, articleAsScript, articleReviewUnits, articleSentences } from './article';
 import type { Corpus, Verdict } from './corpus';
+import { dataRef, loadDatasets } from './datasets';
 import type { PassageReader } from './evidence';
 import { findingLabel } from './finding-label';
 import { readJson, ROOT } from './io';
@@ -214,8 +215,12 @@ export function validateArticle(
   };
 }
 
-/** The chart ids an article's figures may name: `<story-slug>/<scene-id>` for every storyboard scene with a chart. */
+/** The ids an article's figures may name: `<story-slug>/<scene-id>` for every storyboard scene with a chart, and
+ *  `data:<topic>/<id>` for every evidence dataset of the topic. */
 export function figuresOf(topic: string, storyId: string, root = ROOT): Set<string> {
   const sb = readJson<StoryboardPlan>(join(scriptDir(topic, storyId, root), FILES.storyboard));
-  return new Set((sb?.scenes ?? []).filter((s) => s.visual?.chart).map((s) => `${storySlug(storyId)}/${s.id}`));
+  return new Set([
+    ...(sb?.scenes ?? []).filter((s) => s.visual?.chart).map((s) => `${storySlug(storyId)}/${s.id}`),
+    ...loadDatasets(topic, root).map((d) => dataRef(topic, d.id)),
+  ]);
 }

@@ -203,6 +203,9 @@ describe('article validation', () => {
     writeFileSync(join(dir, 'storyboard.json'), JSON.stringify({ scenes }));
     expect([...figuresOf('demo', 'decision:mlm-and-seminars', root)]).toEqual(['decision-mlm-and-seminars/sc01']);
     expect(figuresOf('demo', 'decision:none', root).size).toBe(0);
+    mkdirSync(join(root, 'topics', 'demo', 'data'), { recursive: true });
+    writeFileSync(join(root, 'topics', 'demo', 'data', 'prices.json'), JSON.stringify({ id: 'prices' }));
+    expect(figuresOf('demo', 'decision:none', root).has('data:demo/prices')).toBe(true);
   });
   it('an article that repeats the narration warns once per section', () => {
     const a = article();

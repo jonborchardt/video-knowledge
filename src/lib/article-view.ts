@@ -3,12 +3,16 @@
 import { type ArticleRelease, type Callout, articleSentences } from './article';
 import { type PublicRecord, type Revision, isClaimRevision } from './public-record';
 import type { Sentence } from './script';
+import type { DataTable } from './datasets';
+import type { ChartSpec } from './storyboard';
 import type { Topic } from './topics';
 import { citeHref, citeLines } from './url';
 
-export interface FigureTable {
-  columns: string[];
-  rows: { label: string; cells: string[] }[];
+/** What a figure draws: a storyboard chart or an evidence dataset, with the source line its caption carries. */
+export interface FigureDraw {
+  chart?: ChartSpec;
+  table?: DataTable;
+  source: string;
 }
 export type ViewBlock =
   | {
@@ -17,7 +21,7 @@ export type ViewBlock =
       sentences: { id: string; text: string; refs: number[]; corrected: boolean; correctedOn?: string }[];
     }
   | { kind: 'table'; caption: string; columns: string[]; rows: { label: string; cells: string[] }[] }
-  | { kind: 'figure'; ref: string; caption: string; table?: FigureTable }; // the chart's points until plan 3 draws it
+  | { kind: 'figure'; ref: string; caption: string; draw?: FigureDraw };
 export interface ArticleView {
   headline: string;
   dek: string;
@@ -46,7 +50,7 @@ export function articleView(
   t: Pick<Topic, 'sources' | 'docNames'>,
   record: PublicRecord,
   repo: string,
-  figures?: Map<string, FigureTable>,
+  figures?: Map<string, FigureDraw>,
 ): ArticleView {
   const a = r.article;
   // each corrected sentence's newest correction date (history is oldest first)
@@ -104,8 +108,8 @@ export function articleView(
             columns: b.columns,
             rows: b.rows.map((x) => ({ label: x.label, cells: x.cells.map((c) => c.display) })),
           };
-        const table = figures?.get(b.ref);
-        return { kind: 'figure', ref: b.ref, caption: b.caption, ...(table && { table }) };
+        const draw = figures?.get(b.ref);
+        return { kind: 'figure', ref: b.ref, caption: b.caption, ...(draw && { draw }) };
       }),
     })),
     refs,

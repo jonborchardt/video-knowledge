@@ -11,7 +11,9 @@ import LabelStrip from '../../components/LabelStrip.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import ArticleBody from '../../components/ArticleBody.astro';
 import { loadArticleRelease } from '../../lib/article';
-import { articleView, type FigureTable } from '../../lib/article-view';
+import { articleView, type FigureDraw } from '../../lib/article-view';
+import { chartProblems } from '../../lib/chart-geometry';
+import { dataRef, loadDatasets } from '../../lib/datasets';
 import { FILES } from '../../lib/script';
 import type { Storyboard } from '../../lib/storyboard';
 import { storyOutputs } from '../../lib/outputs';
@@ -24,7 +26,7 @@ import { commissionBody, commissionKey, commissionOf, site } from '../../config/
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
 import { readJson, ROOT, topicDir } from '../../lib/io';
-import { href } from '../../lib/url';
+import { citeLines, href } from '../../lib/url';
 
 export function getStaticPaths() {
   return publicTopicNames().flatMap((name) => {
@@ -55,18 +57,37 @@ const outputs = storyOutputs(t.name, s.partOf ?? s.id);
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 const path = `/${t.name}/${storyUrlSlug(s)}/`;
-// The released companion article, each figure as its storyboard chart's points: a figure ref is
-// '<story slug>/<scene id>'. A follow-up links to its first question's article, so the two pages never share a title.
+// The released companion article, each figure drawn from its storyboard chart ('<story slug>/<scene id>') or
+// evidence dataset ('data:<topic>/<id>'). A follow-up links to its first question's article, so the two pages never share a title.
 const release = first ? null : loadArticleRelease(t.name, s.id);
 const firstArticle = !!first && !!loadArticleRelease(t.name, first.id);
-const figures = new Map<string, FigureTable>();
+const figures = new Map<string, FigureDraw>();
+// "Document name, lines 10-24" for each distinct passage a figure's points cite.
+const sourceOf = (cites: string[]) =>
+  [...new Set(cites)]
+    .map((c) => {
+      const file = c.split('#')[0].split('/').pop()!;
+      return `${t.docNames[file] ?? file}, lines ${citeLines(c)}`;
+    })
+    .join('; ');
+const datasets = loadDatasets(t.name);
 for (const b of release?.article.sections.flatMap((x) => x.blocks) ?? []) {
   if (b.kind !== 'figure') continue;
+  const table = datasets.find((d) => dataRef(t.name, d.id) === b.ref);
+  if (table) {
+    figures.set(b.ref, {
+      table,
+      source: `${sourceOf(table.rows.flatMap((r) => r.cells.map((c) => c.cite)))} (${table.asOf})`,
+    });
+    continue;
+  }
   const [slug, scene] = b.ref.split('/');
   const sb = readJson<Storyboard>(join(topicDir(t.name), 'scripts', slug, FILES.storyboard));
-  const points = sb?.scenes.find((x) => x.id === scene)?.visual.chart?.points;
-  if (points?.length)
-    figures.set(b.ref, { columns: ['Value'], rows: points.map((p) => ({ label: p.label, cells: [p.display] })) });
+  const chart = sb?.scenes.find((x) => x.id === scene)?.visual.chart;
+  if (!chart) continue;
+  const problems = chartProblems(chart);
+  if (problems.length) throw new Error(`figure ${b.ref}: ${problems.join('; ')}`);
+  figures.set(b.ref, { chart, source: sourceOf(chart.points.map((p) => p.cite)) });
 }
 const view = release && articleView(release, t, loadPublicRecord(t.name), site.repo, figures);
 const meta = release?.article.meta;

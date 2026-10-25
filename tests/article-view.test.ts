@@ -133,7 +133,7 @@ describe('article view', () => {
     expect(b.kind === 'p' && b.sentences.map((s) => s.correctedOn)).toEqual(['2026-11-03', undefined, '2026-11-05']);
   });
 
-  it('a figure with a known ref carries its points; an unknown one only its caption', () => {
+  it('a figure with a known ref carries what it draws; an unknown one only its caption', () => {
     const a = article({
       sections: [
         {
@@ -146,10 +146,10 @@ describe('article view', () => {
         },
       ],
     });
-    const table = { columns: ['Value'], rows: [{ label: 'x', cells: ['1'] }] };
-    const v = articleView(release({ article: a }), topic, empty, REPO, new Map([['slug/sc01', table]]));
+    const draw = { chart: { type: 'bar' as const, points: [] }, source: 'S' };
+    const v = articleView(release({ article: a }), topic, empty, REPO, new Map([['slug/sc01', draw]]));
     expect(v.sections[0].blocks).toEqual([
-      { kind: 'figure', ref: 'slug/sc01', caption: 'Known', table },
+      { kind: 'figure', ref: 'slug/sc01', caption: 'Known', draw },
       { kind: 'figure', ref: 'slug/sc02', caption: 'Unknown' },
     ]);
   });
