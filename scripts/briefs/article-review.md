@@ -2,10 +2,9 @@
 
 Give an agent that did not write the article this file plus the topic id and story id. The `<slug>` is the story
 id with `:` replaced by `-`. The agent runs `npm run article -- validate <topic> <story-id>`, then reads
-`npm run article -- show <topic> <story-id>` (the article as a reader sees it, each sentence's state, the open
-issues), `topics/<topic>/scripts/<slug>/article.json` (every sentence with its assertions and cites, every
-callout, table and figure), `article-validation.json` beside it (each sentence's `fingerprint` and result), the
-`evidence-package.json` (claims, verdict notes, passages, gaps), and the source documents in
+`npm run article -- show <topic> <story-id>` (the article as a reader sees it, each sentence's state and `fp=` fingerprint, the
+open issues), `topics/<topic>/scripts/<slug>/article.json` (every sentence with its assertions and cites, every
+callout, table and figure), the `evidence-package.json` (claims, verdict notes, passages, gaps), and the source documents in
 `topics/<topic>/sources/` where a passage needs its surroundings. It writes
 `topics/<topic>/scripts/<slug>/article-review.json` and validates again. It never edits `article.json`: a
 sentence that needs changing is a finding, and the writer changes it. The code has already checked references,
@@ -34,8 +33,8 @@ Including `meta.dek` and `meta.description`, which are sentences like any other.
 6. **Numbers.** Each figure means what the sentence says it means (percent of whom, money of what, over what
    period), and a calculation's inputs are the right inputs.
 
-Approve a sentence only when every check passes. Approval is by fingerprint: copy the sentence's `fingerprint`
-from `article-validation.json`; a later edit changes it and the approval lapses.
+Approve a sentence only when every check passes. Approval is by fingerprint: copy the `fp=` value the sheet prints after the
+sentence's id; a later edit changes it and the approval lapses.
 
 ## What only an article has
 
@@ -51,7 +50,7 @@ from `article-validation.json`; a later edit changes it and the approval lapses.
 - **Tables.** The code checked that each cell's figures are in its passage. Check that the row label's
   population and year are the passage's, that the cells in one column measure the same thing on the same
   baseline, and that the caption claims no more than the cells. A finding goes on the first sentence of the
-  section that holds the table, naming the table id.
+  section that holds the table, or on the nearest sentence when that section has no prose, naming the table id.
 - **Figures.** The caption describes the storyboard chart it names and adds no figure.
 - **Chains.** When the package has `questions`: each question section answers its own question with its own
   claims, and the `close` answers nothing again.
@@ -95,7 +94,7 @@ from `article-validation.json`; a later edit changes it and the approval lapses.
   `speaker-missing`, `figure-in-non-factual`) at that sentence's fingerprint, keyed by the assertion id or the
   sentence id; give a list under one id to retire two categories. A warning you judge real becomes a finding
   instead. Blocking issues cannot be dispositioned. A `gap-coverage` warning has no sentence and cannot be
-  retired: if the gap matters, make a finding on the sentence nearest it.
+  retired: it is the writer's to close with an `unresolved` callout naming the gap.
 - Severity: `blocking` (a reader would come away believing something the evidence does not establish),
   `warning` (true but imprecise, or a limitation stated too far away), `info`. `needs-human` with `warning` when
   only an editor can decide.

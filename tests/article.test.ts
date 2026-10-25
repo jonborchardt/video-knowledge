@@ -143,6 +143,27 @@ describe('article validation', () => {
     expect(urls(h)).toEqual(['-']);
     expect(urls(withBlock({ kind: 'figure', ref: 'x/sc01', caption: 'from www.x.org' }))).toEqual(['x/sc01']);
   });
+  it('a URL in a table column, row label, cell label or display blocks', () => {
+    const cell = { label: 'Lost money', value: 47, unit: 'percent' as const, display: '47%', cite: DOC_D };
+    const table = (patch: (b: Extract<Block, { kind: 'table' }>) => void) => {
+      const b: Extract<Block, { kind: 'table' }> = {
+        kind: 'table',
+        id: 'tb1',
+        caption: 'Outcomes',
+        columns: ['Share'],
+        rows: [{ label: 'Lost money', cells: [{ ...cell }] }],
+      };
+      patch(b);
+      return check(withBlock(b))
+        .issues.filter((i) => i.category === 'no-url')
+        .map((i) => i.sentence);
+    };
+    expect(table(() => {})).toEqual([]);
+    expect(table((b) => (b.columns[0] = 'www.x.org'))).toEqual(['tb1']);
+    expect(table((b) => (b.rows[0].label = 'see https://x.org'))).toEqual(['tb1']);
+    expect(table((b) => (b.rows[0].cells[0].label = 'www.x.org'))).toEqual(['tb1']);
+    expect(table((b) => (b.rows[0].cells[0].display = '47% www.x.org'))).toEqual(['tb1']);
+  });
   it('a table cell whose display does not state its value blocks', () => {
     const table = (cite: string, display: string): Block => ({
       kind: 'table',
@@ -303,7 +324,14 @@ describe('article release', () => {
     const md = renderArticleMd(a, check(a));
     expect(md).toContain('# How Much Money Do MLM Participants Make?');
     expect(md).toContain('## What we found');
-    expect(md).toMatch(/47 percent lost money\. \[s02 review\]/);
+    expect(md).toMatch(/47 percent lost money\. \[s02 review fp=[0-9a-f]{10}\]/);
+    const fp = check(a).sentences.find((x) => x.id === 's02')?.fingerprint;
+    expect(md).toContain(`fp=${fp}]`);
+    const gap = renderArticleMd(
+      withBlock(prose('s04', 'Nobody has measured it.', { callout: 'unresolved', gap: 2 })),
+      check(a),
+    );
+    expect(gap).toContain('**unresolved (gap 2):** Nobody has measured it.');
     expect(md).toContain('## Open issues');
   });
 });

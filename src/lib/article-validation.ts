@@ -93,7 +93,15 @@ export function articleIssues(
     ['meta.seoTitle', a.meta.seoTitle],
     ...a.sections.map((x): [string, string] => ['-', x.heading]),
     ...blocks.flatMap((b): [string, string][] =>
-      b.kind === 'prose' ? [] : [[b.kind === 'table' ? b.id : b.ref, b.caption]],
+      b.kind === 'prose'
+        ? []
+        : b.kind === 'figure'
+          ? [[b.ref, b.caption]]
+          : [
+              b.caption,
+              ...b.columns,
+              ...b.rows.flatMap((r) => [r.label, ...r.cells.flatMap((c) => [c.label, c.display])]),
+            ].map((text): [string, string] => [b.id, text]),
     ),
   ];
   for (const [id, text] of shown)

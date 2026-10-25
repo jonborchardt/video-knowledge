@@ -131,7 +131,8 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
   the claim holds, or what is not known and why.
 - **Qualification coverage (blocking).** Every package claim whose label is Qualification (verdict `partly`) or
   Unresolved (studied, not settled) must be named by a callout, or carried by an assertion on that claim with
-  `qualifications`. Every gap should have an `unresolved` callout naming it (a warning otherwise).
+  `qualifications`. Every gap needs an `unresolved` callout naming it by `gap` (a `gap-coverage` warning otherwise, which only you
+  can close).
 - **Tables.** Cells are `ChartPoint`s, checked by the storyboard's own point check: `value` a number, `unit`
   one of `percent`, `usd`, `count`, `ratio`, `display` the figure as the passage states it (it must state the
   value; for a ratio, "1 in 238" with value 238), `cite` a cite in the package whose passage holds every figure
@@ -176,12 +177,13 @@ every open blocking issue and warning as `SEVERITY <sentence> <category> [determ
 then `RESULT: PASSED` or `RESULT: FAILED (<status>)`. Before a review exists the status is at best
 `needs-review`: your job is zero blocking issues. Blocking issues (missing provenance, a figure not in the
 evidence, a misquote, a calculation that does not reproduce, `qualification-coverage`, `metadata`, `no-url`,
-`table-data`, `figure`, `structure`) are yours to fix; warnings (`transcript-overlap`, `gap-coverage`,
-`needs-qualification`) are for the reviewer unless plainly yours.
+`table-data`, `figure`, `structure`) are yours to fix. A `gap-coverage` warning is yours too: close it with an
+`unresolved` callout whose `gap` is that index; nobody can disposition it. Other warnings
+(`transcript-overlap`, `needs-qualification`) are for the reviewer unless plainly yours.
 
 `npm run article -- show <topic> <story-id>` prints `article.md`: the article as a reader sees it, each sentence
-followed by `[<id> ok|review|BLOCKED]` when it has assertions or is not yet verified, each callout led by
-`**qualification (<claim>):**`, each table rendered with its `display` values, then `## Open issues` with every
+followed by `[<id> ok|review|BLOCKED fp=<fingerprint>]` (the state is left out for a verified sentence with no
+assertions), each callout led by `**qualification (<claim>):**` or `**unresolved (gap <n>):**`, each table rendered with its `display` values, then `## Open issues` with every
 issue not dispositioned, review findings included, and the reviewer's suggestions.
 
 ## Revising

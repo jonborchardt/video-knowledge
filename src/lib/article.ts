@@ -192,7 +192,7 @@ export function renderArticleMd(a: Article, v: ScriptValidation): string {
   const line = (s: Sentence) => {
     const r = by.get(s.id);
     const m = r && (r.assertions.length || r.issues.length || r.status !== 'verified') ? MARK[r.status] : '';
-    return `${s.text}${m ? ` [${s.id} ${m}]` : ''}`;
+    return `${s.text} [${s.id}${m ? ` ${m}` : ''} fp=${r?.fingerprint ?? sentenceFingerprint(s)}]`;
   };
   const out = [
     `# ${a.meta.headline}`,
@@ -209,7 +209,7 @@ export function renderArticleMd(a: Article, v: ScriptValidation): string {
     for (const b of sec.blocks)
       if (b.kind === 'prose')
         out.push(
-          `${b.callout ? `**${b.callout}${b.claim ? ` (${b.claim})` : ''}:** ` : ''}${b.sentences.map(line).join(' ')}`,
+          `${b.callout ? `**${b.callout}${b.claim ? ` (${b.claim})` : ''}${b.gap === undefined ? '' : ` (gap ${b.gap})`}:** ` : ''}${b.sentences.map(line).join(' ')}`,
           '',
         );
       else if (b.kind === 'table')
