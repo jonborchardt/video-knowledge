@@ -3,8 +3,8 @@
 // them. Stories are candidates from stories.json (their pages are dev-only); a ready one links to its place in the
 // inquiry, the rest are listed as under examination. A chain's follow-ups ride with their first question.
 import Base from '../../layouts/Base.astro';
-import { type Commission, commissions, site } from '../../config/site';
-import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
+import { type Commission, commissionBody, commissions, site } from '../../config/site';
+import { loadStories, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
 import { href } from '../../lib/url';
 
@@ -17,10 +17,9 @@ export function getStaticPaths() {
 }
 const { c, topics } = Astro.props as { c: Commission; topics: Topic[] };
 const fmt = (n: number) => n.toLocaleString('en-US');
-const storyHref = (t: Topic, s: Story) => href(`/${t.name}/${storyUrlSlug(s)}/`);
 const docket = topics.map((t) => ({ t, stories: (loadStories(t.name)?.stories ?? []).filter((s) => !s.partOf) }));
 const total = docket.reduce((n, d) => n + d.stories.length, 0);
-const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => c.name.split(' ').includes(w))!;
+const body = commissionBody(c);
 ---
 
 <Base title={`${c.name} · ${site.name}`} description={c.remit} image={`/og/${Astro.params.id}.jpg`}>
@@ -112,7 +111,7 @@ const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => c.name.sp
               <ul class="grid list-none gap-2 p-0">
                 {stories.map((s) => (
                   <li class="grid gap-0.5 border-l-2 pl-3">
-                    <a class="font-heading font-bold" href={storyHref(t, s)}>
+                    <a class="font-heading font-bold" href={href(`/${t.name}/${storyUrlSlug(s)}/`)}>
                       {s.title}
                     </a>
                     <span class="text-sm text-muted-foreground">{s.question}</span>

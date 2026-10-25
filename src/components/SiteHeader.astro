@@ -6,7 +6,7 @@ import ThemeToggle from './ThemeToggle.astro';
 import logo from '../assets/logo.svg?raw';
 
 const current = Astro.url.pathname;
-const isActive = (path: string) => path.startsWith('/') && current.startsWith(href(path));
+const isActive = (path: string) => current.startsWith(href(path));
 ---
 
 <header class="border-b print:hidden">
@@ -25,7 +25,7 @@ const isActive = (path: string) => path.startsWith('/') && current.startsWith(hr
           site.nav.map((item) => (
             <li>
               <a
-                href={item.href.startsWith('/') ? href(item.href) : item.href}
+                href={href(item.href)}
                 aria-current={isActive(item.href) ? 'page' : undefined}
                 class="rounded-sm px-2 py-1 text-muted-foreground no-underline hover:text-foreground aria-[current=page]:font-medium aria-[current=page]:text-foreground"
               >

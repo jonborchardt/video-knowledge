@@ -167,44 +167,43 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
     : null;
 
   const state = o?.state ?? null;
-  const no = (why: string): Can => why;
-  const live = state?.live ? no(`live at ${state.url}; a re-release is a new output`) : null;
+  const live = state?.live ? `live at ${state.url}; a re-release is a new output` : null;
   const can: ReviewView['can'] = {
     approve: !pkg
-      ? no('no review package yet')
+      ? 'no review package yet'
       : (live ??
         (pkg.status === 'draft'
-          ? no('a draft (edge voice) is never approved: Accept draft makes the release build')
+          ? 'a draft (edge voice) is never approved: Accept draft makes the release build'
           : !pkg.qaOk
-            ? no('QA failed on this build')
+            ? 'QA failed on this build'
             : !o
-              ? no('no ledger entry yet: npm run video -- package records it')
+              ? 'no ledger entry yet: npm run video -- package records it'
               : state!.status === 'approved' || state!.status === 'scheduled'
-                ? no(`already ${state!.status}`)
+                ? `already ${state!.status}`
                 : true)),
     requestChanges: !pkg
-      ? no('no review package yet')
+      ? 'no review package yet'
       : !o
-        ? no('no ledger entry yet')
-        : (live ?? (state!.status === 'scheduled' ? no('scheduled on YouTube: unschedule it there first') : true)),
-    acceptDraft: !pkg ? no('no review package yet') : pkg.status === 'release' ? no('this is the release build') : true,
+        ? 'no ledger entry yet'
+        : (live ?? (state!.status === 'scheduled' ? 'scheduled on YouTube: unschedule it there first' : true)),
+    acceptDraft: !pkg ? 'no review package yet' : pkg.status === 'release' ? 'this is the release build' : true,
     upload: !pkg
-      ? no('no review package yet')
+      ? 'no review package yet'
       : !o
-        ? no('no ledger entry yet')
+        ? 'no ledger entry yet'
         : !state!.id || state!.status === 'build-behind'
           ? true
-          : no(`uploaded (${state!.status})`),
+          : `uploaded (${state!.status})`,
     goLive: !o
-      ? no('no ledger entry yet')
+      ? 'no ledger entry yet'
       : state!.status === 'metadata-behind' && !state!.live
-        ? no('the title, description or thumbnail changed since the upload: Push metadata first')
+        ? 'the title, description or thumbnail changed since the upload: Push metadata first'
         : state!.status !== 'approved'
-          ? no(`not approved (${state!.status})`)
+          ? `not approved (${state!.status})`
           : !state!.id
-            ? no('approved: upload it privately first')
+            ? 'approved: upload it privately first'
             : !o.parentLive
-              ? no(`publish ${o.out.derivedFrom} first`)
+              ? `publish ${o.out.derivedFrom} first`
               : true,
   };
 

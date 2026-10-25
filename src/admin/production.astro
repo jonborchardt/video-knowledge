@@ -15,9 +15,9 @@ import {
   type Health,
   mainState,
   PRODUCTION_STAGES,
+  type OutputView,
   type StoryRow,
 } from '../lib/production';
-import type { OutputView } from '../lib/production';
 import { loadLedger } from '../lib/publish';
 import { storySlug } from '../lib/script';
 import { href } from '../lib/url';
@@ -594,7 +594,7 @@ const stripOf = (r: StoryRow) => {
                       </p>
                     )}
                     {(() => {
-                      const events = p!.publish!.outputs.find((x) => x.id === o.id) ? ledgerEvents(p!, o.id) : [];
+                      const events = ledgerEvents(p!, o.id);
                       return events.length > 0 ? (
                         <table class="mt-1 w-full text-xs">
                           <thead class="text-left text-muted-foreground uppercase">

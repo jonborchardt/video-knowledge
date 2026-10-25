@@ -12,7 +12,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
-import { commissionKey, commissionOf, commissions, site } from '../src/config/site';
+import { commissionBody, commissionKey, commissionOf, commissions, site } from '../src/config/site';
 import { ROOT, readJson } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
@@ -59,17 +59,10 @@ const LOAD_FONTS = `Promise.all(['16px "Libre Baskerville"', 'bold 16px "Libre B
 // Remotion downloads chrome-headless-shell for video renders; the kit uses the same binary.
 function chrome(): string {
   const base = join(ROOT, 'node_modules/.remotion/chrome-headless-shell');
-  const find = (d: string): string | null => {
-    for (const e of existsSync(d) ? readdirSync(d, { withFileTypes: true }) : []) {
-      const p = join(d, e.name);
-      if (e.isDirectory()) {
-        const f = find(p);
-        if (f) return f;
-      } else if (/^chrome-headless-shell(\.exe)?$/.test(e.name)) return p;
-    }
-    return null;
-  };
-  const bin = find(base);
+  const e = (existsSync(base) ? readdirSync(base, { recursive: true, withFileTypes: true }) : []).find(
+    (e) => e.isFile() && /^chrome-headless-shell(\.exe)?$/.test(e.name),
+  );
+  const bin = e && join(e.parentPath, e.name);
   if (!bin) throw new Error(`no chrome-headless-shell under ${base}: run \`npx remotion browser ensure\` first`);
   return bin;
 }
@@ -114,9 +107,7 @@ function brandData(key: string, kit: Kit) {
     short: c ? c.name : 'Commonwealth',
     fullName: c ? c.fullName : site.name,
     handle: c?.handle ?? null,
-    body: c
-      ? ['Commission', 'Bureau', 'Office', 'Society'].find((w) => c.name.split(' ').includes(w))!
-      : 'Commonwealth',
+    body: c ? commissionBody(c) : 'Commonwealth',
     ringTop: name.toUpperCase(),
     nameLines: twoLines(name),
   };
@@ -208,7 +199,7 @@ for (const key of ['cor', ...Object.keys(commissions)]) {
     await shoot(`${key}-${name}`, a, png);
     if (slots.find((s) => s.id === a.slot)!.format.includes('jpg')) await toJpg(png, join(dir, `${name}.jpg`));
   });
-  writeFileSync(kitPath, JSON.stringify({ ...kit, assets: recorded, concepts: undefined }, null, 2) + '\n');
+  writeFileSync(kitPath, JSON.stringify({ ...kit, assets: recorded }, null, 2) + '\n');
   // The site's copies: the share card (public/og/<key>.jpg, the Commonwealth's is site.jpg) and an institution's seal.
   mkdirSync(join(ROOT, 'public/og'), { recursive: true });
   copyFileSync(join(dir, 'og-default.jpg'), join(ROOT, 'public/og', `${key === 'cor' ? 'site' : key}.jpg`));

@@ -8,7 +8,7 @@ import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
 import Stamp from '../../components/Stamp.astro';
-import { type Commission, commissionKey, commissionOf, site } from '../../config/site';
+import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
 import { ROOT } from '../../lib/io';
@@ -27,10 +27,9 @@ const byId = new Map(stories.map((x) => [x.id, x]));
 const first = s.partOf ? byId.get(s.partOf) : undefined;
 const claims = s.claims.map((id) => t.claims.find((c) => c.id === id)).filter((c) => !!c);
 const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
-const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => commission.name.split(' ').includes(w))!;
+const body = commissionBody(commission);
 const h2 = 'mb-3 text-featured font-bold';
 const eyebrowLink = 'text-muted-foreground no-underline hover:underline';
-const commissionHref = (c: Commission) => href(`/commissions/${commissionKey(c)}/`);
 // The story's own share card (npm run brand), else its institution's.
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
@@ -49,7 +48,7 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
           height="256"
         />
         <a class={eyebrowLink} href={href('/')}>{site.name}</a> ·{' '}
-        <a class={eyebrowLink} href={commissionHref(commission)}>{commission.ceremonialName}</a>
+        <a class={eyebrowLink} href={href(`/commissions/${commissionKey(commission)}/`)}>{commission.ceremonialName}</a>
       </div>
       <div class="flex items-center gap-3">
         <div class="eyebrow text-gold">{s.readiness === 'ready' ? 'Matter' : 'Matter under examination'}</div>

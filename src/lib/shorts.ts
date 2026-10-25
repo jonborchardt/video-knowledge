@@ -4,7 +4,6 @@
 // is byte-identical. The reviewer's file (shorts-review.json, scripts/briefs/shorts.md) supplies what code cannot
 // judge: whether the finding stands alone, the hook, the format, and how each qualification the parent carried
 // elsewhere is said inside the Short. A candidate is never ready without it.
-import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, sha, toJson, ROOT } from './io';
 import { nums } from './numbers';
@@ -92,7 +91,7 @@ export interface ShortParent {
 const FINDING_SECTIONS = /^(investigation|question-\d+|answer)$/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const uniq = <T>(xs: T[]) => [...new Set(xs)];
-export const releaseFingerprint = (release: Release | null) => (release ? sha(toJson(release.fingerprints)) : null);
+const releaseFingerprint = (release: Release | null) => (release ? sha(toJson(release.fingerprints)) : null);
 const isFormat = (x: unknown): x is ShortFormat => (SHORT_FORMATS as readonly unknown[]).includes(x);
 
 /** The candidates, judged against the review; pure. */
@@ -215,7 +214,7 @@ export function loadShortParent(topic: string, storyId: string, root = ROOT): Sh
     v: need<ScriptValidation>(FILES.validation, 'run npm run script -- validate'),
     sb: need<Storyboard>(FILES.storyboard, 'run npm run script -- storyboard'),
     pkg: need<EvidencePackage>(FILES.pkg, 'run npm run script -- package'),
-    release: existsSync(join(dir, FILES.release)) ? readJson<Release>(join(dir, FILES.release)) : null,
+    release: readJson<Release>(join(dir, FILES.release)),
   };
 }
 

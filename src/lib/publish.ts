@@ -10,7 +10,7 @@ import { approverProblem } from './release';
 import { scriptDir, shortId, shortOf, storySlug } from './script';
 import { loadStories } from './stories';
 
-export const PUBLISH_FILE = 'publish.json';
+const PUBLISH_FILE = 'publish.json';
 export const EVENT_TYPES = [
   'uploaded',
   'approved',
@@ -23,8 +23,6 @@ export const EVENT_TYPES = [
   'retracted',
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
-/** Known kinds; any string is allowed, unknown kinds get the generic flow. */
-export const KNOWN_KINDS = ['youtube-video', 'youtube-short', 'blog-post', 'web-page', 'post'] as const;
 export type Visibility = 'private' | 'unlisted' | 'public';
 
 /** One reviewer note on a build: where in the video it is (any of the three, all optional) and what to change. */
@@ -178,10 +176,9 @@ export function eventKey(e: PublishEvent): string | null {
     case 'published':
     case 'unpublished':
       return `${e.type}|${e.id}`; // judged against the latest of the two for that id, see appendEvent
-    case 'updated':
-      return null; // recordUpdated refuses an unchanged sha; A, B, A is three honest events
     case 'retracted':
       return 'retracted';
+    case 'updated': // recordUpdated refuses an unchanged sha; A, B, A is three honest events
     case 'failed':
       return null;
   }
@@ -199,9 +196,7 @@ export function appendEvent(
   let existing: PublishEvent | null = null;
   if (e.type === 'published' || e.type === 'unpublished') {
     // publish, unpublish, publish again are three events; only a repeat of the latest of the pair is the same one
-    const latest = [...o.events]
-      .reverse()
-      .find((x) => (x.type === 'published' || x.type === 'unpublished') && x.id === e.id);
+    const latest = o.events.findLast((x) => (x.type === 'published' || x.type === 'unpublished') && x.id === e.id);
     existing = latest?.type === e.type ? latest : null;
   } else if (e.type === 'approved' || e.type === 'changes-requested') {
     // approve, send back, approve again are three decisions; only a repeat of the latest decision on the build is one
@@ -245,8 +240,11 @@ export function saveLedger(path: string, ledger: Ledger): void {
   const tmp = `${path}.tmp`;
   writeFileSync(tmp, toJson(ledger));
   renameSync(tmp, path);
-  if (existsSync(tmp)) throw new Error(`${tmp} still exists after rename`);
 }
+
+/** The last upload or update that sent metadata: what the platform has now. */
+export const lastSent = (o: Pick<Output, 'events'>) =>
+  o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
 
 // ---- state ------------------------------------------------------------------------------------------------------
 
@@ -339,13 +337,10 @@ export function outputState(
   const scheduled = id ? since.filter((e) => e.type === 'scheduled' && e.id === id).at(-1) : undefined;
   const published = id ? since.filter((e) => e.type === 'published' && e.id === id).at(-1) : undefined;
   const generic = flowOf(output.kind) === 'generic';
-  const out = generic ? [...ev].reverse().find((e) => e.type === 'published' || e.type === 'unpublished') : undefined;
+  const out = generic ? ev.findLast((e) => e.type === 'published' || e.type === 'unpublished') : undefined;
   const live = generic ? out?.type === 'published' : !!published;
-  const url =
-    [...ev].reverse().find((e) => e.url && (e.id === id || !id))?.url ?? (id ? `https://youtu.be/${id}` : null);
-  const sentSha = [...ev]
-    .reverse()
-    .find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata)?.metadata;
+  const url = ev.findLast((e) => e.url && (e.id === id || !id))?.url ?? (id ? `https://youtu.be/${id}` : null);
+  const sentSha = lastSent(output)?.metadata;
   const base: Omit<OutputState, 'status' | 'next' | 'due'> = {
     live,
     failed,
@@ -484,7 +479,7 @@ interface ReviewJson {
 export function parentUrlOf(ledger: Ledger, output: Output): string | null {
   const parent = output.derivedFrom ? ledger.outputs[output.derivedFrom] : null;
   if (!parent) return null;
-  const last = [...parent.events].reverse().find((e) => e.type === 'published' || e.type === 'unpublished');
+  const last = parent.events.findLast((e) => e.type === 'published' || e.type === 'unpublished');
   if (last?.type !== 'published') return null;
   return last.url ?? (last.id ? `https://youtu.be/${last.id}` : null);
 }
@@ -710,7 +705,7 @@ export function recordChangesRequested(
 
 /** The last upload's build status: a draft (edge voice) is never scheduled or published. */
 const refuseDraft = (o: ReturnType<typeof openOutput>) => {
-  if ([...o.out.events].reverse().find((e) => e.type === 'uploaded')?.buildStatus === 'draft')
+  if (o.out.events.findLast((e) => e.type === 'uploaded')?.buildStatus === 'draft')
     throw new Refusal('the upload is a draft build (edge voice); npm run video -- final makes the release build');
 };
 
@@ -745,7 +740,7 @@ export function recordUpdated(topic: string, storyId: string, a: VerbArgs & { fi
   const o = openOutput(topic, storyId, a);
   if (!o.state.id) throw new Refusal('nothing uploaded yet; there is nothing on YouTube to update');
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
-  const sent = [...o.out.events].reverse().find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
+  const sent = lastSent(o.out);
   if (sent?.metadata === o.metadata.sha)
     return { event: sent, existing: true, message: `the metadata is unchanged since ${describe(sent)}` };
   return write(o, {

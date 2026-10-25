@@ -2,14 +2,14 @@
 // only: no client id, secret, token or key ever goes here. A YouTube group is drawn per commission with a `channelId`.
 import { commissions, site } from '../config/site';
 
-export type ServiceIcon = 'youtube' | 'key' | 'api' | 'cloud' | 'globe' | 'voice';
-export interface ServiceLink {
+type ServiceIcon = 'youtube' | 'key' | 'api' | 'cloud' | 'globe' | 'voice';
+interface ServiceLink {
   label: string;
   url: string;
   d: string; // one line: what you go there for
-  primary?: boolean; // a frequent one: listed first and emphasised
+  primary?: boolean; // a frequent one: list it first; emphasised
 }
-export interface ServiceGroup {
+interface ServiceGroup {
   title: string;
   icon: ServiceIcon;
   ids: { label: string; value: string }[]; // public identifiers shown beside the links

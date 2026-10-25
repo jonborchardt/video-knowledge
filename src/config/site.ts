@@ -84,6 +84,10 @@ export const commissions: Record<string, Commission> = {
 export const commissionOf = (topic: string): Commission | null =>
   Object.values(commissions).find((c) => c.topics.includes(topic)) ?? null;
 
+/** The institution's kind, wherever it sits in its name: "the Commission", "the Bureau", ... */
+export const commissionBody = (c: Commission): string =>
+  ['Commission', 'Bureau', 'Office', 'Society'].find((w) => c.name.split(' ').includes(w))!;
+
 /** The key of a commission in `commissions`: its stable id and the slug of its page, `/commissions/<key>/`. */
 export const commissionKey = (c: Commission): string => Object.entries(commissions).find(([, v]) => v === c)![0];
 

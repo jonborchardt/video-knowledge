@@ -3,8 +3,6 @@
 // overlapping cues). The package writes it next to the mp4 (captions.en.srt) and the uploader sends it as is.
 import type { Timeline } from './types';
 
-export const CAPTION_LANGUAGE = 'en';
-export const CAPTION_NAME = 'English';
 export const MAX_CUE_LINE = 42; // characters on one line; longer sentences become two balanced lines
 
 const stamp = (seconds: number) => {
@@ -17,7 +15,7 @@ const stamp = (seconds: number) => {
 };
 
 /** One line when it fits, else two lines split at the space nearest the middle (a sentence is one cue). */
-export function wrapCue(text: string): string[] {
+function wrapCue(text: string): string[] {
   const t = text.trim().replace(/\s+/g, ' ');
   if (t.length <= MAX_CUE_LINE) return [t];
   const mid = t.length / 2;

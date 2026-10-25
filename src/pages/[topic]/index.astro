@@ -10,7 +10,7 @@ import SurpriseItem from '../../components/SurpriseItem.astro';
 import VerdictBadge from '../../components/VerdictBadge.astro';
 import { groupSlug, loadStories } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
-import { commissionKey, commissionOf, site } from '../../config/site';
+import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -33,8 +33,7 @@ const tabs = [
   ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'Overruled guesses' }] : []),
 ];
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
-// "Findings of the Commission / Bureau / Office / Society": the institution's kind, wherever it sits in the name.
-const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => commission.name.split(' ').includes(w))!;
+const body = commissionBody(commission); // "Findings of the Commission / Bureau / Office / Society"
 const sec = (id: string) => `Section ${ROMAN[tabs.findIndex((x) => x.id === id)]}`;
 const filters = (['right', 'partly', 'wrong', 'untestable', 'unknown'] as const)
   .map((v) => ({ v, n: t.claims.filter((c) => (c.verdict ?? 'unknown') === v).length }))

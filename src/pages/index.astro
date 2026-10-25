@@ -4,22 +4,18 @@
 // says so rather than inventing a handle.
 import Base from '../layouts/Base.astro';
 import { commissionKey, commissions, site } from '../config/site';
-import { loadStories } from '../lib/stories';
-import { storyUrlSlug } from '../lib/stories';
+import { loadStories, storyUrlSlug } from '../lib/stories';
 import { loadTopic, publicTopicNames } from '../lib/topics';
 import { href } from '../lib/url';
 
 const names = new Set(publicTopicNames());
-const topics = new Map([...names].map((n) => [n, loadTopic(n)]));
 const institutions = Object.values(commissions).map((c) => {
-  const published = c.topics.filter((n) => names.has(n)).map((n) => topics.get(n)!);
-  // Featured: the best-ranked ready story across the institution's inquiries. A decision story is a recap group on
-  // the topic page, so it deep-links to that group; any other story lands on the inquiry.
+  const published = c.topics.filter((n) => names.has(n)).map((n) => loadTopic(n));
+  // Featured: the best-ranked ready story across the institution's inquiries, linked to its own page.
   const featured = published
     .flatMap((t) => (loadStories(t.name)?.stories ?? []).map((s) => ({ s, t })))
     .find(({ s }) => s.readiness === 'ready');
-  const link = featured ? href(`/${featured.t.name}/${storyUrlSlug(featured.s)}/`) : null;
-  return { c, published, featured, link };
+  return { c, published, featured };
 });
 const fmt = (n: number) => n.toLocaleString('en-US');
 ---
@@ -44,7 +40,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
 
   <section class="grid gap-6" aria-label="Institutions">
     {
-      institutions.map(({ c, published, featured, link }) => (
+      institutions.map(({ c, published, featured }) => (
         <article class="grid gap-4 rounded-lg border bg-card p-5 text-card-foreground sm:p-6">
           <header class="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
             <div class="flex items-center gap-4">
@@ -98,10 +94,10 @@ const fmt = (n: number) => n.toLocaleString('en-US');
                   </li>
                 ))}
               </ul>
-              {featured && link && (
+              {featured && (
                 <a
                   class="grid content-start gap-2 rounded-md border border-dashed p-4 no-underline hover:border-primary"
-                  href={link}
+                  href={href(`/${featured.t.name}/${storyUrlSlug(featured.s)}/`)}
                 >
                   <span class="eyebrow text-muted-foreground">Featured inquiry · {featured.t.label}</span>
                   <span class="font-heading text-title font-bold">{featured.s.title}</span>

@@ -490,7 +490,7 @@ const fig = { width: 780, height: yOf(flow.length) };
               </dl>
             )}
             <ul class="mt-2 grid gap-1 text-sm">
-              {[...g.links.filter((l) => l.primary), ...g.links.filter((l) => !l.primary)].map((l) => (
+              {g.links.map((l) => (
                 <li>
                   <a href={l.url} target="_blank" rel="noopener noreferrer" class={l.primary ? 'font-semibold' : ''}>
                     {l.label}

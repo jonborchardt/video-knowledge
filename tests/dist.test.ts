@@ -3,10 +3,11 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { commissions } from '../src/config/site';
+import { ROOT } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames, topicNames } from '../src/lib/topics';
 
-const DIST = join(process.cwd(), 'dist');
+const DIST = join(ROOT, 'dist');
 // Same switch as astro.config.mjs: the GitHub Pages mirror under a base path, else the root site.
 const PAGES = process.env.DEPLOY_TARGET === 'pages';
 const SITE = PAGES ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com';

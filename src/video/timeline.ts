@@ -1,7 +1,7 @@
 // Timeline: the measured narration durations tile the scenes; the storyboard's word-count estimates are not used.
 // Deterministic given the segment, the manifest, render.json and the cited passages. Every cue resolves to the frame
 // its word is spoken on, and every excerpt to its passage, or the build fails.
-import { commissionOf, commissions, site } from '../config/site';
+import { commissionKey, commissionOf, site } from '../config/site';
 import type { PassageReader } from '../lib/evidence';
 import { sha } from '../lib/io';
 import { narrationFingerprint } from './files';
@@ -109,10 +109,11 @@ export function buildTimeline(
     };
   });
   const short = seg.pkg.short;
+  const commission = commissionOf(seg.script.topic);
   // A landscape video whose story has a companion page (its topic is published) ends on the institution's close card,
   // then its end-screen card for YouTube's end-screen elements (5 to 20 s); a range render that stops early has none.
   const last = seg.storyboard.scenes.at(-1)?.id;
-  if (!short && commissionOf(seg.script.topic) && seg.scenes.at(-1)?.scene.id === last) {
+  if (!short && commission && seg.scenes.at(-1)?.scene.id === last) {
     const start = cursor;
     cursor += f(END_SECONDS);
     scenes.push({
@@ -150,9 +151,8 @@ export function buildTimeline(
       ? {
           short: {
             format: short.format,
-            commission: commissionOf(seg.script.topic)?.name ?? site.name,
-            commissionKey:
-              Object.entries(commissions).find(([, c]) => c === commissionOf(seg.script.topic))?.[0] ?? null,
+            commission: commission?.name ?? site.name,
+            commissionKey: commission ? commissionKey(commission) : null,
             question: seg.pkg.question,
             parent: short.parent,
           },

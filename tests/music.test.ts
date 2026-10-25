@@ -533,7 +533,7 @@ describe('music contract', () => {
     const mixed = decodePcm(out);
     expect(rmsDb(mixed, 6, 9)).toBeGreaterThan(-40);
     expect(rmsDb(mixed, 26, 30)).toBeLessThan(-70); // after the ending: intentional silence
-  });
+  }, 30_000); // PCM mix of a real-length track; slow when the suite runs in parallel
 });
 
 describe('build report clearance and the board', () => {

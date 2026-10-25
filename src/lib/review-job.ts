@@ -8,8 +8,8 @@ import { join } from 'node:path';
 import { ROOT, readJson, toJson } from './io';
 
 export const JOB_FILE = 'review-job.json';
-export const JOB_LOG = 'review-job.log';
-export interface Job {
+const JOB_LOG = 'review-job.log';
+interface Job {
   label: string;
   args: string[]; // [cli, ...args]: cli is a scripts/<cli>.ts
   pid: number;
@@ -44,8 +44,8 @@ export function jobStatus(dir: string): { label: string; state: JobState; tail: 
 /** Starts `npm run <cli> -- <args>` (as tsx scripts/<cli>.ts, no shell, so no argument is ever re-parsed) for the
  *  production in `dir`; refuses while that production's last job is still running. */
 export function startJob(dir: string, label: string, args: string[], root = ROOT): void {
-  if (jobStatus(dir)?.state === 'running')
-    throw new Error(`a job is running (${readJson<Job>(paths(dir).json)!.label})`);
+  const last = jobStatus(dir);
+  if (last?.state === 'running') throw new Error(`a job is running (${last.label})`);
   const [cli, ...rest] = args;
   if (!/^[a-z]+$/.test(cli ?? '')) throw new Error(`not a CLI: ${cli}`);
   const p = paths(dir);
