@@ -2,7 +2,15 @@
 // investigation sentence asserts a fact with figures, storyboarded into three scenes (tests/video-helpers.ts).
 import { describe, expect, it } from 'vitest';
 import { toJson } from '../src/lib/io';
-import { type EvidencePackage, type Script, sectionsFor, sentenceFingerprint, sentences } from '../src/lib/script';
+import {
+  type EvidencePackage,
+  type Script,
+  scriptFingerprint,
+  sectionsFor,
+  sentenceFingerprint,
+  sentences,
+} from '../src/lib/script';
+import { storyboardFingerprint, validationFingerprint } from '../src/lib/release';
 import { buildStoryboard } from '../src/lib/storyboard';
 import {
   type ShortParent,
@@ -26,7 +34,7 @@ import {
   scene,
   sentence,
 } from './script-helpers';
-import { inputs, scenes } from './video-helpers';
+import { scenes } from './video-helpers';
 
 /** The fixture script with its sentences in finding sections, and a qualification on the fact. */
 function parentScript(over: { qualifications?: string[] } = {}): Script {
@@ -57,9 +65,22 @@ function parent(over: { qualifications?: string[]; release?: boolean; approve?: 
     pkg(),
     read,
   );
-  const release = over.release === false ? null : inputs({ release: true }).release;
+  const release = over.release === false ? null : lockOf(script, v, sb);
   return { script, v, sb, pkg: pkg(), release };
 }
+const lockOf = (script: Script, v: ShortParent['v'], sb: ShortParent['sb']): ShortParent['release'] => ({
+  topic: script.topic,
+  story: script.story,
+  approvedBy: 'test',
+  date: 'd',
+  revision: 1,
+  fingerprints: {
+    script: scriptFingerprint(script),
+    package: pkg().fingerprint,
+    validation: validationFingerprint(v),
+    storyboard: storyboardFingerprint(sb),
+  },
+});
 const kept = (over: Partial<ShortsReviewFile['candidates'][string]> = {}): ShortsReviewFile => ({
   candidates: {
     s02: {
@@ -118,6 +139,12 @@ describe('short discovery', () => {
     const l = discoverShorts(parent({ release: false }), kept()).candidates[0];
     expect(l.readiness).toBe('needs-review');
     expect(l.blocking.join()).toMatch(/not locked/);
+    // a lock of another revision of the parent is no lock
+    const p = parent();
+    const old = { ...p, release: { ...p.release!, fingerprints: { ...p.release!.fingerprints, script: 'older' } } };
+    const s = discoverShorts(old, kept()).candidates[0];
+    expect(s.readiness).toBe('needs-review');
+    expect(s.blocking.join()).toMatch(/lock is stale/);
   });
   it('refuses a review claim outside the parent package and flags stale review keys', () => {
     const c = discoverShorts(parent(), kept({ claims: ['t/other'] })).candidates[0];
@@ -160,6 +187,12 @@ describe('short package', () => {
   it('refuses a candidate that is not ready', () => {
     const file = discoverShorts(parent(), null);
     expect(() => buildShortPackage(pkg(), file.candidates[0], file)).toThrow(/needs-review/);
+  });
+  it('refuses a parent package other than the one discovery read', () => {
+    const { file } = made();
+    expect(() => buildShortPackage({ ...pkg(), fingerprint: 'newer' }, file.candidates[0], file)).toThrow(
+      /run discover again/,
+    );
   });
   it('is a package the validator reads as a short', () => {
     const { pkg: sp } = made();

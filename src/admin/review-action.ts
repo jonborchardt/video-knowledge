@@ -43,7 +43,7 @@ export async function handle(
       status: 303,
       headers: { location: `${href(`/${topic}/review/${path}`)}?${key}=${encodeURIComponent(text)}` },
     });
-  const form = await req.formData();
+  const form = await req.formData().catch(() => new FormData()); // not a form: no name, so refused below
   const field = (k: string) => String(form.get(k) ?? '').trim();
   const by = field('by');
   const view = reviewView(topic, storyId, root);

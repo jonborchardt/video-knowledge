@@ -82,8 +82,17 @@ export function relativeScene(s: TimelineScene): TimelineScene {
     cues: Object.fromEntries(Object.entries(s.cues).map(([k, v]) => [k, r(v)])),
   };
 }
-export const sceneKey = (s: TimelineScene, tl: Timeline) =>
-  sha(
+/** The kit files a scene draws from the staged brand/ folder: the end scene's cards, and a Short's seal (the portrait
+ *  badge on every scene when an institution publishes it). */
+export const kitSlots = (s: TimelineScene, tl: Timeline): string[] => [
+  ...(s.kind === 'close-card' ? ['close-card', 'endscreen-subscribe'] : []),
+  ...(tl.short?.commissionKey ? ['seal'] : []),
+];
+const kitSvg = (topic: string, slot: string) =>
+  readFileSync(join(ROOT, 'brand', brandKey(topic), `${slot}.svg`), 'utf8');
+export const sceneKey = (s: TimelineScene, tl: Timeline, readKit: (topic: string, slot: string) => string = kitSvg) => {
+  const slots = kitSlots(s, tl);
+  return sha(
     JSON.stringify({
       scene: relativeScene(s),
       fps: tl.fps,
@@ -91,17 +100,12 @@ export const sceneKey = (s: TimelineScene, tl: Timeline) =>
       h: tl.height,
       short: tl.short ?? null, // the frame and the end card draw the institution and the question
       code: rendererVersion(s.kind),
-      // the end scene draws the kit's cards, so a redrawn kit re-renders it (the committed SVGs, not the rasters);
+      // a scene that draws the kit re-renders when the kit is redrawn (the committed SVGs, not the rasters);
       // absent elsewhere, so no other scene's key moves
-      ...(s.kind === 'close-card'
-        ? {
-            kit: ['close-card', 'endscreen-subscribe'].map((f) =>
-              sha(readFileSync(join(ROOT, 'brand', brandKey(tl.topic), `${f}.svg`), 'utf8')),
-            ),
-          }
-        : {}),
+      ...(slots.length ? { kit: slots.map((f) => sha(readKit(tl.topic, f))) } : {}),
     }),
   );
+};
 
 export interface Chunk {
   scene: TimelineScene;

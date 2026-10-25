@@ -1,7 +1,7 @@
 ---
 // One institution of the Commonwealth: what it is for, where it publishes, the inquiries it owns and every story in
-// them. Stories are candidates from stories.json (their pages are dev-only); a ready one links to its place in the
-// inquiry, the rest are listed as under examination. A chain's follow-ups ride with their first question.
+// them. Stories are candidates from stories.json, each linked to its own page ([topic]/[story].astro); one not ready
+// is marked under examination. A chain's follow-ups ride with their first question.
 import Base from '../../layouts/Base.astro';
 import { type Commission, commissionBody, commissions, site } from '../../config/site';
 import { loadStories, storyUrlSlug } from '../../lib/stories';

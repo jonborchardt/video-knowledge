@@ -15,7 +15,15 @@ import { cue, lineFrames, spokenAt } from '../src/video/cues';
 import { excerptWindow, flowPassage } from '../src/video/excerpt';
 import { type Probe, audioStats, probe } from '../src/video/ffmpeg';
 import { BESPOKE } from '../src/video/bespoke';
-import { ALL_KINDS, GENERIC, SHORT_GENERIC, kindOf, registryFor, unsupportedWhy } from '../src/video/kinds';
+import {
+  ALL_KINDS,
+  GENERIC,
+  SHORT_GENERIC,
+  kindOf,
+  registryFor,
+  unsupportedAssets,
+  unsupportedWhy,
+} from '../src/video/kinds';
 import { citationTop } from '../src/video/remotion/Citation';
 import { captionCards } from '../src/video/remotion/Portrait';
 import { SHORT_MAX_SECONDS, type Script, type ShortBlock, sentences } from '../src/lib/script';
@@ -35,7 +43,7 @@ import {
   syncChecks,
 } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
-import { deepImports, relativeScene, sceneKey } from '../src/video/render';
+import { deepImports, kitSlots, relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
 import { type TtsProvider, provider, providerLimitations } from '../src/video/tts';
@@ -737,6 +745,9 @@ describe('shorts: portrait frame and kinds', () => {
     expect(kindOf({ visual: { category: 'diagram', description: 'd' } }, undefined, {}, SHORT_GENERIC)).toBeNull();
     expect(registryFor({ short })).toBe(SHORT_GENERIC);
     expect(registryFor(null)).toBe(GENERIC);
+    // a Short's kinds draw no asset: one the landscape kinds support is still unsupported there
+    expect(unsupportedAssets('title', ['phone-ui'])).toEqual([]);
+    expect(unsupportedAssets('short-title', ['phone-ui'])).toEqual(['phone-ui']);
     for (const k of Object.keys(SHORT_GENERIC)) {
       expect(GENERIC).not.toHaveProperty(k);
       for (const reg of Object.values(BESPOKE)) expect(reg).not.toHaveProperty(k);
@@ -776,6 +787,17 @@ describe('shorts: portrait frame and kinds', () => {
     expect([video.width, video.height]).toEqual([1920, 1080]);
     expect(video.short).toBeUndefined();
     expect(sceneKey(tl.scenes[0], tl)).not.toBe(sceneKey(tl.scenes[0], { ...tl, width: 1920, height: 1080 }));
+  });
+  it('re-renders a Short scene that draws the seal when the kit redraws it', () => {
+    const inp = shortInputs({ config: { scenes: ['sc03'] } });
+    const tl = buildTimeline(checkSegment(inp), manifest(inp), 30, read);
+    const sealed = { ...tl, short: { ...tl.short!, commissionKey: 'spending' } };
+    const kit = (seal: string) => (_t: string, slot: string) => (slot === 'seal' ? seal : 'card');
+    expect(kitSlots(sealed.scenes[0], sealed)).toEqual(['seal']);
+    expect(sceneKey(sealed.scenes[0], sealed, kit('a'))).not.toBe(sceneKey(sealed.scenes[0], sealed, kit('b')));
+    const unsealed = { ...tl, short: { ...tl.short!, commissionKey: null } };
+    expect(kitSlots(unsealed.scenes[0], unsealed)).toEqual([]);
+    expect(sceneKey(unsealed.scenes[0], unsealed, kit('a'))).toBe(sceneKey(unsealed.scenes[0], unsealed, kit('b')));
   });
   it('checks the three-minute rule on portrait builds only', () => {
     expect(shortChecks({ duration: 181 }, { width: 1080, height: 1920 })[0]).toMatchObject({

@@ -47,6 +47,7 @@ export interface PublishEvent {
   build?: string; // mp4 sha (uploaded, approved)
   buildStatus?: 'draft' | 'release';
   metadata?: string; // composed upload metadata sha (uploaded, updated)
+  captions?: string; // sha of the captions file that landed with it (uploaded, updated); push resends only a new one
   id?: string; // the platform's id
   url?: string;
   visibility?: Visibility;
@@ -146,6 +147,8 @@ export function ledgerProblems(x: unknown, video: string): string[] {
       }
       if (typeof e.by !== 'string' || !e.by) out.push(`${where}.by: missing`);
       if (!EVENT_TYPES.includes(e.type as EventType)) return out.push(`${where}.type: ${JSON.stringify(e.type)}`);
+      if (e.captions !== undefined && (typeof e.captions !== 'string' || !e.captions))
+        out.push(`${where}.captions: not a sha`);
       for (const k of REQUIRED[e.type as EventType])
         if (e[k] === undefined || e[k] === '') out.push(`${where}.${k}: ${e.type} needs it`);
     });
@@ -242,6 +245,9 @@ export function saveLedger(path: string, ledger: Ledger): void {
   renameSync(tmp, path);
 }
 
+/** The captions sha the platform has: the latest upload or update that recorded one (none: unknown, send them). */
+export const lastCaptions = (o: Pick<Output, 'events'>) =>
+  o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.captions)?.captions ?? null;
 /** The last upload or update that sent metadata: what the platform has now. */
 export const lastSent = (o: Pick<Output, 'events'>) =>
   o.events.findLast((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata);
@@ -303,6 +309,14 @@ export interface StateContext {
   parentLive?: boolean; // for a derivative: whether the output it derives from is published (default: yes)
   title?: string | null; // the composed title now; an approval made with another title does not count (absent: any)
 }
+/** The latest decision on a build: an approval (with the title it was made with) or a change request; it decides it. */
+const decisionOn = (ev: PublishEvent[], b: string) =>
+  ev.findLast((e) => (e.type === 'approved' || e.type === 'changes-requested') && e.build === b) ?? null;
+/** Whether the latest decision on `build` is an approval made under `title` (absent on either side: any title). */
+export function approvalHolds(ev: PublishEvent[], build: string, title?: string | null): boolean {
+  const d = decisionOn(ev, build);
+  return d?.type === 'approved' && (d.title === undefined || title == null || d.title === title);
+}
 /** The flow a kind follows: YouTube outputs are uploaded, watched and approved; anything else is made, approved, published. */
 export const flowOf = (kind: string): 'youtube' | 'generic' => (kind.startsWith('youtube') ? 'youtube' : 'generic');
 
@@ -322,15 +336,10 @@ export function outputState(
   const uploads = ev.filter((e) => e.type === 'uploaded');
   const upload = uploads.at(-1) ?? null;
   const id = upload?.id ?? null;
-  // The latest decision on a build decides it: an approval (with the title it was made with) or a change request.
-  const decision = (b: string) =>
-    ev.findLast((e) => (e.type === 'approved' || e.type === 'changes-requested') && e.build === b) ?? null;
-  const holds = (d: PublishEvent | null) =>
-    d?.type === 'approved' && (d.title === undefined || ctx.title == null || d.title === ctx.title);
-  const approved = !!upload && holds(decision(upload.build!));
-  const localApproved = !!build && holds(decision(build.sha));
+  const approved = !!upload && approvalHolds(ev, upload.build!, ctx.title);
+  const localApproved = !!build && approvalHolds(ev, build.sha, ctx.title);
   const judged = upload && (!build || build.sha === upload.build) ? upload.build! : build?.sha;
-  const requested = judged ? decision(judged) : null;
+  const requested = judged ? decisionOn(ev, judged) : null;
   // an unpublish closes a chapter: the schedule and publication before it are history
   const cut = id ? ev.findLastIndex((e) => e.type === 'unpublished' && e.id === id) : -1;
   const since = ev.slice(cut + 1);
@@ -595,7 +604,7 @@ const stamp = (a: { now?: Date }) => (a.now ?? new Date()).toISOString();
 export function recordUploaded(
   topic: string,
   storyId: string,
-  a: VerbArgs & { id: string; url?: string; visibility?: Visibility },
+  a: VerbArgs & { id: string; url?: string; visibility?: Visibility; captions?: string },
 ): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (o.out.kind.startsWith('youtube') && !YOUTUBE_ID.test(a.id)) {
@@ -614,9 +623,14 @@ export function recordUploaded(
     throw new Refusal(`--visibility ${visibility}: private, unlisted or public`);
   if (visibility === 'public' && o.build.status === 'draft')
     throw new Refusal('a draft build (edge voice) never goes public; npm run video -- final makes the release build');
-  const approved = o.out.events.some((e) => e.type === 'approved' && e.build === o.build!.sha);
-  if (visibility === 'public' && !approved)
-    throw new Refusal(`build ${o.build.sha} is not approved; a public upload needs npm run publish -- approve first`);
+  if (visibility === 'public') {
+    if (!approvalHolds(o.out.events, o.build.sha, o.metadata.title))
+      throw new Refusal(
+        `build ${o.build.sha} is not approved under the title "${o.metadata.title}"; a public upload needs npm run publish -- approve first`,
+      );
+    const problem = goLiveProblem(o, a.by);
+    if (problem) throw new Refusal(problem);
+  }
   const at = stamp(a);
   const e: PublishEvent = {
     at,
@@ -629,6 +643,7 @@ export function recordUploaded(
     visibility,
   };
   if (a.url) e.url = a.url;
+  if (a.captions) e.captions = a.captions;
   return write(o, e, (l) =>
     visibility === 'public'
       ? appendEvent(l, o.id, { at, type: 'published', by: a.by, id: a.id, ...(a.url ? { url: a.url } : {}) }).ledger
@@ -703,17 +718,25 @@ export function recordChangesRequested(
   return write(o, { at: stamp(a), type: 'changes-requested', by: a.by, build: a.build, notes });
 }
 
-/** The last upload's build status: a draft (edge voice) is never scheduled or published. */
-const refuseDraft = (o: ReturnType<typeof openOutput>) => {
+/** Why `o` may not go public or be scheduled by `by`, or null: only a person does it, never with a draft upload (edge
+ *  voice), and a derivative (a Short) only after the output it derives from is live. go-live asks before calling YouTube. */
+export function goLiveProblem(o: ReturnType<typeof openOutput>, by: string): string | null {
+  if (by.trim().startsWith('automated:')) return 'an output goes live by a person, never by an automated run';
   if (o.out.events.findLast((e) => e.type === 'uploaded')?.buildStatus === 'draft')
-    throw new Refusal('the upload is a draft build (edge voice); npm run video -- final makes the release build');
+    return 'the upload is a draft build (edge voice); npm run video -- final makes the release build';
+  if (!o.parentLive) return `${o.id} derives from ${o.out.derivedFrom}: publish ${o.out.derivedFrom} first`;
+  return null;
+}
+const refuseGoLive = (o: ReturnType<typeof openOutput>, by: string) => {
+  const problem = goLiveProblem(o, by);
+  if (problem) throw new Refusal(problem);
 };
 
 export function recordScheduled(topic: string, storyId: string, a: VerbArgs & { at: string }): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
     throw new Refusal(`the upload is ${o.state.status}, not approved: ${o.state.next}`);
-  refuseDraft(o);
+  refuseGoLive(o, a.by);
   const t = Date.parse(a.at);
   if (Number.isNaN(t)) throw new Refusal(`--at ${a.at} is not an ISO date`);
   if (t <= (a.now ?? new Date()).getTime()) throw new Refusal(`--at ${a.at} is in the past`);
@@ -723,12 +746,12 @@ export function recordScheduled(topic: string, storyId: string, a: VerbArgs & { 
 export function recordPublished(
   topic: string,
   storyId: string,
-  a: VerbArgs & { url?: string; id?: string },
+  a: VerbArgs & { url?: string; id?: string; observed?: boolean }, // observed: sync read it back public, a fact to record
 ): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (o.state.status !== 'approved' && o.state.status !== 'scheduled')
     throw new Refusal(`the output is ${o.state.status}, not approved or scheduled: ${o.state.next}`);
-  refuseDraft(o);
+  if (!a.observed) refuseGoLive(o, a.by);
   // a generic output has no platform id of its own: the url (or the output id) names what went live
   const id = o.state.id ?? a.id ?? a.url ?? o.id;
   const e: PublishEvent = { at: stamp(a), type: 'published', by: a.by, id };
@@ -736,7 +759,11 @@ export function recordPublished(
   return write(o, e);
 }
 
-export function recordUpdated(topic: string, storyId: string, a: VerbArgs & { fields: string[] }): VerbResult {
+export function recordUpdated(
+  topic: string,
+  storyId: string,
+  a: VerbArgs & { fields: string[]; captions?: string },
+): VerbResult {
   const o = openOutput(topic, storyId, a);
   if (!o.state.id) throw new Refusal('nothing uploaded yet; there is nothing on YouTube to update');
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
@@ -750,6 +777,7 @@ export function recordUpdated(topic: string, storyId: string, a: VerbArgs & { fi
     id: o.state.id,
     metadata: o.metadata.sha,
     fields: a.fields,
+    ...(a.captions ? { captions: a.captions } : {}),
   });
 }
 

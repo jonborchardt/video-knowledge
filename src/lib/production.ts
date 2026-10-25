@@ -861,7 +861,8 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     sb: null,
   };
   // The ledger view: every output's state against the build on disk and the metadata it would send. A Short's view is
-  // its own output in the parent's ledger (present once it is packaged), judged against its own build.
+  // its own output in the parent's ledger (present once it is packaged), judged against its own build: c.build is the
+  // parent's package, which outputStates uses only for an output without a source; a Short's output names its folder.
   const own = short ? `short:${short.slug}` : null;
   if ((own ? own in c.ledger.outputs : c.build) || (!own && existsSync(publishPath(topic, storyId, root)))) {
     const lrel = (f: string) => rel(join(ledgerDir, f), root);
@@ -978,7 +979,10 @@ export function boardNext(topic: string, storyId: string, root = ROOT): BoardNex
       : 'the story is not ready in stories.json';
   const live = mainState(prod);
   if (prod && live && (live.live || live.status === 'scheduled')) {
-    const next = `stop: ${live.live ? 'live' : 'scheduled'} at ${live.url}; a re-release is npm run publish -- add ${topic} ${storyId} youtube-2 --kind youtube-video`;
+    const again = short
+      ? `a new Short of ${short.parent}, never this one rebuilt`
+      : `npm run publish -- add ${topic} ${storyId} youtube-2 --kind youtube-video`;
+    const next = `stop: ${live.live ? 'live' : 'scheduled'} at ${live.url}; a re-release is ${again}`;
     return {
       topic,
       story: storyId,

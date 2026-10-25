@@ -38,6 +38,10 @@ describe('web-quality exceptions', () => {
 });
 
 describe.skipIf(!existsSync(DIST))('web-quality: built pages', () => {
+  it('finds the built pages (an empty dist/ would pass every check below)', () => {
+    expect(pages).toContain('index.html');
+  });
+
   it('HTML is valid (html-validate: WHATWG content models, duplicate ids, labels, a11y basics)', async () => {
     const hv = new HtmlValidate(new FileSystemConfigLoader());
     const findings: Finding[] = [];

@@ -309,6 +309,9 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
       },
       body: bytes.subarray(from),
     });
+    // a 308 here is YouTube holding a partial upload: the session stands and the next run resumes it
+    if (r.status === 308)
+      throw new YouTubeError('upload incomplete; run the verb again to resume', 308, 'incomplete', true);
     return r.json();
   }
 

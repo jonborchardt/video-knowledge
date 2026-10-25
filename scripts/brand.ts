@@ -142,12 +142,14 @@ ${LOAD_FONTS}.then(() => {
   const svgs = [...root.children].map((s) => new XMLSerializer().serializeToString(s));
   document.getElementById('out').textContent = JSON.stringify(list.map((a, i) => ({ ...a, svg: svgs[i] })));
   root.remove();
-});
+}).catch((e) => (document.getElementById('out').textContent = 'ERROR ' + e.message));
 </script>`,
   );
   const dom = await run(['--dump-dom', pathToFileURL(page).href]);
   const m = /<pre id="out">([\s\S]*?)<\/pre>/.exec(dom);
-  if (!m || !m[1]) throw new Error(`${name}: the page did not finish drawing (fonts not loaded?)`);
+  if (!m || !m[1]) throw new Error(`${name}: the page did not finish drawing`);
+  if (m[1].startsWith('ERROR '))
+    throw new Error(`${name}: ${unescape(m[1].slice(6))} (a font failed to load, or text does not fit)`);
   return JSON.parse(unescape(m[1])) as T[];
 }
 /** Rasterizes one fitted SVG in the same fonts to `png` (transparent where the drawing is). */
