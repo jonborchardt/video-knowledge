@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { author, commissions, site } from '../src/config/site';
 import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
 import { loadArticleRelease } from '../src/lib/article';
+import { distPages, loadMoved, manifestProblems } from '../src/lib/content-graph';
 import { datasetChart } from '../src/lib/chart-geometry';
 import { dataRef, loadDatasets } from '../src/lib/datasets';
 import { ROOT, readJson, topicDir } from '../src/lib/io';
@@ -416,5 +417,24 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       }
     }
     expect(seen).toBeGreaterThan(0);
+  });
+
+  it('the built site keeps every url in public-urls.json', () => {
+    const manifest = JSON.parse(readFileSync(join(ROOT, 'public-urls.json'), 'utf8')) as string[];
+    const { built, indexed } = distPages(DIST);
+    expect(manifestProblems(manifest, built, indexed)).toEqual([]);
+  });
+
+  it('a redirect page is noindex, points at its target and is not in the sitemap', () => {
+    const sitemap = sitemapXml();
+    for (const topic of publicTopicNames())
+      for (const [from, to] of Object.entries(loadMoved(topic))) {
+        const [old, now] = [from, to].map((id) => `${topic}/${storyUrlSlug({ id })}/`);
+        const html = readFileSync(join(DIST, old, 'index.html'), 'utf8');
+        expect(html).toContain('content="noindex"');
+        expect(html).toContain(`rel="canonical" href="${SITE}${BASE}${now}"`);
+        expect(html).toContain('http-equiv="refresh"');
+        expect(sitemap).not.toContain(`${BASE}${old}<`);
+      }
   });
 });

@@ -1,6 +1,7 @@
 // The content graph (plan 4, D1): every asset made from a story (its matter page, video, Shorts, article, charts,
 // datasets, tool), joined by stable ids and rebuilt from the committed files at every build; never stored. `urlOf` is
 // the one way a page, description or package builds a link to a node (D2); a URL comes from an id, never a title.
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionKey, commissionOf, site } from '../config/site';
 import { TOOLS } from '../tools';
@@ -263,4 +264,52 @@ export function inquiryMatters(g: Graph, topic: string): MatterItem[] {
         (g.stories.get(n.id)!.chain ?? []).map((c) => storyNode(topic, c.id)).filter((id) => g.stories.has(id)),
       ),
     );
+}
+
+/** A topic's moved stories (`topics/<topic>/moved.json`, written by a person): old story id → current story id. `{}`
+ *  when there is none; a target that is not a current story throws. */
+export function loadMoved(topic: string, root = ROOT): Record<string, string> {
+  const moved = readJson<Record<string, string>>(join(topicDir(topic, root), 'moved.json')) ?? {};
+  const ids = new Set((loadStories(topic, root)?.stories ?? []).map((s) => s.id));
+  for (const to of Object.values(moved))
+    if (!ids.has(to)) throw new Error(`moved.json: ${to} is not a story of ${topic}`);
+  return moved;
+}
+
+/** Every redirect the build emits, old matter path → current matter path, for Astro's `redirects` (which writes each
+ *  as a noindex page with a canonical link and a meta refresh). */
+export const movedRedirects = (topics: string[] = publicTopicNames()): Record<string, string> =>
+  Object.fromEntries(
+    topics.flatMap((t) =>
+      Object.entries(loadMoved(t)).map(([from, to]) => [matterPath(t, { id: from }), matterPath(t, { id: to })]),
+    ),
+  );
+
+/** The pages a build wrote under `dist`, as root-relative paths (`/heat-pumps/`): `built` is every page, redirects
+ *  included; `indexed` leaves out redirect pages, noindex pages and the 404 (what `public-urls.json` lists). */
+export function distPages(dist: string): { built: Set<string>; indexed: Set<string> } {
+  const built = new Set<string>();
+  const indexed = new Set<string>();
+  for (const f of readdirSync(dist, { recursive: true, encoding: 'utf8' })) {
+    const file = f.replaceAll('\\', '/');
+    if (file !== 'index.html' && !file.endsWith('/index.html')) continue;
+    const path = `/${file.slice(0, -'index.html'.length)}`;
+    built.add(path);
+    const html = readFileSync(join(dist, file), 'utf8');
+    if (!/http-equiv="refresh"|name="robots" content="noindex/.test(html)) indexed.add(path);
+  }
+  return { built, indexed };
+}
+
+/** The URL manifest's problems (D3): a path the manifest promised that the build lost (no page and no redirect), and an
+ *  indexed page the manifest does not list yet. */
+export function manifestProblems(manifest: string[], built: Set<string>, indexed: Set<string> = built): string[] {
+  const listed = new Set(manifest);
+  return [
+    ...manifest.filter((p) => !built.has(p)).map((p) => `lost ${p}: add a moved.json entry`),
+    ...[...indexed]
+      .filter((p) => !listed.has(p))
+      .sort()
+      .map((p) => `new ${p}: run npm run links -- freeze`),
+  ];
 }
