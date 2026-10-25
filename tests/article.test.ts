@@ -270,13 +270,31 @@ describe('article release', () => {
     expect(release.history[1]).toMatchObject({ revision: 2, note: 'Fixed the 2024 price', sentences: ['s03'] });
     expect(publicRecordProblems({ exhibits: {}, revisions: [revision] })).toEqual([]);
   });
-  it('correct names added and removed sentences, and refuses a change to no sentence', () => {
+  const fix = (prev: typeof r, b: Article) =>
+    correctArticle(prev, b, check(b, { review: approveArticle(b) }), 'Jon', 'n', 'd');
+  it('correct names added and removed sentences, and a changed headline or heading', () => {
     const b = structuredClone(a);
     b.sections[0].blocks = [prose('s09', 'Say you sign up under a friend.')];
-    const { revision } = correctArticle(r, b, check(b, { review: approveArticle(b) }), 'Jon', 'n', 'd');
-    expect(revision.kind === 'article' && revision.sentences).toEqual(['s09', 's01']);
-    const h = { ...a, meta: { ...a.meta, headline: 'Another headline' } };
-    expect(() => correctArticle(r, h, check(h, { review: approveArticle(h) }), 'Jon', 'n', 'd')).toThrow(/no sentence/);
+    expect(fix(r, b).revision.sentences).toEqual(['s09', 's01']);
+    const h = structuredClone(a);
+    h.meta.headline = 'Another headline';
+    h.sections[1].heading = 'What the survey found';
+    expect(fix(r, h).revision.sentences).toEqual(['meta.headline', 'heading:answer']);
+  });
+  it('a table-only correction names the table id', () => {
+    const cell = { label: 'Lost money', value: 47, unit: 'percent' as const, display: '47%', cite: DOC_D };
+    const tb: Block = {
+      kind: 'table',
+      id: 'tb1',
+      caption: 'Outcomes',
+      columns: ['Share'],
+      rows: [{ label: 'Lost money', cells: [cell] }],
+    };
+    const base = withBlock(tb);
+    const v = check(base, { review: approveArticle(base) });
+    expect(v.status).toBe('passed');
+    const released = lockArticle(null, base, v, 'Jon', 'd');
+    expect(fix(released, withBlock({ ...tb, caption: 'Outcomes reported' })).revision.sentences).toEqual(['tb1']);
   });
   it('correct refuses an unchanged article', () => {
     expect(() => correctArticle(r, a, passed, 'Jon', 'n', '2026-11-05')).toThrow(Refusal);

@@ -132,6 +132,27 @@ export function lockArticle(
   return { ...snapshot(a, v, approvedBy, date, 1), history: [{ revision: 1, date, approvedBy, fingerprint: fp }] };
 }
 
+/** Every unit a correction can name, in reading order, with its fingerprint: the headline, SEO title, each sentence
+ *  (with its block's callout), each section heading (`heading:<section>`), each table by id and figure by ref. */
+function unitsOf(a: Article): [string, string][] {
+  const out: [string, string][] = [
+    ['meta.headline', sha(a.meta.headline)],
+    ['meta.seoTitle', sha(a.meta.seoTitle)],
+    [a.meta.dek.id, sentenceFingerprint(a.meta.dek)],
+    [a.meta.description.id, sentenceFingerprint(a.meta.description)],
+  ];
+  for (const sec of a.sections) {
+    out.push([`heading:${sec.name}`, sha(sec.heading)]);
+    for (const b of sec.blocks)
+      if (b.kind === 'prose') {
+        const { sentences: _s, ...attrs } = b;
+        void _s;
+        for (const x of b.sentences) out.push([x.id, sha(sentenceFingerprint(x) + JSON.stringify(attrs))]);
+      } else out.push([b.kind === 'table' ? b.id : b.ref, sha(JSON.stringify(b))]);
+  }
+  return out;
+}
+
 /** A new release of changed text, and the noted revision it adds to the topic's public record. */
 export function correctArticle(
   prev: ArticleRelease,
@@ -145,15 +166,14 @@ export function correctArticle(
   releasable(v, approvedBy);
   const fp = articleFingerprint(a);
   if (prev.fingerprints.article === fp) throw new Refusal('the article is unchanged since its release');
-  const before = new Map(articleSentences(prev.article).map((s) => [s.id, sentenceFingerprint(s)]));
-  const now = articleSentences(a);
-  const ids = new Set(now.map((s) => s.id));
+  const before = new Map(unitsOf(prev.article));
+  const now = unitsOf(a);
+  const ids = new Set(now.map(([id]) => id));
   const sentences = [
-    ...now.filter((s) => before.get(s.id) !== sentenceFingerprint(s)).map((s) => s.id),
+    ...now.filter(([id, print]) => before.get(id) !== print).map(([id]) => id),
     ...[...before.keys()].filter((id) => !ids.has(id)),
   ];
-  // ponytail: a headline, table or figure fix with no sentence changed cannot be corrected; the record names sentences
-  if (!sentences.length) throw new Refusal('the correction changes no sentence; the public record names sentences');
+  if (!sentences.length) throw new Refusal('the text changed but no sentence, heading, table or figure did');
   const revision = prev.revision + 1;
   return {
     release: {

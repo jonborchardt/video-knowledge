@@ -98,7 +98,7 @@ function run() {
     }
     case 'show': {
       if (!existsSync(p(ARTICLE_FILES.md)))
-        throw new Error(`run npm run article -- validate ${topic} ${storyId} first`);
+        throw new Refusal(`run npm run article -- validate ${topic} ${storyId} first`);
       console.log(readFileSync(p(ARTICLE_FILES.md), 'utf8'));
       return;
     }
@@ -108,7 +108,7 @@ function run() {
       const r = lockArticle(prev, a, v, flag('--approved-by') ?? '', today);
       if (r === prev) return console.log(`${rel(p(ARTICLE_FILES.release))} unchanged: revision ${r.revision}`);
       writeArtifact(dir, ARTICLE_FILES.release, toJson(r));
-      console.log(`released ${rel(p(ARTICLE_FILES.release))}: revision 1, approved by ${r.approvedBy}`);
+      console.log(`released ${rel(p(ARTICLE_FILES.release))}: revision ${r.revision}, approved by ${r.approvedBy}`);
       return;
     }
     case 'correct': {
@@ -127,10 +127,11 @@ function run() {
       if (problems.length) throw new Refusal(problems.join('; '));
       const record = loadPublicRecord(topic);
       const next = { ...record, revisions: [...record.revisions, revision] };
-      writeArtifact(dir, ARTICLE_FILES.release, toJson(release));
+      // the record first: if the release write then fails, correct can be re-run against the old release
       writeFileSync(publicRecordPath(topic), toJson(next));
+      writeArtifact(dir, ARTICLE_FILES.release, toJson(release));
       console.log(
-        `released ${rel(p(ARTICLE_FILES.release))}: revision ${release.revision}, sentences ${revision.sentences.join(', ')}; recorded in ${rel(publicRecordPath(topic))}`,
+        `released ${rel(p(ARTICLE_FILES.release))}: revision ${release.revision}, changed ${revision.sentences.join(', ')}; recorded in ${rel(publicRecordPath(topic))}`,
       );
     }
   }
