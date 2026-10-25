@@ -7,14 +7,20 @@ import { absoluteUrl, href } from '../lib/url';
 import { websiteJsonLd, type PageMeta } from '../lib/seo';
 
 type Props = PageMeta;
-const { title, description = site.description, noindex = false, image: imagePath = '/og/site.jpg' } = Astro.props;
+const {
+  title,
+  description = site.description,
+  noindex = false,
+  image: imagePath = '/og/site.jpg',
+  jsonLd: pageLd = [],
+} = Astro.props;
 const siteUrl = Astro.site!;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 // Social image: the brand kit's share card (1200x675), the Commonwealth's unless the page belongs to an institution.
 const image = absoluteUrl(imagePath, siteUrl);
 const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
 // JSON-LD sits in a <script>: escape < so no value can close the tag.
-const jsonLd = JSON.stringify(websiteJsonLd(siteUrl)).replaceAll('<', '\\u003c');
+const jsonLd = [websiteJsonLd(siteUrl), ...pageLd].map((x) => JSON.stringify(x).replaceAll('<', '\\u003c'));
 ---
 
 <!doctype html>
@@ -58,7 +64,7 @@ const jsonLd = JSON.stringify(websiteJsonLd(siteUrl)).replaceAll('<', '\\u003c')
     <meta name="twitter:image:alt" content={imageAlt} />
     <meta name="author" content={author.name} />
     {/* eslint-disable-next-line astro/no-set-html-directive -- JSON-LD from site config, with < escaped */}
-    {!noindex && <script is:inline type="application/ld+json" set:html={jsonLd} />}
+    {!noindex && jsonLd.map((x) => <script is:inline type="application/ld+json" set:html={x} />)}
 
     <!-- Theme: applied before paint to avoid a flash. Order: user override → system preference. -->
     <script is:inline>

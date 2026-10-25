@@ -32,6 +32,8 @@ const sitemapXml = () => {
   const part = index.match(/<loc>[^<]*\/(sitemap-\d+\.xml)<\/loc>/)![1];
   return readFileSync(join(DIST, part), 'utf8');
 };
+const ldOf = (html: string) =>
+  [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
 const decode = (s: string) => s.replaceAll('&#39;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
@@ -195,6 +197,27 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       const nums = [...html.matchAll(/Exhibit (\d+)/g)].map((m) => Number(m[1]));
       expect(nums).toEqual([...nums].sort((a, b) => a - b));
     }
+  });
+
+  it('ready matters carry Article and BreadcrumbList; unsettled ones carry none; nothing claims a review', () => {
+    for (const { topic, slug, s } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const types = ldOf(html).map((x) => x['@type']);
+      if (s.readiness === 'ready') expect(types).toEqual(expect.arrayContaining(['Article', 'BreadcrumbList']));
+      else expect(types).toEqual([]);
+      expect(html).not.toContain('ClaimReview');
+    }
+  });
+
+  it('inquiries carry a Report and institutions a CollectionPage, each with breadcrumbs', () => {
+    for (const n of publicTopicNames())
+      expect(ldOf(readFileSync(join(DIST, n, 'index.html'), 'utf8')).map((x) => x['@type'])).toEqual(
+        expect.arrayContaining(['Report', 'BreadcrumbList']),
+      );
+    for (const k of Object.keys(commissions))
+      expect(ldOf(readFileSync(join(DIST, 'commissions', k, 'index.html'), 'utf8')).map((x) => x['@type'])).toEqual(
+        expect.arrayContaining(['CollectionPage', 'BreadcrumbList']),
+      );
   });
 
   it('serves a 404 page', () => {

@@ -4,6 +4,7 @@
 // is marked under examination. A chain's follow-ups ride with their first question.
 import Base from '../../layouts/Base.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
+import { breadcrumbJsonLd, collectionJsonLd } from '../../lib/seo';
 import { type Commission, commissionBody, commissions, site } from '../../config/site';
 import { loadStories, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
@@ -23,7 +24,21 @@ const total = docket.reduce((n, d) => n + d.stories.length, 0);
 const body = commissionBody(c);
 ---
 
-<Base title={`${c.name} · ${site.name}`} description={c.remit} image={`/og/${Astro.params.id}.jpg`}>
+<Base
+  title={`${c.name} · ${site.name}`}
+  description={c.remit}
+  image={`/og/${Astro.params.id}.jpg`}
+  jsonLd={[
+    collectionJsonLd(c.ceremonialName, c.remit, `/commissions/${Astro.params.id}/`, Astro.site!),
+    breadcrumbJsonLd(
+      [
+        { name: site.name, path: '/' },
+        { name: c.name, path: `/commissions/${Astro.params.id}/` },
+      ],
+      Astro.site!,
+    ),
+  ]}
+>
   <ReportHeader
     brand={Astro.params.id}
     kind="Institution"

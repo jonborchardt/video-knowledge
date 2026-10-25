@@ -10,6 +10,7 @@ import ReportHeader from '../../components/ReportHeader.astro';
 import LabelStrip from '../../components/LabelStrip.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import { storyOutputs } from '../../lib/outputs';
+import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
 import { revisionLine } from '../../lib/public-record';
 import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
 import SourceIcons from '../../components/SourceIcons.astro';
@@ -45,12 +46,37 @@ const revisions = claims
 const revised = revisions.at(-1)?.r.at ?? null;
 // The video lives on the first question's page; a follow-up links to it.
 const outputs = storyOutputs(t.name, s.partOf ?? s.id);
-const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
-const body = commissionBody(commission);
-const h2 = 'mb-3 text-featured font-bold';
 // The story's own share card (npm run brand), else its institution's.
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
+const path = `/${t.name}/${storyUrlSlug(s)}/`;
+const jsonLd = [
+  articleJsonLd(
+    {
+      headline: s.title,
+      description: s.question,
+      path,
+      image,
+      series: commission.fullName,
+      datePublished: outputs.video?.publishedAt,
+      dateModified: revised ?? undefined,
+    },
+    Astro.site!,
+  ),
+  ...(outputs.video && !first ? [videoJsonLd(outputs.video, s.question, image, Astro.site!)] : []),
+  breadcrumbJsonLd(
+    [
+      { name: site.name, path: '/' },
+      { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
+      { name: t.label, path: `/${t.name}/` },
+      { name: s.title, path },
+    ],
+    Astro.site!,
+  ),
+];
+const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
+const body = commissionBody(commission);
+const h2 = 'mb-3 text-featured font-bold';
 ---
 
 <Base
@@ -58,6 +84,7 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
   description={s.question}
   image={image}
   noindex={s.readiness !== 'ready'}
+  jsonLd={jsonLd}
 >
   <SourceIcons />
   <ReportHeader

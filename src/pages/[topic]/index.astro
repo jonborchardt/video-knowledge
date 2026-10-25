@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
 import { revisionLine } from '../../lib/public-record';
+import { breadcrumbJsonLd, reportJsonLd } from '../../lib/seo';
 import SourceIcons from '../../components/SourceIcons.astro';
 import Stamp from '../../components/Stamp.astro';
 import SourceDetails from '../../components/SourceDetails.astro';
@@ -113,6 +114,24 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
   title={`${t.label} · ${commission.name}`}
   description={t.bottomLine ?? undefined}
   image={`/og/${commissionKey(commission)}.jpg`}
+  jsonLd={[
+    reportJsonLd(
+      t.hero.title ?? t.label,
+      t.bottomLine ?? `The public inquiry into ${t.label}.`,
+      `/${t.name}/`,
+      t.revised,
+      commission.fullName,
+      Astro.site!,
+    ),
+    breadcrumbJsonLd(
+      [
+        { name: site.name, path: '/' },
+        { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
+        { name: t.label, path: `/${t.name}/` },
+      ],
+      Astro.site!,
+    ),
+  ]}
 >
   <SourceIcons />
   <div class="grid gap-5">
