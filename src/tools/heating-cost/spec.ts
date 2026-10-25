@@ -1,0 +1,40 @@
+import { dataRef } from '../../lib/datasets';
+import type { ToolSpec } from '../index';
+
+const SRC = 'heat-pumps/sources/eia-2026-state-residential-energy-prices.txt';
+
+export const heatingCost: ToolSpec = {
+  id: 'heating-cost',
+  topic: 'heat-pumps',
+  story: 'decision:is-it-cheaper-to-run-than-gas',
+  justification: {
+    condition:
+      'Whether a heat pump is cheaper to run than a gas furnace turns on the price ratio and the heat pump seasonal COP, so the answer differs by household; the evidence gives the method, not one answer.',
+    model: `${SRC}#L119-L127`,
+  },
+  defaults: {
+    prices: dataRef('heat-pumps', 'state-prices'),
+    afue: [
+      { value: 0.95, cite: `${SRC}#L131` },
+      { value: 0.8, cite: `${SRC}#L131` },
+    ],
+    cops: { value: [2.5, 3.0], cite: `${SRC}#L133` },
+  },
+  assumptions: [
+    '1 MMBtu = 293.07 kWh.',
+    'Residential natural gas carries 1.036 MMBtu per Mcf (EIA approximate U.S. average).',
+    '1 therm = 0.1 MMBtu (a definition).',
+    'Break-even seasonal COP = price ratio x AFUE, with prices compared per MMBtu of energy.',
+    'Prices are annual averages including fixed monthly charges.',
+    'The COP is a seasonal average over the heating season.',
+  ],
+  limitations: [
+    'Ignores backup resistance heat.',
+    'Ignores tiered and time-of-use rates.',
+    'A household that keeps its gas connection keeps the fixed gas charge; one that disconnects saves it.',
+    'Ignores installation cost.',
+    'Ignores cooling.',
+  ],
+  whyDefaults:
+    'The efficiencies are the source’s own illustrative values: furnace AFUE 0.95 and 0.80, heat pump seasonal COP 2.5 and 3.0. Prices are the state averages from the same source, starting from the U.S. average. None was chosen to favour either machine.',
+};
