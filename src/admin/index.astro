@@ -109,40 +109,6 @@ const flow: Step[] = [
     d: ['storyboard.md; graphics.md per bespoke', 'scene, visual-review.md, render check;', 'lock writes release.json'],
   },
   {
-    t: 'Write the article',
-    d: [
-      'a side track after the lock, never blocking',
-      'the video: a writer (article.md); evidence.md',
-      'if needed; npm run article -- validate',
-    ],
-  },
-  {
-    t: 'Review the article',
-    d: [
-      'a different reviewer (article-review.md)',
-      'writes article-review.json; validate again;',
-      'the board: none, writing, review, blocked',
-    ],
-  },
-  {
-    you: true,
-    t: 'Release the article',
-    d: [
-      'npm run article -- lock <topic> <story>',
-      '--approved-by "<your name>"; the site shows',
-      'the released text, not article.json',
-    ],
-  },
-  {
-    you: true,
-    t: 'Correct a released article',
-    d: [
-      'board: changed or stale (a cited finding was',
-      'revised); article -- correct with --note',
-      'records it in public-record.json',
-    ],
-  },
-  {
     t: 'Draft video',
     d: [
       'video init, music cues; spike: edge voice,',
@@ -218,6 +184,40 @@ const flow: Step[] = [
       'set each related video in YouTube Studio',
       '(no API): updated --fields relatedVideo;',
       "a Short's description links the live video",
+    ],
+  },
+  {
+    t: 'Write the article',
+    d: [
+      'a side track: starts once the script is',
+      'locked, never blocks the video; a writer',
+      '(article.md), evidence.md if needed',
+    ],
+  },
+  {
+    t: 'Review the article',
+    d: [
+      'a different reviewer (article-review.md)',
+      'writes article-review.json; npm run',
+      'article -- validate; board: Article column',
+    ],
+  },
+  {
+    you: true,
+    t: 'Release the article',
+    d: [
+      'npm run article -- lock <topic> <story>',
+      '--approved-by "<your name>"; the site shows',
+      'the released text, not article.json',
+    ],
+  },
+  {
+    you: true,
+    t: 'Correct a released article',
+    d: [
+      'board: changed or stale (a cited finding was',
+      'revised); article -- correct with --note',
+      'records it in public-record.json',
     ],
   },
   {

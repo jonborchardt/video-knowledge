@@ -568,8 +568,13 @@ describe('the article on the board', () => {
         state: 'changed',
         next: `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`,
       });
-      // a claim the release asserts is revised after it: stale wins over released and changed
+      // the release snapshot stands without article.json
+      rmSync(join(fx.dir, 'article.json'));
+      expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
+      write(fx, 'article.json', a);
+      // a claim the release asserts is revised after it: stale while the released text is unchanged
       const claim = readJson<EvidencePackage>(join(fx.dir, 'evidence-package.json'))!.claims[0].id;
+      r.article = structuredClone(a);
       r.article.meta.dek.assertions = [
         { id: 'meta.dek.a', text: 'x', claims: [{ id: claim, role: 'supports' }] } as never,
       ];
@@ -583,6 +588,22 @@ describe('the article on the board', () => {
       expect(stale.next).toContain('2026-02-01');
       expect(stale.next).toContain('a new study');
       expect(stale.next).toContain('scripts/briefs/article.md (revise)');
+      // the writer revises: a new revision goes to the reviewer, never to lock
+      const revised = structuredClone(a);
+      revised.revision = 2;
+      revised.meta.dek = { ...revised.meta.dek, text: 'What do the newest sources say?' };
+      write(fx, 'article.json', revised);
+      expect(articleState(fx)).toEqual({
+        state: 'review',
+        next: `agent: scripts/briefs/article-review.md -> ${relative(fx.root, join(fx.dir, 'article-review.json')).replaceAll(sep, '/')}`,
+      });
+      // reviewed and passing: a correction
+      write(fx, 'article-review.json', {
+        ...readJson<object>(join(fx.dir, 'article-review.json')),
+        revision: 2,
+        approved: Object.fromEntries(articleSentences(revised).map((x) => [x.id, sentenceFingerprint(x)])),
+      });
+      expect(articleState(fx)?.state).toBe('changed');
     } finally {
       fx.cleanup();
     }
@@ -601,7 +622,22 @@ describe('the article on the board', () => {
     }
   });
 
-  it('the first released article reads released', () => {
-    expect(productionOf('heat-pumps', 'decision:is-it-cheaper-to-run-than-gas')?.article?.state).toBe('released');
+  it('an article asking for evidence is writing', { timeout: 30_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const a = articleOf(fx);
+      a.generation.needsEvidence = [{ claim: 'heat-pumps/some-claim', why: 'baseline' }];
+      write(fx, 'article.json', a);
+      expect(articleState(fx)).toEqual({ state: 'writing', next: 'agent: scripts/briefs/evidence.md' });
+    } finally {
+      fx.cleanup();
+    }
+  });
+
+  // live data: a later claim revision may make it stale, and a correction in progress changed
+  it('the first released article has a release state', { timeout: 15_000 }, () => {
+    expect(['released', 'stale', 'changed']).toContain(
+      productionOf('heat-pumps', 'decision:is-it-cheaper-to-run-than-gas')?.article?.state,
+    );
   });
 });

@@ -831,16 +831,13 @@ function articleOf({ topic, storyId, root, p, r, read, t, review, pkg, script, r
   const writer = `agent: scripts/briefs/article.md (revise) -> ${r(ARTICLE_FILES.article)}`;
   const a = readJson<Article>(p(ARTICLE_FILES.article));
   const out = loadArticleRelease(topic, storyId, root);
-  const stale = out && articleStale(out, loadPublicRecord(topic, root));
-  if (stale)
-    return { state: 'stale' as const, next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}` };
-  if (out && a)
-    return out.fingerprints.article === articleFingerprint(a)
-      ? { state: 'released' as const, next: 'none' }
-      : {
-          state: 'changed' as const,
-          next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
-        };
+  // The released text stands until article.json differs from it (or is gone); a revised text takes the live path.
+  if (out && (!a || out.fingerprints.article === articleFingerprint(a))) {
+    const stale = articleStale(out, loadPublicRecord(topic, root));
+    return stale
+      ? { state: 'stale' as const, next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}` }
+      : { state: 'released' as const, next: 'none' };
+  }
   if (!a) return { state: 'none' as const, next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}` };
   if (a.generation?.needsEvidence?.length)
     return { state: 'writing' as const, next: 'agent: scripts/briefs/evidence.md' };
@@ -861,6 +858,12 @@ function articleOf({ topic, storyId, root, p, r, read, t, review, pkg, script, r
     };
   // A review of this revision that still holds sentences is the writer's to answer, not another review's.
   const covered = areview?.revision === a.revision && areview.packageFingerprint === pkg.fingerprint;
+  // After a release, lock refuses: a passing revision is a correction.
+  if (out && live.status === 'passed')
+    return {
+      state: 'changed' as const,
+      next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
+    };
   return {
     state: 'review' as const,
     next:
