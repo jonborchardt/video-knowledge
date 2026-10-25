@@ -7,6 +7,8 @@ import { join } from 'node:path';
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
+import LabelStrip from '../../components/LabelStrip.astro';
+import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
 import SourceIcons from '../../components/SourceIcons.astro';
 import Stamp from '../../components/Stamp.astro';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
@@ -27,6 +29,10 @@ const commission = commissionOf(t.name)!;
 const byId = new Map(stories.map((x) => [x.id, x]));
 const first = s.partOf ? byId.get(s.partOf) : undefined;
 const claims = s.claims.map((id) => t.claims.find((c) => c.id === id)).filter((c) => !!c);
+const groups = FINDING_LABELS.map((label) => ({
+  label,
+  claims: claims.filter((c) => findingLabel(c) === label),
+})).filter((g) => g.claims.length);
 const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
 const body = commissionBody(commission);
 const h2 = 'mb-3 text-featured font-bold';
@@ -35,7 +41,12 @@ const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 ---
 
-<Base title={`${s.title} · ${commission.name}`} description={s.question} image={image}>
+<Base
+  title={`${s.title} · ${commission.name}`}
+  description={s.question}
+  image={image}
+  noindex={s.readiness !== 'ready'}
+>
   <SourceIcons />
   <ReportHeader
     brand={commissionKey(commission)}
@@ -75,24 +86,41 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
     }
   </ReportHeader>
 
-  <section aria-labelledby="dispute">
-    <div class="eyebrow text-gold">Section I</div>
-    <h2 class={h2} id="dispute">The dispute</h2>
-    <p class="max-w-prose">{s.tension}</p>
+  <section id="answer" aria-labelledby="answer-title">
+    <div class="eyebrow text-gold">The answer</div>
+    <h2 class={h2} id="answer-title">{s.readiness === 'ready' ? 'What the Record finds' : 'Not yet answered'}</h2>
+    <p class="max-w-prose font-heading text-[1.05rem] leading-relaxed">
+      {
+        s.readiness === 'ready'
+          ? s.arc.resolution
+          : 'The evidence is still being weighed. The claims below carry their current verdicts.'
+      }
+    </p>
+    <div class="mt-3">
+      <LabelStrip counts={labelCounts(claims)} base="#evidence-" />
+    </div>
   </section>
 
-  <section aria-labelledby="evidence">
-    <div class="eyebrow text-gold">Section II</div>
-    <h2 class={h2} id="evidence">What the evidence shows</h2>
-    <p class="max-w-prose">{s.premise}</p>
-    {
-      s.arc.takeaway && (
-        <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
-          <figcaption class="eyebrow text-muted-foreground">Takeaway</figcaption>
-          <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">{s.arc.takeaway}</p>
-        </figure>
-      )
-    }
+  <section id="article">
+    <section aria-labelledby="dispute">
+      <div class="eyebrow text-gold">Section I</div>
+      <h2 class={h2} id="dispute">The dispute</h2>
+      <p class="max-w-prose">{s.tension}</p>
+    </section>
+
+    <section aria-labelledby="evidence">
+      <div class="eyebrow text-gold">Section II</div>
+      <h2 class={h2} id="evidence">What the evidence shows</h2>
+      <p class="max-w-prose">{s.premise}</p>
+      {
+        s.arc.takeaway && (
+          <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
+            <figcaption class="eyebrow text-muted-foreground">Takeaway</figcaption>
+            <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">{s.arc.takeaway}</p>
+          </figure>
+        )
+      }
+    </section>
   </section>
 
   <section aria-labelledby="claims">
@@ -100,9 +128,20 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
     <h2 class={h2} id="claims">The claims examined</h2>
     <p class="mb-3 text-sm text-muted-foreground">
       Each claim as the sources make it, its verdict, and the quote or study lines it rests on.{' '}
-      <a href={href('/about/#verdicts')}>How to read the verdict labels.</a>
+      <a href={href('/about/#labels')}>How to read the finding labels.</a>
     </p>
-    {claims.map((c) => <ClaimCard claim={c} group="story" />)}
+    {
+      groups.map((g) => (
+        <>
+          <h3 class="mt-5 mb-1 text-title font-semibold" id={`evidence-${g.label}`}>
+            {FINDING_TEXT[g.label].name}
+          </h3>
+          {g.claims.map((c) => (
+            <ClaimCard claim={c} group="story" />
+          ))}
+        </>
+      ))
+    }
   </section>
 
   {

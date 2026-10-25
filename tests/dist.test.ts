@@ -23,6 +23,16 @@ const pages = [
   ...publicTopicNames().map((n) => `${n}/index.html`),
   ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
 ];
+// Pages search engines are pointed at: a matter whose story is not ready is noindex and left out of the sitemap.
+const listed = pages.filter(
+  (p) => !storyPages.some((x) => x.s.readiness !== 'ready' && p === `${x.topic}/${x.slug}/index.html`),
+);
+const sitemapXml = () => {
+  const index = readFileSync(join(DIST, 'sitemap-index.xml'), 'utf8');
+  const part = index.match(/<loc>[^<]*\/(sitemap-\d+\.xml)<\/loc>/)![1];
+  return readFileSync(join(DIST, part), 'utf8');
+};
+const decode = (s: string) => s.replaceAll('&#39;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
   it.each(pages)('%s exists without template leaks', (p) => {
@@ -154,11 +164,35 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('a matter answers first: the resolution and label strip come before the claims', () => {
+    for (const { topic, slug, s } of storyPages) {
+      const html = decode(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8'));
+      expect(html.indexOf('id="answer"')).toBeGreaterThan(-1);
+      expect(html.indexOf('id="answer"')).toBeLessThan(html.indexOf('aria-labelledby="claims"'));
+      if (s.readiness === 'ready') expect(html).toContain(s.arc.resolution); // an unready arc is the writer's brief
+    }
+  });
+
+  it('an unsettled matter is noindex and left out of the sitemap; a ready one is listed', () => {
+    const sitemap = sitemapXml();
+    for (const { topic, slug, s } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const loc = `<loc>${SITE}${BASE}${topic}/${slug}/</loc>`;
+      if (s.readiness === 'ready') {
+        expect(html).not.toContain('noindex');
+        expect(sitemap).toContain(loc);
+      } else {
+        expect(html).toContain('content="noindex');
+        expect(sitemap).not.toContain(loc);
+      }
+    }
+  });
+
   it('serves a 404 page', () => {
     expect(readFileSync(join(DIST, '404.html'), 'utf8')).toContain('<h1');
   });
 
-  it.each(pages)('%s: canonical and social metadata', (p) => {
+  it.each(listed)('%s: canonical and social metadata', (p) => {
     const html = readFileSync(join(DIST, p), 'utf8');
     expect(html).toContain(`<link rel="canonical" href="${SITE}${BASE}`);
     expect(html).not.toContain('name="robots"');
@@ -178,10 +212,8 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   it('robots.txt points at the sitemap, which lists every page', () => {
     const robots = readFileSync(join(DIST, 'robots.txt'), 'utf8');
     expect(robots).toContain(`Sitemap: ${SITE}${BASE}sitemap-index.xml`);
-    const index = readFileSync(join(DIST, 'sitemap-index.xml'), 'utf8');
-    const part = index.match(/<loc>[^<]*\/(sitemap-\d+\.xml)<\/loc>/)![1];
-    const sitemap = readFileSync(join(DIST, part), 'utf8');
-    for (const p of pages) {
+    const sitemap = sitemapXml();
+    for (const p of listed) {
       expect(sitemap).toContain(`<loc>${SITE}${BASE}${p.replace('index.html', '')}</loc>`);
     }
     expect(sitemap).not.toContain('404');
