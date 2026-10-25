@@ -1,0 +1,25 @@
+---
+// The public finding label (plan D3) as a chip. A reported claim is dashed so it never looks settled.
+import { FINDING_TEXT, type FindingLabel } from '../lib/finding-label';
+
+interface Props {
+  label: FindingLabel;
+}
+const { label } = Astro.props;
+const colour = {
+  verified: 'text-success',
+  qualification: 'text-warning',
+  unresolved: 'text-muted-foreground',
+  reported: 'text-muted-foreground border-dashed',
+}[label];
+---
+
+<span
+  class:list={[
+    'inline-block rounded-sm border border-current px-1.5 py-1 text-xs leading-none whitespace-nowrap',
+    colour,
+  ]}
+  title={FINDING_TEXT[label].meaning}
+>
+  {FINDING_TEXT[label].name}
+</span>

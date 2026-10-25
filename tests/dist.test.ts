@@ -3,6 +3,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { commissions, site } from '../src/config/site';
+import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
 import { ROOT } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames, topicNames } from '../src/lib/topics';
@@ -123,6 +124,20 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       // the kit's record stamp closes the page, in both inks (dark mode swaps them)
       for (const g of ['paper', 'ground'])
         expect(html).toContain(`src="${BASE}stamps/${key}/stamp-record-rect-${g}.png"`);
+    }
+  });
+
+  it('about explains the four finding labels', () => {
+    const html = readFileSync(join(DIST, 'about/index.html'), 'utf8');
+    expect(html).toContain('id="labels"');
+    for (const l of FINDING_LABELS) expect(html).toContain(FINDING_TEXT[l].name);
+  });
+
+  it('every claim card carries one finding label', () => {
+    for (const n of publicTopicNames()) {
+      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
+      const cards = html.match(/<details[^>]*data-claim/g)!.length;
+      expect(html.match(/data-label="(verified|qualification|unresolved|reported)"/g)!.length).toBe(cards);
     }
   });
 

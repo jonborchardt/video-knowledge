@@ -5,6 +5,8 @@ import type { ClaimView } from '../lib/topics';
 import { site } from '../config/site';
 import SourceLink from './SourceLink.astro';
 import VerdictBadge from './VerdictBadge.astro';
+import FindingLabel from './FindingLabel.astro';
+import { findingLabel } from '../lib/finding-label';
 
 interface Props {
   claim: ClaimView;
@@ -33,14 +35,17 @@ const citeHref = (cite: string) => `${site.repo}/blob/main/${cite}`;
 const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
 ---
 
-<details class="group border-t py-3" data-verdict={c.verdict ?? 'unknown'} data-claim>
+<details class="group border-t py-3" data-verdict={c.verdict ?? 'unknown'} data-label={findingLabel(c)} data-claim>
   <summary class="grid cursor-pointer list-none gap-1 [&::-webkit-details-marker]:hidden">
     <span class="flex flex-wrap items-baseline justify-between gap-x-2.5">
       <span>
         <span class="mr-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">▸</span>
         {c.text}
       </span>
-      <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
+      <span class="flex flex-wrap gap-1.5">
+        <FindingLabel label={findingLabel(c)} />
+        <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
+      </span>
     </span>
     {c.note && <span class:list={[small, 'ml-[1.4em]']}>{c.note}</span>}
     <span class="ml-[1.4em] font-mono text-xs text-muted-foreground tabular-nums">
