@@ -1,4 +1,5 @@
 ---
+import TabBar from '../../components/TabBar.astro';
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
@@ -236,40 +237,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
     }
   </header>
 
-  <!-- Tabs: hidden until the scripts run, so without JavaScript every section simply shows. -->
-  <div
-    id="tabbar"
-    role="tablist"
-    aria-label="Report sections"
-    hidden
-    class="top-0 z-10 -mb-4 flex flex-wrap gap-1 border-b bg-background pt-2 sm:sticky print:hidden"
-  >
-    {
-      tabs.map((tab) => (
-        <button
-          type="button"
-          role="tab"
-          id={`tab-${tab.id}`}
-          aria-controls={tab.id}
-          class="cursor-pointer rounded-t-md border border-b-0 border-transparent px-3 py-2 text-sm font-medium whitespace-nowrap text-muted-foreground hover:text-foreground aria-selected:-mb-px aria-selected:border-border aria-selected:bg-card aria-selected:text-primary"
-        >
-          {tab.label}
-        </button>
-      ))
-    }
-  </div>
-  <script is:inline define:vars={{ ids: tabs.map((tab) => tab.id) }}>
-    // Runs while the page is still parsing, before any section is painted: show the tab bar and hide every section
-    // but the active one now, so the tab script below does not shift the page when it takes over.
-    const hash = location.hash.slice(1);
-    const active = ids.includes(hash) ? hash : ids[0];
-    document.getElementById('tabbar').hidden = false;
-    // eslint-disable-next-line no-restricted-syntax -- the tab ids are built in, not data
-    document.head.insertAdjacentHTML(
-      'beforeend',
-      `<style data-tab-init>main > section:not(#${active}) { display: none }</style>`,
-    );
-  </script>
+  <TabBar tabs={tabs} label="Report sections" />
 
   <section id="recap">
     <div class="eyebrow text-gold">{sec('recap')}</div>
@@ -525,10 +493,6 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
 </Base>
 
 <style is:global>
-  /* Keep a section's heading clear of the sticky tab bar when the browser scrolls to a deep link. */
-  main > section {
-    scroll-margin-top: 3.5rem;
-  }
   /* Source chips: the checked radio decides which claim rows show. No script needed. */
   [data-source]:has([value='novel']:checked) li:not([data-novel]),
   [data-source]:has([value='right']:checked) li:not([data-v='right']),
@@ -546,45 +510,6 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
 </style>
 
 <script>
-  // Tabs: one section at a time; the URL hash holds the tab (deep links, back button); arrow keys move.
-  // The tabpanel roles are set here, not in the markup, so without JavaScript the sections stay plain sections.
-  const bar = document.getElementById('tabbar')!;
-  const tabs = [...bar.querySelectorAll<HTMLButtonElement>('[role=tab]')];
-  const panels = tabs.map((b, i) => {
-    const p = document.getElementById(b.getAttribute('aria-controls')!)!;
-    p.setAttribute('role', 'tabpanel');
-    p.setAttribute('aria-labelledby', tabs[i].id);
-    return p;
-  });
-  const isPanel = (id: string) => panels.some((p) => p.id === id);
-  function show(id: string) {
-    if (!isPanel(id)) id = panels[0].id;
-    panels.forEach((p, i) => {
-      const on = p.id === id;
-      p.hidden = !on;
-      tabs[i].setAttribute('aria-selected', String(on));
-      tabs[i].tabIndex = on ? 0 : -1;
-    });
-  }
-  tabs.forEach((b, i) => {
-    b.addEventListener('click', () => {
-      history.replaceState(null, '', '#' + panels[i].id);
-      show(panels[i].id);
-    });
-    b.addEventListener('keydown', (e) => {
-      const to = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
-      if (to === undefined) return;
-      e.preventDefault();
-      const next = tabs[(to + tabs.length) % tabs.length];
-      next.focus();
-      next.click();
-    });
-  });
-  // Only panel hashes switch tabs; the skip link's #main, for one, must not reset to the first tab.
-  addEventListener('hashchange', () => isPanel(location.hash.slice(1)) && show(location.hash.slice(1)));
-  show(location.hash.slice(1));
-  document.querySelector('[data-tab-init]')?.remove(); // the pre-paint stylesheet; `hidden` takes over from here
-
   // Claim filter and search: the cards are already on the page; this only hides the ones that don't match.
   const q = document.getElementById('q') as HTMLInputElement;
   const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];

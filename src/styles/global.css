@@ -163,10 +163,15 @@
     font-family: var(--font-heading);
     text-wrap: balance;
   }
+  /* links are underlined (preflight strips it); cards, nav and eyebrows opt out with no-underline */
   a {
+    text-decoration-line: underline;
     text-underline-offset: 0.18em;
     text-decoration-thickness: 1px;
-    text-decoration-color: var(--gold);
+    text-decoration-color: var(--gold-ink);
+  }
+  a:hover {
+    text-decoration-thickness: 2px;
   }
   :focus-visible {
     outline: 2px solid var(--ring);

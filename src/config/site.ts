@@ -28,6 +28,7 @@ export interface Commission {
   slogan?: string; // RECOMMENDED only where the charter has one
   handle?: string; // only once the channel exists
   youtube?: string;
+  channelId?: string; // the public UC... id, for the Studio links on /admin
   topics: string[];
 }
 
@@ -40,6 +41,7 @@ export const commissions: Record<string, Commission> = {
     slogan: 'An inquiry into what things actually cost.',
     handle: '@CORSpending',
     youtube: 'https://www.youtube.com/@CORSpending',
+    channelId: 'UCc5kWuv226H1gjz7e4bj_0Q',
     topics: ['heat-pumps', 'inflation-2026'],
   },
   'dubious-returns': {
