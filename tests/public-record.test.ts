@@ -1,12 +1,15 @@
+import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import {
   claimStates,
+  loadPublicRecord,
   nextPublicRecord,
   noteRevision,
+  publicRecordPath,
   publicRecordProblems,
   revisionLine,
 } from '../src/lib/public-record';
-import type { ClaimView, SourceView, Verdict } from '../src/lib/topics';
+import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/lib/topics';
 
 const claim = (id: string, verdict: Verdict | null, confidence: number | null, decidedBy: string | null = 'S') =>
   ({ id, verdict, confidence, decidedBy }) as ClaimView;
@@ -85,5 +88,14 @@ describe('public record', () => {
   it('revisionLine', () => {
     const r = { at: '2026-11-02', kind: 'claim' as const, id: 'x', from: null, to: null, note: 'n' };
     expect(revisionLine(r)).toBe('Revised 2026-11-02: n');
+  });
+
+  it('every public topic has a public record with exhibit numbers for its sources and no unexplained revision', () => {
+    for (const n of publicTopicNames()) {
+      expect(existsSync(publicRecordPath(n)), n).toBe(true);
+      const rec = loadPublicRecord(n);
+      expect(publicRecordProblems(rec), n).toEqual([]);
+      for (const s of loadTopic(n).sources) expect(rec.exhibits[s.id], `${n} ${s.id}`).toBeGreaterThan(0);
+    }
   });
 });
