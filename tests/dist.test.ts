@@ -126,14 +126,27 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
-  it('a matter with a released article shows it with its headline and sources', () => {
+  it('a matter with a released article shows it with its headline and sources; a follow-up links to it', () => {
     for (const { topic, slug, s } of storyPages) {
       const r = loadArticleRelease(topic, s.partOf ?? s.id);
       if (!r) continue;
       const html = decode(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8'));
-      expect(html).toContain('data-article');
-      expect(html).toContain(r.article.meta.headline);
+      if (s.partOf) {
+        expect(html).not.toContain('data-article');
+        expect(html).toContain(`${storyUrlSlug({ id: s.partOf })}/#article"`);
+      } else {
+        expect(html).toContain('data-article');
+        expect(html).toContain(r.article.meta.headline);
+      }
     }
+  });
+
+  it('no two story pages share a title', () => {
+    const titles = storyPages.map(
+      ({ topic, slug }) =>
+        readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8').match(/<title>([^<]+)<\/title>/)![1],
+    );
+    expect(titles.filter((x, i) => titles.indexOf(x) !== i)).toEqual([]);
   });
 
   it('topic pages are branded as the institution that publishes them', () => {

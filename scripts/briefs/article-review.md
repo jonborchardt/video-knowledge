@@ -56,9 +56,13 @@ When the fix needs a passage the package does not have, say so in the finding. O
   that names the claim but drops the condition is a blocking `missing-qualification` on its first sentence.
 - **Headline, SEO title, dek and description.** None may claim more than the claims' labels: a Qualification
   summarised as a flat yes or no, an Unresolved question summarised as settled, or a Reported claim summarised
-  as true is `overclaim`, blocking. The headline and SEO title are not sentences and cannot be approved or
-  found against by id; put a finding about either on `meta.dek` (category `overclaim`, the explanation naming
-  the field) so the writer sees it.
+  as true is `overclaim`, blocking. The headline and SEO title are not sentences: approve each by its unit id
+  (`meta.headline`, `meta.seoTitle`) at the `fp=` the sheet prints beside it, and put a finding about either on
+  `meta.dek` (category `overclaim`, the explanation naming the field) so the writer sees it.
+- **Headings, tables and figures are approved too.** Each section heading (`heading:<section>`), table (its `id`)
+  and figure (its `ref`) carries a `[<id> fp=<fingerprint>]` on the sheet; approve it at that fingerprint in
+  `approved` once it says no more than its section, cells or chart. An unapproved or edited unit holds the
+  article at `needs-review` (an `unreviewed` info issue names it).
 - **Tables.** The code checked that each cell's figures are in its passage. Check that the row label's
   population and year are the passage's, that the cells in one column measure the same thing on the same
   baseline, and that the caption claims no more than the cells. A finding goes on the first sentence of the
@@ -80,7 +84,15 @@ When the fix needs a passage the package does not have, say so in the finding. O
   "date": "<ISO date>",
   "revision": 1,
   "packageFingerprint": "<evidence-package.json fingerprint>",
-  "approved": { "meta.dek": "<fingerprint>", "meta.description": "<fingerprint>", "s01": "<fingerprint>" },
+  "approved": {
+    "meta.headline": "<fingerprint>",
+    "meta.seoTitle": "<fingerprint>",
+    "heading:hook": "<fingerprint>",
+    "t1": "<fingerprint>",
+    "meta.dek": "<fingerprint>",
+    "meta.description": "<fingerprint>",
+    "s01": "<fingerprint>"
+  },
   "findings": [
     {
       "sentence": "s12",
@@ -117,7 +129,8 @@ When the fix needs a passage the package does not have, say so in the finding. O
   sentence can change what an approved neighbour means: re-read the sentences around it. Editing a
   callout's `claim` or `gap`, or an assertion's `qualifications`, does not change a sentence's fingerprint:
   re-read every callout on a new revision.
-- The article passes when nothing blocks and every sentence is approved; `validate` then prints
+- The article passes when nothing blocks and every sentence and unit (headline, SEO title, heading, table,
+  figure) is approved; `validate` then prints
   `RESULT: PASSED`.
 
 Final reply: sentences approved, findings by severity, and the three findings that most change what the article

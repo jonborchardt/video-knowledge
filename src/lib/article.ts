@@ -92,6 +92,7 @@ export interface ArticleRelease {
     fingerprint: string;
     note?: string;
     sentences?: string[];
+    reaffirmed?: true; // the text stands unchanged after a finding it relies on was revised
   }[];
 }
 
@@ -153,6 +154,13 @@ function unitsOf(a: Article): [string, string][] {
   return out;
 }
 
+/** The units a reviewer approves besides sentences, with the fingerprint an approval names: the headline, SEO title,
+ *  each section heading, each table and figure (the ids correctArticle names). */
+export function articleReviewUnits(a: Article): [string, string][] {
+  const ids = new Set(articleSentences(a).map((s) => s.id));
+  return unitsOf(a).filter(([id]) => !ids.has(id));
+}
+
 /** A new release of changed text, and the noted revision it adds to the topic's public record. */
 export function correctArticle(
   prev: ArticleRelease,
@@ -184,20 +192,48 @@ export function correctArticle(
   };
 }
 
+/** A stale release whose text stands: the same text approved again with a note, its date moved to today so the
+ *  revised finding no longer postdates it. No public-record revision: nothing the reader saw changed. */
+export function reaffirmArticle(
+  prev: ArticleRelease,
+  stale: boolean,
+  a: Article,
+  v: ScriptValidation,
+  approvedBy: string,
+  note: string,
+  date: string,
+): ArticleRelease {
+  if (!stale) throw new Refusal('the article is not stale: nothing it relies on was revised after its release');
+  if (!note.trim()) throw new Refusal('a reaffirmation needs a --note saying why the text stands');
+  releasable(v, approvedBy);
+  const fp = articleFingerprint(a);
+  if (prev.fingerprints.article !== fp) throw new Refusal('the article changed since its release: use correct');
+  return {
+    ...prev,
+    date,
+    history: [
+      ...prev.history,
+      { revision: prev.revision, date, approvedBy, fingerprint: fp, note: note.trim(), reaffirmed: true },
+    ],
+  };
+}
+
 const MARK: Record<string, string> = { verified: 'ok', 'needs-review': 'review', blocked: 'BLOCKED' };
 
 /** The article as a reader sees it, with each sentence's state, then the open issues (as script.md reads). */
 export function renderArticleMd(a: Article, v: ScriptValidation): string {
   const by = new Map(v.sentences.map((s) => [s.id, s]));
+  const units = new Map(articleReviewUnits(a));
+  const unit = (id: string) => `[${id} fp=${units.get(id)}]`;
   const line = (s: Sentence) => {
     const r = by.get(s.id);
     const m = r && (r.assertions.length || r.issues.length || r.status !== 'verified') ? MARK[r.status] : '';
     return `${s.text} [${s.id}${m ? ` ${m}` : ''} fp=${r?.fingerprint ?? sentenceFingerprint(s)}]`;
   };
   const out = [
-    `# ${a.meta.headline}`,
+    `# ${a.meta.headline} ${unit('meta.headline')}`,
     '',
-    `Story \`${a.story}\` (${a.topic}), revision ${a.revision}. SEO title: ${a.meta.seoTitle}. Validation: **${v.status}**, ${v.counts.blocking} blocking, ${v.counts.warnings} warnings, ${v.counts.verified}/${v.counts.assertions} assertions verified.`,
+    `Story \`${a.story}\` (${a.topic}), revision ${a.revision}. SEO title: ${a.meta.seoTitle} ${unit('meta.seoTitle')}. Validation: **${v.status}**, ${v.counts.blocking} blocking, ${v.counts.warnings} warnings, ${v.counts.verified}/${v.counts.assertions} assertions verified.`,
     '',
     `> ${line(a.meta.dek)}`,
     '',
@@ -205,7 +241,7 @@ export function renderArticleMd(a: Article, v: ScriptValidation): string {
     '',
   ];
   for (const sec of a.sections) {
-    out.push(`## ${sec.heading}`, '');
+    out.push(`## ${sec.heading} ${unit(`heading:${sec.name}`)}`, '');
     for (const b of sec.blocks)
       if (b.kind === 'prose')
         out.push(
@@ -214,14 +250,14 @@ export function renderArticleMd(a: Article, v: ScriptValidation): string {
         );
       else if (b.kind === 'table')
         out.push(
-          `Table ${b.id}: ${b.caption}`,
+          `Table ${b.id}: ${b.caption} ${unit(b.id)}`,
           '',
           `| | ${b.columns.join(' | ')} |`,
           `|---|${b.columns.map(() => '---').join('|')}|`,
           ...b.rows.map((r) => `| ${r.label} | ${r.cells.map((c) => c.display).join(' | ')} |`),
           '',
         );
-      else out.push(`Figure ${b.ref}: ${b.caption}`, '');
+      else out.push(`Figure ${b.ref}: ${b.caption} ${unit(b.ref)}`, '');
   }
   const open = v.issues.filter((i) => !i.disposition);
   if (open.length) {

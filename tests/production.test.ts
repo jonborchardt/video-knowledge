@@ -21,7 +21,13 @@ import {
   stepsOf,
   validationHaltKind,
 } from '../src/lib/production';
-import { type Article, type ArticleRelease, articleFingerprint, articleSentences } from '../src/lib/article';
+import {
+  type Article,
+  type ArticleRelease,
+  articleFingerprint,
+  articleReviewUnits,
+  articleSentences,
+} from '../src/lib/article';
 import { corpusOf } from '../src/lib/corpus';
 import { loadStories } from '../src/lib/stories';
 import { passageReader } from '../src/lib/evidence';
@@ -553,7 +559,10 @@ describe('the article on the board', () => {
         date: '2026-01-02',
         revision: 1,
         packageFingerprint: a.generation.evidencePackage,
-        approved: Object.fromEntries(articleSentences(a).map((x) => [x.id, sentenceFingerprint(x)])),
+        approved: Object.fromEntries([
+          ...articleSentences(a).map((x) => [x.id, sentenceFingerprint(x)]),
+          ...articleReviewUnits(a),
+        ]),
         findings: [],
       });
       expect(articleState(fx)).toEqual({
@@ -563,7 +572,15 @@ describe('the article on the board', () => {
       const r = released(a);
       write(fx, 'article-release.json', r);
       expect(articleState(fx)).toEqual({ state: 'released', next: 'none' });
-      write(fx, 'article.json', { ...a, meta: { ...a.meta, headline: 'Is a heat pump cheaper to run than gas?' } });
+      const headlined = { ...a, meta: { ...a.meta, headline: 'Is a heat pump cheaper to run than gas?' } };
+      write(fx, 'article.json', headlined);
+      // the new headline is unapproved: the review still covers this revision, so it is the writer's
+      expect(articleState(fx)?.state).toBe('review');
+      const reviewed = readJson<{ approved: Record<string, string> }>(join(fx.dir, 'article-review.json'))!;
+      write(fx, 'article-review.json', {
+        ...reviewed,
+        approved: { ...reviewed.approved, ...Object.fromEntries(articleReviewUnits(headlined)) },
+      });
       expect(articleState(fx)).toEqual({
         state: 'changed',
         next: `npm run article -- correct ${fx.topic} ${fx.story} --approved-by "<your name>" --note "<what changed>"`,
@@ -588,6 +605,7 @@ describe('the article on the board', () => {
       expect(stale.next).toContain('2026-02-01');
       expect(stale.next).toContain('a new study');
       expect(stale.next).toContain('scripts/briefs/article.md (revise)');
+      expect(stale.next).toContain(`npm run article -- reaffirm ${fx.topic} ${fx.story}`);
       // the writer revises: a new revision goes to the reviewer, never to lock
       const revised = structuredClone(a);
       revised.revision = 2;
@@ -601,7 +619,10 @@ describe('the article on the board', () => {
       write(fx, 'article-review.json', {
         ...readJson<object>(join(fx.dir, 'article-review.json')),
         revision: 2,
-        approved: Object.fromEntries(articleSentences(revised).map((x) => [x.id, sentenceFingerprint(x)])),
+        approved: Object.fromEntries([
+          ...articleSentences(revised).map((x) => [x.id, sentenceFingerprint(x)]),
+          ...articleReviewUnits(revised),
+        ]),
       });
       expect(articleState(fx)?.state).toBe('changed');
     } finally {

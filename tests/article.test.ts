@@ -7,12 +7,14 @@ import {
   type Block,
   articleAsScript,
   articleFingerprint,
+  articleReviewUnits,
   correctArticle,
   lockArticle,
+  reaffirmArticle,
   renderArticleMd,
 } from '../src/lib/article';
 import { Refusal } from '../src/lib/publish';
-import { publicRecordProblems } from '../src/lib/public-record';
+import { publicRecordProblems, withArticleRevision } from '../src/lib/public-record';
 import { LIMITS, figuresOf, validateArticle } from '../src/lib/article-validation';
 import { buildPackage } from '../src/lib/evidence-package';
 import { type EvidencePackage, type Sentence, scriptDir } from '../src/lib/script';
@@ -245,6 +247,57 @@ describe('article validation', () => {
   });
 });
 
+describe('article review units', () => {
+  const tb: Block = {
+    kind: 'table',
+    id: 'tb1',
+    caption: 'Outcomes',
+    columns: ['Share'],
+    rows: [
+      {
+        label: 'Lost money',
+        cells: [{ label: 'Lost money', value: 47, unit: 'percent', display: '47%', cite: DOC_D }],
+      },
+    ],
+  };
+  const a = withBlock(tb);
+  const ok = approveArticle(a);
+  it('the headline, SEO title, headings and tables are approved by unit id', () => {
+    expect(articleReviewUnits(a).map(([id]) => id)).toEqual([
+      'meta.headline',
+      'meta.seoTitle',
+      'heading:hook',
+      'heading:answer',
+      'tb1',
+    ]);
+    expect(check(a, { review: ok }).status).toBe('passed');
+  });
+  it.each(['meta.headline', 'meta.seoTitle', 'heading:answer', 'tb1'])('%s unapproved holds the article', (id) => {
+    const { [id]: _gone, ...approved } = ok.approved;
+    void _gone;
+    const v = check(a, { review: { ...ok, approved } });
+    expect(v.status).toBe('needs-review');
+    expect(v.issues.find((i) => i.sentence === id)?.category).toBe('unreviewed');
+  });
+  it('an edit after the review makes the approval stale', () => {
+    const edits: ((x: Article) => void)[] = [
+      (x) => (x.meta.headline = 'Another headline'),
+      (x) => (x.meta.seoTitle = 'Another SEO title'),
+      (x) => (x.sections[1].heading = 'Another heading'),
+      (x) => ((x.sections[1].blocks.at(-1) as { caption: string }).caption = 'Outcomes reported'),
+    ];
+    for (const edit of edits) {
+      const b = structuredClone(a);
+      edit(b);
+      expect(check(b, { review: ok }).status).toBe('needs-review');
+    }
+  });
+  it('the markdown prints each unit with its fingerprint', () => {
+    const md = renderArticleMd(a, check(a, { review: ok }));
+    for (const [id, fp] of articleReviewUnits(a)) expect(md).toContain(`[${id} fp=${fp}]`);
+  });
+});
+
 describe('article release', () => {
   const a = article();
   const passed = check(a, { review: approveArticle(a) });
@@ -316,6 +369,32 @@ describe('article release', () => {
     expect(v.status).toBe('passed');
     const released = lockArticle(null, base, v, 'Jon', 'd');
     expect(fix(released, withBlock({ ...tb, caption: 'Outcomes reported' })).revision.sentences).toEqual(['tb1']);
+  });
+  it('a re-run of correct does not record the same revision twice', () => {
+    const { revision } = correctArticle(r, edited, passedEdited, 'Jon', 'n', '2026-11-05');
+    const once = withArticleRevision({ exhibits: {}, revisions: [] }, revision);
+    expect(once.revisions).toEqual([revision]);
+    expect(withArticleRevision(once, structuredClone(revision))).toBe(once);
+    expect(withArticleRevision(once, { ...revision, note: 'other' }).revisions).toHaveLength(2);
+  });
+  it('reaffirm keeps a stale text with a note and moves the release date', () => {
+    expect(() => reaffirmArticle(r, false, a, passed, 'Jon', 'stands', '2026-11-09')).toThrow(/not stale/);
+    expect(() => reaffirmArticle(r, true, edited, passedEdited, 'Jon', 'stands', '2026-11-09')).toThrow(/correct/);
+    expect(() => reaffirmArticle(r, true, a, check(a), 'Jon', 'stands', '2026-11-09')).toThrow(Refusal);
+    expect(() => reaffirmArticle(r, true, a, passed, '<name>', 'stands', '2026-11-09')).toThrow(Refusal);
+    expect(() => reaffirmArticle(r, true, a, passed, 'Jon', ' ', '2026-11-09')).toThrow(Refusal);
+    const x = reaffirmArticle(r, true, a, passed, 'Jon', 'the new study agrees', '2026-11-09');
+    expect(x.date).toBe('2026-11-09');
+    expect(x.revision).toBe(1);
+    expect(x.article).toBe(r.article);
+    expect(x.history.at(-1)).toEqual({
+      revision: 1,
+      date: '2026-11-09',
+      approvedBy: 'Jon',
+      fingerprint: articleFingerprint(a),
+      note: 'the new study agrees',
+      reaffirmed: true,
+    });
   });
   it('correct refuses an unchanged article', () => {
     expect(() => correctArticle(r, a, passed, 'Jon', 'n', '2026-11-05')).toThrow(Refusal);

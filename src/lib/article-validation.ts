@@ -3,7 +3,7 @@
 // prose, table cells that state their cited values, figures that name a chart the story has, and prose that is not
 // the narration read back.
 import { join } from 'node:path';
-import { type Article, articleAsScript, articleSentences } from './article';
+import { type Article, articleAsScript, articleReviewUnits, articleSentences } from './article';
 import type { Corpus, Verdict } from './corpus';
 import type { PassageReader } from './evidence';
 import { findingLabel } from './finding-label';
@@ -167,6 +167,14 @@ export function validateArticle(
   const review = opts.review ?? null;
   const current = !!review && review.packageFingerprint === opts.pkg.fingerprint;
   const prints = new Map(articleSentences(a).map((s) => [s.id, sentenceFingerprint(s)]));
+  // The text that is not a sentence (headline, SEO title, headings, tables, figures) is approved by its own unit id,
+  // at its fingerprint, as a sentence is: an edit after the review asks for it again.
+  const unapproved = articleReviewUnits(a).filter(([id, fp]) => !current || review.approved?.[id] !== fp);
+  own.push(
+    ...unapproved.map(([id, fp]) =>
+      issue(id, 'unreviewed', 'info', `${id} is not approved at fingerprint ${fp}; the reviewer approves it there`),
+    ),
+  );
   for (const i of own) {
     const d = [review?.dispositions?.[i.sentence] ?? []].flat().find((x) => x.category === i.category);
     if (current && i.severity === 'warning' && d && d.fingerprint === prints.get(i.sentence)) i.disposition = d.reason;
@@ -183,7 +191,8 @@ export function validateArticle(
   const issues = [...v.issues, ...own].sort((x, y) => RANK.indexOf(x.severity) - RANK.indexOf(y.severity));
   const blocking = issues.filter((x) => x.severity === 'blocking').length;
   const warnings = issues.filter((x) => x.severity === 'warning' && !x.disposition).length;
-  const status = blocking ? 'blocked' : v.status; // v is blocked only when it has a blocking issue
+  // v is blocked only when it has a blocking issue; an unapproved unit holds a passing article in review
+  const status = blocking ? 'blocked' : unapproved.length ? 'needs-review' : v.status;
   return {
     ...v,
     status,
@@ -195,6 +204,7 @@ export function validateArticle(
       blocking,
       warnings,
       dispositioned: issues.filter((x) => x.disposition).length,
+      unreviewed: v.counts.unreviewed + unapproved.length,
     },
     history: [...v.history.slice(0, -1), { ...v.history[v.history.length - 1], status, blocking, warnings }],
     revisionLimitReached:

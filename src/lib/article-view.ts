@@ -29,9 +29,10 @@ export interface ArticleView {
 
 /** The newest revision of a claim the release asserts, made after the release. */
 export function articleStale(r: ArticleRelease, record: PublicRecord): Revision | null {
-  const claims = new Set(
-    articleSentences(r.article).flatMap((s) => (s.assertions ?? []).flatMap((a) => a.claims.map((c) => c.id))),
-  );
+  const claims = new Set([
+    ...articleSentences(r.article).flatMap((s) => (s.assertions ?? []).flatMap((a) => a.claims.map((c) => c.id))),
+    ...r.article.sections.flatMap((s) => s.blocks.flatMap((b) => (b.kind === 'prose' && b.claim ? [b.claim] : []))),
+  ]);
   return (
     record.revisions
       .filter((v) => isClaimRevision(v) && claims.has(v.id) && v.at > r.date)
@@ -109,7 +110,7 @@ export function articleView(
     })),
     refs,
     corrections: r.history
-      .filter((h) => h.note)
+      .filter((h) => h.note && !h.reaffirmed)
       .map((h) => ({ date: h.date, note: h.note!, sentences: h.sentences ?? [] }))
       .reverse(),
     stale: articleStale(r, record),

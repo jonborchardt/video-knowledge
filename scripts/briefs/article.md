@@ -207,7 +207,8 @@ evidence, a misquote, a calculation that does not reproduce, `qualification-cove
 followed by `[<id> ok|review|BLOCKED fp=<fingerprint>]` (the state is left out for a verified sentence with no
 assertions), each callout led by `**qualification (<claim>):**` or `**unresolved (gap <n>):**`, each table
 rendered with its `display` values, then `## Open issues` with every issue not dispositioned, review findings
-included, and the reviewer's suggestions.
+included, and the reviewer's suggestions. The headline, SEO title, each heading, table and figure carry
+`[<id> fp=<fingerprint>]` too: the reviewer approves them like sentences, so an edit to one is reviewed again.
 
 ## Revising
 
@@ -220,6 +221,22 @@ revision 1, so in a first pass revision 3 is the last: if it still blocks, the l
 stays as it is with its blockers listed, and a person decides. A revision that only answers warnings is not limited. Never set
 `passStartRevision` or `generation.corrective` yourself; a person or the run does, and a corrective pass
 changes only the sentences its entry lists.
+
+## Stale article
+
+The board says `stale` when a finding the released article relies on (a claim its sentences assert or a callout
+names) was revised after the release. Read the revision's note in `public-record.json` and the claim's new
+verdict, then either:
+
+- **Revise:** the text no longer holds. Change what the revised finding touches as in Revising (bump `revision`,
+  keep ids); after review a person releases it with
+  `npm run article -- correct <topic> <story-id> --approved-by "<name>" --note "<what changed>"`, which records
+  the correction.
+- **Reaffirm:** the text still holds as written (the revision does not change what the article says). Change
+  nothing; a person runs
+  `npm run article -- reaffirm <topic> <story-id> --approved-by "<name>" --note "<why unchanged>"`. It refuses an article that is not stale, one that changed since the release (use `correct`), a
+  validation that has not passed and a placeholder approver. It adds a history entry with the note and moves the
+  release date to today, which clears the stale banner; it records no public-record revision.
 
 Final reply: the deterministic result, the tables and figures you used, and the three sentences you are least
 sure the evidence supports as worded.

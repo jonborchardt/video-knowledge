@@ -4,6 +4,7 @@
 //   lock <topic> <story-id> --approved-by "<name>"                   release the article (article-release.json)
 //   correct <topic> <story-id> --approved-by "<name>" --note "<note>"  release changed text and record the correction
 //                                                                      as a revision in the topic's public-record.json
+//   reaffirm <topic> <story-id> --approved-by "<name>" --note "<why unchanged>"  a stale article's text stands
 // lock and correct validate afresh and refuse (exit 2, nothing written) unless it passes; a real name or "automated: ...".
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -13,13 +14,20 @@ import {
   correctArticle,
   loadArticleRelease,
   lockArticle,
+  reaffirmArticle,
   renderArticleMd,
 } from '../src/lib/article';
+import { articleStale } from '../src/lib/article-view';
 import { figuresOf, validateArticle } from '../src/lib/article-validation';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
-import { loadPublicRecord, publicRecordPath, publicRecordProblems } from '../src/lib/public-record';
+import {
+  loadPublicRecord,
+  publicRecordPath,
+  publicRecordProblems,
+  withArticleRevision,
+} from '../src/lib/public-record';
 import { Refusal } from '../src/lib/publish';
 import { loadReview } from '../src/lib/review';
 import {
@@ -37,11 +45,11 @@ const flag = (name: string) => {
   const i = rest.indexOf(name);
   return i >= 0 ? rest[i + 1] : undefined;
 };
-if (!['validate', 'show', 'lock', 'correct'].includes(cmd) || !topic || !storyId) {
+if (!['validate', 'show', 'lock', 'correct', 'reaffirm'].includes(cmd) || !topic || !storyId) {
   console.error(
     readFileSync(new URL(import.meta.url), 'utf8')
       .split('\n')
-      .slice(0, 7)
+      .slice(0, 8)
       .map((l) => l.replace(/^\/\/ ?/, ''))
       .join('\n'),
   );
@@ -126,13 +134,24 @@ function run() {
       const problems = publicRecordProblems({ exhibits: {}, revisions: [revision] });
       if (problems.length) throw new Refusal(problems.join('; '));
       const record = loadPublicRecord(topic);
-      const next = { ...record, revisions: [...record.revisions, revision] };
-      // the record first: if the release write then fails, correct can be re-run against the old release
-      writeFileSync(publicRecordPath(topic), toJson(next));
+      // the record first: if the release write then fails, correct can be re-run against the old release, and the
+      // re-run finds its revision already recorded
+      const next = withArticleRevision(record, revision);
+      if (next !== record) writeFileSync(publicRecordPath(topic), toJson(next));
       writeArtifact(dir, ARTICLE_FILES.release, toJson(release));
       console.log(
         `released ${rel(p(ARTICLE_FILES.release))}: revision ${release.revision}, changed ${revision.sentences.join(', ')}; recorded in ${rel(publicRecordPath(topic))}`,
       );
+      return;
+    }
+    case 'reaffirm': {
+      const { a, v } = releasable();
+      const prev = loadArticleRelease(topic, storyId);
+      if (!prev) throw new Refusal(`nothing released yet: npm run article -- lock ${topic} ${storyId}`);
+      const stale = articleStale(prev, loadPublicRecord(topic));
+      const r = reaffirmArticle(prev, !!stale, a, v, flag('--approved-by') ?? '', flag('--note') ?? '', today);
+      writeArtifact(dir, ARTICLE_FILES.release, toJson(r));
+      console.log(`reaffirmed ${rel(p(ARTICLE_FILES.release))}: revision ${r.revision} stands, dated ${r.date}`);
     }
   }
 }

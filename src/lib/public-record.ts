@@ -111,4 +111,18 @@ export function noteRevision(rec: PublicRecord, id: string, note: string): Publi
   return { ...rec, revisions: rec.revisions.map((v, j) => (j === i ? { ...v, note } : v)) };
 }
 
+/** The record with an article correction appended, unless the same one is already there (a re-run of correct after
+ *  its release write failed). */
+export const withArticleRevision = (rec: PublicRecord, r: Extract<Revision, { kind: 'article' }>): PublicRecord =>
+  rec.revisions.some(
+    (x) =>
+      x.kind === 'article' &&
+      x.id === r.id &&
+      x.at === r.at &&
+      x.note === r.note &&
+      JSON.stringify(x.sentences) === JSON.stringify(r.sentences),
+  )
+    ? rec
+    : { ...rec, revisions: [...rec.revisions, r] };
+
 export const revisionLine = (r: Revision) => `Revised ${r.at}: ${r.note}`;

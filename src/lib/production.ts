@@ -835,7 +835,10 @@ function articleOf({ topic, storyId, root, p, r, read, t, review, pkg, script, r
   if (out && (!a || out.fingerprints.article === articleFingerprint(a))) {
     const stale = articleStale(out, loadPublicRecord(topic, root));
     return stale
-      ? { state: 'stale' as const, next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}` }
+      ? {
+          state: 'stale' as const,
+          next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`,
+        }
       : { state: 'released' as const, next: 'none' };
   }
   if (!a) return { state: 'none' as const, next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}` };

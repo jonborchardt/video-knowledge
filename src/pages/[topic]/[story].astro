@@ -55,9 +55,10 @@ const outputs = storyOutputs(t.name, s.partOf ?? s.id);
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 const path = `/${t.name}/${storyUrlSlug(s)}/`;
-// The released companion article (a follow-up shows its first question's), each figure as its storyboard chart's
-// points: a figure ref is '<story slug>/<scene id>'.
-const release = loadArticleRelease(t.name, s.partOf ?? s.id);
+// The released companion article, each figure as its storyboard chart's points: a figure ref is
+// '<story slug>/<scene id>'. A follow-up links to its first question's article, so the two pages never share a title.
+const release = first ? null : loadArticleRelease(t.name, s.id);
+const firstArticle = !!first && !!loadArticleRelease(t.name, first.id);
 const figures = new Map<string, FigureTable>();
 for (const b of release?.article.sections.flatMap((x) => x.blocks) ?? []) {
   if (b.kind !== 'figure') continue;
@@ -174,6 +175,13 @@ const h2 = 'mb-3 text-featured font-bold';
   }
 
   <section id="article">
+    {
+      firstArticle && (
+        <p>
+          The article answering this question is on <a href={`${storyHref(first!)}#article`}>{first!.title}</a>.
+        </p>
+      )
+    }
     {
       view ? (
         <ArticleBody view={view} />

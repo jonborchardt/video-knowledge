@@ -1,5 +1,5 @@
 import { type Article } from '../src/lib/article';
-import { articleSentences } from '../src/lib/article';
+import { articleReviewUnits, articleSentences } from '../src/lib/article';
 import { type ScriptReviewFile, sentenceFingerprint } from '../src/lib/script';
 import { TOPIC } from './corpus';
 import { MLM, fact, pkg, sentence } from './script-helpers';
@@ -51,6 +51,9 @@ export const approveArticle = (a: Article): ScriptReviewFile => ({
   date: 'd',
   revision: a.revision,
   packageFingerprint: pkg().fingerprint,
-  approved: Object.fromEntries(articleSentences(a).map((x) => [x.id, sentenceFingerprint(x)])),
+  approved: Object.fromEntries([
+    ...articleSentences(a).map((x) => [x.id, sentenceFingerprint(x)]),
+    ...articleReviewUnits(a),
+  ]),
   findings: [],
 });

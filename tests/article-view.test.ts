@@ -79,6 +79,33 @@ describe('article view', () => {
     expect(articleStale(release(), rec(claimRev('demo/other', '2026-11-02')))).toBeNull();
   });
 
+  it('a claim named only by a callout counts toward staleness', () => {
+    const r = release();
+    r.article.sections[0].blocks.push({
+      kind: 'prose',
+      callout: 'qualification',
+      claim: 'demo/callout-only',
+      sentences: [sentence('s9', 'It depends.', 'rhetorical')],
+    });
+    const rev = claimRev('demo/callout-only', '2026-11-02');
+    expect(articleStale(r, { exhibits: {}, revisions: [rev] })).toEqual(rev);
+  });
+
+  it('a reaffirmation is not shown as a correction', () => {
+    const history = [
+      ...release().history,
+      {
+        revision: 1,
+        date: '2026-11-03',
+        approvedBy: 'Jon',
+        fingerprint: 'f',
+        note: 'stands',
+        reaffirmed: true as const,
+      },
+    ];
+    expect(articleView(release({ history }), topic, empty, REPO).corrections).toEqual([]);
+  });
+
   it('a correction marks its sentences', () => {
     const history = [
       ...release().history,
