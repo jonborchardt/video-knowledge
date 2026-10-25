@@ -49,6 +49,7 @@ import {
   chapters,
   renderChecklist,
   renderDescription,
+  type DescriptionLinks,
   renderReadme,
   reviewData,
   reviewInputProblem,
@@ -726,9 +727,12 @@ describe('a short review package', () => {
     expect(d).toContain('Nearly half of them lost money.');
     expect(d).toContain('#Shorts');
     expect(d).not.toContain('Chapters');
-    expect(d).toMatch(/Full inquiry: https?:\/\//);
-    const live = reviewData(s, t, report, { ...made, fullVideo: 'https://youtu.be/parent00001' });
-    expect(renderDescription(live, s, t, report)).toContain('Full inquiry: https://youtu.be/parent00001');
+    // the parent's matter page comes in the links (descriptionLinks, tests/links.test.ts); the uploader adds the video
+    const parent: DescriptionLinks = {
+      cta: 'default',
+      links: [{ type: 'parent-matter', node: null, url: 'https://x/heat-pumps/a/', text: 'Full inquiry' }],
+    };
+    expect(renderDescription(pkg, s, t, report, parent)).toContain('Full inquiry: https://x/heat-pumps/a/');
     expect(reviewMp4Name(join('t', 'scripts', 'parent', 'shorts', 'my-short', 'video'), true)).toBe(
       'parent-short-my-short.mp4',
     );

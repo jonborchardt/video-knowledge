@@ -6,7 +6,9 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { site } from '../config/site';
-import { fileSha, sha, toJson } from '../lib/io';
+import { contentGraph, matterPath, storyNode } from '../lib/content-graph';
+import { type CtaType, ctaPath, loadCta, resolveCtas } from '../lib/cta';
+import { fileSha, ROOT, sha, toJson } from '../lib/io';
 import { loadLedger, mainOutput } from '../lib/publish';
 import { sectionTitle } from '../lib/script';
 import { renderSrt } from './captions';
@@ -25,7 +27,54 @@ export const REVIEW_FILES = {
   report: 'build-report.md',
   thumbnail: 'thumbnail.png',
   captions: 'captions.en.srt', // one cue per sentence from the measured timeline (src/video/captions.ts)
+  links: 'links.json', // every destination in the description's Links block (DescriptionLinks)
 } as const;
+
+/** The description's Links block (plan 4, D5 and D8), recorded in links.json: the calls to action, or for a Short its
+ *  parent's matter page, then the record on the inquiry. `cta` is the sha of cta.json, or "default" without one. */
+export interface DescriptionLinks {
+  cta: string;
+  links: { type: CtaType | 'inquiry-record' | 'parent-matter'; node: string | null; url: string; text: string }[];
+}
+const recordLink = (topic: string): DescriptionLinks['links'][number] => ({
+  type: 'inquiry-record',
+  node: topic,
+  url: `${site.url}${topic}/`,
+  text: 'The full record on this inquiry',
+});
+
+/** The links a description carries, from the content graph and the story's cta.json (a file problem throws). A story
+ *  the public graph does not hold (a topic no institution publishes) gets the record line only. */
+export function descriptionLinks(
+  topic: string,
+  story: string,
+  shortParent: string | null,
+  root = ROOT,
+): DescriptionLinks {
+  const g = contentGraph(root, [topic]);
+  const id = shortParent ?? story;
+  const node = storyNode(topic, id);
+  const s = g.stories.get(node);
+  if (!s) return { cta: 'default', links: [recordLink(topic)] };
+  const matter = `${site.url}${matterPath(topic, s).slice(1)}`;
+  if (shortParent)
+    return {
+      cta: 'default',
+      links: [{ type: 'parent-matter', node, url: matter, text: 'Full inquiry' }, recordLink(topic)],
+    };
+  const file = loadCta(topic, story, root);
+  const r = resolveCtas(file, g, node, root);
+  if (r.problems.length) throw new Error(`cta.json: ${r.problems.join('; ')}`);
+  const ctas = [r.primary, ...r.secondary].map((c) => ({
+    type: c.type,
+    node: c.node,
+    url: c.url,
+    text: c.disclosure ? `Paid link (${c.disclosure}): ${c.text}` : c.text,
+  }));
+  // The record line, unless a call to action already points at the inquiry.
+  const record = ctas.some((c) => c.url === recordLink(topic).url) ? [] : [recordLink(topic)];
+  return { cta: file ? fileSha(ctaPath(topic, story, root)) : 'default', links: [...ctas, ...record] };
+}
 
 export interface Chapter {
   scene: string;
@@ -183,6 +232,7 @@ export function reviewData(
       REVIEW_FILES.report,
       made.thumbnailSha ? REVIEW_FILES.thumbnail : null,
       made.captionsSha ? REVIEW_FILES.captions : null,
+      REVIEW_FILES.links,
       REVIEW_FILES.json,
     ].filter((f): f is string => !!f),
     short: short
@@ -192,7 +242,13 @@ export function reviewData(
 }
 
 /** description.txt: paste-ready for the upload, with the measured chapters and the research sources. */
-export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline, report: BuildReport): string {
+export function renderDescription(
+  pkg: ReviewPackage,
+  seg: Segment,
+  tl: Timeline,
+  report: BuildReport,
+  links: DescriptionLinks = { cta: 'default', links: [recordLink(tl.topic)] },
+): string {
   const musicLine = report.music
     ? report.music.compositions
         .map(
@@ -202,10 +258,13 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
         .join('; ')
     : 'none';
   const release = pkg.status === 'release build';
-  // a Short (brand/design.md 2.6): the hook, the link to the full inquiry, the studies, the record, #Shorts
+  // The Links block opens the description: the calls to action (a Short: its parent's matter page) and the record.
+  // YouTube allows 5000 bytes; the sources discussed (often forty) live on the topic page, the record link replaces them.
+  const block = links.links.map((l) => `${l.text}: ${l.url}`);
+  // a Short (brand/design.md 2.6): the hook, the links, the studies, #Shorts; the uploader adds the full video once live
   const body = pkg.short
-    ? [seg.pkg.short?.hook ?? tl.title, '', `Full inquiry: ${pkg.short.fullVideo ?? `${site.url}${tl.topic}/`}`]
-    : [seg.pkg.question ?? tl.title, '', 'Chapters', ...pkg.chapters.map((c) => `${c.stamp} ${c.title}`)];
+    ? [seg.pkg.short?.hook ?? tl.title, '', ...block]
+    : [seg.pkg.question ?? tl.title, '', ...block, '', 'Chapters', ...pkg.chapters.map((c) => `${c.stamp} ${c.title}`)];
   return (
     [
       ...(release
@@ -218,9 +277,6 @@ export function renderDescription(pkg: ReviewPackage, seg: Segment, tl: Timeline
       '',
       'Studies cited',
       ...pkg.sources.studies.map((s) => `- ${s.name}`),
-      '',
-      // YouTube allows 5000 bytes; the sources discussed (often forty) live on the topic page, one link replaces the list
-      `${site.publicRecord}, with every source discussed and how each claim held up: ${site.url}${tl.topic}/`,
       '',
       `${site.name}. ${site.disclosure}`,
       ...(pkg.short ? ['', '#Shorts'] : []),
@@ -340,7 +396,9 @@ export function buildReviewPackage(
   if (existsSync(other)) unlinkSync(other);
   copyFileSync(mp4, join(dir, pkg.mp4));
   writeFileSync(join(dir, REVIEW_FILES.readme), renderReadme(pkg, tl, report));
-  writeFileSync(join(dir, REVIEW_FILES.description), renderDescription(pkg, seg, tl, report));
+  const links = descriptionLinks(seg.script.topic, seg.script.story, seg.pkg.short?.parent ?? null);
+  writeFileSync(join(dir, REVIEW_FILES.description), renderDescription(pkg, seg, tl, report, links));
+  writeFileSync(join(dir, REVIEW_FILES.links), toJson(links));
   writeFileSync(join(dir, REVIEW_FILES.checklist), renderChecklist(pkg, tl));
   copyFileSync(join(videoDir, VIDEO_FILES.reportMd), join(dir, REVIEW_FILES.report));
   writeFileSync(join(dir, REVIEW_FILES.json), toJson(pkg));

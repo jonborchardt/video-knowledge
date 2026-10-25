@@ -1,0 +1,188 @@
+1
+00:00:00,600 --> 00:00:09,700
+Picture a pair of developers switching on the same AI coding assistant
+on the same morning: a veteran, and a newcomer just starting out.
+
+2
+00:00:09,700 --> 00:00:11,520
+Which of them gets more out of it?
+
+3
+00:00:12,033 --> 00:00:18,296
+The confident answer online is the veteran, so let's put
+that answer next to the trials that actually measured it.
+
+4
+00:00:18,300 --> 00:00:29,125
+On The Pragmatic Engineer, in an episode about AI at Shopify, it was offered as a maybe:
+"the AI agents are going to help the best engineers more than the mediocre engineer".
+
+5
+00:00:29,133 --> 00:00:37,358
+On the same show, Simon Willison said that with these tools he will "run
+circles around somebody who's never written a code line of code in their life".
+
+6
+00:00:37,367 --> 00:00:51,504
+Willison's yardstick is someone who has never coded, and the trials that follow compared developers with each other, so what they
+can test is the first claim: when researchers split their results by experience, did the best engineers gain more than the rest?
+
+7
+00:00:52,033 --> 00:01:04,458
+In field experiments that gave developers the coding assistant Copilot, short-tenure developers
+raised their output by 27 to 39 percent, while long-tenure developers gained 8 to 13 percent.
+
+8
+00:01:04,767 --> 00:01:14,004
+Those estimates are noisy and not statistically significant, but the
+pattern was the same on all three of the studies' main output measures.
+
+9
+00:01:14,033 --> 00:01:27,621
+The authors note that longer-tenure developers abandoning the tool after a trial may shrink their estimate, yet
+junior developers, who used it as much as seniors once they had adopted it, still gained more than senior ones.
+
+10
+00:01:27,633 --> 00:01:37,958
+A separate experiment found the same direction: developers with fewer years of experience
+got the speed benefit from generative AI, while the quality of their code was unaffected.
+
+11
+00:01:38,267 --> 00:01:50,154
+Another Copilot trial found that less experienced programmers benefited more, and its authors called
+that promising for people moving into software development, if the result holds up in further studies.
+
+12
+00:01:50,167 --> 00:02:04,004
+An experiment that ran from bachelor's students to professional developers found that every group got significantly further
+through its task with AI support, and its authors say the differences between groups were not related to experience.
+
+13
+00:02:04,333 --> 00:02:13,708
+Professionals gained more there than bachelor's students, but each group had
+tasks suited to its level, and the professionals' were among the most complex.
+
+14
+00:02:13,733 --> 00:02:23,171
+Then there is a trial of developers who knew their projects deeply: 5
+years and 1,500 commits on average in the repositories they worked on.
+
+15
+00:02:23,200 --> 00:02:41,475
+With AI allowed, these developers were slower, not faster, and its researchers report moderate evidence that they were slowed down more on issues where
+they had high prior exposure to the task; the developers said AI was particularly helpful on unfamiliar issues and less helpful on familiar ones.
+
+16
+00:02:41,500 --> 00:02:50,525
+As one developer put it: "if I am the dedicated maintainer of a very specialized
+part of the codebase, there is no way agent mode can do better than me."
+
+17
+00:02:51,033 --> 00:03:02,608
+One trial leaned the other way: on a complex task, more senior engineers were, if anything,
+faster with AI than less senior ones, though that difference was not statistically significant.
+
+18
+00:03:02,933 --> 00:03:09,521
+Its authors suggest AI may not yet be able
+to close a skill gap on a task that complex.
+
+19
+00:03:09,533 --> 00:03:16,696
+That leaves the other half of the belief: that using these
+tools well is a skill of its own, and the skilled pull ahead.
+
+20
+00:03:17,200 --> 00:03:28,288
+Among those deeply experienced developers, the slowdown broadly did not shrink with up to
+50 hours of Cursor experience, counting the hours they reported from before the study.
+
+21
+00:03:28,600 --> 00:03:41,688
+One developer past 50 hours did see a speedup, but when a second developer corrected the experience
+they had reported, that group's estimate fell from roughly 25 percent faster to roughly 0 percent.
+
+22
+00:03:41,700 --> 00:04:04,200
+In the trial that leaned toward seniors, run with full-time Googlers, how often people already used AI tools made no significant difference to their speed with AI; among the possible
+reasons its authors offer are too little statistical power, a low usability floor where the benefits come quickly, and one feature needing prompting skills that may not be universal yet.
+
+23
+00:04:04,200 --> 00:04:19,638
+The clearest sign that tool skill matters comes from a maintainability trial: the more practised the original developer was with AI, the
+better the code scored on a code-health measure once someone else built on it, though that developer's proficiency in Java mattered even more.
+
+24
+00:04:20,167 --> 00:04:39,367
+So across these trials, nothing shows AI multiplying experts far more than novices: several leaned toward the less experienced, though the field experiments'
+gaps were noisy and not significant and another trial's result awaits further studies, and the one hint the other way was not significant either.
+
+25
+00:04:39,667 --> 00:04:52,254
+What runs through them is how much the developer already knew: the tool helped more for short-tenure developers
+in one trial and on unfamiliar issues in another, and helped less for maintainers on tasks they knew well.
+
+26
+00:04:52,267 --> 00:04:56,879
+But how can a tool that writes code for you
+leave an expert slower on work they know best?
+
+27
+00:04:57,900 --> 00:05:07,275
+Back with those maintainers, the answer starts with how often they took what
+the tool offered: they accepted fewer than 44 percent of Cursor's generations.
+
+28
+00:05:07,600 --> 00:05:18,013
+When they turned one down, they reprompted or gave up, and the researchers saw
+significant time wasted reviewing, testing or modifying code before rejecting it.
+
+29
+00:05:18,033 --> 00:05:29,271
+Even accepted code cost time: 75 percent said they read every line the AI
+wrote, and 56 percent said they often had to make major changes to clean it up.
+
+30
+00:05:29,300 --> 00:05:39,325
+Engineers deciding when to hand work to Claude described the same trade; for a
+task under 10 minutes, one said, "I'm probably not going to bother using Claude."
+
+31
+00:05:39,633 --> 00:05:50,408
+Another described a cold start: their team's codebase holds knowledge Claude does not have by
+default, so rather than iterate on the perfect prompt, "I'm just going to go and do it myself."
+
+32
+00:05:50,433 --> 00:06:06,196
+The same limit shows up at larger scale: in one company's AI-assisted migration of 5,359 files, the bottleneck was
+how fast engineers could review the changes, so the team deliberately capped how many changes it generated each week.
+
+33
+00:06:06,200 --> 00:06:19,650
+A review of what has been written about vibe coding names its central risk a verification gap: code
+generated faster than developers and their processes can verify its correctness, security and provenance.
+
+34
+00:06:19,967 --> 00:06:27,729
+Its authors suggest that skill in verification, constraint
+specification and review may matter as much as skill in writing code.
+
+35
+00:06:27,733 --> 00:06:42,133
+And the study of engineers using Claude names the catch, a "paradox of supervision": using Claude effectively
+requires supervising it, and supervising it requires the very coding skills that may atrophy from overuse.
+
+36
+00:06:42,433 --> 00:06:45,771
+That checking is part of the
+price those maintainers paid.
+
+37
+00:06:46,800 --> 00:06:54,100
+So before you hand a task to an assistant, ask yourself how much of
+it you already know, and how long checking its answer will take.
+
+38
+00:06:54,400 --> 00:07:02,338
+And if you find yourself deleting most of what it writes, point it at the parts
+that are new to you, and keep enough of the skill to check what it hands back.
