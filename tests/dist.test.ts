@@ -2,7 +2,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { commissions, site } from '../src/config/site';
+import { author, commissions, site } from '../src/config/site';
 import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
 import { ROOT } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
@@ -19,6 +19,7 @@ const storyPages = publicTopicNames().flatMap((topic) =>
 const pages = [
   'index.html',
   'about/index.html',
+  'institutions/index.html',
   ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
   ...publicTopicNames().map((n) => `${n}/index.html`),
   ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
@@ -65,7 +66,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     const dirs = readdirSync(DIST, { withFileTypes: true }).filter(
       (d) => d.isDirectory() && !['_astro', 'og', 'stamps'].includes(d.name),
     );
-    expect(dirs.map((d) => d.name).sort()).toEqual(['about', 'commissions', ...publicTopicNames()].sort());
+    expect(dirs.map((d) => d.name).sort()).toEqual(
+      ['about', 'commissions', 'institutions', ...publicTopicNames()].sort(),
+    );
     for (const n of topicNames()) {
       expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
       expect(existsSync(join(DIST, n, 'scripts')), `${n}/scripts`).toBe(false);
@@ -81,8 +84,8 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain(`href="${BASE}production/"`);
   });
 
-  it('the home page lists every institution, links only real channels and features a story', () => {
-    const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  it('the directory lists every institution, links only real channels and features a story', () => {
+    const html = readFileSync(join(DIST, 'institutions/index.html'), 'utf8');
     for (const c of Object.values(commissions)) {
       expect(html).toContain(c.name);
       if (c.youtube) expect(html).toContain(`href="${c.youtube}"`);
@@ -218,6 +221,25 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(ldOf(readFileSync(join(DIST, 'commissions', k, 'index.html'), 'utf8')).map((x) => x['@type'])).toEqual(
         expect.arrayContaining(['CollectionPage', 'BreadcrumbList']),
       );
+  });
+
+  it('the front page leads with ready matters and links the directory', () => {
+    const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+    const ready = storyPages.filter((p) => p.s.readiness === 'ready' && !p.s.partOf);
+    expect(ready.some((p) => html.includes(`href="${BASE}${p.topic}/${p.slug}/"`))).toBe(true);
+    expect(html).toContain(`href="${BASE}institutions/"`);
+  });
+
+  it('about names the real publisher and gives no contact address', () => {
+    const html = readFileSync(join(DIST, 'about/index.html'), 'utf8');
+    expect(html).toContain('id="publisher"');
+    expect(html).toContain(author.name);
+    expect(html).not.toContain('mailto:');
+  });
+
+  it('the directory carries a CollectionPage', () => {
+    const types = ldOf(readFileSync(join(DIST, 'institutions/index.html'), 'utf8')).map((x) => x['@type']);
+    expect(types).toEqual(expect.arrayContaining(['CollectionPage', 'BreadcrumbList']));
   });
 
   it('serves a 404 page', () => {

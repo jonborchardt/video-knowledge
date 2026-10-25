@@ -46,7 +46,7 @@ export function distPages(): string[] {
     .sort();
 }
 
-/** One page per template (home, about, commission, topic, story, 404): the representative set the browser suite runs. */
+/** One page per template (home, about, directory, commission, topic, story, 404): the representative set the browser suite runs. */
 export function representativePages(all = distPages()): string[] {
   const size = (p: string) => readFileSync(join(DIST, p)).length;
   const smallest = (ps: string[]) => ps.sort((a, b) => size(a) - size(b))[0];
@@ -54,8 +54,9 @@ export function representativePages(all = distPages()): string[] {
   const picks = [
     'index.html',
     'about/index.html',
+    'institutions/index.html',
     smallest(all.filter((p) => p.startsWith('commissions/') && depth(p) === 3)),
-    smallest(all.filter((p) => !/^(about|commissions)\//.test(p) && depth(p) === 2)), // topic page
+    smallest(all.filter((p) => !/^(about|commissions|institutions)\//.test(p) && depth(p) === 2)), // topic page
     smallest(all.filter((p) => !p.startsWith('commissions/') && depth(p) === 3)), // story page
     '404.html',
   ];

@@ -1,0 +1,51 @@
+---
+// The institutional directory: one card per institution of the Commonwealth, with the inquiries it has published and
+// a featured story. A topic no institution claims is not listed (publicTopicNames); an institution without a channel
+// says so rather than inventing a handle.
+import Base from '../layouts/Base.astro';
+import InstitutionCard from '../components/InstitutionCard.astro';
+import { commissions, site } from '../config/site';
+import { breadcrumbJsonLd, collectionJsonLd } from '../lib/seo';
+import { loadStories } from '../lib/stories';
+import { loadTopic, publicTopicNames } from '../lib/topics';
+import { href } from '../lib/url';
+
+const names = new Set(publicTopicNames());
+const institutions = Object.values(commissions).map((c) => {
+  const published = c.topics.filter((n) => names.has(n)).map((n) => loadTopic(n));
+  // Featured: the best-ranked ready story across the institution's inquiries, linked to its own page.
+  const featured =
+    published
+      .flatMap((t) => (loadStories(t.name)?.stories ?? []).map((s) => ({ s, t })))
+      .find(({ s }) => s.readiness === 'ready') ?? null;
+  return { c, published, featured };
+});
+const description = `The institutions of ${site.name}: what each is for, where it publishes and the inquiries it has opened.`;
+---
+
+<Base
+  title={`Institutions · ${site.name}`}
+  description={description}
+  jsonLd={[
+    collectionJsonLd(`Institutions of ${site.name}`, description, '/institutions/', Astro.site!),
+    breadcrumbJsonLd(
+      [
+        { name: site.name, path: '/' },
+        { name: 'Institutions', path: '/institutions/' },
+      ],
+      Astro.site!,
+    ),
+  ]}
+>
+  <header class="grid gap-3 border-b pb-8">
+    <div class="eyebrow text-muted-foreground"><a href={href('/')}>{site.publicRecord}</a></div>
+    <h1 class="text-display font-bold">The institutions</h1>
+    <p class="max-w-prose text-lg">
+      Each institution of the Commonwealth publishes its inquiries here and on its own channel.
+    </p>
+  </header>
+
+  <section class="grid gap-6" aria-label="Institutions">
+    {institutions.map((x) => <InstitutionCard {...x} />)}
+  </section>
+</Base>

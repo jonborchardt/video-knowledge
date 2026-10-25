@@ -19,7 +19,7 @@ const WIDTHS = [320, 375, 768, 1024, 1440]; // the named breakpoints; the sweep 
 const WCAG = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select, textarea, summary, [tabindex]:not([tabindex="-1"])';
-const isTopic = (p: string) => /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions)\//.test(p);
+const isTopic = (p: string) => /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions|institutions)\//.test(p);
 
 let server: Awaited<ReturnType<typeof preview>>;
 let origin = '';
@@ -58,7 +58,7 @@ afterAll(async () => server?.stop());
 // Without a build every suite below skips, so the gate would pass having checked nothing.
 it('has the built site to check (npm run build), one page per template', () => {
   expect(pages.length, 'no pages in dist/: run npm run build').toBeGreaterThan(0);
-  if (process.env.WEB_QUALITY_FULL !== '1') expect(pages, 'representativePages() lost a template').toHaveLength(6);
+  if (process.env.WEB_QUALITY_FULL !== '1') expect(pages, 'representativePages() lost a template').toHaveLength(7);
 });
 
 describe.skipIf(!pages.length).each(BROWSERS)('%s', (name) => {

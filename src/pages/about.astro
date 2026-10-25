@@ -211,12 +211,17 @@ const rows = [
     <li>It does not invent. Every citation, witness, authority and figure on this site is real and attributed.</li>
   </ul>
 
-  <h2 class={h2}>Who</h2>
+  <!-- Out of character, on purpose: the real publisher, in plain type, with no seal or in-world title. -->
+  <h2 class={h2} id="publisher">Publisher</h2>
   <p class={p}>
-    Published by <a href={author.links.GitHub}>{author.name}</a>, who writes about building things like this at{' '}
-    <a href={author.blog.url}>{author.blog.name}</a>. The data, the agent briefs, the brand charter and this site are
-    open at <a href={site.repo}>GitHub</a>. Every claim links back to its quote and every study verdict to the lines it
-    rests on, so you can check the checking.
+    This site is published by <a href={author.links.GitHub}>{author.name}</a>, who writes about building things like
+    this at <a href={author.blog.url}>{author.blog.name}</a>. The data, the agent briefs, the brand charter and this
+    site are open at <a href={site.repo}>GitHub</a>. Every claim links back to its quote and every study verdict to the
+    lines it rests on, so you can check the checking.
+  </p>
+  <p class={p}>
+    Corrections go through the repository's issues: <a href={`${site.repo}/issues`}>raise one</a>. A corrected finding
+    is marked on its page with the date and the reason.
   </p>
   <p class={`${p} text-sm text-muted-foreground`}>
     <a href={href('/')}>Back to the Public Record</a>.
