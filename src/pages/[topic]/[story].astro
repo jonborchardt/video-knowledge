@@ -12,6 +12,8 @@ import VideoEmbed from '../../components/VideoEmbed.astro';
 import ArticleBody from '../../components/ArticleBody.astro';
 import Tool from '../../components/Tool.astro';
 import MatterList from '../../components/MatterList.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import { loadCta, resolveCtas } from '../../lib/cta';
 import { contentGraph, matterItem, related, storyNode } from '../../lib/content-graph';
 import { toolOf } from '../../tools';
 import { loadArticleRelease } from '../../lib/article';
@@ -132,7 +134,13 @@ const body = commissionBody(commission);
 const h2 = 'mb-3 text-featured font-bold';
 const tool = toolOf(t.name, s.id);
 const graph = contentGraph();
-const relatedItems = related(graph, storyNode(t.name, s.id)).map((n) => matterItem(graph, n.id));
+const node = storyNode(t.name, s.id);
+// The calls to action of a ready first question (a follow-up's live on its first question's video); a file error
+// fails the build.
+const ctaFile = loadCta(t.name, s.id);
+const ctas = s.readiness === 'ready' && !first ? resolveCtas(ctaFile, graph, node) : null;
+if (ctas?.problems.length) throw new Error(`${t.name}/${s.id} cta.json: ${ctas.problems.join('; ')}`);
+const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => matterItem(graph, n.id));
 ---
 
 <Base
@@ -208,6 +216,18 @@ const relatedItems = related(graph, storyNode(t.name, s.id)).map((n) => matterIt
           <VideoEmbed video={outputs.video} poster={image} shorts={outputs.shorts} />
         </section>
       ))
+  }
+
+  {
+    ctas && (
+      <section aria-labelledby="next">
+        <div class="eyebrow text-gold">Next</div>
+        <h2 class={h2} id="next">
+          Where to go from here
+        </h2>
+        <NextSteps ctas={ctas} path={path} />
+      </section>
+    )
   }
 
   <section id="article">

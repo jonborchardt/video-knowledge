@@ -1,0 +1,70 @@
+---
+// A matter's calls to action (plan 4, D5): the primary as a block, the secondaries under it, each with the icon of the
+// kind of page it leads to. A destination on this page (the evidence, the article, the tool) is an in-page link; a
+// paid link says so before it.
+import KindIcon, { type LinkKind } from './KindIcon.astro';
+import type { CtaResult, CtaType, ResolvedCta } from '../lib/cta';
+import { site } from '../config/site';
+import { href } from '../lib/url';
+
+interface Props {
+  ctas: CtaResult;
+  path: string; // this matter's root-relative path
+}
+const { ctas, path } = Astro.props;
+const KIND: Record<CtaType, LinkKind> = {
+  tool: 'tool',
+  evidence: 'matter',
+  article: 'article',
+  data: 'data',
+  video: 'video',
+  inquiry: 'inquiry',
+  reference: 'external',
+  commercial: 'external',
+};
+// A site URL back to its root-relative path under the base; this page's own URL to its anchor.
+const link = (c: ResolvedCta) => {
+  if (!c.url.startsWith(site.url)) return c.url;
+  const p = `/${c.url.slice(site.url.length)}`;
+  if (p.startsWith(path)) return p.slice(path.length) || '#claims';
+  return href(p);
+};
+// A paid link is marked for search engines as well as for the reader.
+const rel = (c: ResolvedCta) => (c.type === 'commercial' ? 'sponsored' : undefined);
+---
+
+<div class="grid gap-3">
+  <a
+    class="flex items-center gap-3 rounded-md border-2 border-primary bg-card p-4 font-heading text-title font-bold no-underline hover:bg-muted"
+    href={link(ctas.primary)}
+    data-cta={ctas.primary.type}
+    rel={rel(ctas.primary)}
+  >
+    <KindIcon kind={KIND[ctas.primary.type]} class="size-6 text-primary" />
+    <span>
+      {
+        ctas.primary.disclosure && (
+          <span class="block eyebrow text-muted-foreground">Paid link ({ctas.primary.disclosure})</span>
+        )
+      }
+      {ctas.primary.text}
+    </span>
+  </a>
+  {
+    ctas.secondary.length > 0 && (
+      <ul class="grid list-none gap-1.5 p-0">
+        {ctas.secondary.map((c) => (
+          <li class="flex items-baseline gap-2">
+            <KindIcon kind={KIND[c.type]} class="text-muted-foreground" />
+            <span>
+              {c.disclosure && <span class="text-sm text-muted-foreground">Paid link ({c.disclosure}): </span>}
+              <a href={link(c)} rel={rel(c)}>
+                {c.text}
+              </a>
+            </span>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</div>

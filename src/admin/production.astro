@@ -19,6 +19,8 @@ import {
   type OutputView,
   type StoryRow,
 } from '../lib/production';
+import { contentGraph, storyNode } from '../lib/content-graph';
+import { loadCta, resolveCtas } from '../lib/cta';
 import { loadLedger } from '../lib/publish';
 import { storySlug } from '../lib/script';
 import { href } from '../lib/url';
@@ -152,6 +154,20 @@ const stripOf = (r: StoryRow) => {
         : -1;
   return PRODUCTION_STAGES.map((s, i) => ({ s, state: i < at ? 'done' : i === at ? 'current' : 'todo' }));
 };
+// The video's calls to action as its description will carry them (scripts/briefs/cta.md): the primary, and any the
+// value checks dropped. Public topics only: the graph holds no other.
+const graph = contentGraph();
+function ctaNotes(topic: string, id: string): string[] {
+  const node = storyNode(topic, id);
+  if (!graph.stories.has(node)) return [];
+  const file = loadCta(topic, id);
+  const c = resolveCtas(file, graph, node);
+  return [
+    `call to action${file ? '' : ' (default, no cta.json)'}: ${c.primary.type}: ${c.primary.text}`,
+    ...c.dropped.map((d) => `call to action dropped (${d.cta.type}): ${d.why}`),
+    ...c.problems.map((p) => `cta.json: ${p}`),
+  ];
+}
 ---
 
 <Base
@@ -299,6 +315,7 @@ const stripOf = (r: StoryRow) => {
                 ...(r.decision ? [`${r.decision.decision} ${day(r.decision.date)}: ${r.decision.note}`] : []),
                 ...(r.production?.blockers ?? []),
                 ...(r.production ? [] : r.story.blocking),
+                ...(r.production ? ctaNotes(r.topic.name, r.story.id) : []),
               ];
               return (
                 <tr

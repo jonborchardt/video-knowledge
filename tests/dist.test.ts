@@ -437,4 +437,13 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
         expect(sitemap).not.toContain(`${BASE}${old}<`);
       }
   });
+
+  it('every ready matter shows one primary call to action that resolves', () => {
+    for (const { topic, slug } of storyPages.filter((p) => p.s.readiness === 'ready' && !p.s.partOf)) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      expect(html.match(/data-cta="/g), slug).toHaveLength(1);
+      const target = html.match(/href="([^"]*)"[^>]*data-cta="/)![1];
+      if (target.startsWith('#')) expect(html, `${slug} ${target}`).toContain(`id="${target.slice(1)}"`);
+    }
+  });
 });
