@@ -34,7 +34,12 @@ export const REVIEW_FILES = {
  *  parent's matter page, then the record on the inquiry. `cta` is the sha of cta.json, or "default" without one. */
 export interface DescriptionLinks {
   cta: string;
-  links: { type: CtaType | 'inquiry-record' | 'parent-matter'; node: string | null; url: string; text: string }[];
+  links: {
+    type: CtaType | 'matter' | 'inquiry-record' | 'parent-matter';
+    node: string | null;
+    url: string;
+    text: string;
+  }[];
 }
 const recordLink = (topic: string): DescriptionLinks['links'][number] => ({
   type: 'inquiry-record',
@@ -60,7 +65,10 @@ export function descriptionLinks(
   if (shortParent)
     return {
       cta: 'default',
-      links: [{ type: 'parent-matter', node, url: matter, text: 'Full inquiry' }, recordLink(topic)],
+      links: [
+        { type: 'parent-matter', node, url: matter, text: 'The evidence and the full answer' },
+        recordLink(topic),
+      ],
     };
   const file = loadCta(topic, story, root);
   const r = resolveCtas(file, g, node, root);
@@ -72,8 +80,13 @@ export function descriptionLinks(
     text: c.disclosure ? `Paid link (${c.disclosure}): ${c.text}` : c.text,
   }));
   // The record line, unless a call to action already points at the inquiry.
+  // The matter page always (D3.1: the URL moved.json protects), unless a call to action already leads there; then the
+  // record line, unless a call to action already points at the inquiry.
+  const page = ctas.some((c) => c.url.startsWith(matter))
+    ? []
+    : [{ type: 'matter' as const, node, url: matter, text: 'The evidence and the full answer' }];
   const record = ctas.some((c) => c.url === recordLink(topic).url) ? [] : [recordLink(topic)];
-  return { cta: file ? fileSha(ctaPath(topic, story, root)) : 'default', links: [...ctas, ...record] };
+  return { cta: file ? fileSha(ctaPath(topic, story, root)) : 'default', links: [...ctas, ...page, ...record] };
 }
 
 export interface Chapter {

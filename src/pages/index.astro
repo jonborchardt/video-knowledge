@@ -7,7 +7,9 @@ import LabelStrip from '../components/LabelStrip.astro';
 import { commissionKey, commissions, site } from '../config/site';
 import { labelCounts } from '../lib/finding-label';
 import { ROOT } from '../lib/io';
-import { contentGraph, matterOrder, storyNode } from '../lib/content-graph';
+import { contentGraph, hasVideo, matterOrder, storyNode } from '../lib/content-graph';
+import KindIcon from '../components/KindIcon.astro';
+import SourceIcons from '../components/SourceIcons.astro';
 import { loadStories, storyUrlSlug } from '../lib/stories';
 import { loadTopic, publicTopicNames } from '../lib/topics';
 import { href } from '../lib/url';
@@ -29,11 +31,19 @@ const latest = publicTopicNames()
     const path = `/${t.name}/${storyUrlSlug(s)}/`;
     const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
     const claims = t.claims.filter((c) => s.claims.includes(c.id));
-    return { s, t, path, card: existsSync(join(ROOT, 'public', card)) ? card : null, counts: labelCounts(claims) };
+    return {
+      s,
+      t,
+      path,
+      card: existsSync(join(ROOT, 'public', card)) ? card : null,
+      counts: labelCounts(claims),
+      video: hasVideo(graph, storyNode(t.name, s.id)),
+    };
   });
 ---
 
 <Base title={site.name}>
+  <SourceIcons />
   <header class="grid gap-3 border-b pb-8">
     <div class="eyebrow text-muted-foreground">{site.publicRecord}</div>
     <h1 class="text-display font-bold">{site.name}</h1>
@@ -55,7 +65,7 @@ const latest = publicTopicNames()
     <h2 class="mb-4 text-featured font-bold" id="latest">Latest findings</h2>
     <ul class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
       {
-        latest.map(({ s, t, path, card, counts }) => (
+        latest.map(({ s, t, path, card, counts, video }) => (
           <li class="grid content-start gap-2 rounded-lg border bg-card p-4 text-card-foreground">
             {card && <img class="w-full rounded-sm" src={href(card)} alt="" width="1200" height="675" loading="lazy" />}
             <span class="eyebrow text-muted-foreground">{t.label}</span>
@@ -63,6 +73,12 @@ const latest = publicTopicNames()
               {s.title}
             </a>
             <span class="text-sm text-muted-foreground">{s.question}</span>
+            {video && (
+              <span class="inline-flex items-center gap-1 eyebrow">
+                <KindIcon kind="video" decorative />
+                Video
+              </span>
+            )}
             <p class="text-sm">{s.arc.resolution}</p>
             <LabelStrip counts={counts} base={`${href(path)}#evidence-`} />
           </li>

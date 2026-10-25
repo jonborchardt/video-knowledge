@@ -131,8 +131,10 @@ export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root 
         const n = c.target ? g.nodes.get(c.target) : undefined;
         if (n?.kind !== 'video') return 'not a video';
         if (!n.public) return 'not live';
+        // A chain is one video: its first question's. Pointing at it from the chain points at itself.
+        if (chainRoot(n.story!) === chainRoot(story)) return 'the same video';
         const shared = g.edges.some((e) => e.kind === 'shares-claims' && e.from === story && e.to === n.story);
-        if (!shared && chainRoot(n.story!) !== chainRoot(story)) return 'not related';
+        if (!shared) return 'not related';
         return at(n.id, c);
       }
       case 'inquiry':

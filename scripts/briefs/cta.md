@@ -35,8 +35,9 @@ topic. A dropped primary falls back to the default: the matter page, "The eviden
 
 1. **One primary**, the destination that adds the most for a viewer who just watched: a tool when the story
    has one and the question is a decision the viewer's own numbers change; else the article when it carries
-   tables and qualifications the video compressed; else the evidence. Use `video` as the primary only when
-   the next question is a chain the viewer will want answered.
+   tables and qualifications the video compressed; else the evidence. Use `video` as the primary only for another
+   video that shares claims and asks the question the viewer will have next. A chain's follow-ups are already
+   in this video (a chain is one video), so `video` never points at its own chain; the check drops it.
 2. **At most two secondaries**, each adding something different from the primary. None is better than one
    that repeats it.
 3. **Copy**: one line, at most 80 characters, that promises no more than the destination carries. Use the

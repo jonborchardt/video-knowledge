@@ -1,10 +1,12 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { loadMoved, manifestProblems } from '../src/lib/content-graph';
 import { site } from '../src/config/site';
-import { toJson, topicDir } from '../src/lib/io';
+import { readJson, toJson, topicDir } from '../src/lib/io';
+import { loadStories } from '../src/lib/stories';
+import { publicTopicNames } from '../src/lib/topics';
 import { scriptDir } from '../src/lib/script';
 import { descriptionLinks, type DescriptionLinks, renderDescription, type ReviewPackage } from '../src/video/package';
 import type { BuildReport } from '../src/video/report';
@@ -100,9 +102,9 @@ describe('links that cannot silently break', () => {
       type: 'parent-matter',
       node: 'heat-pumps/decision:a',
       url: matter,
-      text: 'Full inquiry',
+      text: 'The evidence and the full answer',
     });
-    expect(describe_(links, true)).toContain(`Full inquiry: ${matter}`);
+    expect(describe_(links, true)).toContain(`The evidence and the full answer: ${matter}`);
   });
 
   it('links.json lists exactly the description links', () => {
@@ -115,5 +117,27 @@ describe('links that cannot silently break', () => {
     const block = lines.slice(2, lines.indexOf('', 2));
     expect(block.map((l) => l.slice(l.lastIndexOf(' ') + 1))).toEqual(links.links.map((l) => l.url));
     expect(links.links.map((l) => l.type)).toEqual(['evidence', 'reference', 'inquiry-record']);
+  });
+
+  it('a description always links its matter page, whatever the primary', () => {
+    story({ primary: { type: 'inquiry', target: 'heat-pumps', text: 'The full record' } });
+    const links = descriptionLinks('heat-pumps', 'decision:a', null, root);
+    expect(links.links.map((l) => l.url)).toEqual([`${site.url}heat-pumps/`, matter]);
+    expect(links.links[1]).toMatchObject({ type: 'matter', text: 'The evidence and the full answer' });
+  });
+
+  it('every committed links.json matches the graph and cta.json today (else re-package)', () => {
+    for (const t of publicTopicNames())
+      for (const s of loadStories(t)?.stories ?? []) {
+        const dir = join(scriptDir(t, s.id), 'video', 'review');
+        const file = readJson<DescriptionLinks>(join(dir, 'links.json'));
+        if (file) expect(descriptionLinks(t, s.id, null), `${t}/${s.id}: npm run video -- package`).toEqual(file);
+        const shorts = join(scriptDir(t, s.id), 'shorts');
+        if (!existsSync(shorts)) continue;
+        for (const x of readdirSync(shorts)) {
+          const f = readJson<DescriptionLinks>(join(shorts, x, 'video', 'review', 'links.json'));
+          if (f) expect(descriptionLinks(t, `${s.id}/shorts/${x}`, s.id), `${t}/${s.id}/shorts/${x}`).toEqual(f);
+        }
+      }
   });
 });

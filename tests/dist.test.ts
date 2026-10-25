@@ -100,7 +100,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       if (c.youtube) expect(html).toContain(`href="${c.youtube}"`);
     }
     expect(html).toContain('Channel coming soon');
-    expect(html).toContain('Featured inquiry');
+    expect(html).toContain('Featured matter');
     expect(html).toContain('The Commonwealth is fictional. The research is real.');
   });
 
@@ -505,5 +505,14 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(header(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8')), slug).toContain(
         `href="${BASE}${topic}/"`,
       );
+  });
+
+  it('a list that mixes kinds of page marks each kind; an inquiry is never called a matter', () => {
+    const dir = readFileSync(join(DIST, 'institutions', 'index.html'), 'utf8');
+    for (const k of ['inquiry', 'matter', 'external']) expect(dir, k).toContain(`href="#icon-${k}"`);
+    expect(dir).toContain('Featured matter');
+    expect(dir).not.toContain('Featured inquiry');
+    for (const n of publicTopicNames())
+      expect(header(readFileSync(join(DIST, n, 'index.html'), 'utf8')), n).not.toMatch(/>Matter</);
   });
 });

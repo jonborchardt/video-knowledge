@@ -1,9 +1,11 @@
 ---
-// One institution in the directory: its seal, channel, remit, published inquiries and a featured story.
+// One institution in the directory: its seal, channel, remit, published inquiries and a featured matter, each link
+// marked with the kind of page it leads to (the page includes SourceIcons).
 import { type Commission, commissionKey, site } from '../config/site';
 import { type Story, storyUrlSlug } from '../lib/stories';
 import type { Topic } from '../lib/topics';
 import { href } from '../lib/url';
+import KindIcon from './KindIcon.astro';
 
 interface Props {
   c: Commission;
@@ -37,9 +39,12 @@ const fmt = (n: number) => n.toLocaleString('en-US');
     </div>
     {
       c.youtube ? (
-        <a href={c.youtube} rel="me" class="text-sm" title={c.fullName}>
-          YouTube {c.handle}
-        </a>
+        <span class="inline-flex items-baseline gap-1 text-sm">
+          <KindIcon kind="external" class="text-muted-foreground" />
+          <a href={c.youtube} rel="me" title={c.fullName}>
+            YouTube {c.handle}
+          </a>
+        </span>
       ) : (
         <span class="rounded-sm border border-dashed px-2 py-1 eyebrow text-muted-foreground">Channel coming soon</span>
       )
@@ -59,6 +64,9 @@ const fmt = (n: number) => n.toLocaleString('en-US');
                 {/* eslint-disable-next-line astro/no-set-html-directive -- glyphs are committed topics/<topic>/glyph.svg files */}
                 {t.glyph && <span class="size-9 text-primary [&>svg]:size-full" set:html={t.glyph} />}
                 <span class="grid gap-0.5">
+                  <span class="eyebrow text-muted-foreground">
+                    <KindIcon kind="inquiry" decorative /> Inquiry
+                  </span>
                   <span class="font-heading font-bold text-primary">{t.label}</span>
                   <span class="font-mono text-xs text-muted-foreground">
                     {fmt(t.counted)} sources · {fmt(t.claims.length)} claims · {t.studies} studies
@@ -73,7 +81,9 @@ const fmt = (n: number) => n.toLocaleString('en-US');
             class="grid content-start gap-2 rounded-md border border-dashed p-4 no-underline hover:border-primary"
             href={href(`/${featured.t.name}/${storyUrlSlug(featured.s)}/`)}
           >
-            <span class="eyebrow text-muted-foreground">Featured inquiry · {featured.t.label}</span>
+            <span class="eyebrow text-muted-foreground">
+              <KindIcon kind="matter" decorative /> Featured matter · {featured.t.label}
+            </span>
             <span class="font-heading text-title font-bold">{featured.s.title}</span>
             <span class="text-sm text-muted-foreground">{featured.s.question}</span>
             <span class="text-sm text-primary">Read the findings</span>

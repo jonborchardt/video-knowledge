@@ -105,6 +105,21 @@ describe('calls to action', () => {
     expect(r.primary.text).toBe('The evidence and the full answer');
   });
 
+  it('a video cta never points at the video the story is already in', () => {
+    const g = graphOf(
+      [
+        { id: 'decision:a', claims: ['c1'], chain: [{ id: 'decision:b', question: '' }] },
+        { id: 'decision:b', claims: ['c1'], partOf: 'decision:a' },
+      ],
+      ['decision:a'],
+    );
+    const own: Cta = { type: 'video', target: `${T}/decision:a#youtube`, text: 'The next question' };
+    for (const from of ['decision:a', 'decision:b'])
+      expect(resolveCtas({ primary: ev, secondary: [own] }, g, storyNode(T, from), root).dropped[0]?.why).toBe(
+        'the same video',
+      );
+  });
+
   it('more than two secondaries is a problem', () => {
     expect(resolveCtas({ primary: ev, secondary: [ev, ev, ev] }, contentGraph(), TOOL_STORY).problems).toEqual([
       'at most 2 secondary calls to action, found 3',

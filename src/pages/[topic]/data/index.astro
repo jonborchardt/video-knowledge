@@ -63,7 +63,7 @@ const base = `/${t.name}/data`;
       title={`The figures behind the ${t.label} inquiry`}
       lede="Each table is read from a cited source passage; every figure is shown as the source states it. Download a table as CSV or JSON."
       facts={[
-        { term: 'Matter', value: t.label },
+        { term: 'Inquiry', value: t.label, href: href(`/${t.name}/`), kind: 'inquiry' },
         { term: 'Tables', value: String(datasets.length) },
       ]}
     />
