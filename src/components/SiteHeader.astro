@@ -12,6 +12,7 @@ const isActive = (path: string) => path.startsWith('/') && current.startsWith(hr
 <header class="border-b print:hidden">
   <div class="mx-auto flex max-w-page flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
     <a href={href('/')} class="flex items-center gap-3 no-underline">
+      {/* eslint-disable-next-line astro/no-set-html-directive -- the logo is a committed SVG in src/assets */}
       <span class="inline-block h-9 w-9 [&>svg]:h-full [&>svg]:w-full" aria-hidden="true" set:html={logo} />
       <span class="grid leading-tight">
         <span class="font-heading text-[1.05rem] font-bold tracking-wide">{site.name}</span>

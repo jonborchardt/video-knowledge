@@ -79,6 +79,7 @@ const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => c.name.sp
                 class="grid h-full grid-cols-[auto_1fr] content-start items-start gap-3 rounded-md border bg-card p-4 no-underline hover:border-primary"
                 href={href(`/${t.name}/`)}
               >
+                {/* eslint-disable-next-line astro/no-set-html-directive -- glyphs are committed topics/<topic>/glyph.svg files */}
                 {t.glyph && <span class="size-10 text-primary [&>svg]:size-full" set:html={t.glyph} />}
                 <span class="grid gap-1">
                   <span class="font-heading text-title font-bold text-primary">{t.label}</span>

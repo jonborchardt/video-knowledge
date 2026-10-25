@@ -54,7 +54,7 @@ const rows = [
               {c.name}
             </a>
             {c.youtube ? (
-              <a href={c.youtube} rel="me" class="text-sm" title={c.fullName}>
+              <a href={c.youtube} rel="me" class="inline-block py-0.5 text-sm" title={c.fullName}>
                 YouTube {c.handle}
               </a>
             ) : (
@@ -119,41 +119,43 @@ const rows = [
     from the verdict and fades as confidence drops. A <em>leans</em> label with a dashed border is an unverified AI guess
     or a weak study: it shows which way the evidence points, not a settled answer.
   </p>
-  <table class="mt-4 w-full max-w-wide border-collapse text-sm">
-    <thead>
-      <tr class="border-b text-left text-muted-foreground">
-        <th scope="col" class="py-2 pr-4 font-medium">Confidence</th>
-        <th scope="col" class="py-2 pr-4 font-medium">Judged right</th>
-        <th scope="col" class="py-2 pr-4 font-medium">Judged partly right</th>
-        <th scope="col" class="py-2 font-medium">Judged wrong</th>
-      </tr>
-    </thead>
-    <tbody>
-      {
-        rows.map((r) => (
-          <tr class="border-b">
-            <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground tabular-nums">{r.band}</td>
-            <td class="py-2.5 pr-4">
-              <VerdictBadge verdict="right" confidence={r.c} />
-            </td>
-            <td class="py-2.5 pr-4">
-              <VerdictBadge verdict="partly" confidence={r.c} />
-            </td>
-            <td class="py-2.5">
-              <VerdictBadge verdict="wrong" confidence={r.c} />
-            </td>
-          </tr>
-        ))
-      }
-      <tr>
-        <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground">no judgment</td>
-        <td class="py-2.5 pr-4" colspan="3">
-          <VerdictBadge verdict="untestable" />
-          <VerdictBadge verdict="unknown" />
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <section class="mt-4 max-w-wide overflow-x-auto" aria-label="Verdict labels" tabindex="0">
+    <table class="w-full border-collapse text-sm">
+      <thead>
+        <tr class="border-b text-left text-muted-foreground">
+          <th scope="col" class="py-2 pr-4 font-medium">Confidence</th>
+          <th scope="col" class="py-2 pr-4 font-medium">Judged right</th>
+          <th scope="col" class="py-2 pr-4 font-medium">Judged partly right</th>
+          <th scope="col" class="py-2 font-medium">Judged wrong</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          rows.map((r) => (
+            <tr class="border-b">
+              <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground tabular-nums">{r.band}</td>
+              <td class="py-2.5 pr-4">
+                <VerdictBadge verdict="right" confidence={r.c} />
+              </td>
+              <td class="py-2.5 pr-4">
+                <VerdictBadge verdict="partly" confidence={r.c} />
+              </td>
+              <td class="py-2.5">
+                <VerdictBadge verdict="wrong" confidence={r.c} />
+              </td>
+            </tr>
+          ))
+        }
+        <tr>
+          <td class="py-2.5 pr-4 font-mono text-xs text-muted-foreground">no judgment</td>
+          <td class="py-2.5 pr-4" colspan="3">
+            <VerdictBadge verdict="untestable" />
+            <VerdictBadge verdict="unknown" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
   <p class={`${p} text-sm text-muted-foreground`}>
     Confidence measures how strongly that evidence settles that claim, not how reputable the publisher is. A direct
     reading from an official release scores high. One econometric study scores lower, and lower still when a claim

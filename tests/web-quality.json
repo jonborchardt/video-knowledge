@@ -1,0 +1,38 @@
+{
+  "$comment": "The web-quality gate's limits and its approved exceptions (.claude/skills/web-quality/SKILL.md). Every exception names one check, one rule and the narrowest page pattern (a regex over the dist path, e.g. ^[^/]+/index\\.html$ for topic pages), with a reason. An exception that no longer matches anything fails the gate, so the list only shrinks unless someone adds to it in review.",
+  "budgets": {
+    "$comment": "Gzipped bytes per page: inline and bundled script, CSS, and the HTML document itself.",
+    "default": { "js": 20000, "css": 15000, "html": 60000 },
+    "overrides": [
+      {
+        "page": "^[^/]+/index\\.html$",
+        "html": 600000,
+        "reason": "Topic pages render every claim card (up to ~660, each with its full Tailwind class list) into one document: 3-4.5 MB raw, ~520 KB gzipped on 2026-10-24. Ratchet ceiling, not a target: slimming the card markup or paginating the claims tab would bring it under the default."
+      }
+    ]
+  },
+  "thirdParty": [
+    {
+      "origin": "https://fonts.googleapis.com",
+      "reason": "Brand type (Libre Baskerville, IBM Plex) per brand/design.md; the stylesheet."
+    },
+    { "origin": "https://fonts.gstatic.com", "reason": "Brand type: the font files the Google Fonts stylesheet loads." }
+  ],
+  "headers": ["X-Content-Type-Options: nosniff", "Referrer-Policy:", "Content-Security-Policy:", "Permissions-Policy:"],
+  "exceptions": [
+    {
+      "check": "axe",
+      "rule": "color-contrast",
+      "page": "^(about/index\\.html|[^/]+/index\\.html|[^/]+/[^/]+/index\\.html)$",
+      "target": "text-(success|warning|destructive)\\\\/(60|70|85)",
+      "reason": "WCAG 1.4.3, open since 2026-10-24: VerdictBadge fades its colour with confidence (/85, /70, /60 in verdict-label.ts) by design, and the faded shades fall under 4.5:1 on paper. Needs a design decision (darker base tokens, or carrying confidence by border or weight instead of opacity)."
+    },
+    {
+      "check": "axe",
+      "rule": "nested-interactive",
+      "page": "^[^/]+/(index\\.html|[^/]+/index\\.html)$",
+      "target": "summary|details-marker",
+      "reason": "WCAG 4.1.2, open since 2026-10-24: ClaimCard and SourceDetails put the stat-line shortcut buttons (data-pick) inside <summary>, itself a control. Fixing it means moving the chips out of the summary, a component restructure."
+    }
+  ]
+}

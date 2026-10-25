@@ -73,7 +73,7 @@ const chips = [
     {
       s.claims.map((c) => (
         <li data-v={c.verdict} data-novel={c.novel || undefined} class="grid gap-0.5 border-t pt-2">
-          <div class="flex items-baseline justify-between gap-2.5">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-2.5">
             <p>
               {c.stance === 'denies' && <span class="font-mono text-xs text-muted-foreground">DENIES </span>}
               {c.text}

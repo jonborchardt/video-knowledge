@@ -9,6 +9,26 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...astro.configs.recommended,
-  { files: ['scripts/**/*.mjs', '*.config.{js,mjs}'], languageOptions: { globals: globals.node } },
+  { files: ['scripts/**/*.mjs', '.claude/**/*.mjs', '*.config.{js,mjs}'], languageOptions: { globals: globals.node } },
+  // Web-quality gate (F. security): HTML-string sinks only with committed repo content, each use disabled with a reason.
+  {
+    files: ['src/**/*.{astro,ts}'],
+    ignores: ['src/video/**'],
+    rules: {
+      'astro/no-set-html-directive': 'error',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'AssignmentExpression[left.property.name=/^(innerHTML|outerHTML)$/]',
+          message: 'Build DOM nodes or set textContent; an HTML string is an injection sink.',
+        },
+        {
+          selector:
+            "CallExpression[callee.property.name='insertAdjacentHTML'], CallExpression[callee.object.name='document'][callee.property.name=/^write(ln)?$/]",
+          message: 'Build DOM nodes or set textContent; an HTML string is an injection sink.',
+        },
+      ],
+    },
+  },
   prettier,
 ];

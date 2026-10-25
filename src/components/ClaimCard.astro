@@ -35,14 +35,14 @@ const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
 
 <details class="group border-t py-3" data-verdict={c.verdict ?? 'unknown'} data-claim>
   <summary class="grid cursor-pointer list-none gap-1 [&::-webkit-details-marker]:hidden">
-    <div class="flex items-baseline justify-between gap-2.5">
-      <p>
+    <span class="flex flex-wrap items-baseline justify-between gap-x-2.5">
+      <span>
         <span class="mr-1 inline-block transition-transform group-open:rotate-90" aria-hidden="true">▸</span>
         {c.text}
-      </p>
+      </span>
       <VerdictBadge verdict={c.verdict} confidence={c.confidence} />
-    </div>
-    {c.note && <p class:list={[small, 'ml-[1.4em]']}>{c.note}</p>}
+    </span>
+    {c.note && <span class:list={[small, 'ml-[1.4em]']}>{c.note}</span>}
     <span class="ml-[1.4em] font-mono text-xs text-muted-foreground tabular-nums">
       {
         chips.map((x, i) => (

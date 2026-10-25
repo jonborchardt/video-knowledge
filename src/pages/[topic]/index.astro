@@ -264,6 +264,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
     const hash = location.hash.slice(1);
     const active = ids.includes(hash) ? hash : ids[0];
     document.getElementById('tabbar').hidden = false;
+    // eslint-disable-next-line no-restricted-syntax -- the tab ids are built in, not data
     document.head.insertAdjacentHTML(
       'beforeend',
       `<style data-tab-init>main > section:not(#${active}) { display: none }</style>`,
@@ -284,13 +285,16 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
     {
       t.bottomLine && (
         <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
-          <Stamp
-            brand={commissionKey(commission)}
-            slot="stamp-finding"
-            form="round"
-            class="float-right ml-3 size-16 sm:size-20"
-          />
-          <figcaption class="eyebrow text-muted-foreground">Finding</figcaption>
+          {/* The (decorative) stamp sits in the caption so the caption stays the figure's first child; it still floats over the text below. */}
+          <figcaption class="eyebrow text-muted-foreground">
+            <Stamp
+              brand={commissionKey(commission)}
+              slot="stamp-finding"
+              form="round"
+              class="float-right ml-3 size-16 sm:size-20"
+            />
+            Finding
+          </figcaption>
           <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">
             {t.bottomLine[0].toUpperCase() + t.bottomLine.slice(1)}
           </p>
@@ -336,7 +340,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
         t.top.map((s) => (
           <li>
             <SourceDetails source={s} group="top" meta={`${s.channel} · novelty ${s.novelty.toFixed(2)}`}>
-              {s.summary && <p class:list={[small, 'ml-[1.4em]']}>{s.summary}</p>}
+              {s.summary && <span class:list={[small, 'ml-[1.4em] block']}>{s.summary}</span>}
             </SourceDetails>
           </li>
         ))

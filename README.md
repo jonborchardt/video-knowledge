@@ -497,9 +497,10 @@ npm run dev        # live preview at http://localhost:4321/ (DEPLOY_TARGET=pages
 npm run build      # build dist/
 npm run validate   # typecheck + lint + format check + build + tests (what CI runs)
 npm run format     # prettier --write
+npm run quality    # web-quality gate for site changes (build, static checks, browser suite); -- --audit for the full audit
 ```
 
-Pushing to `main` runs `.github/workflows/pages.yml`: `npm ci`, `npm run validate`, deploy `dist/`.
+Pushing to `main` runs `.github/workflows/pages.yml`: `npm ci`, `npm run validate`, `npm audit` of shipped dependencies, the browser suite in Chromium, Firefox and WebKit, then deploy `dist/`. What each check enforces and what still needs a person: `.claude/skills/web-quality/reference/enforcement-matrix.md`.
 
 The data scripts (`report`, `record`, `record-sources`, `watcher`) run the watcher CLI from `../retire-sim/watcher` (or `$WATCHER_DIR`). It isn't an npm dependency, so CI, which only builds the site, doesn't need it.
 

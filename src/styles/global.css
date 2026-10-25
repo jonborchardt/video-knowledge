@@ -115,6 +115,14 @@
 }
 
 @layer base {
+  /* WCAG 1.4.10 and 1.4.12: a long word in a heading or a definition wraps instead of pushing the page sideways. */
+  h1,
+  h2,
+  h3,
+  h4,
+  dd {
+    overflow-wrap: anywhere;
+  }
   * {
     @apply border-border;
   }

@@ -30,6 +30,14 @@ jobs:
       - run: npm run validate
         env:
           DEPLOY_TARGET: pages # the GitHub Pages mirror under /video-knowledge/; Cloudflare builds the root site
+      # Web-quality gate (.claude/skills/web-quality): known advisories in shipped dependencies, then real browsers
+      # (reflow, keyboard, interactions in all three engines; axe, lab CLS, reduced motion in Chromium) against dist/.
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run test:browser
+        env:
+          DEPLOY_TARGET: pages
+          WEB_QUALITY_BROWSERS: chromium,firefox,webkit
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

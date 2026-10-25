@@ -13,6 +13,8 @@ const canonical = new URL(Astro.url.pathname, siteUrl).href;
 // Social image: the brand kit's share card (1200x675), the Commonwealth's unless the page belongs to an institution.
 const image = absoluteUrl(imagePath, siteUrl);
 const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
+// JSON-LD sits in a <script>: escape < so no value can close the tag.
+const jsonLd = JSON.stringify(websiteJsonLd(siteUrl)).replaceAll('<', '\\u003c');
 ---
 
 <!doctype html>
@@ -55,7 +57,8 @@ const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
     <meta name="twitter:image" content={image} />
     <meta name="twitter:image:alt" content={imageAlt} />
     <meta name="author" content={author.name} />
-    {!noindex && <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd(siteUrl))} />}
+    {/* eslint-disable-next-line astro/no-set-html-directive -- JSON-LD from site config, with < escaped */}
+    {!noindex && <script is:inline type="application/ld+json" set:html={jsonLd} />}
 
     <!-- Theme: applied before paint to avoid a flash. Order: user override → system preference. -->
     <script is:inline>
@@ -101,6 +104,7 @@ const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
 
     <!-- Back to top, as on the blog: shown once the page is scrolled past 400px. -->
     <button
+      type="button"
       id="back-to-top"
       aria-label="Back to top"
       hidden
