@@ -1,0 +1,519 @@
+{
+  "reviewer": "scripts/briefs/article-review.md",
+  "model": "claude-opus-5-5",
+  "date": "2026-10-25",
+  "revision": 3,
+  "packageFingerprint": "6dd3b084bb",
+  "approved": {
+    "meta.dek": "585115616d",
+    "s18": "4def885d1c",
+    "s19": "de063396d7",
+    "s20": "4ae18987b7",
+    "s22": "6c63efc9a9",
+    "s26": "7bbe6968c9",
+    "s31": "10c32f5a7a",
+    "s32": "c1985a904f",
+    "s34": "2763dba6a1",
+    "s47": "ed0d25dad5",
+    "s35": "a6943b0df9",
+    "s36": "a5963bc79b",
+    "s38": "22052efa3b",
+    "s40": "965534980a",
+    "s41": "4b1e35e02f",
+    "meta.description": "305b2ea605",
+    "s01": "1603bd6273",
+    "s02": "1e980073d6",
+    "s03": "a887442b99",
+    "s04": "702ea7cdb8",
+    "s05": "b100bb9bd0",
+    "s06": "5744194bde",
+    "s07": "ba9ddd62b1",
+    "s08": "a3f385ef53",
+    "s09": "90097d2fd1",
+    "s10": "dcc0fc35f0",
+    "s11": "bcff17284e",
+    "s12": "0dd87dec77",
+    "s13": "fcd4ca9845",
+    "s14": "015492c5aa",
+    "s15": "9a12ae5a1c",
+    "s16": "61816933e1",
+    "s17": "40d96050ed",
+    "s21": "9cbb084f5f",
+    "s23": "fb986af885",
+    "s24": "13a0e4f77c",
+    "s25": "4a8ee20066",
+    "s27": "79485badb7",
+    "s28": "ab2c914749",
+    "s29": "ded9752712",
+    "s30": "0daea82fb0",
+    "s33": "8b07c74231",
+    "s37": "0fec354c06",
+    "s39": "ae02523a3f",
+    "s42": "d063f3a989",
+    "s43": "9c791e41a1",
+    "s44": "b41362ccd0",
+    "s45": "0e6d137be1",
+    "s46": "dfaa5ba558"
+  },
+  "findings": [
+    {
+      "sentence": "meta.dek",
+      "assertion": "meta.dek.b",
+      "fingerprint": "605fbae21c",
+      "revision": 2,
+      "category": "selective",
+      "severity": "blocking",
+      "explanation": "'Whether a furnace or air conditioner needed replacing' tells a gas household that a furnace due on its own can make a heat pump repay itself. For gas homes the package says the reverse: RMI finds that a gas home only needing a new furnace usually pays more to electrify, Deetjen finds switching from gas rarely pays even at end-of-life replacement, and RMI's exception is the customer replacing both the furnace and the air conditioner. The 'either failure' result (CEE 2018) comes from propane and electric-resistance homes.",
+      "refs": [
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L423-L431",
+        "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L647-L652",
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1268-L1272"
+      ],
+      "suggestion": "Say 'turns largely on whether the furnace and the air conditioner both needed replacing anyway, or the home is adding cooling', matching s44."
+    },
+    {
+      "sentence": "s19",
+      "assertion": "s19.a",
+      "fingerprint": "b5067172fa",
+      "revision": 2,
+      "category": "incompatible-comparison",
+      "severity": "blocking",
+      "explanation": "The passage's $1,000 is what optimising the heat pump saves for a customer who is on the Free Nights rate, i.e. against the same heat pump on Free Nights without that control. It does not say the controlled heat pump beats the flat rate (or gas). 'Only a heat pump controlled ... came out ahead, by around $1,000' reads as ahead of the flat-rate plan.",
+      "refs": [
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L748-L755"
+      ],
+      "suggestion": "Say 'and for a household on that plan, controlling the heat pump to preheat and precool while power was free saved around $1,000 in net present cost against running it on the plan without that control.' Drop 'only ... came out ahead'."
+    },
+    {
+      "sentence": "s20",
+      "fingerprint": "b9aae7d81a",
+      "revision": 2,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'The NREL model did not test such rates' is not in the cited passage (L754-L757 is a policy remark) and no assertion covers it; it comes from the verdict note, not a cited line.",
+      "refs": [
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L754-L757"
+      ],
+      "suggestion": "Drop the clause: 'The NREL authors raise such rates only as a possibility: where they are offered, controlling a heat pump to use less power at peak times may improve its bill savings.' Or record the study's methods line through record-sources; do not cite an uncited line."
+    },
+    {
+      "sentence": "s31",
+      "fingerprint": "b734237fff",
+      "revision": 2,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "'So a majority only in the ideal case' is contradicted by the model it reports: s29's passage says a majority of homes (55%) already come out ahead with the cheapest unit ('a majority of homes can benefit from lower-cost minimum-efficiency ASHPs'). No assertion covers the inference.",
+      "refs": [
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520",
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L645-L647"
+      ],
+      "suggestion": "Say 'Even if every home picked its best option, the model has 59 percent ahead, only slightly more than the 55 percent with the cheapest unit.'"
+    },
+    {
+      "sentence": "s35",
+      "assertion": "s35.a",
+      "fingerprint": "74761c80b4",
+      "revision": 2,
+      "category": "unsupported",
+      "severity": "blocking",
+      "explanation": "The sentence reports that the Canadian report 'says bills tend to be lower in homes with heat pumps', but the cited passage (L842-L846) is the lifetime-cost finding, not that remark. The remark is at L1591-L1597, which the package already holds (contextual, on the switching claim). Gap 0's condition itself is stated correctly.",
+      "refs": [
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846",
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1591-L1597"
+      ],
+      "suggestion": "Add an attribution assertion for the remark citing cci-2023-heat-pumps-pay-off.txt#L1591-L1597 (a package passage); keep the rest of the sentence."
+    },
+    {
+      "sentence": "s18",
+      "assertion": "s18.a",
+      "fingerprint": "abdbf6f2a8",
+      "revision": 2,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "The callout calls the question 'not settled', but the claim's label is a qualification (right, 0.7, a staggered-adoption study of 6,631 households): in this evidence a time-of-use tariff did cut UK running costs, mostly through shifted use, and in RMI's Houston model a tariff alone did not. 'Not settled' is narrower than the note, and the note's own limit, that the authors are linked to Octopus, is left out.",
+      "refs": [
+        "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1898-L1906",
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L748-L755"
+      ],
+      "suggestion": "Open with the condition instead: 'In this evidence a time-of-use tariff cut running costs only where use was shifted into cheap hours:' and add the authors' link to Octopus if a package passage states it (otherwise keep 'one supplier's tariff measured against its own flat rate')."
+    },
+    {
+      "sentence": "s22",
+      "assertion": "s22.a",
+      "fingerprint": "fbd44e8dee",
+      "revision": 2,
+      "category": "overclaim",
+      "severity": "warning",
+      "explanation": "'Does not hold against gas' is a general statement resting on one cited study of British boilers. The package has other gas evidence for the same conclusion (RMI's gas retrofits, Wilson's average savings), but the sentence cites only Bernard.",
+      "refs": [
+        "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1855",
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L158-L161",
+        "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L332-L334"
+      ],
+      "suggestion": "Either cite the RMI and Wilson passages for the general clause, or narrow it: 'A promise to halve the bill did not hold for the British homes that left gas: ...'."
+    },
+    {
+      "sentence": "s26",
+      "assertion": "s26.a",
+      "fingerprint": "6e48d08fa6",
+      "revision": 2,
+      "category": "selective",
+      "severity": "warning",
+      "explanation": "The same Washington Post calculation also puts the payback 'closer to eight years' when the heat pump is counted against the cost of a new furnace. Quoting only the 48 years presents it as a rival estimate when the source itself shows the timing effect the article goes on to explain.",
+      "refs": [],
+      "suggestion": "Add the source's second recorded statement: '... \"making the payback period around 48 years\", or closer to eight years counted against the cost of a new furnace.'"
+    },
+    {
+      "sentence": "s34",
+      "assertion": "s34.b",
+      "fingerprint": "c8b27f2a66",
+      "revision": 2,
+      "category": "incompatible-comparison",
+      "severity": "warning",
+      "explanation": "'Other models split' sets RMI's gas retrofits in four US cities against a Canadian model that compares full replacements of heating and cooling (a heat pump against gas heat plus an air conditioner) under Canadian rebates and carbon pricing. They answer different questions, so 'split' overstates the disagreement, and the Canadian result's conditions are not stated beside it. The cooling clause the writer flagged is entailed by L842-L846.",
+      "refs": [
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846",
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1202-L1208",
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1325-L1327"
+      ],
+      "suggestion": "Replace 'Other models split' with the conditions, e.g. '... while a Canadian Climate Institute model, which compares a heat pump with buying both a gas furnace and an air conditioner, finds it the lowest-cost option for most households in the Canadian cities it modelled, helped by the fact that it also does the cooling.'"
+    },
+    {
+      "sentence": "s38",
+      "fingerprint": "619765c257",
+      "revision": 2,
+      "category": "causation",
+      "severity": "warning",
+      "explanation": "'Timing is where the spread comes from' says timing explains the 4-year versus 48-year spread in s25-s26. The Minnesota table shows timing moves one study's payback a long way, but the package's payback claim says payback varies with climate, fuel prices and the equipment replaced; timing is one cause, not the cause.",
+      "refs": [
+        "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+      ],
+      "suggestion": "Say 'Timing alone moves the payback a long way:'."
+    },
+    {
+      "sentence": "s40",
+      "assertion": "s40.b",
+      "fingerprint": "ddc56b3caf",
+      "revision": 2,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "After 'the years do not carry over to a gas home, but', the second Minnesota study reads as gas evidence. Its homes were also heated with propane (flex-fuel systems) or electric resistance, so it confirms the pattern only for the same fuels.",
+      "refs": [
+        "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L513-L516"
+      ],
+      "suggestion": "Say 'a second Minnesota field study, also of propane and electric-resistance homes, found the same pattern: ...', with a cited line that names the fuels. The cited L513-L516 does not; the source names them at L505-L512 and L85, which are not package passages, so record them through record-sources or drop 'found the same pattern' in favour of 'in homes off the gas grid' only once a passage supports it."
+    },
+    {
+      "sentence": "s41",
+      "assertion": "s41.a",
+      "fingerprint": "11ff9775ed",
+      "revision": 2,
+      "category": "omission",
+      "severity": "warning",
+      "explanation": "The package's verdict note on this passage limits RMI's exception: it held in Houston, Chicago and Oakland but not Providence, where RMI finds new gas equipment cheaper than a heat pump retrofit even when the air conditioner is replaced at the same time. The sentence states the exception without that limit.",
+      "refs": [
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1268-L1272",
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L803-L815"
+      ],
+      "suggestion": "Add 'in three of its four cities; in cold, high-price Providence gas still won', with a cited passage for it (record-sources if the Providence lines are not in the package), or narrow to 'in most of its cities'."
+    },
+    {
+      "sentence": "s32",
+      "assertion": "s32.a",
+      "fingerprint": "37f364fe8f",
+      "revision": 2,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "The 21 percent sits beside NREL's 55 percent with no reason given for the gap. The verdict note gives Deetjen's assumptions (minimum-efficiency units, a 7 percent discount rate, a 15-year life), which drive the lower share; the sentence leaves them out.",
+      "refs": [
+        "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L886-L889"
+      ],
+      "suggestion": "Add 'on its assumptions of a 7 percent discount rate and a 15-year heat pump life' with a cited passage for them (record-sources if the methods line is not in the package), or say 'on its own cost and discount assumptions'."
+    },
+    {
+      "sentence": "s36",
+      "assertion": "s36.a",
+      "fingerprint": "803ddfed7a",
+      "revision": 2,
+      "category": "missing-qualification",
+      "severity": "warning",
+      "explanation": "The 4,121 pounds is not only purchase cost: the passage builds it as private capital spend minus the avoided boiler plus 1,159 pounds of higher running costs over 20 years, assuming disconnection from gas. The sentence names the grant and the avoided boiler but not the running-cost part, so a reader takes it as a net purchase price.",
+      "refs": [
+        "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1871"
+      ],
+      "suggestion": "Add 'and including its higher running cost on a standard tariff'."
+    },
+    {
+      "sentence": "s03",
+      "fingerprint": "a887442b99",
+      "revision": 2,
+      "category": "overclaim",
+      "severity": "info",
+      "explanation": "Table t3: the caption and row labels date every row to Octopus Energy's June 2024 prices, but the Cosy savings passage (L1898-L1906) gives no price date; only the 190 and 100 pound rows are dated (15 June 2024). Placed on s03, the first sentence of the section holding the table; s03 itself is approved.",
+      "refs": [
+        "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1863",
+        "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1898-L1906"
+      ],
+      "suggestion": "Caption: 'UK homes that replaced a gas boiler with a heat pump, at Octopus Energy's prices'; drop '2024' from the two Cosy row labels."
+    },
+    {
+      "sentence": "s35",
+      "assertion": "s35.a",
+      "fingerprint": "a6943b0df9",
+      "revision": 3,
+      "category": "contextual-only",
+      "severity": "info",
+      "explanation": "s35.a cites CCI L1591-L1597, which the package classes as context only (wrong 0.3, contextual) on the switching claim, as a fact that 'denies' that claim. The sentence does not use it to decide anything: it reports what the report says, which the passage establishes ('energy bills will tend to be lower in homes with heat pumps (see Section 3)'), and says the remark cannot decide the bill question, which is gap 0's condition. So the reader is not misled and the sentence is approved; but the assertion's metadata counts a contextual passage as evidence against the claim, which is why the validator attaches Bernard's 'bills do rise' limitation to it.",
+      "refs": [
+        "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1591-L1597"
+      ],
+      "suggestion": "When next revised (warnings and info do not count against the limit), make s35.a an attribution assertion (kind 'attribution', the report as speaker) rather than a fact that denies the claim. The validator should arguably refuse a contextual passage as decisive study evidence; that is a tooling gap, not the writer's."
+    },
+    {
+      "sentence": "s41",
+      "assertion": "s41.a",
+      "fingerprint": "4b1e35e02f",
+      "revision": 3,
+      "category": "omission",
+      "severity": "info",
+      "explanation": "Now framed as what RMI's report names, which L1268-L1272 entails, so approved. RMI's own Providence results (L803-L815, not a package passage) find gas cheaper even when the air conditioner is replaced too; the verdict note records this. It stays out of the article until a passage carries it.",
+      "refs": [
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1268-L1272",
+        "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L803-L815"
+      ],
+      "suggestion": "If the Providence lines are recorded through record-sources later, add 'though in cold, high-price Providence gas still won'."
+    }
+  ],
+  "dispositions": {
+    "meta.dek.a": {
+      "fingerprint": "585115616d",
+      "category": "needs-qualification",
+      "reason": "Prices and the unit are named together; the averages caveat is in the s09 callout."
+    },
+    "meta.dek.b": {
+      "fingerprint": "585115616d",
+      "category": "needs-qualification",
+      "reason": "The Canadian full-replacement limit does not bear on RMI's gas-home statement; the dek says 'clearest case', not that it always pays."
+    },
+    "s18.a": {
+      "fingerprint": "4def885d1c",
+      "category": "needs-qualification",
+      "reason": "This callout is the qualification: it states the one-supplier comparison and the shifted use, and s19 gives RMI's tariff-alone result beside it."
+    },
+    "s19.a": {
+      "fingerprint": "de063396d7",
+      "category": "needs-qualification",
+      "reason": "The sentence is RMI's limit itself: tariff alone did not help; control needed; one city."
+    },
+    "s20.a": {
+      "fingerprint": "4ae18987b7",
+      "category": "needs-qualification",
+      "reason": "Stated as a possibility the authors raise, not a result."
+    },
+    "s22.a": {
+      "fingerprint": "6c63efc9a9",
+      "category": "needs-qualification",
+      "reason": "The sentence is limited to gas and to this evidence; s23 says where cuts of half do appear."
+    },
+    "s22.b": {
+      "fingerprint": "6c63efc9a9",
+      "category": "needs-qualification",
+      "reason": "The 40 percent is energy, not bills; the sentence says the homes still paid more."
+    },
+    "s22.c": {
+      "fingerprint": "6c63efc9a9",
+      "category": "needs-qualification",
+      "reason": "Modelled cities, gas retrofits, stated as RMI's."
+    },
+    "s22.d": {
+      "fingerprint": "6c63efc9a9",
+      "category": "needs-qualification",
+      "reason": "Energy, not bills, and across all fuels, as the sentence says."
+    },
+    "s31.a": {
+      "fingerprint": "10c32f5a7a",
+      "category": "needs-qualification",
+      "reason": "Stated as each home's best option, beside s29's single-option 55 percent."
+    },
+    "s32.a": {
+      "fingerprint": "c1985a904f",
+      "category": "needs-qualification",
+      "reason": "Named as a separate model with its own costs and assumptions; the RMI limits are stated in s34."
+    },
+    "s34.a": {
+      "fingerprint": "2763dba6a1",
+      "category": "needs-qualification",
+      "reason": "Limited to gas households at the prices RMI used."
+    },
+    "s47.a": {
+      "fingerprint": "ed0d25dad5",
+      "category": "needs-qualification",
+      "reason": "States the different question (heat pump against gas heat plus AC) beside the result."
+    },
+    "s47.b": {
+      "fingerprint": "ed0d25dad5",
+      "category": "needs-qualification",
+      "reason": "The sentence states the carbon price and rebate condition."
+    },
+    "s35.a": {
+      "fingerprint": "a6943b0df9",
+      "category": "needs-qualification",
+      "reason": "The sentence decides nothing about bills; the UK rise is reported in s15-s16 and the tariff in s18."
+    },
+    "s36.a": {
+      "fingerprint": "a5963bc79b",
+      "category": "needs-qualification",
+      "reason": "Stated as one study's estimate with its components; s37 gives the tariff that changes it."
+    },
+    "s41.a": {
+      "fingerprint": "4b1e35e02f",
+      "category": "needs-qualification",
+      "reason": "The Canadian limit does not bear on RMI's gas-retrofit statement."
+    },
+    "meta.description.a": {
+      "fingerprint": "305b2ea605",
+      "category": "needs-qualification",
+      "reason": "Prices and efficiency are named together; the averages caveat is in the s09 callout."
+    },
+    "meta.description.b": {
+      "fingerprint": "305b2ea605",
+      "category": "needs-qualification",
+      "reason": "Promises no payback period; says payback depends on what is due."
+    },
+    "s06.a": {
+      "fingerprint": "5744194bde",
+      "category": "needs-qualification",
+      "reason": "States the threshold as ratio times AFUE, not the bare ratio; s09 gives what the rule leaves out."
+    },
+    "s07.a": {
+      "fingerprint": "ba9ddd62b1",
+      "category": "needs-qualification",
+      "reason": "National averages, stated as such; s08 gives the state spread."
+    },
+    "s08.a": {
+      "fingerprint": "a3f385ef53",
+      "category": "needs-qualification",
+      "reason": "The sentence is the location-and-efficiency limit itself."
+    },
+    "s09.a": {
+      "fingerprint": "90097d2fd1",
+      "category": "needs-qualification",
+      "reason": "This callout is the qualification."
+    },
+    "s10.a": {
+      "fingerprint": "dcc0fc35f0",
+      "category": "needs-qualification",
+      "reason": "Population, price period and equipment dependence are in the sentence."
+    },
+    "s10.b": {
+      "fingerprint": "dcc0fc35f0",
+      "category": "needs-qualification",
+      "reason": "The assertion only dates the model's prices; the payback limitations belong to question-2, which states them."
+    },
+    "s11.a": {
+      "fingerprint": "bcff17284e",
+      "category": "needs-qualification",
+      "reason": "Same model and limits as s10, stated there."
+    },
+    "s11.b": {
+      "fingerprint": "bcff17284e",
+      "category": "needs-qualification",
+      "reason": "The Canadian full-replacement limit does not bear on a modelled US bill fact."
+    },
+    "s13.a": {
+      "fingerprint": "fcd4ca9845",
+      "category": "needs-qualification",
+      "reason": "'Clearly ahead' and the 28 percent unclear share are beside the 53 percent."
+    },
+    "s14.a": {
+      "fingerprint": "015492c5aa",
+      "category": "needs-qualification",
+      "reason": "'As well' after s10 keeps prices as one driver, not the main one."
+    },
+    "s15.a": {
+      "fingerprint": "9a12ae5a1c",
+      "category": "needs-qualification",
+      "reason": "British boilers and prices are stated in s16, the next sentence."
+    },
+    "s16.a": {
+      "fingerprint": "61816933e1",
+      "category": "needs-qualification",
+      "reason": "The sentence limits itself to British boilers at British prices."
+    },
+    "s16.b": {
+      "fingerprint": "61816933e1",
+      "category": "needs-qualification",
+      "reason": "The time-of-use tariff that reverses the rise is the s18 callout beside the table."
+    },
+    "s17.a": {
+      "fingerprint": "40d96050ed",
+      "category": "needs-qualification",
+      "reason": "Conditional on equipment in the sentence."
+    },
+    "s17.b": {
+      "fingerprint": "40d96050ed",
+      "category": "needs-qualification",
+      "reason": "Conditional on climate in the sentence; modelled cities named."
+    },
+    "s21.a": {
+      "fingerprint": "9cbb084f5f",
+      "category": "needs-qualification",
+      "reason": "Conditional on AC, equipment and prices in the sentence."
+    },
+    "s21.b": {
+      "fingerprint": "9cbb084f5f",
+      "category": "needs-qualification",
+      "reason": "The averages caveat is in the s09 callout."
+    },
+    "s23.a": {
+      "fingerprint": "fb986af885",
+      "category": "needs-qualification",
+      "reason": "The sentence keeps the resistance-only condition."
+    },
+    "s27.a": {
+      "fingerprint": "79485badb7",
+      "category": "needs-qualification",
+      "reason": "Describes each study's baseline; does not assert it is right; the gap 2 callout follows."
+    },
+    "s28.a": {
+      "fingerprint": "ab2c914749",
+      "category": "needs-qualification",
+      "reason": "The sentence says it is an untested assumption."
+    },
+    "s29.a": {
+      "fingerprint": "ded9752712",
+      "category": "needs-qualification",
+      "reason": "The listed limits are other studies' results, reported in s32-s34; this sentence is NREL-only and s30 says whose homes make up the 55 percent."
+    },
+    "s30.a": {
+      "fingerprint": "0daea82fb0",
+      "category": "needs-qualification",
+      "reason": "Reports which homes make up the share; the other studies' limits are in s32-s34."
+    },
+    "s33.a": {
+      "fingerprint": "8b07c74231",
+      "category": "needs-qualification",
+      "reason": "States the share's sensitivity to cost, the limit on the 21 percent."
+    },
+    "s37.a": {
+      "fingerprint": "0fec354c06",
+      "category": "needs-qualification",
+      "reason": "'If they last the full period' carries the persistence assumption."
+    },
+    "s39.a": {
+      "fingerprint": "ae02523a3f",
+      "category": "needs-qualification",
+      "reason": "The Canadian limit does not bear on the Minnesota figure; s40 states the propane limit."
+    },
+    "s42.a": {
+      "fingerprint": "d063f3a989",
+      "category": "needs-qualification",
+      "reason": "Limited in the sentence to a home adding cooling."
+    },
+    "s44.b": {
+      "fingerprint": "b41362ccd0",
+      "category": "needs-qualification",
+      "reason": "'Little or nothing' is limited to a double replacement or added cooling; the AC-only case is said not to vanish."
+    }
+  }
+}

@@ -1,0 +1,2160 @@
+{
+  "topic": "heat-pumps",
+  "story": "decision:is-it-cheaper-to-run-than-gas",
+  "revision": 3,
+  "generation": {
+    "model": "claude-opus-5-5",
+    "brief": "scripts/briefs/article.md",
+    "date": "2026-10-25",
+    "wordsPerMinute": 150,
+    "evidencePackage": "6dd3b084bb"
+  },
+  "meta": {
+    "headline": "Is a heat pump cheaper to run than gas, and does it ever pay for itself?",
+    "seoTitle": "Heat pump vs gas furnace: running cost and payback",
+    "dek": {
+      "id": "meta.dek",
+      "text": "Whether a heat pump heats a home for less than a gas furnace turns on local electricity and gas prices and on the unit you buy; whether it repays its price turns largely on timing, and for a gas home the clearest case is when the furnace and the air conditioner both need replacing.",
+      "type": "factual",
+      "assertions": [
+        {
+          "id": "meta.dek.a",
+          "text": "The break-even seasonal COP equals the electricity-to-gas price ratio times the furnace's AFUE, so the outcome depends on local prices and on the heat pump's seasonal efficiency together.",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+              "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L119-L125"
+            }
+          ],
+          "qualifications": [
+            "The dek names prices and the unit together, not prices alone, as the qualifying evidence requires; question-1 carries the averages caveat in its qualification callout."
+          ]
+        },
+        {
+          "id": "meta.dek.b",
+          "text": "For homes using natural gas heating and only needing to replace a gas furnace, it is usually more expensive to electrify than to stick with gas; a notable exception is the customer needing to replace both furnace and air conditioner, which a single heat pump replaces.",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/heat-pump-makes-most-financial-sense",
+              "stance": "asserts"
+            },
+            {
+              "id": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+              "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1268-L1272"
+            },
+            {
+              "kind": "study",
+              "claim": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+              "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L423-L431"
+            }
+          ],
+          "qualifications": [
+            "The dek says \"the clearest case\", not that it always pays; question-2 states the exception as RMI's."
+          ]
+        }
+      ]
+    },
+    "description": {
+      "id": "meta.description",
+      "text": "A heat pump's running cost against gas depends on local prices and the unit's efficiency; for a gas home, payback is best when furnace and AC are both due.",
+      "type": "factual",
+      "assertions": [
+        {
+          "id": "meta.description.a",
+          "text": "The break-even seasonal COP equals the electricity-to-gas price ratio times the furnace's AFUE, so the outcome depends on local prices and on the heat pump's seasonal efficiency together.",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+              "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L119-L125"
+            }
+          ],
+          "qualifications": [
+            "Prices and efficiency together, not prices alone."
+          ]
+        },
+        {
+          "id": "meta.description.b",
+          "text": "In many retrofit scenarios for a home with existing natural gas heating, heat pumps are more expensive than new gas equipment; a notable exception is the customer needing to replace both furnace and air conditioner.",
+          "kind": "fact",
+          "claims": [
+            {
+              "id": "heat-pumps/heat-pump-makes-most-financial-sense",
+              "stance": "asserts"
+            }
+          ],
+          "evidence": [
+            {
+              "kind": "study",
+              "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+              "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1268-L1272"
+            }
+          ],
+          "qualifications": [
+            "\"Best\", not a promised payback period."
+          ]
+        }
+      ]
+    }
+  },
+  "sections": [
+    {
+      "name": "hook",
+      "heading": "Same heat pump, different bills",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s01",
+              "text": "Neighbours on the same street install the same model of heat pump, and by the end of the winter one household is paying less to stay warm while the other is paying more.",
+              "type": "hypothetical"
+            },
+            {
+              "id": "s02",
+              "text": "This article works through why, first on the cost of running a heat pump against a gas furnace and then on whether the purchase ever earns back its price.",
+              "type": "transitional"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "question-1",
+      "heading": "Is a heat pump actually cheaper to run than a gas furnace?",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s03",
+              "text": "Sellers say yes: the British energy supplier Octopus Energy tells customers \"it's now cheaper to run a heat pump in your home than it is a gas boiler\".",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s03.a",
+                  "text": "Octopus Energy said it is now cheaper to run a heat pump in a home than a gas boiler.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "source": "bm1koXDcFCc"
+                    }
+                  ],
+                  "quote": {
+                    "text": "it's now cheaper to run a heat pump in your home than it is a gas boiler",
+                    "source": "bm1koXDcFCc",
+                    "speaker": "Octopus Energy"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s04",
+              "text": "The American Gas Association says the reverse, that \"natural gas is more affordable in 41 out of 50 states when comparing ENERGY STAR natural gas furnaces to ENERGY STAR electric heat pumps.\"",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s04.a",
+                  "text": "The American Gas Association said natural gas is more affordable in 41 out of 50 states when comparing ENERGY STAR gas furnaces to ENERGY STAR heat pumps.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "source": "aga-natural-gas-or-a-heat-pump-where-you-live-matters"
+                    }
+                  ],
+                  "quote": {
+                    "text": "natural gas is more affordable in 41 out of 50 states when comparing ENERGY STAR natural gas furnaces to ENERGY STAR electric heat pumps.",
+                    "source": "aga-natural-gas-or-a-heat-pump-where-you-live-matters",
+                    "speaker": "American Gas Association"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s05",
+              "text": "The YouTube channel Technology Connections frames the same dispute as a question of efficiency: \"Locally we need a consistent COP of 4 just to break even with the cost of gas\".",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s05.a",
+                  "text": "Technology Connections said that locally a consistent COP of 4 is needed just to break even with the cost of gas.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+                      "source": "43XKfuptnik"
+                    }
+                  ],
+                  "quote": {
+                    "text": "Locally we need a consistent COP of 4 just to break even with the cost of gas",
+                    "source": "43XKfuptnik",
+                    "speaker": "Technology Connections"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s06",
+              "text": "Each home has its own break-even number: the price of electricity divided by the price of gas, compared for the same energy content, multiplied by the furnace's efficiency, and a heat pump whose average efficiency over the heating season (its seasonal COP) is above that number heats the home more cheaply.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s06.a",
+                  "text": "A heat pump heats more cheaply than a gas furnace when its seasonal average COP is above the electricity-to-gas price ratio, on an energy-content basis, times the furnace's AFUE.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence states the threshold as the price ratio times furnace efficiency, not the bare ratio; the qualification callout after s08 states what the rule leaves out."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s07",
+              "text": "On 2024 national averages the price ratio was 3.45, which put the break-even seasonal COP at 3.28 for a high-efficiency furnace and lower for a less efficient one, as the table shows.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s07.a",
+                  "text": "At 2024 US average prices the electricity-to-gas price ratio was 3.45, so the break-even seasonal COP was 3.28 against a furnace with AFUE 0.95 and 2.76 at AFUE 0.80.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131"
+                    }
+                  ],
+                  "qualifications": [
+                    "National averages; s08 gives the state spread and the callout after it the averages caveat."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t1",
+          "caption": "The break-even seasonal COP against a gas furnace at US average prices, 2024",
+          "columns": [
+            "Value"
+          ],
+          "rows": [
+            {
+              "label": "Electricity-to-gas price ratio, same energy content (US average, 2024)",
+              "cells": [
+                {
+                  "label": "Value",
+                  "value": 3.45,
+                  "unit": "count",
+                  "display": "3.45",
+                  "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131"
+                }
+              ]
+            },
+            {
+              "label": "Break-even seasonal COP against a furnace of AFUE 0.95 (US average, 2024)",
+              "cells": [
+                {
+                  "label": "Value",
+                  "value": 3.28,
+                  "unit": "count",
+                  "display": "3.28",
+                  "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131"
+                }
+              ]
+            },
+            {
+              "label": "Break-even seasonal COP against a furnace of AFUE 0.80 (US average, 2024)",
+              "cells": [
+                {
+                  "label": "Value",
+                  "value": 2.76,
+                  "unit": "count",
+                  "display": "2.76",
+                  "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s08",
+              "text": "State prices move the bar a long way: in 11 states a heat pump with a seasonal COP of 2.5 already beats a 95 percent furnace, while in 30 places, the District of Columbia among them, it needs a seasonal COP of 3.0 or more.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s08.a",
+                  "text": "At 2024 average prices a heat pump with seasonal COP 2.5 beats a 95% furnace on running cost in 11 states, while 30 places, including the District of Columbia, need a seasonal COP of 3.0 or higher.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L191-L193"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says the answer depends on where you live and on the unit's efficiency, which is the limitation the audit lists for the flat claim that a heat pump costs less than gas."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "figure",
+          "ref": "decision-is-it-cheaper-to-run-than-gas/sc09",
+          "caption": "States grouped by the seasonal COP a heat pump needs to beat a high-efficiency gas furnace at annual average prices."
+        },
+        {
+          "kind": "prose",
+          "callout": "qualification",
+          "claim": "heat-pumps/heat-pump-beats-gas-running-cost",
+          "sentences": [
+            {
+              "id": "s09",
+              "text": "The bar is the price ratio multiplied by the furnace's efficiency, not the price ratio by itself, and it is built on average prices: it leaves out time-of-use rates and backup resistance heat, and an average gas price includes the fixed monthly charge, which a household that keeps its gas connection goes on paying and one that disconnects saves.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s09.a",
+                  "text": "The break-even seasonal COP is the price ratio times AFUE; the rule uses average prices and ignores tiered or time-of-use rates and backup resistance heat; average gas prices include fixed customer charges, which a household that keeps its gas connection keeps paying and one that disconnects saves.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131"
+                    }
+                  ],
+                  "qualifications": [
+                    "This sentence is the qualification for s06-s08."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s10",
+              "text": "Clearing the bar depends on the unit: a national model by researchers at NREL and Lawrence Berkeley National Laboratory, run at winter 2021-2022 fuel prices, finds that among gas-heated homes that already have air conditioning, the share whose bills would fall runs from 38 percent with the lowest-performing heat pump to 99 percent with the highest.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s10.a",
+                  "text": "In the NREL and LBNL study, for homes heating with natural gas and with AC, the share with positive bill savings ranged from 38% to 99% depending on ASHP performance level.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence keeps the population (gas-heated homes with AC), the price period and the dependence on equipment; 'model' marks the bills as modelled, not metered."
+                  ]
+                },
+                {
+                  "id": "s10.b",
+                  "text": "The NREL and LBNL main case used winter 2021-2022 fuel prices.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s11",
+              "text": "For gas homes without air conditioning the share is lower, partly because the heat pump gives them cooling they did not pay to run before.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s11.a",
+                  "text": "For homes heating with natural gas but without AC, only 5% to 58% had positive bill savings, lower than for gas homes with AC.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                    }
+                  ],
+                  "qualifications": [
+                    "Same model and limits as s10; the table gives the figures."
+                  ]
+                },
+                {
+                  "id": "s11.b",
+                  "text": "Homes without existing AC are more likely to see energy bill increases because of the new central AC the heat pump provides.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L522-L526"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t2",
+          "caption": "Modelled share of US gas-heated homes whose energy bills would fall with a heat pump, by heat pump performance",
+          "columns": [
+            "Lowest-performing heat pump",
+            "Highest-performing heat pump"
+          ],
+          "rows": [
+            {
+              "label": "Gas-heated homes with air conditioning (NREL and LBNL model, winter 2021-2022 prices)",
+              "cells": [
+                {
+                  "label": "Lowest-performing heat pump",
+                  "value": 38,
+                  "unit": "percent",
+                  "display": "38%",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                },
+                {
+                  "label": "Highest-performing heat pump",
+                  "value": 99,
+                  "unit": "percent",
+                  "display": "99%",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                }
+              ]
+            },
+            {
+              "label": "Gas-heated homes without air conditioning (same model and prices)",
+              "cells": [
+                {
+                  "label": "Lowest-performing heat pump",
+                  "value": 5,
+                  "unit": "percent",
+                  "display": "5%",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                },
+                {
+                  "label": "Highest-performing heat pump",
+                  "value": 58,
+                  "unit": "percent",
+                  "display": "58%",
+                  "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s12",
+              "text": "Across all American homes, whatever fuel they heat with, the same model has bills rising in 39 percent of homes with a minimum-efficiency unit and in 5 percent with a high-efficiency cold-climate unit.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s12.a",
+                  "text": "In the NREL and LBNL model, negative bill savings occur in 39% of homes with the minimum-efficiency ASHP but only 5% of homes with the high-efficiency ccASHP.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/most-households-would-see-lower-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/most-households-would-see-lower-energy",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L362-L366"
+                    }
+                  ],
+                  "qualifications": [
+                    "All fuels together, modelled bills; s10 and s11 say gas homes, the group this question is about, save less often."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s13",
+              "text": "A second national model, by Edwards and colleagues, puts 53 percent of households clearly ahead on bills, 19 percent behind and 28 percent with no clear change either way.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s13.a",
+                  "text": "In Edwards' Monte Carlo analysis, 53% of households in the dataset see reduced energy bills, 19% see costs, and 28% see no clear benefits or costs.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/most-households-would-see-lower-energy",
+                      "stance": "asserts"
+                    },
+                    {
+                      "id": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/most-households-would-see-lower-energy",
+                      "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L290-L294"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L290-L294"
+                    }
+                  ],
+                  "qualifications": [
+                    "'Clearly ahead' keeps the model's definition; the majority is thin, and the 28 percent with no clear change is stated beside it."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s14",
+              "text": "Fuel prices move these shares as well: rerun at 2019 prices, when electricity cost 4.1 times as much as gas, the NREL model's share of all gas-heated homes that save drops from 32-92 percent to 22-83 percent, depending on the unit.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s14.a",
+                  "text": "A return to 2019 energy prices, an electricity-to-gas ratio of 4.1, would reduce the percentage of natural-gas homes with positive bill savings from 32%-92% to 22%-83%, depending on ASHP efficiency level.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L538-L553"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says prices move the result 'as well', after s10 showed equipment matters, so it does not claim prices alone decide it."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s15",
+              "text": "Measured use tells a similar story: a large British study of homes that replaced a gas boiler with a heat pump found total energy use fell by 40 percent, yet running costs came out slightly higher because a kilowatt-hour of electricity costs more than a kilowatt-hour of gas.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s15.a",
+                  "text": "In the UK study, total energy use fell 40% in homes heated by heat pumps compared with gas-boiler homes, but because electricity costs more per kWh than gas, running costs were estimated slightly higher.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1038-L1044"
+                    }
+                  ],
+                  "qualifications": [
+                    "s16 says it is a British result at British prices, against boilers, not American furnaces."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s16",
+              "text": "At Octopus Energy's standard prices in June 2024 the difference was £190 a year, of which a household that disconnects from mains gas wins back about £100, and these are British boilers at British prices, not a forecast for an American furnace.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s16.a",
+                  "text": "Heat pumps cost £190 more per year to run than gas boilers, based on Octopus Energy's standard tariff electricity and gas prices as of 15 June 2024 in the UK.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1855"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence itself limits it to British boilers and British prices."
+                  ]
+                },
+                {
+                  "id": "s16.b",
+                  "text": "Customers pay approximately £100 per year for their mains gas connection, and disconnecting from mains gas further reduces annual costs by £100.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1863"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "qualification",
+          "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+          "sentences": [
+            {
+              "id": "s17",
+              "text": "Switching from gas raises the bill only under some conditions: in the NREL model most gas homes with air conditioning pay more with a minimum-efficiency unit and nearly all pay less with the best units, and in RMI's city models energy costs rose in cold Chicago and Providence but not in Houston and Oakland, where the saving was simply too small to repay the extra equipment cost.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s17.a",
+                  "text": "For gas-heated homes with AC, bill savings range from 38% positive with the lowest ASHP performance level to 99% positive with the highest.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                    }
+                  ],
+                  "qualifications": [
+                    "Conditional on equipment, stated in the sentence."
+                  ]
+                },
+                {
+                  "id": "s17.b",
+                  "text": "Customers with existing gas service either pay more for energy with electric devices, in colder Chicago and Providence, or save too little in energy costs to make up the additional capital cost, in Houston and Oakland.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L158-L161"
+                    }
+                  ],
+                  "qualifications": [
+                    "Conditional on climate, stated in the sentence; modelled cities only."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t3",
+          "caption": "UK homes that replaced a gas boiler with a heat pump, at Octopus Energy's prices, June 2024",
+          "columns": [
+            "Pounds a year"
+          ],
+          "rows": [
+            {
+              "label": "Extra running cost on the standard tariff (UK, 2024)",
+              "cells": [
+                {
+                  "label": "Pounds a year",
+                  "value": 190,
+                  "unit": "usd",
+                  "display": "£190",
+                  "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1863"
+                }
+              ]
+            },
+            {
+              "label": "Saved by disconnecting from mains gas (UK, 2024)",
+              "cells": [
+                {
+                  "label": "Pounds a year",
+                  "value": 100,
+                  "unit": "usd",
+                  "display": "£100",
+                  "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1863"
+                }
+              ]
+            },
+            {
+              "label": "Saved on the Cosy time-of-use tariff against the standard tariff (UK, 2024)",
+              "cells": [
+                {
+                  "label": "Pounds a year",
+                  "value": 318,
+                  "unit": "usd",
+                  "display": "£318",
+                  "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1898-L1906"
+                }
+              ]
+            },
+            {
+              "label": "Of which, from shifting use between times of day (UK, 2024)",
+              "cells": [
+                {
+                  "label": "Pounds a year",
+                  "value": 240,
+                  "unit": "usd",
+                  "display": "£240",
+                  "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1898-L1906"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "qualification",
+          "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+          "sentences": [
+            {
+              "id": "s18",
+              "text": "A time-of-use tariff cut running costs in the British study, under conditions: households that moved to Cosy, Octopus's own time-of-use tariff, saved £318 a year against the supplier's standard tariff, most of it by shifting use into cheaper hours, so the saving is one supplier's tariff measured against its own flat rate.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s18.a",
+                  "text": "Switching to the Cosy time-of-use tariff saved customers £318 per year compared with Octopus Energy's standard tariff, of which £240 came from changing consumption by period of the day.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1898-L1906"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence names the tariff as the supplier's own, the comparison as against that supplier's standard tariff, and the saving as mostly from shifted use; s19 gives the US model in which a tariff alone did not help."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s19",
+              "text": "In RMI's Houston model a tariff alone did not help: a standard heat pump on a free-nights plan cost more than on a flat rate, though a customer on that plan who controlled the heat pump to preheat and precool while power was free saved around $1,000 in net present cost.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s19.a",
+                  "text": "In RMI's Houston model, heat pumps on TXU Energy's Free Nights rate have higher costs than on a flat rate, and for a customer on that rate, optimizing the heat pump to preheat or precool while electricity is free saves around $1,000 in net present cost.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+                      "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L748-L755"
+                    }
+                  ],
+                  "qualifications": [
+                    "One city, one model, smart control needed, as the sentence says."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s20",
+              "text": "The NREL authors add that where time-of-use rates are offered, controlling a heat pump to use less power at peak times may improve its bill savings.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s20.a",
+                  "text": "Where time-of-use electric rates are offered, there may be an opportunity to control ASHPs to reduce use during more expensive on-peak periods and improve bill savings.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L754-L757"
+                    }
+                  ],
+                  "qualifications": [
+                    "Stated as a possibility the authors raise, not a result."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s21",
+              "text": "So a gas home that already has air conditioning, and buys a well-performing heat pump where electricity is not expensive next to gas, will usually pay less to heat; with a minimum-efficiency unit, or where the price ratio is high, it often will not, because the higher that ratio the more efficient the heat pump has to be.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s21.a",
+                  "text": "For gas-heated homes with AC, the share with positive bill savings rises to 99% at the highest ASHP performance level but is 38% at the lowest.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "stance": "asserts"
+                    },
+                    {
+                      "id": "heat-pumps/most-households-would-see-lower-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heating-heat-pump-costs-less-natural",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L409-L415"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/most-households-would-see-lower-energy",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L362-L366"
+                    }
+                  ],
+                  "qualifications": [
+                    "The answer is conditional on equipment, on prices and on homes that already have AC; s10 named the model and its prices."
+                  ]
+                },
+                {
+                  "id": "s21.b",
+                  "text": "The break-even seasonal COP equals the electricity-to-gas price ratio times the furnace's AFUE, so a higher price ratio needs a more efficient heat pump.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-beats-gas-running-cost",
+                      "cite": "heat-pumps/sources/eia-2026-state-residential-energy-prices.txt#L123-L131"
+                    }
+                  ],
+                  "qualifications": [
+                    "The qualification callout after s08 carried the averages caveat."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s22",
+              "text": "A promise to halve the bill does not hold against gas in this evidence: the British homes cut their energy use sharply and still paid more to run, in RMI's gas retrofits energy costs either rose or fell too little to repay the equipment, and even the NREL model's average energy saving across all fuels is under half.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s22.a",
+                  "text": "In the UK study, homes that switched from gas boilers had somewhat higher running costs than gas boilers.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1855"
+                    }
+                  ],
+                  "qualifications": [
+                    "Limited to gas in the sentence; s23 says where cuts of half or more do appear."
+                  ]
+                },
+                {
+                  "id": "s22.b",
+                  "text": "In the UK study total energy use fell 40% after switching from a gas boiler to a heat pump.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/whether-heat-pump-cheaper-run-gas",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1038-L1044"
+                    }
+                  ]
+                },
+                {
+                  "id": "s22.c",
+                  "text": "Customers with existing gas service either pay more for energy with electric devices, in Chicago and Providence, or save too little in energy costs to make up the additional capital cost, in Houston and Oakland.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L158-L161"
+                    }
+                  ],
+                  "qualifications": [
+                    "Modelled gas retrofits in named cities."
+                  ]
+                },
+                {
+                  "id": "s22.d",
+                  "text": "National site energy savings average 31%-47%, depending on ASHP performance level.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L332-L334"
+                    }
+                  ],
+                  "qualifications": [
+                    "Energy, not bills, as the sentence says."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s23",
+              "text": "Cuts of half or more show up in this evidence only against electric resistance heat: in Minnesota homes, energy costs fell 53 to 56 percent against resistance heaters but 26 to 40 percent against propane furnaces.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s23.a",
+                  "text": "In the Minnesota study, energy cost reductions were 53%-56% against electric resistance and 26%-40% against propane furnaces.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-heat-pump-cuts-heating-bills",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L298-L314"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence keeps the condition: half or more held only for resistance-heated homes."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s24",
+              "text": "A smaller bill is not yet a good investment, though, and that is the second question.",
+              "type": "transitional"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "question-2",
+      "heading": "Does a heat pump really pay for itself, and does it matter when you buy?",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s25",
+              "text": "The usual pitch is a payback of a few years; the channel I Like To Build Stuff reckons that at a saving of \"$500 a year it take 4 years to pay back the unit.\"",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s25.a",
+                  "text": "I Like To Build Stuff said that at $500 a year of savings it takes 4 years to pay back the unit.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "source": "XL4ROp_Jh7g"
+                    }
+                  ],
+                  "quote": {
+                    "text": "$500 a year it take 4 years to pay back the unit.",
+                    "source": "XL4ROp_Jh7g",
+                    "speaker": "I Like To Build Stuff"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "s26",
+              "text": "Others land far from that: a Washington Post calculation for one home ends up \"making the payback period around 48 years\", though the same piece, counting \"the difference between the cost of a new heat pump and a new furnace — bringing the payback time closer to eight years\", shows how much the baseline matters.",
+              "type": "attributed",
+              "assertions": [
+                {
+                  "id": "s26.a",
+                  "text": "The Washington Post put the payback period around 48 years.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "source": "washingtonpost-home-efficiency-emissions-cost"
+                    }
+                  ],
+                  "quote": {
+                    "text": "making the payback period around 48 years",
+                    "source": "washingtonpost-home-efficiency-emissions-cost",
+                    "speaker": "Washington Post"
+                  }
+                },
+                {
+                  "id": "s26.b",
+                  "text": "The Washington Post said counting the difference between the cost of a new heat pump and a new furnace brings the payback time closer to 8 years.",
+                  "kind": "attribution",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "statement",
+                      "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "source": "washingtonpost-home-efficiency-emissions-cost"
+                    }
+                  ],
+                  "quote": {
+                    "text": "the difference between the cost of a new heat pump and a new furnace — bringing the payback time closer to eight years",
+                    "source": "washingtonpost-home-efficiency-emissions-cost",
+                    "speaker": "Washington Post"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s27",
+              "text": "The national models set the comparison at replacement time: Deetjen and colleagues count only what a heat pump costs beyond replacing the old heater with a similar one at the end of its life, and the NREL model compares against like-for-like replacement of equipment that has reached the end of its lifetime.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s27.a",
+                  "text": "Deetjen counts only the extra cost of a heat pump over replacing the existing heater with a similar technology, assuming purchase when the existing heater nears the end of its life; Wilson's reference scenario is like-for-like replacement of equipment at end of lifetime.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/payback-should-count-only-heat-pump",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                      "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L500-L506"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L709-L716"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence describes how the studies set their baseline; it does not assert that this is the right way to count payback (the support is weak), as the unresolved callout after it says."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "gap": 2,
+          "sentences": [
+            {
+              "id": "s28",
+              "text": "Counting only the extra cost is an assumption these studies make, not a rule any of them tests, and no study in this evidence is strong enough to settle it; for a furnace that still works, the Minnesota study counts the whole installed price as the extra cost.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s28.a",
+                  "text": "Deetjen assumes homeowners are most likely to buy a heat pump when the existing heater is nearing the end of its life, and counts the heat pump's cost net of replacing the heater with a similar technology.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/payback-should-count-only-heat-pump",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                      "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L500-L506"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says it is an assumption, untested."
+                  ]
+                },
+                {
+                  "id": "s28.b",
+                  "text": "In the Minnesota study, with no failure the incremental cost of the ccASHP is its full installed cost.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s29",
+              "text": "Even on that footing the NREL model finds that, before subsidies, a minimum-efficiency heat pump comes out ahead over its life in 55 percent of homes, and the dearer efficient models in fewer, because their higher purchase price outweighs their larger bill savings.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s29.a",
+                  "text": "Lower-cost minimum-efficiency ASHPs have the largest share of households with positive unsubsidized NPV (55%); the higher upfront costs of the medium and high-efficiency cold-climate scenarios reduce the share to 41% and 21%.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/high-installation-costs-keep-heat-pumps",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/high-installation-costs-keep-heat-pumps",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L517-L520"
+                    }
+                  ],
+                  "qualifications": [
+                    "Modelled lifetime value at the replacement-time baseline (s27), all fuels; s30 says whose homes make up the 55 percent; the figure shows the other shares."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s30",
+              "text": "That 55 percent is drawn mostly from homes heated by oil, propane or electricity and, among gas homes, from those with central air in warmer climates.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s30.a",
+                  "text": "The group with positive unsubsidized NPV (55%) from minimum-efficiency ASHPs includes most homes that use fuel oil, propane, or electricity for heating, and also most homes that use natural gas and have central AC in warmer climates.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L497-L520"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s31",
+              "text": "Letting every home pick its best option raises the share to 59 percent.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s31.a",
+                  "text": "Selecting the upgrade package with the highest unsubsidized NPV for each home, 59% of homes have at least one package with positive unsubsidized NPV.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/most-homes-would-save-money-over",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/most-homes-would-save-money-over",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L645-L647"
+                    }
+                  ],
+                  "qualifications": [
+                    "Stated as the best option per home, beside s29's single-option shares."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "figure",
+          "ref": "decision-is-it-cheaper-to-run-than-gas/sc25",
+          "caption": "Share of US homes ahead over the heat pump's life before subsidies, by heat pump efficiency, in the NREL and LBNL model."
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s32",
+              "text": "Deetjen's study, a separate model with its own costs and assumptions, finds that only 21 percent of American single-family houses would gain economically from replacing their heater with a heat pump, and that switching from gas rarely pays even when the old heater is due, with almost no houses in cold climates where it makes sense.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s32.a",
+                  "text": "Deetjen finds 21% of the US single-family residential stock could benefit economically from replacing their existing heater with a heat pump.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "stance": "denies"
+                    },
+                    {
+                      "id": "heat-pumps/most-homes-would-save-money-over",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-pays-itself-through-lower",
+                      "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L570-L574"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/most-homes-would-save-money-over",
+                      "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L886-L889"
+                    }
+                  ],
+                  "qualifications": [
+                    "A model at its own discount rate and equipment life; s34 says other models disagree."
+                  ]
+                },
+                {
+                  "id": "s32.b",
+                  "text": "Switching a home's heating fuel from natural gas to a heat pump rarely produces a benefit, especially in cold climates where there are almost no houses where the switch makes sense, with the heat pump costed against replacing the old heater at the end of its life.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+                      "stance": "asserts"
+                    },
+                    {
+                      "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+                      "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L647-L652"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L646-L654"
+                    }
+                  ],
+                  "qualifications": [
+                    "Stated for gas homes at end-of-life replacement, as the study frames it."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s33",
+              "text": "The same team adds that small cuts in capital cost could greatly raise that share.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s33.a",
+                  "text": "Small reductions in capital cost and small gains in efficiency could greatly increase heat pump adoption rates.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/high-installation-costs-keep-heat-pumps",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/high-installation-costs-keep-heat-pumps",
+                      "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L919-L923"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says the share is sensitive to cost, which is the limit on reading the 21 percent as fixed."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s34",
+              "text": "RMI concluded that most of the 56 million American households heated by gas would not find a heat pump cost-effective at the prices it used.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s34.a",
+                  "text": "RMI concludes that most of the 56 million American households heated with natural gas will not find it cost-effective to switch to electric heat pumps at today's prices.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/most-homes-would-save-money-over",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/most-homes-would-save-money-over",
+                      "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1325-L1327"
+                    }
+                  ],
+                  "qualifications": [
+                    "Gas households only, at the prices RMI used; the Canadian result is given beside it."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s47",
+              "text": "A Canadian Climate Institute model of Canadian cities answers a different question, setting a heat pump against gas heating plus air conditioning, and finds the heat pump the lowest-cost option for most households there, partly because it also does the cooling; in some regions that result depends on Canada's carbon price and rebates.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s47.a",
+                  "text": "Canadian Climate Institute modelling finds heat pumps are the lowest-cost heating and cooling option for most households, lower than gas-fired heating with air conditioning, partly because they double as cooling.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L842-L846"
+                    }
+                  ],
+                  "qualifications": [
+                    "Canadian cities, not the US, as the sentence says; the model compares full replacements of heating and cooling."
+                  ]
+                },
+                {
+                  "id": "s47.b",
+                  "text": "Existing policy, in particular the carbon price and federal and provincial rebate programs, supports heat pump cost competitiveness; in some regions heat pumps are often lowest-cost even without it, while in others the current policy mix is necessary.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/high-installation-costs-keep-heat-pumps",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/high-installation-costs-keep-heat-pumps",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1202-L1208"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence states the policy condition beside the Canadian result."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "gap": 0,
+          "sentences": [
+            {
+              "id": "s35",
+              "text": "The same Canadian report also says bills tend to be lower in homes with heat pumps, but that remark rests on its lifetime-cost modelling and measures no change in anyone's bill after a switch from gas, so it cannot say whether switching raises a gas household's bills.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s35.a",
+                  "text": "The Canadian report says energy bills will tend to be lower in homes with heat pumps, pointing back to its own modelling section.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "stance": "denies"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/switching-gas-heat-pump-raises-household",
+                      "cite": "heat-pumps/sources/cci-2023-heat-pumps-pay-off.txt#L1591-L1597"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says the remark is model-based and does not decide the bill question."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s36",
+              "text": "In Britain the same study as before put the net private cost of swapping a gas boiler for a heat pump at £4,121 over 20 years: the household's share of the purchase after the grant, minus the boiler it no longer has to buy, plus higher running costs, assuming it disconnects from mains gas.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s36.a",
+                  "text": "In the UK study, the net private cost of the heat pump over 20 years is £4,121, even after the grant: the £5,213 private capital expenditure minus the £2,250 avoided expenditure on a gas boiler plus £1,159 higher net present operating cost.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+                      "stance": "asserts"
+                    },
+                    {
+                      "id": "heat-pumps/payback-should-count-only-heat-pump",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1850-L1871"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-should-count-only-heat-pump",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1821-L1825"
+                    }
+                  ],
+                  "qualifications": [
+                    "Stated as one study's estimate, after the grant, so it is not read as unsubsidised beside s29; s16 already said British prices and boilers; s37 gives the tariff that changes it."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s37",
+              "text": "The authors also valued the Cosy tariff's savings, if they last the full period, at £4,675, which is more than that net cost.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s37.a",
+                  "text": "Assuming the Cosy savings persist across 20 years, their net present value is £4,675, and the net private cost of the heat pump is lower than that.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+                      "stance": "asserts"
+                    },
+                    {
+                      "id": "heat-pumps/high-installation-costs-keep-heat-pumps",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/time-use-heat-pump-electricity-tariffs",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L1898-L1906"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/high-installation-costs-keep-heat-pumps",
+                      "cite": "heat-pumps/sources/bernard-2024-nber-uk-heat-pumps-tou-tariff.txt#L2019-L2024"
+                    }
+                  ],
+                  "qualifications": [
+                    "'If they last the full period' carries the authors' assumption that the savings persist."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s38",
+              "text": "Timing alone moves payback a long way: a Minnesota study priced a cold-climate heat pump with a propane furnace as backup at $9,450 installed, and with nothing broken that whole price was the extra cost, so the payback ran from 14.5 to 28.8 years depending on the furnace it was compared with.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s38.a",
+                  "text": "In the Minnesota study, the average ccASHP with propane furnace back-up costs $9,450 installed; with no failure the incremental cost is the full $9,450 and the simple payback is 14.5 years against an 82% furnace and 28.8 years against a condensing furnace.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                    }
+                  ],
+                  "qualifications": [
+                    "s40 says these are propane homes, not gas."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s39",
+              "text": "When the furnace and the air conditioner both needed replacing, the extra cost fell to $370 and the payback to under a year, and the table shows the cases in between.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s39.a",
+                  "text": "When both furnace and A/C need replacement the incremental cost is $370 and the ccASHP systems have a simple payback of less than one year.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1386-L1408"
+                    }
+                  ],
+                  "qualifications": [
+                    "s40 says these are propane homes, not gas."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "table",
+          "id": "t4",
+          "caption": "Extra cost and simple payback of a cold-climate heat pump with a propane furnace backup in Minnesota, by what needed replacing",
+          "columns": [
+            "Extra cost",
+            "Payback against a condensing furnace, years",
+            "Payback against an 82% furnace, years"
+          ],
+          "rows": [
+            {
+              "label": "Nothing broken (Minnesota propane homes, 2017 study)",
+              "cells": [
+                {
+                  "label": "Extra cost",
+                  "value": 9450,
+                  "unit": "usd",
+                  "display": "$9,450",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                },
+                {
+                  "label": "Payback against a condensing furnace",
+                  "value": 28.8,
+                  "unit": "count",
+                  "display": "28.8",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                },
+                {
+                  "label": "Payback against the less efficient furnace",
+                  "value": 14.5,
+                  "unit": "count",
+                  "display": "14.5",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            },
+            {
+              "label": "Air conditioner failed (same study)",
+              "cells": [
+                {
+                  "label": "Extra cost",
+                  "value": 4270,
+                  "unit": "usd",
+                  "display": "$4,270",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                },
+                {
+                  "label": "Payback against a condensing furnace",
+                  "value": 13,
+                  "unit": "count",
+                  "display": "13.0",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                },
+                {
+                  "label": "Payback against the less efficient furnace",
+                  "value": 6.5,
+                  "unit": "count",
+                  "display": "6.5",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            },
+            {
+              "label": "Furnace failed (same study)",
+              "cells": [
+                {
+                  "label": "Extra cost",
+                  "value": 5550,
+                  "unit": "usd",
+                  "display": "$5,550",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                },
+                {
+                  "label": "Payback against a condensing furnace",
+                  "value": 16.9,
+                  "unit": "count",
+                  "display": "16.9",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                },
+                {
+                  "label": "Payback against the less efficient furnace",
+                  "value": 8.5,
+                  "unit": "count",
+                  "display": "8.5",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            },
+            {
+              "label": "Furnace and air conditioner both failed (same study)",
+              "cells": [
+                {
+                  "label": "Extra cost",
+                  "value": 370,
+                  "unit": "usd",
+                  "display": "$370",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                },
+                {
+                  "label": "Payback against a condensing furnace",
+                  "value": 1.1,
+                  "unit": "count",
+                  "display": "1.1",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                },
+                {
+                  "label": "Payback against the less efficient furnace",
+                  "value": 0.6,
+                  "unit": "count",
+                  "display": "0.6",
+                  "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s40",
+              "text": "Those homes ran on propane, not gas, so the years do not carry over to a gas home.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s40.a",
+                  "text": "The Minnesota payback figures are for a ccASHP with propane furnace back-up, not natural gas.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1376-L1408"
+                    }
+                  ],
+                  "qualifications": [
+                    "This sentence is the fuel limit on s38, s39 and the table."
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s41",
+              "text": "For gas homes, RMI's report finds that in many retrofits a heat pump costs more than new gas equipment, and names as a notable exception the customer who must replace both a furnace and an air conditioner, since one heat pump does both jobs.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s41.a",
+                  "text": "In many retrofit scenarios for a home with existing natural gas heating, switching to heat pumps is more expensive than retrofitting with new gas equipment; a notable exception is the customer needing to replace both furnace and air conditioner, which a single heat pump replaces.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1268-L1272"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "s42",
+              "text": "And Lawrence Berkeley's cost study found the heat pump's price premium over gas equipment disappears once a home is adding cooling as well as heating.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s42.a",
+                  "text": "In LBNL's archetypal projects for homes without cooling, electric upgrades cost more than gas ones by almost exactly the cost of adding cooling, implying no cost premium when comparing like-for-like upgrades that add both heating and cooling.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2288-L2293"
+                    }
+                  ],
+                  "qualifications": [
+                    "Limited in the sentence to a home adding cooling."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "callout": "unresolved",
+          "gap": 1,
+          "sentences": [
+            {
+              "id": "s43",
+              "text": "None of these shares is your house's payback: the Edwards model's 19 percent of households that would pay more and 28 percent with no clear change describe a population, not whether a particular home's heat pump repays itself, and the NREL model found bill savings varied more from house to house within one area than from area to area.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s43.a",
+                  "text": "In Edwards' analysis 19% of households see costs and 28% see no clear benefits or costs.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/most-households-would-see-lower-energy",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/most-households-would-see-lower-energy",
+                      "cite": "heat-pumps/sources/edwards-2024-heat-pump-inequities.txt#L290-L294"
+                    }
+                  ],
+                  "qualifications": [
+                    "The sentence says a population share cannot decide one home's payback."
+                  ]
+                },
+                {
+                  "id": "s43.b",
+                  "text": "Bill savings vary geographically with climate, energy prices and housing stock, and there is even more variation between the 5th and 95th percentiles within a given location.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/payback-heat-pump-varies-widely-climate",
+                      "cite": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L368-L373"
+                    }
+                  ],
+                  "qualifications": [
+                    "Bill savings, not payback; the sentence uses it only to say the shares are not one home's number."
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s44",
+              "text": "So for a gas home whose furnace still works, a heat pump rarely pays for itself on energy savings alone; bought when the furnace and the air conditioner both need replacing, or when the home is adding cooling anyway, the extra cost can shrink to little or nothing, while with only the air conditioner due it shrinks but does not vanish.",
+              "type": "factual",
+              "assertions": [
+                {
+                  "id": "s44.a",
+                  "text": "Switching from natural gas to a heat pump rarely produces a private benefit even at end-of-life replacement, and for gas homes only needing a new furnace it is usually more expensive to electrify than to stay with gas.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+                      "cite": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L647-L652"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/replacing-working-gas-furnace-heat-pump",
+                      "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L423-L431"
+                    }
+                  ],
+                  "qualifications": [
+                    "A population answer; s43 said savings vary house to house."
+                  ]
+                },
+                {
+                  "id": "s44.b",
+                  "text": "When both furnace and air conditioner need replacing, the heat pump's incremental cost falls to $370 in Minnesota and RMI names this the exception for gas homes; LBNL finds no cost premium once cooling is added as well; at air conditioner failure alone the incremental cost falls only to $4,270.",
+                  "kind": "fact",
+                  "claims": [
+                    {
+                      "id": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "stance": "asserts"
+                    }
+                  ],
+                  "evidence": [
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "cite": "heat-pumps/sources/cee-2017-cold-climate-ashp-minnesota.txt#L1386-L1408"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "cite": "heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L1268-L1272"
+                    },
+                    {
+                      "kind": "study",
+                      "claim": "heat-pumps/heat-pump-makes-most-financial-sense",
+                      "cite": "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt#L2288-L2293"
+                    }
+                  ],
+                  "qualifications": [
+                    "'Little or nothing' is limited to a double replacement (CEE, RMI's exception) or added cooling (LBNL); the air-conditioner-only case is said to shrink but not vanish; s40 said the Minnesota homes ran on propane."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "close",
+      "heading": "What to check before you switch",
+      "blocks": [
+        {
+          "kind": "prose",
+          "sentences": [
+            {
+              "id": "s45",
+              "text": "Before signing, work out your own break-even number from your electricity and gas prices and your furnace's efficiency, and ask the installer for the seasonal COP of the unit being quoted, since it has to beat that number.",
+              "type": "rhetorical"
+            },
+            {
+              "id": "s46",
+              "text": "If your furnace still works, get the quote now and plan to buy when the air conditioner, or the air conditioner and the furnace together, come due.",
+              "type": "rhetorical"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
