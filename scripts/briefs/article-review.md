@@ -36,7 +36,9 @@ Including `meta.dek` and `meta.description`, which are sentences like any other.
    article leaves out? `selective` or `omission`.
 5. **Strength.** Contextual-only evidence (`contextual-only`), one study presented as general (`overclaim`), a
    summary and its original counted as two (`double-counting`). Check each cite's `role` in the package: a
-   passage whose role is `context` cited as `study` evidence is yours to catch, since the gate does not.
+   passage whose role is `context` cited as `study` evidence is yours to catch, since the gate does not. The
+   exception is a gap callout about that context-only passage: it may report what the passage says, citing it,
+   provided it states that the passage cannot decide the claim.
 6. **Numbers.** Each figure means what the sentence says it means (percent of whom, money of what, over what
    period), and a calculation's inputs are the right inputs.
 
