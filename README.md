@@ -388,7 +388,8 @@ The flow, as the board's next step walks it (every step is one `npm run publish 
    records `updated`. A live video is never replaced: a re-release is a new output, `add <id> --kind youtube-video`.
 
 A Short is another output of the same ledger: `add short-1 --kind youtube-short --from youtube --source <file>`,
-then the same `upload`, `approve`, `go-live`; it goes live only after the full video. Its description links the full
+then the same `upload`, `approve`, `go-live`. Shorts are made and approved before the full video launches, and
+they launch together: the video goes live first, its Shorts right after (`go-live` refuses a Short before its video). Its description links the full
 video once that is live (so its metadata is pushed once more); the related
 video is set in YouTube Studio (the API has no field for it).
 

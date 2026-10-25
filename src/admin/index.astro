@@ -34,27 +34,319 @@ const scripts = scriptDirs().map((d) => {
   };
 });
 const small = 'text-sm text-muted-foreground';
+// One icon per kind of page, from the sprite in the template (the SourceIcons style: 16px, currentColor).
+const ico = 'size-4 shrink-0';
+const row = 'flex items-center gap-2';
+const KIND: Record<string, string> = { 'draft build': 'text-warning', 'release build': 'text-success' };
+
+// The whole workflow, top to bottom: `you` steps are a person's, the rest an agent's or a CLI's; `planned` is not built
+// yet. Keep it current: a change to a stage, a halt a person resolves or a human step changes this list (CLAUDE.md).
+type Step = { you?: boolean; planned?: boolean; t: string; d: string[] };
+const flow: Step[] = [
+  {
+    you: true,
+    t: 'Pick a topic, queue its sources',
+    d: [
+      'YouTube URLs or a queue file for the watcher;',
+      'a commission in site.ts claims the topic',
+      'so the site publishes it',
+    ],
+  },
+  {
+    t: 'Extract the claims (watcher)',
+    d: [
+      'transcripts and posts to canonical claims,',
+      'one line, mechanism-level; an AI guess',
+      'counts for at most 0.5 confidence',
+    ],
+  },
+  {
+    t: 'Judge them against studies',
+    d: [
+      'record-sources: a verdict per claim with',
+      'its cited passage; npm run report writes',
+      'report.json (needs the watcher checkout)',
+    ],
+  },
+  {
+    t: 'Find the stories',
+    d: [
+      'stories discover: candidates + evidence audit;',
+      'stories.md agent: applicability, pruning,',
+      'chains; board: needs-research/-review/ready',
+    ],
+  },
+  {
+    you: true,
+    t: 'Start a ready story',
+    d: [
+      "copy /produce from the board's What next?,",
+      'add Approver: your name (the lock sign-off);',
+      'a red row later: fix it, paste it again',
+    ],
+  },
+  {
+    t: 'Script',
+    d: [
+      'evidence package; a writer (script.md),',
+      'a different reviewer (script-review.md),',
+      'validate; 3 revisions; evidence.md if needed',
+    ],
+  },
+  {
+    t: 'Storyboard, graphics, lock',
+    d: ['storyboard.md; graphics.md per bespoke', 'scene, visual-review.md, render check;', 'lock writes release.json'],
+  },
+  {
+    t: 'Draft video',
+    d: [
+      'video init, music cues; spike: edge voice,',
+      'Remotion render, mix, QA (fit guard);',
+      'private package; board: your-review',
+    ],
+  },
+  {
+    you: true,
+    t: 'Watch it on the review page',
+    d: ['QA and script findings at their moment;', 'send back with timestamped notes, or', 'accept the draft'],
+  },
+  {
+    t: 'Voice redo (video final)',
+    d: [
+      'the same words in the Azure neural voice,',
+      'timeline, render, QA again; the release',
+      'package: real title, no private banner',
+    ],
+  },
+  {
+    you: true,
+    t: 'Approve the release build',
+    d: [
+      'tick every checklist item; binds the mp4',
+      'and its title (a new title asks again);',
+      'a title or thumbnail edit: updated event',
+    ],
+  },
+  {
+    t: 'Find the Shorts',
+    d: [
+      'shorts discover on the locked video;',
+      'shorts.md agent: keep, hook, how each',
+      'qualification is carried; at most 3',
+    ],
+  },
+  {
+    you: true,
+    t: 'Start each Short',
+    d: [
+      '/produce <story>/shorts/<slug> with',
+      'your name, as for the video; Shorts are',
+      'made before the video launches',
+    ],
+  },
+  {
+    t: 'Produce the Short',
+    d: [
+      'the same loop in portrait (1080x1920),',
+      'hook, finding, close, at most 170 s;',
+      'draft, voice redo, release package',
+    ],
+  },
+  {
+    you: true,
+    t: 'Review and approve each Short',
+    d: ['the same review page, send-back and', 'checklist as the video; its approval', 'binds its own build and title'],
+  },
+  {
+    you: true,
+    t: 'Launch them together',
+    d: [
+      'upload the video and its Shorts (private);',
+      'go live (or schedule): the video, then its',
+      'Shorts; push / sync; board: published',
+    ],
+  },
+  {
+    you: true,
+    t: 'Link the Shorts',
+    d: [
+      'set each related video in YouTube Studio',
+      '(no API): updated --fields relatedVideo;',
+      "a Short's description links the live video",
+    ],
+  },
+  {
+    planned: true,
+    t: 'Tweets (planned)',
+    d: ['posts for the X accounts in the brand', "kit's accounts.json; not built yet"],
+  },
+];
+const W = 330,
+  H = 80,
+  ROW = 104,
+  TOP = 40,
+  LOOP = 14;
+const xOf = (you?: boolean) => (you ? 40 : 430);
+const yOf = (i: number) => TOP + i * ROW;
+const mid = (you?: boolean) => xOf(you) + W / 2;
+const back = flow.findIndex((s) => s.t.startsWith('Watch'));
+const to = flow.findIndex((s) => s.t === 'Script');
+const edges = flow.slice(1).map((s, i) => {
+  const a = flow[i],
+    y1 = yOf(i) + H,
+    y2 = yOf(i + 1),
+    m = (y1 + y2) / 2;
+  return { d: `M${mid(a.you)} ${y1} V${m} H${mid(s.you)} V${y2 - 2}`, label: i === back ? 'accept the draft' : '' };
+});
+const fig = { width: 780, height: yOf(flow.length) };
 ---
 
 <Base title="Admin" noindex>
+  <svg aria-hidden="true" width="0" height="0" class="absolute">
+    <symbol id="adm-board" viewBox="0 0 16 16">
+      <rect x="1.5" y="2" width="13" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+      <path d="M6 2v12M10.5 2v12" stroke="currentColor" stroke-width="1.2"></path>
+    </symbol>
+    <symbol id="adm-ideas" viewBox="0 0 16 16">
+      <path
+        d="M8 1.8a4.4 4.4 0 0 0-2.6 8c.5.4.8 1 .8 1.6v.6h3.6v-.6c0-.6.3-1.2.8-1.6A4.4 4.4 0 0 0 8 1.8z"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.3"
+        stroke-linejoin="round"></path>
+      <path d="M6.3 14.2h3.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path>
+    </symbol>
+    <symbol id="adm-script" viewBox="0 0 16 16">
+      <path d="M3.5 1.5h6l3 3v10h-9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"
+      ></path>
+      <path d="M5.5 7.5h5M5.5 10h5M5.5 12.5h3" stroke="currentColor" stroke-width="1.2"></path>
+    </symbol>
+    <symbol id="adm-video" viewBox="0 0 16 16">
+      <rect x="1" y="3" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+      <path d="M6.5 5.8v4.4L10.3 8z" fill="currentColor"></path>
+    </symbol>
+    <symbol id="adm-short" viewBox="0 0 16 16">
+      <rect x="4" y="1" width="8" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
+      <path d="M7 6.3v3.4L9.8 8z" fill="currentColor"></path>
+    </symbol>
+  </svg>
+
   <header>
     <div class="eyebrow text-muted-foreground">Admin</div>
     <h1 class="mt-1 text-display font-semibold">Working pages</h1>
     <p class={`mt-2 max-w-prose ${small}`}>
       Dev server only: none of these pages is part of the built site. Each script has up to three kinds of page:
-      <strong>Script</strong> (the narration, the evidence behind every sentence, the storyboard),
-      <strong>Review video</strong> (watch the packaged landscape video, see its QA and script findings at their moment, approve
-      it or send it back, upload and publish it) and <strong>Review Short</strong> (the same review page for one of the video's
-      vertical Shorts, which is approved on its own and goes live only after the video).
+    </p>
+    <ul class="mt-2 grid max-w-prose gap-1 text-sm">
+      <li class={row}>
+        <svg class={ico} aria-hidden="true"><use href="#adm-script"></use></svg>
+        <span><strong>Script</strong>: the narration, the evidence behind every sentence, the storyboard.</span>
+      </li>
+      <li class={row}>
+        <svg class={ico} aria-hidden="true"><use href="#adm-video"></use></svg>
+        <span
+          ><strong>Review video</strong>: watch the packaged landscape video, see its QA and script findings at their
+          moment, approve it or send it back, upload and publish it.</span
+        >
+      </li>
+      <li class={row}>
+        <svg class={ico} aria-hidden="true"><use href="#adm-short"></use></svg>
+        <span
+          ><strong>Review Short</strong>: the same for one of the video's vertical Shorts, made before the video
+          launches and approved on its own; they launch together, the video first.</span
+        >
+      </li>
+    </ul>
+    <p class={`mt-2 ${small}`}>
+      <span class="text-warning">draft build</span>: the draft voice, review only.{' '}
+      <span class="text-success">release build</span>: the release voice, can be approved and published.
     </p>
   </header>
 
-  <ul class="mt-6 list-disc space-y-1 pl-5">
-    <li>
-      <a href={href('/production/')}>Production board</a>
-      <span class={small}>: every video, who acts next, and the next step's command or prompt</span>
-    </li>
-  </ul>
+  <section class="mt-8" aria-labelledby="workflow">
+    <h2 id="workflow" class="text-title font-semibold">The workflow</h2>
+    <p class={`mt-1 max-w-prose ${small}`}>
+      What you do, and what the agents and CLIs do between your steps. A red row on the board means /produce stopped (a
+      revision limit, a story that left the list, a <code>stop:</code> step): fix what it names and paste the same prompt
+      again.
+    </p>
+    <svg
+      class="mt-4 w-full max-w-3xl"
+      viewBox={`0 0 ${fig.width} ${fig.height}`}
+      role="img"
+      aria-labelledby="workflow-title"
+    >
+      <title id="workflow-title">
+        Workflow from sources to a published video, your steps on the left, the AI's on the right
+      </title>
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" style="fill: var(--muted-foreground)"></path>
+        </marker>
+      </defs>
+      <g style="font-weight: 600; font-size: 13px; fill: var(--muted-foreground); letter-spacing: 0.08em">
+        <text x={mid(true)} y="20" text-anchor="middle">YOU</text>
+        <text x={mid(false)} y="20" text-anchor="middle">AI AND CLIS</text>
+      </g>
+      <g style="fill: none; stroke: var(--muted-foreground); stroke-width: 1.5">
+        {edges.map((e) => <path d={e.d} marker-end="url(#arrow)" />)}
+        <path
+          d={`M${xOf(true)} ${yOf(back) + H / 2} H${LOOP} V${yOf(to) + H / 2} H${xOf(false) - 2}`}
+          stroke-dasharray="5 4"
+          marker-end="url(#arrow)"></path>
+      </g>
+      {
+        flow.map((s, i) => (
+          <g>
+            <rect
+              x={xOf(s.you)}
+              y={yOf(i)}
+              width={W}
+              height={H}
+              rx="8"
+              stroke-dasharray={s.planned ? '5 4' : undefined}
+              style={`fill: var(${s.you ? '--accent' : '--card'}); stroke: var(--border); stroke-width: 1.5`}
+            />
+            <text
+              x={xOf(s.you) + 12}
+              y={yOf(i) + 22}
+              style="font-size: 14px; font-weight: 600; fill: var(--foreground)"
+            >
+              {s.t}
+            </text>
+            {s.d.map((line, j) => (
+              <text
+                x={xOf(s.you) + 12}
+                y={yOf(i) + 41 + j * 15}
+                style="font-size: 11.5px; fill: var(--muted-foreground)"
+              >
+                {line}
+              </text>
+            ))}
+          </g>
+        ))
+      }
+      <g style="font-size: 12px; fill: var(--muted-foreground)">
+        {
+          edges.map(
+            (e, i) =>
+              e.label && (
+                <text x={mid(true) + 8} y={yOf(i + 1) - 15}>
+                  {e.label}
+                </text>
+              ),
+          )
+        }
+        <text x={LOOP + 6} y={yOf(to) + H / 2 - 6}>send back with notes</text>
+      </g>
+    </svg>
+  </section>
+
+  <p class={`mt-6 ${row}`}>
+    <svg class={ico} aria-hidden="true"><use href="#adm-board"></use></svg>
+    <a href={href('/production/')}>Production board</a>
+    <span class={small}>every video, who acts next, and the next step's command or prompt</span>
+  </p>
 
   {
     storyTopicNames().map((name) => (
@@ -62,9 +354,12 @@ const small = 'text-sm text-muted-foreground';
         <h2 id={`topic-${name}`} class="text-title font-semibold">
           {name}
         </h2>
-        <p class="mt-1">
+        <p class={`mt-1 ${row}`}>
+          <svg class={ico} aria-hidden="true">
+            <use href="#adm-ideas" />
+          </svg>
           <a href={href(`/${name}/stories/`)}>Story ideas</a>
-          <span class={small}>: the topic's story candidates and their evidence check</span>
+          <span class={small}>the topic's story candidates and their evidence check</span>
         </p>
         <ul class="mt-3 grid gap-3">
           {scripts
@@ -74,26 +369,35 @@ const small = 'text-sm text-muted-foreground';
                 <div class="font-medium">{d.title}</div>
                 <div class={`${small} font-mono text-xs`}>{d.slug}</div>
                 <ul class="mt-2 grid gap-1 text-sm">
-                  <li>
+                  <li class={row}>
+                    <svg class={ico} aria-hidden="true">
+                      <use href="#adm-script" />
+                    </svg>
                     <a href={href(`/${name}/scripts/${d.slug}/`)}>Script</a>
                   </li>
-                  <li>
+                  <li class={row}>
+                    <svg class={ico} aria-hidden="true">
+                      <use href="#adm-video" />
+                    </svg>
                     {d.pkg ? (
                       <>
-                        <a href={href(`/${name}/review/${d.slug}`)}>Review video</a>{' '}
-                        <span class={small}>({d.pkg.kind})</span>
+                        <a href={href(`/${name}/review/${d.slug}`)}>Review video</a>
+                        <span class={KIND[d.pkg.kind]}>{d.pkg.kind}</span>
                       </>
                     ) : (
                       <span class={small}>Review video: not packaged yet</span>
                     )}
                   </li>
                   {d.shorts.map((s) => (
-                    <li>
+                    <li class={row}>
+                      <svg class={ico} aria-hidden="true">
+                        <use href="#adm-short" />
+                      </svg>
                       {s.pkg ? (
-                        <>
+                        <span>
                           <a href={href(`/${name}/review/${d.slug}/shorts/${s.slug}`)}>Review Short: {s.pkg.title}</a>{' '}
-                          <span class={small}>({s.pkg.kind})</span>
-                        </>
+                          <span class={KIND[s.pkg.kind]}>{s.pkg.kind}</span>
+                        </span>
                       ) : (
                         <span class={small}>Review Short {s.slug}: not packaged yet</span>
                       )}
