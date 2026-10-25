@@ -15,7 +15,9 @@ sentence changes, not the evidence. The `<slug>` is the story id with `:` replac
   said what), the study passages and their roles, the gaps. A fact not in it does not go in the article.
 - **`script.json` is framing only:** which questions the video asks, in what order, what it already explained.
   Do not copy its sentences: the article is a new text for a reader. The validator warns
-  (`transcript-overlap`) when a section shares more than 30% of its 8-word runs with the narration.
+  (`transcript-overlap`) when a section shares more than 30% of its 8-word runs with the narration. Its
+  verified assertions (text, claims, evidence, calc, quote) may be reused as they are; its sentence wording may
+  not.
 - **`storyboard.json` is the list of figures:** each scene with a `visual.chart` can be shown by reference. Never
   copy its points into a figure; a table carries its own cited cells.
 
@@ -36,6 +38,11 @@ vaguer sentence. Add an entry to `generation.needsEvidence` and stop:
 
 A separate evidence agent records what decides it and rebuilds the package. When you revise against the rebuilt
 package, remove the field. If the gap could not be closed, say in the sentence that the evidence cannot answer.
+
+A limit that only a verdict note carries (no cited passage states it) cannot be stated as fact: narrow the
+sentence so it does not need the limit, or set `needsEvidence` when the article cannot stand without it. A
+conflict of interest or an affiliation goes in the article only when a cited passage carries it; otherwise leave
+it out, and do not stop for it.
 
 ## What an article adds
 
@@ -94,9 +101,18 @@ Prose sentences are typed and asserted exactly as in the script brief (`scripts/
   cited passage. `kind: "fact"` takes `study` evidence; `kind: "attribution"` takes `statement` evidence.
   `calc` for a derived figure, `quote` (with `speaker` when the text names one) for a quotation, as in a script.
 - **A claim no study has decided (the label Reported) is stated `attributed`, never `factual`** ("installers
-  say ...", "several videos claim ..."). The validator blocks a factual assertion no study verifies.
+  say ...", "several videos claim ..."). What the validator enforces is the assertion: a `kind: "fact"` on such
+  a claim has no study verdict to cite and blocks (`bad-reference` or `unsupported`); only `kind: "attribution"`
+  with `statement` evidence passes. The sentence `type` itself is the reviewer's to check.
+- **An assertion's `stance` agrees with the claim's verdict.** Asserting a claim the evidence judged wrong (or
+  denying one judged right) blocks as `contradicted`; state it with `"stance": "denies"`, or attribute it.
+- **Number words are figures** (`src/lib/numbers.ts`): "two", "one in", "fourteen percent" are checked like
+  digits. Keep them out of `hypothetical`, `rhetorical` and `transitional` sentences, which carry no figure.
+- **A quotation is one unbroken run:** `quote.text` must appear in the sentence word for word, not split around
+  an inserted clause.
 - `qualifications` on an assertion names where the article carries the limitation ("s14 says the savings are
-  modelled, not metered").
+  modelled, not metered"). Such an assertion still raises a `needs-qualification` warning: that is expected, the
+  reviewer retires it with a disposition, and you do not reword to clear it.
 - Sentence ids `s01`, `s02`, ... are unique across the article (the dek and description are `meta.dek` and
   `meta.description`), stay stable across revisions, and a deleted id is not reused.
 - Contextual evidence and AI guesses never support a fact. Two documents with `sameStudyAs` are one study.
@@ -128,16 +144,22 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
 - **Callouts.** A `qualification` callout names the claim it qualifies by its package id in `claim`. An
   `unresolved` callout names either a claim (`claim`) or a gap by its zero-based index in the package's
   `gaps` list (`gap`). The callout's sentences state the condition from the verdict note: under what conditions
-  the claim holds, or what is not known and why.
-- **Qualification coverage (blocking).** Every package claim whose label is Qualification (verdict `partly`) or
-  Unresolved (studied, not settled) must be named by a callout, or carried by an assertion on that claim with
-  `qualifications`. Every gap needs an `unresolved` callout naming it by `gap` (a `gap-coverage` warning otherwise, which only you
-  can close).
+  the claim holds, or what is not known and why. The callout type follows the claim's label (`findingLabel` in
+  `src/lib/finding-label.ts`): `qualification` for a Qualification (verdict `partly`), `unresolved` for an
+  Unresolved claim (decided by a study, but not `right` or `wrong` at verified confidence). The coverage check
+  accepts either type, so getting it right is yours. A factual sentence in a gap callout cites a study passage
+  that bears on the gap, never a context-only one.
+- **Qualification coverage (blocking).** Every package claim whose label is Qualification or Unresolved must be
+  named by a callout, or carried by an assertion on that claim with `qualifications`. Every gap needs an
+  `unresolved` callout naming it by `gap` (a `gap-coverage` warning otherwise, which only you can close).
 - **Tables.** Cells are `ChartPoint`s, checked by the storyboard's own point check: `value` a number, `unit`
   one of `percent`, `usd`, `count`, `ratio`, `display` the figure as the passage states it (it must state the
   value; for a ratio, "1 in 238" with value 238), `cite` a cite in the package whose passage holds every figure
   in `display` and in the cell's own `label`. Optional `qualifier`: `lt`, `lte`, `gt`, `gte`, `about`. A table
-  never holds a figure the passage does not; the row's `label` names the population and year.
+  never holds a figure the passage does not. The row's `label` names the population and year but is not checked
+  for figures, so put every figure in a cell's own `label` or `display`. There is no currency but `usd` and no
+  unit for years or a COP: as the storyboard does, pounds go under `usd` with a "£" display ("£120"), and years
+  or a COP under `count`.
 - **Figures.** `ref` is `<story-slug>/<scene-id>` of a storyboard scene that has a chart
   (`figuresOf` in `src/lib/article-validation.ts`); anything else blocks. The caption describes the chart and
   carries no figure of its own.
@@ -183,8 +205,9 @@ evidence, a misquote, a calculation that does not reproduce, `qualification-cove
 
 `npm run article -- show <topic> <story-id>` prints `article.md`: the article as a reader sees it, each sentence
 followed by `[<id> ok|review|BLOCKED fp=<fingerprint>]` (the state is left out for a verified sentence with no
-assertions), each callout led by `**qualification (<claim>):**` or `**unresolved (gap <n>):**`, each table rendered with its `display` values, then `## Open issues` with every
-issue not dispositioned, review findings included, and the reviewer's suggestions.
+assertions), each callout led by `**qualification (<claim>):**` or `**unresolved (gap <n>):**`, each table
+rendered with its `display` values, then `## Open issues` with every issue not dispositioned, review findings
+included, and the reviewer's suggestions.
 
 ## Revising
 
@@ -192,8 +215,9 @@ After review, read `npm run article -- show` and `article-validation.json` (open
 blocking finding: remove the assertion, narrow or qualify it, rewrite it as attributed, say the evidence is
 insufficient, or record that it needs research. Change only what the findings touch; bump `revision`; keep ids.
 A changed sentence loses its approval and is reviewed again. A pass has three revisions (`MAX_REVISIONS`) to
-clear its blocking findings: after that, with blockers still open, the article stays as it is with its blockers
-listed, and a person decides. A revision that only answers warnings is not limited. Never set
+clear its blocking findings, counted as `revision` minus `passStartRevision` (0 when absent). The first draft is
+revision 1, so in a first pass revision 3 is the last: if it still blocks, the limit is reached, the article
+stays as it is with its blockers listed, and a person decides. A revision that only answers warnings is not limited. Never set
 `passStartRevision` or `generation.corrective` yourself; a person or the run does, and a corrective pass
 changes only the sentences its entry lists.
 
