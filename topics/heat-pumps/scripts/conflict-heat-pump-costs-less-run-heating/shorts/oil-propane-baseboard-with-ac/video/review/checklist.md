@@ -1,6 +1,6 @@
 # Review checklist
 
-Oil, propane or electric heat, plus AC? A national model says 95 to 100 percent of homes save., private review build 2026-10-24.
+Oil, propane or electric heat, plus AC? A national model says 95 to 100 percent of homes save., private review build 2026-10-25.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?
