@@ -19,6 +19,17 @@
   --color-destructive: var(--destructive);
   --color-warning: var(--warning);
   --color-success: var(--success);
+  /* Verdict colours faded by confidence (VerdictBadge): mixed toward the muted grey that unknown verdicts use, not toward
+     transparent, so every step keeps text contrast (WCAG 1.4.3) and a lean reads close to unknown. */
+  --color-success-85: color-mix(in oklch, var(--success) 85%, var(--muted-foreground));
+  --color-success-70: color-mix(in oklch, var(--success) 70%, var(--muted-foreground));
+  --color-success-60: color-mix(in oklch, var(--success) 60%, var(--muted-foreground));
+  --color-warning-85: color-mix(in oklch, var(--warning) 85%, var(--muted-foreground));
+  --color-warning-70: color-mix(in oklch, var(--warning) 70%, var(--muted-foreground));
+  --color-warning-60: color-mix(in oklch, var(--warning) 60%, var(--muted-foreground));
+  --color-destructive-85: color-mix(in oklch, var(--destructive) 85%, var(--muted-foreground));
+  --color-destructive-70: color-mix(in oklch, var(--destructive) 70%, var(--muted-foreground));
+  --color-destructive-60: color-mix(in oklch, var(--destructive) 60%, var(--muted-foreground));
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
