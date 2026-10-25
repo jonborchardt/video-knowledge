@@ -20,6 +20,15 @@
           .padStart(2, '0'),
       )
       .join('');
+  // WCAG relative luminance and contrast ratio
+  const lum = (h) =>
+    hex(h)
+      .map((v) => ((v /= 255) <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
+      .reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+  const contrast = (a, b) => {
+    const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+    return (x + 0.05) / (y + 0.05);
+  };
   let uid = 0;
   const nid = (p) => p + ++uid;
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -116,10 +125,14 @@
     }
     const gold = (fill = k.ground) => seal('url(#g)', fill);
 
-    // Stamps: one ink by meaning, a rectangle where there is room and a circle where it is small.
+    // Stamps: one ink by meaning, a rectangle where there is room and a circle where it is small, on paper and on the
+    // brand's ground. On the ground, record and finding go in paper ink; amended and examination keep their meaning in
+    // a light red and a light slate while those clear 3:1 against the ground, else paper too.
+    const light = (want) => (contrast(want, k.ground) >= 3 ? want : k.paper);
     const STAMPS = {
       'stamp-record': {
         ink: RED,
+        dark: k.paper,
         big: 'PUBLIC RECORD',
         small: 'ENTERED INTO THE',
         ring: `ENTERED INTO THE PUBLIC RECORD · ${B.short.toUpperCase()} · `,
@@ -127,6 +140,7 @@
       },
       'stamp-finding': {
         ink: k.ground,
+        dark: k.paper,
         big: 'FINDING',
         small: `OF THE ${B.body.toUpperCase()}`,
         ring: `FINDING OF THE ${B.body.toUpperCase()} · `,
@@ -134,6 +148,7 @@
       },
       'stamp-amended': {
         ink: RED,
+        dark: light(mix(RED, '#ffffff', 0.45)),
         big: 'AMENDED',
         small: 'SEE ERRATUM · DATED',
         ring: 'AMENDED FINDING · ERRATUM ENTERED · ',
@@ -141,6 +156,7 @@
       },
       'stamp-examination': {
         ink: k.ink,
+        dark: light(mix(k.ink, '#ffffff', 0.6)),
         big: 'UNDER EXAMINATION',
         small: `MATTER BEFORE THE ${B.body.toUpperCase()}`,
         ring: 'UNDER EXAMINATION · EVIDENCE BEING WEIGHED · ',
@@ -162,7 +178,7 @@
         '</g>'
       );
     }
-    function stampRound(s, { ring, center, ink }, rot) {
+    function stampRound(s, { ring, center, ink }, rot, onInk = '#f6f1e6') {
       const r = s * 0.42,
         c = s / 2,
         a = nid('sr');
@@ -176,7 +192,7 @@
           c + r * 0.02,
           r * 0.24,
           center,
-          '#f6f1e6',
+          onInk,
           `${SERIF} text-anchor="middle" dominant-baseline="middle" font-weight="700" letter-spacing="3"`,
         ) +
         '</g>'
@@ -290,8 +306,11 @@
       ['stamp-amended', 800],
       ['stamp-examination', 1200],
     ]) {
-      add(slot, 'rect', w, 400, stampRect(w, 400, STAMPS[slot], -3));
-      add(slot, 'round', 400, 400, stampRound(400, STAMPS[slot], 6));
+      const dark = { ...STAMPS[slot], ink: STAMPS[slot].dark };
+      add(slot, 'rect-paper', w, 400, stampRect(w, 400, STAMPS[slot], -3));
+      add(slot, 'round-paper', 400, 400, stampRound(400, STAMPS[slot], 6));
+      add(slot, 'rect-ground', w, 400, stampRect(w, 400, dark, -3));
+      add(slot, 'round-ground', 400, 400, stampRound(400, dark, 6, k.ground));
     }
 
     // Headers and banners

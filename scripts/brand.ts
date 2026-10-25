@@ -3,9 +3,9 @@
 //   src/config/site.ts, every slot in brand/slots.json except templates, drawn by scripts/brand/draw.js from the brand's
 //   kit.json (palette, emblem, slogan). Text is fitted in the real fonts (brand/fonts) inside Remotion's headless Chrome,
 //   then each SVG is saved (committed) and rasterized to the PNG or JPG its slot names (gitignored, for uploads). Writes
-//   each kit's `assets` and the site's copies: share cards public/og/, seals public/commissions/, the favicon set and
-//   src/assets/logo.svg (the Commonwealth's small mark), and one inquiry card per public story (template og-inquiry,
-//   public/og/stories/). Re-run after changing a drawing, a kit or a story's question.
+//   each kit's `assets` and the site's copies: share cards public/og/, seals public/commissions/, stamps public/stamps/,
+//   the favicon set and src/assets/logo.svg (the Commonwealth's small mark), and one inquiry card per public story
+//   (template og-inquiry, public/og/stories/). Re-run after changing a drawing, a kit or a story's question.
 import { execFile } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -40,6 +40,12 @@ interface Asset {
 }
 
 const BRAND = join(ROOT, 'brand');
+// The stamps the site uses, copied per institution into public/stamps/<key>/ (src/components/Stamp.astro).
+const SITE_STAMPS = [
+  ['stamp-record', 'rect'],
+  ['stamp-finding', 'round'],
+  ['stamp-examination', 'round'],
+] as const;
 const slots = readJson<{ slots: Slot[] }>(join(BRAND, 'slots.json'))!.slots.filter((s) => !s.template);
 const FONTS = `
 @font-face { font-family: 'Libre Baskerville'; font-weight: 400 700; src: url('${pathToFileURL(join(BRAND, 'fonts/LibreBaskerville.woff2'))}'); }
@@ -122,6 +128,9 @@ const unescape = (s: string) =>
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&');
+/** The files a slot ships: one per form and ground (the stamps), per ground, per form, or one. */
+const keysOf = (s: Pick<Slot, 'grounds' | 'forms'>) =>
+  s.forms && s.grounds ? s.forms.flatMap((f) => s.grounds!.map((g) => `${f}-${g}`)) : (s.grounds ?? s.forms);
 const fileOf = (a: Asset) => `${a.slot}${a.key ? '-' + a.key : ''}`;
 const tmp = join(tmpdir(), `brand-kit-${process.pid}`); // per run: another checkout may be drawing too
 mkdirSync(tmp, { recursive: true });
@@ -181,7 +190,7 @@ for (const key of ['cor', ...Object.keys(commissions)]) {
   const recorded: Record<string, unknown> = {};
   for (const slot of slots) {
     const mine = assets.filter((a) => a.slot === slot.id);
-    const keys = slot.grounds ?? slot.forms;
+    const keys = keysOf(slot);
     if (!mine.length || (keys && keys.some((k) => !mine.find((a) => a.key === k))))
       throw new Error(`${key}: draw.js has no ${slot.id}`);
     recorded[slot.id] = keys
@@ -209,6 +218,16 @@ for (const key of ['cor', ...Object.keys(commissions)]) {
       .resize(256, 256)
       .png({ compressionLevel: 9 })
       .toFile(join(ROOT, 'public/commissions', `${key}.png`));
+    // the stamps the site shows (src/components/Stamp.astro), on paper and on the ground for dark mode
+    const stamps = join(ROOT, 'public/stamps', key);
+    rmSync(stamps, { recursive: true, force: true });
+    mkdirSync(stamps, { recursive: true });
+    for (const [slot, form] of SITE_STAMPS)
+      for (const g of ['paper', 'ground'])
+        await sharp(join(dir, `${slot}-${form}-${g}.png`))
+          .resize(form === 'rect' ? 480 : 200)
+          .png({ compressionLevel: 9 })
+          .toFile(join(stamps, `${slot}-${form}-${g}.png`));
   }
   console.log(`${key}: ${assets.length} files`);
 }

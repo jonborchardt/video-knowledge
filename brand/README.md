@@ -26,12 +26,13 @@ on its seal, lockups and banners; the closing card keeps the Commonwealth line).
   `og-default`, `cta-record`, `avatar`, `watermark`, ...): its group, pixel size, formats and use. A slot with `grounds`
   ships one file per background (`-paper`, `-ground`: the lockups, wordmark, one-colour seal and emboss, since which
   one a surface uses depends on it); a slot with `forms` one file per shape (the stamps: `-rect` where there is room,
-  `-round` where it is small). A `template` (the per-inquiry share card) is drawn per use, not exported.
+  `-round` where it is small), each on both grounds (`<slot>-<form>-paper`, `-ground`). A `template` (the per-inquiry share card) is drawn per use, not exported.
 - `<brand>/kit.json` is the brand's manifest: `palette` (`ground`, `accent`, `paper`, `ink`), `emblem`, `slogan`, and
   `assets` mapping each slot to its SVG (`file`, or `files` by ground or form). The folder name is the brand key: `cor`
   for the Commonwealth, otherwise the key in `commissions` (`src/config/site.ts`). Stamp inks are fixed by meaning,
   the same in every brand: red for the official acts (recorded, amended), the brand's ground for a finding, slate for
-  a matter under examination.
+  a matter under examination. On the ground, record and finding go in paper ink, and amended and examination in a
+  light red and a light slate (paper where those fall under 3:1 against the brand's ground).
 - `npm run brand` writes every kit: `scripts/brand/draw.js` draws each slot from the kit and the names in
   `src/config/site.ts`, Remotion's headless Chrome fits the text in the real fonts (`fonts/`, OFL), and the script
   saves `<slot>.svg` (committed) and the PNG or JPG its slot names (gitignored; run it to get files to upload), plus the
@@ -48,7 +49,9 @@ Where the kit is used:
   (`public/og/stories/<topic>/<story slug>.jpg`; `brand/og-inquiry.json` records the questions drawn, and the kit test
   fails when one has changed since); the favicon set and the header logo are the Commonwealth's `mark-small`; an
   institution's `seal` (`public/commissions/<key>.png`) stands beside its name on the home page, About, and its
-  commission, topic and story pages.
+  commission, topic and story pages; its stamps (`public/stamps/<key>/`, `src/components/Stamp.astro`, paper ink
+  swapped for ground ink in dark mode) close a topic page and a ready story page (record), mark the topic's finding,
+  and mark a story still under examination.
 - **Video**: every render copies the story's institution's kit into the video folder's `brand/` (`src/video/brand.ts`,
   gitignored), so a scene loads a slot with `staticFile('brand/<slot>.png')`. A landscape video of a published topic ends on
   an unnarrated scene `end` (kind `close-card`, appended by `src/video/timeline.ts`): the kit's `close-card` for 4 s,

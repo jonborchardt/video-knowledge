@@ -1,0 +1,20 @@
+---
+// One of the institution's stamps from its brand kit (public/stamps/<key>/, written by npm run brand): the paper ink,
+// swapped for the ground ink in dark mode. Decorative: the words beside it say the same, and a stamp never claims more
+// than the verdicts do (brand/charter.md 2.2).
+import { href } from '../lib/url';
+
+interface Props {
+  brand: string; // commission key
+  slot: 'stamp-record' | 'stamp-finding' | 'stamp-examination';
+  form: 'rect' | 'round';
+  class?: string;
+}
+const { brand, slot, form, class: cls = '' } = Astro.props;
+const src = (g: string) => href(`/stamps/${brand}/${slot}-${form}-${g}.png`);
+const [w, h] =
+  form === 'rect' ? [480, slot === 'stamp-record' || slot === 'stamp-examination' ? 160 : 240] : [200, 200];
+---
+
+<img class:list={[cls, 'dark:hidden']} src={src('paper')} alt="" width={w} height={h} loading="lazy" />
+<img class:list={[cls, 'hidden dark:block']} src={src('ground')} alt="" width={w} height={h} loading="lazy" />

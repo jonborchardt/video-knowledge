@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
+import Stamp from '../../components/Stamp.astro';
 import { type Commission, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
@@ -50,7 +51,14 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
         <a class={eyebrowLink} href={href('/')}>{site.name}</a> ·{' '}
         <a class={eyebrowLink} href={commissionHref(commission)}>{commission.ceremonialName}</a>
       </div>
-      <div class="eyebrow text-gold">{s.readiness === 'ready' ? 'Matter' : 'Matter under examination'}</div>
+      <div class="flex items-center gap-3">
+        <div class="eyebrow text-gold">{s.readiness === 'ready' ? 'Matter' : 'Matter under examination'}</div>
+        {
+          s.readiness !== 'ready' && (
+            <Stamp brand={commissionKey(commission)} slot="stamp-examination" form="round" class="size-14" />
+          )
+        }
+      </div>
     </div>
     <h1 class="text-display font-bold text-balance">{s.title}</h1>
     <p class="max-w-prose text-lg text-muted-foreground">{s.question}</p>
@@ -132,12 +140,21 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
     )
   }
 
-  <footer class="grid gap-2 border-y-4 border-double py-5 text-sm text-muted-foreground">
-    <div class="eyebrow text-gold">Entered into the Public Record</div>
-    <p class="font-heading text-[1.05rem] text-foreground">The matter is before the {body}.</p>
-    <p class="max-w-prose">
-      Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed.
-      Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
-    </p>
+  <footer
+    class="flex flex-wrap items-center justify-between gap-4 border-y-4 border-double py-5 text-sm text-muted-foreground"
+  >
+    <div class="grid gap-2">
+      <div class="eyebrow text-gold">Entered into the Public Record</div>
+      <p class="font-heading text-[1.05rem] text-foreground">The matter is before the {body}.</p>
+      <p class="max-w-prose">
+        Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed.
+        Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
+      </p>
+    </div>
+    {
+      s.readiness === 'ready' && (
+        <Stamp brand={commissionKey(commission)} slot="stamp-record" form="rect" class="w-44 shrink-0 sm:w-52" />
+      )
+    }
   </footer>
 </Base>
