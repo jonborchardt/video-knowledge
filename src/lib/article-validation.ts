@@ -87,8 +87,17 @@ export function articleIssues(
   if (!a.meta.dek.text.trim()) out.push(issue('meta.dek', 'metadata', 'blocking', 'the dek is empty'));
 
   const URL = /https?:\/\/|www\./i;
-  for (const s of all)
-    if (URL.test(s.text)) out.push(issue(s.id, 'no-url', 'blocking', 'a URL in the prose; links come from cites'));
+  const shown: [string, string][] = [
+    ...all.map((s): [string, string] => [s.id, s.text]),
+    ['meta.headline', a.meta.headline],
+    ['meta.seoTitle', a.meta.seoTitle],
+    ...a.sections.map((x): [string, string] => ['-', x.heading]),
+    ...blocks.flatMap((b): [string, string][] =>
+      b.kind === 'prose' ? [] : [[b.kind === 'table' ? b.id : b.ref, b.caption]],
+    ),
+  ];
+  for (const [id, text] of shown)
+    if (URL.test(text)) out.push(issue(id, 'no-url', 'blocking', 'a URL in the article; links come from cites'));
 
   const known = new Set(pkg.documents.flatMap((d) => d.cites));
   for (const b of blocks) {
@@ -105,7 +114,7 @@ export function articleIssues(
               ),
             );
     if (b.kind === 'figure' && !opts.figures.has(b.ref))
-      out.push(issue('-', 'figure', 'blocking', `figure ${b.ref} is not a chart this story has`));
+      out.push(issue(b.ref, 'figure', 'blocking', `figure ${b.ref} is not a chart this story has`));
   }
 
   // Prose that reads the narration back: keyed on the section's first sentence, so a reviewer can disposition it.
@@ -141,19 +150,28 @@ export function validateArticle(
   a: Article,
   t: Corpus,
   read: PassageReader,
-  opts: ValidateOptions & { script: Script | null; figures: Set<string> },
+  opts: ValidateOptions & { pkg: EvidencePackage; script: Script | null; figures: Set<string> },
 ): ScriptValidation {
   const script = articleAsScript(a);
   const v = validateScript(script, t, read, { ...opts, pacing: false });
-  const own = opts.pkg ? articleIssues(a, opts.pkg, read, opts) : [];
+  const own = articleIssues(a, opts.pkg, read, opts);
   // Dispositions as validateScript applies them: a current review retires a warning at the sentence's fingerprint.
   const review = opts.review ?? null;
-  const current = !!review && (!opts.pkg || review.packageFingerprint === opts.pkg.fingerprint);
+  const current = !!review && review.packageFingerprint === opts.pkg.fingerprint;
   const prints = new Map(articleSentences(a).map((s) => [s.id, sentenceFingerprint(s)]));
   for (const i of own) {
     const d = [review?.dispositions?.[i.sentence] ?? []].flat().find((x) => x.category === i.category);
     if (current && i.severity === 'warning' && d && d.fingerprint === prints.get(i.sentence)) i.disposition = d.reason;
   }
+  // An issue on a sentence joins that sentence's result; a blocking one blocks it, as validateScript's rule does.
+  const results = v.sentences.map((r) => {
+    const mine = own.filter((i) => i.sentence === r.id);
+    if (!mine.some((i) => i.severity === 'blocking')) return mine.length ? { ...r, issues: [...r.issues, ...mine] } : r;
+    const assertions = r.assertions.map((x) =>
+      x.status === 'verified' ? { ...x, status: 'needs-review' as const } : x,
+    );
+    return { ...r, issues: [...r.issues, ...mine], status: 'blocked' as const, assertions };
+  });
   const issues = [...v.issues, ...own].sort((x, y) => RANK.indexOf(x.severity) - RANK.indexOf(y.severity));
   const blocking = issues.filter((x) => x.severity === 'blocking').length;
   const warnings = issues.filter((x) => x.severity === 'warning' && !x.disposition).length;
@@ -162,7 +180,14 @@ export function validateArticle(
     ...v,
     status,
     issues,
-    counts: { ...v.counts, blocking, warnings, dispositioned: issues.filter((x) => x.disposition).length },
+    sentences: results,
+    counts: {
+      ...v.counts,
+      verified: results.reduce((n, s) => n + s.assertions.filter((x) => x.status === 'verified').length, 0),
+      blocking,
+      warnings,
+      dispositioned: issues.filter((x) => x.disposition).length,
+    },
     history: [...v.history.slice(0, -1), { ...v.history[v.history.length - 1], status, blocking, warnings }],
     revisionLimitReached:
       status === 'blocked' &&

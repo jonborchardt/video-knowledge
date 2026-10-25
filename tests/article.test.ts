@@ -85,7 +85,9 @@ describe('article validation', () => {
     const a = article();
     const v = check(a, { review: approveArticle(a) }, { name: corpus().name, claims: [guessed, rental()] });
     expect(v.status).toBe('blocked');
-    expect(v.issues.some((i) => i.sentence === 's02' && i.severity === 'blocking')).toBe(true);
+    expect(v.issues.filter((i) => i.sentence === 's02' && i.severity === 'blocking').map((i) => i.category)).toEqual([
+      'bad-reference',
+    ]);
   });
   it('an uncovered qualification blocks; a callout naming the claim clears it', () => {
     const q = structuredClone(pkg());
@@ -118,6 +120,19 @@ describe('article validation', () => {
   it('a URL in prose blocks', () => {
     expect(cats(check(withBlock(prose('s04', 'For more, see https://example.com today.'))))).toContain('no-url');
   });
+  it('a URL in the headline, a heading or a caption blocks too', () => {
+    const urls = (a: Article) =>
+      check(a)
+        .issues.filter((i) => i.category === 'no-url')
+        .map((i) => i.sentence);
+    const a = article();
+    expect(urls({ ...a, meta: { ...a.meta, headline: 'Read www.example.com' } })).toEqual(['meta.headline']);
+    expect(urls({ ...a, meta: { ...a.meta, seoTitle: 'http://x.org' } })).toEqual(['meta.seoTitle']);
+    const h = structuredClone(a);
+    h.sections[0].heading = 'See https://x.org';
+    expect(urls(h)).toEqual(['-']);
+    expect(urls(withBlock({ kind: 'figure', ref: 'x/sc01', caption: 'from www.x.org' }))).toEqual(['x/sc01']);
+  });
   it('a table cell whose display does not state its value blocks', () => {
     const table = (cite: string, display: string): Block => ({
       kind: 'table',
@@ -140,7 +155,8 @@ describe('article validation', () => {
   });
   it('a figure must name a chart the story has', () => {
     const a = withBlock({ kind: 'figure', ref: 'x/sc99', caption: 'c' });
-    expect(cats(check(a, { figures: new Set(['x/sc01']) }))).toContain('figure');
+    const v = check(a, { figures: new Set(['x/sc01']) });
+    expect(v.issues.filter((i) => i.category === 'figure').map((i) => i.sentence)).toEqual(['x/sc99']);
     expect(cats(check(a, { figures: new Set(['x/sc99']) }))).not.toContain('figure');
   });
   it('figuresOf lists the storyboard scenes that draw a chart', { timeout: 5000 }, () => {
@@ -190,5 +206,10 @@ describe('article validation', () => {
     expect(v.counts.blocking).toBe(1);
     expect(v.history.at(-1)).toMatchObject({ status: 'blocked', blocking: 1 });
     expect(v.revisionLimitReached).toBe(true);
+    // the sentence carrying the URL is blocked, not verified, though the reviewer approved it
+    const s04 = v.sentences.find((s) => s.id === 's04')!;
+    expect(s04.status).toBe('blocked');
+    expect(s04.issues.map((i) => i.category)).toContain('no-url');
+    expect(v.sentences.find((s) => s.id === 's02')!.status).toBe('verified');
   });
 });
