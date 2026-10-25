@@ -1,7 +1,7 @@
 ---
 // A released companion article (src/lib/article-view.ts): its corrections and any revised finding first, the prose
 // with numbered source marks, tables, figures drawn as charts with their data tables, then the sources the marks point at.
-import type { ArticleView, FigureDraw } from '../lib/article-view';
+import type { ArticleView } from '../lib/article-view';
 import { FINDING_TEXT } from '../lib/finding-label';
 import Chart from './Chart.astro';
 import DataTableView from './DataTableView.astro';
@@ -10,13 +10,6 @@ interface Props {
   view: ArticleView;
 }
 const { view: v } = Astro.props;
-// A dataset figure charts its first column; the full table sits above the chart.
-const chartOf = (d: FigureDraw) =>
-  d.chart ?? {
-    type: 'bar' as const,
-    title: `${d.table!.title}: ${d.table!.columns[0].label}`,
-    points: d.table!.rows.map((r) => ({ ...r.cells[0], label: r.label })),
-  };
 const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
 ---
 
@@ -86,7 +79,9 @@ const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
             return b.draw ? (
               <>
                 {b.draw.table && <DataTableView table={b.draw.table} />}
-                <Chart spec={chartOf(b.draw)} caption={b.caption} source={b.draw.source} />
+                {b.draw.chart && (
+                  <Chart spec={b.draw.chart} caption={b.caption} source={b.draw.source} table={!b.draw.table} />
+                )}
               </>
             ) : (
               <p class="max-w-prose text-sm text-muted-foreground">{b.caption}</p>

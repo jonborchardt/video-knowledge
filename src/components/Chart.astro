@@ -8,8 +8,9 @@ interface Props {
   spec: ChartSpec;
   caption: string;
   source: string;
+  table?: boolean; // false when the page already carries the data as a table
 }
-const { spec, caption, source } = Astro.props;
+const { spec, caption, source, table = true } = Astro.props;
 const drawn =
   spec.type === 'bar' || spec.type === 'stacked-bar' || spec.type === 'dot-plot' || spec.type === 'stat-tiles';
 const ROW = spec.type === 'stat-tiles' ? 64 : 40;
@@ -63,27 +64,33 @@ const label = `${title}: ${spec.points.map((p) => `${p.label} ${p.display}`).joi
       </svg>
     )
   }
-  <details class="mt-1 text-sm">
-    <summary class="cursor-pointer py-1">The figures as a table</summary>
-    <table class="w-full border-collapse">
-      <thead>
-        <tr class="border-b text-left text-muted-foreground">
-          <th scope="col" class="py-1 pr-4 font-medium">Measure</th>
-          <th scope="col" class="py-1 pr-4 font-medium">{spec.title ?? 'Value'}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          spec.points.map((p) => (
-            <tr class="border-b">
-              <th scope="row" class="py-1 pr-4 text-left font-normal">
-                {p.label}
+  {
+    table && (
+      <details class="mt-1 text-sm">
+        <summary class="cursor-pointer py-1">The figures as a table</summary>
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="border-b text-left text-muted-foreground">
+              <th scope="col" class="py-1 pr-4 font-medium">
+                Measure
               </th>
-              <td class="py-1 pr-4 font-mono tabular-nums">{p.display}</td>
+              <th scope="col" class="py-1 pr-4 font-medium">
+                {spec.title ?? 'Value'}
+              </th>
             </tr>
-          ))
-        }
-      </tbody>
-    </table>
-  </details>
+          </thead>
+          <tbody>
+            {spec.points.map((p) => (
+              <tr class="border-b">
+                <th scope="row" class="py-1 pr-4 text-left font-normal">
+                  {p.label}
+                </th>
+                <td class="py-1 pr-4 font-mono tabular-nums">{p.display}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </details>
+    )
+  }
 </figure>

@@ -12,7 +12,7 @@ import VideoEmbed from '../../components/VideoEmbed.astro';
 import ArticleBody from '../../components/ArticleBody.astro';
 import { loadArticleRelease } from '../../lib/article';
 import { articleView, type FigureDraw } from '../../lib/article-view';
-import { chartProblems } from '../../lib/chart-geometry';
+import { chartProblems, datasetChart } from '../../lib/chart-geometry';
 import { dataRef, loadDatasets } from '../../lib/datasets';
 import { FILES } from '../../lib/script';
 import type { Storyboard } from '../../lib/storyboard';
@@ -75,8 +75,12 @@ for (const b of release?.article.sections.flatMap((x) => x.blocks) ?? []) {
   if (b.kind !== 'figure') continue;
   const table = datasets.find((d) => dataRef(t.name, d.id) === b.ref);
   if (table) {
+    const chart = datasetChart(table);
+    const problems = chart ? chartProblems(chart) : [];
+    if (problems.length) throw new Error(`figure ${b.ref}: ${problems.join('; ')}`);
     figures.set(b.ref, {
       table,
+      ...(chart && { chart }),
       source: `${sourceOf(table.rows.flatMap((r) => r.cells.map((c) => c.cite)))} (${table.asOf})`,
     });
     continue;

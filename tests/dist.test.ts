@@ -5,7 +5,10 @@ import { describe, expect, it } from 'vitest';
 import { author, commissions, site } from '../src/config/site';
 import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
 import { loadArticleRelease } from '../src/lib/article';
-import { ROOT } from '../src/lib/io';
+import { datasetChart } from '../src/lib/chart-geometry';
+import { dataRef, loadDatasets } from '../src/lib/datasets';
+import { ROOT, readJson, topicDir } from '../src/lib/io';
+import type { Storyboard } from '../src/lib/storyboard';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames, topicNames } from '../src/lib/topics';
 
@@ -149,13 +152,26 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       if (!figures.length) continue;
       const html = decode(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8'));
       const charts = html.match(/<figure[^>]*>[\s\S]*?<\/figure>/g) ?? [];
-      expect(charts, `${topic}/${slug}`).toHaveLength(figures.length);
-      for (const c of charts) {
-        expect(c).toMatch(/<svg[^>]*role="img"[^>]*aria-label="[^"]+"/);
-        expect(c).toMatch(/<details[\s\S]*<table[\s\S]*<td/);
+      // what each figure draws: a storyboard chart, or a dataset's chart when one fits
+      const specs = figures.flatMap((f) => {
+        const d = loadDatasets(topic).find((x) => dataRef(topic, x.id) === f.ref);
+        const [sl, scene] = f.ref.split('/');
+        const sb = readJson<Storyboard>(join(topicDir(topic), 'scripts', sl, 'storyboard.json'));
+        const spec = d ? datasetChart(d) : sb?.scenes.find((x) => x.id === scene)?.visual.chart;
+        return spec ? [{ spec, data: !!d }] : [];
+      });
+      expect(charts, `${topic}/${slug}`).toHaveLength(specs.length);
+      specs.forEach(({ spec, data }, i) => {
+        const c = charts[i];
+        if (['bar', 'stacked-bar', 'dot-plot', 'stat-tiles'].includes(spec.type))
+          expect(c).toMatch(/<svg[^>]*role="img"[^>]*aria-label="[^"]+"/);
+        else expect(c).not.toContain('<svg');
+        if (data)
+          expect(c).not.toContain('<details'); // the dataset's own table carries the data
+        else expect(c).toMatch(/<details[\s\S]*<table[\s\S]*<td/);
         expect(c).toContain('Source:');
         drawn++;
-      }
+      });
     }
     expect(drawn).toBeGreaterThan(0);
   });

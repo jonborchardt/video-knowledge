@@ -1,4 +1,5 @@
 // Static charts for the site: the problems that make a chart misleading, and the bars a horizontal chart draws.
+import type { DataTable } from './datasets';
 import type { ChartPoint, ChartSpec } from './storyboard';
 
 export interface Bar {
@@ -33,4 +34,12 @@ export function barGeometry(points: ChartPoint[], width: number, height: number)
     w: max > 0 ? (Math.max(p.value, 0) / max) * width : 0,
     h: row * 0.5,
   }));
+}
+
+/** A dataset as a bar chart where one fits: a single column whose cells share one unit; otherwise null. */
+export function datasetChart(d: DataTable): ChartSpec | null {
+  if (d.columns.length !== 1 || !d.rows.length) return null;
+  const points = d.rows.map((r) => ({ ...r.cells[0], label: r.label }));
+  if (new Set(points.map((p) => p.unit)).size !== 1) return null;
+  return { type: 'bar', title: `${d.title}: ${d.columns[0].label}`, points };
 }
