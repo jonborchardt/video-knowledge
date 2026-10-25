@@ -22,7 +22,7 @@ export function loadDatasets(topic: string, root = ROOT): DataTable[] {
   if (!existsSync(dir)) return [];
   return readdirSync(dir)
     .filter((f) => f.endsWith('.json'))
-    .map((f) => readJson<DataTable>(join(dir, f)))
+    .map((f) => readJson<DataTable>(join(dir, f))!)
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 

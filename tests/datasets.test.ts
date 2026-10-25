@@ -51,3 +51,11 @@ describe('datasets', () => {
     }
   });
 });
+
+describe('heat-pumps datasets', () => {
+  it('state-prices carries the U.S. row as the source prints it', () => {
+    const d = loadDatasets('heat-pumps').find((x) => x.id === 'state-prices')!;
+    expect(d.rows[0].label).toBe('U.S.');
+    expect(d.rows[0].cells.map((c) => c.value)).toEqual([48.3, 14, 3.45, 3.28, 2.76]);
+  });
+});
