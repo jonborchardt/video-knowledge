@@ -7,8 +7,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
 import { openBrowser, renderMedia, renderStill, selectComposition } from '@remotion/renderer';
-import { sha } from '../lib/io';
-import { stageBrand } from './brand';
+import { ROOT, sha } from '../lib/io';
+import { brandKey, stageBrand } from './brand';
 import { ALL_KINDS } from './kinds';
 import { COMPOSITION, CONTACT } from './remotion/Root';
 import type { Timeline, TimelineScene } from './types';
@@ -91,6 +91,15 @@ export const sceneKey = (s: TimelineScene, tl: Timeline) =>
       h: tl.height,
       short: tl.short ?? null, // the frame and the end card draw the institution and the question
       code: rendererVersion(s.kind),
+      // the end scene draws the kit's cards, so a redrawn kit re-renders it (the committed SVGs, not the rasters);
+      // absent elsewhere, so no other scene's key moves
+      ...(s.kind === 'close-card'
+        ? {
+            kit: ['close-card', 'endscreen-subscribe'].map((f) =>
+              sha(readFileSync(join(ROOT, 'brand', brandKey(tl.topic), `${f}.svg`), 'utf8')),
+            ),
+          }
+        : {}),
     }),
   );
 

@@ -24,6 +24,11 @@ export type SegmentCore = Pick<
   'scenes' | 'sentences' | 'config' | 'fingerprints' | 'script' | 'storyboard' | 'pkg'
 >;
 
+/** The appended end scene: the close card for CLOSE_SECONDS, then the end screen to END_SECONDS. */
+export const END_SCENE = 'end';
+const CLOSE_SECONDS = 4;
+const END_SECONDS = 16;
+
 export function buildTimeline(
   seg: SegmentCore,
   manifest: NarrationManifest,
@@ -104,6 +109,29 @@ export function buildTimeline(
     };
   });
   const short = seg.pkg.short;
+  // A landscape video whose story has a companion page (its topic is published) ends on the institution's close card,
+  // then its end-screen card for YouTube's end-screen elements (5 to 20 s); a range render that stops early has none.
+  const last = seg.storyboard.scenes.at(-1)?.id;
+  if (!short && commissionOf(seg.script.topic) && seg.scenes.at(-1)?.scene.id === last) {
+    const start = cursor;
+    cursor += f(END_SECONDS);
+    scenes.push({
+      id: END_SCENE,
+      order: scenes.length + 1,
+      category: 'typography',
+      kind: 'close-card',
+      start,
+      duration: cursor - start,
+      sentences: [],
+      cues: {},
+      onScreenText: [],
+      chart: null,
+      excerpt: null,
+      citations: [],
+      assets: [],
+      options: { closeFrames: f(CLOSE_SECONDS) },
+    });
+  }
   return {
     topic: seg.script.topic,
     story: seg.script.story,

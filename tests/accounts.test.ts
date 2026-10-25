@@ -7,6 +7,8 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { commissions, site } from '../src/config/site';
 import { readJson, ROOT } from '../src/lib/io';
+import { loadStories, storyUrlSlug } from '../src/lib/stories';
+import { publicTopicNames } from '../src/lib/topics';
 
 interface Kit {
   brand: string;
@@ -53,7 +55,12 @@ describe('brand kits', () => {
         expect(slots.has(slot), `unknown slot ${slot}`).toBe(true);
         expect(STATUS).toContain(a.status);
         // A slot that ships on several grounds lists one file per ground; any other slot lists one file.
-        const keys = slots.get(slot)?.grounds ?? slots.get(slot)?.forms;
+        // (a stamp has both: one per form and ground, `<form>-<ground>`)
+        const sl = slots.get(slot);
+        const keys =
+          sl?.forms && sl.grounds
+            ? sl.forms.flatMap((f) => sl.grounds!.map((g) => `${f}-${g}`))
+            : (sl?.grounds ?? sl?.forms);
         const files = keys ? keys.map((g) => a.files?.[g]) : [a.file];
         for (const f of files) expect(f && existsSync(join(BRAND, b, f)), `${slot}: ${f}`).toBe(true);
       }
@@ -62,6 +69,11 @@ describe('brand kits', () => {
         if (!s.template) expect(kit.assets[id], `${b} has no ${id}: run npm run brand`).toBeDefined();
       if (b !== 'cor')
         expect(existsSync(join(ROOT, 'public/commissions', `${b}.png`)), `public/commissions/${b}.png`).toBe(true);
+      // the site's stamps (src/components/Stamp.astro), in paper and ground ink
+      if (b !== 'cor')
+        for (const f of ['stamp-record-rect', 'stamp-finding-round', 'stamp-examination-round'])
+          for (const g of ['paper', 'ground'])
+            expect(existsSync(join(ROOT, 'public/stamps', b, `${f}-${g}.png`)), `${b}: ${f}-${g}`).toBe(true);
 
       const acc = readJson<{ commission: string; accounts: Record<string, Account> }>(join(BRAND, b, 'accounts.json'));
       const c = commissions[b];
@@ -84,4 +96,16 @@ describe('brand kits', () => {
       }
     });
   }
+
+  it('every public story has an inquiry card drawn from its current question', () => {
+    const want = Object.fromEntries(
+      publicTopicNames().flatMap((topic) =>
+        (loadStories(topic)?.stories ?? []).map((s) => [`${topic}/${storyUrlSlug(s)}`, s.question]),
+      ),
+    );
+    // brand/og-inquiry.json is what `npm run brand` drew; a changed or new question needs a re-run
+    expect(readJson(join(BRAND, 'og-inquiry.json')), 'stale inquiry cards: run npm run brand').toEqual(want);
+    for (const card of Object.keys(want))
+      expect(existsSync(join(ROOT, 'public/og/stories', `${card}.jpg`)), card).toBe(true);
+  });
 });

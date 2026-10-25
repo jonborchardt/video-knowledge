@@ -409,6 +409,15 @@ describe('music contract', () => {
     expect(anchorSeconds('sc03+100', 'end', tl)).toBe(30); // clamped to the timeline
     expect(() => anchorSeconds('sc99', 'start', tl)).toThrow(/not in the timeline/);
   });
+  it('runs a cue that ends with the narration on under the appended end scene', () => {
+    const last = tl.scenes.at(-1)!;
+    const end = { ...last, id: 'end', kind: 'close-card' as const, start: 900, duration: 480, sentences: [] };
+    const withEnd: Timeline = { ...tl, durationInFrames: 1380, scenes: [...tl.scenes, end] };
+    expect(anchorSeconds('sc03', 'end', withEnd)).toBe(46);
+    expect(anchorSeconds('sc03:end-2', 'end', withEnd)).toBe(28); // an offset is deliberate: kept
+    expect(anchorSeconds('sc02', 'end', withEnd)).toBe(20);
+    expect(anchorSeconds('sc03:end', 'start', withEnd)).toBe(30); // a `from` never moves
+  });
 
   it('resolves cues against the compositions with the variation defaults', () => {
     const cues = resolveCues(cfg(), tl, root);

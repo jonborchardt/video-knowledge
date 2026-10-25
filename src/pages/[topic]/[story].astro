@@ -2,12 +2,16 @@
 // One matter before an institution: a story from topics/<topic>/stories.json as its own page. The viewer-facing
 // parts of the candidate (title, question, tension, premise, takeaway) and the claims it turns on, each with its
 // verdict and sources from the inquiry. A chain lists its follow-up questions; a follow-up points at its first question.
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
+import Stamp from '../../components/Stamp.astro';
 import { type Commission, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
+import { ROOT } from '../../lib/io';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
@@ -27,9 +31,12 @@ const body = ['Commission', 'Bureau', 'Office', 'Society'].find((w) => commissio
 const h2 = 'mb-3 text-featured font-bold';
 const eyebrowLink = 'text-muted-foreground no-underline hover:underline';
 const commissionHref = (c: Commission) => href(`/commissions/${commissionKey(c)}/`);
+// The story's own share card (npm run brand), else its institution's.
+const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
+const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 ---
 
-<Base title={`${s.title} · ${commission.name}`} description={s.question} image={`/og/${commissionKey(commission)}.jpg`}>
+<Base title={`${s.title} · ${commission.name}`} description={s.question} image={image}>
   <SourceIcons />
   <header class="grid gap-4 border-y-4 border-double py-5">
     <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
@@ -44,7 +51,14 @@ const commissionHref = (c: Commission) => href(`/commissions/${commissionKey(c)}
         <a class={eyebrowLink} href={href('/')}>{site.name}</a> ·{' '}
         <a class={eyebrowLink} href={commissionHref(commission)}>{commission.ceremonialName}</a>
       </div>
-      <div class="eyebrow text-gold">{s.readiness === 'ready' ? 'Matter' : 'Matter under examination'}</div>
+      <div class="flex items-center gap-3">
+        <div class="eyebrow text-gold">{s.readiness === 'ready' ? 'Matter' : 'Matter under examination'}</div>
+        {
+          s.readiness !== 'ready' && (
+            <Stamp brand={commissionKey(commission)} slot="stamp-examination" form="round" class="size-14" />
+          )
+        }
+      </div>
     </div>
     <h1 class="text-display font-bold text-balance">{s.title}</h1>
     <p class="max-w-prose text-lg text-muted-foreground">{s.question}</p>
@@ -126,12 +140,21 @@ const commissionHref = (c: Commission) => href(`/commissions/${commissionKey(c)}
     )
   }
 
-  <footer class="grid gap-2 border-y-4 border-double py-5 text-sm text-muted-foreground">
-    <div class="eyebrow text-gold">Entered into the Public Record</div>
-    <p class="font-heading text-[1.05rem] text-foreground">The matter is before the {body}.</p>
-    <p class="max-w-prose">
-      Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed.
-      Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
-    </p>
+  <footer
+    class="flex flex-wrap items-center justify-between gap-4 border-y-4 border-double py-5 text-sm text-muted-foreground"
+  >
+    <div class="grid gap-2">
+      <div class="eyebrow text-gold">Entered into the Public Record</div>
+      <p class="font-heading text-[1.05rem] text-foreground">The matter is before the {body}.</p>
+      <p class="max-w-prose">
+        Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed.
+        Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
+      </p>
+    </div>
+    {
+      s.readiness === 'ready' && (
+        <Stamp brand={commissionKey(commission)} slot="stamp-record" form="rect" class="w-44 shrink-0 sm:w-52" />
+      )
+    }
   </footer>
 </Base>

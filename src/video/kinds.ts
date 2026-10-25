@@ -64,6 +64,8 @@ export const GENERIC = {
   'trick-vs-document': { component: 'TrickVsDocument', accepts: ['diagram'] }, // the claim beside what its document says
   'fine-print': { component: 'FinePrint', accepts: ['animation'] }, // a push into a document's fine print
   waterfall: { component: 'Waterfall', accepts: ['diagram'] }, // paid out, then costs, then what is kept
+  // never a storyboard scene's: the timeline appends it after the last one (the close card, then the end screen)
+  'close-card': { component: 'CloseCard', accepts: [] },
 } as const satisfies Record<string, KindSpec>;
 
 /** The vertical kinds a Short (a package with a `short` block) draws with: the same inference over a smaller, portrait

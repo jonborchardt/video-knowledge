@@ -1,4 +1,4 @@
-/* global window */
+/* global window, document */
 // The brand kit's drawings: one design per slot in brand/slots.json, the same for the Commonwealth and every institution,
 // drawn from the brand's kit.json (palette, emblem, slogan) and its names in src/config/site.ts. Runs in the browser
 // that scripts/brand.ts opens, so text is measured in the real fonts (fitText) before the SVGs are saved.
@@ -20,6 +20,15 @@
           .padStart(2, '0'),
       )
       .join('');
+  // WCAG relative luminance and contrast ratio
+  const lum = (h) =>
+    hex(h)
+      .map((v) => ((v /= 255) <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4))
+      .reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+  const contrast = (a, b) => {
+    const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+    return (x + 0.05) / (y + 0.05);
+  };
   let uid = 0;
   const nid = (p) => p + ++uid;
   const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -48,6 +57,37 @@
   const fitN = (t, w, max, ls) => Math.min(max, (w / t.length - ls) / 0.72);
   const fit = (t, w, max, r = 0.56) => `${Math.min(max, w / (t.length * r)).toFixed(1)}" data-maxw="${w}`;
   function fitText(root) {
+    // A wrapped block (data-wrap: at most that many lines inside data-maxw, centred in data-box below data-top) shrinks
+    // one step at a time until it fits, then becomes one tspan per line.
+    for (const el of root.querySelectorAll('text[data-wrap]')) {
+      const max = +el.dataset.maxw,
+        most = +el.dataset.wrap,
+        lh = 1.22,
+        words = el.textContent.split(/\s+/).filter(Boolean);
+      const len = (s) => ((el.textContent = s), el.getComputedTextLength());
+      let size = +el.getAttribute('font-size'),
+        lines;
+      for (; ; size -= 1) {
+        el.setAttribute('font-size', size);
+        lines = [];
+        for (const w of words) {
+          const next = lines.length ? `${lines[lines.length - 1]} ${w}` : w;
+          if (lines.length && len(next) <= max) lines[lines.length - 1] = next;
+          else lines.push(w);
+        }
+        if ((lines.length <= most && lines.every((l) => len(l) <= max)) || size <= 12) break;
+      }
+      const top = +el.dataset.top + (+el.dataset.box - lines.length * size * lh) / 2 + size * 0.8;
+      el.textContent = '';
+      lines.forEach((l, i) => {
+        const span = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        span.setAttribute('x', el.getAttribute('x'));
+        span.setAttribute('y', (top + i * size * lh).toFixed(1));
+        span.textContent = l;
+        el.appendChild(span);
+      });
+      for (const k of ['wrap', 'maxw', 'top', 'box']) el.removeAttribute(`data-${k}`);
+    }
     for (const el of root.querySelectorAll('text[data-maxw]')) {
       const max = +el.dataset.maxw;
       const len = el.getComputedTextLength();
@@ -85,10 +125,14 @@
     }
     const gold = (fill = k.ground) => seal('url(#g)', fill);
 
-    // Stamps: one ink by meaning, a rectangle where there is room and a circle where it is small.
+    // Stamps: one ink by meaning, a rectangle where there is room and a circle where it is small, on paper and on the
+    // brand's ground. On the ground, record and finding go in paper ink; amended and examination keep their meaning in
+    // a light red and a light slate while those clear 3:1 against the ground, else paper too.
+    const light = (want) => (contrast(want, k.ground) >= 3 ? want : k.paper);
     const STAMPS = {
       'stamp-record': {
         ink: RED,
+        dark: k.paper,
         big: 'PUBLIC RECORD',
         small: 'ENTERED INTO THE',
         ring: `ENTERED INTO THE PUBLIC RECORD · ${B.short.toUpperCase()} · `,
@@ -96,6 +140,7 @@
       },
       'stamp-finding': {
         ink: k.ground,
+        dark: k.paper,
         big: 'FINDING',
         small: `OF THE ${B.body.toUpperCase()}`,
         ring: `FINDING OF THE ${B.body.toUpperCase()} · `,
@@ -103,6 +148,7 @@
       },
       'stamp-amended': {
         ink: RED,
+        dark: light(mix(RED, '#ffffff', 0.45)),
         big: 'AMENDED',
         small: 'SEE ERRATUM · DATED',
         ring: 'AMENDED FINDING · ERRATUM ENTERED · ',
@@ -110,6 +156,7 @@
       },
       'stamp-examination': {
         ink: k.ink,
+        dark: light(mix(k.ink, '#ffffff', 0.6)),
         big: 'UNDER EXAMINATION',
         small: `MATTER BEFORE THE ${B.body.toUpperCase()}`,
         ring: 'UNDER EXAMINATION · EVIDENCE BEING WEIGHED · ',
@@ -131,7 +178,7 @@
         '</g>'
       );
     }
-    function stampRound(s, { ring, center, ink }, rot) {
+    function stampRound(s, { ring, center, ink }, rot, onInk = '#f6f1e6') {
       const r = s * 0.42,
         c = s / 2,
         a = nid('sr');
@@ -145,7 +192,7 @@
           c + r * 0.02,
           r * 0.24,
           center,
-          '#f6f1e6',
+          onInk,
           `${SERIF} text-anchor="middle" dominant-baseline="middle" font-weight="700" letter-spacing="3"`,
         ) +
         '</g>'
@@ -259,8 +306,11 @@
       ['stamp-amended', 800],
       ['stamp-examination', 1200],
     ]) {
-      add(slot, 'rect', w, 400, stampRect(w, 400, STAMPS[slot], -3));
-      add(slot, 'round', 400, 400, stampRound(400, STAMPS[slot], 6));
+      const dark = { ...STAMPS[slot], ink: STAMPS[slot].dark };
+      add(slot, 'rect-paper', w, 400, stampRect(w, 400, STAMPS[slot], -3));
+      add(slot, 'round-paper', 400, 400, stampRound(400, STAMPS[slot], 6));
+      add(slot, 'rect-ground', w, 400, stampRect(w, 400, dark, -3));
+      add(slot, 'round-ground', 400, 400, stampRound(400, dark, 6, k.ground));
     }
 
     // Headers and banners
@@ -389,5 +439,41 @@
     return out;
   }
 
-  window.BrandKit = { assets, fitText };
+  // The og-inquiry template, "Ground, question first": one story's question in large serif on the brand's ground, a
+  // gold rule, the seal, the full institution name and THE OFFICIAL PUBLIC RECORD. fitText wraps the question.
+  function inquiryCard(B, question) {
+    const k = B.palette;
+    return {
+      w: 1200,
+      h: 675,
+      svg:
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" width="1200" height="675">${defs(k)}` +
+        `<rect width="1200" height="675" fill="${k.ground}"/>` +
+        frame(1200, 675, k.accent, 28) +
+        T(96, 128, 22, 'THE OFFICIAL PUBLIC RECORD', k.accent, `${MONO} letter-spacing="8"`) +
+        T(
+          96,
+          0,
+          `62" data-wrap="4" data-maxw="1008" data-top="150" data-box="350`,
+          question,
+          k.paper,
+          `${SERIF} font-weight="700"`,
+        ) +
+        `<path d="M96 524 H420" stroke="${k.accent}" stroke-width="3"/>` +
+        place(
+          assets(B)
+            .find((a) => a.slot === 'seal')
+            .svg.replace(/^<svg[^>]*>|<\/svg>$/g, '')
+            .replace(/<defs>[\s\S]*?<\/defs>/, ''),
+          96,
+          546,
+          68,
+        ) +
+        T(184, 586, fit(B.fullName, 900, 28), B.fullName, k.paper, SERIF) +
+        T(186, 618, 18, SITE, k.accent, MONO) +
+        '</svg>',
+    };
+  }
+
+  window.BrandKit = { assets, inquiryCard, fitText };
 })();

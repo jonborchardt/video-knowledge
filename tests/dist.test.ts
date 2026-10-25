@@ -48,7 +48,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it('only built pages for topics an institution publishes; no admin pages', () => {
     const dirs = readdirSync(DIST, { withFileTypes: true }).filter(
-      (d) => d.isDirectory() && !['_astro', 'og'].includes(d.name),
+      (d) => d.isDirectory() && !['_astro', 'og', 'stamps'].includes(d.name),
     );
     expect(dirs.map((d) => d.name).sort()).toEqual(['about', 'commissions', ...publicTopicNames()].sort());
     for (const n of topicNames()) {
@@ -95,6 +95,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(html).toContain('<section aria-labelledby="claims"');
       expect(html).toContain('data-verdict=');
       expect(html).toContain(`href="${BASE}${topic}/"`);
+      // its own share card, the question drawn on it (npm run brand)
+      expect(html).toContain(`<meta property="og:image" content="${SITE}${BASE}og/stories/${topic}/${slug}.jpg"`);
+      expect(existsSync(join(DIST, 'og/stories', topic, `${slug}.jpg`)), `${topic}/${slug} card`).toBe(true);
       if (!s.partOf) {
         const c = Object.entries(commissions).find(([, c]) => c.topics.includes(topic))![0];
         expect(readFileSync(join(DIST, 'commissions', c, 'index.html'), 'utf8')).toContain(
@@ -115,6 +118,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(html).toContain(c.fullName);
       expect(html).toContain(c.ceremonialName);
       expect(html).toContain('Entered into the Public Record');
+      // the kit's record stamp closes the page, in both inks (dark mode swaps them)
+      for (const g of ['paper', 'ground'])
+        expect(html).toContain(`src="${BASE}stamps/${key}/stamp-record-rect-${g}.png"`);
     }
   });
 

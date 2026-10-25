@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import SourceIcons from '../../components/SourceIcons.astro';
+import Stamp from '../../components/Stamp.astro';
 import SourceDetails from '../../components/SourceDetails.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import SurpriseItem from '../../components/SurpriseItem.astro';
@@ -283,6 +284,12 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
     {
       t.bottomLine && (
         <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
+          <Stamp
+            brand={commissionKey(commission)}
+            slot="stamp-finding"
+            form="round"
+            class="float-right ml-3 size-16 sm:size-20"
+          />
           <figcaption class="eyebrow text-muted-foreground">Finding</figcaption>
           <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">
             {t.bottomLine[0].toUpperCase() + t.bottomLine.slice(1)}
@@ -498,13 +505,18 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
   }
 
   <!-- The record close: outside the tab panels, so it ends every section. -->
-  <footer class="grid gap-2 border-y-4 border-double py-5 text-sm text-muted-foreground">
-    <div class="eyebrow text-gold">Entered into the Public Record</div>
-    <p class="font-heading text-[1.05rem] text-foreground">The matter is now part of the public record.</p>
-    <p class="max-w-prose">
-      {commission.fullName}. Every verdict links to the quote it judges and the lines of evidence it rests on.
-      Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
-    </p>
+  <footer
+    class="flex flex-wrap items-center justify-between gap-4 border-y-4 border-double py-5 text-sm text-muted-foreground"
+  >
+    <div class="grid gap-2">
+      <div class="eyebrow text-gold">Entered into the Public Record</div>
+      <p class="font-heading text-[1.05rem] text-foreground">The matter is now part of the public record.</p>
+      <p class="max-w-prose">
+        {commission.fullName}. Every verdict links to the quote it judges and the lines of evidence it rests on.
+        Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
+      </p>
+    </div>
+    <Stamp brand={commissionKey(commission)} slot="stamp-record" form="rect" class="w-44 shrink-0 sm:w-52" />
   </footer>
 </Base>
 

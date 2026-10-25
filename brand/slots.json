@@ -1,5 +1,5 @@
 {
-  "$comment": "Every brand asset slot, drawn by scripts/brand/draw.js and written by `npm run brand` into brand/<brand>/ as <slot>.svg (committed) and the raster `format` names (png keeps transparency, jpg for opaque artwork; gitignored, regenerated). A slot with `grounds` ships one file per ground (paper, ground) and one with `forms` one file per form (rect where there is room, round where it is small), named <slot>-<key>. A `template` is drawn per use, not exported.",
+  "$comment": "Every brand asset slot, drawn by scripts/brand/draw.js and written by `npm run brand` into brand/<brand>/ as <slot>.svg (committed) and the raster `format` names (png keeps transparency, jpg for opaque artwork; gitignored, regenerated). A slot with `grounds` ships one file per ground (paper, ground) and one with `forms` one file per form (rect where there is room, round where it is small), named <slot>-<key>; a slot with both (the stamps) one per form and ground, <slot>-<form>-<ground>. A `template` is drawn per use, not exported.",
   "slots": [
     {
       "id": "seal",
@@ -61,7 +61,8 @@
       "size": "1200x400",
       "format": "svg, png",
       "use": "ENTERED INTO THE PUBLIC RECORD: a published inquiry, the closing card (red ink)",
-      "forms": ["rect", "round"]
+      "forms": ["rect", "round"],
+      "grounds": ["paper", "ground"]
     },
     {
       "id": "stamp-finding",
@@ -69,7 +70,8 @@
       "size": "800x400",
       "format": "svg, png",
       "use": "FINDING: marks the answer section; never decoration (charter 2.2) (the brand's ground ink)",
-      "forms": ["rect", "round"]
+      "forms": ["rect", "round"],
+      "grounds": ["paper", "ground"]
     },
     {
       "id": "stamp-amended",
@@ -77,7 +79,8 @@
       "size": "800x400",
       "format": "svg, png",
       "use": "AMENDED: a dated correction (red ink)",
-      "forms": ["rect", "round"]
+      "forms": ["rect", "round"],
+      "grounds": ["paper", "ground"]
     },
     {
       "id": "stamp-examination",
@@ -85,7 +88,8 @@
       "size": "1200x400",
       "format": "svg, png",
       "use": "UNDER EXAMINATION: a story not yet published (slate ink)",
-      "forms": ["rect", "round"]
+      "forms": ["rect", "round"],
+      "grounds": ["paper", "ground"]
     },
     {
       "id": "youtube-banner",
@@ -120,7 +124,7 @@
       "group": "cards",
       "size": "1200x675",
       "format": "svg",
-      "use": "Share-card template for one inquiry: the question as text over the brand's ground, seal and full name below (drawn per inquiry; not in the kit export)",
+      "use": "Share-card template for one inquiry: the question as text over the brand's ground, seal and full name below (drawn per story by `npm run brand` into public/og/stories/<topic>/<story slug>.jpg; not in the kit export)",
       "template": true
     },
     {
