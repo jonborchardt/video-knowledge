@@ -2,7 +2,17 @@ import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { type Article, type Block, articleAsScript, articleFingerprint } from '../src/lib/article';
+import {
+  type Article,
+  type Block,
+  articleAsScript,
+  articleFingerprint,
+  correctArticle,
+  lockArticle,
+  renderArticleMd,
+} from '../src/lib/article';
+import { Refusal } from '../src/lib/publish';
+import { publicRecordProblems } from '../src/lib/public-record';
 import { LIMITS, figuresOf, validateArticle } from '../src/lib/article-validation';
 import { buildPackage } from '../src/lib/evidence-package';
 import { type EvidencePackage, type Sentence, scriptDir } from '../src/lib/script';
@@ -211,5 +221,71 @@ describe('article validation', () => {
     expect(s04.status).toBe('blocked');
     expect(s04.issues.map((i) => i.category)).toContain('no-url');
     expect(v.sentences.find((s) => s.id === 's02')!.status).toBe('verified');
+  });
+});
+
+describe('article release', () => {
+  const a = article();
+  const passed = check(a, { review: approveArticle(a) });
+  const edited = structuredClone(a);
+  (edited.sections[1].blocks[1] as { sentences: Sentence[] }).sentences[0].text = 'One survey is not the final word.';
+  const passedEdited = check(edited, { review: approveArticle(edited) });
+  const r = lockArticle(null, a, passed, 'Jon', '2026-11-01');
+
+  it('the fixtures pass', () => {
+    expect([passed.status, passedEdited.status]).toEqual(['passed', 'passed']);
+  });
+  it('lock refuses a placeholder approver, an unpassed validation, and a changed article after release', () => {
+    expect(() => lockArticle(null, a, passed, '<name>', 'd')).toThrow(Refusal);
+    expect(() => lockArticle(null, a, check(a), 'Jon', 'd')).toThrow(Refusal);
+    expect(() => lockArticle(r, edited, passedEdited, 'Jon', 'd')).toThrow(/correct/);
+  });
+  it('lock is idempotent', () => {
+    expect(lockArticle(r, a, passed, 'Jon', '2026-11-02')).toBe(r);
+  });
+  it('the release snapshots the article and starts its history', () => {
+    expect(r.article).toEqual(a);
+    expect(r.revision).toBe(1);
+    expect(r.history).toEqual([
+      { revision: 1, date: '2026-11-01', approvedBy: 'Jon', fingerprint: articleFingerprint(a) },
+    ]);
+  });
+  it('correct needs a note, names the changed sentences and records an article revision', () => {
+    expect(() => correctArticle(r, edited, passedEdited, 'Jon', ' ', '2026-11-05')).toThrow(Refusal);
+    expect(() => correctArticle(r, edited, check(edited), 'Jon', 'n', '2026-11-05')).toThrow(Refusal);
+    expect(() => correctArticle(r, edited, passedEdited, 'automated:', 'n', '2026-11-05')).toThrow(Refusal);
+    const { release, revision } = correctArticle(r, edited, passedEdited, 'Jon', 'Fixed the 2024 price', '2026-11-05');
+    expect(revision).toEqual({
+      at: '2026-11-05',
+      kind: 'article',
+      id: a.story,
+      from: null,
+      to: null,
+      sentences: ['s03'],
+      note: 'Fixed the 2024 price',
+    });
+    expect(release.revision).toBe(2);
+    expect(release.article).toEqual(edited);
+    expect(release.history).toHaveLength(2);
+    expect(release.history[1]).toMatchObject({ revision: 2, note: 'Fixed the 2024 price', sentences: ['s03'] });
+    expect(publicRecordProblems({ exhibits: {}, revisions: [revision] })).toEqual([]);
+  });
+  it('correct names added and removed sentences, and refuses a change to no sentence', () => {
+    const b = structuredClone(a);
+    b.sections[0].blocks = [prose('s09', 'Say you sign up under a friend.')];
+    const { revision } = correctArticle(r, b, check(b, { review: approveArticle(b) }), 'Jon', 'n', 'd');
+    expect(revision.kind === 'article' && revision.sentences).toEqual(['s09', 's01']);
+    const h = { ...a, meta: { ...a.meta, headline: 'Another headline' } };
+    expect(() => correctArticle(r, h, check(h, { review: approveArticle(h) }), 'Jon', 'n', 'd')).toThrow(/no sentence/);
+  });
+  it('correct refuses an unchanged article', () => {
+    expect(() => correctArticle(r, a, passed, 'Jon', 'n', '2026-11-05')).toThrow(Refusal);
+  });
+  it('the markdown shows headings, sentence states and open issues', () => {
+    const md = renderArticleMd(a, check(a));
+    expect(md).toContain('# How Much Money Do MLM Participants Make?');
+    expect(md).toContain('## What we found');
+    expect(md).toMatch(/47 percent lost money\. \[s02 review\]/);
+    expect(md).toContain('## Open issues');
   });
 });

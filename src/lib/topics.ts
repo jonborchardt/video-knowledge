@@ -4,7 +4,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, topicDir, TOPICS, ROOT } from './io';
 import { commissionOf } from '../config/site';
-import { loadPublicRecord, type Revision } from './public-record';
+import { type ClaimRevision, isClaimRevision, loadPublicRecord } from './public-record';
 
 import type { Verdict } from './corpus';
 export type { Verdict };
@@ -89,7 +89,7 @@ export interface ClaimView {
   lean: string | null; // from topics/<topic>/lean.json: pro | pro-hype | calibrating | skeptic | neutral
   sources: ClaimSourceView[]; // every source that asserts or denies it, with its quote
   verdicts: ClaimVerdictView[]; // every recorded judgment: the AI guess and each study
-  revisions: Revision[]; // public changes of its label or verdict, oldest first (public-record.json)
+  revisions: ClaimRevision[]; // public changes of its label or verdict, oldest first (public-record.json)
 }
 export interface ClaimSourceView {
   id: string;
@@ -169,7 +169,7 @@ export interface Topic {
   contested: ClaimView[];
   docNames: Record<string, string>; // '<file>.txt' -> display name
   sameStudy: Record<string, string>; // '<file>.txt' -> the file of the primary report of the same study
-  revisions: Revision[]; // every public change of a finding in this inquiry, oldest first
+  revisions: ClaimRevision[]; // every public change of a finding in this inquiry, oldest first
   revised: string | null; // the latest revision's date
 }
 
@@ -194,6 +194,7 @@ export function loadTopic(name: string): Topic {
   const cfg = readJson<SiteConfig>(join(dir, 'site.json')) ?? {};
   const lean = readJson<Record<string, string>>(join(dir, 'lean.json')) ?? {};
   const record = loadPublicRecord(name);
+  const revisions = record.revisions.filter(isClaimRevision); // an article's corrections are shown on its story
   // Sorted: readdirSync order differs by file system, and the order reaches every claim's sources and the packages.
   const recs = readdirSync(join(dir, 'store', 'videos'))
     .sort()
@@ -251,7 +252,7 @@ export function loadTopic(name: string): Topic {
     lean: lean[c.id] ?? null,
     sources: claimSources.get(c.id) ?? [],
     verdicts: (claimVerdicts.get(c.id) ?? []).sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0)),
-    revisions: record.revisions.filter((r) => r.id === c.id),
+    revisions: revisions.filter((r) => r.id === c.id),
   });
   const claims = t.claims.map(claimOf).sort((a, b) => b.asserted + b.denied - (a.asserted + a.denied));
   const byId = new Map(claims.map((c) => [c.id, c]));
@@ -368,9 +369,9 @@ export function loadTopic(name: string): Topic {
     contested: t.contested.map((c) => byId.get(c.id)!),
     docNames: cfg.docs ?? {},
     sameStudy: cfg.sameStudy ?? {},
-    revisions: record.revisions,
+    revisions,
     revised:
-      record.revisions
+      revisions
         .map((r) => r.at)
         .sort()
         .at(-1) ?? null,

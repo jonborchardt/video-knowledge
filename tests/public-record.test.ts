@@ -93,6 +93,23 @@ describe('public record', () => {
     expect(() => noteRevision(empty, 'x', 'n')).toThrow('no unexplained revision of x');
   });
 
+  it('accepts an article revision in its own shape, and a report run keeps it', () => {
+    const art = { at: 'd', kind: 'article' as const, id: 'q:s', from: null, to: null, sentences: ['s3'], note: 'n' };
+    const rec = { exhibits: {}, revisions: [art] };
+    expect(publicRecordProblems(rec)).toEqual([]);
+    expect(publicRecordProblems({ exhibits: {}, revisions: [{ ...art, sentences: [] }] })).toEqual([
+      'revision 0: malformed',
+    ]);
+    expect(
+      publicRecordProblems({ exhibits: {}, revisions: [{ ...art, from: { label: 'verified', verdict: 'right' } }] }),
+    ).toEqual(['revision 0: malformed']);
+    const t = { claims: [claim('q:s', 'wrong', 0.9)], sources: [] };
+    const next = nextPublicRecord(rec, claimStates({ claims: [claim('q:s', 'right', 0.9)] }), t, 'e');
+    expect(next.revisions[0]).toEqual(art);
+    expect(next.revisions).toHaveLength(2);
+    expect(() => noteRevision({ ...rec, revisions: [{ ...art, note: '' }] }, 'q:s', 'x')).toThrow();
+  });
+
   it('flags a bad shape and duplicate or non-positive exhibit numbers', () => {
     expect(publicRecordProblems(null)).not.toEqual([]);
     expect(publicRecordProblems({ exhibits: { a: 1, b: 1, c: 0 }, revisions: [] })).toHaveLength(2);

@@ -1,6 +1,7 @@
-// The public record of an inquiry (plan D5, D7): `topics/<topic>/public-record.json`, written only by `npm run report`.
-// Exhibit numbers are assigned once and never renumber (a removed source keeps its number as a gap); revisions are
-// append-only, one per public change of a claim's label or verdict, each explained by a person's note.
+// The public record of an inquiry (plan D5, D7): `topics/<topic>/public-record.json`, written only by `npm run report`
+// and `npm run article -- correct`. Exhibit numbers are assigned once and never renumber (a removed source keeps its
+// number as a gap); revisions are append-only, one per public change of a claim's label or verdict or per correction
+// of a released article, each explained by a person's note.
 import { join } from 'node:path';
 import { findingLabel, FINDING_LABELS, type FindingLabel } from './finding-label';
 import { readJson, ROOT, topicDir } from './io';
@@ -12,14 +13,26 @@ export interface ClaimState {
   label: FindingLabel;
   verdict: Verdict | null;
 }
-export interface Revision {
-  at: string; // YYYY-MM-DD
-  kind: 'claim';
-  id: string;
-  from: ClaimState | null;
-  to: ClaimState | null; // null: the claim left the report (merged away)
-  note: string;
-}
+export type Revision =
+  | {
+      at: string; // YYYY-MM-DD
+      kind: 'claim';
+      id: string;
+      from: ClaimState | null;
+      to: ClaimState | null; // null: the claim left the report (merged away)
+      note: string;
+    }
+  | {
+      at: string;
+      kind: 'article';
+      id: string; // the story id
+      from: null;
+      to: null;
+      sentences: string[]; // the corrected sentence ids
+      note: string;
+    };
+export type ClaimRevision = Extract<Revision, { kind: 'claim' }>;
+export const isClaimRevision = (r: Revision): r is ClaimRevision => r.kind === 'claim';
 export interface PublicRecord {
   exhibits: Record<string, number>;
   revisions: Revision[];
@@ -76,15 +89,16 @@ export function publicRecordProblems(x: unknown): string[] {
     else seen.set(n, id);
   }
   r.revisions.forEach((v, i) => {
-    if (
-      typeof v?.at !== 'string' ||
-      !v.at ||
-      v.kind !== 'claim' ||
-      typeof v.id !== 'string' ||
-      !isState(v.from) ||
-      !isState(v.to)
-    )
-      out.push(`revision ${i}: malformed`);
+    const shape =
+      v?.kind === 'claim'
+        ? isState(v.from) && isState(v.to)
+        : v?.kind === 'article' &&
+          v.from === null &&
+          v.to === null &&
+          Array.isArray(v.sentences) &&
+          v.sentences.length > 0 &&
+          v.sentences.every((x) => typeof x === 'string' && x);
+    if (typeof v?.at !== 'string' || !v.at || typeof v.id !== 'string' || !shape) out.push(`revision ${i}: malformed`);
     else if (!v.note?.trim()) out.push(`revision ${i} (${v.id}, ${v.at}): no note`);
   });
   return out;
@@ -92,7 +106,7 @@ export function publicRecordProblems(x: unknown): string[] {
 
 /** Fills the note of the latest unexplained revision of `id`. */
 export function noteRevision(rec: PublicRecord, id: string, note: string): PublicRecord {
-  const i = rec.revisions.findLastIndex((v) => v.id === id && !v.note.trim());
+  const i = rec.revisions.findLastIndex((v) => v.kind === 'claim' && v.id === id && !v.note.trim());
   if (i < 0) throw new Error(`no unexplained revision of ${id}`);
   return { ...rec, revisions: rec.revisions.map((v, j) => (j === i ? { ...v, note } : v)) };
 }

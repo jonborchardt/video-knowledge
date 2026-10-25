@@ -1,6 +1,17 @@
 // The companion article: prose blocks over the script's sentences, so the script validator judges it unchanged.
-import { sha } from './io';
-import type { Script, SectionName, Sentence } from './script';
+import { join } from 'node:path';
+import { readJson, ROOT, sha } from './io';
+import type { Revision } from './public-record';
+import { Refusal } from './publish';
+import { approverProblem, validationFingerprint } from './release';
+import {
+  type Script,
+  type ScriptValidation,
+  type SectionName,
+  type Sentence,
+  scriptDir,
+  sentenceFingerprint,
+} from './script';
 import type { ChartPoint } from './storyboard';
 
 export const ARTICLE_FILES = {
@@ -64,3 +75,142 @@ export function articleAsScript(a: Article): Script {
 }
 
 export const articleFingerprint = (a: Article) => sha(JSON.stringify({ meta: a.meta, sections: a.sections }));
+
+/** What the site renders: the article as approved, with every correction since. */
+export interface ArticleRelease {
+  topic: string;
+  story: string;
+  approvedBy: string;
+  date: string;
+  revision: number;
+  fingerprints: { article: string; package: string; validation: string };
+  article: Article;
+  history: {
+    revision: number;
+    date: string;
+    approvedBy: string;
+    fingerprint: string;
+    note?: string;
+    sentences?: string[];
+  }[];
+}
+
+export const loadArticleRelease = (topic: string, storyId: string, root = ROOT) =>
+  readJson<ArticleRelease>(join(scriptDir(topic, storyId, root), ARTICLE_FILES.release));
+
+function releasable(v: ScriptValidation, approvedBy: string) {
+  const why = approverProblem(approvedBy);
+  if (why) throw new Refusal(why);
+  if (v.status !== 'passed') throw new Refusal(`validation is ${v.status}, not passed`);
+}
+const snapshot = (a: Article, v: ScriptValidation, approvedBy: string, date: string, revision: number) => ({
+  topic: a.topic,
+  story: a.story,
+  approvedBy,
+  date,
+  revision,
+  fingerprints: {
+    article: articleFingerprint(a),
+    package: v.packageFingerprint ?? '',
+    validation: validationFingerprint(v),
+  },
+  article: a,
+});
+
+/** The first release. Locking the released text again changes nothing; a changed text is a correction. */
+export function lockArticle(
+  prev: ArticleRelease | null,
+  a: Article,
+  v: ScriptValidation,
+  approvedBy: string,
+  date: string,
+): ArticleRelease {
+  releasable(v, approvedBy);
+  const fp = articleFingerprint(a);
+  if (prev?.fingerprints.article === fp) return prev;
+  if (prev) throw new Refusal(`released at revision ${prev.revision} with other text: use correct, with a note`);
+  return { ...snapshot(a, v, approvedBy, date, 1), history: [{ revision: 1, date, approvedBy, fingerprint: fp }] };
+}
+
+/** A new release of changed text, and the noted revision it adds to the topic's public record. */
+export function correctArticle(
+  prev: ArticleRelease,
+  a: Article,
+  v: ScriptValidation,
+  approvedBy: string,
+  note: string,
+  date: string,
+): { release: ArticleRelease; revision: Extract<Revision, { kind: 'article' }> } {
+  if (!note.trim()) throw new Refusal('a correction needs a --note');
+  releasable(v, approvedBy);
+  const fp = articleFingerprint(a);
+  if (prev.fingerprints.article === fp) throw new Refusal('the article is unchanged since its release');
+  const before = new Map(articleSentences(prev.article).map((s) => [s.id, sentenceFingerprint(s)]));
+  const now = articleSentences(a);
+  const ids = new Set(now.map((s) => s.id));
+  const sentences = [
+    ...now.filter((s) => before.get(s.id) !== sentenceFingerprint(s)).map((s) => s.id),
+    ...[...before.keys()].filter((id) => !ids.has(id)),
+  ];
+  // ponytail: a headline, table or figure fix with no sentence changed cannot be corrected; the record names sentences
+  if (!sentences.length) throw new Refusal('the correction changes no sentence; the public record names sentences');
+  const revision = prev.revision + 1;
+  return {
+    release: {
+      ...snapshot(a, v, approvedBy, date, revision),
+      history: [...prev.history, { revision, date, approvedBy, fingerprint: fp, note: note.trim(), sentences }],
+    },
+    revision: { at: date, kind: 'article', id: a.story, from: null, to: null, sentences, note: note.trim() },
+  };
+}
+
+const MARK: Record<string, string> = { verified: 'ok', 'needs-review': 'review', blocked: 'BLOCKED' };
+
+/** The article as a reader sees it, with each sentence's state, then the open issues (as script.md reads). */
+export function renderArticleMd(a: Article, v: ScriptValidation): string {
+  const by = new Map(v.sentences.map((s) => [s.id, s]));
+  const line = (s: Sentence) => {
+    const r = by.get(s.id);
+    const m = r && (r.assertions.length || r.issues.length || r.status !== 'verified') ? MARK[r.status] : '';
+    return `${s.text}${m ? ` [${s.id} ${m}]` : ''}`;
+  };
+  const out = [
+    `# ${a.meta.headline}`,
+    '',
+    `Story \`${a.story}\` (${a.topic}), revision ${a.revision}. SEO title: ${a.meta.seoTitle}. Validation: **${v.status}**, ${v.counts.blocking} blocking, ${v.counts.warnings} warnings, ${v.counts.verified}/${v.counts.assertions} assertions verified.`,
+    '',
+    `> ${line(a.meta.dek)}`,
+    '',
+    `Description: ${line(a.meta.description)}`,
+    '',
+  ];
+  for (const sec of a.sections) {
+    out.push(`## ${sec.heading}`, '');
+    for (const b of sec.blocks)
+      if (b.kind === 'prose')
+        out.push(
+          `${b.callout ? `**${b.callout}${b.claim ? ` (${b.claim})` : ''}:** ` : ''}${b.sentences.map(line).join(' ')}`,
+          '',
+        );
+      else if (b.kind === 'table')
+        out.push(
+          `Table ${b.id}: ${b.caption}`,
+          '',
+          `| | ${b.columns.join(' | ')} |`,
+          `|---|${b.columns.map(() => '---').join('|')}|`,
+          ...b.rows.map((r) => `| ${r.label} | ${r.cells.map((c) => c.display).join(' | ')} |`),
+          '',
+        );
+      else out.push(`Figure ${b.ref}: ${b.caption}`, '');
+  }
+  const open = v.issues.filter((i) => !i.disposition);
+  if (open.length) {
+    out.push('## Open issues', '');
+    for (const i of open)
+      out.push(
+        `- **${i.severity}** ${i.sentence}${i.assertion ? ` (${i.assertion})` : ''} ${i.category} (${i.by}): ${i.explanation}${i.suggestion ? ` Suggestion: ${i.suggestion}` : ''}`,
+      );
+    out.push('');
+  }
+  return out.join('\n');
+}
