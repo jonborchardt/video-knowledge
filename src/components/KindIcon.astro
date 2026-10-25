@@ -18,9 +18,11 @@ interface Props {
   class?: string;
 }
 const { kind, decorative, class: cls } = Astro.props;
-const a11y = decorative ? { 'aria-hidden': 'true' } : { role: 'img', 'aria-label': KIND_LABEL[kind] };
 ---
 
-<svg class:list={['inline shrink-0 align-[-0.15em]', !cls?.includes('size-') && 'size-[1em]', cls]} {...a11y}
-  ><use href={`#icon-${kind}`}></use></svg
+<svg
+  class:list={['inline shrink-0 align-[-0.15em]', !cls?.includes('size-') && 'size-[1em]', cls]}
+  role={decorative ? undefined : 'img'}
+  aria-label={decorative ? undefined : KIND_LABEL[kind]}
+  aria-hidden={decorative ? 'true' : undefined}><use href={`#icon-${kind}`}></use></svg
 >

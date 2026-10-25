@@ -77,28 +77,30 @@ function buildGraph(root: string, topics: string[]): Graph {
     for (const s of stories) {
       const id = storyNode(topic, s.id);
       if (s.partOf) edge(id, storyNode(topic, s.partOf), 'partOf');
-      const ledger = loadLedger(topic, s.id, root);
-      if (ledger) {
-        const live = storyOutputs(topic, s.id, root);
-        for (const [key, o] of Object.entries(ledger.outputs)) {
-          if (o.kind !== 'youtube-video' && o.kind !== 'youtube-short') continue;
-          const short = o.kind === 'youtube-short';
-          // Every video output of a story is its one #youtube node: a re-release replaces the original.
-          const out = `${id}#${short ? key : 'youtube'}`;
-          if (g.nodes.has(out)) continue;
-          const v = short ? live.shorts.find((x) => x.output === key) : live.video;
-          node({
-            id: out,
-            kind: short ? 'short' : 'video',
-            title: v?.title || s.title,
-            topic,
-            story: id,
-            public: !!v,
-            ...(v && { url: v.url }),
-          });
-          edge(out, id, 'madeFrom');
-          if (short && o.derivedFrom) edge(out, `${id}#youtube`, 'derivedFrom');
-        }
+      // What is live comes from storyOutputs (the one reader of publishing state); the ledger adds the outputs that
+      // exist but are not live yet.
+      const live = storyOutputs(topic, s.id, root);
+      const outputs = Object.entries(loadLedger(topic, s.id, root)?.outputs ?? {});
+      if (live.video && !outputs.some(([, o]) => o.kind === 'youtube-video'))
+        outputs.unshift([live.video.output, { kind: 'youtube-video', metadata: {}, events: [] }]);
+      for (const [key, o] of outputs) {
+        if (o.kind !== 'youtube-video' && o.kind !== 'youtube-short') continue;
+        const short = o.kind === 'youtube-short';
+        // Every video output of a story is its one #youtube node: a re-release replaces the original.
+        const out = `${id}#${short ? key : 'youtube'}`;
+        if (g.nodes.has(out)) continue;
+        const v = short ? live.shorts.find((x) => x.output === key) : live.video;
+        node({
+          id: out,
+          kind: short ? 'short' : 'video',
+          title: v?.title || s.title,
+          topic,
+          story: id,
+          public: !!v,
+          ...(v && { url: v.url }),
+        });
+        edge(out, id, 'madeFrom');
+        if (short && o.derivedFrom) edge(out, `${id}#youtube`, 'derivedFrom');
       }
       const release = loadArticleRelease(topic, s.id, root);
       if (release) {

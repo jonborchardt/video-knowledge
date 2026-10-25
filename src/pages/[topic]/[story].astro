@@ -27,6 +27,7 @@ import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
 import { loadPublicRecord, revisionLine } from '../../lib/public-record';
 import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
 import SourceIcons from '../../components/SourceIcons.astro';
+import SourceLink from '../../components/SourceLink.astro';
 import Stamp from '../../components/Stamp.astro';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
@@ -157,12 +158,13 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
     trail={[
       { label: site.name, href: href('/') },
       { label: commission.ceremonialName, href: href(`/commissions/${commissionKey(commission)}/`) },
+      { label: t.label, href: href(`/${t.name}/`) },
     ]}
     title={s.title}
     lede={s.question}
     revised={revised}
     facts={[
-      { term: 'Inquiry', value: t.label, href: href(`/${t.name}/`) },
+      { term: 'Inquiry', value: t.label, href: href(`/${t.name}/`), kind: 'inquiry' },
       { term: 'Published by', value: commission.fullName },
       { term: 'Claims', value: `${claims.length} examined` },
       {
@@ -312,8 +314,8 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
       {
         exhibits.map((x) => (
           <li>
-            <span class="font-mono text-xs text-muted-foreground">Exhibit {x.exhibit}</span> ·{' '}
-            <a href={x.href}>{x.title}</a> <span class="text-sm text-muted-foreground">· {x.channel}</span>
+            <span class="font-mono text-xs text-muted-foreground">Exhibit {x.exhibit}</span> · <SourceLink source={x} />{' '}
+            <span class="text-sm text-muted-foreground">· {x.channel}</span>
           </li>
         ))
       }
@@ -327,16 +329,11 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
         <h2 class={h2} id="chain">
           Questions that follow
         </h2>
-        <ul class="grid list-none gap-2 p-0">
-          {s.chain.map((q) => (
-            <li class="grid gap-0.5 border-l-2 pl-3">
-              <a class="font-heading font-bold" href={storyHref(q)}>
-                {byId.get(q.id)?.title ?? q.question}
-              </a>
-              <span class="text-sm text-muted-foreground">{q.question}</span>
-            </li>
-          ))}
-        </ul>
+        <MatterList
+          items={s.chain
+            .filter((q) => graph.stories.has(storyNode(t.name, q.id)))
+            .map((q) => matterItem(graph, storyNode(t.name, q.id)))}
+        />
       </section>
     )
   }
@@ -360,8 +357,11 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
       <div class="eyebrow text-gold">Entered into the Public Record</div>
       <p class="font-heading text-[1.05rem] text-foreground">The matter is before the {body}.</p>
       <p class="max-w-prose">
-        Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed.
-        Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
+        Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed:{
+          ' '
+        }
+        <a href={href(`/${t.name}/#matters`)}>all matters in this inquiry</a>. Corrections are welcome and recorded with
+        their date: <a href={`${site.repo}/issues`}>raise one</a>.
       </p>
       {
         revisions.length > 0 && (

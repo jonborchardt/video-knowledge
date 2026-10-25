@@ -2,10 +2,10 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { author, commissions, site } from '../src/config/site';
+import { author, commissionKey, commissionOf, commissions, site } from '../src/config/site';
 import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
 import { loadArticleRelease } from '../src/lib/article';
-import { distPages, loadMoved, manifestProblems } from '../src/lib/content-graph';
+import { contentGraph, distPages, hasVideo, loadMoved, manifestProblems } from '../src/lib/content-graph';
 import { datasetChart } from '../src/lib/chart-geometry';
 import { dataRef, loadDatasets } from '../src/lib/datasets';
 import { ROOT, readJson, topicDir } from '../src/lib/io';
@@ -445,5 +445,65 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       const target = html.match(/href="([^"]*)"[^>]*data-cta="/)![1];
       if (target.startsWith('#')) expect(html, `${slug} ${target}`).toContain(`id="${target.slice(1)}"`);
     }
+  });
+
+  // Breadth-first over the built pages from `start`, following hrefs under the base: page -> clicks from start.
+  const crawl = (start: string) => {
+    const depth = new Map([[start, 0]]);
+    const queue = [start];
+    for (let page = queue.shift(); page !== undefined; page = queue.shift()) {
+      const html = readFileSync(join(DIST, page), 'utf8');
+      for (const [, h] of html.matchAll(/href="([^"#?]*)/g)) {
+        if (!h.startsWith(BASE) || /\.\w+$/.test(h)) continue;
+        const next = `${h.slice(BASE.length)}index.html`.replace(/^\//, '');
+        if (depth.has(next) || !existsSync(join(DIST, next))) continue;
+        depth.set(next, depth.get(page)! + 1);
+        queue.push(next);
+      }
+    }
+    return depth;
+  };
+  const header = (html: string) => html.match(/<header[^>]*data-report-header[\s\S]*?<\/header>/)?.[0] ?? '';
+
+  it('every public page is reachable from home, matters within three clicks', () => {
+    const depth = crawl('index.html');
+    const sitemap = [...sitemapXml().matchAll(/<loc>([^<]*)<\/loc>/g)].map(
+      (m) => `${m[1].slice(SITE.length + BASE.length)}index.html`,
+    );
+    for (const p of sitemap) expect(depth.has(p), p).toBe(true);
+    for (const { topic, slug, s } of storyPages.filter((x) => !x.s.partOf))
+      expect(depth.get(`${topic}/${slug}/index.html`), s.id).toBeLessThanOrEqual(3);
+  });
+
+  it('an inquiry page links every matter of the inquiry and marks the live videos', () => {
+    const g = contentGraph();
+    for (const n of publicTopicNames()) {
+      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
+      const sec = html.match(/<section id="matters"[\s\S]*?<\/section>/)?.[0] ?? '';
+      for (const { slug, s } of storyPages.filter((x) => x.topic === n)) {
+        const at = sec.indexOf(`href="${BASE}${n}/${slug}/"`);
+        expect(at, `${n} ${s.id}`).toBeGreaterThan(-1);
+        if (s.partOf) continue;
+        const entry = sec.slice(at, sec.indexOf('</li>', at));
+        expect(entry.includes('Video'), `${s.id} video mark`).toBe(hasVideo(g, `${n}/${s.id}`));
+      }
+    }
+  });
+
+  it('every page below home links to its parent', () => {
+    for (const key of Object.keys(commissions))
+      expect(header(readFileSync(join(DIST, 'commissions', key, 'index.html'), 'utf8')), key).toContain(
+        `href="${BASE}"`,
+      );
+    for (const n of publicTopicNames()) {
+      const inst = `href="${BASE}commissions/${commissionKey(commissionOf(n)!)}/"`;
+      expect(header(readFileSync(join(DIST, n, 'index.html'), 'utf8')), n).toContain(inst);
+      if (loadDatasets(n).length)
+        expect(header(readFileSync(join(DIST, n, 'data', 'index.html'), 'utf8'))).toContain(`href="${BASE}${n}/"`);
+    }
+    for (const { topic, slug } of storyPages)
+      expect(header(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8')), slug).toContain(
+        `href="${BASE}${topic}/"`,
+      );
   });
 });
