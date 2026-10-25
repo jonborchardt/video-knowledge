@@ -6,7 +6,7 @@ Upload `decision-how-much-faster.mp4` to YouTube as a **public** video: the buil
 - Duration: 5:42 (342.5s), 1920x1080 @ 30 fps
 - MP4 sha: 9b2dfb11fb; build report 52c373fff9; QA 36/36
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
-- Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card)
+- Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card); captions: `captions.en.srt`
 
 ## Chapters
 
@@ -24,5 +24,7 @@ Upload `decision-how-much-faster.mp4` to YouTube as a **public** video: the buil
 
 ## After the upload
 
-1. Record the public URL in `production.json` (`decision: "published"`, `url`).
-2. Any later edit renders a draft again; run `npm run video -- final` once more before re-uploading.
+1. Record it: `npm run publish -- uploaded ai-coding decision:how-much-faster --id <youtube id> --visibility private` (or `public` once approved).
+2. Watch the upload with the checklist, then approve this build: `npm run publish -- approve ai-coding decision:how-much-faster --by "<name>"`.
+3. Set it public or schedule it on YouTube, then `npm run publish -- published ai-coding decision:how-much-faster` (or `scheduled --at <ISO>`).
+4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).
