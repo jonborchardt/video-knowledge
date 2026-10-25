@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -99,6 +99,14 @@ describe('public outputs', () => {
         chapters: [],
       }),
     ]);
+  });
+
+  it('a re-release output not yet live leaves the live original on the page', () => {
+    setup([ev('published', '2026-11-02T10:00:00Z')]);
+    const path = publishPath(TOPIC, STORY, root);
+    const ledger = JSON.parse(readFileSync(path, 'utf8')) as Ledger;
+    saveLedger(path, addOutput(ledger, 'youtube-2', 'youtube-video'));
+    expect(storyOutputs(TOPIC, STORY, root).video).toMatchObject({ output: 'youtube', id: 'abc12345678' });
   });
 
   it('seekUrl appends the whole second', () => {

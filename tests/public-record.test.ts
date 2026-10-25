@@ -1,4 +1,6 @@
-import { existsSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   claimStates,
@@ -9,6 +11,8 @@ import {
   publicRecordProblems,
   revisionLine,
 } from '../src/lib/public-record';
+import { ROOT, topicDir } from '../src/lib/io';
+import { copyTopic } from './production-helpers';
 import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/lib/topics';
 
 const claim = (id: string, verdict: Verdict | null, confidence: number | null, decidedBy: string | null = 'S') =>
@@ -98,4 +102,27 @@ describe('public record', () => {
       for (const s of loadTopic(n).sources) expect(rec.exhibits[s.id], `${n} ${s.id}`).toBeGreaterThan(0);
     }
   });
+
+  it('npm run report puts the old report back when the new one cannot be read, so no change goes unrecorded', () => {
+    const c = copyTopic('heat-pumps');
+    try {
+      copyFileSync(join(ROOT, 'package.json'), join(c.root, 'package.json')); // ROOT resolves to the copy
+      symlinkSync(join(ROOT, 'node_modules'), join(c.root, 'node_modules'), 'junction'); // tsx, for the watcher spawn
+      const watcher = join(c.root, 'fake-watcher');
+      mkdirSync(join(watcher, 'src'), { recursive: true });
+      writeFileSync(join(watcher, 'src', 'cli.ts'), "process.stdout.write('{ not json');\n");
+      const report = join(topicDir('heat-pumps', c.root), 'report.json');
+      const old = readFileSync(report, 'utf8');
+      const r = spawnSync(process.execPath, ['--import', 'tsx', join(ROOT, 'scripts', 'report.ts')], {
+        cwd: c.root,
+        env: { ...process.env, WATCHER_DIR: watcher },
+        encoding: 'utf8',
+      });
+      expect(r.stderr).toMatch(/JSON/); // it got as far as reading the new report
+      expect(r.status).not.toBe(0);
+      expect(readFileSync(report, 'utf8')).toBe(old);
+    } finally {
+      c.cleanup();
+    }
+  }, 60_000);
 });

@@ -3,7 +3,7 @@
 // public only after a person's go-live is in the ledger: the site never decides what is public.
 import { join } from 'node:path';
 import { readJson, ROOT } from './io';
-import { loadLedger, mainOutput, nestedSource, type Output } from './publish';
+import { loadLedger, nestedSource, type Output } from './publish';
 import { scriptDir } from './script';
 
 export interface PublicVideo {
@@ -54,8 +54,13 @@ function publicVideo(output: string, o: Output, reviewDir: string | null): Publi
 export function storyOutputs(topic: string, storyId: string, root = ROOT): StoryOutputs {
   const ledger = loadLedger(topic, storyId, root);
   if (!ledger) return { video: null, shorts: [] };
-  const main = mainOutput(ledger);
-  const video = main ? publicVideo(main, ledger.outputs[main], scriptDir(topic, storyId, root)) : null;
+  // The last video output that is live: a re-release in progress (a new output, not yet public) leaves the original.
+  // ponytail: chapters and title come from the current review package, which a re-release's build replaces.
+  const video =
+    Object.entries(ledger.outputs)
+      .filter(([, o]) => o.kind === 'youtube-video')
+      .map(([id, o]) => publicVideo(id, o, scriptDir(topic, storyId, root)))
+      .findLast((v) => !!v) ?? null;
   const shorts = Object.entries(ledger.outputs)
     .filter(([, o]) => o.kind === 'youtube-short')
     .map(([id, o]) => {

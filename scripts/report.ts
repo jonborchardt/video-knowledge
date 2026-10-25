@@ -5,7 +5,7 @@
 //   seed [topic]                  no watcher: exhibit numbers only, for every topic with a report (or one); runs anywhere
 //   note <topic> <claim> "<note>" explain the latest unexplained revision of a claim (exit 2 when there is none)
 // The watcher lives in ../retire-sim (or $WATCHER_DIR), so the default command only runs locally; commit the results.
-import { existsSync, readdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import {
   type ClaimState,
@@ -52,13 +52,20 @@ if (cmd === 'note') {
   for (const d of readdirSync(join(ROOT, TOPICS), { withFileTypes: true })) {
     if (!d.isDirectory() || !existsSync(join(topicDir(d.name), 'store', 'topics.json'))) continue;
     const before = reported.has(d.name) ? claimStates(loadTopic(d.name)) : null;
-    writeFileSync(
-      join(topicDir(d.name), 'report.json'),
-      watcher(['report', '--json', '--store', join(TOPICS, d.name, 'store')]),
-    );
+    const path = join(topicDir(d.name), 'report.json');
+    const old = existsSync(path) ? readFileSync(path, 'utf8') : null;
+    writeFileSync(path, watcher(['report', '--json', '--store', join(TOPICS, d.name, 'store')]));
+    // The old report is the only record of the claims' previous states: if the new one cannot be applied, put it back,
+    // so the next run still sees the change. ponytail: a kill between the two writes still loses it; diff against
+    // states kept in public-record.json if that ever happens.
+    try {
+      if (topicNames().includes(d.name)) keep(d.name, before); // a report with no claims yet has nothing to number
+    } catch (e) {
+      if (old === null) rmSync(path);
+      else writeFileSync(path, old);
+      throw e;
+    }
     console.log('wrote', `${TOPICS}/${d.name}/report.json`);
-    if (!topicNames().includes(d.name)) continue; // a report with no claims yet has nothing to number
-    keep(d.name, before);
     const open = loadPublicRecord(d.name).revisions.filter((r) => !r.note.trim());
     if (open.length) {
       console.log(`${d.name}: ${open.length} revisions need a note:`);
