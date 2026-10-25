@@ -226,7 +226,9 @@ export function buildStoryboard(
       if (!c.points?.length) issue(p.id, 'chart', 'blocking', 'a chart with no points');
       for (const pt of c.points ?? [])
         for (const why of pointProblems(pt, known, read))
-          issue(p.id, known.has(pt.cite) ? 'chart-data' : 'chart', 'blocking', `chart point "${pt.label}": ${why}`);
+          known.has(pt.cite)
+            ? issue(p.id, 'chart-data', 'blocking', `chart point "${pt.label}": ${why}`)
+            : issue(p.id, 'chart', 'blocking', `chart point "${pt.label}" ${why}`);
       // The title and note are drawn too: their figures must be in one of the points' passages.
       const chartText = (c.points ?? [])
         .filter((pt) => known.has(pt.cite))

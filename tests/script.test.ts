@@ -23,7 +23,6 @@ import {
 } from '../src/lib/script';
 import { evalExpr, repetitions, validateScript } from '../src/lib/script-validation';
 import { sha } from '../src/lib/io';
-import { pointProblems } from '../src/lib/storyboard';
 import { spokenWords } from '../src/lib/numbers';
 import {
   type ChartPoint,
@@ -31,6 +30,7 @@ import {
   type ChartType,
   type StoryboardPlan,
   buildStoryboard,
+  pointProblems,
 } from '../src/lib/storyboard';
 import { TOPIC, claim, study } from './corpus';
 import {
@@ -735,6 +735,19 @@ describe('storyboard', () => {
         read,
       ).status,
     ).toBe('ok');
+  });
+
+  it('words an unknown cite and a display mismatch as it always has', () => {
+    const s = good();
+    const v = run(s, approveAll(s, pkg()));
+    const msgs = (pts: ChartPoint[]) =>
+      buildStoryboard(chartPlan(pts), s, v, pkg(), read).issues.map((i) => i.explanation);
+    expect(msgs([point({ cite: 'nope/sources/x.txt#L1-L2' })])).toContain(
+      `chart point "lost money" cites nope/sources/x.txt#L1-L2, which is not in the evidence package`,
+    );
+    expect(msgs([point({ value: 12, display: '13%' })])).toContain(
+      `chart point "lost money": display "13%" does not state the value 12`,
+    );
   });
 
   it('rejects display/value mismatch, out-of-passage figures, bad units and unknown types', () => {
