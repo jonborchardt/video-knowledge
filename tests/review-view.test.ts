@@ -153,3 +153,21 @@ describe('parseNotes', () => {
     expect(parseNotes('s99 what', v)).toEqual([{ text: 's99 what' }]);
   });
 });
+
+describe('review fixes', () => {
+  it('a release build approved before its upload can be uploaded from the page', () =>
+    run(placed(syntheticProduction('packaged', { release: true }), false), (f) => {
+      recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+      const v = reviewView(f.topic, f.story, f.root);
+      expect(v.state?.status).toBe('approved');
+      expect(v.can.upload).toBe(true);
+    }));
+  it('shows the composed title, the one an approval binds', () =>
+    run(placed(syntheticProduction('packaged', { release: true }), false), (f) => {
+      recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+      const l = loadLedger(f.topic, f.story, f.root)!;
+      l.outputs.youtube.metadata.title = 'Override';
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+      expect(reviewView(f.topic, f.story, f.root).title).toBe('Override');
+    }));
+});

@@ -167,7 +167,7 @@ describe('jobs', () => {
   };
   it('reads running, done, failed and lost', () =>
     run(syntheticProduction('locked'), async (f) => {
-      const base = { label: 'upload', args: ['publish', 'upload'], startedAt: '2026-10-24T00:00:00Z' };
+      const base = { label: 'upload', args: ['publish', 'upload'], startedAt: new Date().toISOString() };
       expect(jobStatus(dirWith(f, null))).toBeNull();
       expect(jobStatus(dirWith(f, { ...base, pid: process.pid, exitCode: null }))?.state).toBe('running');
       expect(jobStatus(dirWith(f, { ...base, pid: process.pid, exitCode: 0 }))?.state).toBe('done');
@@ -176,7 +176,34 @@ describe('jobs', () => {
     }));
   it('refuses a second job while one runs', () =>
     run(syntheticProduction('locked'), async (f) => {
-      const dir = dirWith(f, { label: 'upload', args: [], startedAt: '', pid: process.pid, exitCode: null });
+      const dir = dirWith(f, {
+        label: 'upload',
+        args: [],
+        startedAt: new Date().toISOString(),
+        pid: process.pid,
+        exitCode: null,
+      });
       expect(() => startJob(dir, 'push', ['publish', 'push'])).toThrow(/running/);
+    }));
+});
+
+describe('review fixes', () => {
+  it('an approval made against another title, or by a name that reads as a flag, is refused', () =>
+    run(syntheticProduction('packaged', { release: true }), async (f) => {
+      const params = { topic: f.topic, action: 'approve', path: pathOf(f) };
+      let res = await handle(post('/', { by: 'Jon', build: 'releasesha', title: 'Not the title' }), params, {
+        root: f.root,
+      });
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=.*title/);
+      res = await handle(post('/', { by: '--at', build: 'releasesha' }), params, { root: f.root });
+      expect(decodeURIComponent(res.headers.get('location')!)).toMatch(/error=/);
+      expect(loadLedger(f.topic, f.story, f.root)?.outputs.youtube.events ?? []).toEqual([]);
+    }));
+  it('a job from before this server started is lost even when its pid is alive again', () =>
+    run(syntheticProduction('locked'), async (f) => {
+      mkdirSync(join(f.dir, 'video'), { recursive: true });
+      const job = { label: 'upload', args: [], pid: process.pid, exitCode: null };
+      writeFileSync(join(f.dir, 'video', JOB_FILE), JSON.stringify({ ...job, startedAt: '2000-01-01T00:00:00Z' }));
+      expect(jobStatus(f.dir)?.state).toBe('lost');
     }));
 });

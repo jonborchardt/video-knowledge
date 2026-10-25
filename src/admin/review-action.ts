@@ -49,9 +49,12 @@ export async function handle(
   const view = reviewView(topic, storyId, root);
   try {
     const problem = approverProblem(by);
-    if (problem || by.startsWith('automated:')) throw new Refusal('every action here is a person’s: type your name');
+    if (problem || by.startsWith('automated:') || by.startsWith('-'))
+      throw new Refusal('every action here is a person’s: type your name');
     if (field('build') !== view.pkg?.mp4Sha)
       throw new Refusal(`the build changed since this page was loaded (now ${view.pkg?.mp4Sha ?? 'none'}): reload it`);
+    if (form.has('title') && field('title') !== view.title)
+      throw new Refusal(`the title changed since this page was loaded (now "${view.title}"): reload it`);
     const can = CAN[action as Action];
     if (can && view.can[can] !== true) throw new Refusal(String(view.can[can]));
     if ((action === 'push' || action === 'sync') && !view.state?.id) throw new Refusal('nothing uploaded yet');

@@ -33,8 +33,10 @@ export function jobStatus(dir: string): { label: string; state: JobState; tail: 
   const p = paths(dir);
   const job = readJson<Job>(p.json);
   if (!job) return null;
+  // a job started before this process is the previous server's: its pid may be reused by now, so it is lost
+  const ours = Date.parse(job.startedAt) >= Date.now() - process.uptime() * 1000;
   const state: JobState =
-    job.exitCode === null ? (alive(job.pid) ? 'running' : 'lost') : job.exitCode === 0 ? 'done' : 'failed';
+    job.exitCode === null ? (ours && alive(job.pid) ? 'running' : 'lost') : job.exitCode === 0 ? 'done' : 'failed';
   const log = existsSync(p.log) ? readFileSync(p.log, 'utf8') : '';
   return { label: job.label, state, tail: log.split(/\r?\n/).slice(-15).join('\n').trim(), startedAt: job.startedAt };
 }

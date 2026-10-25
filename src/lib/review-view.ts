@@ -36,6 +36,7 @@ export interface ReviewView {
   storyId: string; // a Short's id is <story-id>/shorts/<slug>
   path: string; // its folder under topics/<topic>/scripts/
   kind: 'youtube-video' | 'youtube-short';
+  title: string; // the composed upload title: what an approval binds and what goes live
   parent: { storyId: string; path: string; title: string; status: OutputStatus | 'not-packaged' } | null; // a Short's
   shorts: { storyId: string; path: string; title: string; status: OutputStatus | 'not-packaged' }[]; // a video's
   pkg: {
@@ -181,13 +182,17 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
               : state!.status === 'approved' || state!.status === 'scheduled'
                 ? no(`already ${state!.status}`)
                 : true)),
-    requestChanges: !pkg ? no('no review package yet') : !o ? no('no ledger entry yet') : (live ?? true),
+    requestChanges: !pkg
+      ? no('no review package yet')
+      : !o
+        ? no('no ledger entry yet')
+        : (live ?? (state!.status === 'scheduled' ? no('scheduled on YouTube: unschedule it there first') : true)),
     acceptDraft: !pkg ? no('no review package yet') : pkg.status === 'release' ? no('this is the release build') : true,
     upload: !pkg
       ? no('no review package yet')
       : !o
         ? no('no ledger entry yet')
-        : state!.status === 'not-uploaded' || state!.status === 'build-behind'
+        : !state!.id || state!.status === 'build-behind'
           ? true
           : no(`uploaded (${state!.status})`),
     goLive: !o
@@ -230,6 +235,7 @@ export function reviewView(topic: string, storyId: string, root = ROOT): ReviewV
     storyId,
     path: pathOf(topic, storyId, root),
     kind: short ? 'youtube-short' : 'youtube-video',
+    title: o?.metadata?.title ?? rp?.title ?? storyId,
     parent,
     shorts,
     pkg,

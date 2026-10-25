@@ -170,7 +170,7 @@ export function eventKey(e: PublishEvent): string | null {
     case 'uploaded':
       return `uploaded|${e.build}|${e.id}`;
     case 'approved':
-      return `approved|${e.build}`;
+      return `approved|${e.build}|${e.title ?? ''}`; // the same build under a new title is a new decision
     case 'changes-requested':
       return `changes-requested|${e.build}|${sha(JSON.stringify(e.notes ?? []))}`;
     case 'scheduled':
@@ -403,6 +403,17 @@ export function outputState(
     const studio = output.kind === 'youtube-short' ? '; set the related video in YouTube Studio (not in the API)' : '';
     return done('published', `live at ${url}${moved}${studio}`);
   }
+  // a schedule stands until it is unpublished: YouTube publishes it whatever the ledger decides about it since
+  if (scheduled) {
+    const due = Date.parse(scheduled.publishAt!) <= now.getTime();
+    return done(
+      'scheduled',
+      due
+        ? `was due ${scheduled.publishAt} (${verb('sync')})`
+        : `scheduled for ${scheduled.publishAt}; nothing until then`,
+      due,
+    );
+  }
   if (build && build.sha !== upload.build)
     return done(
       'build-behind',
@@ -421,16 +432,6 @@ export function outputState(
       status === 'draft'
         ? `watch ${url} with video/review/checklist.md, then npm run video -- final ${ctx.topic} ${ctx.story} --approved-by "<name>"`
         : `watch ${url} with video/review/checklist.md, then ${verb('approve', ' --by "<name>"')}`,
-    );
-  }
-  if (scheduled) {
-    const due = Date.parse(scheduled.publishAt!) <= now.getTime();
-    return done(
-      'scheduled',
-      due
-        ? `was due ${scheduled.publishAt} (${verb('sync')})`
-        : `scheduled for ${scheduled.publishAt}; nothing until then`,
-      due,
     );
   }
   if (metadataSha && sentSha && metadataSha !== sentSha) return done('metadata-behind', behind);
@@ -702,6 +703,8 @@ export function recordChangesRequested(
   if (!o.build || o.build.sha !== a.build)
     throw new Refusal(`build ${a.build} is not the current build (${o.build?.sha ?? 'none'}); reload and review it`);
   if (o.state.live) throw new Refusal(`${o.id} is live; a re-release is a new output (npm run publish -- add)`);
+  if (o.state.status === 'scheduled')
+    throw new Refusal(`${o.id} is scheduled on YouTube; unschedule it in YouTube Studio first, then record it`);
   return write(o, { at: stamp(a), type: 'changes-requested', by: a.by, build: a.build, notes });
 }
 

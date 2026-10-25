@@ -30,7 +30,7 @@ try {
 const media = (file: string) => href(`/${topic}/review-media/${file}/${path}`);
 const action = (a: string) => href(`/${topic}/review-action/${a}/${path}`);
 const page = (p: string) => href(`/${topic}/review/${p}`);
-const title = v.pkg?.title ?? storyId;
+const title = v.title; // the composed upload title (an override in publish.json wins): what an approval binds
 const SEV: Record<Finding['severity'], string> = {
   blocking: 'text-destructive',
   warning: 'text-warning',
@@ -181,6 +181,7 @@ const sentenceStarts = JSON.stringify(v.sentences.map((s) => [s.at.seconds, s.at
             <form method="post" action={action('approve')} class="grid gap-2">
               <h3 class="font-semibold">Approve this build</h3>
               <input type="hidden" name="build" value={v.pkg.mp4Sha} />
+              <input type="hidden" name="title" value={title} />
               <fieldset class="grid gap-1 text-sm" disabled={!!why(v.can.approve)}>
                 <legend class={small}>Every item, watched on this build:</legend>
                 {v.pkg.checklist.map((item, i) => (
@@ -261,6 +262,7 @@ const sentenceStarts = JSON.stringify(v.sentences.map((s) => [s.at.seconds, s.at
             <form method="post" action={action('go-live')} class="grid gap-2 text-sm md:col-span-2">
               <h3 class="font-semibold">Go live</h3>
               <input type="hidden" name="build" value={v.pkg.mp4Sha} />
+              <input type="hidden" name="title" value={title} />
               <fieldset class="grid gap-2" disabled={!!why(v.can.goLive) || job?.state === 'running'}>
                 <label class="flex items-center gap-2">
                   <input type="radio" name="when" value="now" required /> Public now

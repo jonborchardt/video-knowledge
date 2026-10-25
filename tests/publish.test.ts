@@ -807,3 +807,46 @@ describe('review decisions (the review page)', () => {
     }
   });
 });
+
+describe('review fixes', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  it('a build approved again under a new title is approved', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+      const l = loadLedger(f.topic, f.story, f.root)!;
+      l.outputs.youtube.metadata.title = 'A better title';
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+      const r = recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now: new Date('2026-10-27T00:00:00Z') });
+      expect(r.existing).toBe(false);
+      expect(r.event!.title).toBe('A better title');
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).toBe('approved');
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('a scheduled upload stays scheduled through a title edit, and refuses a change request', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'aaaaaaaaaaa' });
+      recordApproved(f.topic, f.story, { root: f.root, by: 'Jon', now });
+      recordScheduled(f.topic, f.story, { root: f.root, by: 'Jon', now, at: '2026-11-01T15:00:00Z' });
+      const l = loadLedger(f.topic, f.story, f.root)!;
+      l.outputs.youtube.metadata.title = 'Retitled';
+      saveLedger(publishPath(f.topic, f.story, f.root), l);
+      expect(openOutput(f.topic, f.story, { root: f.root }).state.status).toBe('scheduled');
+      expect(() =>
+        recordChangesRequested(f.topic, f.story, {
+          root: f.root,
+          by: 'Jon',
+          now,
+          build: 'releasesha',
+          notes: [{ text: 'x' }],
+        }),
+      ).toThrow(/scheduled/);
+    } finally {
+      f.cleanup();
+    }
+  });
+});
