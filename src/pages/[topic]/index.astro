@@ -14,12 +14,14 @@ import VerdictBadge from '../../components/VerdictBadge.astro';
 import { groupSlug, loadStories } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
+import { loadDatasets } from '../../lib/datasets';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
   return publicTopicNames().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
 }
 const { t } = Astro.props as { t: Topic };
+const hasData = loadDatasets(t.name).length > 0;
 const stories = import.meta.env.DEV ? loadStories(t.name) : null; // the story ideas page exists on the dev server only
 const commission = commissionOf(t.name)!; // the institution that publishes this inquiry (every public topic has one)
 
@@ -157,6 +159,9 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
           term: 'Evidence',
           value: `${t.counted} sources examined · ${t.studies ? `${t.studies} studies and reports` : 'no studies checked yet'}`,
         },
+        ...(hasData
+          ? [{ term: 'Data', value: 'Tables and downloads (CSV, JSON)', href: href(`/${t.name}/data/`) }]
+          : []),
         { term: 'Status', value: 'Entered into the public record; verdicts update as evidence is added' },
       ]}
     >

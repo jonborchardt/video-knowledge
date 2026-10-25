@@ -40,3 +40,13 @@ export function datasetProblems(d: DataTable, read: PassageReader): string[] {
   }
   return out;
 }
+
+/** A dataset as CSV (RFC 4180): `label` then the column labels, one row per row, each cell as its display text. */
+export function datasetCsv(d: DataTable): string {
+  const cell = (v: string) => (/[",\r\n]/.test(v) ? `"${v.replaceAll('"', '""')}"` : v);
+  const lines = [
+    ['label', ...d.columns.map((c) => c.label)],
+    ...d.rows.map((r) => [r.label, ...r.cells.map((c) => c.display)]),
+  ];
+  return lines.map((l) => l.map(cell).join(',')).join('\n') + '\n';
+}

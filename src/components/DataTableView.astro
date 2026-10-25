@@ -5,14 +5,16 @@ import type { DataTable } from '../lib/datasets';
 interface Props {
   table: DataTable;
   caption?: string;
+  dataHref?: string; // the inquiry's data page, linked from the caption (omit on the data page itself)
 }
-const { table, caption } = Astro.props;
+const { table, caption, dataHref } = Astro.props;
 ---
 
 <section class="max-w-wide overflow-x-auto" aria-label={table.title} tabindex="0">
   <table class="w-full border-collapse text-sm">
     <caption class="mb-1 text-left text-muted-foreground">
       {caption ? `${caption} ` : ''}{table.title}, {table.asOf}.{table.note ? ` ${table.note}` : ''}
+      {dataHref && <a href={dataHref}> All figures in this inquiry.</a>}
     </caption>
     <thead>
       <tr class="border-b text-left text-muted-foreground">

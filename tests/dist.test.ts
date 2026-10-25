@@ -27,6 +27,9 @@ const pages = [
   ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
   ...publicTopicNames().map((n) => `${n}/index.html`),
   ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
+  ...publicTopicNames()
+    .filter((n) => loadDatasets(n).length > 0)
+    .map((n) => `${n}/data/index.html`),
 ];
 // Pages search engines are pointed at: a matter whose story is not ready is noindex and left out of the sitemap.
 const listed = pages.filter(
@@ -39,6 +42,7 @@ const sitemapXml = () => {
 };
 const ldOf = (html: string) =>
   [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+const csvCell = (v: string) => (/[",\n]/.test(v) ? `"${v.replaceAll('"', '""')}"` : v); // RFC 4180
 const decode = (s: string) => s.replaceAll('&#39;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
@@ -376,6 +380,19 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       for (const [th] of html.matchAll(/<th[\s>][^>]*>/g)) expect(th).toContain('scope="col"');
       expect(html).toContain('role="status"');
       expect(html).toContain('<symbol id="icon-video"'); // the shared icon sprite SourceLink points at
+    }
+  });
+
+  it('a topic with datasets has a data page with each table and its downloads', () => {
+    for (const n of publicTopicNames()) {
+      const ds = loadDatasets(n);
+      expect(existsSync(join(DIST, n, 'data/index.html'))).toBe(ds.length > 0);
+      for (const d of ds) {
+        expect(readFileSync(join(DIST, n, 'data', `${d.id}.csv`), 'utf8').split('\n')[0]).toBe(
+          ['label', ...d.columns.map((c) => c.label)].map(csvCell).join(','),
+        );
+        expect(JSON.parse(readFileSync(join(DIST, n, 'data', `${d.id}.json`), 'utf8'))).toEqual(d);
+      }
     }
   });
 });

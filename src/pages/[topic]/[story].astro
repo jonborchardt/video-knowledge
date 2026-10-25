@@ -209,7 +209,7 @@ const h2 = 'mb-3 text-featured font-bold';
     }
     {
       view ? (
-        <ArticleBody view={view} />
+        <ArticleBody view={view} dataHref={datasets.length ? href(`/${t.name}/data/`) : undefined} />
       ) : (
         <>
           <section aria-labelledby="dispute">

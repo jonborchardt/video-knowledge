@@ -8,8 +8,9 @@ import DataTableView from './DataTableView.astro';
 
 interface Props {
   view: ArticleView;
+  dataHref?: string; // the inquiry's data page, when it has one
 }
-const { view: v } = Astro.props;
+const { view: v, dataHref } = Astro.props;
 const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
 ---
 
@@ -78,7 +79,7 @@ const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
           if (b.kind === 'figure')
             return b.draw ? (
               <>
-                {b.draw.table && <DataTableView table={b.draw.table} />}
+                {b.draw.table && <DataTableView table={b.draw.table} dataHref={dataHref} />}
                 {b.draw.chart && (
                   <Chart spec={b.draw.chart} caption={b.caption} source={b.draw.source} table={!b.draw.table} />
                 )}
