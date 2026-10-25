@@ -7,7 +7,7 @@
 //   reaffirm <topic> <story-id> --approved-by "<name>" --note "<why unchanged>"  a stale article's text stands
 // lock and correct validate afresh and refuse (exit 2, nothing written) unless it passes; a real name or "automated: ...".
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import {
   ARTICLE_FILES,
   type Article,
@@ -18,26 +18,14 @@ import {
   renderArticleMd,
 } from '../src/lib/article';
 import { articleStale } from '../src/lib/article-view';
-import { figuresOf, validateArticle } from '../src/lib/article-validation';
+import { validateArticleIn } from '../src/lib/article-validation';
 import { corpusOf } from '../src/lib/corpus';
 import { passageReader } from '../src/lib/evidence';
 import { readJson, toJson, writeArtifact, ROOT } from '../src/lib/io';
-import {
-  loadPublicRecord,
-  publicRecordPath,
-  publicRecordProblems,
-  withArticleRevision,
-} from '../src/lib/public-record';
+import { loadPublicRecord, publicRecordPath, withArticleRevision } from '../src/lib/public-record';
 import { Refusal } from '../src/lib/publish';
 import { loadReview } from '../src/lib/review';
-import {
-  type EvidencePackage,
-  FILES,
-  type Script,
-  type ScriptReviewFile,
-  type ScriptValidation,
-  scriptDir,
-} from '../src/lib/script';
+import { type EvidencePackage, FILES, type Script, type ScriptValidation, scriptDir } from '../src/lib/script';
 import { loadTopic } from '../src/lib/topics';
 
 const [cmd, topic, storyId, ...rest] = process.argv.slice(2);
@@ -57,11 +45,7 @@ if (!['validate', 'show', 'lock', 'correct', 'reaffirm'].includes(cmd) || !topic
 }
 const dir = scriptDir(topic, storyId);
 const p = (name: string) => join(dir, name);
-const rel = (f: string) =>
-  f
-    .replace(ROOT, '')
-    .replace(/^[\\/]/, '')
-    .replaceAll('\\', '/');
+const rel = (f: string) => relative(ROOT, f).replaceAll('\\', '/');
 const today = new Date().toISOString().slice(0, 10);
 
 /** The article judged against the current package, review, script, storyboard and sources. */
@@ -70,13 +54,10 @@ function validate(): { a: Article; v: ScriptValidation } {
   if (!a) throw new Refusal(`no ${rel(p(ARTICLE_FILES.article))}; give an agent scripts/briefs/article.md`);
   const pkg = readJson<EvidencePackage>(p(FILES.pkg));
   if (!pkg) throw new Refusal(`no ${rel(p(FILES.pkg))}; run npm run script -- package ${topic} ${storyId}`);
-  const v = validateArticle(a, corpusOf(loadTopic(topic)), passageReader(), {
-    review: readJson<ScriptReviewFile>(p(ARTICLE_FILES.review)),
+  const v = validateArticleIn(topic, storyId, a, corpusOf(loadTopic(topic)), passageReader(), {
     judgments: loadReview(topic).applicability,
-    previous: readJson<ScriptValidation>(p(ARTICLE_FILES.validation)),
     pkg,
     script: readJson<Script>(p(FILES.script)),
-    figures: figuresOf(topic, storyId),
   });
   return { a, v };
 }
@@ -131,8 +112,6 @@ function run() {
         flag('--note') ?? '',
         today,
       );
-      const problems = publicRecordProblems({ exhibits: {}, revisions: [revision] });
-      if (problems.length) throw new Refusal(problems.join('; '));
       const record = loadPublicRecord(topic);
       // the record first: if the release write then fails, correct can be re-run against the old release, and the
       // re-run finds its revision already recorded

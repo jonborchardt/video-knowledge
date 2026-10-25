@@ -6,7 +6,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { site } from '../config/site';
-import { contentGraph, matterPath, storyNode } from '../lib/content-graph';
+import { absolute, contentGraph, matterPath, storyNode } from '../lib/content-graph';
 import { type CtaType, ctaPath, loadCta, resolveCtas } from '../lib/cta';
 import { fileSha, ROOT, sha, toJson } from '../lib/io';
 import { loadLedger, mainOutput } from '../lib/publish';
@@ -61,7 +61,7 @@ export function descriptionLinks(
   const node = storyNode(topic, id);
   const s = g.stories.get(node);
   if (!s) return { cta: 'default', links: [recordLink(topic)] };
-  const matter = `${site.url}${matterPath(topic, s).slice(1)}`;
+  const matter = absolute(matterPath(topic, s));
   if (shortParent)
     return {
       cta: 'default',
@@ -79,7 +79,6 @@ export function descriptionLinks(
     url: c.url,
     text: c.disclosure ? `Paid link (${c.disclosure}): ${c.text}` : c.text,
   }));
-  // The record line, unless a call to action already points at the inquiry.
   // The matter page always (D3.1: the URL moved.json protects), unless a call to action already leads there; then the
   // record line, unless a call to action already points at the inquiry.
   const page = ctas.some((c) => c.url.startsWith(matter))

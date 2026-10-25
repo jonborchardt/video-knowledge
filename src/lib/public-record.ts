@@ -7,8 +7,6 @@ import { findingLabel, FINDING_LABELS, type FindingLabel } from './finding-label
 import { readJson, ROOT, topicDir } from './io';
 import type { Topic, Verdict } from './topics';
 
-export const PUBLIC_RECORD_FILE = 'public-record.json';
-
 export interface ClaimState {
   label: FindingLabel;
   verdict: Verdict | null;
@@ -38,7 +36,7 @@ export interface PublicRecord {
   revisions: Revision[];
 }
 
-export const publicRecordPath = (topic: string, root = ROOT) => join(topicDir(topic, root), PUBLIC_RECORD_FILE);
+export const publicRecordPath = (topic: string, root = ROOT) => join(topicDir(topic, root), 'public-record.json');
 
 export const loadPublicRecord = (topic: string, root = ROOT): PublicRecord =>
   readJson<PublicRecord>(publicRecordPath(topic, root)) ?? { exhibits: {}, revisions: [] };

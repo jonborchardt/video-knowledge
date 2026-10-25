@@ -49,7 +49,7 @@ export interface Article {
   sections: ArticleSection[];
 }
 
-const proseOf = (s: ArticleSection) => s.blocks.flatMap((b) => (b.kind === 'prose' ? b.sentences : []));
+export const proseOf = (s: ArticleSection) => s.blocks.flatMap((b) => (b.kind === 'prose' ? b.sentences : []));
 
 export const articleSentences = (a: Article): Sentence[] => [
   a.meta.dek,

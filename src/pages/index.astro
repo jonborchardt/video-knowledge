@@ -7,28 +7,25 @@ import LabelStrip from '../components/LabelStrip.astro';
 import { commissionKey, commissions, site } from '../config/site';
 import { labelCounts } from '../lib/finding-label';
 import { ROOT } from '../lib/io';
-import { contentGraph, hasVideo, matterOrder, storyNode } from '../lib/content-graph';
+import { contentGraph, hasVideo, matterOrder, matterPath } from '../lib/content-graph';
 import KindIcon from '../components/KindIcon.astro';
 import SourceIcons from '../components/SourceIcons.astro';
-import { loadStories, storyUrlSlug } from '../lib/stories';
-import { loadTopic, publicTopicNames } from '../lib/topics';
+import { storyUrlSlug } from '../lib/stories';
+import { loadTopic } from '../lib/topics';
 import { href } from '../lib/url';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const LATEST = 6;
 const graph = contentGraph();
-const latest = publicTopicNames()
-  .flatMap((name) => {
-    const t = loadTopic(name);
-    return (loadStories(name)?.stories ?? [])
-      .filter((s) => s.readiness === 'ready' && !s.partOf)
-      .map((s) => ({ s, t, node: graph.nodes.get(storyNode(name, s.id))! }));
-  })
-  .sort((a, b) => matterOrder(graph, a.node, b.node))
+const latest = [...graph.nodes.values()]
+  .filter((n) => n.kind === 'story' && n.public && !graph.stories.get(n.id)!.partOf)
+  .sort((a, b) => matterOrder(graph, a, b))
   .slice(0, LATEST)
-  .map(({ s, t }) => {
-    const path = `/${t.name}/${storyUrlSlug(s)}/`;
+  .map((n) => {
+    const s = graph.stories.get(n.id)!;
+    const t = loadTopic(n.topic!);
+    const path = matterPath(t.name, s);
     const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
     const claims = t.claims.filter((c) => s.claims.includes(c.id));
     return {
@@ -37,7 +34,7 @@ const latest = publicTopicNames()
       path,
       card: existsSync(join(ROOT, 'public', card)) ? card : null,
       counts: labelCounts(claims),
-      video: hasVideo(graph, storyNode(t.name, s.id)),
+      video: hasVideo(graph, n.id),
     };
   });
 ---

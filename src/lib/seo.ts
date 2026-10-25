@@ -1,6 +1,7 @@
 import { author, site } from '../config/site';
 import { absoluteUrl } from './url';
-import { loadStories, storyUrlSlug } from './stories';
+import { matterPath } from './content-graph';
+import { loadStories } from './stories';
 import { publicTopicNames } from './topics';
 import type { PublicVideo } from './outputs';
 
@@ -17,20 +18,22 @@ export interface PageMeta {
   jsonLd?: object[];
 }
 
+const person = () => ({ '@type': 'Person', name: author.name, url: author.links.GitHub });
+
 export const websiteJsonLd = (siteUrl: URL) => ({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: site.name,
   description: site.description,
   url: absoluteUrl('/', siteUrl),
-  publisher: { '@type': 'Person', name: author.name, url: author.links.GitHub },
+  publisher: person(),
 });
 
 /** Root-relative paths (`/<topic>/<slug>/`) of every public story that is not ready: its matter page is noindex and
  *  left out of the sitemap until it is, so search engines only send visitors to settled answers. */
 export const unlistedPaths = (): string[] =>
   publicTopicNames().flatMap((t) =>
-    (loadStories(t)?.stories ?? []).filter((s) => s.readiness !== 'ready').map((s) => `/${t}/${storyUrlSlug(s)}/`),
+    (loadStories(t)?.stories ?? []).filter((s) => s.readiness !== 'ready').map((s) => matterPath(t, s)),
   );
 
 /** The sitemap filter: strips Astro's `base` from the page URL before matching. */
@@ -43,7 +46,6 @@ export const isListed = (pageUrl: string, base: string, unlisted: Set<string>): 
 // Per-page structured data (plan D11). The publisher is always the real person; an institution appears only as the
 // name of a series, never as an Organization, so search engines are not told a fictional government exists.
 // ClaimReview is deliberately not used: our ratings are confidence-weighted across many sources, not one claimant.
-const person = () => ({ '@type': 'Person', name: author.name, url: author.links.GitHub });
 const ld = (type: string) => ({ '@context': 'https://schema.org', '@type': type });
 
 /** Whole seconds as an ISO 8601 duration: `PT7M54S`. */

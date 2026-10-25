@@ -114,7 +114,7 @@ describe('article view', () => {
     const v = articleView(release({ history }), topic, empty, REPO);
     expect(v.corrections).toEqual([{ date: '2026-11-03', note: 'n', sentences: ['s3'] }]);
     const b = v.sections[0].blocks[0];
-    expect(b.kind === 'p' && b.sentences.map((s) => s.corrected)).toEqual([false, false, true]);
+    expect(b.kind === 'p' && b.sentences.map((s) => !!s.correctedOn)).toEqual([false, false, true]);
   });
 
   it('a corrected sentence carries the date of the newest correction that names it', () => {

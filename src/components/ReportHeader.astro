@@ -50,16 +50,10 @@ const seal = href(`/commissions/${brand}.png`);
       <slot name="stamp" />
     </div>
   </div>
-  {
-    bigSeal ? (
-      <div class="flex items-center gap-4">
-        <img class="size-20 shrink-0" src={seal} alt="" width="256" height="256" />
-        <h1 class="text-display font-bold text-balance">{title}</h1>
-      </div>
-    ) : (
-      <h1 class="text-display font-bold text-balance">{title}</h1>
-    )
-  }
+  <div class="flex items-center gap-4">
+    {bigSeal && <img class="size-20 shrink-0" src={seal} alt="" width="256" height="256" />}
+    <h1 class="text-display font-bold text-balance">{title}</h1>
+  </div>
   {lede && <p class="max-w-prose text-lg text-muted-foreground">{lede}</p>}
   <slot />
   <dl

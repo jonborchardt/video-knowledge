@@ -10,7 +10,7 @@ import { chartProblems, datasetChart } from '../../../lib/chart-geometry';
 import { dataRef, loadDatasets, type DataTable } from '../../../lib/datasets';
 import { breadcrumbJsonLd } from '../../../lib/seo';
 import { loadTopic, publicTopicNames, type Topic } from '../../../lib/topics';
-import { citeHref, citeLines, datasetSource, href } from '../../../lib/url';
+import { citeHref, citeLabel, datasetSource, href } from '../../../lib/url';
 
 export function getStaticPaths() {
   return publicTopicNames()
@@ -21,16 +21,13 @@ const { t, datasets } = Astro.props as { t: Topic; datasets: DataTable[] };
 const commission = commissionOf(t.name)!;
 const brand = commissionKey(commission);
 
-const cites = (d: DataTable) => [...new Set(d.rows.flatMap((r) => r.cells.map((c) => c.cite)))];
-const passage = (c: string) => {
-  const file = c.split('#')[0].split('/').pop()!;
-  return { href: citeHref(site.repo, c), label: `${t.docNames[file] ?? file}, lines ${citeLines(c)}` };
-};
 const entries = datasets.map((d) => {
   const chart = datasetChart(d);
   const problems = chart ? chartProblems(chart) : [];
   if (problems.length) throw new Error(`${dataRef(t.name, d.id)}: ${problems.join('; ')}`);
-  return { d, chart, passages: cites(d).map(passage) };
+  const cites = [...new Set(d.rows.flatMap((r) => r.cells.map((c) => c.cite)))];
+  const passages = cites.map((c) => ({ href: citeHref(site.repo, c), label: citeLabel(t.docNames, c) }));
+  return { d, chart, cites, passages };
 });
 const base = `/${t.name}/data`;
 ---
@@ -68,13 +65,13 @@ const base = `/${t.name}/data`;
       ]}
     />
     {
-      entries.map(({ d, chart, passages }) => (
+      entries.map(({ d, chart, cites, passages }) => (
         <div class="grid gap-3">
           <h2 id={d.id} class="text-featured font-semibold">
             {d.title}
           </h2>
           {chart && (
-            <Chart spec={chart} caption={d.title} source={datasetSource(t.docNames, cites(d), d.asOf)} table={false} />
+            <Chart spec={chart} caption={d.title} source={datasetSource(t.docNames, cites, d.asOf)} table={false} />
           )}
           <DataTableView table={d} />
           <p class="text-sm">

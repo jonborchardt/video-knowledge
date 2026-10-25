@@ -5,7 +5,6 @@ import type { ClaimView } from './topics';
 
 export const FINDING_LABELS = ['verified', 'qualification', 'unresolved', 'reported'] as const;
 export type FindingLabel = (typeof FINDING_LABELS)[number];
-export const VERIFIED_MIN = STRONG;
 
 export const FINDING_TEXT: Record<FindingLabel, { name: string; meaning: string }> = {
   verified: { name: 'Verified finding', meaning: 'A study decides it, either way.' },
@@ -19,7 +18,7 @@ type Judged = Pick<ClaimView, 'verdict' | 'confidence' | 'decidedBy'>;
 export function findingLabel(c: Judged): FindingLabel {
   if (!c.decidedBy) return 'reported';
   if (c.verdict === 'partly') return 'qualification';
-  if ((c.verdict === 'right' || c.verdict === 'wrong') && (c.confidence ?? 0) >= VERIFIED_MIN) return 'verified';
+  if ((c.verdict === 'right' || c.verdict === 'wrong') && (c.confidence ?? 0) >= STRONG) return 'verified';
   return 'unresolved';
 }
 

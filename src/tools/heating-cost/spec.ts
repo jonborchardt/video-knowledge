@@ -7,11 +7,9 @@ export const heatingCost: ToolSpec = {
   id: 'heating-cost',
   topic: 'heat-pumps',
   story: 'decision:is-it-cheaper-to-run-than-gas',
-  justification: {
-    condition:
-      'Whether a heat pump is cheaper to run than a gas furnace turns on the price ratio and the heat pump seasonal COP, so the answer differs by household; the evidence gives the method, not one answer.',
-    model: `${SRC}#L119-L127`,
-  },
+  // Whether a heat pump is cheaper to run than a gas furnace turns on the price ratio and the heat pump seasonal COP,
+  // so the answer differs by household; the evidence gives the method, not one answer.
+  justification: { model: `${SRC}#L119-L127` },
   defaults: {
     prices: dataRef('heat-pumps', 'state-prices'),
     afue: [

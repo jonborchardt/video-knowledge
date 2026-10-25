@@ -5,10 +5,9 @@
 import Base from '../layouts/Base.astro';
 import InstitutionCard from '../components/InstitutionCard.astro';
 import SourceIcons from '../components/SourceIcons.astro';
-import { contentGraph, matterOrder, storyNode } from '../lib/content-graph';
+import { contentGraph, matterOrder } from '../lib/content-graph';
 import { commissions, site } from '../config/site';
 import { breadcrumbJsonLd, collectionJsonLd } from '../lib/seo';
-import { loadStories } from '../lib/stories';
 import { loadTopic, publicTopicNames } from '../lib/topics';
 import { href } from '../lib/url';
 
@@ -18,13 +17,13 @@ const institutions = Object.values(commissions).map((c) => {
   const published = c.topics.filter((n) => names.has(n)).map((n) => loadTopic(n));
   // Featured: the first ready matter across the institution's inquiries in the one order (a live video first); a
   // follow-up is never featured on its own.
-  const featured =
-    published
-      .flatMap((t) =>
-        (loadStories(t.name)?.stories ?? []).map((s) => ({ s, t, n: graph.nodes.get(storyNode(t.name, s.id))! })),
-      )
-      .filter(({ s }) => s.readiness === 'ready' && !s.partOf)
-      .sort((a, b) => matterOrder(graph, a.n, b.n))[0] ?? null;
+  const first = [...graph.nodes.values()]
+    .filter((n) => n.kind === 'story' && n.public && !graph.stories.get(n.id)!.partOf)
+    .filter((n) => published.some((t) => t.name === n.topic))
+    .sort((a, b) => matterOrder(graph, a, b))[0];
+  const featured = first
+    ? { s: graph.stories.get(first.id)!, t: published.find((t) => t.name === first.topic)! }
+    : null;
   return { c, published, featured };
 });
 const description = `The institutions of ${site.name}: what each is for, where it publishes and the inquiries it has opened.`;

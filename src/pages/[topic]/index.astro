@@ -30,9 +30,7 @@ const commission = commissionOf(t.name)!; // the institution that publishes this
 // Every matter of the inquiry (D9), a live video first; a claim group that is a story's links its matter.
 const graph = contentGraph();
 const matters = inquiryMatters(graph, t.name);
-const groupMatter = new Map(
-  (loadStories(t.name)?.stories ?? []).map((x) => [storyUrlSlug(x), `/${t.name}/${storyUrlSlug(x)}/`]),
-);
+const groupMatter = new Set((loadStories(t.name)?.stories ?? []).map(storyUrlSlug));
 
 // The report reads as an inquiry (brand/charter.md lexicon): findings, exhibits, the record. Each tab is a numbered
 // section of the document.
@@ -311,7 +309,7 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
         <>
           <h3 class={h3} id={groupSlug(g.title)}>
             {groupMatter.has(groupSlug(g.title)) ? (
-              <a href={href(groupMatter.get(groupSlug(g.title))!)}>{g.title}</a>
+              <a href={href(`/${t.name}/${groupSlug(g.title)}/`)}>{g.title}</a>
             ) : (
               g.title
             )}

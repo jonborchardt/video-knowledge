@@ -4,7 +4,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionKey, commissionOf, site } from '../config/site';
-import { TOOLS } from '../tools';
+import { toolOf } from '../tools';
 import { loadArticleRelease } from './article';
 import { dataRef, loadDatasets } from './datasets';
 import { readJson, ROOT, topicDir } from './io';
@@ -115,7 +115,8 @@ function buildGraph(root: string, topics: string[]): Graph {
           edge(art, b.ref, 'cites');
         }
       }
-      for (const t of Object.values(TOOLS).filter((x) => x.topic === topic && x.story === s.id)) {
+      const t = toolOf(topic, s.id);
+      if (t) {
         node({ id: `tool:${t.id}`, kind: 'tool', title: t.id, topic, story: id, public: s.readiness === 'ready' });
         edge(id, `tool:${t.id}`, 'uses');
       }
@@ -164,15 +165,19 @@ export function urlOf(g: Graph, id: string): string | null {
  *  as its watch URL. */
 export const absoluteOf = (g: Graph, id: string): string | null => {
   const u = urlOf(g, id);
-  return u && (u.startsWith('/') ? new URL(u.slice(1), site.url).toString() : u);
+  return u && (u.startsWith('/') ? absolute(u) : u);
+};
+/** A root-relative site path as its absolute URL under `site.url`. */
+export const absolute = (path: string) => new URL(path.slice(1), site.url).toString();
+
+/** A story node's chain: a follow-up resolves to its first question's node id, any other story to itself. */
+export const chainRoot = (g: Graph, id: string) => {
+  const s = g.stories.get(id);
+  return s?.partOf ? id.replace(/[^/]+$/, s.partOf) : id;
 };
 
 /** Whether a story has a live video (a follow-up's video is its first question's). */
-export const hasVideo = (g: Graph, story: string) => {
-  const s = g.stories.get(story);
-  const first = s?.partOf ? story.replace(/[^/]+$/, s.partOf) : story;
-  return !!g.nodes.get(`${first}#youtube`)?.public;
-};
+export const hasVideo = (g: Graph, story: string) => !!g.nodes.get(`${chainRoot(g, story)}#youtube`)?.public;
 
 /** The one order of matters in every list (D9): a live video first, then ready before under examination, then the
  *  overall score, then the id. */
@@ -197,10 +202,6 @@ export function related(
   const self = g.stories.get(story);
   const me = g.nodes.get(story);
   if (!self || !me) return [];
-  const chainOf = (id: string) => {
-    const s = g.stories.get(id)!;
-    return s.partOf ? id.replace(/[^/]+$/, s.partOf) : id;
-  };
   const shared = new Map(
     g.edges.filter((e) => e.kind === 'shares-claims' && e.from === story).map((e) => [e.to, e.weight ?? 0]),
   );
@@ -208,7 +209,7 @@ export function related(
   const tier = (n: Node) =>
     opts.pin?.includes(n.id)
       ? 0
-      : chainOf(n.id) === chainOf(story)
+      : chainRoot(g, n.id) === chainRoot(g, story)
         ? 1
         : shared.has(n.id)
           ? 2

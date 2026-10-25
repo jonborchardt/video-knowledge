@@ -4,10 +4,9 @@
 // disclosure, a person's approval, and never primary over a tool or the evidence. No script, storyboard or render
 // carries one; the description and the matter page do.
 import { join } from 'node:path';
-import { site } from '../config/site';
 import { toolOf } from '../tools';
 import { loadArticleRelease } from './article';
-import { absoluteOf, type Graph, matterPath, storyNode } from './content-graph';
+import { absolute, absoluteOf, chainRoot, type Graph, matterPath } from './content-graph';
 import { readJson, ROOT } from './io';
 import { approverProblem } from './release';
 import { FILES, type Script, scriptDir, sentences } from './script';
@@ -57,16 +56,6 @@ export interface CtaResult {
   problems: string[];
 }
 
-const matterUrl = (g: Graph, story: string) =>
-  new URL(matterPath(g.nodes.get(story)!.topic!, g.stories.get(story)!).slice(1), site.url).toString();
-export const defaultCta = (g: Graph, story: string): ResolvedCta => ({
-  type: 'evidence',
-  text: 'The evidence and the full answer',
-  url: matterUrl(g, story),
-  node: story,
-  disclosure: null,
-});
-
 /** The file's errors: each fails the build (a commercial entry without its disclosure or a person's approval, too). */
 function fileProblems(f: CtaFile): string[] {
   const out: string[] = [];
@@ -89,11 +78,17 @@ function fileProblems(f: CtaFile): string[] {
 }
 
 export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root = ROOT): CtaResult {
-  const fallback = defaultCta(g, story);
-  if (!file) return { primary: fallback, secondary: [], dropped: [], problems: [] };
-  const problems = fileProblems(file);
   const s = g.stories.get(story)!;
   const topic = g.nodes.get(story)!.topic!;
+  const fallback: ResolvedCta = {
+    type: 'evidence',
+    text: 'The evidence and the full answer',
+    url: absolute(matterPath(topic, s)),
+    node: story,
+    disclosure: null,
+  };
+  if (!file) return { primary: fallback, secondary: [], dropped: [], problems: [] };
+  const problems = fileProblems(file);
   const tool = toolOf(topic, s.id);
   const release = loadArticleRelease(topic, s.id, root);
   const script = readJson<Script>(join(scriptDir(topic, s.id, root), FILES.script));
@@ -101,10 +96,6 @@ export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root 
     script ? sentences(script).flatMap((x) => (x.assertions ?? []).flatMap((a) => a.claims.map((c) => c.id))) : [],
   );
   const unasserted = s.claims.some((c) => !asserted.has(c));
-  const chainRoot = (id: string) => {
-    const x = g.stories.get(id);
-    return x?.partOf ? storyNode(topic, x.partOf) : id;
-  };
   const at = (node: string, c: Cta, type: CtaType = c.type): ResolvedCta | string => {
     const url = absoluteOf(g, node);
     return url ? { type, text: c.text, url, node, disclosure: null } : 'not public';
@@ -132,7 +123,7 @@ export function resolveCtas(file: CtaFile | null, g: Graph, story: string, root 
         if (n?.kind !== 'video') return 'not a video';
         if (!n.public) return 'not live';
         // A chain is one video: its first question's. Pointing at it from the chain points at itself.
-        if (chainRoot(n.story!) === chainRoot(story)) return 'the same video';
+        if (chainRoot(g, n.story!) === chainRoot(g, story)) return 'the same video';
         const shared = g.edges.some((e) => e.kind === 'shares-claims' && e.from === story && e.to === n.story);
         if (!shared) return 'not related';
         return at(n.id, c);

@@ -2,7 +2,8 @@
 // One institution in the directory: its seal, channel, remit, published inquiries and a featured matter, each link
 // marked with the kind of page it leads to (the page includes SourceIcons).
 import { type Commission, commissionKey, site } from '../config/site';
-import { type Story, storyUrlSlug } from '../lib/stories';
+import { matterPath } from '../lib/content-graph';
+import type { Story } from '../lib/stories';
 import type { Topic } from '../lib/topics';
 import { href } from '../lib/url';
 import KindIcon from './KindIcon.astro';
@@ -79,7 +80,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
         {featured && (
           <a
             class="grid content-start gap-2 rounded-md border border-dashed p-4 no-underline hover:border-primary"
-            href={href(`/${featured.t.name}/${storyUrlSlug(featured.s)}/`)}
+            href={href(matterPath(featured.t.name, featured.s))}
           >
             <span class="eyebrow text-muted-foreground">
               <KindIcon kind="matter" decorative /> Featured matter · {featured.t.label}
