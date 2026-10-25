@@ -141,6 +141,19 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('topic, matter and institution pages open with one report header and the seal', () => {
+    const heads = [
+      ...publicTopicNames().map((n) => `${n}/index.html`),
+      ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
+      ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
+    ];
+    for (const p of heads) {
+      const html = readFileSync(join(DIST, p), 'utf8');
+      expect(html.match(/data-report-header/g), p).toHaveLength(1);
+      expect(html).toMatch(new RegExp(`src="${BASE}commissions/[a-z-]+\\.png"`));
+    }
+  });
+
   it('serves a 404 page', () => {
     expect(readFileSync(join(DIST, '404.html'), 'utf8')).toContain('<h1');
   });
