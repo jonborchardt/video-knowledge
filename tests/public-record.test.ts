@@ -1,5 +1,15 @@
 import { spawnSync } from 'node:child_process';
-import { copyFileSync, existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync } from 'node:fs';
+import {
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
@@ -11,8 +21,7 @@ import {
   publicRecordProblems,
   revisionLine,
 } from '../src/lib/public-record';
-import { ROOT, topicDir } from '../src/lib/io';
-import { copyTopic } from './production-helpers';
+import { ROOT, toJson, topicDir } from '../src/lib/io';
 import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/lib/topics';
 
 const claim = (id: string, verdict: Verdict | null, confidence: number | null, decidedBy: string | null = 'S') =>
@@ -104,25 +113,42 @@ describe('public record', () => {
   });
 
   it('npm run report puts the old report back when the new one cannot be read, so no change goes unrecorded', () => {
-    const c = copyTopic('heat-pumps');
+    // A one-claim topic in a temp root (its package.json makes ROOT the copy) and a watcher that prints a broken report.
+    const root = mkdtempSync(join(tmpdir(), 'vk-report-'));
     try {
-      copyFileSync(join(ROOT, 'package.json'), join(c.root, 'package.json')); // ROOT resolves to the copy
-      symlinkSync(join(ROOT, 'node_modules'), join(c.root, 'node_modules'), 'junction'); // tsx, for the watcher spawn
-      const watcher = join(c.root, 'fake-watcher');
+      copyFileSync(join(ROOT, 'package.json'), join(root, 'package.json'));
+      symlinkSync(join(ROOT, 'node_modules'), join(root, 'node_modules'), 'junction'); // tsx, for the watcher spawn
+      const dir = topicDir('fixture', root);
+      mkdirSync(join(dir, 'store', 'videos'), { recursive: true });
+      writeFileSync(join(dir, 'store', 'topics.json'), '[]\n');
+      const claim = { id: 'fixture/x', text: 'x', asserted: 1, denied: 0, effective: 'right', confidence: 0.9 };
+      const old = toJson({
+        topics: [
+          {
+            id: 'fixture',
+            label: 'Fixture',
+            claims: [{ ...claim, note: null, source: 'fixture/sources/s.txt', documents: ['s.txt'] }],
+            commonlyWrong: [],
+            contested: [],
+            surprises: [],
+          },
+        ],
+        videos: [],
+      });
+      writeFileSync(join(dir, 'report.json'), old);
+      const watcher = join(root, 'fake-watcher');
       mkdirSync(join(watcher, 'src'), { recursive: true });
       writeFileSync(join(watcher, 'src', 'cli.ts'), "process.stdout.write('{ not json');\n");
-      const report = join(topicDir('heat-pumps', c.root), 'report.json');
-      const old = readFileSync(report, 'utf8');
       const r = spawnSync(process.execPath, ['--import', 'tsx', join(ROOT, 'scripts', 'report.ts')], {
-        cwd: c.root,
+        cwd: root,
         env: { ...process.env, WATCHER_DIR: watcher },
         encoding: 'utf8',
       });
       expect(r.stderr).toMatch(/JSON/); // it got as far as reading the new report
       expect(r.status).not.toBe(0);
-      expect(readFileSync(report, 'utf8')).toBe(old);
+      expect(readFileSync(join(dir, 'report.json'), 'utf8')).toBe(old);
     } finally {
-      c.cleanup();
+      rmSync(root, { recursive: true, force: true });
     }
-  }, 60_000);
+  }, 30_000);
 });
