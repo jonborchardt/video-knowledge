@@ -300,6 +300,29 @@ describe.skipIf(!withVideo.length || !BROWSERS.includes('chromium'))('video faca
   });
 });
 
+const withTool = pagesMatching('data-tool=');
+
+describe.skipIf(!withTool.length || !BROWSERS.includes('chromium'))('calculator', () => {
+  it('the calculator updates its result, names missing inputs, and is keyboard operable', async () => {
+    const browser = await chromium.launch();
+    const page = await browser.newPage();
+    await page.goto(urlOf(withTool[0]), { waitUntil: 'load' });
+    const out = page.locator('[data-tool] output');
+    await expect.poll(() => out.textContent()).toContain('Break-even');
+    const before = await out.textContent();
+    await page.locator('[data-tool] select[name=state]').focus();
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Tab'); // reached by Tab from the control before it
+    expect(await page.evaluate(() => (document.activeElement as HTMLSelectElement).name)).toBe('state');
+    await page.locator('[data-tool] select[name=state]').selectOption({ label: 'Massachusetts' });
+    await expect.poll(() => out.textContent()).not.toBe(before);
+    await page.locator('[data-tool] input[name=gas]').fill('');
+    await expect.poll(() => out.textContent()).toContain('Enter a gas price above zero');
+    expect(await out.textContent()).not.toMatch(/NaN|Infinity/);
+    await browser.close();
+  });
+});
+
 describe.skipIf(!pages.length || !BROWSERS.includes('chromium'))('exceptions', () => {
   it('every exception for a page this run covered still matches a finding', () => {
     const ran = (re: string) => pages.some((p) => new RegExp(re).test(p));

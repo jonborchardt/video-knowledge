@@ -1,9 +1,18 @@
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { ROOT } from '../src/lib/io';
 import { passageReader } from '../src/lib/evidence';
 import { loadStories } from '../src/lib/stories';
 import { TOOLS, toolOf } from '../src/tools';
 import { type Result, estimate, fromCentsPerKwh, fromDollarsPerMcf } from '../src/tools/heating-cost/model';
 
+// Every file under dir, as repo-relative paths with '/' separators.
+const walk = (dir: string) =>
+  readdirSync(join(ROOT, dir), { recursive: true, encoding: 'utf8' })
+    .map((f) => join(ROOT, dir, f))
+    .filter((f) => statSync(f).isFile())
+    .map((f) => relative(ROOT, f).replaceAll('\\', '/'));
 const round2 = (n: number) => Math.round(n * 100) / 100;
 const worked = { elec: fromCentsPerKwh(16.48), gas: fromDollarsPerMcf(14.5) };
 
@@ -28,6 +37,10 @@ describe('heating-cost model', () => {
       missing: ['elec', 'gas', 'therms'],
     });
   });
+  it('takes the COP pair in either order', () => {
+    const i = { ...worked, afue: 0.95, therms: 600 };
+    expect(estimate({ ...i, cops: [3.0, 2.5] })).toEqual(estimate({ ...i, cops: [2.5, 3.0] }));
+  });
   it('annual costs from a bill', () => {
     const r = estimate({ ...worked, afue: 0.95, cops: [2.5, 3.0], therms: 600 }) as Result;
     expect(r.annual!.furnace).toBeCloseTo(600 * 0.1 * worked.gas, 6);
@@ -50,5 +63,14 @@ describe('tool registry', () => {
       expect(read(d.cops.cite)).toMatch(/COP 2\.5 .*COP 3\.0/);
     }
     expect(toolOf('heat-pumps', 'nope')).toBeNull();
+  });
+  it('tools and datasets hold no outbound link', () => {
+    const files = [
+      ...walk('src/tools'),
+      ...walk('src/components/tools'),
+      ...walk('topics').filter((f) => /\/data\/[^/]+\.json$/.test(f)),
+    ];
+    expect(files.length).toBeGreaterThan(3);
+    for (const f of files) expect(readFileSync(join(ROOT, f), 'utf8'), f).not.toMatch(/https?:\/\//);
   });
 });

@@ -37,7 +37,7 @@ export function estimate(i: Inputs): Result | { missing: (keyof Inputs)[] } {
 
   const ratio = i.elec / i.gas;
   const breakEven = ratio * i.afue;
-  const [lo, hi] = i.cops;
+  const [lo, hi] = [Math.min(...i.cops), Math.max(...i.cops)]; // a visitor may type the pair either way round
   const side: Side = lo > breakEven ? 'heat-pump' : hi <= breakEven ? 'furnace' : 'depends';
   let annual: Result['annual'] = null;
   if (i.therms !== undefined) {

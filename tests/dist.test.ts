@@ -383,6 +383,13 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('the tool section informs without JavaScript', () => {
+    const html = readFileSync(join(DIST, 'heat-pumps', 'is-it-cheaper-to-run-than-gas', 'index.html'), 'utf8');
+    expect(html).toContain('data-tool="heating-cost"');
+    expect(html).toContain('3.28'); // the U.S. break-even in the worked examples
+    expect(html).toContain('not a prediction');
+  });
+
   it('a topic with datasets has a data page with each table and its downloads', () => {
     for (const n of publicTopicNames()) {
       const ds = loadDatasets(n);

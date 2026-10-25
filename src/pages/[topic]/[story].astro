@@ -10,6 +10,8 @@ import ReportHeader from '../../components/ReportHeader.astro';
 import LabelStrip from '../../components/LabelStrip.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
 import ArticleBody from '../../components/ArticleBody.astro';
+import Tool from '../../components/Tool.astro';
+import { toolOf } from '../../tools';
 import { loadArticleRelease } from '../../lib/article';
 import { articleView, type FigureDraw } from '../../lib/article-view';
 import { chartProblems, datasetChart } from '../../lib/chart-geometry';
@@ -122,6 +124,7 @@ const jsonLd = [
 const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
 const body = commissionBody(commission);
 const h2 = 'mb-3 text-featured font-bold';
+const tool = toolOf(t.name, s.id);
 ---
 
 <Base
@@ -237,6 +240,18 @@ const h2 = 'mb-3 text-featured font-bold';
       )
     }
   </section>
+
+  {
+    tool && (
+      <section id="tool" aria-labelledby="tool-title">
+        <div class="eyebrow text-gold">Your numbers</div>
+        <h2 class={h2} id="tool-title">
+          Run the comparison with your prices
+        </h2>
+        <Tool spec={tool} t={t} s={s} counts={labelCounts(claims)} />
+      </section>
+    )
+  }
 
   <section aria-labelledby="claims">
     <div class="eyebrow text-gold">Section III</div>
