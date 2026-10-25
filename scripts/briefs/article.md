@@ -148,7 +148,8 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
   `src/lib/finding-label.ts`): `qualification` for a Qualification (verdict `partly`), `unresolved` for an
   Unresolved claim (decided by a study, but not `right` or `wrong` at verified confidence). The coverage check
   accepts either type, so getting it right is yours. A factual sentence in a gap callout cites a study passage
-  that bears on the gap, never a context-only one.
+  that bears on the gap, never a context-only one, unless the gap is about that passage (the package marks it
+  context only): then the callout may report what it says, citing it, and states that it cannot decide the claim.
 - **Qualification coverage (blocking).** Every package claim whose label is Qualification or Unresolved must be
   named by a callout, or carried by an assertion on that claim with `qualifications`. Every gap needs an
   `unresolved` callout naming it by `gap` (a `gap-coverage` warning otherwise, which only you can close).
