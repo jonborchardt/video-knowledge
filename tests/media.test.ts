@@ -13,5 +13,6 @@ describe('parseRange', () => {
     expect(parseRange(null, 1000)).toBeNull();
     for (const h of ['bytes=1000-', 'bytes=5-2', 'chunks=0-1', 'bytes=-0', 'bytes=0-1,5-6', 'bytes=x-'])
       expect(parseRange(h, 1000)).toBe('invalid');
+    expect(parseRange('bytes=-5', 0)).toBe('invalid'); // an empty file has no last bytes
   });
 });

@@ -4,6 +4,7 @@
 //   show <topic> <story-id> [key]      the candidates, or one with its sentences, qualifications and cited passages
 // A Short is then produced as <story-id>/shorts/<slug> through the same CLIs as a video (npm run board -- next, /produce).
 import { readFileSync, writeFileSync } from 'node:fs';
+import { relative } from 'node:path';
 import { passageReader } from '../src/lib/evidence';
 import { toJson, ROOT } from '../src/lib/io';
 import { sentences, shortId, shortOf } from '../src/lib/script';
@@ -29,11 +30,7 @@ const usage = () => {
   process.exit(1);
 };
 if (!cmd || !topic || !storyId) usage();
-const rel = (f: string) =>
-  f
-    .replace(ROOT, '')
-    .replace(/^[\\/]/, '')
-    .replaceAll('\\', '/');
+const rel = (f: string) => relative(ROOT, f).replaceAll('\\', '/');
 const pad = (s: string | number, w: number) => String(s).padEnd(w);
 
 function list(cs: ShortCandidate[]) {

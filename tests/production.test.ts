@@ -2,7 +2,7 @@
 // stage tests run on a synthetic production (production-helpers.ts) built by the library code, not a committed video.
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { readJson, toJson } from '../src/lib/io';
 import type { RenderCheckSummary } from '../src/lib/render-check';
@@ -457,4 +457,25 @@ describe('shorts on the board', () => {
       }
     },
   );
+  it("judges a Short's output against its own build, not the parent's", { timeout: 60_000 }, () => {
+    const f = syntheticShort('packaged', { release: true });
+    try {
+      const source = relative(f.root, f.dir).split(sep).join('/');
+      addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+        derivedFrom: 'youtube',
+        source,
+        root: f.root,
+      });
+      const now = new Date('2026-10-26T00:00:00Z');
+      recordUploaded(f.topic, f.story, { root: f.root, by: 'Jon', now, id: 'bbbbbbbbbbb' });
+      const prod = productionOf(f.topic, f.story, f.root)!;
+      expect(prod.publish?.outputs.map((o) => o.id)).toEqual(['short:fixture-short']);
+      expect(mainState(prod)?.status).toBe('uploaded'); // build-behind if judged against the parent's package
+      expect(prod.upload?.file).toBe(
+        `${source}/video/review/${readJson<{ mp4: string }>(join(f.dir, 'video', 'review', 'review.json'))!.mp4}`,
+      );
+    } finally {
+      f.cleanup();
+    }
+  });
 });

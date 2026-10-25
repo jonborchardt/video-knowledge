@@ -43,13 +43,12 @@ export async function handle(
       status: 303,
       headers: { location: `${href(`/${topic}/review/${path}`)}?${key}=${encodeURIComponent(text)}` },
     });
-  const form = await req.formData();
+  const form = await req.formData().catch(() => new FormData()); // not a form: no name, so refused below
   const field = (k: string) => String(form.get(k) ?? '').trim();
   const by = field('by');
   const view = reviewView(topic, storyId, root);
   try {
-    const problem = approverProblem(by);
-    if (problem || by.startsWith('automated:') || by.startsWith('-'))
+    if (approverProblem(by) || by.startsWith('automated:') || by.startsWith('-'))
       throw new Refusal('every action here is a person’s: type your name');
     if (field('build') !== view.pkg?.mp4Sha)
       throw new Refusal(`the build changed since this page was loaded (now ${view.pkg?.mp4Sha ?? 'none'}): reload it`);
@@ -103,7 +102,7 @@ export async function handle(
       }
     }
   } catch (e) {
-    if (e instanceof Refusal || e instanceof Error) return back('error', e.message);
+    if (e instanceof Error) return back('error', e.message);
     throw e;
   }
 }

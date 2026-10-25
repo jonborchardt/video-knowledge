@@ -178,8 +178,8 @@ export interface OutputView {
   metadata: UploadMetadata | null; // composed upload metadata; null without a review package
 }
 /** The main output's state, or null when there is no ledger view or every youtube-video output is retracted. */
-export const mainState = (p: Production | null | undefined): OutputState | null =>
-  p?.publish?.outputs.find((o) => o.id === p.publish!.main)?.state ?? null;
+const mainOf = (pub: Production['publish'] | undefined) => pub?.outputs.find((o) => o.id === pub.main);
+export const mainState = (p: Production | null | undefined): OutputState | null => mainOf(p?.publish)?.state ?? null;
 
 export interface StoryRow {
   story: Story;
@@ -766,7 +766,7 @@ const soundtrackStage: BoardStage = ({ topic, storyId, r, release, vr, short }, 
 
 /** What moves the main output on, from the ledger; or the way out when every youtube-video output is retracted. */
 const publishNext = (c: BoardContext) => {
-  const main = c.publish?.outputs.find((o) => o.id === c.publish!.main);
+  const main = mainOf(c.publish);
   if (main) return main.state.next;
   // a packaged Short records itself in the parent's ledger when it is packaged; no entry means an older package
   if (c.short)
@@ -848,20 +848,21 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     release: readJson<Release>(p(FILES.release)),
     vr: readJson<BuildSummary>(p(VIDEO_REPORT)),
     ledger: loadLedger(topic, ledgerStory, root) ?? emptyLedger(`${topic}/${ledgerStory}`),
-    build: short ? currentBuild(ledgerDir) : currentBuild(dir),
+    build: currentBuild(ledgerDir),
     publish: null,
     short: short
       ? {
           ...short,
           shorts: loadShorts(topic, short.parent, root),
-          parentPkg: readJson<EvidencePackage>(join(scriptDir(topic, short.parent, root), FILES.pkg)),
+          parentPkg: readJson<EvidencePackage>(join(ledgerDir, FILES.pkg)),
         }
       : null,
     live: null,
     sb: null,
   };
   // The ledger view: every output's state against the build on disk and the metadata it would send. A Short's view is
-  // its own output in the parent's ledger (present once it is packaged), judged against its own build.
+  // its own output in the parent's ledger (present once it is packaged), judged against its own build: c.build is the
+  // parent's package, which outputStates uses only for an output without a source; a Short's output names its folder.
   const own = short ? `short:${short.slug}` : null;
   if ((own ? own in c.ledger.outputs : c.build) || (!own && existsSync(publishPath(topic, storyId, root)))) {
     const lrel = (f: string) => rel(join(ledgerDir, f), root);
@@ -914,7 +915,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
 
   const { v, sreview, release, pkg, plan, script, vr, publish } = c;
   const stage = s.stage;
-  const main = publish?.outputs.find((o) => o.id === publish.main);
+  const main = mainOf(publish);
   const versions: Version[] = (v?.history ?? []).map((h) => ({
     ...h,
     reviewed: sreview?.revision === h.revision,
@@ -978,7 +979,10 @@ export function boardNext(topic: string, storyId: string, root = ROOT): BoardNex
       : 'the story is not ready in stories.json';
   const live = mainState(prod);
   if (prod && live && (live.live || live.status === 'scheduled')) {
-    const next = `stop: ${live.live ? 'live' : 'scheduled'} at ${live.url}; a re-release is npm run publish -- add ${topic} ${storyId} youtube-2 --kind youtube-video`;
+    const again = short
+      ? `a new Short of ${short.parent}, never this one rebuilt`
+      : `npm run publish -- add ${topic} ${storyId} youtube-2 --kind youtube-video`;
+    const next = `stop: ${live.live ? 'live' : 'scheduled'} at ${live.url}; a re-release is ${again}`;
     return {
       topic,
       story: storyId,
@@ -1131,18 +1135,7 @@ function shortRows(
   const discover = `npm run shorts -- discover ${topic} ${storyId}`;
   if (!file) return { shorts: [], shortsNext: production?.stage === 'packaged' ? discover : null };
   const reviewFile = rel(shortsPath(topic, storyId, root), root).replace(/shorts\.json$/, 'shorts-review.json');
-  const shorts: ShortRow[] = [...file.candidates, ...file.rejected.map((r) => ({ ...r, rejected: true }))].map((c) => {
-    if ('rejected' in c)
-      return {
-        key: c.key,
-        id: null,
-        slug: null,
-        format: null,
-        readiness: 'rejected' as const,
-        blocking: [c.reason],
-        production: null,
-        next: `rejected: ${c.reason}`,
-      };
+  const shorts: ShortRow[] = file.candidates.map((c) => {
     const id = c.slug ? shortId(storyId, c.slug) : null;
     const prod = id && existsSync(scriptDir(topic, id, root)) ? productionOf(topic, id, root) : null;
     const live = mainState(prod);
@@ -1166,16 +1159,25 @@ function shortRows(
       next,
     };
   });
-  const current = (() => {
-    try {
-      return (
-        toJson(discoverShorts(loadShortParent(topic, storyId, root), loadShortsReview(topic, storyId, root))) ===
-        toJson(file)
-      );
-    } catch {
-      return false;
-    }
-  })();
+  for (const r of file.rejected)
+    shorts.push({
+      key: r.key,
+      id: null,
+      slug: null,
+      format: null,
+      readiness: 'rejected',
+      blocking: [r.reason],
+      production: null,
+      next: `rejected: ${r.reason}`,
+    });
+  let current = false;
+  try {
+    current =
+      toJson(discoverShorts(loadShortParent(topic, storyId, root), loadShortsReview(topic, storyId, root))) ===
+      toJson(file);
+  } catch {
+    // a parent that cannot be rediscovered: shorts.json is not current
+  }
   return { shorts, shortsNext: current ? null : discover };
 }
 

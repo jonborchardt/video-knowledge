@@ -2,11 +2,12 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { commissions } from '../src/config/site';
+import { commissions, site } from '../src/config/site';
+import { ROOT } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames, topicNames } from '../src/lib/topics';
 
-const DIST = join(process.cwd(), 'dist');
+const DIST = join(ROOT, 'dist');
 // Same switch as astro.config.mjs: the GitHub Pages mirror under a base path, else the root site.
 const PAGES = process.env.DEPLOY_TARGET === 'pages';
 const SITE = PAGES ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com';
@@ -29,9 +30,10 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(html).not.toMatch(/[>"](undefined|NaN|\[object Object\])[<"]/);
   });
 
-  it.each(pages)('%s: internal links resolve', (p) => {
+  it.each(pages)('%s: internal links and images resolve under the base path', (p) => {
     const html = readFileSync(join(DIST, p), 'utf8');
-    for (const [, href] of html.matchAll(new RegExp(`href="(${BASE}[^"#]*)"`, 'g'))) {
+    for (const [, href] of html.matchAll(/(?:href|src)="(\/(?!\/)[^"#]*)"/g)) {
+      expect(href.startsWith(BASE), `${href} skips the base: build it with href()`).toBe(true);
       const path = join(DIST, href.slice(BASE.length));
       const file = /\.\w+$/.test(path) ? path : join(path, 'index.html'); // a page is a folder with index.html
       expect(existsSync(file), href).toBe(true);
@@ -173,6 +175,8 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(html.match(/<h1[\s>]/g)).toHaveLength(1);
     expect(html).toContain('href="#main"'); // skip link
     expect(html).toContain('<main id="main"');
+    // The truth boundary is said once per surface: the footer, nowhere else (CLAUDE.md, Names).
+    expect(html.split(site.disclosure).length - 1, 'site.disclosure once').toBe(1);
     // Every input is labelled and every icon is either hidden or named.
     for (const [tag] of html.matchAll(/<input[^>]*>/g)) expect(tag).toMatch(/aria-label=|id="/);
     for (const [tag] of html.matchAll(/<svg[^>]*>/g)) expect(tag).toMatch(/aria-hidden="true"|aria-label=/);

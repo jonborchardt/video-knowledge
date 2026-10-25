@@ -54,6 +54,12 @@ beforeAll(async () => {
 });
 afterAll(async () => server?.stop());
 
+// Without a build every suite below skips, so the gate would pass having checked nothing.
+it('has the built site to check (npm run build), one page per template', () => {
+  expect(pages.length, 'no pages in dist/: run npm run build').toBeGreaterThan(0);
+  if (process.env.WEB_QUALITY_FULL !== '1') expect(pages, 'representativePages() lost a template').toHaveLength(6);
+});
+
 describe.skipIf(!pages.length).each(BROWSERS)('%s', (name) => {
   let browser: Browser;
   beforeAll(async () => void (browser = await ENGINES[name].launch()));

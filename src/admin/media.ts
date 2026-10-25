@@ -17,7 +17,7 @@ export function parseRange(header: string | null, size: number): { start: number
   if (!m || (!m[1] && !m[2])) return 'invalid';
   if (!m[1]) {
     const n = Number(m[2]);
-    return n > 0 ? { start: Math.max(0, size - n), end: size - 1 } : 'invalid';
+    return n > 0 && size > 0 ? { start: Math.max(0, size - n), end: size - 1 } : 'invalid';
   }
   const start = Number(m[1]);
   const end = m[2] ? Math.min(Number(m[2]), size - 1) : size - 1;
@@ -47,7 +47,11 @@ export const GET: APIRoute = ({ params, request }) => {
   const type = TYPES[file as keyof typeof TYPES];
   if (range === 'invalid') return new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${size}` } });
   const { start, end } = range ?? { start: 0, end: size - 1 };
-  const body = Readable.toWeb(createReadStream(abs, { start, end })) as ReadableStream;
+  // an empty file has no bytes to stream (createReadStream refuses end < start); a HEAD would never read the stream
+  const body =
+    size === 0 || request.method === 'HEAD'
+      ? null
+      : (Readable.toWeb(createReadStream(abs, { start, end })) as ReadableStream);
   return new Response(body, {
     status: range ? 206 : 200,
     headers: {

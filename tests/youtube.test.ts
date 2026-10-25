@@ -244,6 +244,26 @@ describe('insertVideo', () => {
     expect(f.calls.some((c) => insert.test(c.url))).toBe(false);
   });
 
+  it('a partial upload (308 on the last put) is a retryable YouTubeError, not a bad json read', async () => {
+    const f = fakeFetch([
+      token,
+      {
+        match: insert,
+        method: 'POST',
+        reply: () => new Response('', { status: 200, headers: { location: 'https://u/9' } }),
+      },
+      { match: /^https:\/\/u\/9$/, method: 'PUT', reply: () => new Response(null, { status: 308 }) },
+    ]);
+    const r = youtubeClient(creds(), f.fn).insertVideo({
+      file: mp4,
+      snippet,
+      status,
+      session: null,
+      onSession: () => undefined,
+    });
+    await expect(r).rejects.toMatchObject({ name: 'YouTubeError', retryable: true });
+  });
+
   it('a finished session returns the video without another put', async () => {
     const f = fakeFetch([
       token,

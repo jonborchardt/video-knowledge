@@ -3,14 +3,14 @@
 // for tests; no googleapis. Every failure is a YouTubeError the uploader records as a `failed` ledger event.
 // Credentials: YOUTUBE_CLIENT_ID and YOUTUBE_CLIENT_SECRET in the environment (.env), the refresh token from
 // YOUTUBE_REFRESH_TOKEN or <root>/.youtube-token.json (written by `npm run publish -- auth`). Library layer.
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { dirname, extname, join, resolve } from 'node:path';
 import { ROOT, readJson } from './io';
 
 export const SCOPE = 'https://www.googleapis.com/auth/youtube.force-ssl';
 export const TOKEN_FILE = '.youtube-token.json'; // the token store when YOUTUBE_OAUTH_CREDENTIALS_PATH is not set
-export const CREDENTIALS_PATH_VAR = 'YOUTUBE_OAUTH_CREDENTIALS_PATH';
+const CREDENTIALS_PATH_VAR = 'YOUTUBE_OAUTH_CREDENTIALS_PATH';
 const TOKEN_URL = 'https://oauth2.googleapis.com/token';
 const AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const API = 'https://www.googleapis.com/youtube/v3';
@@ -309,6 +309,9 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
       },
       body: bytes.subarray(from),
     });
+    // a 308 here is YouTube holding a partial upload: the session stands and the next run resumes it
+    if (r.status === 308)
+      throw new YouTubeError('upload incomplete; run the verb again to resume', 308, 'incomplete', true);
     return r.json();
   }
 
@@ -371,6 +374,3 @@ export function youtubeClient(creds: Credentials, fetchFn: typeof fetch = fetch)
     },
   };
 }
-
-/** Whether the token file exists (for the CLI's auth hint). */
-export const hasTokenFile = (root = ROOT) => existsSync(join(root, TOKEN_FILE));

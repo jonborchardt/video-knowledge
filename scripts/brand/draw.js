@@ -75,7 +75,9 @@
           if (lines.length && len(next) <= max) lines[lines.length - 1] = next;
           else lines.push(w);
         }
-        if ((lines.length <= most && lines.every((l) => len(l) <= max)) || size <= 12) break;
+        const fits = lines.length <= most && lines.every((l) => len(l) <= max);
+        if (fits) break;
+        if (size <= 12) throw new Error(`does not fit in ${most} lines at 12px: ${words.join(' ')}`);
       }
       const top = +el.dataset.top + (+el.dataset.box - lines.length * size * lh) / 2 + size * 0.8;
       el.textContent = '';

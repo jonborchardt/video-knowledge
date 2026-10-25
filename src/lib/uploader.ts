@@ -11,6 +11,7 @@ import {
   type Output,
   type PublishEvent,
   Refusal,
+  goLiveProblem,
   openOutput,
   type UploadMetadata,
   type VerbResult,
@@ -20,6 +21,8 @@ import {
   recordScheduled,
   recordUpdated,
   recordUploaded,
+  lastCaptions,
+  lastSent,
 } from './publish';
 import { type RemoteVideo, type Snippet, type VideoStatus, type YouTubeClient, YouTubeError } from './youtube';
 
@@ -31,7 +34,7 @@ export interface Session {
   startedAt: string;
 }
 export const CATEGORY_DEFAULT = '27'; // Education
-export const LANGUAGE_DEFAULT = 'en';
+const LANGUAGE_DEFAULT = 'en';
 export const MIN_SCHEDULE_LEAD_MS = 5 * 60_000; // a publishAt in the past publishes now; never "schedule" into that
 const LIMITS = { title: 100, description: 5000, tags: 500 }; // YouTube's, 2026-10-23
 
@@ -70,9 +73,6 @@ const statusOf = (out: Output): VideoStatus => ({
   selfDeclaredMadeForKids: false,
   containsSyntheticMedia: out.metadata.containsSyntheticMedia ?? false,
 });
-const lastSentSha = (out: Output) =>
-  [...out.events].reverse().find((e) => (e.type === 'uploaded' || e.type === 'updated') && e.metadata)?.metadata ??
-  null;
 const urlOf = (id: string) => `https://youtu.be/${id}`;
 
 /** Runs one client call; a YouTubeError becomes a `failed` ledger event for `step` and is rethrown. */
@@ -90,10 +90,7 @@ async function guarded<T>(
     if (!(e instanceof YouTubeError)) throw e;
     const custom = final?.(e) ?? null;
     recordFailed(topic, storyId, {
-      output: c.output,
-      by: c.by,
-      root: c.root,
-      now: c.now,
+      ...c,
       step,
       error: custom ?? `${e.reason}: ${e.message}`,
       retryable: custom ? false : e.retryable,
@@ -154,10 +151,28 @@ export async function upload(topic: string, storyId: string, c: Ctx): Promise<Ve
             : null
       : undefined,
   );
-  results.push(
-    recordUploaded(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, id, visibility: 'private' }),
-  );
+  // captions before the record, so the uploaded event names the captions that landed (push resends only new ones);
+  // a failure is recorded after the upload
+  let captionsError: YouTubeError | null = null;
+  if (captions)
+    try {
+      await c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English');
+    } catch (e) {
+      if (!(e instanceof YouTubeError)) throw e;
+      captionsError = e;
+    }
+  const sent = captions && !captionsError ? captions.sha : undefined;
+  results.push(recordUploaded(topic, storyId, { ...c, id, visibility: 'private', captions: sent }));
   if (existsSync(sessionPath)) unlinkSync(sessionPath);
+  if (captionsError) {
+    const f = recordFailed(topic, storyId, {
+      ...c,
+      step: 'captions',
+      error: `${captionsError.reason}: ${captionsError.message}`,
+      retryable: captionsError.retryable,
+    });
+    results.push({ event: f.event, existing: false, message: `captions failed: ${captionsError.message}` });
+  } else if (captions) results.push({ event: null, existing: false, message: 'captions uploaded' });
 
   const asset = async (step: string, fn: () => Promise<void>, done: string) => {
     try {
@@ -169,12 +184,6 @@ export async function upload(topic: string, storyId: string, c: Ctx): Promise<Ve
     }
   };
   if (thumbnail) await asset('thumbnail', () => c.client.setThumbnail(id, thumbnail), 'thumbnail set');
-  if (captions)
-    await asset(
-      'captions',
-      () => c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English'),
-      'captions uploaded',
-    );
   return results;
 }
 const lastEvent = (topic: string, storyId: string, c: Ctx): PublishEvent | null =>
@@ -185,14 +194,15 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
   const o = openOutput(topic, storyId, c);
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; there is nothing on YouTube to update`);
   if (!o.metadata) throw new Refusal('no review package; the metadata cannot be composed');
-  if (lastSentSha(o.out) === o.metadata.sha)
+  if (lastSent(o.out)?.metadata === o.metadata.sha)
     return { event: null, existing: true, message: `the metadata on YouTube is current (${o.metadata.sha})` };
   const problem = uploadProblem(o.metadata);
   if (problem) throw new Refusal(problem);
   const id = o.state.id;
   const thumbnail = o.metadata.thumbnail ? join(o.root, o.metadata.thumbnail.file) : null;
   if (thumbnail && !existsSync(thumbnail)) throw new Refusal(`${o.metadata.thumbnail!.file} is missing on disk`);
-  const captions = o.metadata.captions;
+  // captions.insert adds a track: send them only when they are not the ones YouTube already has
+  const captions = o.metadata.captions?.sha === lastCaptions(o.out) ? null : o.metadata.captions;
   await guarded(topic, storyId, c, 'update', () => c.client.updateVideo(id, { snippet: snippetOf(o.metadata!) }));
   // the snippet landed: record it even if an asset fails, so the board does not stay metadata-behind and resend it
   const landed = ['snippet'];
@@ -211,13 +221,14 @@ export async function push(topic: string, storyId: string, c: Ctx): Promise<Verb
     await asset('captions', () =>
       c.client.insertCaptions(id, join(o.root, captions.file), captions.language, 'English'),
     );
-  const r = recordUpdated(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, fields: landed });
+  const r = recordUpdated(topic, storyId, {
+    ...c,
+    fields: landed,
+    captions: captions && landed.includes('captions') ? captions.sha : undefined,
+  });
   for (const f of failures)
     recordFailed(topic, storyId, {
-      output: c.output,
-      by: c.by,
-      root: c.root,
-      now: c.now,
+      ...c,
       step: f.step,
       error: `${f.e.reason}: ${f.e.message}`,
       retryable: f.e.retryable,
@@ -232,7 +243,8 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
     return { event: null, existing: true, message: `${o.id} is already ${o.state.status}: ${o.state.next}` };
   if (o.state.status !== 'approved') throw new Refusal(`${o.id} is ${o.state.status}, not approved: ${o.state.next}`);
   if (!o.state.id) throw new Refusal(`${o.id} is approved but not uploaded yet: ${o.state.next}`);
-  if (!o.parentLive) throw new Refusal(`${o.id} derives from ${o.out.derivedFrom}: publish ${o.out.derivedFrom} first`);
+  const problem = goLiveProblem(o, c.by); // what recordPublished and recordScheduled refuse, asked before YouTube is
+  if (problem) throw new Refusal(problem);
   const id = o.state.id;
   if (c.at) {
     const t = Date.parse(c.at);
@@ -243,12 +255,12 @@ export async function goLive(topic: string, storyId: string, c: Ctx & { at?: str
     await guarded(topic, storyId, c, 'go-live', () =>
       c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'private', publishAt: at } }),
     );
-    return recordScheduled(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, at });
+    return recordScheduled(topic, storyId, { ...c, at });
   }
   await guarded(topic, storyId, c, 'go-live', () =>
     c.client.updateVideo(id, { status: { ...statusOf(o.out), privacyStatus: 'public' } }),
   );
-  return recordPublished(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, url: urlOf(id) });
+  return recordPublished(topic, storyId, { ...c, url: urlOf(id) });
 }
 
 /** Reads the video back: a rejection or a deletion is a final failure, a scheduled video gone public is recorded,
@@ -258,19 +270,10 @@ export async function sync(topic: string, storyId: string, c: Ctx): Promise<Verb
   if (!o.state.id) throw new Refusal(`${o.id} is ${o.state.status}; nothing on YouTube to read`);
   const id = o.state.id;
   const v = await guarded(topic, storyId, c, 'sync', () => c.client.getVideo(id));
-  const failed = (error: string) =>
-    recordFailed(topic, storyId, {
-      output: c.output,
-      by: c.by,
-      root: c.root,
-      now: c.now,
-      step: 'sync',
-      error,
-      retryable: false,
-    });
+  const failed = (error: string) => recordFailed(topic, storyId, { ...c, step: 'sync', error, retryable: false });
   if (!v) return failed(`${id} is not on YouTube (deleted?); a person decides`);
   if (v.uploadStatus === 'rejected') return failed(`rejected: ${v.rejectionReason ?? 'no reason given'}`);
   if (v.privacyStatus === 'public' && (o.state.status === 'scheduled' || o.state.status === 'approved'))
-    return recordPublished(topic, storyId, { output: c.output, by: c.by, root: c.root, now: c.now, url: urlOf(id) });
+    return recordPublished(topic, storyId, { ...c, url: urlOf(id), observed: true });
   return v;
 }

@@ -38,6 +38,10 @@ describe('web-quality exceptions', () => {
 });
 
 describe.skipIf(!existsSync(DIST))('web-quality: built pages', () => {
+  it('finds the built pages (an empty dist/ would pass every check below)', () => {
+    expect(pages).toContain('index.html');
+  });
+
   it('HTML is valid (html-validate: WHATWG content models, duplicate ids, labels, a11y basics)', async () => {
     const hv = new HtmlValidate(new FileSystemConfigLoader());
     const findings: Finding[] = [];
@@ -70,13 +74,14 @@ describe.skipIf(!existsSync(DIST))('web-quality: built pages', () => {
     for (const [, href] of html.matchAll(/<link[^>]*rel="stylesheet"[^>]*href="([^"]*_astro\/[^"]+)"/g))
       css += local(href);
     for (const [, body] of html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)) css += body;
-    const limit = { ...config.budgets.default };
-    for (const o of config.budgets.overrides)
-      if (new RegExp(o.page).test(page)) Object.assign(limit, { js: o.js, css: o.css, html: o.html });
+    const limit = Object.assign(
+      { ...config.budgets.default },
+      ...config.budgets.overrides.filter((o) => new RegExp(o.page).test(page)),
+    );
     const size = (s: string) => gzipSync(s).length;
-    expect(size(js), 'JavaScript').toBeLessThanOrEqual(limit.js ?? config.budgets.default.js);
-    expect(size(css), 'CSS').toBeLessThanOrEqual(limit.css ?? config.budgets.default.css);
-    expect(size(html), 'HTML').toBeLessThanOrEqual(limit.html ?? config.budgets.default.html);
+    expect(size(js), 'JavaScript').toBeLessThanOrEqual(limit.js);
+    expect(size(css), 'CSS').toBeLessThanOrEqual(limit.css);
+    expect(size(html), 'HTML').toBeLessThanOrEqual(limit.html);
   });
 
   it.each(pages)('%s: no inline handlers, javascript: URLs or unlisted third-party resources', (page) => {

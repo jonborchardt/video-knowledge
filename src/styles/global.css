@@ -30,8 +30,6 @@
   --color-destructive-85: color-mix(in oklch, var(--destructive) 85%, var(--muted-foreground));
   --color-destructive-70: color-mix(in oklch, var(--destructive) 70%, var(--muted-foreground));
   --color-destructive-60: color-mix(in oklch, var(--destructive) 60%, var(--muted-foreground));
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-primary-foreground: var(--primary-foreground);
@@ -44,7 +42,6 @@
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
 }
 
 @theme {
@@ -92,14 +89,13 @@
   --muted: var(--paper);
   --muted-foreground: var(--slate);
   --accent: color-mix(in oklch, var(--gold), var(--paper) 70%);
-  --accent-foreground: var(--navy);
   /* Verdict inks, low chroma so they read as stamps on paper rather than traffic lights: oxblood, umber, bottle green. */
   --destructive: oklch(0.45 0.12 25);
   --warning: oklch(0.5 0.09 60);
   --success: oklch(0.45 0.07 155);
   --border: color-mix(in oklch, var(--gold), var(--paper) 45%); /* a fine gold rule */
   --input: var(--slate); /* form-control border: 3:1 against the background (WCAG 1.4.11) */
-  --ring: var(--gold);
+  --ring: var(--gold-ink); /* the focus outline: raw gold is ~2:1 on paper, gold ink keeps 3:1 (WCAG 1.4.11) */
   --radius: 0.25rem;
   color-scheme: light;
 }
@@ -115,7 +111,6 @@
   --muted: color-mix(in oklch, var(--navy), white 10%);
   --muted-foreground: color-mix(in oklch, var(--paper), var(--navy) 28%);
   --accent: color-mix(in oklch, var(--gold), var(--navy) 65%);
-  --accent-foreground: var(--paper);
   --destructive: oklch(0.74 0.11 25);
   --warning: oklch(0.78 0.09 70);
   --success: oklch(0.76 0.08 155);

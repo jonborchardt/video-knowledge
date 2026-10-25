@@ -86,6 +86,15 @@ describe('ledger', () => {
     expect(ledgerProblems(example(), 'ai-coding/decision:how-much-faster')).toEqual([]);
   });
 
+  it('an event may carry the captions sha it sent; old events without one stay valid', () => {
+    const l = example();
+    expect(ledgerProblems(l, l.video)).toEqual([]);
+    l.outputs.youtube.events[0].captions = 'c1';
+    expect(ledgerProblems(l, l.video)).toEqual([]);
+    (l.outputs.youtube.events[0] as unknown as Record<string, unknown>).captions = 3;
+    expect(ledgerProblems(l, l.video)).toEqual(['outputs.youtube.events[0].captions: not a sha']);
+  });
+
   it('names the field that is wrong', () => {
     const bad = (mutate: (l: Ledger) => void) => {
       const l = example();
@@ -845,6 +854,48 @@ describe('review fixes', () => {
           notes: [{ text: 'x' }],
         }),
       ).toThrow(/scheduled/);
+    } finally {
+      f.cleanup();
+    }
+  });
+});
+
+describe('going live is a person, on the latest decision, after the parent', () => {
+  const now = new Date('2026-10-26T00:00:00Z');
+  const a = <T extends object>(f: Fixture, extra: T = {} as T) => ({ root: f.root, by: 'Jon', now, ...extra });
+  it('a public upload refuses a build sent back since its approval, and an automated run', () => {
+    const f = syntheticProduction('packaged', { release: true });
+    try {
+      recordApproved(f.topic, f.story, a(f));
+      const pub = (by = 'Jon') =>
+        recordUploaded(f.topic, f.story, a(f, { by, id: 'aaaaaaaaaaa', visibility: 'public' as const }));
+      expect(() => pub('automated: /produce run started by Jon')).toThrow(/person/);
+      recordChangesRequested(f.topic, f.story, a(f, { build: 'releasesha', notes: [{ text: 'too fast' }] }));
+      expect(() => pub()).toThrow(/not approved/);
+      expect(loadLedger(f.topic, f.story, f.root)!.outputs.youtube.events.map((e) => e.type)).toEqual([
+        'approved',
+        'changes-requested',
+      ]);
+    } finally {
+      f.cleanup();
+    }
+  });
+
+  it('the hand verbs refuse an automated run and a Short before its parent is live', () => {
+    const f = syntheticShort('packaged', { release: true });
+    try {
+      const source = relative(f.root, f.dir).split(sep).join('/');
+      addOutputTo(f.topic, f.parent, 'short:fixture-short', 'youtube-short', {
+        derivedFrom: 'youtube',
+        source,
+        root: f.root,
+      });
+      recordUploaded(f.topic, f.story, a(f, { id: 'bbbbbbbbbbb' }));
+      recordApproved(f.topic, f.story, a(f));
+      expect(() => recordPublished(f.topic, f.story, a(f))).toThrow(/youtube first/);
+      expect(() => recordScheduled(f.topic, f.story, a(f, { at: '2026-11-01T00:00:00Z' }))).toThrow(/youtube first/);
+      expect(() => recordPublished(f.topic, f.story, a(f, { by: 'automated: x' }))).toThrow(/person/);
+      expect(recordPublished(f.topic, f.story, a(f, { observed: true })).event!.type).toBe('published'); // sync saw it
     } finally {
       f.cleanup();
     }

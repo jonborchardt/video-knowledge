@@ -4,11 +4,10 @@
 // is byte-identical. The reviewer's file (shorts-review.json, scripts/briefs/shorts.md) supplies what code cannot
 // judge: whether the finding stands alone, the hook, the format, and how each qualification the parent carried
 // elsewhere is said inside the Short. A candidate is never ready without it.
-import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { readJson, sha, toJson, ROOT } from './io';
 import { nums } from './numbers';
-import { storyboardFingerprint, validationFingerprint } from './release';
+import { releaseCheck, storyboardFingerprint, validationFingerprint } from './release';
 import {
   type EvidencePackage,
   FILES,
@@ -92,7 +91,7 @@ export interface ShortParent {
 const FINDING_SECTIONS = /^(investigation|question-\d+|answer)$/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const uniq = <T>(xs: T[]) => [...new Set(xs)];
-export const releaseFingerprint = (release: Release | null) => (release ? sha(toJson(release.fingerprints)) : null);
+const releaseFingerprint = (release: Release | null) => (release ? sha(toJson(release.fingerprints)) : null);
 const isFormat = (x: unknown): x is ShortFormat => (SHORT_FORMATS as readonly unknown[]).includes(x);
 
 /** The candidates, judged against the review; pure. */
@@ -106,6 +105,13 @@ export function discoverShorts(parent: ShortParent, review: ShortsReviewFile | n
   const rejected: ShortsFile['rejected'] = [];
   const slugs = new Map<string, string>();
   let ready = 0;
+  // a lock that no longer matches the parent's script, package, validation or storyboard is no lock
+  const stale = release
+    ? [
+        ...releaseCheck(release, v, sb).map((i) => i.explanation),
+        ...(release.fingerprints.package !== pkg.fingerprint ? ['release.json locked another evidence package'] : []),
+      ]
+    : [];
   for (const sc of sb.scenes) {
     const ids = sc.sentences;
     const first = ids[0] && byId.get(ids[0]);
@@ -151,6 +157,7 @@ export function discoverShorts(parent: ShortParent, review: ShortsReviewFile | n
       if (r.claims && !r.claims.length) blocking.push('the review prunes every claim');
     }
     if (!release) blocking.push('the parent is not locked (no release.json)');
+    else if (stale.length) blocking.push(`the parent's lock is stale: ${stale[0]}`);
     if (!blocking.length && ready >= MAX_SHORTS) blocking.push(`over the cap of ${MAX_SHORTS} ready shorts per video`);
     const readiness: ShortReadiness = blocking.length ? 'needs-review' : 'ready';
     if (readiness === 'ready') ready++;
@@ -215,7 +222,7 @@ export function loadShortParent(topic: string, storyId: string, root = ROOT): Sh
     v: need<ScriptValidation>(FILES.validation, 'run npm run script -- validate'),
     sb: need<Storyboard>(FILES.storyboard, 'run npm run script -- storyboard'),
     pkg: need<EvidencePackage>(FILES.pkg, 'run npm run script -- package'),
-    release: existsSync(join(dir, FILES.release)) ? readJson<Release>(join(dir, FILES.release)) : null,
+    release: readJson<Release>(join(dir, FILES.release)),
   };
 }
 
@@ -230,6 +237,10 @@ export function buildShortPackage(
 ): EvidencePackage {
   if (candidate.readiness !== 'ready')
     throw new Error(`candidate ${candidate.key} is ${candidate.readiness}: ${candidate.blocking.join('; ')}`);
+  if (parent.fingerprint !== shorts.parentFingerprints.package)
+    throw new Error(
+      `shorts.json was discovered from package ${shorts.parentFingerprints.package}, the parent's is now ${parent.fingerprint}: run discover again`,
+    );
   const claims = candidate.claims.map((id) => {
     const c = parent.claims.find((x) => x.id === id);
     if (!c) throw new Error(`claim ${id} is not in the parent's package`);
