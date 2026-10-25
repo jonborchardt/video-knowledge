@@ -47,7 +47,8 @@ export interface MusicCue {
   id: string;
   asset: string; // "<composition>/<variation>"
   /** Scene anchors: "sc12" (the scene's start for `from`, its end for `to`), "sc12:start", "sc12:end", with an
-   *  optional offset in seconds: "sc12+1.5", "sc20:end-2". */
+   *  optional offset in seconds: "sc12+1.5", "sc20:end-2". A `to` at the end of the last narrated scene (no offset)
+   *  runs on to the end of the video's appended close card and end screen. */
   from: string;
   to: string;
   gain: number; // dB applied to the asset (music beds sit well under narration: -18 to -30)
@@ -92,7 +93,11 @@ export function anchorSeconds(a: string, edge: 'start' | 'end', tl: Timeline): n
   const p = parseAnchor(a, edge);
   const s = tl.scenes.find((x) => x.id === p.scene);
   if (!s) throw new Error(`anchor "${a}": scene ${p.scene} is not in the timeline`);
-  const at = p.edge === 'start' ? s.start : s.start + s.duration;
+  // a cue that runs to the end of the last narrated scene plays on under the appended close card and end screen
+  const i = tl.scenes.indexOf(s);
+  const tail = edge === 'end' && p.edge === 'end' && !p.offset ? tl.scenes[i + 1] : undefined;
+  const until = tail?.kind === 'close-card' ? tail : s;
+  const at = p.edge === 'start' ? s.start : until.start + until.duration;
   return Math.max(0, Math.min(tl.durationInFrames / tl.fps, at / tl.fps + p.offset));
 }
 

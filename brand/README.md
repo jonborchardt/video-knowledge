@@ -52,7 +52,8 @@ Where the kit is used:
 - **Video**: every render copies the story's institution's kit into the video folder's `brand/` (`src/video/brand.ts`,
   gitignored), so a scene loads a slot with `staticFile('brand/<slot>.png')`. A landscape video of a published topic ends on
   an unnarrated scene `end` (kind `close-card`, appended by `src/video/timeline.ts`): the kit's `close-card` for 4 s,
-  then its `endscreen-subscribe` for the 12 s YouTube's end-screen elements sit on. Its render cache key includes
+  then its `endscreen-subscribe` for the 12 s YouTube's end-screen elements sit on. A music cue that runs to the end of the last
+  narrated scene plays on under it. Its render cache key includes
   those two SVGs, so a redrawn kit re-renders it. The channel's avatar, banner and
   watermark are uploaded from the kit by hand and recorded in `accounts.json`.
 
