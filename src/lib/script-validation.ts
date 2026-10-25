@@ -146,6 +146,7 @@ export interface ValidateOptions {
   previous?: ScriptValidation | null; // carries resolved findings and history forward
   pkg?: EvidencePackage | null;
   hashDoc?: DocHasher;
+  pacing?: boolean; // false for prose that is read, not spoken (articles)
 }
 
 const issue = (
@@ -611,7 +612,14 @@ export function validateScript(
   script: Script,
   t: Corpus,
   read: PassageReader,
-  { review = null, judgments = {}, previous = null, pkg = null, hashDoc = docHasher() }: ValidateOptions = {},
+  {
+    review = null,
+    judgments = {},
+    previous = null,
+    pkg = null,
+    hashDoc = docHasher(),
+    pacing: paceIt = true,
+  }: ValidateOptions = {},
 ): ScriptValidation {
   const wpm = script.generation?.wordsPerMinute || WPM_DEFAULT;
   const all = sentences(script);
@@ -626,7 +634,7 @@ export function validateScript(
   const top = scriptIssues(script, all, pkg, hashDoc);
   const merge = mergeReview(script, all, review, pkg, previous);
   top.push(...merge.issues);
-  const paced = pacing(all, wpm);
+  const paced = paceIt ? pacing(all, wpm) : new Map<string, Issue[]>();
   const results = all.map((s) =>
     judgeSentence(
       s,

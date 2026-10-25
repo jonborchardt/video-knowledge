@@ -23,6 +23,7 @@ import {
 } from '../src/lib/script';
 import { evalExpr, repetitions, validateScript } from '../src/lib/script-validation';
 import { sha } from '../src/lib/io';
+import { pointProblems } from '../src/lib/storyboard';
 import { spokenWords } from '../src/lib/numbers';
 import {
   type ChartPoint,
@@ -203,6 +204,19 @@ describe('pacing', () => {
       ['investigation', ['s03', 's04', 's05', 's06', 's07'].map(dense)],
     ]);
     expect(warned(s)).toEqual(['s03 number-dense', 's03 slow-start']);
+  });
+
+  it('pacing: false raises no pacing warning on a number-dense script', () => {
+    const s = layout([
+      ['hook', [long('s01')]],
+      ['setup', [long('s02')]],
+      ['investigation', ['s03', 's04', 's05', 's06', 's07'].map(dense)],
+    ]);
+    expect(cats(validateScript(s, corpus(), read, { pkg: pkg(), pacing: false }))).not.toContain('number-dense');
+  });
+  it('pointProblems names a display that does not state its value', () => {
+    const pt = { label: 'x', value: 12, unit: 'percent' as const, display: '13%', cite: DOC_D };
+    expect(pointProblems(pt, new Set([DOC_D]), read)).toContain('display "13%" does not state the value 12');
   });
 
   it('a list of dispositions retires several warnings on one sentence', () => {
