@@ -2,7 +2,7 @@ import { type Article } from '../src/lib/article';
 import { articleSentences } from '../src/lib/article';
 import { type ScriptReviewFile, sentenceFingerprint } from '../src/lib/script';
 import { TOPIC } from './corpus';
-import { fact, pkg, sentence } from './script-helpers';
+import { MLM, fact, pkg, sentence } from './script-helpers';
 
 export const article = (extra: Partial<Article> = {}): Article => ({
   topic: TOPIC,
@@ -32,6 +32,13 @@ export const article = (extra: Partial<Article> = {}): Article => ({
               fact('s02.a', 'Of 601 participants, 47% reported losing money.'),
             ]),
           ],
+        },
+        // The package's claim is unresolved (one study, below the verified confidence): a callout carries it.
+        {
+          kind: 'prose',
+          callout: 'unresolved',
+          claim: MLM,
+          sentences: [sentence('s03', 'One survey is not the last word.', 'rhetorical')],
         },
       ],
     },
