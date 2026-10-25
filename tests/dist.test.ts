@@ -2,7 +2,8 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { commissions, site } from '../src/config/site';
+import { author, commissions, site } from '../src/config/site';
+import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
 import { ROOT } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames, topicNames } from '../src/lib/topics';
@@ -18,10 +19,23 @@ const storyPages = publicTopicNames().flatMap((topic) =>
 const pages = [
   'index.html',
   'about/index.html',
+  'institutions/index.html',
   ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
   ...publicTopicNames().map((n) => `${n}/index.html`),
   ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
 ];
+// Pages search engines are pointed at: a matter whose story is not ready is noindex and left out of the sitemap.
+const listed = pages.filter(
+  (p) => !storyPages.some((x) => x.s.readiness !== 'ready' && p === `${x.topic}/${x.slug}/index.html`),
+);
+const sitemapXml = () => {
+  const index = readFileSync(join(DIST, 'sitemap-index.xml'), 'utf8');
+  const part = index.match(/<loc>[^<]*\/(sitemap-\d+\.xml)<\/loc>/)![1];
+  return readFileSync(join(DIST, part), 'utf8');
+};
+const ldOf = (html: string) =>
+  [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+const decode = (s: string) => s.replaceAll('&#39;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 
 describe.skipIf(!existsSync(DIST))('built site', () => {
   it.each(pages)('%s exists without template leaks', (p) => {
@@ -52,7 +66,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     const dirs = readdirSync(DIST, { withFileTypes: true }).filter(
       (d) => d.isDirectory() && !['_astro', 'og', 'stamps'].includes(d.name),
     );
-    expect(dirs.map((d) => d.name).sort()).toEqual(['about', 'commissions', ...publicTopicNames()].sort());
+    expect(dirs.map((d) => d.name).sort()).toEqual(
+      ['about', 'commissions', 'institutions', ...publicTopicNames()].sort(),
+    );
     for (const n of topicNames()) {
       expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
       expect(existsSync(join(DIST, n, 'scripts')), `${n}/scripts`).toBe(false);
@@ -68,8 +84,8 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain(`href="${BASE}production/"`);
   });
 
-  it('the home page lists every institution, links only real channels and features a story', () => {
-    const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+  it('the directory lists every institution, links only real channels and features a story', () => {
+    const html = readFileSync(join(DIST, 'institutions/index.html'), 'utf8');
     for (const c of Object.values(commissions)) {
       expect(html).toContain(c.name);
       if (c.youtube) expect(html).toContain(`href="${c.youtube}"`);
@@ -126,11 +142,111 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('about explains the four finding labels', () => {
+    const html = readFileSync(join(DIST, 'about/index.html'), 'utf8');
+    expect(html).toContain('id="labels"');
+    for (const l of FINDING_LABELS) expect(html).toContain(FINDING_TEXT[l].name);
+  });
+
+  it('every claim card carries one finding label', () => {
+    for (const n of publicTopicNames()) {
+      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
+      const cards = html.match(/<details[^>]*data-claim/g)!.length;
+      expect(html.match(/data-label="(verified|qualification|unresolved|reported)"/g)!.length).toBe(cards);
+    }
+  });
+
+  it('topic, matter and institution pages open with one report header and the seal', () => {
+    const heads = [
+      ...publicTopicNames().map((n) => `${n}/index.html`),
+      ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
+      ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
+    ];
+    for (const p of heads) {
+      const html = readFileSync(join(DIST, p), 'utf8');
+      expect(html.match(/data-report-header/g), p).toHaveLength(1);
+      expect(html).toMatch(new RegExp(`src="${BASE}commissions/[a-z-]+\\.png"`));
+    }
+  });
+
+  it('a matter answers first: the resolution and label strip come before the claims', () => {
+    for (const { topic, slug, s } of storyPages) {
+      const html = decode(readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8'));
+      expect(html.indexOf('id="answer"')).toBeGreaterThan(-1);
+      expect(html.indexOf('id="answer"')).toBeLessThan(html.indexOf('aria-labelledby="claims"'));
+      if (s.readiness === 'ready') expect(html).toContain(s.arc.resolution); // an unready arc is the writer's brief
+    }
+  });
+
+  it('an unsettled matter is noindex and left out of the sitemap; a ready one is listed', () => {
+    const sitemap = sitemapXml();
+    for (const { topic, slug, s } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const loc = `<loc>${SITE}${BASE}${topic}/${slug}/</loc>`;
+      if (s.readiness === 'ready') {
+        expect(html).not.toContain('noindex');
+        expect(sitemap).toContain(loc);
+      } else {
+        expect(html).toContain('content="noindex');
+        expect(sitemap).not.toContain(loc);
+      }
+    }
+  });
+
+  it('matter pages list their exhibits by number', () => {
+    for (const { topic, slug } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      expect(html).toContain('aria-labelledby="exhibits"');
+      const nums = [...html.matchAll(/Exhibit (\d+)/g)].map((m) => Number(m[1]));
+      expect(nums).toEqual([...nums].sort((a, b) => a - b));
+    }
+  });
+
+  it('ready matters carry Article and BreadcrumbList; unsettled ones carry none; nothing claims a review', () => {
+    for (const { topic, slug, s } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const types = ldOf(html).map((x) => x['@type']);
+      if (s.readiness === 'ready') expect(types).toEqual(expect.arrayContaining(['Article', 'BreadcrumbList']));
+      else expect(types).toEqual([]);
+      expect(html).not.toContain('ClaimReview');
+    }
+  });
+
+  it('inquiries carry a Report and institutions a CollectionPage, each with breadcrumbs', () => {
+    for (const n of publicTopicNames())
+      expect(ldOf(readFileSync(join(DIST, n, 'index.html'), 'utf8')).map((x) => x['@type'])).toEqual(
+        expect.arrayContaining(['Report', 'BreadcrumbList']),
+      );
+    for (const k of Object.keys(commissions))
+      expect(ldOf(readFileSync(join(DIST, 'commissions', k, 'index.html'), 'utf8')).map((x) => x['@type'])).toEqual(
+        expect.arrayContaining(['CollectionPage', 'BreadcrumbList']),
+      );
+  });
+
+  it('the front page leads with ready matters and links the directory', () => {
+    const html = readFileSync(join(DIST, 'index.html'), 'utf8');
+    const ready = storyPages.filter((p) => p.s.readiness === 'ready' && !p.s.partOf);
+    expect(ready.some((p) => html.includes(`href="${BASE}${p.topic}/${p.slug}/"`))).toBe(true);
+    expect(html).toContain(`href="${BASE}institutions/"`);
+  });
+
+  it('about names the real publisher and gives no contact address', () => {
+    const html = readFileSync(join(DIST, 'about/index.html'), 'utf8');
+    expect(html).toContain('id="publisher"');
+    expect(html).toContain(author.name);
+    expect(html).not.toContain('mailto:');
+  });
+
+  it('the directory carries a CollectionPage', () => {
+    const types = ldOf(readFileSync(join(DIST, 'institutions/index.html'), 'utf8')).map((x) => x['@type']);
+    expect(types).toEqual(expect.arrayContaining(['CollectionPage', 'BreadcrumbList']));
+  });
+
   it('serves a 404 page', () => {
     expect(readFileSync(join(DIST, '404.html'), 'utf8')).toContain('<h1');
   });
 
-  it.each(pages)('%s: canonical and social metadata', (p) => {
+  it.each(listed)('%s: canonical and social metadata', (p) => {
     const html = readFileSync(join(DIST, p), 'utf8');
     expect(html).toContain(`<link rel="canonical" href="${SITE}${BASE}`);
     expect(html).not.toContain('name="robots"');
@@ -150,10 +266,8 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   it('robots.txt points at the sitemap, which lists every page', () => {
     const robots = readFileSync(join(DIST, 'robots.txt'), 'utf8');
     expect(robots).toContain(`Sitemap: ${SITE}${BASE}sitemap-index.xml`);
-    const index = readFileSync(join(DIST, 'sitemap-index.xml'), 'utf8');
-    const part = index.match(/<loc>[^<]*\/(sitemap-\d+\.xml)<\/loc>/)![1];
-    const sitemap = readFileSync(join(DIST, part), 'utf8');
-    for (const p of pages) {
+    const sitemap = sitemapXml();
+    for (const p of listed) {
       expect(sitemap).toContain(`<loc>${SITE}${BASE}${p.replace('index.html', '')}</loc>`);
     }
     expect(sitemap).not.toContain('404');

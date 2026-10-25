@@ -12,7 +12,10 @@ export const site = {
     'The Official Public Record of the Commonwealth of Reason: public inquiries into what videos and posts claim, judged against the evidence.',
   locale: 'en-US',
   url: 'https://commonwealthofreason.com/', // the canonical public URL; used where Astro's href() is not available (the review package)
-  nav: [{ label: 'About', href: '/about/' }],
+  nav: [
+    { label: 'Institutions', href: '/institutions/' },
+    { label: 'About', href: '/about/' },
+  ],
   repo: 'https://github.com/jonborchardt/video-knowledge',
 };
 

@@ -78,6 +78,7 @@ export function claim(
     lean: o.lean ?? null,
     sources: srcs,
     verdicts,
+    revisions: [],
   };
 }
 

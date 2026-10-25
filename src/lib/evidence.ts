@@ -107,7 +107,7 @@ export function passageReader(root = ROOT): PassageReader {
 }
 
 export const PRIOR_CAP = 0.5; // mirrors the watcher: a study weaker than this cannot override an AI guess
-const STRONG = 0.75;
+export const STRONG = 0.75;
 const ABSOLUTE =
   /\b(always|never|all|every|everyone|anyone|guarantees?|guaranteed|reliably|consistently|proves?|causes?|definitely|certainly|nobody|no one)\b/i;
 const TYPICAL = /\b(most|usually|typically|on average|majority|tend|tends|generally|often|rarely|seldom)\b/i;

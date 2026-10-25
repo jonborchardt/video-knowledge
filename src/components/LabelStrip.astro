@@ -1,0 +1,25 @@
+---
+// The finding-status strip (plan D3): one link per non-empty label, pointing at that group of claims below.
+import { FINDING_LABELS, FINDING_TEXT, type FindingLabel } from '../lib/finding-label';
+
+interface Props {
+  counts: Record<FindingLabel, number>;
+  /** The anchor prefix of each group's heading, e.g. `#evidence-`. */
+  base: string;
+}
+const { counts, base } = Astro.props;
+const items = FINDING_LABELS.filter((l) => counts[l]).map((l) => {
+  const name = FINDING_TEXT[l].name.toLowerCase();
+  return { l, text: `${counts[l]} ${counts[l] === 1 ? name : `${name}s`}` };
+});
+---
+
+<ul class="flex list-none flex-wrap gap-x-4 gap-y-1 p-0 text-sm" aria-label="Claims by finding">
+  {
+    items.map((x) => (
+      <li>
+        <a href={`${base}${x.l}`}>{x.text}</a>
+      </li>
+    ))
+  }
+</ul>

@@ -3,6 +3,8 @@
 // them. Stories are candidates from stories.json, each linked to its own page ([topic]/[story].astro); one not ready
 // is marked under examination. A chain's follow-ups ride with their first question.
 import Base from '../../layouts/Base.astro';
+import ReportHeader from '../../components/ReportHeader.astro';
+import { breadcrumbJsonLd, collectionJsonLd } from '../../lib/seo';
 import { type Commission, commissionBody, commissions, site } from '../../config/site';
 import { loadStories, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
@@ -22,16 +24,39 @@ const total = docket.reduce((n, d) => n + d.stories.length, 0);
 const body = commissionBody(c);
 ---
 
-<Base title={`${c.name} · ${site.name}`} description={c.remit} image={`/og/${Astro.params.id}.jpg`}>
-  <header class="grid gap-4 border-y-4 border-double py-5">
-    <div class="eyebrow text-muted-foreground">
-      <a class="text-muted-foreground no-underline hover:underline" href={href('/')}>{site.name}</a>
-    </div>
-    <div class="flex items-center gap-4">
-      <!-- The seal: a copy of brand/<id>/seal.png written by `npm run brand`. -->
-      <img class="size-20 shrink-0" src={href(`/commissions/${Astro.params.id}.png`)} alt="" width="256" height="256" />
-      <h1 class="text-display font-bold text-balance">{c.ceremonialName}</h1>
-    </div>
+<Base
+  title={`${c.name} · ${site.name}`}
+  description={c.remit}
+  image={`/og/${Astro.params.id}.jpg`}
+  jsonLd={[
+    collectionJsonLd(c.ceremonialName, c.remit, `/commissions/${Astro.params.id}/`, Astro.site!),
+    breadcrumbJsonLd(
+      [
+        { name: site.name, path: '/' },
+        { name: c.name, path: `/commissions/${Astro.params.id}/` },
+      ],
+      Astro.site!,
+    ),
+  ]}
+>
+  <ReportHeader
+    brand={Astro.params.id}
+    kind="Institution"
+    trail={[{ label: site.name, href: href('/') }]}
+    title={c.ceremonialName}
+    bigSeal
+    facts={[
+      c.youtube
+        ? { term: 'Channel', value: c.fullName, href: c.youtube, rel: 'me' }
+        : { term: 'Channel', value: `${c.fullName} · coming soon` },
+      {
+        term: 'Record',
+        value: topics.length
+          ? `${topics.length} ${topics.length === 1 ? 'inquiry' : 'inquiries'} · ${total} stories`
+          : 'no inquiry published yet',
+      },
+    ]}
+  >
     {c.slogan && <p class="font-heading text-lg italic">{c.slogan}</p>}
     <p class="max-w-prose text-muted-foreground">{c.remit}</p>
     <!-- The channel's link points here, so this greets a viewer arriving from a video. -->
@@ -40,31 +65,7 @@ const body = commissionBody(c);
       and posts examined, each claim they make, and the verdict on it with the lines of evidence behind it.{' '}
       <a href={href('/about/')}>How to read the record.</a>
     </p>
-    <dl
-      class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 border-t pt-3 font-mono text-xs text-muted-foreground sm:grid-cols-[auto_1fr_auto_1fr]"
-    >
-      <dt class="uppercase">Channel</dt>
-      <dd class="text-foreground">
-        {
-          c.youtube ? (
-            <a href={c.youtube} rel="me" title={c.fullName}>
-              {c.fullName}
-            </a>
-          ) : (
-            `${c.fullName} · coming soon`
-          )
-        }
-      </dd>
-      <dt class="uppercase">Record</dt>
-      <dd class="text-foreground">
-        {
-          topics.length
-            ? `${topics.length} ${topics.length === 1 ? 'inquiry' : 'inquiries'} · ${total} stories`
-            : 'no inquiry published yet'
-        }
-      </dd>
-    </dl>
-  </header>
+  </ReportHeader>
 
   {
     topics.length > 0 && (

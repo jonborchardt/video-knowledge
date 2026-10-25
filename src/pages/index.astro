@@ -1,23 +1,34 @@
 ---
-// The Official Public Record: one card per institution of the Commonwealth, with the inquiries it has published and a
-// featured story. A topic no institution claims is not listed (publicTopicNames); an institution without a channel
-// says so rather than inventing a handle.
+// The front page of the Record: the latest settled matters (those with a live video first), then the institutions.
+// The full directory is /institutions/. A topic no institution claims is not listed (publicTopicNames).
 import Base from '../layouts/Base.astro';
+import LabelStrip from '../components/LabelStrip.astro';
 import { commissionKey, commissions, site } from '../config/site';
+import { labelCounts } from '../lib/finding-label';
+import { ROOT } from '../lib/io';
+import { storyOutputs } from '../lib/outputs';
 import { loadStories, storyUrlSlug } from '../lib/stories';
 import { loadTopic, publicTopicNames } from '../lib/topics';
 import { href } from '../lib/url';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 
-const names = new Set(publicTopicNames());
-const institutions = Object.values(commissions).map((c) => {
-  const published = c.topics.filter((n) => names.has(n)).map((n) => loadTopic(n));
-  // Featured: the best-ranked ready story across the institution's inquiries, linked to its own page.
-  const featured = published
-    .flatMap((t) => (loadStories(t.name)?.stories ?? []).map((s) => ({ s, t })))
-    .find(({ s }) => s.readiness === 'ready');
-  return { c, published, featured };
-});
-const fmt = (n: number) => n.toLocaleString('en-US');
+const LATEST = 6;
+const latest = publicTopicNames()
+  .flatMap((name) => {
+    const t = loadTopic(name);
+    return (loadStories(name)?.stories ?? [])
+      .filter((s) => s.readiness === 'ready' && !s.partOf)
+      .map((s) => ({ s, t, live: storyOutputs(name, s.id).video?.publishedAt ?? '' }));
+  })
+  .sort((a, b) => b.live.localeCompare(a.live) || b.s.scores.overall - a.s.scores.overall)
+  .slice(0, LATEST)
+  .map(({ s, t }) => {
+    const path = `/${t.name}/${storyUrlSlug(s)}/`;
+    const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
+    const claims = t.claims.filter((c) => s.claims.includes(c.id));
+    return { s, t, path, card: existsSync(join(ROOT, 'public', card)) ? card : null, counts: labelCounts(claims) };
+  });
 ---
 
 <Base title={site.name}>
@@ -38,79 +49,37 @@ const fmt = (n: number) => n.toLocaleString('en-US');
     </p>
   </header>
 
-  <section class="grid gap-6" aria-label="Institutions">
-    {
-      institutions.map(({ c, published, featured }) => (
-        <article class="grid gap-4 rounded-lg border bg-card p-5 text-card-foreground sm:p-6">
-          <header class="flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
-            <div class="flex items-center gap-4">
-              <img
-                class="size-14 shrink-0"
-                src={href(`/commissions/${commissionKey(c)}.png`)}
-                alt=""
-                width="256"
-                height="256"
-              />
-              <div>
-                <div class="eyebrow text-muted-foreground">
-                  {site.name} · {c.ceremonialName !== c.name ? c.ceremonialName : 'Institution'}
-                </div>
-                <h2 class="mt-1 text-featured font-bold">
-                  <a class="no-underline hover:underline" href={href(`/commissions/${commissionKey(c)}/`)}>
-                    {c.name}
-                  </a>
-                </h2>
-              </div>
-            </div>
-            {c.youtube ? (
-              <a href={c.youtube} rel="me" class="text-sm" title={c.fullName}>
-                YouTube {c.handle}
-              </a>
-            ) : (
-              <span class="rounded-sm border border-dashed px-2 py-1 eyebrow text-muted-foreground">
-                Channel coming soon
-              </span>
-            )}
-          </header>
-          <p class="max-w-prose text-muted-foreground">{c.remit}</p>
-          {published.length > 0 ? (
-            <div class="grid gap-4 md:grid-cols-[2fr_3fr]">
-              <ul class="grid list-none gap-2 p-0">
-                {published.map((t) => (
-                  <li>
-                    <a
-                      class="grid grid-cols-[auto_1fr] items-start gap-3 rounded-md border bg-background p-3 no-underline hover:border-primary"
-                      href={href(`/${t.name}/`)}
-                    >
-                      {/* eslint-disable-next-line astro/no-set-html-directive -- glyphs are committed topics/<topic>/glyph.svg files */}
-                      {t.glyph && <span class="size-9 text-primary [&>svg]:size-full" set:html={t.glyph} />}
-                      <span class="grid gap-0.5">
-                        <span class="font-heading font-bold text-primary">{t.label}</span>
-                        <span class="font-mono text-xs text-muted-foreground">
-                          {fmt(t.counted)} sources · {fmt(t.claims.length)} claims · {t.studies} studies
-                        </span>
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              {featured && (
-                <a
-                  class="grid content-start gap-2 rounded-md border border-dashed p-4 no-underline hover:border-primary"
-                  href={href(`/${featured.t.name}/${storyUrlSlug(featured.s)}/`)}
-                >
-                  <span class="eyebrow text-muted-foreground">Featured inquiry · {featured.t.label}</span>
-                  <span class="font-heading text-title font-bold">{featured.s.title}</span>
-                  <span class="text-sm text-muted-foreground">{featured.s.question}</span>
-                  <span class="text-sm text-primary">Read the findings</span>
-                </a>
-              )}
-            </div>
-          ) : (
-            <p class="font-mono text-xs text-muted-foreground">No inquiry published yet.</p>
-          )}
-        </article>
-      ))
-    }
+  <section aria-labelledby="latest">
+    <h2 class="mb-4 text-featured font-bold" id="latest">Latest findings</h2>
+    <ul class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        latest.map(({ s, t, path, card, counts }) => (
+          <li class="grid content-start gap-2 rounded-lg border bg-card p-4 text-card-foreground">
+            {card && <img class="w-full rounded-sm" src={href(card)} alt="" width="1200" height="675" loading="lazy" />}
+            <span class="eyebrow text-muted-foreground">{t.label}</span>
+            <a class="font-heading text-title font-bold" href={href(path)}>
+              {s.title}
+            </a>
+            <span class="text-sm text-muted-foreground">{s.question}</span>
+            <p class="text-sm">{s.arc.resolution}</p>
+            <LabelStrip counts={counts} base={`${href(path)}#evidence-`} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="institutions">
+    <h2 class="mb-3 text-featured font-bold" id="institutions">Institutions</h2>
+    <ul class="grid list-none gap-1.5 p-0">
+      {
+        Object.values(commissions).map((c) => (
+          <li>
+            <a href={href(`/commissions/${commissionKey(c)}/`)}>{c.ceremonialName}</a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mt-3"><a href={href('/institutions/')}>The full directory</a></p>
   </section>
 </Base>

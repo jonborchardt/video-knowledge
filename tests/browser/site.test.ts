@@ -2,7 +2,8 @@
 // in dist/, served by `astro preview`. Run through `npm run test:browser` (representative pages, Chromium) or
 // `npm run quality -- --audit` (every page, Chromium + Firefox + WebKit). Env: WEB_QUALITY_BROWSERS=chromium,firefox,webkit,
 // WEB_QUALITY_FULL=1 for every page. Findings go through the same exceptions as the static gate (tests/web-quality.json).
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import axe from 'axe-core';
 import { preview } from 'astro';
 import { chromium, firefox, webkit, type Browser, type BrowserContextOptions, type Page } from 'playwright';
@@ -18,7 +19,7 @@ const WIDTHS = [320, 375, 768, 1024, 1440]; // the named breakpoints; the sweep 
 const WCAG = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select, textarea, summary, [tabindex]:not([tabindex="-1"])';
-const isTopic = (p: string) => /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions)\//.test(p);
+const isTopic = (p: string) => /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions|institutions)\//.test(p);
 
 let server: Awaited<ReturnType<typeof preview>>;
 let origin = '';
@@ -57,7 +58,7 @@ afterAll(async () => server?.stop());
 // Without a build every suite below skips, so the gate would pass having checked nothing.
 it('has the built site to check (npm run build), one page per template', () => {
   expect(pages.length, 'no pages in dist/: run npm run build').toBeGreaterThan(0);
-  if (process.env.WEB_QUALITY_FULL !== '1') expect(pages, 'representativePages() lost a template').toHaveLength(6);
+  if (process.env.WEB_QUALITY_FULL !== '1') expect(pages, 'representativePages() lost a template').toHaveLength(7);
 });
 
 describe.skipIf(!pages.length).each(BROWSERS)('%s', (name) => {
@@ -271,6 +272,28 @@ describe.skipIf(!pages.length).each(BROWSERS)('%s', (name) => {
       expect(moving, 'animations longer than 1ms under reduced motion').toEqual([]);
       await close();
     });
+  });
+});
+
+/** Built pages whose HTML contains `attr`: a template that only renders for some data (a live video). */
+const pagesMatching = (attr: string) =>
+  existsSync(DIST) ? distPages().filter((p) => readFileSync(join(DIST, p), 'utf8').includes(attr)) : [];
+const withVideo = pagesMatching('data-embed');
+
+describe.skipIf(!withVideo.length || !BROWSERS.includes('chromium'))('video facade', () => {
+  it('the video loads nothing from YouTube until played, then embeds youtube-nocookie', async () => {
+    const browser = await chromium.launch();
+    const page = await browser.newPage();
+    const youtube: string[] = [];
+    page.on('request', (r) => /youtube/.test(new URL(r.url()).hostname) && youtube.push(r.url()));
+    await page.route(/youtube/, (r) => r.abort()); // nothing leaves the machine, even after the click
+    await page.goto(urlOf(withVideo[0]), { waitUntil: 'load' });
+    expect(youtube, 'requests to YouTube before the click').toEqual([]);
+    await page.locator('[data-play]').first().click();
+    await expect
+      .poll(() => page.locator('[data-embed] iframe').first().getAttribute('src'))
+      .toMatch(/^https:\/\/www\.youtube-nocookie\.com\/embed\//);
+    await browser.close();
   });
 });
 

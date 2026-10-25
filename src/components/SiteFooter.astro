@@ -1,5 +1,6 @@
 ---
 import { author, commissions, site } from '../config/site';
+import { href } from '../lib/url';
 
 const channels = Object.values(commissions).filter((c) => c.youtube); // only channels a person has created
 ---
@@ -31,6 +32,7 @@ const channels = Object.values(commissions).filter((c) => c.youtube); // only ch
           </li>
         ))
       }
+      <li><a href={href('/about/#publisher')} class="hover:text-foreground">Publisher</a></li>
       <li><a href={site.repo} class="hover:text-foreground">Source</a></li>
     </ul>
     <p class="basis-full text-xs">

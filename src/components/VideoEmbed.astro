@@ -1,0 +1,80 @@
+---
+// The matter's live video (plan D6): a click-to-load facade. Nothing loads from YouTube until a reader plays it or
+// picks a chapter; then one youtube-nocookie iframe takes the poster's place. Without JS every link goes to YouTube.
+import { type PublicVideo, seekUrl } from '../lib/outputs';
+import { href } from '../lib/url';
+
+interface Props {
+  video: PublicVideo;
+  /** Site path of the story's share card, the poster. */
+  poster: string;
+  shorts: PublicVideo[];
+}
+const { video, poster, shorts } = Astro.props;
+---
+
+<div id="video" class="grid gap-3" data-embed={video.embedUrl} data-title={video.title}>
+  <div class="relative aspect-video overflow-hidden rounded-md border bg-card" data-frame>
+    <a href={video.url} data-play class="group block size-full">
+      <img class="size-full object-cover" src={href(poster)} alt="" width="1200" height="675" loading="lazy" />
+      <span
+        class="absolute inset-x-0 bottom-0 bg-background/85 px-4 py-2 text-sm font-semibold text-foreground group-hover:underline"
+      >
+        ▶ Play the video (loads YouTube)
+      </span>
+    </a>
+  </div>
+  <p class="font-heading font-bold">{video.title}</p>
+  {
+    video.chapters.length > 0 && (
+      <ol class="grid list-none gap-1 p-0 text-sm">
+        {video.chapters.map((c) => (
+          <li>
+            <a href={seekUrl(video, c.seconds)} data-seek={Math.floor(c.seconds)}>
+              <span class="font-mono text-xs">{c.stamp}</span> {c.title}
+            </a>
+          </li>
+        ))}
+      </ol>
+    )
+  }
+  {
+    shorts.length > 0 && (
+      <ul class="flex list-none flex-wrap gap-3 p-0" aria-label="Shorts">
+        {shorts.map((s) => (
+          <li>
+            <a
+              class="grid aspect-[9/16] w-28 content-end rounded-md border bg-card p-2 text-xs no-underline hover:border-primary"
+              href={s.url}
+            >
+              <span class="eyebrow text-gold">Short</span>
+              <span class="text-foreground">{s.title}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</div>
+
+<script>
+  // Play or a chapter: put (or re-point) one youtube-nocookie iframe where the poster was.
+  document.addEventListener('click', (e) => {
+    const a = (e.target as Element).closest<HTMLAnchorElement>('[data-embed] [data-play], [data-embed] [data-seek]');
+    if (!a) return;
+    const fig = a.closest<HTMLElement>('[data-embed]')!;
+    e.preventDefault();
+    const src = `${fig.dataset.embed}?autoplay=1&start=${a.dataset.seek ?? 0}`;
+    const frame = fig.querySelector<HTMLElement>('[data-frame]')!;
+    let iframe = frame.querySelector('iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.title = fig.dataset.title ?? 'Video';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'size-full';
+      frame.replaceChildren(iframe);
+    }
+    iframe.src = src;
+  });
+</script>
