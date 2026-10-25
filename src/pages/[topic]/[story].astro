@@ -8,6 +8,8 @@ import Base from '../../layouts/Base.astro';
 import ClaimCard from '../../components/ClaimCard.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
 import LabelStrip from '../../components/LabelStrip.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import { storyOutputs } from '../../lib/outputs';
 import { revisionLine } from '../../lib/public-record';
 import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
 import SourceIcons from '../../components/SourceIcons.astro';
@@ -41,6 +43,8 @@ const revisions = claims
   .flatMap((c) => c.revisions.map((r) => ({ r, text: c.text })))
   .sort((a, b) => a.r.at.localeCompare(b.r.at));
 const revised = revisions.at(-1)?.r.at ?? null;
+// The video lives on the first question's page; a follow-up links to it.
+const outputs = storyOutputs(t.name, s.partOf ?? s.id);
 const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
 const body = commissionBody(commission);
 const h2 = 'mb-3 text-featured font-bold';
@@ -109,6 +113,19 @@ const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionK
       <LabelStrip counts={labelCounts(claims)} base="#evidence-" />
     </div>
   </section>
+
+  {
+    outputs.video &&
+      (first ? (
+        <p>
+          The video answering this question is on <a href={`${storyHref(first)}#video`}>{first.title}</a>.
+        </p>
+      ) : (
+        <section aria-label="The video">
+          <VideoEmbed video={outputs.video} poster={image} shorts={outputs.shorts} />
+        </section>
+      ))
+  }
 
   <section id="article">
     <section aria-labelledby="dispute">
