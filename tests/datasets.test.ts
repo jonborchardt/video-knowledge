@@ -33,6 +33,25 @@ describe('datasets', () => {
     const p = datasetProblems(table([{ label: 'Alabama', cells: [cell(44.49, '44.49'), cell(19.99, '19.99')] }]), read);
     expect(p.join('\n')).toContain('"19.99" is not in');
   });
+  it("in a '|' table line, the row label is the first field and each cell its own column's field", () => {
+    const swapped = datasetProblems(
+      table([{ label: 'Alabama', cells: [cell(17.98, '17.98'), cell(44.49, '44.49')] }]),
+      read,
+    );
+    expect(swapped).toEqual([
+      'cell "Alabama/a": display "17.98" is not field 2 of its line ("44.49")',
+      'cell "Alabama/b": display "44.49" is not field 3 of its line ("17.98")',
+    ]);
+    const relabelled = datasetProblems(
+      table([{ label: 'Alaska', cells: [cell(44.49, '44.49'), cell(17.98, '17.98')] }]),
+      read,
+    );
+    expect(relabelled.join('\n')).toContain('row "Alaska" is not the first field of its line ("Alabama")');
+    const spaced: PassageReader = (c) => (c === CITE ? '  Alabama   |  44.49 |17.98 ' : null);
+    expect(
+      datasetProblems(table([{ label: 'Alabama', cells: [cell(44.49, '44.49'), cell(17.98, '17.98')] }]), spaced),
+    ).toEqual([]);
+  });
   it('a row with the wrong number of cells is a problem', () => {
     expect(datasetProblems(table([{ label: 'Alabama', cells: [cell(44.49, '44.49')] }]), read)).toContain(
       'row "Alabama": 1 cells for 2 columns',

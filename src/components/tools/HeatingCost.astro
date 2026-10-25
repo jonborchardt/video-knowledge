@@ -195,7 +195,8 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
           }
         </div>
         <label class={field}>
-          Annual gas use in therms, optional (from your gas bill; no default)
+          Gas used for heating in a year, in therms, optional (a year's bills less twelve times a summer month's use; no
+          default)
           <input name="therms" id="hc-therms" type="number" min="0" step="any" inputmode="decimal" class={control} />
         </label>
         <p class="text-sm text-muted-foreground">
@@ -231,31 +232,22 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
 </div>
 
 <script>
-  import {
-    estimate,
-    fromCentsPerKwh,
-    fromDollarsPerMcf,
-    fromDollarsPerTherm,
-    type Inputs,
-  } from '../../tools/heating-cost/model';
+  import { convertPrice, estimate, type Inputs, type PriceUnit } from '../../tools/heating-cost/model';
 
   const root = document.querySelector<HTMLElement>('[data-tool="heating-cost"]');
   if (root) {
     const field = <T extends HTMLInputElement | HTMLSelectElement>(name: string) =>
       root.querySelector<T>(`[name="${name}"]`)!;
     const num = (name: string) => field<HTMLInputElement>(name).valueAsNumber; // NaN when blank
-    const TO_MMBTU: Record<string, (x: number) => number> = {
-      kwh: fromCentsPerKwh,
-      therm: fromDollarsPerTherm,
-      mcf: fromDollarsPerMcf,
-      mmbtu: (x) => x,
-    };
+    const unit = (k: string) => field(`${k}-unit`).value as PriceUnit;
+    const shown = { elec: unit('elec'), gas: unit('gas') }; // each price's unit before a change
+    const therms = field<HTMLInputElement>('therms');
     const ASK: Record<keyof Inputs, string> = {
       elec: 'Enter an electricity price above zero.',
       gas: 'Enter a gas price above zero.',
       afue: 'Choose a furnace efficiency.',
       cops: 'Enter both heat pump COPs above zero.',
-      therms: 'Enter an annual gas use above zero, or leave it blank.',
+      therms: 'Enter the gas used for heating above zero, or leave it blank.',
     };
     const out = root.querySelector('output')!;
     const usd = (n: number, digits: number) =>
@@ -266,14 +258,18 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
       const b = num('cop-high');
       const afue = Number(field('afue').value);
       const r = estimate({
-        elec: TO_MMBTU[field('elec-unit').value](num('elec')),
-        gas: TO_MMBTU[field('gas-unit').value](num('gas')),
+        elec: convertPrice(num('elec'), unit('elec'), 'mmbtu'),
+        gas: convertPrice(num('gas'), unit('gas'), 'mmbtu'),
         afue,
         cops: [a, b],
-        therms: field('therms').value.trim() ? num('therms') : undefined,
+        // a browser blanks the value of a number field holding text, so "not a number" is read from its validity
+        therms: therms.value.trim() || therms.validity.badInput ? num('therms') : undefined,
       });
       let lines: string[];
-      if ('missing' in r) lines = r.missing.map((m) => ASK[m]);
+      if ('missing' in r)
+        lines = r.missing.map((m) =>
+          m === 'therms' && therms.validity.badInput ? 'The gas used for heating is not a number.' : ASK[m],
+        );
       else {
         const [lo, hi] = [Math.min(a, b).toFixed(2), Math.max(a, b).toFixed(2)];
         const [hpLo, hpHi] = r.perMmbtu.heatPump;
@@ -282,7 +278,7 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
           `Cost of a million Btu of heat: gas furnace ${usd(r.perMmbtu.furnace, 2)}; heat pump ${usd(hpLo, 2)} at COP ${lo} to ${usd(hpHi, 2)} at COP ${hi}.`,
           r.annual
             ? `A year's heating: gas furnace ${usd(r.annual.furnace, 0)}; heat pump ${usd(r.annual.heatPump[0], 0)} at COP ${lo} to ${usd(r.annual.heatPump[1], 0)} at COP ${hi}.`
-            : 'Enter your annual gas use in therms to see a year’s cost each way.',
+            : 'Enter the gas you use for heating in a year, in therms, to see a year’s cost each way.',
           r.side === 'heat-pump'
             ? `Both COPs are above the break-even: at these prices the heat pump costs less to run.`
             : r.side === 'furnace'
@@ -300,8 +296,14 @@ const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-
         const o = state.selectedOptions[0];
         for (const k of ['elec', 'gas']) {
           field(k).value = Number(o.dataset[k]).toFixed(2);
-          field(`${k}-unit`).value = 'mmbtu';
+          field(`${k}-unit`).value = shown[k as 'elec' | 'gas'] = 'mmbtu';
         }
+      } else if (name === 'elec-unit' || name === 'gas-unit') {
+        // the same price restated in the new unit, not the number re-read in it
+        const k = name === 'elec-unit' ? 'elec' : 'gas';
+        const x = num(k);
+        if (Number.isFinite(x)) field(k).value = String(Number(convertPrice(x, shown[k], unit(k)).toFixed(4)));
+        shown[k] = unit(k);
       } else if (/^(elec|gas)/.test(name)) state.value = '';
       update();
     });

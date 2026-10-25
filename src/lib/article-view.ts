@@ -6,7 +6,7 @@ import type { Sentence } from './script';
 import type { DataTable } from './datasets';
 import type { ChartSpec } from './storyboard';
 import type { Topic } from './topics';
-import { citeHref, citeLines } from './url';
+import { citeHref, citeLabel } from './url';
 
 /** What a figure draws: a storyboard chart or an evidence dataset, with the source line its caption carries. */
 export interface FigureDraw {
@@ -18,7 +18,7 @@ export type ViewBlock =
   | {
       kind: 'p';
       callout?: Callout;
-      sentences: { id: string; text: string; refs: number[]; corrected: boolean; correctedOn?: string }[];
+      sentences: { id: string; text: string; refs: number[]; correctedOn?: string }[];
     }
   | { kind: 'table'; caption: string; columns: string[]; rows: { label: string; cells: string[] }[] }
   | { kind: 'figure'; ref: string; caption: string; draw?: FigureDraw };
@@ -37,9 +37,12 @@ export function articleStale(r: ArticleRelease, record: PublicRecord): Revision 
     ...articleSentences(r.article).flatMap((s) => (s.assertions ?? []).flatMap((a) => a.claims.map((c) => c.id))),
     ...r.article.sections.flatMap((s) => s.blocks.flatMap((b) => (b.kind === 'prose' && b.claim ? [b.claim] : []))),
   ]);
+  // The record is append-only: a release that counted it knows exactly which revisions came after, even the same day.
+  // An older release falls back to whole days.
+  const seen = r.recordSeen;
   return (
     record.revisions
-      .filter((v) => isClaimRevision(v) && claims.has(v.id) && v.at > r.date)
+      .filter((v, i) => isClaimRevision(v) && claims.has(v.id) && (seen === undefined ? v.at > r.date : i >= seen))
       .sort((a, b) => a.at.localeCompare(b.at))
       .at(-1) ?? null
   );
@@ -72,8 +75,7 @@ export function articleView(
     for (const e of (s.assertions ?? []).flatMap((x) => x.evidence)) {
       let n: number | undefined;
       if (e.kind === 'study') {
-        const file = e.cite.split('#')[0].split('/').pop()!;
-        n = number(e.cite, `${t.docNames[file] ?? file}, lines ${citeLines(e.cite)}`, citeHref(repo, e.cite));
+        n = number(e.cite, citeLabel(t.docNames, e.cite), citeHref(repo, e.cite));
       } else if (e.kind === 'statement') {
         const x = sources.get(e.source);
         const exhibit = record.exhibits[e.source] ?? x?.exhibit;
@@ -97,7 +99,6 @@ export function articleView(
               id: s.id,
               text: s.text,
               refs: refsOf(s),
-              corrected: correctedOn.has(s.id),
               ...(correctedOn.has(s.id) && { correctedOn: correctedOn.get(s.id) }),
             })),
           };

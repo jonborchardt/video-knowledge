@@ -3,7 +3,7 @@
 // prose, table cells that state their cited values, figures that name a chart the story has, and prose that is not
 // the narration read back.
 import { join } from 'node:path';
-import { type Article, articleAsScript, articleReviewUnits, articleSentences } from './article';
+import { ARTICLE_FILES, type Article, articleAsScript, articleReviewUnits, articleSentences, proseOf } from './article';
 import type { Corpus, Verdict } from './corpus';
 import { dataRef, loadDatasets } from './datasets';
 import type { PassageReader } from './evidence';
@@ -16,6 +16,7 @@ import {
   norm,
   revisionsInPass,
   type Script,
+  type ScriptReviewFile,
   type ScriptValidation,
   type Severity,
   FILES,
@@ -53,14 +54,17 @@ export function articleIssues(
   const blocks = a.sections.flatMap((s) => s.blocks);
   const prose = blocks.flatMap((b) => (b.kind === 'prose' ? [b] : []));
 
-  // A claim the evidence only qualifies, or leaves open, is carried by a callout or a qualified assertion.
+  // A claim the evidence only qualifies, or leaves open, is carried by a callout or a qualified assertion. A
+  // qualification counts only when placed: it names a sentence of the article that carries it (as a Short's must).
+  const ids = new Set(all.map((s) => s.id));
+  const placed = (qs: string[] = []) => qs.some((q) => [...q.matchAll(/\bs\d+\b/g)].some((m) => ids.has(m[0])));
   for (const c of pkg.claims) {
     const label = findingLabel({ ...c, verdict: c.verdict as Verdict | null }); // the package keeps the verdict as a string
     if (label !== 'qualification' && label !== 'unresolved') continue;
     const covered =
       prose.some((b) => b.callout && b.claim === c.id) ||
       all.some((s) =>
-        (s.assertions ?? []).some((x) => x.qualifications?.length && x.claims.some((y) => y.id === c.id)),
+        (s.assertions ?? []).some((x) => placed(x.qualifications) && x.claims.some((y) => y.id === c.id)),
       );
     if (!covered)
       out.push(
@@ -136,7 +140,7 @@ export function articleIssues(
       ),
     );
     for (const sec of a.sections) {
-      const ss = sec.blocks.flatMap((b) => (b.kind === 'prose' ? b.sentences : []));
+      const ss = proseOf(sec);
       const g = grams(ss.map((s) => s.text).join(' '));
       const found = g.filter((x) => spoken.has(x)).length;
       if (g.length && found / g.length > OVERLAP.share)
@@ -213,6 +217,26 @@ export function validateArticle(
       revisionsInPass(script) >= MAX_REVISIONS &&
       !script.generation.corrective?.some((c) => c.revision === script.revision),
   };
+}
+
+/** validateArticle over the story's script folder: its article review, the previous validation and the figures it
+ *  may name. */
+export function validateArticleIn(
+  topic: string,
+  storyId: string,
+  a: Article,
+  t: Corpus,
+  read: PassageReader,
+  opts: Pick<ValidateOptions, 'judgments'> & { pkg: EvidencePackage; script: Script | null },
+  root = ROOT,
+): ScriptValidation {
+  const p = (f: string) => join(scriptDir(topic, storyId, root), f);
+  return validateArticle(a, t, read, {
+    ...opts,
+    review: readJson<ScriptReviewFile>(p(ARTICLE_FILES.review)),
+    previous: readJson<ScriptValidation>(p(ARTICLE_FILES.validation)),
+    figures: figuresOf(topic, storyId, root),
+  });
 }
 
 /** The ids an article's figures may name: `<story-slug>/<scene-id>` for every storyboard scene with a chart, and

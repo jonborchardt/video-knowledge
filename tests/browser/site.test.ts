@@ -321,6 +321,22 @@ describe.skipIf(!withTool.length || !BROWSERS.includes('chromium'))('calculator'
     expect(await out.textContent()).not.toMatch(/NaN|Infinity/);
     await browser.close();
   });
+  it('a unit change restates the price; text in the therms field is named as not a number', async () => {
+    const browser = await chromium.launch();
+    const page = await browser.newPage();
+    await page.goto(urlOf(withTool[0]), { waitUntil: 'load' });
+    const out = page.locator('[data-tool] output');
+    await expect.poll(() => out.textContent()).toContain('Break-even');
+    const before = await out.textContent();
+    const elec = page.locator('[data-tool] input[name=elec]');
+    expect(await elec.inputValue()).toBe('48.30'); // the U.S. default, $ per MMBtu
+    await page.locator('[data-tool] select[name=elec-unit]').selectOption('kwh');
+    expect(Number(await elec.inputValue())).toBeCloseTo(16.48, 2);
+    expect(await out.textContent()).toBe(before); // the same price, so the same answer
+    await page.locator('[data-tool] input[name=therms]').pressSequentially('e');
+    await expect.poll(() => out.textContent()).toContain('not a number');
+    await browser.close();
+  });
 });
 
 describe.skipIf(!pages.length || !BROWSERS.includes('chromium'))('exceptions', () => {

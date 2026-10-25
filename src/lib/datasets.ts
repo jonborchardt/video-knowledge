@@ -26,16 +26,28 @@ export function loadDatasets(topic: string, root = ROOT): DataTable[] {
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 
-/** The problems with a dataset: a row's cell count, each cell's passage, and its figures against that passage. */
+const fields = (line: string) => line.split('|').map((f) => f.replace(/\s+/g, ' ').trim());
+
+/** The problems with a dataset: a row's cell count, each cell's passage, and its figures against that passage. A cell
+ *  citing one table line (fields separated by '|') must sit on its row's line (the first field is the row label) and
+ *  in its own column: column i is field i + 1. */
 export function datasetProblems(d: DataTable, read: PassageReader): string[] {
   const out: string[] = [];
   for (const row of d.rows) {
     if (row.cells.length !== d.columns.length)
       out.push(`row "${row.label}": ${row.cells.length} cells for ${d.columns.length} columns`);
+    const label = fields(row.label)[0];
     row.cells.forEach((cell, i) => {
       const name = `cell "${row.label}/${d.columns[i]?.key ?? i}"`;
-      if (read(cell.cite) === null) out.push(`cell "${row.label}": no passage at ${cell.cite}`);
-      else for (const p of pointProblems(cell, new Set([cell.cite]), read)) out.push(`${name}: ${p}`);
+      const passage = read(cell.cite);
+      if (passage === null) return out.push(`cell "${row.label}": no passage at ${cell.cite}`);
+      for (const p of pointProblems(cell, new Set([cell.cite]), read)) out.push(`${name}: ${p}`);
+      const lines = passage.split('\n').filter((l) => l.includes('|'));
+      if (lines.length !== 1) return; // prose, or a range: the figure check above is all there is
+      const f = fields(lines[0]);
+      if (f[0] !== label) out.push(`${name}: row "${row.label}" is not the first field of its line ("${f[0]}")`);
+      if (f[i + 1] !== cell.display.replace(/\s+/g, ' ').trim())
+        out.push(`${name}: display "${cell.display}" is not field ${i + 2} of its line ("${f[i + 1] ?? ''}")`);
     });
   }
   return out;

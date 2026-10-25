@@ -389,6 +389,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(html).toContain('data-tool="heating-cost"');
     expect(html).toContain('3.28'); // the U.S. break-even in the worked examples
     expect(html).toContain('not a prediction');
+    expect(html).toContain('Gas used for heating'); // not the whole bill: winter use minus summer use
   });
 
   it('a topic with datasets has a data page with each table and its downloads', () => {

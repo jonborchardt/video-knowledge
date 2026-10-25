@@ -596,6 +596,7 @@ describe('the article on the board', () => {
         { id: 'meta.dek.a', text: 'x', claims: [{ id: claim, role: 'supports' }] } as never,
       ];
       write(fx, 'article-release.json', r);
+      write(fx, 'article.json', r.article); // the released text, unchanged
       write(fx, '../../public-record.json', {
         exhibits: {},
         revisions: [{ at: '2026-02-01', kind: 'claim', id: claim, from: null, to: null, note: 'a new study' }],

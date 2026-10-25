@@ -7,11 +7,9 @@ export const heatingCost: ToolSpec = {
   id: 'heating-cost',
   topic: 'heat-pumps',
   story: 'decision:is-it-cheaper-to-run-than-gas',
-  justification: {
-    condition:
-      'Whether a heat pump is cheaper to run than a gas furnace turns on the price ratio and the heat pump seasonal COP, so the answer differs by household; the evidence gives the method, not one answer.',
-    model: `${SRC}#L119-L127`,
-  },
+  // Whether a heat pump is cheaper to run than a gas furnace turns on the price ratio and the heat pump seasonal COP,
+  // so the answer differs by household; the evidence gives the method, not one answer.
+  justification: { model: `${SRC}#L119-L127` },
   defaults: {
     prices: dataRef('heat-pumps', 'state-prices'),
     afue: [
@@ -34,6 +32,7 @@ export const heatingCost: ToolSpec = {
     'A household that keeps its gas connection keeps the fixed gas charge; one that disconnects saves it.',
     'Ignores installation cost.',
     'Ignores cooling.',
+    'The annual figures assume all the therms entered are for heating: gas for water heating, cooking or drying, left in, makes both annual costs too high.',
   ],
   whyDefaults:
     'The efficiencies are the source’s own illustrative values: furnace AFUE 0.95 and 0.80, heat pump seasonal COP 2.5 and 3.0. Prices are the state averages from the same source, starting from the U.S. average. None was chosen to favour either machine.',

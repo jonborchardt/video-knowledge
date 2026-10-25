@@ -5,7 +5,7 @@ export interface ToolSpec {
   id: string;
   topic: string;
   story: string;
-  justification: { condition: string; model: string };
+  justification: { model: string };
   defaults: Record<string, unknown>;
   assumptions: string[];
   limitations: string[];

@@ -79,6 +79,16 @@ describe('article view', () => {
     expect(articleStale(release(), rec(claimRev('demo/other', '2026-11-02')))).toBeNull();
   });
 
+  it('a release that records the revisions it saw is stale on any later one, the same day too', () => {
+    const before = claimRev(MLM, '2026-11-01');
+    const sameDayLater = claimRev(MLM, '2026-11-01');
+    const r = release({ recordSeen: 1 });
+    expect(articleStale(r, { exhibits: {}, revisions: [before] })).toBeNull();
+    expect(articleStale(r, { exhibits: {}, revisions: [before, sameDayLater] })).toBe(sameDayLater);
+    // without the count, the date decides (as before)
+    expect(articleStale(release(), { exhibits: {}, revisions: [before, sameDayLater] })).toBeNull();
+  });
+
   it('a claim named only by a callout counts toward staleness', () => {
     const r = release();
     r.article.sections[0].blocks.push({
@@ -114,7 +124,7 @@ describe('article view', () => {
     const v = articleView(release({ history }), topic, empty, REPO);
     expect(v.corrections).toEqual([{ date: '2026-11-03', note: 'n', sentences: ['s3'] }]);
     const b = v.sections[0].blocks[0];
-    expect(b.kind === 'p' && b.sentences.map((s) => s.corrected)).toEqual([false, false, true]);
+    expect(b.kind === 'p' && b.sentences.map((s) => !!s.correctedOn)).toEqual([false, false, true]);
   });
 
   it('a corrected sentence carries the date of the newest correction that names it', () => {

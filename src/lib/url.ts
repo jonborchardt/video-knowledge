@@ -5,6 +5,9 @@ export function href(path: string): string {
   return `${base}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
+/** The URLs in plain text (a video description), without the punctuation that closes the sentence around them. */
+export const textUrls = (text: string) => [...text.matchAll(/https?:\/\/\S+/g)].map(([u]) => u.replace(/[),.;]+$/, ''));
+
 /** Absolute URL for canonical and social tags. Requires `site` in astro.config. */
 export function absoluteUrl(path: string, site: URL | string): string {
   return new URL(href(path), site).toString();
@@ -15,6 +18,11 @@ export function absoluteUrl(path: string, site: URL | string): string {
 export const citeHref = (repo: string, cite: string) => `${repo}/blob/main/topics/${cite}`;
 /** The cite's line range, `10-24`. */
 export const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
+/** The cite as its document's name and line range, "EIA table, lines 10-24". */
+export function citeLabel(docNames: Record<string, string>, cite: string): string {
+  const file = cite.split('#')[0].split('/').pop()!;
+  return `${docNames[file] ?? file}, lines ${citeLines(cite)}`;
+}
 
 /** A dataset's source line: each document once with the overall line range its cells cite, then the period:
  *  "EIA table, lines 135-186 (2024 annual)". */

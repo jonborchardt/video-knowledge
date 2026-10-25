@@ -54,7 +54,7 @@ const label = `${title}: ${spec.points.map((p) => `${p.label} ${p.display}`).joi
                     <circle cx={b.w} cy={b.y + b.h / 2} r={b.h / 2} class="fill-primary" />
                   </>
                 ) : (
-                  <rect x={b.x} y={b.y} width={b.w} height={b.h} class="fill-primary" />
+                  <rect x="0" y={b.y} width={b.w} height={b.h} class="fill-primary" />
                 )}
                 <text x={b.w + b.h / 2 + 6} y={b.y + b.h / 2 + 5} class="fill-foreground text-[14px] font-bold">
                   {b.display}

@@ -6,7 +6,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { ARTICLE_FILES, type Article, articleFingerprint, loadArticleRelease } from './article';
-import { figuresOf, validateArticle } from './article-validation';
+import { validateArticleIn } from './article-validation';
 import { articleStale } from './article-view';
 import { type Corpus, corpusOf } from './corpus';
 import { type PassageReader, passageReader } from './evidence';
@@ -826,37 +826,42 @@ const BOARD_STAGES: BoardStage[] = [
 
 /** The article beside a locked script: never a stage or a halt of the video. Its validation re-runs live, as the
  *  script's does, so review and blocked mean what npm run article -- validate would say now. */
-function articleOf({ topic, storyId, root, p, r, read, t, review, pkg, script, release, short }: BoardContext) {
+function articleOf({
+  topic,
+  storyId,
+  root,
+  p,
+  r,
+  read,
+  t,
+  review,
+  pkg,
+  script,
+  release,
+  short,
+}: BoardContext): Production['article'] {
   if (!release || short) return null;
   const writer = `agent: scripts/briefs/article.md (revise) -> ${r(ARTICLE_FILES.article)}`;
   const a = readJson<Article>(p(ARTICLE_FILES.article));
   const out = loadArticleRelease(topic, storyId, root);
   // The released text stands until article.json differs from it (or is gone); a revised text takes the live path.
-  if (out && (!a || out.fingerprints.article === articleFingerprint(a))) {
+  if (out && (!a || articleFingerprint(out.article) === articleFingerprint(a))) {
     const stale = articleStale(out, loadPublicRecord(topic, root));
     return stale
       ? {
-          state: 'stale' as const,
+          state: 'stale',
           next: `${stale.id} was revised on ${stale.at}: ${stale.note}, then ${writer}, or if the text stands: npm run article -- reaffirm ${topic} ${storyId} --approved-by "<your name>" --note "<why unchanged>"`,
         }
-      : { state: 'released' as const, next: 'none' };
+      : { state: 'released', next: 'none' };
   }
-  if (!a) return { state: 'none' as const, next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}` };
-  if (a.generation?.needsEvidence?.length)
-    return { state: 'writing' as const, next: 'agent: scripts/briefs/evidence.md' };
-  if (!pkg) return { state: 'blocked' as const, next: `npm run script -- package ${topic} ${storyId}` };
+  if (!a) return { state: 'none', next: `agent: scripts/briefs/article.md -> ${r(ARTICLE_FILES.article)}` };
+  if (a.generation?.needsEvidence?.length) return { state: 'writing', next: 'agent: scripts/briefs/evidence.md' };
+  if (!pkg) return { state: 'blocked', next: `npm run script -- package ${topic} ${storyId}` };
   const areview = readJson<ScriptReviewFile>(p(ARTICLE_FILES.review));
-  const live = validateArticle(a, t, read, {
-    review: areview,
-    judgments: review.applicability,
-    previous: readJson<ScriptValidation>(p(ARTICLE_FILES.validation)),
-    pkg,
-    script,
-    figures: figuresOf(topic, storyId, root),
-  });
+  const live = validateArticleIn(topic, storyId, a, t, read, { judgments: review.applicability, pkg, script }, root);
   if (live.status === 'blocked')
     return {
-      state: 'blocked' as const,
+      state: 'blocked',
       next: live.revisionLimitReached ? 'stop: revision limit reached with blocking findings' : writer,
     };
   // A review of this revision that still holds sentences is the writer's to answer, not another review's.
@@ -864,11 +869,11 @@ function articleOf({ topic, storyId, root, p, r, read, t, review, pkg, script, r
   // After a release, lock refuses: a passing revision is a correction.
   if (out && live.status === 'passed')
     return {
-      state: 'changed' as const,
+      state: 'changed',
       next: `npm run article -- correct ${topic} ${storyId} --approved-by "<your name>" --note "<what changed>"`,
     };
   return {
-    state: 'review' as const,
+    state: 'review',
     next:
       live.status === 'passed'
         ? `npm run article -- lock ${topic} ${storyId} --approved-by "<your name>"`

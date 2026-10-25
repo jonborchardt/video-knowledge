@@ -91,9 +91,7 @@ const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
           const body = b.sentences.map((s, i) => (
             <>
               {i > 0 && ' '}
-              <span data-sentence={s.id} data-corrected={s.corrected ? '' : undefined}>
-                {s.text}
-              </span>
+              <span data-sentence={s.id}>{s.text}</span>
               {s.refs.length > 0 && (
                 <sup>
                   {s.refs.map((n, j) => (
