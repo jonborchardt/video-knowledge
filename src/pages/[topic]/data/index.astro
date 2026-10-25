@@ -10,7 +10,7 @@ import { chartProblems, datasetChart } from '../../../lib/chart-geometry';
 import { dataRef, loadDatasets, type DataTable } from '../../../lib/datasets';
 import { breadcrumbJsonLd } from '../../../lib/seo';
 import { loadTopic, publicTopicNames, type Topic } from '../../../lib/topics';
-import { citeHref, citeLines, href } from '../../../lib/url';
+import { citeHref, citeLines, datasetSource, href } from '../../../lib/url';
 
 export function getStaticPaths() {
   return publicTopicNames()
@@ -73,7 +73,9 @@ const base = `/${t.name}/data`;
           <h2 id={d.id} class="text-featured font-semibold">
             {d.title}
           </h2>
-          {chart && <Chart spec={chart} caption={d.title} source={d.asOf} table={false} />}
+          {chart && (
+            <Chart spec={chart} caption={d.title} source={datasetSource(t.docNames, cites(d), d.asOf)} table={false} />
+          )}
           <DataTableView table={d} />
           <p class="text-sm">
             Download:{' '}

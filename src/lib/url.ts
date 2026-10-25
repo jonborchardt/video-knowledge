@@ -15,3 +15,18 @@ export function absoluteUrl(path: string, site: URL | string): string {
 export const citeHref = (repo: string, cite: string) => `${repo}/blob/main/topics/${cite}`;
 /** The cite's line range, `10-24`. */
 export const citeLines = (cite: string) => cite.split('#')[1]?.replace(/L/g, '') ?? '';
+
+/** A dataset's source line: each document once with the overall line range its cells cite, then the period:
+ *  "EIA table, lines 135-186 (2024 annual)". */
+export function datasetSource(docNames: Record<string, string>, cites: string[], asOf: string): string {
+  const spans = new Map<string, [number, number]>();
+  for (const c of cites) {
+    const file = c.split('#')[0].split('/').pop()!;
+    const nums = (citeLines(c).match(/\d+/g) ?? []).map(Number);
+    if (!nums.length) continue;
+    const [lo, hi] = spans.get(file) ?? [Infinity, -Infinity];
+    spans.set(file, [Math.min(lo, ...nums), Math.max(hi, ...nums)]);
+  }
+  const docs = [...spans].map(([f, [lo, hi]]) => `${docNames[f] ?? f}, lines ${lo}-${hi}`);
+  return `${docs.join('; ')} (${asOf})`;
+}

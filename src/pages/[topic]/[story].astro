@@ -28,7 +28,7 @@ import { commissionBody, commissionKey, commissionOf, site } from '../../config/
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
 import { readJson, ROOT, topicDir } from '../../lib/io';
-import { citeLines, href } from '../../lib/url';
+import { citeLines, datasetSource, href } from '../../lib/url';
 
 export function getStaticPaths() {
   return publicTopicNames().flatMap((name) => {
@@ -83,7 +83,11 @@ for (const b of release?.article.sections.flatMap((x) => x.blocks) ?? []) {
     figures.set(b.ref, {
       table,
       ...(chart && { chart }),
-      source: `${sourceOf(table.rows.flatMap((r) => r.cells.map((c) => c.cite)))} (${table.asOf})`,
+      source: datasetSource(
+        t.docNames,
+        table.rows.flatMap((r) => r.cells.map((c) => c.cite)),
+        table.asOf,
+      ),
     });
     continue;
   }

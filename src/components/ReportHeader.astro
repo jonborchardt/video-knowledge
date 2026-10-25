@@ -28,7 +28,10 @@ const seal = href(`/commissions/${brand}.png`);
         trail.map((t, i) => (
           <>
             {i > 0 && ' · '}
-            <a class="text-muted-foreground no-underline hover:underline" href={t.href}>
+            <a
+              class="inline-flex min-h-6 items-center text-muted-foreground no-underline hover:underline"
+              href={t.href}
+            >
               {t.label}
             </a>
           </>

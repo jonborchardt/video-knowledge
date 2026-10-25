@@ -79,7 +79,7 @@ const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
           if (b.kind === 'figure')
             return b.draw ? (
               <>
-                {b.draw.table && <DataTableView table={b.draw.table} dataHref={dataHref} />}
+                {b.draw.table && <DataTableView table={b.draw.table} dataHref={dataHref} caption={b.caption} />}
                 {b.draw.chart && (
                   <Chart spec={b.draw.chart} caption={b.caption} source={b.draw.source} table={!b.draw.table} />
                 )}
