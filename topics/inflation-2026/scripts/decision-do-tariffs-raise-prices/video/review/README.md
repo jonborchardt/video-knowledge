@@ -6,7 +6,7 @@ Upload `decision-do-tariffs-raise-prices.mp4` to YouTube as a **public** video: 
 - Duration: 3:56 (236.5s), 1920x1080 @ 30 fps
 - MP4 sha: d1fc1cd178; build report 8e893a1a1d; QA 36/36
 - Description: `description.txt` (paste as is; chapters are measured from the timeline)
-- Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card)
+- Checklist: `checklist.md`; build report: `build-report.md`; thumbnail: `thumbnail.png` (the title card); captions: `captions.en.srt`
 
 ## Chapters
 
@@ -25,5 +25,7 @@ Upload `decision-do-tariffs-raise-prices.mp4` to YouTube as a **public** video: 
 
 ## After the upload
 
-1. Record the public URL in `production.json` (`decision: "published"`, `url`).
-2. Any later edit renders a draft again; run `npm run video -- final` once more before re-uploading.
+1. Record it: `npm run publish -- uploaded inflation-2026 decision:do-tariffs-raise-prices --id <youtube id> --visibility private` (or `public` once approved).
+2. Watch the upload with the checklist, then approve this build: `npm run publish -- approve inflation-2026 decision:do-tariffs-raise-prices --by "<name>"`.
+3. Set it public or schedule it on YouTube, then `npm run publish -- published inflation-2026 decision:do-tariffs-raise-prices` (or `scheduled --at <ISO>`).
+4. Any later edit renders a draft again; a live video is never replaced: a re-release is a new output (`npm run publish -- add`).

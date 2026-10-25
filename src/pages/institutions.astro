@@ -4,6 +4,8 @@
 // says so rather than inventing a handle.
 import Base from '../layouts/Base.astro';
 import InstitutionCard from '../components/InstitutionCard.astro';
+import SourceIcons from '../components/SourceIcons.astro';
+import { contentGraph, matterOrder, storyNode } from '../lib/content-graph';
 import { commissions, site } from '../config/site';
 import { breadcrumbJsonLd, collectionJsonLd } from '../lib/seo';
 import { loadStories } from '../lib/stories';
@@ -11,13 +13,18 @@ import { loadTopic, publicTopicNames } from '../lib/topics';
 import { href } from '../lib/url';
 
 const names = new Set(publicTopicNames());
+const graph = contentGraph();
 const institutions = Object.values(commissions).map((c) => {
   const published = c.topics.filter((n) => names.has(n)).map((n) => loadTopic(n));
-  // Featured: the best-ranked ready story across the institution's inquiries, linked to its own page.
+  // Featured: the first ready matter across the institution's inquiries in the one order (a live video first); a
+  // follow-up is never featured on its own.
   const featured =
     published
-      .flatMap((t) => (loadStories(t.name)?.stories ?? []).map((s) => ({ s, t })))
-      .find(({ s }) => s.readiness === 'ready') ?? null;
+      .flatMap((t) =>
+        (loadStories(t.name)?.stories ?? []).map((s) => ({ s, t, n: graph.nodes.get(storyNode(t.name, s.id))! })),
+      )
+      .filter(({ s }) => s.readiness === 'ready' && !s.partOf)
+      .sort((a, b) => matterOrder(graph, a.n, b.n))[0] ?? null;
   return { c, published, featured };
 });
 const description = `The institutions of ${site.name}: what each is for, where it publishes and the inquiries it has opened.`;
@@ -37,6 +44,7 @@ const description = `The institutions of ${site.name}: what each is for, where i
     ),
   ]}
 >
+  <SourceIcons />
   <header class="grid gap-3 border-b pb-8">
     <div class="eyebrow text-muted-foreground"><a href={href('/')}>{site.publicRecord}</a></div>
     <h1 class="text-display font-bold">The institutions</h1>

@@ -1,0 +1,310 @@
+---
+// The heating-cost calculator (src/tools/heating-cost) on its matter page: what the research found, worked examples
+// computed at build with the model (useful without JavaScript), the visitor's estimate, and the spec's assumptions and
+// limitations. The one script imports only the pure model; inputs never leave the browser (no form, nothing stored or sent).
+import LabelStrip from '../LabelStrip.astro';
+import { site } from '../../config/site';
+import { dataRef, loadDatasets } from '../../lib/datasets';
+import type { FindingLabel } from '../../lib/finding-label';
+import type { Story } from '../../lib/stories';
+import type { Topic } from '../../lib/topics';
+import { citeHref, citeLines, href } from '../../lib/url';
+import type { ToolSpec } from '../../tools';
+import { estimate, type Result } from '../../tools/heating-cost/model';
+
+interface Props {
+  spec: ToolSpec;
+  t: Topic;
+  s: Story;
+  counts: Record<FindingLabel, number>;
+}
+const { spec, t, s, counts } = Astro.props;
+type Cited<T> = { value: T; cite: string };
+const d = spec.defaults as { prices: string; afue: Cited<number>[]; cops: Cited<[number, number]> };
+const table = loadDatasets(t.name).find((x) => dataRef(t.name, x.id) === d.prices);
+if (!table) throw new Error(`tool ${spec.id}: no dataset ${d.prices}`);
+const cell = (r: (typeof table.rows)[number], key: string) => r.cells[table.columns.findIndex((c) => c.key === key)];
+const rows = table.rows.map((r) => ({ label: r.label, elec: cell(r, 'elec').value, gas: cell(r, 'gas').value }));
+const us = table.rows[0];
+const [afue] = d.afue;
+const cops = d.cops.value;
+const run = (x: { elec: number; gas: number }) => estimate({ ...x, afue: afue.value, cops }) as Result;
+const byRatio = rows.slice(1).sort((a, b) => run(a).ratio - run(b).ratio);
+const examples = [rows[0], byRatio[0], byRatio.at(-1)!].map((x) => ({ ...x, r: run(x) }));
+const year = table.asOf.split(' ')[0];
+const pct = (n: number) => `${Math.round(n * 100)}%`;
+const usBreakEven = cell(us, 'breakEven95');
+// "Document name, line(s) 135", linked to the passage.
+const cite = (c: string) => {
+  const file = c.split('#')[0].split('/').pop()!;
+  const lines = citeLines(c);
+  return {
+    href: citeHref(site.repo, c),
+    text: `${t.docNames[file] ?? file}, ${lines.includes('-') ? 'lines' : 'line'} ${lines}`,
+  };
+};
+const usCite = cite(usBreakEven.cite);
+const found = `At ${year} ${us.label} average prices a heat pump needs a seasonal COP above ${usBreakEven.display} to beat a ${pct(afue.value)} furnace`;
+const caption = `Cost of a million Btu of delivered heat at ${year} average prices: the U.S. and the states with the lowest and highest price ratio, for a ${pct(afue.value)} furnace and a heat pump at seasonal COP ${cops[0].toFixed(2)} and ${cops[1].toFixed(2)}. Computed with the model below from the rounded prices in the `;
+const box = 'mt-4 grid gap-3 rounded-md border bg-card p-4';
+const h3 = 'text-title font-semibold';
+const field = 'grid gap-1 text-sm';
+const control = 'min-w-0 rounded-md border border-input bg-background px-2.5 py-1.5 text-sm';
+---
+
+<div data-tool={spec.id} class="grid grid-cols-[minmax(0,1fr)]">
+  <section class={box} aria-labelledby="tool-found">
+    <h3 class={h3} id="tool-found">What the research found</h3>
+    <p class="max-w-prose">{s.arc.resolution}</p>
+    <LabelStrip counts={counts} base="#evidence-" />
+    <p class="max-w-prose">
+      {found} (<a href={usCite.href}>{usCite.text}</a>).
+    </p>
+  </section>
+
+  <section class="mt-4 max-w-wide overflow-x-auto" aria-labelledby="tool-examples" tabindex="0">
+    <h3 class={h3} id="tool-examples">Worked examples</h3>
+    <table class="mt-2 w-full border-collapse text-sm">
+      <caption class="mb-1 text-left text-muted-foreground">
+        {caption}
+        <a href={href(`/${t.name}/data/`)}>state prices table</a>, so a figure can differ by a cent from the source's
+        own.
+      </caption>
+      <thead>
+        <tr class="border-b text-left text-muted-foreground">
+          <th scope="col" class="py-2 pr-4 font-medium">Prices</th>
+          <th scope="col" class="py-2 pr-4 font-medium">Electricity, $ per MMBtu</th>
+          <th scope="col" class="py-2 pr-4 font-medium">Gas, $ per MMBtu</th>
+          <th scope="col" class="py-2 pr-4 font-medium">Break-even COP</th>
+          <th scope="col" class="py-2 pr-4 font-medium">Furnace, $ per MMBtu of heat</th>
+          <th scope="col" class="py-2 pr-4 font-medium">Heat pump, COP {cops[0].toFixed(2)}</th>
+          <th scope="col" class="py-2 pr-4 font-medium">Heat pump, COP {cops[1].toFixed(2)}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          examples.map((x) => (
+            <tr class="border-b">
+              <th scope="row" class="py-2 pr-4 text-left font-normal">
+                {x.label}
+              </th>
+              {[x.elec, x.gas, x.r.breakEven, x.r.perMmbtu.furnace, ...x.r.perMmbtu.heatPump].map((n) => (
+                <td class="py-2 pr-4 font-mono tabular-nums">{n.toFixed(2)}</td>
+              ))}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <section class={box} aria-labelledby="tool-estimate">
+    <h3 class={h3} id="tool-estimate">Your estimate</h3>
+    <p class="max-w-prose text-sm text-muted-foreground">
+      What you enter stays in this page: nothing is stored or sent.
+    </p>
+    <div class="grid gap-6 md:grid-cols-2">
+      <div class="grid content-start gap-3">
+        <label class={field}>
+          Start from average prices ({table.asOf}, EIA)
+          <select name="state" class={control}>
+            <option value="">Your own prices</option>
+            {
+              rows.map((r, i) => (
+                <option value={r.label} data-elec={r.elec} data-gas={r.gas} selected={i === 0}>
+                  {r.label}
+                </option>
+              ))
+            }
+          </select>
+        </label>
+        <div class="flex flex-wrap items-end gap-2">
+          <label class={`${field} flex-[1_1_8rem]`}>
+            Electricity price (default: the {us.label} average)
+            <input
+              name="elec"
+              id="hc-elec"
+              type="number"
+              min="0"
+              step="any"
+              inputmode="decimal"
+              value={rows[0].elec.toFixed(2)}
+              class={control}
+            />
+          </label>
+          <label class={`${field} flex-[1_1_8rem]`}>
+            Electricity unit
+            <select name="elec-unit" id="hc-elec-unit" class={control}>
+              <option value="kwh">cents per kWh</option>
+              <option value="mmbtu" selected>$ per MMBtu</option>
+            </select>
+          </label>
+        </div>
+        <div class="flex flex-wrap items-end gap-2">
+          <label class={`${field} flex-[1_1_8rem]`}>
+            Gas price (default: the {us.label} average)
+            <input
+              name="gas"
+              id="hc-gas"
+              type="number"
+              min="0"
+              step="any"
+              inputmode="decimal"
+              value={rows[0].gas.toFixed(2)}
+              class={control}
+            />
+          </label>
+          <label class={`${field} flex-[1_1_8rem]`}>
+            Gas unit
+            <select name="gas-unit" id="hc-gas-unit" class={control}>
+              <option value="therm">$ per therm</option>
+              <option value="mcf">$ per Mcf</option>
+              <option value="mmbtu" selected>$ per MMBtu</option>
+            </select>
+          </label>
+        </div>
+        <label class={field}>
+          Furnace efficiency, AFUE (the source's illustrative values)
+          <select name="afue" id="hc-afue" class={control}>
+            {
+              d.afue.map((a, i) => (
+                <option value={a.value} selected={i === 0}>
+                  {pct(a.value)}
+                </option>
+              ))
+            }
+          </select>
+        </label>
+        <div class="flex flex-wrap items-end gap-2">
+          {
+            (['low', 'high'] as const).map((end, i) => (
+              <label class={`${field} flex-[1_1_8rem]`}>
+                Heat pump seasonal COP, {end} (default {cops[i].toFixed(1)}, the source's illustrative value)
+                <input
+                  name={`cop-${end}`}
+                  id={`hc-cop-${end}`}
+                  type="number"
+                  min="0"
+                  step="any"
+                  inputmode="decimal"
+                  value={cops[i].toFixed(1)}
+                  class={control}
+                />
+              </label>
+            ))
+          }
+        </div>
+        <label class={field}>
+          Annual gas use in therms, optional (from your gas bill; no default)
+          <input name="therms" id="hc-therms" type="number" min="0" step="any" inputmode="decimal" class={control} />
+        </label>
+        <p class="text-sm text-muted-foreground">
+          {spec.whyDefaults} Sources: furnace efficiencies (<a href={cite(afue.cite).href}>{cite(afue.cite).text}</a>),
+          COPs (<a href={cite(d.cops.cite).href}>{cite(d.cops.cite).text}</a>), prices (<a
+            href={href(`/${t.name}/data/`)}>{table.title}</a
+          >).
+        </p>
+      </div>
+
+      <div class="grid content-start gap-4">
+        <div class="grid gap-2 border-l-4 border-gold pl-4">
+          <h4 class="font-semibold">An illustration from the numbers you entered, not a prediction</h4>
+          <output
+            for="hc-elec hc-elec-unit hc-gas hc-gas-unit hc-afue hc-cop-low hc-cop-high hc-therms"
+            aria-live="polite"
+            class="grid gap-2 text-sm"
+          >
+            <span
+              >Your estimate appears here when the page's script runs; the worked examples above use the same model.</span
+            >
+          </output>
+        </div>
+        <div class="grid gap-1 text-sm">
+          <h4 class="font-semibold">Assumptions</h4>
+          <ul class="grid list-disc gap-1 pl-5">{spec.assumptions.map((a) => <li>{a}</li>)}</ul>
+          <h4 class="mt-2 font-semibold">Limitations</h4>
+          <ul class="grid list-disc gap-1 pl-5">{spec.limitations.map((a) => <li>{a}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  import {
+    estimate,
+    fromCentsPerKwh,
+    fromDollarsPerMcf,
+    fromDollarsPerTherm,
+    type Inputs,
+  } from '../../tools/heating-cost/model';
+
+  const root = document.querySelector<HTMLElement>('[data-tool="heating-cost"]');
+  if (root) {
+    const field = <T extends HTMLInputElement | HTMLSelectElement>(name: string) =>
+      root.querySelector<T>(`[name="${name}"]`)!;
+    const num = (name: string) => field<HTMLInputElement>(name).valueAsNumber; // NaN when blank
+    const TO_MMBTU: Record<string, (x: number) => number> = {
+      kwh: fromCentsPerKwh,
+      therm: fromDollarsPerTherm,
+      mcf: fromDollarsPerMcf,
+      mmbtu: (x) => x,
+    };
+    const ASK: Record<keyof Inputs, string> = {
+      elec: 'Enter an electricity price above zero.',
+      gas: 'Enter a gas price above zero.',
+      afue: 'Choose a furnace efficiency.',
+      cops: 'Enter both heat pump COPs above zero.',
+      therms: 'Enter an annual gas use above zero, or leave it blank.',
+    };
+    const out = root.querySelector('output')!;
+    const usd = (n: number, digits: number) =>
+      '$' + n.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+
+    const update = () => {
+      const a = num('cop-low');
+      const b = num('cop-high');
+      const afue = Number(field('afue').value);
+      const r = estimate({
+        elec: TO_MMBTU[field('elec-unit').value](num('elec')),
+        gas: TO_MMBTU[field('gas-unit').value](num('gas')),
+        afue,
+        cops: [a, b],
+        therms: field('therms').value.trim() ? num('therms') : undefined,
+      });
+      let lines: string[];
+      if ('missing' in r) lines = r.missing.map((m) => ASK[m]);
+      else {
+        const [lo, hi] = [Math.min(a, b).toFixed(2), Math.max(a, b).toFixed(2)];
+        const [hpLo, hpHi] = r.perMmbtu.heatPump;
+        lines = [
+          `Break-even seasonal COP: ${r.breakEven.toFixed(2)} (price ratio ${r.ratio.toFixed(2)} x furnace efficiency ${afue.toFixed(2)}).`,
+          `Cost of a million Btu of heat: gas furnace ${usd(r.perMmbtu.furnace, 2)}; heat pump ${usd(hpLo, 2)} at COP ${lo} to ${usd(hpHi, 2)} at COP ${hi}.`,
+          r.annual
+            ? `A year's heating: gas furnace ${usd(r.annual.furnace, 0)}; heat pump ${usd(r.annual.heatPump[0], 0)} at COP ${lo} to ${usd(r.annual.heatPump[1], 0)} at COP ${hi}.`
+            : 'Enter your annual gas use in therms to see a year’s cost each way.',
+          r.side === 'heat-pump'
+            ? `Both COPs are above the break-even: at these prices the heat pump costs less to run.`
+            : r.side === 'furnace'
+              ? `Neither COP is above the break-even: at these prices the furnace costs less to run.`
+              : `The break-even lies between your two COPs: which costs less depends on where the heat pump's seasonal COP falls.`,
+        ];
+      }
+      out.replaceChildren(...lines.map((l) => Object.assign(document.createElement('span'), { textContent: l })));
+    };
+
+    root.addEventListener('input', (e) => {
+      const name = (e.target as HTMLInputElement).name;
+      const state = field<HTMLSelectElement>('state');
+      if (name === 'state' && state.value) {
+        const o = state.selectedOptions[0];
+        for (const k of ['elec', 'gas']) {
+          field(k).value = Number(o.dataset[k]).toFixed(2);
+          field(`${k}-unit`).value = 'mmbtu';
+        }
+      } else if (/^(elec|gas)/.test(name)) state.value = '';
+      update();
+    });
+    update();
+  }
+</script>

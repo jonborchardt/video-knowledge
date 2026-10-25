@@ -30,6 +30,7 @@ import {
   type ChartType,
   type StoryboardPlan,
   buildStoryboard,
+  pointProblems,
 } from '../src/lib/storyboard';
 import { TOPIC, claim, study } from './corpus';
 import {
@@ -203,6 +204,19 @@ describe('pacing', () => {
       ['investigation', ['s03', 's04', 's05', 's06', 's07'].map(dense)],
     ]);
     expect(warned(s)).toEqual(['s03 number-dense', 's03 slow-start']);
+  });
+
+  it('pacing: false raises no pacing warning on a number-dense script', () => {
+    const s = layout([
+      ['hook', [long('s01')]],
+      ['setup', [long('s02')]],
+      ['investigation', ['s03', 's04', 's05', 's06', 's07'].map(dense)],
+    ]);
+    expect(cats(validateScript(s, corpus(), read, { pkg: pkg(), pacing: false }))).not.toContain('number-dense');
+  });
+  it('pointProblems names a display that does not state its value', () => {
+    const pt = { label: 'x', value: 12, unit: 'percent' as const, display: '13%', cite: DOC_D };
+    expect(pointProblems(pt, new Set([DOC_D]), read)).toContain('display "13%" does not state the value 12');
   });
 
   it('a list of dispositions retires several warnings on one sentence', () => {
@@ -721,6 +735,19 @@ describe('storyboard', () => {
         read,
       ).status,
     ).toBe('ok');
+  });
+
+  it('words an unknown cite and a display mismatch as it always has', () => {
+    const s = good();
+    const v = run(s, approveAll(s, pkg()));
+    const msgs = (pts: ChartPoint[]) =>
+      buildStoryboard(chartPlan(pts), s, v, pkg(), read).issues.map((i) => i.explanation);
+    expect(msgs([point({ cite: 'nope/sources/x.txt#L1-L2' })])).toContain(
+      `chart point "lost money" cites nope/sources/x.txt#L1-L2, which is not in the evidence package`,
+    );
+    expect(msgs([point({ value: 12, display: '13%' })])).toContain(
+      `chart point "lost money": display "13%" does not state the value 12`,
+    );
   });
 
   it('rejects display/value mismatch, out-of-passage figures, bad units and unknown types', () => {

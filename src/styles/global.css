@@ -121,12 +121,14 @@
 }
 
 @layer base {
-  /* WCAG 1.4.10 and 1.4.12: a long word in a heading or a definition wraps instead of pushing the page sideways. */
+  /* WCAG 1.4.10 and 1.4.12: a long word in a heading, a definition or a list item wraps instead of pushing the page
+     sideways (a grid track never shrinks below its longest word). */
   h1,
   h2,
   h3,
   h4,
-  dd {
+  dd,
+  li {
     overflow-wrap: anywhere;
   }
   * {

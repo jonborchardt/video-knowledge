@@ -58,7 +58,10 @@ afterAll(async () => server?.stop());
 // Without a build every suite below skips, so the gate would pass having checked nothing.
 it('has the built site to check (npm run build), one page per template', () => {
   expect(pages.length, 'no pages in dist/: run npm run build').toBeGreaterThan(0);
-  if (process.env.WEB_QUALITY_FULL !== '1') expect(pages, 'representativePages() lost a template').toHaveLength(7);
+  if (process.env.WEB_QUALITY_FULL !== '1')
+    expect(pages, 'representativePages() lost a template').toHaveLength(
+      pages.some((p) => readFileSync(join(DIST, p), 'utf8').includes('data-article')) ? 8 : 7,
+    );
 });
 
 describe.skipIf(!pages.length).each(BROWSERS)('%s', (name) => {
@@ -293,6 +296,29 @@ describe.skipIf(!withVideo.length || !BROWSERS.includes('chromium'))('video faca
     await expect
       .poll(() => page.locator('[data-embed] iframe').first().getAttribute('src'))
       .toMatch(/^https:\/\/www\.youtube-nocookie\.com\/embed\//);
+    await browser.close();
+  });
+});
+
+const withTool = pagesMatching('data-tool=');
+
+describe.skipIf(!withTool.length || !BROWSERS.includes('chromium'))('calculator', () => {
+  it('the calculator updates its result, names missing inputs, and is keyboard operable', async () => {
+    const browser = await chromium.launch();
+    const page = await browser.newPage();
+    await page.goto(urlOf(withTool[0]), { waitUntil: 'load' });
+    const out = page.locator('[data-tool] output');
+    await expect.poll(() => out.textContent()).toContain('Break-even');
+    const before = await out.textContent();
+    await page.locator('[data-tool] select[name=state]').focus();
+    await page.keyboard.press('Shift+Tab');
+    await page.keyboard.press('Tab'); // reached by Tab from the control before it
+    expect(await page.evaluate(() => (document.activeElement as HTMLSelectElement).name)).toBe('state');
+    await page.locator('[data-tool] select[name=state]').selectOption({ label: 'Massachusetts' });
+    await expect.poll(() => out.textContent()).not.toBe(before);
+    await page.locator('[data-tool] input[name=gas]').fill('');
+    await expect.poll(() => out.textContent()).toContain('Enter a gas price above zero');
+    expect(await out.textContent()).not.toMatch(/NaN|Infinity/);
     await browser.close();
   });
 });

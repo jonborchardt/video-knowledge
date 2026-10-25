@@ -1,0 +1,46 @@
+---
+// An evidence dataset (src/lib/datasets.ts) as a table: one column per entry, the cells' display text as the source states it.
+import type { DataTable } from '../lib/datasets';
+
+interface Props {
+  table: DataTable;
+  caption?: string;
+  dataHref?: string; // the inquiry's data page, linked from the caption (omit on the data page itself)
+}
+const { table, caption, dataHref } = Astro.props;
+---
+
+<section class="max-w-wide overflow-x-auto" aria-label={table.title} tabindex="0">
+  <table class="w-full border-collapse text-sm">
+    <caption class="mb-1 text-left text-muted-foreground">
+      {caption ? `${caption} ` : ''}{table.title}, {table.asOf}.{table.note ? ` ${table.note}` : ''}
+      {dataHref && <a href={dataHref}> All figures in this inquiry.</a>}
+    </caption>
+    <thead>
+      <tr class="border-b text-left text-muted-foreground">
+        <th scope="col" class="py-2 pr-4 font-medium"><span class="sr-only">Measure</span></th>
+        {
+          table.columns.map((c) => (
+            <th scope="col" class="py-2 pr-4 font-medium">
+              {c.label}
+            </th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        table.rows.map((r) => (
+          <tr class="border-b">
+            <th scope="row" class="py-2 pr-4 text-left font-normal">
+              {r.label}
+            </th>
+            {r.cells.map((c) => (
+              <td class="py-2 pr-4 font-mono tabular-nums">{c.display}</td>
+            ))}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</section>

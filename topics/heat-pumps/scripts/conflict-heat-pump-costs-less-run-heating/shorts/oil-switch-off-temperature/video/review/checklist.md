@@ -1,6 +1,6 @@
 # Review checklist
 
-Heat with oil? The evaluators said turn the heat pump off below 8 degrees. A year later, 25., private review build 2026-10-24.
+Heat with oil? The evaluators said turn the heat pump off below 8 degrees. A year later, 25., private review build 2026-10-25.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?

@@ -9,17 +9,31 @@ import ClaimCard from '../../components/ClaimCard.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
 import LabelStrip from '../../components/LabelStrip.astro';
 import VideoEmbed from '../../components/VideoEmbed.astro';
+import ArticleBody from '../../components/ArticleBody.astro';
+import Tool from '../../components/Tool.astro';
+import MatterList from '../../components/MatterList.astro';
+import NextSteps from '../../components/NextSteps.astro';
+import { loadCta, resolveCtas } from '../../lib/cta';
+import { contentGraph, matterItem, related, storyNode } from '../../lib/content-graph';
+import { toolOf } from '../../tools';
+import { loadArticleRelease } from '../../lib/article';
+import { articleView, type FigureDraw } from '../../lib/article-view';
+import { chartProblems, datasetChart } from '../../lib/chart-geometry';
+import { dataRef, loadDatasets } from '../../lib/datasets';
+import { FILES } from '../../lib/script';
+import type { Storyboard } from '../../lib/storyboard';
 import { storyOutputs } from '../../lib/outputs';
 import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
-import { revisionLine } from '../../lib/public-record';
+import { loadPublicRecord, revisionLine } from '../../lib/public-record';
 import { FINDING_LABELS, FINDING_TEXT, findingLabel, labelCounts } from '../../lib/finding-label';
 import SourceIcons from '../../components/SourceIcons.astro';
+import SourceLink from '../../components/SourceLink.astro';
 import Stamp from '../../components/Stamp.astro';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { loadStories, type Story, storyUrlSlug } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
-import { ROOT } from '../../lib/io';
-import { href } from '../../lib/url';
+import { readJson, ROOT, topicDir } from '../../lib/io';
+import { citeLines, datasetSource, href } from '../../lib/url';
 
 export function getStaticPaths() {
   return publicTopicNames().flatMap((name) => {
@@ -50,16 +64,58 @@ const outputs = storyOutputs(t.name, s.partOf ?? s.id);
 const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
 const image = existsSync(join(ROOT, 'public', card)) ? card : `/og/${commissionKey(commission)}.jpg`;
 const path = `/${t.name}/${storyUrlSlug(s)}/`;
+// The released companion article, each figure drawn from its storyboard chart ('<story slug>/<scene id>') or
+// evidence dataset ('data:<topic>/<id>'). A follow-up links to its first question's article, so the two pages never share a title.
+const release = first ? null : loadArticleRelease(t.name, s.id);
+const firstArticle = !!first && !!loadArticleRelease(t.name, first.id);
+const figures = new Map<string, FigureDraw>();
+// "Document name, lines 10-24" for each distinct passage a figure's points cite.
+const sourceOf = (cites: string[]) =>
+  [...new Set(cites)]
+    .map((c) => {
+      const file = c.split('#')[0].split('/').pop()!;
+      return `${t.docNames[file] ?? file}, lines ${citeLines(c)}`;
+    })
+    .join('; ');
+const datasets = loadDatasets(t.name);
+for (const b of release?.article.sections.flatMap((x) => x.blocks) ?? []) {
+  if (b.kind !== 'figure') continue;
+  const table = datasets.find((d) => dataRef(t.name, d.id) === b.ref);
+  if (table) {
+    const chart = datasetChart(table);
+    const problems = chart ? chartProblems(chart) : [];
+    if (problems.length) throw new Error(`figure ${b.ref}: ${problems.join('; ')}`);
+    figures.set(b.ref, {
+      table,
+      ...(chart && { chart }),
+      source: datasetSource(
+        t.docNames,
+        table.rows.flatMap((r) => r.cells.map((c) => c.cite)),
+        table.asOf,
+      ),
+    });
+    continue;
+  }
+  const [slug, scene] = b.ref.split('/');
+  const sb = readJson<Storyboard>(join(topicDir(t.name), 'scripts', slug, FILES.storyboard));
+  const chart = sb?.scenes.find((x) => x.id === scene)?.visual.chart;
+  if (!chart) continue;
+  const problems = chartProblems(chart);
+  if (problems.length) throw new Error(`figure ${b.ref}: ${problems.join('; ')}`);
+  figures.set(b.ref, { chart, source: sourceOf(chart.points.map((p) => p.cite)) });
+}
+const view = release && articleView(release, t, loadPublicRecord(t.name), site.repo, figures);
+const meta = release?.article.meta;
 const jsonLd = [
   articleJsonLd(
     {
-      headline: s.title,
-      description: s.question,
+      headline: meta?.headline ?? s.title,
+      description: meta?.description.text ?? s.question,
       path,
       image,
       series: commission.fullName,
       datePublished: outputs.video?.publishedAt,
-      dateModified: revised ?? undefined,
+      dateModified: release?.history.at(-1)?.date ?? revised ?? undefined,
     },
     Astro.site!,
   ),
@@ -77,11 +133,20 @@ const jsonLd = [
 const storyHref = (x: Pick<Story, 'id'>) => href(`/${t.name}/${storyUrlSlug(x)}/`);
 const body = commissionBody(commission);
 const h2 = 'mb-3 text-featured font-bold';
+const tool = toolOf(t.name, s.id);
+const graph = contentGraph();
+const node = storyNode(t.name, s.id);
+// The calls to action of a ready first question (a follow-up's live on its first question's video); a file error
+// fails the build.
+const ctaFile = loadCta(t.name, s.id);
+const ctas = s.readiness === 'ready' && !first ? resolveCtas(ctaFile, graph, node) : null;
+if (ctas?.problems.length) throw new Error(`${t.name}/${s.id} cta.json: ${ctas.problems.join('; ')}`);
+const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => matterItem(graph, n.id));
 ---
 
 <Base
-  title={`${s.title} · ${commission.name}`}
-  description={s.question}
+  title={`${meta?.seoTitle ?? s.title} · ${commission.name}`}
+  description={meta?.description.text ?? s.question}
   image={image}
   noindex={s.readiness !== 'ready'}
   jsonLd={jsonLd}
@@ -93,12 +158,13 @@ const h2 = 'mb-3 text-featured font-bold';
     trail={[
       { label: site.name, href: href('/') },
       { label: commission.ceremonialName, href: href(`/commissions/${commissionKey(commission)}/`) },
+      { label: t.label, href: href(`/${t.name}/`) },
     ]}
     title={s.title}
     lede={s.question}
     revised={revised}
     facts={[
-      { term: 'Inquiry', value: t.label, href: href(`/${t.name}/`) },
+      { term: 'Inquiry', value: t.label, href: href(`/${t.name}/`), kind: 'inquiry' },
       { term: 'Published by', value: commission.fullName },
       { term: 'Claims', value: `${claims.length} examined` },
       {
@@ -154,27 +220,68 @@ const h2 = 'mb-3 text-featured font-bold';
       ))
   }
 
-  <section id="article">
-    <section aria-labelledby="dispute">
-      <div class="eyebrow text-gold">Section I</div>
-      <h2 class={h2} id="dispute">The dispute</h2>
-      <p class="max-w-prose">{s.tension}</p>
-    </section>
+  {
+    ctas && (
+      <section aria-labelledby="next">
+        <div class="eyebrow text-gold">Next</div>
+        <h2 class={h2} id="next">
+          Where to go from here
+        </h2>
+        <NextSteps ctas={ctas} path={path} />
+      </section>
+    )
+  }
 
-    <section aria-labelledby="evidence">
-      <div class="eyebrow text-gold">Section II</div>
-      <h2 class={h2} id="evidence">What the evidence shows</h2>
-      <p class="max-w-prose">{s.premise}</p>
-      {
-        s.arc.takeaway && (
-          <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
-            <figcaption class="eyebrow text-muted-foreground">Takeaway</figcaption>
-            <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">{s.arc.takeaway}</p>
-          </figure>
-        )
-      }
-    </section>
+  <section id="article">
+    {
+      firstArticle && (
+        <p>
+          The article answering this question is on <a href={`${storyHref(first!)}#article`}>{first!.title}</a>.
+        </p>
+      )
+    }
+    {
+      view ? (
+        <ArticleBody view={view} dataHref={datasets.length ? href(`/${t.name}/data/`) : undefined} />
+      ) : (
+        <>
+          <section aria-labelledby="dispute">
+            <div class="eyebrow text-gold">Section I</div>
+            <h2 class={h2} id="dispute">
+              The dispute
+            </h2>
+            <p class="max-w-prose">{s.tension}</p>
+          </section>
+
+          <section aria-labelledby="evidence">
+            <div class="eyebrow text-gold">Section II</div>
+            <h2 class={h2} id="evidence">
+              What the evidence shows
+            </h2>
+            <p class="max-w-prose">{s.premise}</p>
+            {s.arc.takeaway && (
+              <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
+                <figcaption class="eyebrow text-muted-foreground">Takeaway</figcaption>
+                <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">{s.arc.takeaway}</p>
+              </figure>
+            )}
+          </section>
+        </>
+      )
+    }
   </section>
+
+  {
+    tool && (
+      <section id="tool" aria-labelledby="tool-title">
+        <div class="eyebrow text-gold">Your numbers</div>
+        <h2 class={h2} id="tool-title">
+          Run the comparison with your prices
+        </h2>
+        <Tool spec={tool} t={t} s={s} counts={labelCounts(claims)} />
+      </section>
+    )
+  }
 
   <section aria-labelledby="claims">
     <div class="eyebrow text-gold">Section III</div>
@@ -207,8 +314,8 @@ const h2 = 'mb-3 text-featured font-bold';
       {
         exhibits.map((x) => (
           <li>
-            <span class="font-mono text-xs text-muted-foreground">Exhibit {x.exhibit}</span> ·{' '}
-            <a href={x.href}>{x.title}</a> <span class="text-sm text-muted-foreground">· {x.channel}</span>
+            <span class="font-mono text-xs text-muted-foreground">Exhibit {x.exhibit}</span> · <SourceLink source={x} />{' '}
+            <span class="text-sm text-muted-foreground">· {x.channel}</span>
           </li>
         ))
       }
@@ -222,16 +329,23 @@ const h2 = 'mb-3 text-featured font-bold';
         <h2 class={h2} id="chain">
           Questions that follow
         </h2>
-        <ul class="grid list-none gap-2 p-0">
-          {s.chain.map((q) => (
-            <li class="grid gap-0.5 border-l-2 pl-3">
-              <a class="font-heading font-bold" href={storyHref(q)}>
-                {byId.get(q.id)?.title ?? q.question}
-              </a>
-              <span class="text-sm text-muted-foreground">{q.question}</span>
-            </li>
-          ))}
-        </ul>
+        <MatterList
+          items={s.chain
+            .filter((q) => graph.stories.has(storyNode(t.name, q.id)))
+            .map((q) => matterItem(graph, storyNode(t.name, q.id)))}
+        />
+      </section>
+    )
+  }
+
+  {
+    relatedItems.length > 0 && (
+      <section aria-labelledby="related">
+        <div class="eyebrow text-gold">See also</div>
+        <h2 class={h2} id="related">
+          Related matters
+        </h2>
+        <MatterList items={relatedItems} />
       </section>
     )
   }
@@ -243,8 +357,11 @@ const h2 = 'mb-3 text-featured font-bold';
       <div class="eyebrow text-gold">Entered into the Public Record</div>
       <p class="font-heading text-[1.05rem] text-foreground">The matter is before the {body}.</p>
       <p class="max-w-prose">
-        Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed.
-        Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
+        Part of the inquiry into <a href={href(`/${t.name}/`)}>{t.label}</a>, where every source and claim is listed:{
+          ' '
+        }
+        <a href={href(`/${t.name}/#matters`)}>all matters in this inquiry</a>. Corrections are welcome and recorded with
+        their date: <a href={`${site.repo}/issues`}>raise one</a>.
       </p>
       {
         revisions.length > 0 && (

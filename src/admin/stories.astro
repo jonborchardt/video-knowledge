@@ -8,7 +8,7 @@ import type { EvidenceItem, Validation } from '../lib/evidence';
 import { scriptDirs, storySlug } from '../lib/script';
 import { loadStories, storyTopicNames, type Readiness, type StoriesFile } from '../lib/stories';
 import { loadTopic, type Topic } from '../lib/topics';
-import { href } from '../lib/url';
+import { citeHref as repoCite, href } from '../lib/url';
 
 export function getStaticPaths() {
   return storyTopicNames().map((name) => ({
@@ -54,7 +54,7 @@ const badge =
   'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase';
 const small = 'text-sm text-muted-foreground';
 const h3 = 'mt-4 mb-1 text-title font-semibold';
-const citeHref = (cite: string) => `${site.repo}/blob/main/${cite}`;
+const citeHref = (cite: string) => repoCite(site.repo, cite);
 const refLabel = (x: EvidenceItem) =>
   x.ref.kind === 'study'
     ? `lines ${x.ref.cite.split('#')[1]?.replace(/L/g, '') ?? ''}`

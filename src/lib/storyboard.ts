@@ -108,6 +108,29 @@ export interface Storyboard {
   scenes: Scene[];
 }
 
+/** The problems with one chart point: its cite, value, display, unit and the figures it draws against its passage. */
+export function pointProblems(pt: ChartPoint, known: Set<string>, read: PassageReader): string[] {
+  if (!known.has(pt.cite)) return [`cites ${pt.cite}, which is not in the evidence package`];
+  const out: string[] = [];
+  const bad = (why: string) => out.push(why);
+  const passage = read(pt.cite);
+  const figures = nums(pt.display ?? '');
+  if (typeof pt.value !== 'number' || !Number.isFinite(pt.value)) bad('value is not a number');
+  else if (pt.unit === 'ratio') {
+    if (figures.length < 2 || Number(figures[1]) !== pt.value)
+      bad(
+        `a ratio displays two figures ("1 in 238") and value is the second; display "${pt.display}", value ${pt.value}`,
+      );
+  } else if (!figures.some((n) => Number(n) === pt.value))
+    bad(`display "${pt.display}" does not state the value ${pt.value}`);
+  if (pt.unit === 'percent' && (pt.value < 0 || pt.value > 100)) bad(`${pt.value} is not a percentage`);
+  if (!['percent', 'usd', 'count', 'ratio'].includes(pt.unit)) bad(`unknown unit "${pt.unit}"`);
+  for (const n of figures) if (passage === null || !hasFigure(passage, n)) bad(`"${n}" is not in ${pt.cite}`);
+  for (const n of nums(pt.label ?? ''))
+    if (passage === null || !hasFigure(passage, n)) bad(`label figure "${n}" is not in ${pt.cite}`);
+  return out;
+}
+
 export function buildStoryboard(
   plan: StoryboardPlan,
   script: Script,
@@ -201,33 +224,10 @@ export function buildStoryboard(
         issue(p.id, 'chart', 'blocking', `unknown chart type "${c.type}"; one of ${CHART_TYPES.join(', ')}`);
       if ('series' in c) issue(p.id, 'chart', 'blocking', 'series was replaced by points (value, unit, display, cite)');
       if (!c.points?.length) issue(p.id, 'chart', 'blocking', 'a chart with no points');
-      for (const pt of c.points ?? []) {
-        const bad = (why: string) => issue(p.id, 'chart-data', 'blocking', `chart point "${pt.label}": ${why}`);
-        if (!known.has(pt.cite)) {
-          issue(
-            p.id,
-            'chart',
-            'blocking',
-            `chart point "${pt.label}" cites ${pt.cite}, which is not in the evidence package`,
-          );
-          continue;
-        }
-        const passage = read(pt.cite);
-        const figures = nums(pt.display ?? '');
-        if (typeof pt.value !== 'number' || !Number.isFinite(pt.value)) bad('value is not a number');
-        else if (pt.unit === 'ratio') {
-          if (figures.length < 2 || Number(figures[1]) !== pt.value)
-            bad(
-              `a ratio displays two figures ("1 in 238") and value is the second; display "${pt.display}", value ${pt.value}`,
-            );
-        } else if (!figures.some((n) => Number(n) === pt.value))
-          bad(`display "${pt.display}" does not state the value ${pt.value}`);
-        if (pt.unit === 'percent' && (pt.value < 0 || pt.value > 100)) bad(`${pt.value} is not a percentage`);
-        if (!['percent', 'usd', 'count', 'ratio'].includes(pt.unit)) bad(`unknown unit "${pt.unit}"`);
-        for (const n of figures) if (passage === null || !hasFigure(passage, n)) bad(`"${n}" is not in ${pt.cite}`);
-        for (const n of nums(pt.label ?? ''))
-          if (passage === null || !hasFigure(passage, n)) bad(`label figure "${n}" is not in ${pt.cite}`);
-      }
+      for (const pt of c.points ?? [])
+        for (const why of pointProblems(pt, known, read))
+          if (known.has(pt.cite)) issue(p.id, 'chart-data', 'blocking', `chart point "${pt.label}": ${why}`);
+          else issue(p.id, 'chart', 'blocking', `chart point "${pt.label}" ${why}`);
       // The title and note are drawn too: their figures must be in one of the points' passages.
       const chartText = (c.points ?? [])
         .filter((pt) => known.has(pt.cite))

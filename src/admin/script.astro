@@ -8,7 +8,7 @@ import { passageReader } from '../lib/evidence';
 import { readJson } from '../lib/io';
 import { type EvidencePackage, FILES, type Issue, type Script, type ScriptValidation, scriptDirs } from '../lib/script';
 import type { Storyboard } from '../lib/storyboard';
-import { href } from '../lib/url';
+import { citeHref as repoCite, href } from '../lib/url';
 
 export function getStaticPaths() {
   return scriptDirs().map(({ topic, slug, dir }) => ({
@@ -34,7 +34,7 @@ const by = new Map((v?.sentences ?? []).map((s) => [s.id, s]));
 const docName = new Map((pkg?.documents ?? []).map((d) => [d.file, d.name]));
 const label = (cite: string) =>
   `${docName.get(cite.split('#')[0]) ?? cite.split('#')[0]}, lines ${cite.split('#L')[1] ?? ''}`;
-const citeHref = (cite: string) => `${site.repo}/blob/main/${cite}`;
+const citeHref = (cite: string) => repoCite(site.repo, cite);
 const excerpt = (p: string | null, n = 240) => {
   const one = (p ?? '').replace(/\s+/g, ' ').trim();
   return one.length > n ? one.slice(0, n) + '…' : one;

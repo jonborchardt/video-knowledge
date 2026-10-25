@@ -1,0 +1,145 @@
+---
+// A released companion article (src/lib/article-view.ts): its corrections and any revised finding first, the prose
+// with numbered source marks, tables, figures drawn as charts with their data tables, then the sources the marks point at.
+import type { ArticleView } from '../lib/article-view';
+import { FINDING_TEXT } from '../lib/finding-label';
+import Chart from './Chart.astro';
+import DataTableView from './DataTableView.astro';
+
+interface Props {
+  view: ArticleView;
+  dataHref?: string; // the inquiry's data page, when it has one
+}
+const { view: v, dataHref } = Astro.props;
+const notice = 'max-w-prose border-l-4 border-gold bg-card p-3 pl-4 text-sm';
+---
+
+<article data-article class="grid gap-4">
+  {
+    v.corrections.length > 0 && (
+      <div class={notice} data-corrections>
+        {v.corrections.map((c) => (
+          <p>
+            Corrected {c.date}: {c.note}
+          </p>
+        ))}
+      </div>
+    )
+  }
+  {
+    v.stale && (
+      <p class={notice} data-stale>
+        A finding this article relies on was revised on {v.stale.at}; the article is being reviewed.
+      </p>
+    )
+  }
+  <header>
+    <div class="eyebrow text-gold">The article</div>
+    <h2 class="mb-2 text-featured font-bold">{v.headline}</h2>
+    <p class="max-w-prose font-heading text-[1.05rem] leading-relaxed">{v.dek}</p>
+  </header>
+  {
+    v.sections.map((sec) => (
+      <section class="grid gap-3">
+        <h3 class="text-title font-semibold">{sec.heading}</h3>
+        {sec.blocks.map((b) => {
+          const table = b.kind === 'table' ? b : null;
+          if (table)
+            return (
+              <section class="max-w-wide overflow-x-auto" aria-label={table.caption} tabindex="0">
+                <table class="w-full border-collapse text-sm">
+                  <caption class="mb-1 text-left text-muted-foreground">{table.caption}</caption>
+                  <thead>
+                    <tr class="border-b text-left text-muted-foreground">
+                      <th scope="col" class="py-2 pr-4 font-medium">
+                        <span class="sr-only">Measure</span>
+                      </th>
+                      {table.columns.map((c) => (
+                        <th scope="col" class="py-2 pr-4 font-medium">
+                          {c}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {table.rows.map((r) => (
+                      <tr class="border-b">
+                        <th scope="row" class="py-2 pr-4 text-left font-normal">
+                          {r.label}
+                        </th>
+                        {r.cells.map((c) => (
+                          <td class="py-2 pr-4 font-mono tabular-nums">{c}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </section>
+            );
+          if (b.kind === 'figure')
+            return b.draw ? (
+              <>
+                {b.draw.table && <DataTableView table={b.draw.table} dataHref={dataHref} caption={b.caption} />}
+                {b.draw.chart && (
+                  <Chart spec={b.draw.chart} caption={b.caption} source={b.draw.source} table={!b.draw.table} />
+                )}
+              </>
+            ) : (
+              <p class="max-w-prose text-sm text-muted-foreground">{b.caption}</p>
+            );
+          if (b.kind !== 'p') return null;
+          const body = b.sentences.map((s, i) => (
+            <>
+              {i > 0 && ' '}
+              <span data-sentence={s.id} data-corrected={s.corrected ? '' : undefined}>
+                {s.text}
+              </span>
+              {s.refs.length > 0 && (
+                <sup>
+                  {s.refs.map((n, j) => (
+                    <>
+                      {j > 0 && ','}
+                      <a href={`#ref-${n}`} aria-label={`Source ${n}`}>
+                        {n}
+                      </a>
+                    </>
+                  ))}
+                </sup>
+              )}
+              {s.correctedOn && (
+                <>
+                  {' '}
+                  <small class="text-muted-foreground" data-correction>
+                    (Corrected {s.correctedOn})
+                  </small>
+                </>
+              )}
+            </>
+          ));
+          return b.callout ? (
+            <div class="max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
+              <div class="eyebrow text-muted-foreground">{FINDING_TEXT[b.callout].name}</div>
+              <p class="mt-2 max-w-prose">{body}</p>
+            </div>
+          ) : (
+            <p class="max-w-prose">{body}</p>
+          );
+        })}
+      </section>
+    ))
+  }
+  {
+    v.refs.length > 0 && (
+      <section>
+        <h3 class="text-title font-semibold">Sources</h3>
+        <ol class="grid list-decimal gap-1 pl-6 text-sm">
+          {v.refs.map((r) => (
+            <li id={`ref-${r.n}`}>
+              <a href={r.href}>{r.label}</a>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )
+  }
+</article>

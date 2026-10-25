@@ -1,0 +1,20 @@
+---
+// A story's calculator (src/tools): the component for its ToolSpec id. An id without a component fails the build.
+import HeatingCost from './tools/HeatingCost.astro';
+import type { FindingLabel } from '../lib/finding-label';
+import type { Story } from '../lib/stories';
+import type { Topic } from '../lib/topics';
+import type { ToolSpec } from '../tools';
+
+interface Props {
+  spec: ToolSpec;
+  t: Topic;
+  s: Story;
+  counts: Record<FindingLabel, number>;
+}
+const COMPONENTS = { 'heating-cost': HeatingCost };
+const Component = COMPONENTS[Astro.props.spec.id as keyof typeof COMPONENTS];
+if (!Component) throw new Error(`tool ${Astro.props.spec.id}: no component in Tool.astro`);
+---
+
+<Component {...Astro.props} />

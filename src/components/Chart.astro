@@ -1,0 +1,96 @@
+---
+// A static chart: one figure with its caption and source, an SVG for the drawn types (bar, stacked-bar, dot-plot,
+// stat-tiles) whose every value is also written as text, and the points as a table. Colours are theme tokens.
+import { barGeometry } from '../lib/chart-geometry';
+import type { ChartSpec } from '../lib/storyboard';
+
+interface Props {
+  spec: ChartSpec;
+  caption: string;
+  source: string;
+  table?: boolean; // false when the page already carries the data as a table
+}
+const { spec, caption, source, table = true } = Astro.props;
+const drawn =
+  spec.type === 'bar' || spec.type === 'stacked-bar' || spec.type === 'dot-plot' || spec.type === 'stat-tiles';
+const ROW = spec.type === 'stat-tiles' ? 64 : 40;
+const W = 480;
+const BAR_W = 400; // the rest of the width is the value's text
+const H = ROW * spec.points.length;
+const bars = barGeometry(spec.points, BAR_W, H);
+const title = spec.title ?? caption;
+const label = `${title}: ${spec.points.map((p) => `${p.label} ${p.display}`).join(', ')}`;
+---
+
+<figure class="max-w-wide">
+  <figcaption class="mb-1 text-sm text-muted-foreground">
+    {caption}
+    {spec.note && ` ${spec.note}`}
+    <span class="block">Source: {source}</span>
+  </figcaption>
+  {
+    drawn && (
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={label} class="h-auto w-full">
+        {spec.type === 'stat-tiles'
+          ? bars.map((b, i) => (
+              <g>
+                <rect x="0" y={i * ROW + 4} width={W} height={ROW - 8} class="fill-card stroke-border" />
+                <text x="12" y={i * ROW + 40} class="fill-foreground text-[22px] font-bold">
+                  {b.display}
+                </text>
+                <text x="140" y={i * ROW + 38} class="fill-muted-foreground text-[13px]">
+                  {b.label}
+                </text>
+              </g>
+            ))
+          : bars.map((b) => (
+              <g>
+                <text x="0" y={b.y - 5} class="fill-foreground text-[13px]">
+                  {b.label}
+                </text>
+                {spec.type === 'dot-plot' ? (
+                  <>
+                    <line x1="0" x2={b.w} y1={b.y + b.h / 2} y2={b.y + b.h / 2} class="stroke-border" />
+                    <circle cx={b.w} cy={b.y + b.h / 2} r={b.h / 2} class="fill-primary" />
+                  </>
+                ) : (
+                  <rect x={b.x} y={b.y} width={b.w} height={b.h} class="fill-primary" />
+                )}
+                <text x={b.w + b.h / 2 + 6} y={b.y + b.h / 2 + 5} class="fill-foreground text-[14px] font-bold">
+                  {b.display}
+                </text>
+              </g>
+            ))}
+      </svg>
+    )
+  }
+  {
+    table && (
+      <details class="mt-1 text-sm">
+        <summary class="cursor-pointer py-1">The figures as a table</summary>
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="border-b text-left text-muted-foreground">
+              <th scope="col" class="py-1 pr-4 font-medium">
+                Measure
+              </th>
+              <th scope="col" class="py-1 pr-4 font-medium">
+                {spec.title ?? 'Value'}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {spec.points.map((p) => (
+              <tr class="border-b">
+                <th scope="row" class="py-1 pr-4 text-left font-normal">
+                  {p.label}
+                </th>
+                <td class="py-1 pr-4 font-mono tabular-nums">{p.display}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </details>
+    )
+  }
+</figure>

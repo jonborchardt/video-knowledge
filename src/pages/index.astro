@@ -1,12 +1,15 @@
 ---
-// The front page of the Record: the latest settled matters (those with a live video first), then the institutions.
+// The front page of the Record: settled matters in the one order of every list (a live video first), then the
+// institutions.
 // The full directory is /institutions/. A topic no institution claims is not listed (publicTopicNames).
 import Base from '../layouts/Base.astro';
 import LabelStrip from '../components/LabelStrip.astro';
 import { commissionKey, commissions, site } from '../config/site';
 import { labelCounts } from '../lib/finding-label';
 import { ROOT } from '../lib/io';
-import { storyOutputs } from '../lib/outputs';
+import { contentGraph, hasVideo, matterOrder, storyNode } from '../lib/content-graph';
+import KindIcon from '../components/KindIcon.astro';
+import SourceIcons from '../components/SourceIcons.astro';
 import { loadStories, storyUrlSlug } from '../lib/stories';
 import { loadTopic, publicTopicNames } from '../lib/topics';
 import { href } from '../lib/url';
@@ -14,24 +17,33 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
 const LATEST = 6;
+const graph = contentGraph();
 const latest = publicTopicNames()
   .flatMap((name) => {
     const t = loadTopic(name);
     return (loadStories(name)?.stories ?? [])
       .filter((s) => s.readiness === 'ready' && !s.partOf)
-      .map((s) => ({ s, t, live: storyOutputs(name, s.id).video?.publishedAt ?? '' }));
+      .map((s) => ({ s, t, node: graph.nodes.get(storyNode(name, s.id))! }));
   })
-  .sort((a, b) => b.live.localeCompare(a.live) || b.s.scores.overall - a.s.scores.overall)
+  .sort((a, b) => matterOrder(graph, a.node, b.node))
   .slice(0, LATEST)
   .map(({ s, t }) => {
     const path = `/${t.name}/${storyUrlSlug(s)}/`;
     const card = `/og/stories/${t.name}/${storyUrlSlug(s)}.jpg`;
     const claims = t.claims.filter((c) => s.claims.includes(c.id));
-    return { s, t, path, card: existsSync(join(ROOT, 'public', card)) ? card : null, counts: labelCounts(claims) };
+    return {
+      s,
+      t,
+      path,
+      card: existsSync(join(ROOT, 'public', card)) ? card : null,
+      counts: labelCounts(claims),
+      video: hasVideo(graph, storyNode(t.name, s.id)),
+    };
   });
 ---
 
 <Base title={site.name}>
+  <SourceIcons />
   <header class="grid gap-3 border-b pb-8">
     <div class="eyebrow text-muted-foreground">{site.publicRecord}</div>
     <h1 class="text-display font-bold">{site.name}</h1>
@@ -53,7 +65,7 @@ const latest = publicTopicNames()
     <h2 class="mb-4 text-featured font-bold" id="latest">Latest findings</h2>
     <ul class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3">
       {
-        latest.map(({ s, t, path, card, counts }) => (
+        latest.map(({ s, t, path, card, counts, video }) => (
           <li class="grid content-start gap-2 rounded-lg border bg-card p-4 text-card-foreground">
             {card && <img class="w-full rounded-sm" src={href(card)} alt="" width="1200" height="675" loading="lazy" />}
             <span class="eyebrow text-muted-foreground">{t.label}</span>
@@ -61,6 +73,12 @@ const latest = publicTopicNames()
               {s.title}
             </a>
             <span class="text-sm text-muted-foreground">{s.question}</span>
+            {video && (
+              <span class="inline-flex items-center gap-1 eyebrow">
+                <KindIcon kind="video" decorative />
+                Video
+              </span>
+            )}
             <p class="text-sm">{s.arc.resolution}</p>
             <LabelStrip counts={counts} base={`${href(path)}#evidence-`} />
           </li>

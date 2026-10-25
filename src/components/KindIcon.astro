@@ -1,0 +1,28 @@
+---
+// The icon for the kind of page a link leads to, from the SourceIcons sprite (the page must include it). It names the
+// kind to a screen reader ("Video", "Outside site", ...) unless `decorative` says the kind is already in the text.
+export type LinkKind = 'matter' | 'video' | 'article' | 'data' | 'tool' | 'inquiry' | 'institution' | 'external';
+const KIND_LABEL: Record<LinkKind, string> = {
+  matter: 'Matter',
+  video: 'Video',
+  article: 'Article',
+  data: 'Data',
+  tool: 'Calculator',
+  inquiry: 'Inquiry',
+  institution: 'Institution',
+  external: 'Outside site',
+};
+interface Props {
+  kind: LinkKind;
+  decorative?: boolean;
+  class?: string;
+}
+const { kind, decorative, class: cls } = Astro.props;
+---
+
+<svg
+  class:list={['inline shrink-0 align-[-0.15em]', !cls?.includes('size-') && 'size-[1em]', cls]}
+  role={decorative ? undefined : 'img'}
+  aria-label={decorative ? undefined : KIND_LABEL[kind]}
+  aria-hidden={decorative ? 'true' : undefined}><use href={`#icon-${kind}`}></use></svg
+>

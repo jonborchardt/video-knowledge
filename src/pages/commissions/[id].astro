@@ -4,9 +4,13 @@
 // is marked under examination. A chain's follow-ups ride with their first question.
 import Base from '../../layouts/Base.astro';
 import ReportHeader from '../../components/ReportHeader.astro';
+import KindIcon from '../../components/KindIcon.astro';
+import MatterList from '../../components/MatterList.astro';
+import SourceIcons from '../../components/SourceIcons.astro';
+import { contentGraph, inquiryMatters } from '../../lib/content-graph';
 import { breadcrumbJsonLd, collectionJsonLd } from '../../lib/seo';
 import { type Commission, commissionBody, commissions, site } from '../../config/site';
-import { loadStories, storyUrlSlug } from '../../lib/stories';
+import { loadStories } from '../../lib/stories';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
 import { href } from '../../lib/url';
 
@@ -19,7 +23,13 @@ export function getStaticPaths() {
 }
 const { c, topics } = Astro.props as { c: Commission; topics: Topic[] };
 const fmt = (n: number) => n.toLocaleString('en-US');
-const docket = topics.map((t) => ({ t, stories: (loadStories(t.name)?.stories ?? []).filter((s) => !s.partOf) }));
+const graph = contentGraph();
+// Every matter of each inquiry in the one order (D9), a chain's follow-ups under their first question.
+const docket = topics.map((t) => ({
+  t,
+  stories: (loadStories(t.name)?.stories ?? []).filter((s) => !s.partOf),
+  items: inquiryMatters(graph, t.name),
+}));
 const total = docket.reduce((n, d) => n + d.stories.length, 0);
 const body = commissionBody(c);
 ---
@@ -39,6 +49,7 @@ const body = commissionBody(c);
     ),
   ]}
 >
+  <SourceIcons />
   <ReportHeader
     brand={Astro.params.id}
     kind="Institution"
@@ -47,7 +58,7 @@ const body = commissionBody(c);
     bigSeal
     facts={[
       c.youtube
-        ? { term: 'Channel', value: c.fullName, href: c.youtube, rel: 'me' }
+        ? { term: 'Channel', value: c.fullName, href: c.youtube, rel: 'me', kind: 'external' as const }
         : { term: 'Channel', value: `${c.fullName} · coming soon` },
       {
         term: 'Record',
@@ -106,20 +117,13 @@ const body = commissionBody(c);
         </p>
         {docket
           .filter((d) => d.stories.length)
-          .map(({ t, stories }) => (
+          .map(({ t, items }) => (
             <>
-              <h3 class="mt-5 mb-2 text-title font-bold">{t.label}</h3>
-              <ul class="grid list-none gap-2 p-0">
-                {stories.map((s) => (
-                  <li class="grid gap-0.5 border-l-2 pl-3">
-                    <a class="font-heading font-bold" href={href(`/${t.name}/${storyUrlSlug(s)}/`)}>
-                      {s.title}
-                    </a>
-                    <span class="text-sm text-muted-foreground">{s.question}</span>
-                    {s.readiness !== 'ready' && <span class="eyebrow text-muted-foreground">Under examination</span>}
-                  </li>
-                ))}
-              </ul>
+              <h3 class="mt-5 mb-2 flex items-baseline gap-2 text-title font-bold">
+                <KindIcon kind="inquiry" class="text-muted-foreground" />
+                <a href={href(`/${t.name}/`)}>{t.label}</a>
+              </h3>
+              <MatterList items={items} />
             </>
           ))}
       </section>

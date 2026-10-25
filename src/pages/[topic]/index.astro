@@ -11,17 +11,28 @@ import SourceDetails from '../../components/SourceDetails.astro';
 import SourceLink from '../../components/SourceLink.astro';
 import SurpriseItem from '../../components/SurpriseItem.astro';
 import VerdictBadge from '../../components/VerdictBadge.astro';
-import { groupSlug, loadStories } from '../../lib/stories';
+import { groupSlug, loadStories, storyUrlSlug } from '../../lib/stories';
+import KindIcon from '../../components/KindIcon.astro';
+import MatterList from '../../components/MatterList.astro';
+import { contentGraph, inquiryMatters } from '../../lib/content-graph';
 import { loadTopic, publicTopicNames, type Topic } from '../../lib/topics';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
+import { loadDatasets } from '../../lib/datasets';
 import { href } from '../../lib/url';
 
 export function getStaticPaths() {
   return publicTopicNames().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
 }
 const { t } = Astro.props as { t: Topic };
+const hasData = loadDatasets(t.name).length > 0;
 const stories = import.meta.env.DEV ? loadStories(t.name) : null; // the story ideas page exists on the dev server only
 const commission = commissionOf(t.name)!; // the institution that publishes this inquiry (every public topic has one)
+// Every matter of the inquiry (D9), a live video first; a claim group that is a story's links its matter.
+const graph = contentGraph();
+const matters = inquiryMatters(graph, t.name);
+const groupMatter = new Map(
+  (loadStories(t.name)?.stories ?? []).map((x) => [storyUrlSlug(x), `/${t.name}/${storyUrlSlug(x)}/`]),
+);
 
 // The report reads as an inquiry (brand/charter.md lexicon): findings, exhibits, the record. Each tab is a numbered
 // section of the document.
@@ -148,15 +159,31 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       lede={t.hero.lede ??
         `Every claim gets an AI guess with a one-line reason${t.studies ? `, and the ${t.studies} studies in the sources folder override it where they speak` : ''}. The sections below say what holds up and which sources the ${body} commends.`}
       facts={[
-        { term: 'Matter', value: t.label },
+        { term: 'Inquiry', value: t.label },
         { term: 'Published by', value: commission.fullName },
         commission.youtube
-          ? { term: 'Channel', value: `YouTube ${commission.handle}`, href: commission.youtube, rel: 'me' }
+          ? {
+              term: 'Channel',
+              value: `YouTube ${commission.handle}`,
+              href: commission.youtube,
+              rel: 'me',
+              kind: 'external' as const,
+            }
           : { term: 'Channel', value: 'coming soon' },
         {
           term: 'Evidence',
           value: `${t.counted} sources examined · ${t.studies ? `${t.studies} studies and reports` : 'no studies checked yet'}`,
         },
+        ...(hasData
+          ? [
+              {
+                term: 'Data',
+                value: 'Tables and downloads (CSV, JSON)',
+                href: href(`/${t.name}/data/`),
+                kind: 'data' as const,
+              },
+            ]
+          : []),
         { term: 'Status', value: 'Entered into the public record; verdicts update as evidence is added' },
       ]}
     >
@@ -222,6 +249,25 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
         </div>
       )
     }
+    {
+      matters.length > 0 && (
+        <section id="matters" aria-labelledby="matters-title" class="scroll-mt-4">
+          <h2 class={h2} id="matters-title">
+            Matters before the {body}
+          </h2>
+          <p class:list={[small, 'mb-3']}>
+            The questions this inquiry answers, each with its own page; those with a video come first.
+          </p>
+          <MatterList items={matters} />
+          {hasData && (
+            <p class="mt-3 flex items-baseline gap-2">
+              <KindIcon kind="data" class="text-muted-foreground" />
+              <a href={href(`/${t.name}/data/`)}>The inquiry's data: tables and downloads (CSV, JSON)</a>
+            </p>
+          )}
+        </section>
+      )
+    }
   </div>
 
   <TabBar tabs={tabs} label="Report sections" />
@@ -264,7 +310,11 @@ const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
       t.recap.map((g) => (
         <>
           <h3 class={h3} id={groupSlug(g.title)}>
-            {g.title}
+            {groupMatter.has(groupSlug(g.title)) ? (
+              <a href={href(groupMatter.get(groupSlug(g.title))!)}>{g.title}</a>
+            ) : (
+              g.title
+            )}
           </h3>
           <ul class={list}>
             {g.claims.map((c) => (

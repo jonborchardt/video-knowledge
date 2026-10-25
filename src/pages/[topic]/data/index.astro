@@ -1,0 +1,104 @@
+---
+// The inquiry's data: every evidence dataset (topics/<topic>/data) as a chart where one fits, the table, the passages
+// its figures come from, and CSV and JSON downloads. Only topics with a dataset get this page.
+import Base from '../../../layouts/Base.astro';
+import Chart from '../../../components/Chart.astro';
+import DataTableView from '../../../components/DataTableView.astro';
+import ReportHeader from '../../../components/ReportHeader.astro';
+import { commissionKey, commissionOf, site } from '../../../config/site';
+import { chartProblems, datasetChart } from '../../../lib/chart-geometry';
+import { dataRef, loadDatasets, type DataTable } from '../../../lib/datasets';
+import { breadcrumbJsonLd } from '../../../lib/seo';
+import { loadTopic, publicTopicNames, type Topic } from '../../../lib/topics';
+import { citeHref, citeLines, datasetSource, href } from '../../../lib/url';
+
+export function getStaticPaths() {
+  return publicTopicNames()
+    .filter((name) => loadDatasets(name).length > 0)
+    .map((name) => ({ params: { topic: name }, props: { t: loadTopic(name), datasets: loadDatasets(name) } }));
+}
+const { t, datasets } = Astro.props as { t: Topic; datasets: DataTable[] };
+const commission = commissionOf(t.name)!;
+const brand = commissionKey(commission);
+
+const cites = (d: DataTable) => [...new Set(d.rows.flatMap((r) => r.cells.map((c) => c.cite)))];
+const passage = (c: string) => {
+  const file = c.split('#')[0].split('/').pop()!;
+  return { href: citeHref(site.repo, c), label: `${t.docNames[file] ?? file}, lines ${citeLines(c)}` };
+};
+const entries = datasets.map((d) => {
+  const chart = datasetChart(d);
+  const problems = chart ? chartProblems(chart) : [];
+  if (problems.length) throw new Error(`${dataRef(t.name, d.id)}: ${problems.join('; ')}`);
+  return { d, chart, passages: cites(d).map(passage) };
+});
+const base = `/${t.name}/data`;
+---
+
+<Base
+  title={`Data · ${t.label} · ${commission.name}`}
+  description={`The figures behind the ${t.label} inquiry, as tables with the passages they come from, and CSV and JSON downloads.`}
+  image={`/og/${brand}.jpg`}
+  jsonLd={[
+    breadcrumbJsonLd(
+      [
+        { name: site.name, path: '/' },
+        { name: commission.name, path: `/commissions/${brand}/` },
+        { name: t.label, path: `/${t.name}/` },
+        { name: 'Data', path: `${base}/` },
+      ],
+      Astro.site!,
+    ),
+  ]}
+>
+  <div class="grid gap-6">
+    <ReportHeader
+      brand={brand}
+      kind="Data"
+      trail={[
+        { label: site.name, href: href('/') },
+        { label: commission.ceremonialName, href: href(`/commissions/${brand}/`) },
+        { label: t.label, href: href(`/${t.name}/`) },
+      ]}
+      title={`The figures behind the ${t.label} inquiry`}
+      lede="Each table is read from a cited source passage; every figure is shown as the source states it. Download a table as CSV or JSON."
+      facts={[
+        { term: 'Inquiry', value: t.label, href: href(`/${t.name}/`), kind: 'inquiry' },
+        { term: 'Tables', value: String(datasets.length) },
+      ]}
+    />
+    {
+      entries.map(({ d, chart, passages }) => (
+        <div class="grid gap-3">
+          <h2 id={d.id} class="text-featured font-semibold">
+            {d.title}
+          </h2>
+          {chart && (
+            <Chart spec={chart} caption={d.title} source={datasetSource(t.docNames, cites(d), d.asOf)} table={false} />
+          )}
+          <DataTableView table={d} />
+          <p class="text-sm">
+            Download:{' '}
+            <a href={href(`${base}/${d.id}.csv`)} download>
+              CSV
+            </a>
+            ,{' '}
+            <a href={href(`${base}/${d.id}.json`)} download>
+              JSON
+            </a>
+          </p>
+          <div class="text-sm text-muted-foreground">
+            <h3 class="font-medium text-foreground">Source passages</h3>
+            <ul class="grid list-disc gap-1 pl-6">
+              {passages.map((p) => (
+                <li>
+                  <a href={p.href}>{p.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</Base>
