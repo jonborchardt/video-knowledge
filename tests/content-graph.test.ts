@@ -134,6 +134,13 @@ describe('content graph', () => {
     expect(urlOf(g, 'data:heat-pumps/prices')).toBe('/heat-pumps/data/#prices');
   });
 
+  it('a dataset is public when a public story tool uses it, and not otherwise', () => {
+    const s = `${T}/decision:is-it-cheaper-to-run-than-gas`;
+    const ds = 'data:heat-pumps/state-prices';
+    expect(contentGraph(undefined, undefined, 'live', [s]).nodes.get(ds)?.public).toBe(true);
+    expect(contentGraph(undefined, undefined, 'live', []).nodes.get(ds)?.public).toBe(false);
+  });
+
   it('every edge joins two existing nodes', () => {
     const g = contentGraph();
     for (const e of g.edges) {

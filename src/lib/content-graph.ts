@@ -135,6 +135,9 @@ function buildGraph(root: string, topics: string[], view: View, assumeLive: stri
       if (t) {
         node({ id: `tool:${t.id}`, kind: 'tool', title: t.id, topic, story: id, public: g.nodes.get(id)!.public });
         edge(id, `tool:${t.id}`, 'uses');
+        // A tool's prices table is one of its defaults: the dataset it cites is public with the tool.
+        const ref = t.defaults.prices;
+        if (typeof ref === 'string') edge(`tool:${t.id}`, ref, 'cites');
       }
     }
     // shares-claims: one edge each way per pair of stories with claims in common, weighted by the count.
@@ -146,7 +149,11 @@ function buildGraph(root: string, topics: string[], view: View, assumeLive: stri
       }
     inquiry.public = stories.some((s) => g.nodes.get(storyNode(topic, s.id))!.public);
     for (const e of g.edges)
-      if (e.kind === 'cites' && g.nodes.get(e.from)?.kind === 'article' && g.nodes.get(e.from)!.public)
+      if (
+        e.kind === 'cites' &&
+        ['article', 'tool'].includes(g.nodes.get(e.from)?.kind ?? '') &&
+        g.nodes.get(e.from)!.public
+      )
         for (const d of datasets) if (e.to === dataRef(topic, d.id)) g.nodes.get(e.to)!.public = true;
   }
   // An edge to a node that does not exist (a figure ref to a missing dataset) is dropped, never a node invented for it.
