@@ -121,7 +121,8 @@ export interface ReviewPackage {
 }
 
 /** YouTube keywords: ordered, de-duplicated without regard to case, each kept while the total as `uploadProblem`
- *  counts it stays within YouTube's 500 characters; one that does not fit is skipped and the later ones still tried. */
+ *  counts it stays within YouTube's 500 characters; one that does not fit, or holds < or >, is skipped and the later
+ *  ones still tried. */
 export function keywordsOf(k: { institution: string; inquiry: string; question: string; terms: string[] }): string[] {
   const tags: string[] = [];
   for (const t of [k.institution, k.inquiry, k.question, ...k.terms].map((x) => x.trim())) {
@@ -292,11 +293,11 @@ export function renderDescription(
   const release = pkg.status === 'release build';
   // The Links block opens the description: the calls to action (a Short: its parent's matter page) and the record.
   // YouTube allows 5000 bytes; the sources discussed (often forty) live on the topic page, the record link replaces them.
+  // The institution's page sits before the inquiry record (after it when a call to action took the record's place).
   const c = commissionOf(tl.topic);
-  const block = [
-    ...links.links.map((l) => `${l.text}: ${l.url}`),
-    ...(c ? [`${c.name}: ${absolute(`/commissions/${commissionKey(c)}/`)}`] : []),
-  ];
+  const block = links.links.map((l) => `${l.text}: ${l.url}`);
+  const at = links.links.findIndex((l) => l.type === 'inquiry-record');
+  if (c) block.splice(at < 0 ? block.length : at, 0, `${c.name}: ${absolute(`/commissions/${commissionKey(c)}/`)}`);
   // a Short (brand/design.md 2.6): the hook, the links, the studies, #Shorts; the uploader adds the full video once live
   const body = pkg.short
     ? [seg.pkg.short?.hook ?? tl.title, '', ...block]

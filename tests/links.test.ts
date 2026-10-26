@@ -91,8 +91,8 @@ describe('links that cannot silently break', () => {
       'Is it?',
       '',
       `Every claim and its evidence: ${matter}`,
-      `The full record on this inquiry: ${site.url}heat-pumps/`,
       `Commission on Spending: ${site.url}commissions/spending/`,
+      `The full record on this inquiry: ${site.url}heat-pumps/`,
       '',
     ]);
   });
@@ -125,8 +125,9 @@ describe('links that cannot silently break', () => {
     const lines = describe_(links);
     const block = lines.slice(5, lines.indexOf('', 5));
     expect(block.map((l) => l.slice(l.lastIndexOf(' ') + 1))).toEqual([
-      ...links.links.map((l) => l.url),
+      ...links.links.slice(0, -1).map((l) => l.url),
       `${site.url}commissions/spending/`,
+      links.links.at(-1)!.url,
     ]);
     expect(links.links.map((l) => l.type)).toEqual(['evidence', 'reference', 'inquiry-record']);
   });
@@ -174,6 +175,16 @@ describe('links that cannot silently break', () => {
       'a'.repeat(490),
       'c',
     ]);
+    // the comma between two tags counts: 490 + 9 + 1 leaves no room for 'c'
+    expect(keywordsOf({ institution: 'a'.repeat(490), inquiry: 'b'.repeat(9), question: 'c', terms: [] })).toEqual([
+      'a'.repeat(490),
+      'b'.repeat(9),
+    ]);
+  });
+  it('a term with < or > is no keyword', () => {
+    expect(
+      keywordsOf({ institution: 'I', inquiry: 'Q', question: 'Why', terms: ['cost < gas', 'heat <b>', 'COP'] }),
+    ).toEqual(['I', 'Q', 'Why', 'COP']);
   });
 
   it('a description always links its matter page, whatever the primary', () => {
