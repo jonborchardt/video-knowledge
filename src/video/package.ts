@@ -309,7 +309,7 @@ export function renderDescription(
             `PRIVATE REVIEW BUILD, not for publication. Built ${report.generatedAt.slice(0, 10)} from script ${report.fingerprints.script} / storyboard ${report.fingerprints.storyboard}.`,
             '',
           ]),
-      ...(c ? [c.fullName, c.slogan ?? '', ''] : []),
+      ...(c ? [c.fullName, ...(c.slogan ? [c.slogan] : []), ''] : []),
       ...body,
       '',
       'Studies cited',
@@ -400,6 +400,12 @@ export const renderChecklist = (pkg: ReviewPackage, tl: Timeline) =>
     '',
   ].join('\n');
 
+/** Refuses a package whose title, description or tags YouTube would reject (`uploadProblem`), before it is written. */
+export function assertWithinLimits(m: Parameters<typeof uploadProblem>[0]): void {
+  const problem = uploadProblem(m);
+  if (problem) throw new Error(`package: ${problem}`);
+}
+
 /** Check, copy the mp4, take the thumbnail, then write the package's files: the only part that touches the disk. */
 export function buildReviewPackage(
   seg: Segment,
@@ -419,7 +425,6 @@ export function buildReviewPackage(
   const thumbnail = join(dir, REVIEW_FILES.thumbnail);
   if (card) extractFrame(mp4, (card.start + card.duration - 15) / tl.fps, thumbnail);
   const srt = renderSrt(tl);
-  writeFileSync(join(dir, REVIEW_FILES.captions), srt);
   const pkg = reviewData(seg, tl, report, {
     mp4: reviewMp4Name(videoDir, release),
     mp4Sha: mp4Sha!,
@@ -429,14 +434,15 @@ export function buildReviewPackage(
     generatedAt: new Date().toISOString(),
     fullVideo: seg.pkg.short ? fullVideoUrl(seg.script.topic, seg.pkg.short.parent) : null,
   });
+  // compose and check the description first: a refusal leaves nothing half-written (only the gitignored thumbnail)
+  const links = descriptionLinks(seg.script.topic, seg.script.story, seg.pkg.short?.parent ?? null);
+  const description = renderDescription(pkg, seg, tl, report, links);
+  assertWithinLimits({ title: pkg.title, description, tags: pkg.tags });
+  writeFileSync(join(dir, REVIEW_FILES.captions), srt);
   const other = join(dir, reviewMp4Name(videoDir, !release)); // one mp4 in the folder: the build this package describes
   if (existsSync(other)) unlinkSync(other);
   copyFileSync(mp4, join(dir, pkg.mp4));
   writeFileSync(join(dir, REVIEW_FILES.readme), renderReadme(pkg, tl, report));
-  const links = descriptionLinks(seg.script.topic, seg.script.story, seg.pkg.short?.parent ?? null);
-  const description = renderDescription(pkg, seg, tl, report, links);
-  const limit = uploadProblem({ title: pkg.title, description, tags: pkg.tags });
-  if (limit) throw new Error(`package: ${limit}`);
   writeFileSync(join(dir, REVIEW_FILES.description), description);
   writeFileSync(join(dir, REVIEW_FILES.links), toJson(links));
   writeFileSync(join(dir, REVIEW_FILES.checklist), renderChecklist(pkg, tl));

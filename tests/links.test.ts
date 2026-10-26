@@ -10,6 +10,7 @@ import { publicTopicNames } from '../src/lib/topics';
 import { scriptDir } from '../src/lib/script';
 import { uploadProblem } from '../src/lib/uploader';
 import {
+  assertWithinLimits,
   descriptionLinks,
   type DescriptionLinks,
   keywordsOf,
@@ -148,8 +149,19 @@ describe('links that cannot silently break', () => {
     expect(d).toContain('https://commonwealthofreason.com/commissions/spending/');
   });
   it('an institution without a slogan opens with its name only, and an unclaimed topic with none', () => {
-    expect(as('ai-coding').split('\n').slice(0, 2)).toEqual(['Commonwealth of Reason: Office of Code Pending', '']);
+    expect(as('ai-coding').split('\n').slice(0, 3)).toEqual([
+      'Commonwealth of Reason: Office of Code Pending',
+      '',
+      'Is it?',
+    ]);
     expect(as('nobody-claims-this')).not.toContain('Commonwealth of Reason:');
+  });
+  it('packaging refuses a description over 5000 bytes', () => {
+    const tags = ['Commission on Spending'];
+    expect(() => assertWithinLimits({ title: 't', description: 'x'.repeat(5000), tags })).not.toThrow();
+    expect(() => assertWithinLimits({ title: 't', description: 'x'.repeat(5001), tags })).toThrow(
+      /YouTube allows 5000/,
+    );
   });
   it('keywords fit YouTube; a tag too long for the budget is skipped, shorter ones still fit', () => {
     const terms = Array(80)
