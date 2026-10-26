@@ -3,6 +3,14 @@
     "organic-food/organic-farming-bans-all-synthetic-pesticides|denies|organic-food/sources/baranski-2014-crops.txt#L40-L43": {
       "level": "contextual",
       "reason": "a one-line background paraphrase of organic standards in the introduction of a crop-composition meta-analysis; it does not examine the rules, and the regulation's own list of allowed synthetics (7 CFR 205.601) decides whether every synthetic pesticide is banned"
+    },
+    "organic-food/pesticide-residues-conventional-produce-too-low|asserts|organic-food/sources/efsa-2020-cumulative-nervous.txt#L198-L205": {
+      "level": "partial",
+      "reason": "an EU assessment of two acute nervous-system effects only; it settles that slice of the claim, not health harm in general"
+    },
+    "organic-food/pesticide-residues-conventional-produce-too-low|asserts|organic-food/sources/chiu-2018-earth-ivf.txt#L55-L68": {
+      "level": "partial",
+      "reason": "325 women in IVF treatment, a narrower population and outcome than residues harming health in general"
     }
   },
   "stories": {
@@ -59,12 +67,23 @@
     "conflict:pesticide-residues-conventional-produce-too-low": {
       "coherence": {
         "score": 0.8,
-        "reason": "One question, do the residues on conventional produce harm health, with a risk model and tolerance compliance on one side and birth-cohort evidence on organophosphates on the other."
+        "reason": "One question, do the residues on conventional produce harm the people who eat them, with cohorts, a cumulative risk assessment, a risk model and tolerance data on both sides."
       },
       "question": "Are the pesticide residues on conventional produce too low to hurt you?",
       "title": "Are Pesticide Residues on Produce Too Low to Matter?",
-      "alternates": ["Safe Limits Versus Birth Studies: The Pesticide Residue Question", "How Much Pesticide Residue Is Too Much?"],
-      "research": "The corpus answers this only indirectly: a 2011 risk model of mean exposure to the ten most detected pesticides on 2010 Dirty Dozen crops, a USDA summary of tolerance compliance that measures no health outcome, and a review's summary of organophosphate birth cohorts mostly from farmworker and inner-city settings. Unblocking it needs a direct study of health outcomes against dietary residue exposure in the general population (a cohort linking measured dietary or urinary residues to outcomes, or a current cumulative dietary risk assessment that includes high-end consumers and pregnancy)."
+      "alternates": ["Safe Limits Versus Cohort Studies: The Pesticide Residue Question", "How Much Pesticide Residue Is Too Much?"],
+      "whyWatch": "Regulators and risk models say the residues are far below harm, while a few cohorts tracking what people eat find hints of harm; seeing why both can be true is the useful part.",
+      "tension": "Exposure models and the large Harvard cohorts find no cancer signal and residues below regulatory thresholds, yet the same cohorts find no mortality benefit from high-residue produce and an IVF cohort finds fewer live births.",
+      "evidenceNeeded": "The studies on each side compared on what they measured (tolerance compliance, modelled exposure, estimated intake against outcomes), on whom, and how firmly, to explain the split rather than pick a winner.",
+      "premise": "Whether pesticide residues on conventional produce are too low to harm health depends on what you measure. Residue surveys and risk models (USDA PDP, Winter and Katz, EFSA) find exposure far below legal and regulatory thresholds, though that is compliance and modelled exposure, not observed health, and EFSA covers only two nervous-system effects in Europe with less certainty for toddlers. Cohorts that link estimated residue intake to outcomes split: three large cohorts of US health professionals find no cancer link, but in the same cohorts high-residue produce lacked the lower mortality seen with low-residue produce, and one small IVF cohort found fewer live births. Those cohorts estimate exposure from questionnaires and USDA data rather than measuring it, are observational, and say their findings need confirmation; Mie 2017 adds that prenatal organophosphate studies, mostly in farmworker and inner-city cohorts, point to harm to children's neurodevelopment.",
+      "arc": {
+        "hook": "Residues on conventional produce are almost all below legal limits. Does that mean they cannot hurt you?",
+        "conflict": "Safety assessments say yes; a handful of studies following what people actually eat are less sure.",
+        "evidence": "Tolerance compliance (USDA PDP) and risk models (Winter and Katz, EFSA cumulative assessment) on one side; the Harvard cohorts on cancer and mortality, the EARTH IVF cohort and the Mie review on the other, with what each measured, on whom, and its limits: estimated exposure, observational design, narrow populations.",
+        "resolution": "Below the thresholds regulators use, no clear harm shows up for cancer, but signals for mortality benefit and fertility suggest the margins may be thinner than compliance figures imply; none of it is proof either way.",
+        "takeaway": "Residues are low by regulatory standards and the strongest cohort finds no cancer link; the open questions are pregnancy, young children and long-term effects, which is where organic or low-residue produce matters most if it matters at all."
+      },
+      "qualificationsAccepted": true
     },
     "conflict:dirty-dozen-list-reliable-guide-which": {
       "coherence": {
