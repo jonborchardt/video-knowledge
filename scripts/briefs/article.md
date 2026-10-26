@@ -87,7 +87,7 @@ answers nothing again.
 
 The dek and the description are sentences like any other: typed, with an assertion per claim they state, and
 reviewed. None of the four may state a figure that is not in a cited passage, and none may claim more than the
-labels allow: a claim that is a Qualification is never summarised as a flat yes or no, an Unresolved one is
+labels allow: a claim that is a Qualified claim is never summarised as a flat yes or no, an Unresolved one is
 never summarised as settled, and a Reported one is what sources say, not what is true.
 
 ## Sentences
@@ -145,12 +145,12 @@ A section is `{ "name", "heading", "blocks": [...] }`. Three kinds of block:
   `unresolved` callout names either a claim (`claim`) or a gap by its zero-based index in the package's
   `gaps` list (`gap`). The callout's sentences state the condition from the verdict note: under what conditions
   the claim holds, or what is not known and why. The callout type follows the claim's label (`findingLabel` in
-  `src/lib/finding-label.ts`): `qualification` for a Qualification (verdict `partly`), `unresolved` for an
+  `src/lib/finding-label.ts`): `qualification` for a Qualified claim (verdict `partly`), `unresolved` for an
   Unresolved claim (decided by a study, but not `right` or `wrong` at verified confidence). The coverage check
   accepts either type, so getting it right is yours. A factual sentence in a gap callout cites a study passage
   that bears on the gap, never a context-only one, unless the gap is about that passage (the package marks it
   context only): then the callout may report what it says, citing it, and states that it cannot decide the claim.
-- **Qualification coverage (blocking).** Every package claim whose label is Qualification or Unresolved must be
+- **Qualification coverage (blocking).** Every package claim whose label is Qualified claim or Unresolved claim must be
   named by a callout, or carried by an assertion on that claim with `qualifications`. Every gap needs an
   `unresolved` callout naming it by `gap` (a `gap-coverage` warning otherwise, which only you can close).
 - **Tables.** Cells are `ChartPoint`s, checked by the storyboard's own point check: `value` a number, `unit`

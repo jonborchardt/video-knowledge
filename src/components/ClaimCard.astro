@@ -1,6 +1,6 @@
 ---
 // One claim, expandable to the sources behind its asserted/denied counts and every verdict recorded on it.
-// The chip filter is CSS only; the rules keyed on [data-claim] live in the topic page's style block.
+// The chip filter is CSS only (the style block below); the stat-line shortcuts are the script below.
 import type { ClaimView } from '../lib/topics';
 import { site } from '../config/site';
 import SourceLink from './SourceLink.astro';
@@ -129,3 +129,23 @@ const small = 'text-sm text-muted-foreground';
     </ul>
   </div>
 </details>
+
+<style is:global>
+  /* The checked chip decides which rows show: asserting sources, denying sources, or the verdicts. */
+  [data-claim]:has([value='asserts']:checked) li:not([data-k='asserts']),
+  [data-claim]:has([value='denies']:checked) li:not([data-k='denies']),
+  [data-claim]:has([value='verdict']:checked) li:not([data-k='verdict']) {
+    display: none;
+  }
+</style>
+
+<script>
+  // Stat-line shortcuts ("denied 6", "decided by study"): open the card on that chip.
+  document.addEventListener('click', (e) => {
+    const pick = (e.target as HTMLElement).closest<HTMLElement>('[data-pick]');
+    const card = pick?.closest<HTMLDetailsElement>('details');
+    if (!pick || !card) return;
+    card.open = true;
+    card.querySelector<HTMLInputElement>(`input[value="${pick.dataset.pick}"]`)!.checked = true;
+  });
+</script>

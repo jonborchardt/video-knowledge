@@ -56,8 +56,8 @@ When the fix needs a passage the package does not have, say so in the finding. O
   the package's `gaps`). Read that claim's verdict note and passages: does the callout state the condition the
   note states (under what conditions it holds, what is not known and why), no wider and no narrower? A callout
   that names the claim but drops the condition is a blocking `missing-qualification` on its first sentence.
-- **Headline, SEO title, dek and description.** None may claim more than the claims' labels: a Qualification
-  summarised as a flat yes or no, an Unresolved question summarised as settled, or a Reported claim summarised
+- **Headline, SEO title, dek and description.** None may claim more than the claims' labels: a Qualified claim
+  summarised as a flat yes or no, an Unresolved claim summarised as settled, or a Reported claim summarised
   as true is `overclaim`, blocking. The headline and SEO title are not sentences: approve each by its unit id
   (`meta.headline`, `meta.seoTitle`) at the `fp=` the sheet prints beside it, and put a finding about either on
   `meta.dek` (category `overclaim`, the explanation naming the field) so the writer sees it.

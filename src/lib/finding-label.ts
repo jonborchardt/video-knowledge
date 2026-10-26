@@ -7,9 +7,9 @@ export const FINDING_LABELS = ['verified', 'qualification', 'unresolved', 'repor
 export type FindingLabel = (typeof FINDING_LABELS)[number];
 
 export const FINDING_TEXT: Record<FindingLabel, { name: string; meaning: string }> = {
-  verified: { name: 'Verified finding', meaning: 'A study decides it, either way.' },
-  qualification: { name: 'Qualification', meaning: 'True only under conditions, or partly.' },
-  unresolved: { name: 'Unresolved question', meaning: 'Studied but not settled.' },
+  verified: { name: 'Verified claim', meaning: 'A study decides it, either way.' },
+  qualification: { name: 'Qualified claim', meaning: 'True only under conditions, or partly.' },
+  unresolved: { name: 'Unresolved claim', meaning: 'Studied but not settled.' },
   reported: { name: 'Reported claim', meaning: 'What the videos and posts say. No study has decided it.' },
 };
 
