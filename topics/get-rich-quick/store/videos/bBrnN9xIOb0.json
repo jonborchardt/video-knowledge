@@ -25,7 +25,24 @@
       "claim": "get-rich-quick/leverage-lets-small-account-take-large",
       "stance": "asserts",
       "quote": "it's a lot more leveraged meaning you can have a really small portfolio and make a lot of money",
-      "verdicts": []
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.45,
+          "note": "The FCA says even a mandatory 50% margin close-out is not a guaranteed stop-loss: in volatile markets the firm may be unable to close the position in time and clients can lose their whole deposit or more, so the amount at risk is not fixed.",
+          "source": "get-rich-quick/sources/fca-cp16-40-cfd.txt#L1129-L1140",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "wrong",
+          "confidence": 0.5,
+          "note": "ESMA: leverage raises the probability of a larger loss more than of a larger gain, automatic margin close-out reduces but does not eliminate the risk of losing all or more than the initial margin, and in gapping markets the investor may be unable to close at their preferred price, so the amount at risk is not fixed.",
+          "source": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L136",
+          "date": "2026-10-26"
+        }
+      ]
     },
     {
       "claim": "get-rich-quick/few-percent-per-day-compounds-impossible",

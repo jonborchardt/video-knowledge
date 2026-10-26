@@ -28,9 +28,13 @@
    "level": "partial",
    "reason": "the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines"
   },
-  "get-rich-quick/leverage-lets-small-account-take-large|denies|get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119": {
+  "get-rich-quick/leverage-lets-small-account-take-large|denies|get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L136": {
+   "level": "direct",
+   "reason": "ESMA's gapping paragraph says that in a sudden price move the investor may be unable to close at their preferred price, causing significant losses at high leverage, and that close-out does not eliminate losing all or more than the margin: incompatible with a risk fixed by where the stop sits"
+  },
+  "get-rich-quick/leverage-lets-small-account-take-large|denies|get-rich-quick/sources/fca-cp16-40-cfd.txt#L1129-L1140": {
    "level": "partial",
-   "reason": "a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)"
+   "reason": "the FCA says a mandatory margin close-out is not a guaranteed stop-loss and in volatile markets clients can lose the whole deposit or more; it is about the broker's close-out rather than a trader's own stop order, though the execution risk is the same"
   },
   "get-rich-quick/retail-trading-bots-not-beat-market|asserts|get-rich-quick/sources/ftc-dk-automation-press-release.txt#L37-L37": {
    "level": "contextual",
@@ -281,7 +285,7 @@
   "surprise:leverage-lets-small-account-take-large": {
    "coherence": {
     "score": 0.8,
-    "reason": "One mechanism, one regulator's finding."
+    "reason": "One mechanism (whether a stop fixes the loss on a leveraged position), two regulators' findings on it."
    },
    "question": "Does leverage really let you take a big position while keeping your risk fixed?",
    "title": "Does Leverage Really Keep Your Risk Fixed?",
@@ -289,10 +293,15 @@
     "What Leverage Does to a Small Trading Account",
     "Why 'Only Risk What You Put In' Isn't How Margin Works"
    ],
-   "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped; the EU regulator's finding is the opposite.",
-   "tension": "Fixed risk in the pitch; margin calls and losses beyond the deposit in the regulator's data.",
+   "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped at the stop; the EU and UK regulators say a stop cannot guarantee that.",
+   "tension": "Fixed risk in the pitch; gapping, close-outs that come too late and losses beyond the deposit in the regulators' assessments.",
    "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients.",
-   "research": "The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops."
+   "premise": "Before checking, the best guess was \"partly\": sizing a leveraged position to a stop does set the planned loss, and in ordinary markets the realised loss is close to it. The EU regulator (ESMA, 2018) says leverage raises the chance of a larger loss more than of a larger gain, that automatic margin close-out reduces but does not eliminate the risk of losing all or more than the deposit, and that in a gap the trader may be unable to close at their price. The UK regulator (FCA, 2016) says even a mandatory close-out is not a guaranteed stop-loss: in volatile markets clients can lose their whole deposit or more. Both are regulators' assessments of retail CFDs, not measurements of how often or how far traders' own stop orders slip, so the evidence shows the risk is not fixed, not by how much it usually moves.",
+   "arc": {
+    "hook": "State the pitch: leverage lets a small account take a big position while the stop keeps the dollar risk fixed.",
+    "resolution": "A stop sets the planned loss, and in calm markets that is roughly what is lost; but in a gap or a fast market the position closes at the next available price, and the EU and UK regulators both say losses can then exceed the deposit, so the risk is capped only in ordinary conditions. Neither regulator measures how often stops slip, so the story says the cap is not guaranteed, not how large the overrun typically is."
+   },
+   "qualificationsAccepted": true
   },
   "decision:what-the-evidence-favours": {
    "reject": "a list of consolation morals, not a question: compounding, passive income, luck, survivorship and equity each need their own evidence"

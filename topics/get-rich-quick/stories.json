@@ -3,7 +3,7 @@
  "basis": {
   "claims": 708,
   "sources": 171,
-  "studies": 23,
+  "studies": 24,
   "candidates": 38
  },
  "stories": [
@@ -22,6 +22,7 @@
    "evidenceAvailable": [
     "Brazil day-trader study (Chague et al.): right (0.7, direct)",
     "Taiwan day-trader study (Barber et al.): right (0.7, direct)",
+    "FCA CFD consultation 2016: partly (0.4, partial)",
     "ESMA CFD intervention 2018: partly (0.5, partial)",
     "Taiwan day-trader study (Barber et al.): partly (0.5, direct)",
     "Brazil day-trader study (Chague et al.): partly (0.5, direct)",
@@ -63,10 +64,10 @@
     "stakes": 0.7,
     "depth": 1,
     "originality": 1,
-    "evidence": 0.91,
+    "evidence": 1,
     "editorial": 0.86,
-    "overall": 0.88,
-    "explanation": "editorial 0.86 = mean of coherence 0.9 (review), relevance 1 (27 sources, 21 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (3 studies, 4 claims, tension); evidence 0.91 = strongest Brazil day-trader study (Chague et al.) at 0.7 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "overall": 0.92,
+    "explanation": "editorial 0.86 = mean of coherence 0.9 (review), relevance 1 (27 sources, 21 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (4 studies, 4 claims, tension); evidence 1 = strongest Brazil day-trader study (Chague et al.) at 0.7 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.9), central conclusion qualified with accepted qualifications, 4 essential findings verified, no pending review.",
@@ -124,6 +125,22 @@
        "ref": {
         "kind": "study",
         "claim": "get-rich-quick/most-retail-day-traders-lose-money",
+        "cite": "get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "FCA CFD consultation 2016",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"rather than\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/most-retail-day-traders-lose-money",
         "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62"
        },
        "cited": true,
@@ -140,12 +157,13 @@
      "context": [],
      "problems": [],
      "limitations": [
+      "FCA CFD consultation 2016: In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such. [partial: the verdict note limits its own scope (\"rather than\")]",
       "ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading]"
      ],
      "suggestions": [
       "Add the qualification: the evidence supports a narrower or weaker statement."
      ],
-     "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 1 qualifying."
+     "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 2 qualifying."
     },
     "findings": [
      {
@@ -201,6 +219,22 @@
          "ref": {
           "kind": "study",
           "claim": "get-rich-quick/most-retail-day-traders-lose-money",
+          "cite": "get-rich-quick/sources/fca-cp16-40-cfd.txt#L589-L591"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "FCA CFD consultation 2016",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/most-retail-day-traders-lose-money",
           "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L59-L62"
          },
          "cited": true,
@@ -217,12 +251,13 @@
        "context": [],
        "problems": [],
        "limitations": [
+        "FCA CFD consultation 2016: In an FCA sample of client accounts at eight major UK CFD providers, more than 80% lost money over a year; this is leveraged retail CFD trading rather than day trading as such. [partial: the verdict note limits its own scope (\"rather than\")]",
         "ESMA CFD intervention 2018: EU regulators' studies found 74-89% of retail CFD accounts lose money, with average losses of 1,600 to 29,000 per investor; CFDs are short-term leveraged speculation rather than day trading as such. [partial: retail CFD accounts are leveraged short-term speculation, overlapping with but not the same as day trading]"
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 1 qualifying."
+       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 2 qualifying."
       }
      },
      {
@@ -1467,7 +1502,7 @@
    },
    "chainCandidates": [
     "decision:trading-and-betting",
-    "decision:who-makes-the-money"
+    "surprise:leverage-lets-small-account-take-large"
    ]
   },
   {
@@ -2112,6 +2147,184 @@
    ]
   },
   {
+   "id": "surprise:leverage-lets-small-account-take-large",
+   "kind": "surprise",
+   "title": "Does Leverage Really Keep Your Risk Fixed?",
+   "alternates": [
+    "What Leverage Does to a Small Trading Account",
+    "Why 'Only Risk What You Put In' Isn't How Margin Works"
+   ],
+   "question": "Does leverage really let you take a big position while keeping your risk fixed?",
+   "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped at the stop; the EU and UK regulators say a stop cannot guarantee that.",
+   "tension": "Fixed risk in the pitch; gapping, close-outs that come too late and losses beyond the deposit in the regulators' assessments.",
+   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients.",
+   "evidenceAvailable": [
+    "ESMA CFD intervention 2018: wrong (0.5, direct)",
+    "FCA CFD consultation 2016: wrong (0.45, partial)"
+   ],
+   "gaps": [],
+   "premise": "Before checking, the best guess was \"partly\": sizing a leveraged position to a stop does set the planned loss, and in ordinary markets the realised loss is close to it. The EU regulator (ESMA, 2018) says leverage raises the chance of a larger loss more than of a larger gain, that automatic margin close-out reduces but does not eliminate the risk of losing all or more than the deposit, and that in a gap the trader may be unable to close at their price. The UK regulator (FCA, 2016) says even a mandatory close-out is not a guaranteed stop-loss: in volatile markets clients can lose their whole deposit or more. Both are regulators' assessments of retail CFDs, not measurements of how often or how far traders' own stop orders slip, so the evidence shows the risk is not fixed, not by how much it usually moves.",
+   "claims": [
+    "get-rich-quick/leverage-lets-small-account-take-large"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "State the pitch: leverage lets a small account take a big position while the stop keeps the dollar risk fixed.",
+    "conflict": "A study checked it and found something else.",
+    "evidence": "ESMA CFD intervention 2018: ESMA: leverage raises the probability of a larger loss more than of a larger gain, automatic margin close-out reduces but does not eliminate the risk of losing all or more than the initial margin, and in gapping markets the investor may be unable to close at their preferred price, so the amount at risk is not fixed.",
+    "resolution": "A stop sets the planned loss, and in calm markets that is roughly what is lost; but in a gap or a fast market the position closes at the next available price, and the EU and UK regulators both say losses can then exceed the deposit, so the risk is capped only in ordinary conditions. Neither regulator measures how often stops slip, so the story says the cap is not guaranteed, not how large the overrun typically is.",
+    "takeaway": "The corrected belief, with its limits."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One mechanism (whether a stop fixes the loss on a leveraged position), two regulators' findings on it."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.36,
+    "curiosity": 0.8,
+    "stakes": 0.7,
+    "depth": 0.57,
+    "originality": 1,
+    "evidence": 0.57,
+    "editorial": 0.65,
+    "overall": 0.62,
+    "explanation": "editorial 0.65 = mean of coherence 0.8 (review), relevance 0.36 (2 sources, 2 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.57 (2 studies, 1 claim, tension); evidence 0.57 = strongest ESMA CFD intervention 2018 at 0.5 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.8), central conclusion qualified with accepted qualifications, 1 essential finding verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "The evidence does not support \"Leverage lets a small account take large positions while keeping the dollar amount at risk fixed\"",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0.5,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/leverage-lets-small-account-take-large",
+        "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L136"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "ESMA CFD intervention 2018",
+       "verdict": "wrong",
+       "confidence": 0.5,
+       "note": "ESMA: leverage raises the probability of a larger loss more than of a larger gain, automatic margin close-out reduces but does not eliminate the risk of losing all or more than the initial margin, and in gapping markets the investor may be unable to close at their preferred price, so the amount at risk is not fixed.",
+       "applicability": "direct",
+       "basis": "review",
+       "why": "ESMA's gapping paragraph says that in a sudden price move the investor may be unable to close at their preferred price, causing significant losses at high leverage, and that close-out does not eliminate losing all or more than the margin: incompatible with a risk fixed by where the stop sits"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/leverage-lets-small-account-take-large",
+        "cite": "get-rich-quick/sources/fca-cp16-40-cfd.txt#L1129-L1140"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "FCA CFD consultation 2016",
+       "verdict": "wrong",
+       "confidence": 0.45,
+       "note": "The FCA says even a mandatory 50% margin close-out is not a guaranteed stop-loss: in volatile markets the firm may be unable to close the position in time and clients can lose their whole deposit or more, so the amount at risk is not fixed.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "the FCA says a mandatory margin close-out is not a guaranteed stop-loss and in volatile markets clients can lose the whole deposit or more; it is about the broker's close-out rather than a trader's own stop order, though the execution risk is the same"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "FCA CFD consultation 2016: The FCA says even a mandatory 50% margin close-out is not a guaranteed stop-loss: in volatile markets the firm may be unable to close the position in time and clients can lose their whole deposit or more, so the amount at risk is not fixed. [partial: the FCA says a mandatory margin close-out is not a guaranteed stop-loss and in volatile markets clients can lose the whole deposit or more; it is about the broker's close-out rather than a trader's own stop order, though the execution risk is the same]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.5), 1 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The evidence does not support \"Leverage lets a small account take large positions while keeping the dollar amount at risk fixed\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.5,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/leverage-lets-small-account-take-large",
+          "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L136"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "ESMA CFD intervention 2018",
+         "verdict": "wrong",
+         "confidence": 0.5,
+         "note": "ESMA: leverage raises the probability of a larger loss more than of a larger gain, automatic margin close-out reduces but does not eliminate the risk of losing all or more than the initial margin, and in gapping markets the investor may be unable to close at their preferred price, so the amount at risk is not fixed.",
+         "applicability": "direct",
+         "basis": "review",
+         "why": "ESMA's gapping paragraph says that in a sudden price move the investor may be unable to close at their preferred price, causing significant losses at high leverage, and that close-out does not eliminate losing all or more than the margin: incompatible with a risk fixed by where the stop sits"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/leverage-lets-small-account-take-large",
+          "cite": "get-rich-quick/sources/fca-cp16-40-cfd.txt#L1129-L1140"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "FCA CFD consultation 2016",
+         "verdict": "wrong",
+         "confidence": 0.45,
+         "note": "The FCA says even a mandatory 50% margin close-out is not a guaranteed stop-loss: in volatile markets the firm may be unable to close the position in time and clients can lose their whole deposit or more, so the amount at risk is not fixed.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "the FCA says a mandatory margin close-out is not a guaranteed stop-loss and in volatile markets clients can lose the whole deposit or more; it is about the broker's close-out rather than a trader's own stop order, though the execution risk is the same"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "FCA CFD consultation 2016: The FCA says even a mandatory 50% margin close-out is not a guaranteed stop-loss: in volatile markets the firm may be unable to close the position in time and clients can lose their whole deposit or more, so the amount at risk is not fixed. [partial: the FCA says a mandatory margin close-out is not a guaranteed stop-loss and in volatile markets clients can lose the whole deposit or more; it is about the broker's close-out rather than a trader's own stop order, though the execution risk is the same]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.5), 1 qualifying."
+      }
+     }
+    ]
+   },
+   "chainCandidates": [
+    "surprise:commission-free-brokers-sell-order-flow",
+    "decision:trading-and-betting"
+   ]
+  },
+  {
    "id": "conflict:demeaning-salaried-jobs-college-sales-tactic",
    "kind": "conflict",
    "title": "Do Day Jobs and Degrees Really Not Pay?",
@@ -2323,149 +2536,6 @@
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
        "explanation": "qualified (qualify): no direct support, 3 qualifying."
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "surprise:leverage-lets-small-account-take-large",
-   "kind": "surprise",
-   "title": "Does Leverage Really Keep Your Risk Fixed?",
-   "alternates": [
-    "What Leverage Does to a Small Trading Account",
-    "Why 'Only Risk What You Put In' Isn't How Margin Works"
-   ],
-   "question": "Does leverage really let you take a big position while keeping your risk fixed?",
-   "whyWatch": "The pitch says leverage lets a small account trade big with the downside capped; the EU regulator's finding is the opposite.",
-   "tension": "Fixed risk in the pitch; margin calls and losses beyond the deposit in the regulator's data.",
-   "evidenceNeeded": "Regulatory or account-level evidence on how leverage changes the size and probability of losses for retail clients.",
-   "evidenceAvailable": [
-    "ESMA CFD intervention 2018: wrong (0.5, partial)"
-   ],
-   "gaps": [
-    "Reviewer: The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops."
-   ],
-   "premise": "Before checking, the best guess was \"partly\": Mechanically true for the stop-loss case, but gaps, slippage, funding costs and liquidation mean losses are not actually capped at the planned amount. ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed. 2 sources take a position on it.",
-   "claims": [
-    "get-rich-quick/leverage-lets-small-account-take-large"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "State the expectation everyone shares, with the sources that voice it.",
-    "conflict": "A study checked it and found something else.",
-    "evidence": "ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
-    "resolution": "Why the expectation was wrong, or what the sources were missing.",
-    "takeaway": "The corrected belief, with its limits."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One mechanism, one regulator's finding."
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.36,
-    "curiosity": 0.8,
-    "stakes": 0.7,
-    "depth": 0.43,
-    "originality": 1,
-    "evidence": 0.3,
-    "editorial": 0.62,
-    "overall": 0.49,
-    "explanation": "editorial 0.62 = mean of coherence 0.8 (review), relevance 0.36 (2 sources, 2 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.43 (1 study, 1 claim, tension); evidence 0.3 = strongest ESMA CFD intervention 2018 at 0.5 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops.",
-   "blocking": [
-    "Reviewer: The pitch's claim is that a stop-loss sized to the account keeps the dollar risk fixed; the only cited evidence is ESMA's qualitative statement that leverage magnifies losses, fees and margin sensitivity, which does not address stops. It needs a cited verdict on gapping or slippage past stop-loss levels (ESMA's gapping and margin close-out paragraphs in the same document are uncited), or account-level data on realised losses against planned stops."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "The evidence does not support \"Leverage lets a small account take large positions while keeping the dollar amount at risk fixed\"",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "get-rich-quick/leverage-lets-small-account-take-large",
-        "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "ESMA CFD intervention 2018",
-       "verdict": "wrong",
-       "confidence": 0.5,
-       "note": "ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
-       "applicability": "partial",
-       "basis": "review",
-       "why": "a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed. [partial: a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)]"
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): no direct support, 1 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "The evidence does not support \"Leverage lets a small account take large positions while keeping the dollar amount at risk fixed\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/leverage-lets-small-account-take-large",
-          "cite": "get-rich-quick/sources/esma-2018-cfd-measures.txt#L111-L119"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "ESMA CFD intervention 2018",
-         "verdict": "wrong",
-         "confidence": 0.5,
-         "note": "ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed.",
-         "applicability": "partial",
-         "basis": "review",
-         "why": "a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "ESMA CFD intervention 2018: ESMA: leverage increases possible losses as well as gains, raises the probability of a larger loss more than of a larger gain for retail clients, and makes positions vulnerable to margin calls on small moves; the amount at risk is not fixed. [partial: a regulator's qualitative assessment of retail CFDs: leverage magnifies losses, fees and margin sensitivity, but the cited lines do not address the pitch's stop-loss sizing argument for keeping the dollar risk fixed (gapping is in later, uncited lines)]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
       }
      }
     ]
