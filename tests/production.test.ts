@@ -719,9 +719,19 @@ describe('the article on the board', () => {
 
 describe('the owner gate', () => {
   it('halts a story whose topic no institution claims', () => {
-    const n = boardNext('heat-pumps', 'decision:is-it-cheaper-to-run-than-gas', ROOT, () => null);
+    // a story with no production, so no live video can answer before the gate
+    const n = boardNext('heat-pumps', 'decision:no-such', ROOT, () => null);
     expect(n.halt?.kind).toBe('no-institution');
     expect(n.next).toBe('stop: no institution claims heat-pumps: add it to commissions in src/config/site.ts');
     expect(n.done).toBe(false);
+  });
+  it('the board row of an unclaimed topic says the same stop', { timeout: 60_000 }, () => {
+    const fx = syntheticProduction('locked');
+    try {
+      const row = topicBoard(fx.topic, fx.root, {}, () => null).stories.find((s) => s.story.id === fx.story)!;
+      expect(row.next).toBe(`stop: no institution claims ${fx.topic}: add it to commissions in src/config/site.ts`);
+    } finally {
+      fx.cleanup();
+    }
   });
 });

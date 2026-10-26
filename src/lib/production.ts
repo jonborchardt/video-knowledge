@@ -1032,6 +1032,9 @@ export interface BoardNext {
   halt: Production['halt'];
   done: boolean;
 }
+/** The stop for a topic no institution claims: the board row and boardNext say the same. */
+const unclaimed = (topic: string) =>
+  `stop: no institution claims ${topic}: add it to commissions in src/config/site.ts`;
 export function boardNext(
   topic: string,
   storyId: string,
@@ -1073,7 +1076,7 @@ export function boardNext(
     };
   }
   if (!owner(topic)) {
-    const next = `stop: no institution claims ${topic}: add it to commissions in src/config/site.ts`;
+    const next = unclaimed(topic);
     const stage = prod?.stage ?? 'package';
     return {
       topic,
@@ -1103,7 +1106,12 @@ interface StoreVideo {
 }
 
 /** The research pipeline for one topic, as the store records it, then every story with its production (if any). */
-export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(root)): TopicBoard {
+export function topicBoard(
+  name: string,
+  root = ROOT,
+  decisions = loadDecisions(root),
+  owner: (topic: string) => Commission | null = commissionOf,
+): TopicBoard {
   const dir = topicDir(name, root);
   const topic = loadTopic(name);
   const checks: Check[] = [];
@@ -1180,6 +1188,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       if (decision?.decision === 'parked') n = `parked: ${decision.note}`;
       else if (live?.live) n = `live: ${live.url}`;
       else if (live?.status === 'scheduled') n = live.next;
+      else if (!owner(name)) n = unclaimed(name);
       else if (story.partOf) n = `part of ${story.partOf}: answered in that video`;
       else if (production) n = production.next;
       else if (story.readiness === 'ready') n = `npm run script -- package ${name} ${story.id}`;
