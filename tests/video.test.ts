@@ -716,6 +716,18 @@ describe('look', () => {
     for (const c of [t.data, t.loss, t.gain, t.glow, t.accent2])
       expect(contrast(c, t.ground)).toBeGreaterThanOrEqual(3);
   });
+  it('accent2 is the kit ground hue lifted, so two gold-accent kits still differ', () => {
+    const kits = [
+      { ground: '#172A45', accent: '#C5A46A', paper: '#F2EBDD', ink: '#444E59' }, // spending
+      { ground: '#3B1219', accent: '#C9A063', paper: '#F1E7DC', ink: '#55413F' }, // dubious-returns
+    ];
+    const [a, b] = kits.map(themeOf);
+    expect(a.accent2).not.toBe(b.accent2);
+    kits.forEach((k, i) => {
+      const d = Math.abs(hueOf([a, b][i].accent2) - hueOf(k.ground)) % 360;
+      expect(Math.min(d, 360 - d)).toBeLessThanOrEqual(10);
+    });
+  });
   it('two institutions give two looks', () => {
     const a = themeOf({ ground: '#172A45', accent: '#C5A46A', paper: '#F2EBDD', ink: '#444E59' });
     const b = themeOf({ ground: '#12283A', accent: '#5FB3C9', paper: '#E9EEF0', ink: '#3E4B55' });

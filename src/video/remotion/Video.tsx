@@ -137,7 +137,7 @@ const Backdrop: FC = () => {
         background: [
           blob(theme.accent2, 25 + 12 * Math.sin(f / 7), 30 + 14 * Math.cos(f / 9), 900, 0.24),
           blob(theme.glow, 80 + 10 * Math.cos(f / 8), 75 + 12 * Math.sin(f / 6), 750, 0.24),
-          blob(theme.data, 60 + 18 * Math.sin(f / 11), 10 + 10 * Math.cos(f / 10), 650, 0.2),
+          blob(theme.accent2, 60 + 18 * Math.sin(f / 11), 10 + 10 * Math.cos(f / 10), 650, 0.16),
           theme.ground,
         ].join(', '),
       }}

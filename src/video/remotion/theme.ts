@@ -17,7 +17,7 @@ export type Theme = {
   line: string;
   accent: string; // the kit's accent as drawn on paper (rules, seal)
   glow: string; // the accent lifted for the screen: the pitch, the highlight
-  accent2: string; // a hue-rotated companion of the accent
+  accent2: string; // the kit ground's hue lifted for the screen: the institution's second colour
   data: string;
   loss: string;
   gain: string;
@@ -85,7 +85,7 @@ export function themeOf(p: KitPalette): Theme {
     line: alpha(p.paper, 0.16),
     accent: p.accent,
     glow: onGround(h, Math.max(s + 0.3, 0.8), 0.6, p.ground),
-    accent2: onGround((h + 220) % 360, Math.max(s, 0.6), 0.68, p.ground),
+    accent2: onGround(gh, Math.max(gs, 0.6), 0.6, p.ground),
     // semantic colour outweighs brand uniformity (design.md 2.3): fixed hues, lifted for the screen
     data: onGround(203, 0.75, 0.66, p.ground),
     loss: onGround(12, 0.8, 0.6, p.ground),
