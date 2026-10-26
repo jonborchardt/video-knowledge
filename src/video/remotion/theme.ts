@@ -56,11 +56,17 @@ const luminance = (hex: string) => {
   const [r, g, b] = rgbOf(hex).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 };
-/** A screen tone of hue `h`: saturation `s`, lightness raised from `l` until it reads on the ground at 4.5:1. */
-function onGround(h: number, s: number, l: number, ground: string): string {
-  const floor = luminance(ground);
+/** Contrast ratio of two colours, lighter over darker (WCAG). */
+export const contrastOf = (a: string, b: string) => {
+  const [x, y] = [luminance(a), luminance(b)].sort((p, q) => q - p);
+  return (x + 0.05) / (y + 0.05);
+};
+/** A screen tone of hue `h`: saturation `s`, lightness raised from `l` until it reads on the ground at 4.5:1 (and,
+ *  given `apartFrom`, until it stands 1.5:1 from that colour too). */
+function onGround(h: number, s: number, l: number, ground: string, apartFrom?: string): string {
   let c = fromHsl(h, s, l);
-  while ((luminance(c) + 0.05) / (floor + 0.05) < 4.5 && l < 0.95) c = fromHsl(h, s, (l += 0.02));
+  while ((contrastOf(c, ground) < 4.5 || (apartFrom && contrastOf(c, apartFrom) < 1.5)) && l < 0.95)
+    c = fromHsl(h, s, (l += 0.02));
   return c;
 }
 /** A colour (#RRGGBB) at an opacity, for tints, shadows and fades. */
@@ -92,6 +98,12 @@ export function themeOf(p: KitPalette): Theme {
   const [h, s] = hslOf(p.accent);
   const [gh, gs] = hslOf(p.ground);
   const kit = [h, gh]; // the hues of glow and accent2
+  const accent2 = onGround(gh, Math.max(gs, 0.6), 0.6, p.ground);
+  // loss stays red (-27/+8 around 12). When no red clears both kit hues (a red ground), it clears the glow by hue
+  // and stands apart from accent2, which is decorative, by lightness instead.
+  let lossHue = apart(12, 27, 8, kit);
+  if (Math.min(hueGap(lossHue, h), hueGap(lossHue, gh)) < 34) lossHue = apart(12, 27, 8, [h]);
+  const loss = onGround(lossHue, 0.8, 0.6, p.ground, hueGap(lossHue, gh) < 30 ? accent2 : undefined);
   return {
     ground: p.ground,
     paper: p.paper,
@@ -104,11 +116,11 @@ export function themeOf(p: KitPalette): Theme {
     line: alpha(p.paper, 0.16),
     accent: p.accent,
     glow: onGround(h, Math.max(s + 0.3, 0.8), 0.6, p.ground),
-    accent2: onGround(gh, Math.max(gs, 0.6), 0.6, p.ground),
+    accent2,
     // semantic colour outweighs brand uniformity (design.md 2.3): bluish data, red loss, green gain, lifted for the
     // screen and turned away from the kit's own hues so a split or a cycle never pairs two near-identical colours
     data: onGround(apart(203, 35, 52, kit), 0.75, 0.66, p.ground),
-    loss: onGround(apart(12, 60, 20, kit), 0.8, 0.6, p.ground),
+    loss,
     gain: onGround(apart(100, 25, 45, kit), 0.55, 0.58, p.ground),
     serif: '"Libre Baskerville", Georgia, "Times New Roman", serif',
     sans: '"IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif',

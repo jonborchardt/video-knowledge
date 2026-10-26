@@ -752,14 +752,20 @@ describe('look', () => {
         expect(contrast(s, t.ground), `${k} ${s}`).toBeGreaterThanOrEqual(4.5);
         for (const b of [t.glow, t.accent2]) {
           const d = Math.abs(hueOf(s) - hueOf(b)) % 360;
-          expect(Math.min(d, 360 - d), `${k}: ${s} vs ${b}`).toBeGreaterThanOrEqual(30);
+          // a red kit leaves no red 30 degrees from its accent2: loss then stands apart by lightness instead
+          if (s === t.loss && b === t.accent2 && Math.min(d, 360 - d) < 30)
+            expect(contrast(s, b), `${k}: ${s} vs ${b} by lightness`).toBeGreaterThanOrEqual(1.5);
+          else expect(Math.min(d, 360 - d), `${k}: ${s} vs ${b}`).toBeGreaterThanOrEqual(30);
         }
+        // loss stays red
+        if (s === t.loss) expect(Math.min(hueOf(s), 360 - hueOf(s)), `${k} loss ${s}`).toBeLessThanOrEqual(20);
       }
     }
   });
   it('a hex suffix after a template expression counts as a literal colour', () => {
     expect(LITERAL_COLOUR.test('color: `${theme.glow}55`')).toBe(true);
     expect(LITERAL_COLOUR.test('`${x}AA`')).toBe(true);
+    expect(LITERAL_COLOUR.test("`${c}${hot ? 'AA' : '44'}`")).toBe(true); // a conditional suffix
     expect(LITERAL_COLOUR.test('alpha(theme.glow, 0.33)')).toBe(false);
   });
   it('no scene or bespoke file holds a literal colour', () => {
@@ -1027,8 +1033,9 @@ function contrast(a: string, b: string): number {
   const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
   return (x + 0.05) / (y + 0.05);
 }
-// a hex or rgb literal, or a hex alpha suffix glued to a template expression (`${theme.glow}55`): a tint is alpha()
-const LITERAL_COLOUR = /#[0-9A-Fa-f]{3,8}\b|rgba?\(|\}[0-9A-Fa-f]{2}\b/;
+// a hex or rgb literal, or a hex alpha suffix glued to a template expression (`${theme.glow}55`, or a conditional
+// `${c}${hot ? 'AA' : '44'}`): a tint is alpha()
+const LITERAL_COLOUR = /#[0-9A-Fa-f]{3,8}\b|rgba?\(|\}[0-9A-Fa-f]{2}\b|\}\$\{[^}]*'[0-9A-Fa-f]{2}'/;
 function filesWithLiteralColours(): string[] {
   const dirs = ['src/video/remotion', 'src/video/bespoke'].map((d) => join(ROOT, d));
   const files = dirs.flatMap((d) =>

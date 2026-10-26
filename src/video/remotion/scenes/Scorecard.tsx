@@ -93,7 +93,7 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
               width,
               height: rowH,
               borderRadius: 20 * k + 6,
-              background: `linear-gradient(90deg, ${theme.raised}, ${color}${tint > 0 ? '30' : '00'})`,
+              background: `linear-gradient(90deg, ${theme.raised}, ${alpha(color, tint > 0 ? 0.19 : 0)})`,
               border: `3px solid ${tint > 0.5 ? color : theme.line}`,
               boxShadow: tint > 0 ? `0 0 ${36 * tint}px ${alpha(color, 0.33)}` : undefined,
               opacity: a * dim,

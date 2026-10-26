@@ -86,7 +86,7 @@ export const RealPayColumns: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 background: up
                   ? `linear-gradient(0deg, ${theme.accent2}, ${color})`
                   : `linear-gradient(180deg, ${theme.accent2}, ${color})`,
-                boxShadow: `0 0 ${newest ? 34 : 12}px ${color}${newest ? 'AA' : '55'}`,
+                boxShadow: `0 0 ${newest ? 34 : 12}px ${alpha(color, newest ? 0.67 : 0.33)}`,
               }}
             />
             <div

@@ -4,7 +4,7 @@ import { pointFrames } from '../../chart';
 import { cue, lineFrames } from '../../cues';
 import { citationTop } from '../Citation';
 import type { TimelineScene } from '../../types';
-import { GUTTER, countUp, grow, ramp, theme } from '../theme';
+import { alpha, countUp, grow, GUTTER, ramp, theme } from '../theme';
 
 const COLORS = ['loss', 'gain', 'data', 'glow', 'accent2'] as const;
 const named = (c: string) =>
@@ -116,7 +116,7 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                       width: w,
                       borderRadius: 6,
                       background: `linear-gradient(90deg, ${theme.accent2}, ${color})`,
-                      boxShadow: `0 0 ${newest ? 34 : 12}px ${color}${newest ? 'AA' : '55'}`,
+                      boxShadow: `0 0 ${newest ? 34 : 12}px ${alpha(color, newest ? 0.67 : 0.33)}`,
                     }}
                   />
                 </div>

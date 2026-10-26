@@ -195,7 +195,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
               color: theme.ground,
               background: `linear-gradient(135deg, ${c}, ${alpha(c, 0.67)})`,
               border: `4px solid ${c}`,
-              boxShadow: `0 0 ${20 + 40 * pulse}px ${c}${hot ? 'AA' : '44'}`,
+              boxShadow: `0 0 ${20 + 40 * pulse}px ${alpha(c, hot ? 0.67 : 0.27)}`,
             }}
           >
             {a}
