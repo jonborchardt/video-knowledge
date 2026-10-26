@@ -3,7 +3,7 @@
  "basis": {
   "claims": 385,
   "sources": 216,
-  "studies": 29,
+  "studies": 31,
   "candidates": 66
  },
  "stories": [
@@ -3612,6 +3612,186 @@
    ]
   },
   {
+   "id": "conflict:open-weight-coding-models-now-handle",
+   "kind": "conflict",
+   "title": "Can a Free Open Model Do Your Everyday Coding?",
+   "alternates": [
+    "Open-Weight vs Closed Coding Models: How Big Is the Gap?",
+    "Do You Still Need to Pay for the Best Coding Model?"
+   ],
+   "question": "Are free open-weight models now good enough for everyday coding?",
+   "whyWatch": "Whether a team can self-host a free model instead of paying per token depends on how close open-weight models really are; an independent leaderboard that re-tests every model on fresh GitHub issues, and a capability index across many benchmarks, both measured it.",
+   "tension": "SWE-rebench has open-source models ranking alongside closed ones on fresh GitHub issues; Epoch AI puts the best open-weight models about four months behind the closed frontier and says that probably understates the gap.",
+   "evidenceNeeded": "An independent evaluation running open-weight and closed models on the same everyday coding tasks beyond issue fixing (features, refactors, tests, other languages), with contamination controls, reporting success rates and the gap at the hardest tasks.",
+   "evidenceAvailable": [
+    "SWE-rebench leaderboard: right (0.5, partial)",
+    "Epoch AI open-closed gap: partly (0.4, partial)"
+   ],
+   "gaps": [
+    "Reviewer: Strongest study 0.3 after applicability. SWE-rebench (fresh GitHub issues, one scaffold) shows open-source models ranking alongside the previous generation of closed models, but only for issue fixing on one benchmark; Epoch AI measures the trailing gap (about four months) on a composite index, not coding. Needs an independent evaluation of open-weight and closed models on the same everyday coding tasks beyond issue fixing (features, refactors, tests, several languages) with contamination controls, or a field study of teams using both.",
+    "What explains the split between SWE-rebench leaderboard, Epoch AI open-closed gap?",
+    "Epoch AI open-closed gap: Epoch AI finds the best open-weight models lagged frontier closed models by about four months (8 ECI points) through January-May 2026, and says this probably understates the gap; it supports the trailing half but measures general capability on a composite index, not coding tasks."
+   ],
+   "premise": "Two independent measurements, each narrower than the claim. SWE-rebench runs every model on fresh, date-tracked GitHub issues from open-source repositories under one fixed scaffold; its December 2025 and January 2026 notes say open-source models (GLM-4.7, Kimi K2 Thinking, GLM-5) ranked alongside or were catching up with closed models such as GPT-5.1-codex, gpt-5.2-codex and Opus 4.5, while a closed model held the top spot. That is issue fixing on one benchmark, not all everyday coding, and the closed models matched were a step behind the newest. Epoch AI finds the best open-weight models about four months (8 ECI points) behind the closed frontier in January-May 2026 on a composite index of many benchmarks, not coding alone, and says open models do worse on private benchmarks, so the true gap is probably larger. Together they support \"capable, a few months behind\" for issue-fixing work; how far that carries to the rest of a working day is not measured.",
+   "claims": [
+    "ai-coding/open-weight-coding-models-now-handle"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Free models you can run yourself, or the paid frontier: how big is the difference on real coding work?",
+    "conflict": "Five sources say open models now handle routine coding and only trail at the top; vendor leaderboards are the usual evidence.",
+    "evidence": "SWE-rebench: fresh GitHub issues, one scaffold for every model, open-source models ranking alongside the previous generation of closed ones. Epoch AI: the best open-weight models about four months behind on an aggregate index, likely more on private benchmarks.",
+    "resolution": "On fixing real issues, open-weight models are capable and a few months behind the best closed models; the measurements cover issue fixing and general capability, not every kind of everyday task.",
+    "takeaway": "Treat an open model as last season's frontier: check it on your own tasks before relying on it for the hardest work."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: can a free, self-hostable model do everyday coding work, and how far behind the best closed models is it?"
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.72,
+    "curiosity": 1,
+    "stakes": 0.7,
+    "depth": 0.77,
+    "originality": 1,
+    "evidence": 0.35,
+    "editorial": 0.8,
+    "overall": 0.62,
+    "explanation": "editorial 0.8 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 1 (conflict), stakes 0.7 (lean: pro), depth 0.77 (2 studies, 1 claim, tension); evidence 0.35 = strongest SWE-rebench leaderboard at 0.5 (partial) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: Strongest study 0.3 after applicability. SWE-rebench (fresh GitHub issues, one scaffold) shows open-source models ranking alongside the previous generation of closed models, but only for issue fixing on one benchmark; Epoch AI measures the trailing gap (about four months) on a composite index, not coding. Needs an independent evaluation of open-weight and closed models on the same everyday coding tasks beyond issue fixing (features, refactors, tests, several languages) with contamination controls, or a field study of teams using both.",
+   "blocking": [
+    "Reviewer: Strongest study 0.3 after applicability. SWE-rebench (fresh GitHub issues, one scaffold) shows open-source models ranking alongside the previous generation of closed models, but only for issue fixing on one benchmark; Epoch AI measures the trailing gap (about four months) on a composite index, not coding. Needs an independent evaluation of open-weight and closed models on the same everyday coding tasks beyond issue fixing (features, refactors, tests, several languages) with contamination controls, or a field study of teams using both."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "cite": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L60-L75"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "SWE-rebench leaderboard",
+       "verdict": "right",
+       "confidence": 0.5,
+       "note": "SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "a fixed-scaffold, decontaminated benchmark of fresh GitHub issues shows open-source models ranking alongside closed models a step below the leader, which is the claim in a narrower setting: issue fixing in open-source repositories, the open models compared with the previous generation of closed ones (gpt-5.2-codex, Opus 4.5, GPT-5.1-codex) in December 2025 and January 2026"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/open-weight-coding-models-now-handle",
+        "cite": "ai-coding/sources/epoch-open-closed-eci-gap.txt#L5-L23"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Epoch AI open-closed gap",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "Epoch AI finds the best open-weight models lagged frontier closed models by about four months (8 ECI points) through January-May 2026, and says this probably understates the gap; it supports the trailing half but measures general capability on a composite index, not coding tasks.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "establishes only the trailing half (best open-weight models about four months and 8 ECI points behind the closed frontier in January-May 2026), on a composite capability index rather than coding tasks; it says nothing on whether open models handle typical coding work"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "SWE-rebench leaderboard: SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding. [partial: a fixed-scaffold, decontaminated benchmark of fresh GitHub issues shows open-source models ranking alongside closed models a step below the leader, which is the claim in a narrower setting: issue fixing in open-source repositories, the open models compared with the previous generation of closed ones (gpt-5.2-codex, Opus 4.5, GPT-5.1-codex) in December 2025 and January 2026]",
+      "Epoch AI open-closed gap: Epoch AI finds the best open-weight models lagged frontier closed models by about four months (8 ECI points) through January-May 2026, and says this probably understates the gap; it supports the trailing half but measures general capability on a composite index, not coding tasks. [partial: establishes only the trailing half (best open-weight models about four months and 8 ECI points behind the closed frontier in January-May 2026), on a composite capability index rather than coding tasks; it says nothing on whether open models handle typical coding work]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "cite": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L60-L75"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "SWE-rebench leaderboard",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "a fixed-scaffold, decontaminated benchmark of fresh GitHub issues shows open-source models ranking alongside closed models a step below the leader, which is the claim in a narrower setting: issue fixing in open-source repositories, the open models compared with the previous generation of closed ones (gpt-5.2-codex, Opus 4.5, GPT-5.1-codex) in December 2025 and January 2026"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/open-weight-coding-models-now-handle",
+          "cite": "ai-coding/sources/epoch-open-closed-eci-gap.txt#L5-L23"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Epoch AI open-closed gap",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Epoch AI finds the best open-weight models lagged frontier closed models by about four months (8 ECI points) through January-May 2026, and says this probably understates the gap; it supports the trailing half but measures general capability on a composite index, not coding tasks.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "establishes only the trailing half (best open-weight models about four months and 8 ECI points behind the closed frontier in January-May 2026), on a composite capability index rather than coding tasks; it says nothing on whether open models handle typical coding work"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "SWE-rebench leaderboard: SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding. [partial: a fixed-scaffold, decontaminated benchmark of fresh GitHub issues shows open-source models ranking alongside closed models a step below the leader, which is the claim in a narrower setting: issue fixing in open-source repositories, the open models compared with the previous generation of closed ones (gpt-5.2-codex, Opus 4.5, GPT-5.1-codex) in December 2025 and January 2026]",
+        "Epoch AI open-closed gap: Epoch AI finds the best open-weight models lagged frontier closed models by about four months (8 ECI points) through January-May 2026, and says this probably understates the gap; it supports the trailing half but measures general capability on a composite index, not coding tasks. [partial: establishes only the trailing half (best open-weight models about four months and 8 ECI points behind the closed frontier in January-May 2026), on a composite capability index rather than coding tasks; it says nothing on whether open models handle typical coding work]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
    "id": "surprise:vibe-coded-apps-work-prototypes-but",
    "kind": "surprise",
    "title": "Do Vibe-Coded Apps Survive Production?",
@@ -4182,243 +4362,6 @@
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
        "explanation": "qualified (qualify): no direct support, 2 qualifying."
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "gap:open-weight-coding-models-now-handle",
-   "kind": "gap",
-   "title": "Can a Free Open Model Do Your Everyday Coding?",
-   "alternates": [
-    "Open-Weight vs Closed Coding Models: How Big Is the Gap?",
-    "Do You Still Need to Pay for the Best Coding Model?"
-   ],
-   "question": "Are free open-weight models now good enough for everyday coding?",
-   "whyWatch": "Five sources say open-weight models now handle routine coding and only trail at the top, which decides whether a team can self-host instead of paying per token; none shows a measurement, and vendor leaderboard posts are the only numbers in circulation.",
-   "tension": "Benchmark announcements say the gap has nearly closed; the sources who say so offer impressions, and nothing in the corpus tests either model family on real work.",
-   "evidenceNeeded": "An independent evaluation running open-weight and closed models on the same realistic coding tasks, with contamination controls, reporting success rates on routine tasks and the gap at the hardest ones.",
-   "evidenceAvailable": [],
-   "gaps": [
-    "No study in the corpus checks the claim; the story is the search for evidence.",
-    "Has anyone measured whether open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models?",
-    "Which study or dataset would settle it?"
-   ],
-   "premise": "5 sources assert \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
-   "claims": [
-    "ai-coding/open-weight-coding-models-now-handle"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "How often this gets said, and how confidently.",
-    "conflict": "Ask for the evidence and find none in the corpus.",
-    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
-    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
-    "takeaway": "How to treat the claim until it is checked."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One question: can a free, self-hostable model do everyday coding work, and how far behind the best closed models is it?"
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.72,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 0.35,
-    "originality": 1,
-    "evidence": 0,
-    "editorial": 0.61,
-    "overall": 0.37,
-    "explanation": "editorial 0.61 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
-   "blocking": [
-    "No study in the corpus checks the claim; the story is the search for evidence."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "5 sources claim \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\"; no study in the corpus has checked it.",
-     "kind": "attribution",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "hFzapS8rhEs"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Two People Vibe Coded a $1.8B Company. Yes, This is AI Takeoff.",
-       "verdict": null,
-       "confidence": null,
-       "note": "85.2 compares to 92% for GPT 5.4 ... So, it's not all the way there, but these are tiny models"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "tFffUnSq7VA"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
-       "verdict": null,
-       "confidence": null,
-       "note": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "ulfZwEa1x_o"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "DeepSeek R1 vs Kimi K2 vs Qwen3 Coder vs GLM 4.5 - Head-to-Head Testing!",
-       "verdict": null,
-       "confidence": null,
-       "note": "every single one of these is something that is open source ... All of the results were acceptable"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "zanlib-do-you-still-read-the-code"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "\"Do You Still Read the Code?\" • zanlib",
-       "verdict": null,
-       "confidence": null,
-       "note": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "zuJyJP517Uw"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
-       "verdict": null,
-       "confidence": null,
-       "note": "they're seven months behind and that gap is gradually narrowing"
-      }
-     ],
-     "problems": [],
-     "limitations": [
-      "Reports what the sources said, not whether it is true."
-     ],
-     "suggestions": [],
-     "explanation": "supported (approved): no direct support, 5 source statements."
-    },
-    "findings": [
-     {
-      "role": "belief",
-      "validation": {
-       "id": "f0",
-       "text": "5 sources claim \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\"; no study in the corpus has checked it.",
-       "kind": "attribution",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "hFzapS8rhEs"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Two People Vibe Coded a $1.8B Company. Yes, This is AI Takeoff.",
-         "verdict": null,
-         "confidence": null,
-         "note": "85.2 compares to 92% for GPT 5.4 ... So, it's not all the way there, but these are tiny models"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "tFffUnSq7VA"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
-         "verdict": null,
-         "confidence": null,
-         "note": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "ulfZwEa1x_o"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "DeepSeek R1 vs Kimi K2 vs Qwen3 Coder vs GLM 4.5 - Head-to-Head Testing!",
-         "verdict": null,
-         "confidence": null,
-         "note": "every single one of these is something that is open source ... All of the results were acceptable"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "zanlib-do-you-still-read-the-code"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "\"Do You Still Read the Code?\" • zanlib",
-         "verdict": null,
-         "confidence": null,
-         "note": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "zuJyJP517Uw"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
-         "verdict": null,
-         "confidence": null,
-         "note": "they're seven months behind and that gap is gradually narrowing"
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Reports what the sources said, not whether it is true."
-       ],
-       "suggestions": [],
-       "explanation": "supported (approved): no direct support, 5 source statements."
       }
      }
     ]

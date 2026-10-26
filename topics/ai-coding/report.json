@@ -2421,7 +2421,9 @@
           ],
           "note": "Claude models have often topped SWE-bench and similar leaderboards, but GPT-5.x/Codex and Gemini models trade the lead release to release; also, Cursor and Copilot can run Claude models.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/writing-code-never-main-bottleneck-software",
@@ -2834,7 +2836,9 @@
           ],
           "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/major-coding-subscriptions-subsidized-below-cost",
@@ -5696,7 +5700,9 @@
           ],
           "note": "Several practitioner comparisons report lower token use for Codex, but results vary by task, model and settings; a single run isn't evidence.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/claude-code-produces-higher-quality-safer",
@@ -5997,13 +6003,13 @@
           "asserted": 5,
           "denied": 3,
           "tally": {
-            "right": 6,
+            "right": 7,
             "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
@@ -6016,9 +6022,12 @@
             "zanlib-do-you-still-read-the-code",
             "zuJyJP517Uw"
           ],
-          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
-          "source": null,
-          "documents": []
+          "note": "SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding.",
+          "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L60-L75",
+          "documents": [
+            "ai-coding/sources/epoch-open-closed-eci-gap.txt",
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/one-two-person-company-run-mostly",
@@ -8744,7 +8753,9 @@
           ],
           "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/getting-good-results-coding-tools-takes",
@@ -12011,6 +12022,54 @@
         },
         {
           "claim": {
+            "id": "ai-coding/models-perform-best-inside-their-own",
+            "text": "Models perform best inside their own vendor's agent harness",
+            "topic": "ai-coding",
+            "asserted": 3,
+            "denied": 0,
+            "tally": {
+              "right": 0,
+              "wrong": 0,
+              "partly": 3,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "CUNHS7I3mMA",
+              "F_RyElT_gJk",
+              "dMSZ0WcK1oI"
+            ],
+            "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "wrong",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
+            "confidence": 0.5,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "wrong",
+            "confidence": 0.4,
+            "note": "On SWE-rebench's May-July 2026 tasks, Claude Code running Fable 5 resolved 60.4% against 64.5% for Fable 5 in the benchmark's generic scaffold, and Codex running GPT-5.6 Sol 58.0% against 62.3%; one benchmark, with headless runs under aligned instructions.",
+            "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L8-L33",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/rankings-best-coding-tool-roundups-mostly",
             "text": "Rankings in 'best AI coding tool' roundups mostly reflect reviewer opinion rather than repeatable benchmarks",
             "topic": "ai-coding",
@@ -13442,6 +13501,52 @@
         },
         {
           "claim": {
+            "id": "ai-coding/underlying-model-matters-more-agent-harness",
+            "text": "The underlying model matters more than the agent harness for AI coding results",
+            "topic": "ai-coding",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 0,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "MrfiUMm2Qxk"
+            ],
+            "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
+            "confidence": 0.5,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.4,
+            "note": "Under one fixed scaffold SWE-rebench resolve rates span 17.1% to 64.5% across models, while the vendor harnesses (Claude Code, Codex, Junie) land within about 2-4 points of their own model's scaffold score.",
+            "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L8-L33",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/getting-good-results-coding-tools-takes",
             "text": "Getting good results from AI coding tools takes significant skill, so outcomes vary widely with user expertise",
             "topic": "ai-coding",
@@ -14332,13 +14437,13 @@
           "asserted": 5,
           "denied": 3,
           "tally": {
-            "right": 6,
+            "right": 7,
             "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
@@ -14351,9 +14456,12 @@
             "zanlib-do-you-still-read-the-code",
             "zuJyJP517Uw"
           ],
-          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
-          "source": null,
-          "documents": []
+          "note": "SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding.",
+          "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L60-L75",
+          "documents": [
+            "ai-coding/sources/epoch-open-closed-eci-gap.txt",
+            "ai-coding/sources/swe-rebench-leaderboard-2026.txt"
+          ]
         },
         {
           "id": "ai-coding/post-2022-drop-developer-hiring-driven",
@@ -16058,36 +16166,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/open-weight-coding-models-now-handle",
-          "text": "Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models",
-          "topic": "ai-coding",
-          "asserted": 5,
-          "denied": 3,
-          "tally": {
-            "right": 6,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "0givsV3pA9w",
-            "86UczUYjVQ0",
-            "bpWPEhO7RqE",
-            "hFzapS8rhEs",
-            "tFffUnSq7VA",
-            "ulfZwEa1x_o",
-            "zanlib-do-you-still-read-the-code",
-            "zuJyJP517Uw"
-          ],
-          "note": "Qwen3-Coder, Kimi K2 and GLM 4.5/4.6 posted strong SWE-bench and Terminal-Bench results in 2025 while generally trailing frontier closed models.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/post-2022-drop-developer-hiring-driven",
           "text": "The post-2022 drop in developer hiring was driven mainly by interest rates and pandemic over-hiring rather than AI",
           "topic": "ai-coding",
@@ -17088,31 +17166,6 @@
             "PkITOx9lIT8"
           ],
           "note": "A framing about what matters most; it's a useful lens, but you can't test it as a fact.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/models-perform-best-inside-their-own",
-          "text": "Models perform best inside their own vendor's agent harness",
-          "topic": "ai-coding",
-          "asserted": 3,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 3,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "CUNHS7I3mMA",
-            "F_RyElT_gJk",
-            "dMSZ0WcK1oI"
-          ],
-          "note": "Models are tuned on their vendors' harnesses and often score higher there, but third-party harnesses sometimes match or beat them on benchmarks (e.g. Terminal-Bench).",
           "source": null,
           "documents": []
         },
@@ -18608,29 +18661,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/claude-models-lead-major-coding-tools",
-          "text": "Claude models lead the major AI coding tools on agentic coding benchmarks",
-          "topic": "ai-coding",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "WTLrlkp5Y3c"
-          ],
-          "note": "Claude models have often topped SWE-bench and similar leaderboards, but GPT-5.x/Codex and Gemini models trade the lead release to release; also, Cursor and Copilot can run Claude models.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/code-review-complements-but-does-not",
           "text": "AI code review complements but does not replace automated tests",
           "topic": "ai-coding",
@@ -18673,29 +18703,6 @@
             "gPwa7eHDFkw"
           ],
           "note": "Codex does use Seatbelt/Landlock sandboxing; Claude Code added an OS-level sandbox option in late 2025, so the contrast is outdated.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/codex-cli-uses-far-fewer-tokens",
-          "text": "Codex CLI uses far fewer tokens than Claude Code for the same task",
-          "topic": "ai-coding",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "gPwa7eHDFkw"
-          ],
-          "note": "Several practitioner comparisons report lower token use for Codex, but results vary by task, model and settings; a single run isn't evidence.",
           "source": null,
           "documents": []
         },
@@ -20591,29 +20598,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/underlying-model-matters-more-agent-harness",
-          "text": "The underlying model matters more than the agent harness for AI coding results",
-          "topic": "ai-coding",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "MrfiUMm2Qxk"
-          ],
-          "note": "Model choice is the largest driver of benchmark results, but harness differences also produce sizable gaps on agentic benchmarks.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/usage-concentrated-software-mathematical-tasks",
           "text": "AI usage is concentrated in software and mathematical tasks",
           "topic": "ai-coding",
@@ -20856,7 +20840,7 @@
       "testable": 12,
       "novelty": 1.3148809523809526,
       "redundancy": 0,
-      "thinEvidence": 0.75,
+      "thinEvidence": 0.6666666666666666,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/combining-semantic-embedding-code-search-grep",
@@ -20874,7 +20858,7 @@
       "wrong": [
         "ai-coding/open-weight-coding-models-now-handle"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21394,7 +21378,7 @@
       "testable": 11,
       "novelty": 0.3606268731268731,
       "redundancy": 0,
-      "thinEvidence": 0.2727272727272727,
+      "thinEvidence": 0.18181818181818182,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-development-shifts-developer-effort-toward",
@@ -21754,7 +21738,7 @@
       "testable": 5,
       "novelty": 1.0333333333333332,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/agent-configuration-formats-instruction-files-skill",
@@ -21764,7 +21748,7 @@
         "ai-coding/opencode-offers-richer-agent-harness-openai"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21927,7 +21911,7 @@
       "testable": 12,
       "novelty": 0.7461309523809524,
       "redundancy": 0,
-      "thinEvidence": 0.5833333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/best-practices-coding-tools-stale-within",
@@ -21945,7 +21929,7 @@
         "ai-coding/ide-based-assistants-like-cursor-obsolete",
         "ai-coding/running-many-coding-agents-parallel-not"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22372,7 +22356,7 @@
       "testable": 12,
       "novelty": 1.317906603200721,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.25,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/assisted-changes-should-integrated-small-verifiable",
@@ -22389,7 +22373,7 @@
         "ai-coding/underlying-model-matters-more-agent-harness"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23450,7 +23434,7 @@
       "testable": 8,
       "novelty": 1.2395833333333333,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.875,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/claude-code-best-suited-autonomous-complex",
@@ -23463,7 +23447,7 @@
         "ai-coding/swe-bench-verified-scores-overstate-real"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23993,7 +23977,7 @@
       "testable": 12,
       "novelty": 0.3877450980392157,
       "redundancy": 0,
-      "thinEvidence": 0.4166666666666667,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/cheaper-software-production-will-increase-total",
@@ -24178,7 +24162,7 @@
       "testable": 6,
       "novelty": 0.5408424908424908,
       "redundancy": 0,
-      "thinEvidence": 0.8333333333333334,
+      "thinEvidence": 0.6666666666666666,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agent-configuration-formats-instruction-files-skill",
@@ -24189,7 +24173,7 @@
         "ai-coding/models-perform-best-inside-their-own"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24649,7 +24633,7 @@
       "testable": 4,
       "novelty": 0.625,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.75,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/codex-cli-enforces-level-sandboxing-while",
@@ -24657,7 +24641,7 @@
         "ai-coding/many-developers-combine-several-coding-tools"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24748,13 +24732,13 @@
       "testable": 2,
       "novelty": 0.1,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/open-weight-coding-models-now-handle"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26349,7 +26333,7 @@
       "testable": 12,
       "novelty": 0.6531250000000001,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-development-shifts-developer-effort-toward",
@@ -26627,14 +26611,14 @@
       "testable": 2,
       "novelty": 0.1142857142857143,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/fast-automated-feedback-loops-tests-type",
         "ai-coding/open-weight-coding-models-now-handle"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -27029,7 +27013,7 @@
       "testable": 11,
       "novelty": 1.5183035714285715,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.25,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/coding-agents-ignore-costs-not-visible",
@@ -27091,7 +27075,7 @@
       "testable": 11,
       "novelty": 0.6975378787878788,
       "redundancy": 0,
-      "thinEvidence": 0.5454545454545454,
+      "thinEvidence": 0.45454545454545453,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-run-permission-prompts-disabled-should",

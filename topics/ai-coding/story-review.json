@@ -67,6 +67,14 @@
     "ai-coding/frontier-model-improvements-have-become-incremental|denies|ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt#L17-L23": {
       "level": "direct",
       "reason": "frontier progress on three of four capability metrics sped up from 2023 to early 2026, which is incompatible with improvements having become incremental; the heuristic read the note's own wording (\"rather than slowed\") as a scope limit"
+    },
+    "ai-coding/open-weight-coding-models-now-handle|asserts|ai-coding/sources/swe-rebench-leaderboard-2026.txt#L60-L75": {
+      "level": "partial",
+      "reason": "a fixed-scaffold, decontaminated benchmark of fresh GitHub issues shows open-source models ranking alongside closed models a step below the leader, which is the claim in a narrower setting: issue fixing in open-source repositories, the open models compared with the previous generation of closed ones (gpt-5.2-codex, Opus 4.5, GPT-5.1-codex) in December 2025 and January 2026"
+    },
+    "ai-coding/open-weight-coding-models-now-handle|asserts|ai-coding/sources/epoch-open-closed-eci-gap.txt#L5-L23": {
+      "level": "partial",
+      "reason": "establishes only the trailing half (best open-weight models about four months and 8 ECI points behind the closed frontier in January-May 2026), on a composite capability index rather than coding tasks; it says nothing on whether open models handle typical coding work"
     }
   },
   "stories": {
@@ -347,21 +355,33 @@
     "gap:background-coding-agents-assigned-routine-issues": {
       "reject": "duplicate of conflict:goal-loop-commands-prompt-agent-until: 'can background agents deliver mergeable PRs on routine issues?' and 'can you leave an agent running on your backlog?' ask the viewer the same thing, and the latter has the one documented case"
     },
-    "gap:open-weight-coding-models-now-handle": {
+    "conflict:open-weight-coding-models-now-handle": {
       "coherence": {
         "score": 0.8,
         "reason": "One question: can a free, self-hostable model do everyday coding work, and how far behind the best closed models is it?"
       },
+      "claims": [
+        "ai-coding/open-weight-coding-models-now-handle"
+      ],
       "question": "Are free open-weight models now good enough for everyday coding?",
       "title": "Can a Free Open Model Do Your Everyday Coding?",
       "alternates": [
         "Open-Weight vs Closed Coding Models: How Big Is the Gap?",
         "Do You Still Need to Pay for the Best Coding Model?"
       ],
-      "whyWatch": "Five sources say open-weight models now handle routine coding and only trail at the top, which decides whether a team can self-host instead of paying per token; none shows a measurement, and vendor leaderboard posts are the only numbers in circulation.",
-      "tension": "Benchmark announcements say the gap has nearly closed; the sources who say so offer impressions, and nothing in the corpus tests either model family on real work.",
-      "evidenceNeeded": "An independent evaluation running open-weight and closed models on the same realistic coding tasks, with contamination controls, reporting success rates on routine tasks and the gap at the hardest ones.",
-      "research": "No study in the corpus compares open-weight and closed models on coding tasks; the only lean is an AI guess about 2025 vendor benchmark posts. Needs an independent, contamination-controlled benchmark (for example SWE-bench Verified or Terminal-Bench run by a third party) or a field study scoring both families on the same everyday tasks."
+      "whyWatch": "Whether a team can self-host a free model instead of paying per token depends on how close open-weight models really are; an independent leaderboard that re-tests every model on fresh GitHub issues, and a capability index across many benchmarks, both measured it.",
+      "tension": "SWE-rebench has open-source models ranking alongside closed ones on fresh GitHub issues; Epoch AI puts the best open-weight models about four months behind the closed frontier and says that probably understates the gap.",
+      "evidenceNeeded": "An independent evaluation running open-weight and closed models on the same everyday coding tasks beyond issue fixing (features, refactors, tests, other languages), with contamination controls, reporting success rates and the gap at the hardest tasks.",
+      "premise": "Two independent measurements, each narrower than the claim. SWE-rebench runs every model on fresh, date-tracked GitHub issues from open-source repositories under one fixed scaffold; its December 2025 and January 2026 notes say open-source models (GLM-4.7, Kimi K2 Thinking, GLM-5) ranked alongside or were catching up with closed models such as GPT-5.1-codex, gpt-5.2-codex and Opus 4.5, while a closed model held the top spot. That is issue fixing on one benchmark, not all everyday coding, and the closed models matched were a step behind the newest. Epoch AI finds the best open-weight models about four months (8 ECI points) behind the closed frontier in January-May 2026 on a composite index of many benchmarks, not coding alone, and says open models do worse on private benchmarks, so the true gap is probably larger. Together they support \"capable, a few months behind\" for issue-fixing work; how far that carries to the rest of a working day is not measured.",
+      "arc": {
+        "hook": "Free models you can run yourself, or the paid frontier: how big is the difference on real coding work?",
+        "conflict": "Five sources say open models now handle routine coding and only trail at the top; vendor leaderboards are the usual evidence.",
+        "evidence": "SWE-rebench: fresh GitHub issues, one scaffold for every model, open-source models ranking alongside the previous generation of closed ones. Epoch AI: the best open-weight models about four months behind on an aggregate index, likely more on private benchmarks.",
+        "resolution": "On fixing real issues, open-weight models are capable and a few months behind the best closed models; the measurements cover issue fixing and general capability, not every kind of everyday task.",
+        "takeaway": "Treat an open model as last season's frontier: check it on your own tasks before relying on it for the hardest work."
+      },
+      "qualificationsAccepted": true,
+      "research": "Strongest study 0.3 after applicability. SWE-rebench (fresh GitHub issues, one scaffold) shows open-source models ranking alongside the previous generation of closed models, but only for issue fixing on one benchmark; Epoch AI measures the trailing gap (about four months) on a composite index, not coding. Needs an independent evaluation of open-weight and closed models on the same everyday coding tasks beyond issue fixing (features, refactors, tests, several languages) with contamination controls, or a field study of teams using both."
     },
     "gap:coding-agents-run-tools-loop-step": {
       "coherence": {

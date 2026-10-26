@@ -110,7 +110,24 @@
       "claim": "ai-coding/open-weight-coding-models-now-handle",
       "stance": "denies",
       "quote": "the smaller models usually still struggle with the tool calling.",
-      "verdicts": []
+      "verdicts": [
+        {
+          "method": "source",
+          "verdict": "right",
+          "confidence": 0.5,
+          "note": "SWE-rebench, which runs every model on fresh, date-tracked GitHub issues under one fixed scaffold, reports open-source models (Kimi K2 Thinking, GLM-5, GLM-4.7) catching up with or ranking alongside closed models such as gpt-5.2-codex, Opus 4.5 and GPT-5.1-codex, while closed models held the top spot; one benchmark of issue-fixing tasks, not all everyday coding.",
+          "source": "ai-coding/sources/swe-rebench-leaderboard-2026.txt#L60-L75",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.4,
+          "note": "Epoch AI finds the best open-weight models lagged frontier closed models by about four months (8 ECI points) through January-May 2026, and says this probably understates the gap; it supports the trailing half but measures general capability on a composite index, not coding tasks.",
+          "source": "ai-coding/sources/epoch-open-closed-eci-gap.txt#L5-L23",
+          "date": "2026-10-26"
+        }
+      ]
     },
     {
       "claim": "ai-coding/major-coding-subscriptions-subsidized-below-cost",
