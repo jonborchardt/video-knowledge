@@ -33,6 +33,14 @@
           "note": "A footnote states it is important to avoid premature decomposition of new systems into services, which can inhibit delivery performance, citing Fowler's MonolithFirst; this is an authorial assertion, not a measured result.",
           "source": "software-practices/sources/dora2019-state-of-devops.txt#L1091-L1092",
           "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.25,
+          "note": "The authors conclude from their Azure throughput benchmarks of a two-service app that a monolith seems the better choice for simple, small systems without many concurrent users, and that scaling up a monolith can beat moving to microservices; this backs the default only for small, low-traffic systems and only on performance and infrastructure cost, not on development or organisational outcomes.",
+          "source": "software-practices/sources/blinowski-2022-monolith-vs-microservices.txt#L776-L782",
+          "date": "2026-10-26"
         }
       ]
     },
@@ -100,6 +108,14 @@
           "confidence": 0.25,
           "note": "A multivocal review of 29 mostly grey sources finds cost the most common reason the four documented switch-backs (Istio, Prime Video, Segment, InVision) gave, with Prime Video reporting over 90% lower infrastructure cost after merging; these are self-reported anecdotes of failures, not a comparison of comparable systems.",
           "source": "software-practices/sources/su2023-microservice-to-monolith.txt#L100-L113",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "In controlled throughput benchmarks of a two-endpoint app built as a monolith and as microservices (Java and .NET) on Azure, the monolith outperformed the microservices whenever configurations of similar infrastructure cost were compared, and the vertically scaled monolith was Pareto efficient; this supports higher running cost per unit of throughput for a small system, but the cost is tied to Azure pricing and the study measures nothing about development cost, delivery speed or failures.",
+          "source": "software-practices/sources/blinowski-2022-monolith-vs-microservices.txt#L658-L668",
           "date": "2026-10-26"
         }
       ]
