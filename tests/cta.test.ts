@@ -15,6 +15,8 @@ const TOOL_STORY = storyNode(T, 'decision:is-it-cheaper-to-run-than-gas');
 const OTHER_STORY = storyNode(T, 'conflict:heat-pump-costs-less-run-heating');
 const ev: Cta = { type: 'evidence', text: 'Every claim and its evidence' };
 
+// The real stories are not live yet: assume the two the tests use are.
+const realGraph = () => contentGraph(undefined, undefined, 'live', [TOOL_STORY, OTHER_STORY]);
 let root = '';
 afterEach(() => root && rmSync(root, { recursive: true, force: true }));
 type Bare = Pick<Story, 'id' | 'claims'> & Partial<Story>;
@@ -40,7 +42,7 @@ function graphOf(stories: Bare[], live: string[] = []) {
 
 describe('calls to action', () => {
   it('no cta.json gives the matter page as the primary', () => {
-    const g = contentGraph();
+    const g = realGraph();
     expect(resolveCtas(null, g, TOOL_STORY).primary).toEqual({
       type: 'evidence',
       text: 'The evidence and the full answer',
@@ -51,7 +53,7 @@ describe('calls to action', () => {
   });
 
   it('a tool cta needs a tool for the story', () => {
-    const g = contentGraph();
+    const g = realGraph();
     const tool: Cta = { type: 'tool', target: 'tool:heating-cost', text: 'Run it with your prices' };
     const kept = resolveCtas({ primary: tool }, g, TOOL_STORY);
     expect(kept.primary.type).toBe('tool');
@@ -62,7 +64,7 @@ describe('calls to action', () => {
   });
 
   it('a dropped primary falls back to the matter page', () => {
-    const r = resolveCtas({ primary: { type: 'tool', text: 'Run it' } }, contentGraph(), OTHER_STORY);
+    const r = resolveCtas({ primary: { type: 'tool', text: 'Run it' } }, realGraph(), OTHER_STORY);
     expect(r.primary.type).toBe('evidence');
     expect(r.dropped).toHaveLength(1);
   });
@@ -121,13 +123,13 @@ describe('calls to action', () => {
   });
 
   it('more than two secondaries is a problem', () => {
-    expect(resolveCtas({ primary: ev, secondary: [ev, ev, ev] }, contentGraph(), TOOL_STORY).problems).toEqual([
+    expect(resolveCtas({ primary: ev, secondary: [ev, ev, ev] }, realGraph(), TOOL_STORY).problems).toEqual([
       'at most 2 secondary calls to action, found 3',
     ]);
   });
 
   it('a commercial entry needs a disclosure and a person, never automated, and is never primary over a tool', () => {
-    const g = contentGraph();
+    const g = realGraph();
     const paid: Cta = { type: 'commercial', url: 'https://example.com/x', text: 'A product', approvedBy: 'Jon' };
     expect(resolveCtas({ primary: ev, secondary: [paid] }, g, TOOL_STORY).problems).toEqual([
       'commercial link needs a disclosure: https://example.com/x',
@@ -164,14 +166,14 @@ describe('calls to action', () => {
   it('a reference url must be https', () => {
     const r = resolveCtas(
       { primary: ev, secondary: [{ type: 'reference', url: 'http://x.gov', text: 'The programme' }] },
-      contentGraph(),
+      realGraph(),
       TOOL_STORY,
     );
     expect(r.problems).toEqual(['reference url must be https: http://x.gov']);
   });
 
   it('every committed cta.json resolves with no problems', () => {
-    const g = contentGraph();
+    const g = realGraph();
     for (const t of publicTopicNames()) {
       for (const s of loadStories(t)?.stories ?? []) {
         const f = loadCta(t, s.id);

@@ -20,7 +20,7 @@ const { items } = Astro.props;
           {m.title}
         </a>
         <span class="text-sm text-muted-foreground">{m.question}</span>
-        {(m.video || !m.ready) && (
+        {(m.video || m.preview) && (
           <span class="flex flex-wrap gap-x-3 eyebrow text-muted-foreground">
             {m.video && (
               <span class="inline-flex items-center gap-1 text-foreground">
@@ -28,7 +28,7 @@ const { items } = Astro.props;
                 Video
               </span>
             )}
-            {!m.ready && <span>Under examination</span>}
+            {m.preview && <span>Preview</span>}
           </span>
         )}
         {m.follow.length > 0 && (
