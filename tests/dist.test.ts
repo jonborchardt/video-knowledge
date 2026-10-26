@@ -147,6 +147,17 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
+  it('share cards exist only for live stories', () => {
+    const want = new Set(storyPages.map((p) => `${p.topic}/${p.slug}.jpg`));
+    const dir = join(DIST, 'og', 'stories');
+    const have = existsSync(dir)
+      ? readdirSync(dir, { withFileTypes: true }).flatMap((d) =>
+          readdirSync(join(dir, d.name)).map((f) => `${d.name}/${f}`),
+        )
+      : [];
+    for (const f of have) expect(want.has(f), f).toBe(true);
+  });
+
   it('story pages carry the question and its claims, and the commission page links to them', () => {
     for (const { topic, slug, s } of storyPages) {
       const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
