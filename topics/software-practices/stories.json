@@ -3,7 +3,7 @@
  "basis": {
   "claims": 413,
   "sources": 93,
-  "studies": 33,
+  "studies": 35,
   "candidates": 22
  },
  "stories": [
@@ -1718,6 +1718,417 @@
    "partOf": "decision:clean-code-and-technical-debt"
   },
   {
+   "id": "decision:microservices-vs-monolith",
+   "kind": "decision",
+   "title": "Microservices or a Monolith: Which Should You Start With?",
+   "alternates": [
+    "Do Microservices Pay Off for a New Project?",
+    "Why So Many Teams Regret Starting with Microservices"
+   ],
+   "question": "Should a new project start as microservices or as a monolith?",
+   "whyWatch": "The choice shapes a system for years and is usually made on conference talks. The evidence on outcomes is much thinner than the advice.",
+   "tension": "Microservices promise team independence; critics say they cost more and the boundaries are wrong at first. The studies here catalogue pains but do not measure outcomes.",
+   "evidenceNeeded": "Measured cost, delivery or failure outcomes for comparable systems built as microservices and as monoliths, ideally greenfield against monolith-first.",
+   "evidenceAvailable": [
+    "Lenarduzzi et al. 2020 (migration and technical debt): partly (0.35, direct)",
+    "Su et al. 2023 (back to monolith review): partly (0.25, partial)",
+    "Soldani et al. 2018 (microservices review): partly (0.3, direct)",
+    "Halkjelsvik & Jørgensen 2018 (Time Predictions): partly (0.4, direct)",
+    "Bird et al. 2011 (code ownership): partly (0.3, direct)",
+    "Soldani et al. 2018 (microservices review): partly (0.35, direct)",
+    "DORA State of DevOps 2019: right (0.2, partial)"
+   ],
+   "gaps": [
+    "Reviewer: The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries, one SME's monolith-to-microservices migration (Lenarduzzi 2020: development cost up 20%+, technical debt growing slower afterwards, no greenfield or comparable control) and a grey-literature review of four switch-backs to a monolith (Su 2023). Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones.",
+    "No study strong enough to decide: \"Microservices cost more in the short term and rarely save money\"",
+    "No study strong enough to decide: \"Coordination cost grows faster than linearly with team count on a shared codebase, which service boundaries contain\"",
+    "Unchecked: \"Keeping modules in one process with enforced boundaries gets most of the modularity benefit without the distribution cost\"",
+    "No study strong enough to decide: \"Service boundaries are usually wrong on the first attempt because the domain is not yet understood, so systems built as microservices from scratch tend to end in trouble\""
+   ],
+   "premise": "5 claims bear on this choice; studies decide 0 of them. Walk the viewer from the claims they have heard to the decision the evidence supports.",
+   "claims": [
+    "software-practices/microservices-cost-more-short-term-rarely",
+    "software-practices/coordination-cost-grows-faster-linearly-team",
+    "software-practices/keeping-modules-one-process-enforced-boundaries",
+    "software-practices/service-boundaries-usually-wrong-first-attempt"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "The decision a viewer faces, in their terms.",
+    "conflict": "The claims pulling in different directions: \"Microservices cost more in the short term and rarely save money\"; \"Hype drives teams to adopt microservices they do not need, adding cost and risk\"; \"Coordination cost grows faster than linearly with team count on a shared codebase, which service boundaries contain\"; \"Keeping modules in one process with enforced boundaries gets most of the modularity benefit without the distribution cost\"; \"Service boundaries are usually wrong on the first attempt because the domain is not yet understood, so systems built as microservices from scratch tend to end in trouble\".",
+    "evidence": "Each claim's verdict, strongest study first.",
+    "resolution": "What the evidence settles and what it leaves open.",
+    "takeaway": "A decision rule the viewer can apply."
+   },
+   "coherence": {
+    "score": 0.7,
+    "basis": "review",
+    "explanation": "One question, should a new system start as microservices or a monolith: cost, coordination, boundary mistakes and the modular-monolith alternative. The hype claim is a motive, not part of the answer, so it is pruned."
+   },
+   "scores": {
+    "coherence": 0.7,
+    "relevance": 0.87,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.45,
+    "editorial": 0.75,
+    "overall": 0.63,
+    "explanation": "editorial 0.75 = mean of coherence 0.7 (review), relevance 0.87 (13 sources, 9 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 1 (6 studies, 4 claims, tension); evidence 0.45 = strongest Lenarduzzi et al. 2020 (migration and technical debt) at 0.35 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries, one SME's monolith-to-microservices migration (Lenarduzzi 2020: development cost up 20%+, technical debt growing slower afterwards, no greenfield or comparable control) and a grey-literature review of four switch-backs to a monolith (Su 2023). Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones.",
+   "blocking": [
+    "Reviewer: The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries, one SME's monolith-to-microservices migration (Lenarduzzi 2020: development cost up 20%+, technical debt growing slower afterwards, no greenfield or comparable control) and a grey-literature review of four switch-backs to a monolith (Su 2023). Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Microservices cost more in the short term and rarely save money",
+     "kind": "fact",
+     "modality": "typical",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/microservices-cost-more-short-term-rarely",
+        "cite": "software-practices/sources/lenarduzzi2020-migration-technical-debt.txt#L862-L869"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Lenarduzzi et al. 2020 (migration and technical debt)",
+       "verdict": "partly",
+       "confidence": 0.35,
+       "note": "In one SME extracting five services from a 280K-line monolith, the architect and project manager reported overall development cost up more than 20% from building a distributed system, while SonarQube technical debt spiked at each extraction and then grew about 90% slower than in the monolith; higher short-term cost is supported, but a single migration case says nothing about whether money is rarely saved.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/microservices-cost-more-short-term-rarely",
+        "cite": "software-practices/sources/su2023-microservice-to-monolith.txt#L100-L113"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Su et al. 2023 (back to monolith review)",
+       "verdict": "partly",
+       "confidence": 0.25,
+       "note": "A multivocal review of 29 mostly grey sources finds cost the most common reason the four documented switch-backs (Istio, Prime Video, Segment, InVision) gave, with Prime Video reporting over 90% lower infrastructure cost after merging; these are self-reported anecdotes of failures, not a comparison of comparable systems.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"self-reported\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/microservices-cost-more-short-term-rarely",
+        "cite": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1029-L1037"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Soldani et al. 2018 (microservices review)",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Lenarduzzi et al. 2020 (migration and technical debt): In one SME extracting five services from a 280K-line monolith, the architect and project manager reported overall development cost up more than 20% from building a distributed system, while SonarQube technical debt spiked at each extraction and then grew about 90% slower than in the monolith; higher short-term cost is supported, but a single migration case says nothing about whether money is rarely saved.",
+      "Su et al. 2023 (back to monolith review): A multivocal review of 29 mostly grey sources finds cost the most common reason the four documented switch-backs (Istio, Prime Video, Segment, InVision) gave, with Prime Video reporting over 90% lower infrastructure cost after merging; these are self-reported anecdotes of failures, not a comparison of comparable systems. [partial: the verdict note limits its own scope (\"self-reported\")]",
+      "Soldani et al. 2018 (microservices review): Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 3 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Microservices cost more in the short term and rarely save money",
+       "kind": "fact",
+       "modality": "typical",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/microservices-cost-more-short-term-rarely",
+          "cite": "software-practices/sources/lenarduzzi2020-migration-technical-debt.txt#L862-L869"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Lenarduzzi et al. 2020 (migration and technical debt)",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "In one SME extracting five services from a 280K-line monolith, the architect and project manager reported overall development cost up more than 20% from building a distributed system, while SonarQube technical debt spiked at each extraction and then grew about 90% slower than in the monolith; higher short-term cost is supported, but a single migration case says nothing about whether money is rarely saved.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/microservices-cost-more-short-term-rarely",
+          "cite": "software-practices/sources/su2023-microservice-to-monolith.txt#L100-L113"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Su et al. 2023 (back to monolith review)",
+         "verdict": "partly",
+         "confidence": 0.25,
+         "note": "A multivocal review of 29 mostly grey sources finds cost the most common reason the four documented switch-backs (Istio, Prime Video, Segment, InVision) gave, with Prime Video reporting over 90% lower infrastructure cost after merging; these are self-reported anecdotes of failures, not a comparison of comparable systems.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-reported\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/microservices-cost-more-short-term-rarely",
+          "cite": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1029-L1037"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Soldani et al. 2018 (microservices review)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Lenarduzzi et al. 2020 (migration and technical debt): In one SME extracting five services from a 280K-line monolith, the architect and project manager reported overall development cost up more than 20% from building a distributed system, while SonarQube technical debt spiked at each extraction and then grew about 90% slower than in the monolith; higher short-term cost is supported, but a single migration case says nothing about whether money is rarely saved.",
+        "Su et al. 2023 (back to monolith review): A multivocal review of 29 mostly grey sources finds cost the most common reason the four documented switch-backs (Istio, Prime Video, Segment, InVision) gave, with Prime Video reporting over 90% lower infrastructure cost after merging; these are self-reported anecdotes of failures, not a comparison of comparable systems. [partial: the verdict note limits its own scope (\"self-reported\")]",
+        "Soldani et al. 2018 (microservices review): Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 3 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "Coordination cost grows faster than linearly with team count on a shared codebase, which service boundaries contain",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/coordination-cost-grows-faster-linearly-team",
+          "cite": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L2779-L2788"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Halkjelsvik & Jørgensen 2018 (Time Predictions)",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Coordination and administration grow nonlinearly with team and organisation size (e.g. administrative staff scales as academic staff^1.3; +50% total time from two- to four-person teams); whether service boundaries contain it is not studied.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/coordination-cost-grows-faster-linearly-team",
+          "cite": "software-practices/sources/bird2011-ownership.txt#L405-L411"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Bird et al. 2011 (code ownership)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "More contributors to a Windows binary, especially low-expertise minor ones, means more pre- and post-release failures after controlling for size, churn and complexity, which the authors attribute to coordination and communication breakdowns; growth rate and the effect of service boundaries are not tested.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Halkjelsvik & Jørgensen 2018 (Time Predictions): Coordination and administration grow nonlinearly with team and organisation size (e.g. administrative staff scales as academic staff^1.3; +50% total time from two- to four-person teams); whether service boundaries contain it is not studied.",
+        "Bird et al. 2011 (code ownership): More contributors to a Windows binary, especially low-expertise minor ones, means more pre- and post-release failures after controlling for size, churn and complexity, which the authors attribute to coordination and communication breakdowns; growth rate and the effect of service boundaries are not tested."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     },
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f2",
+       "text": "3 sources claim \"Keeping modules in one process with enforced boundaries gets most of the modularity benefit without the distribution cost\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "typical",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
+          "source": "j2AQ9eTZ3-0"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Microservices, Where Did It All Go Wrong • Ian Cooper • GOTO 2024",
+         "verdict": null,
+         "confidence": null,
+         "note": "this needs to have modularity but that modularity won't use a microservices approach it will instead split it up into larger pieces"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
+          "source": "martinfowler-microservicepremium"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Microservice Premium",
+         "verdict": null,
+         "confidence": null,
+         "note": "there's no reason why you can't make a single monolith with well defined module boundaries"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
+          "source": "shopify-deconstructing-monolith-designing-software-maximizes-developer-productiv"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Deconstructing the Monolith - Shopify",
+         "verdict": null,
+         "confidence": null,
+         "note": "A modular monolith is a system where all of the code powers a single application and there are strictly enforced boundaries between different domains."
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 3 source statements."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f3",
+       "text": "Service boundaries are usually wrong on the first attempt because the domain is not yet understood, so systems built as microservices from scratch tend to end in trouble",
+       "kind": "fact",
+       "modality": "typical",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/service-boundaries-usually-wrong-first-attempt",
+          "cite": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L526-L531"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Soldani et al. 2018 (microservices review)",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "16 industrial sources recognise service dimensioning as a pain and all agree it is hard to identify bounded contexts because boundaries between business capabilities are not sharp; the review does not track whether greenfield microservice systems end in trouble.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/service-boundaries-usually-wrong-first-attempt",
+          "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1091-L1092"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "DORA State of DevOps 2019",
+         "verdict": "right",
+         "confidence": 0.2,
+         "note": "The same footnote advises avoiding premature decomposition of new systems into services because it can inhibit delivery performance, which matches the claim's conclusion though the report offers no data on boundary mistakes.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"though\")"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Soldani et al. 2018 (microservices review): 16 industrial sources recognise service dimensioning as a pain and all agree it is hard to identify bounded contexts because boundaries between business capabilities are not sharp; the review does not track whether greenfield microservice systems end in trouble.",
+        "DORA State of DevOps 2019: The same footnote advises avoiding premature decomposition of new systems into services because it can inhibit delivery performance, which matches the claim's conclusion though the report offers no data on boundary mistakes. [partial: the verdict note limits its own scope (\"though\")]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
    "id": "decision:continuous-delivery",
    "kind": "decision",
    "title": "Does Shipping Faster Mean Breaking More?",
@@ -2669,347 +3080,6 @@
     "decision:10x-developers-and-productivity",
     "decision:static-vs-dynamic-typing"
    ]
-  },
-  {
-   "id": "decision:microservices-vs-monolith",
-   "kind": "decision",
-   "title": "Microservices or a Monolith: Which Should You Start With?",
-   "alternates": [
-    "Do Microservices Pay Off for a New Project?",
-    "Why So Many Teams Regret Starting with Microservices"
-   ],
-   "question": "Should a new project start as microservices or as a monolith?",
-   "whyWatch": "The choice shapes a system for years and is usually made on conference talks. The evidence on outcomes is much thinner than the advice.",
-   "tension": "Microservices promise team independence; critics say they cost more and the boundaries are wrong at first. The studies here catalogue pains but do not measure outcomes.",
-   "evidenceNeeded": "Measured cost, delivery or failure outcomes for comparable systems built as microservices and as monoliths, ideally greenfield against monolith-first.",
-   "evidenceAvailable": [
-    "Soldani et al. 2018 (microservices review): partly (0.3, direct)",
-    "Halkjelsvik & Jørgensen 2018 (Time Predictions): partly (0.4, direct)",
-    "Bird et al. 2011 (code ownership): partly (0.3, direct)",
-    "Soldani et al. 2018 (microservices review): partly (0.35, direct)",
-    "DORA State of DevOps 2019: right (0.2, partial)"
-   ],
-   "gaps": [
-    "Reviewer: The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, and coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries. Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones.",
-    "No study strong enough to decide: \"Microservices cost more in the short term and rarely save money\"",
-    "No study strong enough to decide: \"Coordination cost grows faster than linearly with team count on a shared codebase, which service boundaries contain\"",
-    "Unchecked: \"Keeping modules in one process with enforced boundaries gets most of the modularity benefit without the distribution cost\"",
-    "No study strong enough to decide: \"Service boundaries are usually wrong on the first attempt because the domain is not yet understood, so systems built as microservices from scratch tend to end in trouble\""
-   ],
-   "premise": "5 claims bear on this choice; studies decide 0 of them. Walk the viewer from the claims they have heard to the decision the evidence supports.",
-   "claims": [
-    "software-practices/microservices-cost-more-short-term-rarely",
-    "software-practices/coordination-cost-grows-faster-linearly-team",
-    "software-practices/keeping-modules-one-process-enforced-boundaries",
-    "software-practices/service-boundaries-usually-wrong-first-attempt"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "The decision a viewer faces, in their terms.",
-    "conflict": "The claims pulling in different directions: \"Microservices cost more in the short term and rarely save money\"; \"Hype drives teams to adopt microservices they do not need, adding cost and risk\"; \"Coordination cost grows faster than linearly with team count on a shared codebase, which service boundaries contain\"; \"Keeping modules in one process with enforced boundaries gets most of the modularity benefit without the distribution cost\"; \"Service boundaries are usually wrong on the first attempt because the domain is not yet understood, so systems built as microservices from scratch tend to end in trouble\".",
-    "evidence": "Each claim's verdict, strongest study first.",
-    "resolution": "What the evidence settles and what it leaves open.",
-    "takeaway": "A decision rule the viewer can apply."
-   },
-   "coherence": {
-    "score": 0.7,
-    "basis": "review",
-    "explanation": "One question, should a new system start as microservices or a monolith: cost, coordination, boundary mistakes and the modular-monolith alternative. The hype claim is a motive, not part of the answer, so it is pruned."
-   },
-   "scores": {
-    "coherence": 0.7,
-    "relevance": 0.87,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 1,
-    "originality": 1,
-    "evidence": 0.3,
-    "editorial": 0.75,
-    "overall": 0.57,
-    "explanation": "editorial 0.75 = mean of coherence 0.7 (review), relevance 0.87 (13 sources, 9 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 1 (4 studies, 4 claims, tension); evidence 0.3 = strongest Soldani et al. 2018 (microservices review) at 0.3 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, and coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries. Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones.",
-   "blocking": [
-    "Reviewer: The only sources are a review of practitioner reports (Soldani 2018) that lists pains without measuring cost or outcomes, a DORA footnote advising against premature decomposition with no data, and coordination findings (Bird 2011, Halkjelsvik 2018) that never test service boundaries. Unblock with a study that measures cost, delivery performance or failures for comparable systems built as microservices and as monoliths, or tracks greenfield microservice projects against monolith-first ones."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Microservices cost more in the short term and rarely save money",
-     "kind": "fact",
-     "modality": "typical",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "software-practices/microservices-cost-more-short-term-rarely",
-        "cite": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1029-L1037"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Soldani et al. 2018 (microservices review)",
-       "verdict": "partly",
-       "confidence": 0.3,
-       "note": "Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "Soldani et al. 2018 (microservices review): Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term."
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): no direct support, 1 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "Microservices cost more in the short term and rarely save money",
-       "kind": "fact",
-       "modality": "typical",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/microservices-cost-more-short-term-rarely",
-          "cite": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1029-L1037"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Soldani et al. 2018 (microservices review)",
-         "verdict": "partly",
-         "confidence": 0.3,
-         "note": "Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Soldani et al. 2018 (microservices review): Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f1",
-       "text": "Coordination cost grows faster than linearly with team count on a shared codebase, which service boundaries contain",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/coordination-cost-grows-faster-linearly-team",
-          "cite": "software-practices/sources/halkjelsvik2018-time-predictions-book.txt#L2779-L2788"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Halkjelsvik & Jørgensen 2018 (Time Predictions)",
-         "verdict": "partly",
-         "confidence": 0.4,
-         "note": "Coordination and administration grow nonlinearly with team and organisation size (e.g. administrative staff scales as academic staff^1.3; +50% total time from two- to four-person teams); whether service boundaries contain it is not studied.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/coordination-cost-grows-faster-linearly-team",
-          "cite": "software-practices/sources/bird2011-ownership.txt#L405-L411"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Bird et al. 2011 (code ownership)",
-         "verdict": "partly",
-         "confidence": 0.3,
-         "note": "More contributors to a Windows binary, especially low-expertise minor ones, means more pre- and post-release failures after controlling for size, churn and complexity, which the authors attribute to coordination and communication breakdowns; growth rate and the effect of service boundaries are not tested.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Halkjelsvik & Jørgensen 2018 (Time Predictions): Coordination and administration grow nonlinearly with team and organisation size (e.g. administrative staff scales as academic staff^1.3; +50% total time from two- to four-person teams); whether service boundaries contain it is not studied.",
-        "Bird et al. 2011 (code ownership): More contributors to a Windows binary, especially low-expertise minor ones, means more pre- and post-release failures after controlling for size, churn and complexity, which the authors attribute to coordination and communication breakdowns; growth rate and the effect of service boundaries are not tested."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 2 qualifying."
-      }
-     },
-     {
-      "role": "belief",
-      "validation": {
-       "id": "f2",
-       "text": "3 sources claim \"Keeping modules in one process with enforced boundaries gets most of the modularity benefit without the distribution cost\"; no study in the corpus has checked it.",
-       "kind": "attribution",
-       "modality": "typical",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
-          "source": "j2AQ9eTZ3-0"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Microservices, Where Did It All Go Wrong • Ian Cooper • GOTO 2024",
-         "verdict": null,
-         "confidence": null,
-         "note": "this needs to have modularity but that modularity won't use a microservices approach it will instead split it up into larger pieces"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
-          "source": "martinfowler-microservicepremium"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Microservice Premium",
-         "verdict": null,
-         "confidence": null,
-         "note": "there's no reason why you can't make a single monolith with well defined module boundaries"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/keeping-modules-one-process-enforced-boundaries",
-          "source": "shopify-deconstructing-monolith-designing-software-maximizes-developer-productiv"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Deconstructing the Monolith - Shopify",
-         "verdict": null,
-         "confidence": null,
-         "note": "A modular monolith is a system where all of the code powers a single application and there are strictly enforced boundaries between different domains."
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Reports what the sources said, not whether it is true."
-       ],
-       "suggestions": [],
-       "explanation": "supported (approved): no direct support, 3 source statements."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f3",
-       "text": "Service boundaries are usually wrong on the first attempt because the domain is not yet understood, so systems built as microservices from scratch tend to end in trouble",
-       "kind": "fact",
-       "modality": "typical",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/service-boundaries-usually-wrong-first-attempt",
-          "cite": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L526-L531"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Soldani et al. 2018 (microservices review)",
-         "verdict": "partly",
-         "confidence": 0.35,
-         "note": "16 industrial sources recognise service dimensioning as a pain and all agree it is hard to identify bounded contexts because boundaries between business capabilities are not sharp; the review does not track whether greenfield microservice systems end in trouble.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/service-boundaries-usually-wrong-first-attempt",
-          "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1091-L1092"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "DORA State of DevOps 2019",
-         "verdict": "right",
-         "confidence": 0.2,
-         "note": "The same footnote advises avoiding premature decomposition of new systems into services because it can inhibit delivery performance, which matches the claim's conclusion though the report offers no data on boundary mistakes.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"though\")"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Soldani et al. 2018 (microservices review): 16 industrial sources recognise service dimensioning as a pain and all agree it is hard to identify bounded contexts because boundaries between business capabilities are not sharp; the review does not track whether greenfield microservice systems end in trouble.",
-        "DORA State of DevOps 2019: The same footnote advises avoiding premature decomposition of new systems into services because it can inhibit delivery performance, which matches the claim's conclusion though the report offers no data on boundary mistakes. [partial: the verdict note limits its own scope (\"though\")]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 2 qualifying."
-      }
-     }
-    ]
-   }
   },
   {
    "id": "surprise:relative-size-estimation-more-accurate-time",

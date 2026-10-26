@@ -1608,7 +1608,9 @@
           "note": "Operational overhead of distributed systems is well documented and several public cases of consolidating back to a monolith cite cost; evidence is case studies not controlled data.",
           "source": null,
           "documents": [
-            "software-practices/sources/soldani2018-microservices-pains-gains.txt"
+            "software-practices/sources/lenarduzzi2020-migration-technical-debt.txt",
+            "software-practices/sources/soldani2018-microservices-pains-gains.txt",
+            "software-practices/sources/su2023-microservice-to-monolith.txt"
           ]
         },
         {
@@ -7597,7 +7599,9 @@
           ],
           "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/su2023-microservice-to-monolith.txt"
+          ]
         },
         {
           "id": "software-practices/creating-services-which-team-free-rather",
@@ -8432,7 +8436,9 @@
           ],
           "note": "Lambda pricing and duration limits make this true for sustained workloads; Cockcroft's advice is widely echoed.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/su2023-microservice-to-monolith.txt"
+          ]
         },
         {
           "id": "software-practices/microservices-speed-time-market",
@@ -9116,19 +9122,21 @@
           "tally": {
             "right": 0,
             "wrong": 0,
-            "partly": 0,
+            "partly": 1,
             "untestable": 0,
-            "unknown": 1
+            "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
+          "strongest": "source",
+          "effective": "partly",
+          "confidence": 0.3,
           "videos": [
             "signalvnoise-the-majestic-monolith-can-become-the-citadel"
           ],
-          "note": "There are prominent consolidation stories (Amazon Prime Video, Segment) but no survey establishes a net trend.",
-          "source": null,
-          "documents": []
+          "note": "A systematic search of academic and grey literature found only four documented cases of switching from microservices back to a monolith, and the authors conclude it is still too early to call it a trend; retreats happen, but the record does not show many.",
+          "source": "software-practices/sources/su2023-microservice-to-monolith.txt#L224-L228",
+          "documents": [
+            "software-practices/sources/su2023-microservice-to-monolith.txt"
+          ]
         },
         {
           "id": "software-practices/measured-productivity-gaps-between-programmers-mostly",
@@ -10594,7 +10602,9 @@
             "note": "Operational overhead of distributed systems is well documented and several public cases of consolidating back to a monolith cite cost; evidence is case studies not controlled data.",
             "source": null,
             "documents": [
-              "software-practices/sources/soldani2018-microservices-pains-gains.txt"
+              "software-practices/sources/lenarduzzi2020-migration-technical-debt.txt",
+              "software-practices/sources/soldani2018-microservices-pains-gains.txt",
+              "software-practices/sources/su2023-microservice-to-monolith.txt"
             ]
           },
           "prior": "right",
@@ -10611,10 +10621,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "confidence": 0.3,
-            "note": "Industrial sources name higher compute and network resource consumption than monoliths as the primary operational pain (network cited by 17 of 51), supporting higher running cost; no source quantifies money or distinguishes short from long term.",
-            "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L1029-L1037",
-            "date": "2026-10-15"
+            "confidence": 0.35,
+            "note": "In one SME extracting five services from a 280K-line monolith, the architect and project manager reported overall development cost up more than 20% from building a distributed system, while SonarQube technical debt spiked at each extraction and then grew about 90% slower than in the monolith; higher short-term cost is supported, but a single migration case says nothing about whether money is rarely saved.",
+            "source": "software-practices/sources/lenarduzzi2020-migration-technical-debt.txt#L862-L869",
+            "date": "2026-10-26"
           }
         },
         {
@@ -11982,6 +11992,52 @@
             "note": "17 of 51 sources report much higher network traffic because services interact by remote API calls instead of in-memory calls, and more services mean more remote invocations; this supports rising inter-service cost with finer splits but gives no total-cost curve.",
             "source": "software-practices/sources/soldani2018-microservices-pains-gains.txt#L703-L711",
             "date": "2026-10-15"
+          }
+        },
+        {
+          "claim": {
+            "id": "software-practices/headlines-about-big-companies-abandoning-microservices",
+            "text": "Headlines about big companies abandoning microservices usually describe one team consolidating a few components",
+            "topic": "software-practices",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "j2AQ9eTZ3-0"
+            ],
+            "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
+            "source": null,
+            "documents": [
+              "software-practices/sources/su2023-microservice-to-monolith.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "confidence": 0.7,
+            "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
+            "date": "2026-10-15"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.25,
+            "note": "Of the four documented switch-backs, the most discussed (Prime Video, nine articles) concerned one audio/video monitoring service and Istio merged its control plane, which fits the claim, but Segment consolidated its many destination services into one, so not every case is a few components.",
+            "source": "software-practices/sources/su2023-microservice-to-monolith.txt#L82-L86",
+            "date": "2026-10-26"
           }
         },
         {
@@ -15446,29 +15502,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/headlines-about-big-companies-abandoning-microservices",
-          "text": "Headlines about big companies abandoning microservices usually describe one team consolidating a few components",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "j2AQ9eTZ3-0"
-          ],
-          "note": "The Prime Video post concerned one team's service; Amazon overall remained service-based.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/higher-level-behavioural-tests-make-mutation",
           "text": "Higher-level behavioural tests make mutation testing more practical than many fine-grained unit tests",
           "topic": "software-practices",
@@ -15856,29 +15889,6 @@
             "signalvnoise-the-majestic-monolith"
           ],
           "note": "Service ownership does concentrate knowledge by design; whether that is worse than monolith hotspots has not been measured.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/many-teams-adopted-microservices-retreating-monoliths",
-          "text": "Many teams that adopted microservices are retreating to monoliths",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 1
-          },
-          "strongest": "prior",
-          "effective": "unknown",
-          "confidence": 0,
-          "videos": [
-            "signalvnoise-the-majestic-monolith-can-become-the-citadel"
-          ],
-          "note": "There are prominent consolidation stories (Amazon Prime Video, Segment) but no survey establishes a net trend.",
           "source": null,
           "documents": []
         },
@@ -17240,29 +17250,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/single-process-design-suits-long-running",
-          "text": "A single-process design suits long-running compute jobs and predictable traffic better than serverless functions",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "nordicapis-back-to-the-monolith-why-did-amazon-dump-microservices"
-          ],
-          "note": "Lambda pricing and duration limits make this true for sustained workloads; Cockcroft's advice is widely echoed.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/sleep-stress-hours-worked-affect-output",
           "text": "Sleep, stress and hours worked affect output more than any technical practice.",
           "topic": "software-practices",
@@ -18351,7 +18338,7 @@
         "software-practices/splitting-shared-relational-database-hardest-part"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19404,7 +19391,7 @@
         "software-practices/writing-down-architecture-decisions-their-reasoning"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19792,7 +19779,7 @@
       "testable": 9,
       "novelty": 2.05,
       "redundancy": 0,
-      "thinEvidence": 0.7,
+      "thinEvidence": 0.6,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/creating-services-which-team-free-rather",
@@ -19806,7 +19793,7 @@
         "software-practices/splitting-services-too-finely-raises-inter"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19933,7 +19920,7 @@
         "software-practices/single-process-monolith-right-default-microservices"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20106,7 +20093,7 @@
       "testable": 6,
       "novelty": 0.8,
       "redundancy": 0,
-      "thinEvidence": 0.5714285714285714,
+      "thinEvidence": 0.42857142857142855,
       "worthWatching": "mixed",
       "right": [
         "software-practices/decomposing-monolith-only-works-already-has",
@@ -20117,7 +20104,7 @@
         "software-practices/single-process-design-suits-long-running"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20165,7 +20152,7 @@
         "software-practices/serverless-lets-small-teams-ship-without"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20212,7 +20199,7 @@
         "software-practices/microservices-cost-more-short-term-rarely"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20270,7 +20257,7 @@
         "software-practices/single-process-monolith-right-default-microservices"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20300,7 +20287,7 @@
         "software-practices/static-typing-catches-type-errors-compile"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20327,7 +20314,7 @@
         "software-practices/small-team-can-maintain-large-product"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20336,22 +20323,23 @@
       "channel": "Signal v. Noise",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.6666666666666666,
+      "score": 0.625,
       "scaled": 1,
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.33333333333333337,
+      "novelty": 0.4833333333333334,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "software-practices/coordination-cost-grows-faster-linearly-team",
         "software-practices/extracting-one-slice-divergent-performance-needs",
+        "software-practices/many-teams-adopted-microservices-retreating-monoliths",
         "software-practices/single-process-monolith-right-default-microservices"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21150,6 +21138,7 @@
         "software-practices/extracting-one-slice-divergent-performance-needs",
         "software-practices/hype-drives-teams-adopt-microservices-they",
         "software-practices/many-small-services-make-easy-knowledge",
+        "software-practices/many-teams-adopted-microservices-retreating-monoliths",
         "software-practices/microservices-cost-more-short-term-rarely",
         "software-practices/single-process-monolith-right-default-microservices",
         "software-practices/small-team-can-maintain-large-product"

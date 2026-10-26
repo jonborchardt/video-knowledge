@@ -77,6 +77,14 @@
           "confidence": 0.55,
           "note": "Lambda pricing and duration limits make this true for sustained workloads; Cockcroft's advice is widely echoed.",
           "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.2,
+          "note": "Prime Video's serverless monitoring pipeline hit a hard scaling limit at about 5% of expected load from AWS Step Functions orchestration, and moving it into one process cut infrastructure cost over 90%; one self-reported case of a continuous media-processing workload, not a general comparison.",
+          "source": "software-practices/sources/su2023-microservice-to-monolith.txt#L138-L141",
+          "date": "2026-10-26"
         }
       ]
     },
