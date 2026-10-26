@@ -1,0 +1,675 @@
+ Predicting Risk of Software Changes
+
+Audris Mockus and David M. Weiss
+
+Reducing the number of software failures is one of the most challenging problems
+of software production. We assume that software development proceeds as a series
+of changes and model the probability that a change to software will cause a failure.
+We use predictors based on the properties of a change itself. Such predictors include
+size in lines of code added, deleted, and unmodified; diffusion of the change and its
+component subchanges, as reflected in the number of files, modules, and subsystems
+touched, or changed; several measures of developer experience; and the type of
+change and its subchanges (fault fixes or new code). The model is built on historic
+information and is used to predict the risk of new changes. In this paper we apply
+the model to 5ESS® software updates and find that change diffusion and developer
+experience are essential to predicting failures. The predictive model is implemented
+as a Web-based tool to allow timely prediction of change quality. The ability to pre-
+dict the quality of change enables us to make appropriate decisions regarding
+inspection, testing, and delivery. Historic information on software changes is
+recorded in many commercial software projects, suggesting that our results can be
+easily and widely applied in practice.
+
+Introduction                                                   management to take risk reduction measures, such as
+     Software development proceeds as a series of              allocating more resources for testing and inspection or
+                                                               delaying its delivery to customers.
+changes to a base set of software. For new projects the
+base set may be initially empty. In most projects, how-             Our main hypothesis is that easily obtainable
+ever, there are incremental changes to an existing, per-       properties of a software change--such as size, dura-
+haps large, set of code and documentation. Developers          tion, diffusion, and type--have a significant impact on
+make changes to the code for a variety of reasons, such        the risk of failure. Our approach is distinct from most
+as adding new functionality, fixing defects, improving         failure prediction studies (described in the next sec-
+performance or reliability, or restructuring the software      tion), which focus on the properties of the code being
+to improve its changeability. Each change carries with         changed, rather than on the properties of a change
+it some likelihood of failure.                                 itself. Knowing which parts of the code are difficult to
+                                                               change may help one decide where to concentrate
+     Reducing the number of software failures is one           reengineering work, but the changes themselves are
+of the most challenging problems of software produc-           the most fundamental and immediate concern in a
+tion. It is especially important when rapid delivery           software project, because they are necessary to fix and
+schedules severely restrict coding, inspection, and test-      evolve the product.
+ing intervals. This paper deals with one part of this
+problem: predicting the probability of failure for a soft-          In addition to the main hypothesis, we conjecture
+ware change after the coding for that change is com-           that greater programmer experience should decrease
+pleted. Knowing that the failure probability is high           the failure probability and that the increased size and
+before a software change is delivered allows project
+
+Copyright 2000. Lucent Technologies Inc. All rights reserved.  Bell Labs Technical Journal x April­June 2000 169
+diffusion of a change should increase it. To test our            Panel 1. Abbreviations, Acronyms, and Terms
+hypotheses we designed the necessary change mea-
+sures, constructed a model for change failure probabil-          ECMS--Extended Change Management System
+ity, and then tested our hypotheses by using them in             EXP--developer experience
+the predictive model.                                            FIX--fix of a defect found in the field
+                                                                 IMR--initial maintenance request
+     From a practical perspective we are interested in           IMRTS--IMR Tracking System
+knowing if we can create failure probability models              INT--difference in time between the last and
+that are useful in a commercial software project. As a
+test case we created such a model for a large software               first delta
+system, the 5ESS® switching system software.1 We                 LA--number of lines of code added
+evaluated the predictive properties of our model and             LD--number of lines of code deleted
+then transformed the model into a decision support               LOC--number of lines of code
+tool. It is currently being used by the 5ESS project to          LT--number of lines of code in the files touched
+evaluate the risk of changes that are part of software
+updates (SUs).                                                       by the change
+                                                                 MR--maintenance request
+     The remainder of this paper is organized as follows.        ND--number of deltas
+In the section immediately below, we review related              NF--number of files
+work. Next we define the terminology of software                 NLOGIN--number of developers involved in
+changes and describe the data, after which we discuss
+the goals and methods of our research, including the                 completing an IMR
+change measures. In "Model Fitting," we construct the            NM--number of modules
+models and test our hypotheses. Then we consider the             NMR--number of MRs
+predictive power of the model and discuss the issues             NS--number of subsystems
+associated with applying the model in practice.                  REXP--recent experience
+                                                                 SCCS--Source Code Control System
+Related Work                                                     SEXP--subsystem experience
+     A number of studies investigate the characteristics         SU--software update
+                                                                 URL--uniform resource locator
+of source code files with high fault potential. A com-           VCS--version control system
+mon approach is to use several product measures--
+determined from a snapshot of the code itself--as             tory of the program. Yu, Shen, and Dunsmore11 and
+predictors of fault likelihood, with code size (that is, the  Graves et al.12 use defect history to predict faults, and
+number of lines of code) as the canonical fault predic-       Basili and Perricone3 compare new code units with
+tion measure. Studies conducted by An, Gustafson, and
+Melton,2 Basili and Perricone,3 and Hatton4 relate            those that borrow code from other places.
+defect frequency to file size. An, Gustafson, and
+Melton2 also used the degree of nesting to predict a               The software reliability literature contains many
+file's fault potential. Measures of code complexity, such     studies13-19 that estimate the number of faults remain-
+as McCabe's cyclomatic complexity5 and Halstead's
+program volume6 are other examples of product mea-            ing in a software system in order to predict the num-
+sures sometimes linked to failure rates. Empirical stud-
+ies of product measures and fault rates were described        ber of faults that will be observed in some future time
+by Schneidewind and Hoffman,7 Ohlsson and Alberg,8
+Shen et al.,9 and Munson and Khoshgoftaar.10                  interval. A critique of these approaches is presented by
+                                                              Moranda.20 In contrast to the preceding studies, which
+     A different class of measures for modeling fault
+rates uses data taken from the change and defect his-         attempt to identify the probability of failure or the
+
+                                                              number of failures for a software entity, we focus on
+
+                                                              predicting the probability of failure resulting from a
+
+                                                              change to a software entity.
+
+                                                              Software Changes
+
+                                                                   Most software products evolve over time because
+
+                                                              there is a need to fix defects and extend functionality.
+
+                                                              The evolution is accomplished by changing the source
+
+170 Bell Labs Technical Journal x April­June 2000
+code. Sets of changes are typically grouped together        ware, the SUs are implemented by patching new and
+into releases or generics. A release represents a new       replacement functions onto a running system. On the
+version of software that fixes a number of defects and      running switch, the SU is loaded into a block of avail-
+adds new features. Good business practices demand           able memory. Vectors are set to direct the existing
+that new feature offerings and fault fixes be made          code to the SU code at appropriate points. In many
+available to customers as fast as possible. However, as     cases, there is no system downtime when the SU is
+software systems increase in size, the task of fre-         patched into the running system.
+quently installing new releases becomes increasingly
+unwieldy. SUs are used to solve that problem. The SUs            Both releases and SUs consist of a number of
+can be thought of as small releases designed to fix the     IMRs. IMRs go through several stages until they are
+most urgent defects rapidly and, possibly, to deliver       ready to be submitted. They then enter a pool of can-
+the most lucrative features.                                didate IMRs for release. From this pool the most
+                                                            urgent candidates are selected for the SU. The selected
+     A logical change to the system is implemented as       IMRs are then built, tested, and finally released in the
+an initial maintenance request (IMR). To keep it man-       SU. Our models are designed to provide failure proba-
+ageable, each IMR is organized into a set of mainte-        bilities for IMRs that are in the "submitted" state. SU
+nance requests (MRs), where each MR is confined to a        failures are costly and may be a cause for customer dis-
+single subsystem. Each MR may require changes to            satisfaction. Consequently, project management can
+several source code files. A file may be changed several    use IMR risk information to select IMRs for an SU;
+times, and each change to a file is called a delta. The     build and test teams can use the same information to
+delta is an atomic change to the source code recorded       decide where to spend extra resources for IMRs that
+by a version control system (VCS). The minimal infor-       pose a high risk.
+mation associated with each delta includes the file,
+developer, date, and lines changed. Very large soft-        Change Data
+ware releases typically cause at least one failure, even         The 5ESS source code is organized into subsys-
+in the most reliable software products, so it does not
+make sense to predict the failure probability for an        tems, and each subsystem is further subdivided into a
+entire release (although it is known to be close to         set of modules. Any given module contains a number
+one). For small SUs, however, this is often not true;       of source code files. Each logically distinct change
+the probability of failure is significantly less than one.  request is recorded as an IMR by the IMR Tracking
+It is important for the project management to know          System (IMRTS). The IMRTS records the SU (or
+why the probability of failure is high for some changes,    release) number for the IMR and indicates whether
+so they can take appropriate action. Because SUs are        the IMR was opened to fix a defect found in the field.
+composed of IMRs, knowing which IMRs have high              The project also has an SU tracking database that lists
+failure probability is crucial, so they can either be more  all the SU failures and the IMRs that caused these fail-
+thoroughly inspected and tested, or even be delayed,        ures, based on a root cause analysis.
+until a subsequent SU. These practical considerations
+lead us to study the probability of failure for IMRs,            Figure 1 shows the change hierarchy and its asso-
+rather than for entire SUs or releases.                     ciated databases. Boxes with dashed lines define data
+                                                            sources, such as the SU tracking database; the blue
+Software Project                                            boxes define changes; and the remaining boxes define
+     The project under study is the software for a high     properties of changes. The arrows define an "is a part
+                                                            of" relationship among changes--for example, each
+availability telephone switching system (5ESS). In the      MR is part of an IMR.
+5ESS software, in addition to an annual main release,
+a continual series of SUs are sent out, both to give cus-        The change history of the files is maintained using
+tomers needed software fixes and to add features that       the Extended Change Management System (ECMS)21
+did not make it into the main release. In the 5ESS soft-    for initiating and tracking changes; and the Source
+                                                            Code Control System (SCCS)22 for managing different
+                                                            versions of the files. The ECMS records information
+
+                                                            Bell Labs Technical Journal x April­June 2000 171
+IMRTS                                              Software update  SU tracking
+                                                                    Did it fail?
+                                                   Feature
+                                                                     Bad IMRs
+
+       Is a field fault?                           IMR
+
+ECMS   Description                                 MR
+
+SCCS   Time, date                                  Delta               File, module
+       Developer
+                                                                    Number of lines
+                                                                    added or deleted
+
+ECMS ­ Extended Change Management System                            MR ­ Maintenance request
+IMR ­ Initial maintenance request                                   SCCS ­ Source Code Control System
+IMRTS ­ IMR Tracking System                                         SU ­ Software update
+
+Figure 1.
+Change hierarchy and data sources.
+
+about each MR. Every MR is owned by a developer,             Research Goals and Methods
+who makes changes to the necessary files to imple-                Our main research goal is to determine if we can
+ment the MR. The lines in each file that were added,
+deleted, or unchanged are recorded as one or more            predict the probability that a change to the source code
+deltas in SCCS. It is possible to implement all MR           will cause a failure based on information available
+changes restricted to one file by a single delta, but in     after the coding stage. Prediction at an earlier stage is
+practice developers often perform several deltas on a        likely to be much less precise, and prediction at a later
+single file, especially for larger changes. For each delta,  stage would be much less useful, because fewer
+the time of the change, the login of the developer who       options would be available to mediate the risk.
+made the change, the number of lines added and
+deleted, the associated MR, and several other pieces of           Despite extensive literature on source code com-
+information are all recorded in the ECMS database.           plexity,5,6 complexity of an object-oriented design,23
+                                                             or functional complexity,24 little attention has been
+     Failed IMRs are identified only for the population      devoted to studying the properties of software
+of IMRs that are part of the SUs. Consequently, we use       changes. Belady and Lehman25 described an early
+only that population of IMRs in our analysis. The pop-       study of releases, and Basili and Weiss26 reported on
+ulation includes about 15,000 IMRs during a period of        an exploratory investigation of smaller changes. We
+ten years.                                                   used a subset of change measures obtained by the
+                                                             SoftChange system27 from a software project's version
+                                                             control database. We grouped such measures into five
+
+172 Bell Labs Technical Journal x April­June 2000
+classes: size, interval, diffusion, experience, and change  quently, reduce their likelihood of making a serious
+purpose measures. For each of these measures we             mistake in a change. Of course, this inequality should
+formed a hypothesis about its effect on the likelihood      hold true only for otherwise similar changes.
+of failure of a change, as described below.
+                                                                 To test our hypotheses, first we defined a number
+Properties of Changes                                       of change measures and extracted them from the
+     The properties of change that factor into our pre-     product under study. Then we constructed and fitted a
+                                                            predictive change failure probability model and tested
+diction include the diffusion and size of a change, the     our hypotheses. Finally, we selected a parsimonious
+type of change, and the programmers' experience with        model with high predictive power and applied it in
+the system, as described below.                             practice to predict the risk of failure.
+
+     Diffusion of a change is one of the most important     Construction of Change Measures
+factors in predicting the likelihood of failure. By diffu-       In this work we are interested in change measures
+sion of a change, we mean the number of distinct parts
+of software, such as files, that need to be touched, or     that have three basic properties:
+altered, to make the change. A large diffusion indicates         · The measure should be automatically com-
+that the modularity of the code is not compatible with               puted from any software project's change
+the change, because several modules have to be                       management data.
+touched to implement the change. We expect diffuse               · The measure could be obtained immediately
+changes to have a higher probability of failure than                 after the coding stage to provide enough time
+non-diffuse changes of a comparable size. The diffusion              for risk reduction activities if the predicted risk
+of a change reflects the complexity of the implementa-               turns out to be high.
+tion and, consequently, leads to a higher likelihood of          · The measure should reflect a property of a
+serious mistakes being made by programmers.                          change that might significantly affect the prob-
+                                                                     ability that a change would cause a failure.
+     We also expect that a larger change would be
+more likely to fail. The intuitive reason is that a larger  The first point ensures that it would be possible to
+change (with a comparable diffusion) would create           extract similar measures for most software projects.
+more opportunities to make a mistake that would             The second guarantees that a measure could be used
+result in a failure.                                        in practice if it turned out to be important in predicting
+                                                            the probability of failure. The last point reflects the
+     The changes for new functionality often involve        goals of this investigation.
+creating new functions and new source code files,
+while the defect fixes are less likely to do that. As a          Change diffusion or interaction measures include
+result, defect fixes tend to be much smaller than new       the total number of files (NF), number of modules
+functionality changes. Because of these significant dif-    (NM), and number of subsystems (NS) touched by an
+ferences, we have no reason to expect that the proba-       IMR, or the number of developers involved in com-
+bility of failure would be similar for both types of        pleting an IMR (NLOGIN). We use the following IMR
+changes. Furthermore, if we assume that programmer          size measures: number of lines of code (LOC) added
+familiarity with the code is an important factor in pre-    (LA), LOC deleted (LD), and LOC in the files touched
+venting failures, it is more likely that the fixed code     by the change (LT). The number of MRs (NMR) and
+would be less familiar to the developer than the new        the number of deltas (ND) reflect both the diffusion
+code he or she just wrote for a feature. If this hypothe-   and size of an IMR. We measured the duration of an
+sis is true, then similarly sized and diffuse fault fixes   IMR by calculating the difference in time between the
+made by programmers with similar experience would           last and first delta (INT). We also used information
+have a higher probability of failure than the new fea-      about whether the change was made to fix a defect
+ture changes.                                               found in the field (FIX). If the IMR was a fix, the pre-
+                                                            dictor FIX is one; otherwise it is zero.
+     Finally, programmers' experience with a system
+should increase their familiarity with it and, conse-            IMR experience measures are based on the aver-
+
+                                                            Bell Labs Technical Journal x April­June 2000 173
+Table I. Summary of change measures.                    Table II. ANOVA for the full model.
+
+    Type    Abbreviation              Definition        Description               Predictor            p-value
+Diffusion                                                                                                0.00
+            NS Number of subsystems touched             Number of subsystems      log NS                 0.00
+                                                                                                         0.02
+            NM Number of modules touched                Number of modules         log NM                 0.00
+                                                                                                         0.04
+            NF Number of files touched                  Number of files           log NF                 0.25
+                                                                                                         0.00
+            NLOGIN Number of developers involved        Number of deltas          log ND                 0.87
+                                                                                                         0.09
+             LA           Lines of code added           Number of MRs             log NMR
+             LD           Lines of code deleted                                                          0.00
+Size         LT           Lines of code in the files    Number of logins          log NLOGIN             0.00
+                          touched by the change                                                          0.00
+Diffusion    ND           Number of deltas              Lines of code added       log (LA + 1)           0.56
+and size    NMR           Number of MRs                                                                  0.36
+                                                        Lines of code deleted     log (LD + 1)
+
+                                                        Lines of code in the      log (LT + 1)
+                                                        touched files
+
+Interval     INT          Time between the last and     Is it a problem fix?      FIX
+Purpose                   first deltas
+             FIX                                        Change interval           log INT
+Experience                Fix of a defect found in the
+            EXP           field                         Experience of developers  log EXP
+            REXP
+            SEXP          Developer experience          Recent experience         log REXP
+
+                          Recent developer experience   Subsystem experience      log SEXP
+
+                          Developer experience on a     monly used, is not suitable, because the modeled
+                          subsystem
+
+                                                        response must have values between zero and one. In
+
+                                                        logistic regression, as in linear regression, one uses a
+
+age experience of developers performing the change.     number of predictor variables and the response vari-
+Developer experience (EXP) is determined by the
+number of deltas completed by a developer in making     able, which--in contrast to linear regression--can only
+previous changes before the current change is started.
+EXP is computed by taking a weighted geometric aver-    range between zero and one. In our case, the response
+age over the set of developers involved in the change,
+where the weights are the number of deltas con-         variable is one if an IMR caused a failure, and zero
+tributed by each developer. Two modifications of
+developer experience measures are also computed:        otherwise. Most predictor variables are highly skewed
+recent experience (REXP) and subsystem experience
+(SEXP). For REXP, recent deltas are weighted more       and need a logarithmic transformation.
+heavily than deltas performed a long time ago (the
+number of deltas completed n years ago gets weight      We use all change measures in the full model:
+
+1/ 1n 1 12). For SEXP, only deltas on the subsystems    logit 1P 1failure22 5 C 1 a1log NS 1 a2log NM
+
+that a change touches are included in calculating       1a3log  NF 1 a4log  NLOGIN 1 a5log  ND
+developer experience. Table I summarizes the defini-
+tions of these measures.                                1a6log  NMR 1 a7log  1LA 1 12
+
+Model Fitting                                           1 a8log  1LD 1 121a9log  1LT 1 12              (1)
+     Logistic regression, described by McCullagh and
+                                                        1 a10log INT 1 a11FIX 1a12log  EXP
+Nelder,28 is a standard way to model probabilities or
+proportions. Linear regression, though more com-        1 a13log  REXP 1 a14log  SEXP,
+
+                                                        where logit 1p2 5 log5p/ 11 2 p26, C is the intercept,
+
+                                                        and the estimated coefficients are i. Table II shows
+                                                        the significance of the factors in the full model.
+
+                                                        Because some predictors are strongly correlated, it
+
+                                                        may be difficult to interpret the estimated values of the
+
+                                                        coefficients in the full model. Model selection tech-
+
+                                                        niques such as stepwise regression, described by
+
+                                                        Chambers and Hastie,29 can assist in choosing the best
+
+                                                        model. The technique proceeds by iteratively dropping
+
+174 Bell Labs Technical Journal x April­June 2000
+Table III. Coefficients for the reduced model.                that handle an extremely heavy workload, it is reason-
+                                                              able to expect the probability of failure to increase.
+Description       Predictor       Estimate        p-value
+                                     0.41          0.000           As a caution, note that the hypotheses were con-
+Number of subsystems log NS          0.10          0.000      firmed only in a statistical sense; our statistical model
+                                     0.60          0.000      (or, indeed, any statistical model) does not prove
+Number of deltas  log ND             0.05          0.000      causal relationships. There might be a latent factor that
+                                    ­0.11          0.002      affects both the predictors and the response. Since the
+Is it a fix?      FIX                0.18          0.002      final model is intuitive and reasonable, the possibility
+                                                              of such an unknown latent factor appears unlikely.
+Interval          log INT
+
+Experience        log EXP
+
+Lines of code added log (LA + 1)
+
+predictors from the full model until dropping any             Prediction
+                                                                   In practice, we need to identify the IMRs that
+remaining predictor would no longer be beneficial,
+                                                              have a high risk of failure early enough in the devel-
+based on Mallows Cp criteria.30,31 The procedure in           opment process to be able to take appropriate preven-
+                                                              tive action. Our goal is to perform the prediction
+this case suggested a simpler model, as follows:              immediately after the coding is complete.
+
+logit 1P 1failure22 5 C 1 a1log  NS 1 a2log  ND                    Although calculating the probability of an IMR
+                                                              failure is an essential part of the prediction problem,
+1a3FIX 1 a4log  INT 1 a5log  EXP                        (2)   we need to know what range of probability values is
+                                                              too high for a given delivery, so an appropriate risk
+1a6log  1LA 1 12.                                             management action can be taken. Furthermore, to
+                                                              manage the risk of an IMR, it is important to know
+Both Table II and Table III show that the coeffi-             why the model predicts a high probability of failure.
+                                                              We took the following steps to address these two
+cients for size, diffusion, purpose, and experience are       requirements.
+
+significantly different from zero, supporting our main             First, we considered the predictive power of the
+                                                              model by looking at a family of type I and type II
+hypothesis that change properties do affect the proba-        errors. We then chose two cutoff probabilities to classify
+                                                              the IMRs into three categories: high risk, medium risk,
+bility of failure, at least in the considered project.        and normal. Finally, we constructed flags, each corre-
+                                                              sponding to one predictor in the model, to indicate
+Our specific hypotheses on size and diffusion of              why the risk was high. For example, an IMR may be
+                                                              classified as having a high risk with two flags, "many
+changes are also supported because the IMR failure            subsystems touched" and "is a field fault fix." The
+                                                              project management and developers responsible for the
+probability increases with the number of deltas, the          IMR then act based on the class of risk and the flags.
+
+number of lines of code added, and the number of              Predictive Power
+                                                                   We classify an IMR as risky if its predicted probabil-
+subsystems touched. Average programmer experience
+                                                              ity of failure is above a cutoff value. Choosing a cutoff
+significantly decreases the failure probability. Finally,     value means attaining a balance between two factors:
+
+the changes that fix field problems are more likely to             · The proportion of IMRs that do not fail when
+                                                                       included in the SU, but are identified as risky.
+fail than other IMRs if values for other predictors are                This proportion is categorized as the type I
+                                                                       error. Such IMRs incur wasted effort in trying
+comparable.                                                            to reduce their risk.
+
+The model also indicates that the IMR interval has
+
+an influence on failure probability, even after account-
+
+ing for other factors. We speculate that the longer
+
+interval might indicate organizational or other difficul-
+
+ties that may arise when IMR is implemented, and
+
+these difficulties might increase the potential for failure.
+
+For example, if it takes an unexpectedly long time to
+
+complete coding the change, that increase could reduce
+
+the time and effort used for inspection and testing.
+
+We should note that there may be other predictors
+
+we did not measure. For example, we expect that the
+
+number and type of installations for the SU would influ-
+
+ence the probability of failure. When an update is sent
+
+to a very large number of installations or to installations
+
+                                                              Bell Labs Technical Journal x April­June 2000 175
+                                        1996                                                                                        1997
+
+Type I and Type II errors  1.0                                                              Type I and Type II errors  1.0
+                           0.8                                                                                         0.8
+                           0.6          0.02 0.03           0.04                                                       0.6          0.02 0.03           0.04
+                           0.4                Cutoff value                                                             0.4                Cutoff value
+                           0.2                                                                                         0.2
+                           0.0                                                                                         0.0
+
+                                  0.01                                                                                        0.01
+
+                                        1998                                                                                        1999
+
+Type I and Type II errors  1.0                                                   1.0        Type I and Type II errors
+                           0.8                                                   0.8
+                           0.6          0.02 0.03           0.04                 0.6                                                0.02 0.03           0.04
+                           0.4                Cutoff value                       0.4                                                      Cutoff value
+                           0.2                                                   0.2
+                           0.0                                                   0.0
+
+                                  0.01                                                  0.01
+
+                                                                  Type I error
+                                                                  Type II error
+
+Figure 2.
+Type I and Type II errors for different cutoff values.
+
+     · The proportion of IMRs that do fail when                   and to conduct a cost-benefit analysis. The decision
+         included in the SU, but are not identified as            may be different for different projects and for different
+         risky, known as the type II error. Such IMRs             types of deliveries. Customers do not expect SUs or
+         incur failure remediation costs and customer             patches to fail; consequently, the cutoff value should
+         dissatisfaction.                                         be lower than it would be for large deliveries like new
+                                                                  releases of software. High-reliability systems (such as
+     To choose an appropriate cutoff value, we need to            the project under study) may require lower cutoff val-
+look at error probabilities for a range of cutoff values
+
+176 Bell Labs Technical Journal x April­June 2000
+ues than systems in which some failures may be toler-      project. The tool uses change summaries obtained
+ated. The decision could also be partly based on the       from the SoftChange system.26 Currently, the sum-
+available resources. If the testing and inspection         maries and predictions are automatically updated
+resources are especially scarce at a particular time, the  three nights a week. During each update, the IMR
+cutoff value may be raised accordingly.                    risk assessment tool:
+
+     Figure 2 shows how type I and type II errors               · Extracts the needed change measures from the
+depend on the cutoff value. The horizontal axis shows               summaries;
+the cutoff probability (increasing to the right), while
+the type I and type II errors are plotted using colored         · Fits the logistic regression model specified in
+lines. The plot is produced using the model in                      Equation (2), based on the IMRs that have
+Equation (2) and IMR failure data for all years                     been delivered in SUs;
+between 1996 and 1999 to illustrate trends. The errors
+do not change significantly for the first three years. In       · Uses the fitted model to predict the risk of all
+1999, however, the type II error drops and the type I               submitted IMRs;
+error increases slightly. The change in 1999 is a result
+of radical changes in the SU process designed to                · Classifies all submitted IMRs into risk classes
+increase SU quality.                                                and calculates the risk flags, as described
+                                                                    above; and
+Risk Flags
+     Inspection of the error plots suggested two cutoff         · Summarizes the IMR risk and other properties
+                                                                    on a Web page.
+values appropriate for the project. One cutoff proba-
+bility was used to identify "high-risk" IMRs and           The project manager for the SU then inspects the high-
+another, lower, cutoff probability was used to iden-       risk IMRs and possibly delays some for a later SU. The
+tify "medium-risk" IMRs. We initially used this risk       developer responsible for the IMR is sent an e-mail
+classification and the failure probability routinely to    message with the following content (proprietary infor-
+communicate the risk information for submitted             mation is changed):
+IMRs. Almost immediately we got feedback from the
+project management involved that the risk probabil-              The IMR Risk Assessment tool has flagged your
+ity and the risk class were not sufficient for the proj-         IMR--123456--as potentially risky to SU 25. The
+ect management to use in making appropriate                      enclosed URL provides a detailed explanation of
+decisions. As a result we designed an additional set of          the IMR risk assessment process:
+flags corresponding to each predictor in the model to            http://www.lucent.com/imrrisk/
+communicate the reason why the failure probability
+was high.                                                  IMR Risk Many subsystems flag
+
+     A flag is raised if the corresponding predictor       123456 0.031  1
+exceeds the 95th percentile of the values. For example,
+the "many subsystems touched" flag is raised for an        As the developer of this IMR, please recheck your
+IMR if the number of subsystems touched is larger          code and the test plan to minimize the risk this
+than the number of subsystems touched by 95% of            IMR poses to SU 25.
+IMRs. The "low developer experience" flag is raised
+when the programmers' experience is below the expe-        Conclusions
+rience value observed in 95% of IMRs. Finally, all              Our idea of predicting failure probabilities of
+defect fix IMRs have the flag "is a defect fix."
+                                                           changes based on the properties of the changes seems
+Current Use                                                feasible and useful. We are able to construct a model that
+     The methodology is currently packaged as "the         appeals to our intuition and apply it to the changes that
+                                                           constitute 5ESS software development. The model uses
+IMR Risk Assessment tool" in the 5ESS software             easily obtainable properties of a software change, includ-
+                                                           ing its size, duration, diffusion, and type, as well as the
+                                                           experience of the developer(s) who implemented it.
+
+                                                                All the data we use to compute failure probabili-
+                                                           ties is automatically obtained from the change control
+                                                           system used in the 5ESS software. One could construct
+
+                                                           Bell Labs Technical Journal x April­June 2000 177
+a similar model for any software development project         able amount of valuable information can be derived
+for which the same types of data are available, as they
+are likely to be for most change control systems. Even       free from change management systems for those orga-
+in cases where all the data are not available, it is likely
+that one could construct a useful failure probability        nizations that have the discipline to use it, as illustrated
+model. Something as simple as a quantification of            in studies conducted by Basili and Weiss,26 Mockus et
+developer expertise, expressed as the number of deltas       al.,27 Graves et al.,12 Eick et al.,32 Mockus and Votta,33
+a developer has made to the code, is a strong predictor      Atkins et al.,34 and Siy and Mockus.35 The information
+of change quality.
+                                                             is free to those who have the data.
+     A key element in creating and statistically vali-
+dating a change failure probability model is the exis-       Acknowledgments
+tence of historical data that identifies which IMRs
+fail when included in an SU and which do not.                     We thank our colleagues Susan K. Niedorowski,
+Without such data we could not perform the logistic
+regression needed to construct the model. This               Janet L. Ronchetti, Jiyi A. Yau, and Mary L. Zajac for
+increases the value of conducting the part of root
+cause analysis that identifies the changes that caused       their support and help in starting the IMR risk identifi-
+each failure.
+                                                             cation program. We also thank Tracy Graves,
+     Once the model is in place, the development
+organization can start using it to make decisions.           Harvey P. Siy, Jonathan Y. Chen, and Tippure S.
+Should the development organization expend
+resources on remedial work to improve their confi-           Sundresh for their contributions in the early stages of
+dence that a change with a high probability of failure
+is safe to deliver to customers in a SU? Determining         the risk identification project.
+the cutoff value used to decide which IMRs receive
+further scrutiny is a subjective decision about balanc-      References
+ing development resources against customer satisfac-         1. K. E. Martersteck and A. E. Spencer, Jr., " The
+tion. Setting a high cutoff value increases the
+incidence of failures and angers customers; setting a             5ESS Switching System: Introduction," AT&T
+low one wastes resources. Somewhat paradoxically,                 Tech. J., Vol. 64, No. 6, Part 2, July­Aug. 1985,
+the decisions made about the cutoff value and about               pp. 1305­1314.
+how the failure probability model is used affect the         2. K. H. An, D. A. Gustafson, and A. C. Melton,
+model. When all works well, the incidence of failures             "A model for software maintenance," Proc.
+drops because of the increased scrutiny of high-risk              of the Conf. on Soft. Maintenance, Austin, Texas,
+changes. The lower failure incidence becomes part of              Sept. 21­24, 1987, IEEE Comp. Soc. Press,
+the historical record on which the model is based, and            pp. 57­62.
+the model will have to be adjusted to take the new           3. V. R. Basili and B. T. Perricone, "Software Errors
+factor into account.                                              and Complexity: An Empirical Investigation,"
+                                                                  Commun. of the ACM, Vol. 27, No. 1, Jan. 1984,
+     It is important to note that we worked only with             pp. 42­52.
+existing data in constructing the model--that is, we did     4. L. Hatton, "Reexamining the Fault Density-
+not require the collection of any additional data about           Component Size Connection," IEEE Soft.,
+changes, and we did not perturb the change manage-                Vol. 14, No. 2, Mar./Apr. 1997, pp. 89­97.
+ment system. Compared to the cost of maintaining the         5. T. J. McCabe, "Complexity Measure," IEEE
+change management system, the incremental cost of                 Trans. on Soft. Eng., Vol. SE-2, No. 4, July 1976,
+computing the model is negligible. Indeed, a consider-            pp. 308­320.
+                                                             6. M. H. Halstead, Elements of Software Science,
+                                                                  Elsevier North-Holland, New York, 1977.
+                                                             7. N. F. Schneidewind and H.-M. Hoffman,
+                                                                  "An Experiment in Software Error Data
+                                                                  Collection and Analysis," IEEE Trans. on Soft. Eng.,
+                                                                  Vol. SE-5, No. 3, May 1979, pp. 276­286.
+                                                             8. N. Ohlsson and H. Alberg, "Predicting Fault-
+                                                                  Prone Software Modules in Telephone Switches,"
+                                                                  IEEE Trans. on Soft. Eng., Vol. 22, No. 12, Dec. 1996,
+                                                                  pp. 886­894.
+                                                             9. V. Y. Shen, T.-J. Yu, S. M. Thebaut, and
+                                                                  L. R. Paulsen, "Identifying Error-Prone Soft-
+                                                                  ware--An Empirical Study," IEEE Trans. on Soft.
+                                                                  Eng., Vol. SE-11, No. 4, Apr. 1985, pp. 317­325.
+                                                             10. J. C. Munson and T. M. Khoshgoftaar,
+                                                                  "Regression modeling of software quality:
+
+178 Bell Labs Technical Journal x April­June 2000
+     Empirical investigation," Information and Soft.         25. L. A. Belady and M. M. Lehman, "A model of
+     Tech., Vol. 32, No. 2, Feb. 1990, pp. 106­114.               large program development," IBM Sys. J.,
+11. T.-J. Yu, V. Y. Shen, and H. E. Dunsmore,                     Vol. 15, No. 3, 1976, pp. 225­253.
+     "An Analysis of Several Software Defect Models,"
+     IEEE Trans. on Soft. Eng., Vol. 14, No. 9,              26. V. R. Basili and D. M. Weiss, "Evaluating Soft-
+     Sept. 1988, pp. 1261­1270.                                   ware Development by Analysis of Changes,"
+12. T. L. Graves, A. F. Karr, J. S. Marron, and                   IEEE Trans. on Soft. Eng., Vol. SE-11, No. 2,
+     H. Siy, "Predicting Fault Incidence Using Soft-              Feb. 1985, pp. 157­168.
+     ware Change History," IEEE Trans. on Soft. Eng.,
+     Vol. 26, No. 2 (forthcoming 2000).                      27. A. Mockus, S. G. Eick, T. L. Graves, and
+13. J. D. Musa, A. Iannino, and K. Okumoto,                       A. F. Karr, "On Measurement and Analysis of
+     Software Reliability: Measurement, Prediction, and           Software Changes," Doc. No. ITD-99-36760F,
+     Application, McGraw-Hill, New York, 1990.                    BL0113590-990401-06TM, Lucent Techno-
+14. J. Jelinski and P. B. Moranda, "Software relia-               logies, Murray Hill, N. J., Apr. 1999.
+     bility research," Probabilistic Models for Software,
+     edited by W. Freiberger, Academic Press,                28. P. McCullagh and J. A. Nelder, Generalized Linear
+     New York, 1972, pp. 485­502.                                 Models, 2nd ed., Chapman and Hall, New York,
+15. G. J. Schick and R. W. Wolverton, "An Analysis                1989.
+     of Competing Software Reliability Models,"
+     IEEE Trans. on Soft. Eng., Vol. SE-4, No. 2,            29. J. M. Chambers and T. J. Hastie, eds., Statistical
+     Mar. 1978, pp. 104­120.                                      Models in S, Wadsworth & Brooks, Pacific Grove,
+16. S. N. Mohanty, "Models and Measurements                       Calif., 1992.
+     for Quality Assessment of Software," ACM
+     Computing Surveys, Vol. 11, No. 3, Sept. 1979,          30. A. J. Miller, Subset Selection in Regression,
+     pp. 257­275.                                                 Chapman and Hall, London, 1990.
+17. S. G. Eick, C. R. Loader, M. D. Long, L. G. Votta,
+     and S. Vander Wiel, "Estimating software fault          31. C. L. Mallows, "Some Comments on Cp,"
+     content before coding," Proc. of the 14th Intl. Conf.        Technometrics, Vol. 15, No. 4, Nov. 1973,
+     on Soft. Eng., Melbourne, Australia, May 11­15,              pp. 661­667.
+     1992, pp. 59­65.
+18. D. A. Christenson and S. T. Huang, "Estimating           32. S. G. Eick, T. L. Graves, A. F. Karr, J. S. Marron,
+     the Fault Content of Software Using the Fix-on-              and A. Mockus, "Does Code Decay? Assessing
+     Fix Model," Bell Labs Tech. J., Vol. 1, No. 1,               the Evidence from Change Management Data,"
+     Summer 1996, pp. 130­137.                                    IEEE Trans. on Soft. Eng. (forthcoming 2000).
+19. A. L. Goel, "Software Reliability Models:
+     Assumptions, Limitations, and Applicability,"           33. A. Mockus and L. G. Votta, "Identifying reasons
+     IEEE Trans. on Soft. Eng., Vol. SE-11, No. 12,               for software changes using historic databases,"
+     Dec. 1985, pp. 1411­1423.                                    Proc. Intl. Conf. on Software Maintenance, San Jose,
+20. P. B. Moranda, "Software quality technology,"                 Calif., Oct. 11­14, 2000.
+     IEEE Comp., Vol. 11, No. 11, Nov. 1978,
+     pp. 72­78.                                              34. D. Atkins, T. Ball, T. Graves, and A. Mockus,
+21. A. K. Midha, "Software Configuration Manage-                  "Using version control data to evaluate the
+     ment for the 21st Century," Bell Labs Tech. J.,              impact of software tools," Proc. 21st Intl. Conf. on
+     Vol. 2, No. 1, Winter 1997, pp. 154­165.                     Soft. Eng., Los Angeles, Calif., May 16­22, 1999,
+22. M. J. Rochkind, "The Source Code Control                      ACM Press, pp. 324­333.
+     System," IEEE Trans. on Soft. Eng., Vol. SE-1,
+     No. 4, Dec. 1975, pp. 364­370.                          35. H. Siy and A. Mockus, "Measuring domain
+23. S. R. Chidamber and C. F. Kemerer, "A Metrics                 engineering effects on software change cost,"
+     Suite for Object Oriented Design," IEEE Trans.               Metrics `99: Sixth Intl. Symp. on Soft. Metrics,
+     on Soft. Eng., Vol. 20, No. 6, June 1994, pp. 476­493.       Boca Raton, Fla., Nov. 4­6, 1999, pp. 304­311.
+24. A. J. Albrecht and J. E. Gaffney, Jr., "Soft-
+     ware Function, Source Lines of Code, and                (Manuscript approved May 2000)
+     Development Effort Prediction: A Software
+     Science Validation," IEEE Trans. on Soft. Eng.,         AUDRIS MOCKUS, a member of technical staff in the
+     Vol. SE-9, No. 6, Nov. 1983, pp. 639­648.                               Software Production Research Department
+                                                                             at Bell Labs in Naperville, Illinois, holds B.S.
+                                                                             and M.S. degrees in applied mathematics
+                                                                             from the Moscow Institute of Physics and
+                                                                             Technology, as well as M.S. and Ph.D.
+
+                                                             degrees in statistics from Carnegie Mellon University in
+                                                             Pittsburgh, Pennsylvania. In his research of complex
+                                                             dynamic systems, Dr. Mockus designs data mining
+                                                             methods, data visualization techniques, statistical mod-
+                                                             els, and optimization techniques. He is currently investi-
+
+                                                             Bell Labs Technical Journal x April­June 2000 179
+gating properties of software changes in large soft-
+ware systems.
+DAVID M. WEISS is director of Software Production
+
+               Research at Bell Labs in Naperville, Illinois.
+               He received a B.S. degree in mathematics
+               from Union College in Schenectady,
+               New York, and M.S. and Ph.D. degrees in
+               computer science from the University of
+Maryland in College Park. Dr. Weiss directs research in
+the areas of software product lines, domain engineer-
+ing, measurement, and software architecture and
+specification. x
+
+180 Bell Labs Technical Journal x April­June 2000
+

@@ -56,6 +56,22 @@
           "note": "Changes approved faster than 200 lines per hour ('hastily reviewed') are associated with more post-release defects in Qt 5.1.0, and only 10% of such changes are needed before a component is expected to have a defect; this is about review rate, not a fixed lines-per-review threshold.",
           "source": "software-practices/sources/mcintosh2014-code-review-coverage.txt#L604-L611",
           "date": "2026-10-15"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Review comments per 100 LOC fall as patches grow, but the drop is concentrated among small patches and levels off past about 600 LOC; it counts comments of any kind, not defects found, so it supports less reviewer contribution per line on larger changes but not a sharp break at a few hundred lines.",
+          "source": "software-practices/sources/santos2018-review-distributed.txt#L758-L768",
+          "date": "2026-10-26"
+        },
+        {
+          "method": "source",
+          "verdict": "partly",
+          "confidence": 0.3,
+          "note": "Across 1.5 million review comments in five Microsoft projects, the proportion of comments the author found useful falls steadily as the number of files in a change rises; it measures usefulness by files, not defects by lines, and shows a gradual trend rather than a sharp threshold.",
+          "source": "software-practices/sources/bosu2015-useful-reviews.txt#L543-L552",
+          "date": "2026-10-26"
         }
       ]
     },

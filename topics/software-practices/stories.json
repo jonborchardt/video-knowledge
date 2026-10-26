@@ -3,7 +3,7 @@
  "basis": {
   "claims": 413,
   "sources": 93,
-  "studies": 29,
+  "studies": 33,
   "candidates": 22
  },
  "stories": [
@@ -382,7 +382,387 @@
    },
    "chainCandidates": [
     "decision:10x-developers-and-productivity",
-    "decision:continuous-delivery"
+    "decision:pairing-and-code-review"
+   ]
+  },
+  {
+   "id": "decision:pairing-and-code-review",
+   "kind": "decision",
+   "title": "Are Small Pull Requests Really Better?",
+   "alternates": [
+    "How Big Should a Pull Request Be?",
+    "What Google's Review Data Say About Change Size"
+   ],
+   "question": "Do small pull requests really get reviewed faster and break less?",
+   "whyWatch": "Keep your PRs small is the most repeated code-review advice. Review data from GitHub, Google, Microsoft and an industrial team show which part of it holds and which numbers nobody has measured.",
+   "tension": "Small changes are said to be reviewed faster, reviewed better and to break less. The data back the first, show reviewers giving less per line on big changes without the sharp cliff the advice describes, and tie size to failures only as risk per change.",
+   "evidenceNeeded": "Review-to-merge time by change size, defect-finding by review size, and incident rates by change size.",
+   "evidenceAvailable": [
+    "Yu et al. 2015 (pull request latency): right (0.55, direct)",
+    "dos Santos & Nunes 2018 (review and patch size): right (0.5, partial)",
+    "Sadowski et al. 2018 (Google code review): right (0.55, partial)",
+    "dos Santos & Nunes 2018 (review and patch size): partly (0.3, partial)",
+    "Bosu et al. 2015 (useful review comments): partly (0.3, partial)",
+    "McIntosh et al. 2014 (review coverage): partly (0.35, direct)",
+    "Sadowski et al. 2018 (Google code review): partly (0.3, direct)",
+    "Mockus & Weiss 2000 (change risk): partly (0.4, partial)",
+    "DORA State of DevOps 2019: partly (0.4, partial)"
+   ],
+   "gaps": [
+    "No study strong enough to decide: \"Reviewer defect-finding effectiveness drops sharply once a single review exceeds a few hundred lines\"",
+    "No study strong enough to decide: \"Smaller changes mean less rework, fewer incidents and faster restoration\""
+   ],
+   "premise": "Across about 40,000 merged pull requests in 40 GitHub projects, those adding more lines and commits took significantly longer from creation to close; at Google small changes get first reviewer feedback in under an hour against about five hours for very large ones; and in one 201-person industrial project larger patches took longer to reach final approval, though size explained little of the variance. These are associations in observational data, not experiments. On review quality, comments per 100 lines fall as patches grow (levelling off past about 600 lines) and the share of comments Microsoft authors found useful falls gradually with the number of files; neither counts defects found, and nothing here shows effectiveness dropping sharply past a few hundred lines, while at Google comments per change keep rising up to about 1,250 lines. On breakage, in a telecom system a change with more added lines and more subsystems touched was more likely to cause a failure, and DORA links extra approvals to larger batches and higher change failure; that is risk per change, not proof that splitting work lowers total failures, and rework and restoration time by change size are unmeasured.",
+   "claims": [
+    "software-practices/small-pull-requests-picked-merged-faster",
+    "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+    "software-practices/smaller-changes-mean-less-rework-fewer"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Every code-review guide says keep your pull requests small. Is that advice measured, or just repeated?",
+    "conflict": "The advice bundles three promises: small changes get reviewed faster, get reviewed better past a line-count cliff, and break less. Each rests on different evidence.",
+    "evidence": "GitHub pull-request latency and Google first-feedback times for speed; comment density and comment usefulness by change size for review quality; a telecom change-risk model and DORA for failures.",
+    "resolution": "Speed holds: bigger changes take longer to get through review in every dataset here, as an association. Reviewers do give less per line on bigger changes, but gradually, and the few-hundred-lines cliff is not measured. Bigger changes carry more failure risk each; whether splitting them cuts total failures, rework or restore time is not shown.",
+    "takeaway": "Keep changes small to get them reviewed and merged sooner and to give reviewers less to skim; treat any exact line limit as a rule of thumb, not a finding."
+   },
+   "coherence": {
+    "score": 0.75,
+    "basis": "review",
+    "explanation": "The group mixed pairing and mobbing beliefs with change size; pruned to one question, should you keep changes small for review. The pairing and mob claims are unchecked beliefs and the pair-review claim rests on a 0.25 recommendation."
+   },
+   "scores": {
+    "coherence": 0.75,
+    "relevance": 0.79,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.72,
+    "editorial": 0.75,
+    "overall": 0.74,
+    "explanation": "editorial 0.75 = mean of coherence 0.75 (review), relevance 0.79 (10 sources, 10 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 1 (7 studies, 3 claims, tension); evidence 0.72 = strongest Yu et al. 2015 (pull request latency) at 0.55 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.75), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Small pull requests are picked up and merged faster",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0.55,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/small-pull-requests-picked-merged-faster",
+        "cite": "software-practices/sources/yu2015-pull-request-latency.txt#L164-L172"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Yu et al. 2015 (pull request latency)",
+       "verdict": "right",
+       "confidence": 0.55,
+       "note": "Regression on about 40,000 merged, CI-tested pull requests from 40 GitHub projects finds that pull requests adding more lines and more commits take significantly longer from creation to close, with size and discussion length the dominant predictors; an observational preliminary study of open-source projects.",
+       "applicability": "direct",
+       "basis": "review",
+       "why": "measures time from pull request creation to close for merged pull requests, which includes the wait to be picked up, and finds more added lines and commits go with longer latency across 40 GitHub projects; an association in open-source projects, not an experiment"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/small-pull-requests-picked-merged-faster",
+        "cite": "software-practices/sources/santos2018-review-distributed.txt#L697-L708"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "dos Santos & Nunes 2018 (review and patch size)",
+       "verdict": "right",
+       "confidence": 0.5,
+       "note": "In 8,329 reviews from one 201-person industrial project, larger patches took significantly longer to reach final approval (601-800 LOC about twice as long as 61-80 LOC), though the relationship is nonlinear and size explains little of the variance; it measures time to last approval, not pickup or merge, in a single company.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "larger patches take longer to reach final approval in one industrial project; it measures approval, not pickup or merge, and size explains little of the variance"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "software-practices/small-pull-requests-picked-merged-faster",
+        "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L358-L362"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Sadowski et al. 2018 (Google code review)",
+       "verdict": "right",
+       "confidence": 0.55,
+       "note": "At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "dos Santos & Nunes 2018 (review and patch size): In 8,329 reviews from one 201-person industrial project, larger patches took significantly longer to reach final approval (601-800 LOC about twice as long as 61-80 LOC), though the relationship is nonlinear and size explains little of the variance; it measures time to last approval, not pickup or merge, in a single company. [partial: larger patches take longer to reach final approval in one industrial project; it measures approval, not pickup or merge, and size explains little of the variance]",
+      "Sadowski et al. 2018 (Google code review): At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines. [partial: establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.55), 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Small pull requests are picked up and merged faster",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.55,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/small-pull-requests-picked-merged-faster",
+          "cite": "software-practices/sources/yu2015-pull-request-latency.txt#L164-L172"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Yu et al. 2015 (pull request latency)",
+         "verdict": "right",
+         "confidence": 0.55,
+         "note": "Regression on about 40,000 merged, CI-tested pull requests from 40 GitHub projects finds that pull requests adding more lines and more commits take significantly longer from creation to close, with size and discussion length the dominant predictors; an observational preliminary study of open-source projects.",
+         "applicability": "direct",
+         "basis": "review",
+         "why": "measures time from pull request creation to close for merged pull requests, which includes the wait to be picked up, and finds more added lines and commits go with longer latency across 40 GitHub projects; an association in open-source projects, not an experiment"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/small-pull-requests-picked-merged-faster",
+          "cite": "software-practices/sources/santos2018-review-distributed.txt#L697-L708"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "dos Santos & Nunes 2018 (review and patch size)",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "In 8,329 reviews from one 201-person industrial project, larger patches took significantly longer to reach final approval (601-800 LOC about twice as long as 61-80 LOC), though the relationship is nonlinear and size explains little of the variance; it measures time to last approval, not pickup or merge, in a single company.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "larger patches take longer to reach final approval in one industrial project; it measures approval, not pickup or merge, and size explains little of the variance"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/small-pull-requests-picked-merged-faster",
+          "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L358-L362"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Sadowski et al. 2018 (Google code review)",
+         "verdict": "right",
+         "confidence": 0.55,
+         "note": "At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "dos Santos & Nunes 2018 (review and patch size): In 8,329 reviews from one 201-person industrial project, larger patches took significantly longer to reach final approval (601-800 LOC about twice as long as 61-80 LOC), though the relationship is nonlinear and size explains little of the variance; it measures time to last approval, not pickup or merge, in a single company. [partial: larger patches take longer to reach final approval in one industrial project; it measures approval, not pickup or merge, and size explains little of the variance]",
+        "Sadowski et al. 2018 (Google code review): At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines. [partial: establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.55), 2 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "Reviewer defect-finding effectiveness drops sharply once a single review exceeds a few hundred lines",
+       "kind": "fact",
+       "modality": "possibility",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+          "cite": "software-practices/sources/santos2018-review-distributed.txt#L758-L768"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "dos Santos & Nunes 2018 (review and patch size)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Review comments per 100 LOC fall as patches grow, but the drop is concentrated among small patches and levels off past about 600 LOC; it counts comments of any kind, not defects found, so it supports less reviewer contribution per line on larger changes but not a sharp break at a few hundred lines.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "review comments of any kind per 100 lines fall as patches grow, mostly among small patches, and level off past about 600 lines; no defects are counted and no sharp drop at a few hundred lines is shown"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+          "cite": "software-practices/sources/bosu2015-useful-reviews.txt#L543-L552"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Bosu et al. 2015 (useful review comments)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Across 1.5 million review comments in five Microsoft projects, the proportion of comments the author found useful falls steadily as the number of files in a change rises; it measures usefulness by files, not defects by lines, and shows a gradual trend rather than a sharp threshold.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "the share of useful review comments falls gradually with the number of files in a change at Microsoft; usefulness, not defects, by files, not lines, and no threshold"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+          "cite": "software-practices/sources/mcintosh2014-code-review-coverage.txt#L604-L611"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "McIntosh et al. 2014 (review coverage)",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Changes approved faster than 200 lines per hour ('hastily reviewed') are associated with more post-release defects in Qt 5.1.0, and only 10% of such changes are needed before a component is expected to have a defect; this is about review rate, not a fixed lines-per-review threshold.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
+          "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L405-L412"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Sadowski et al. 2018 (Google code review)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Google data show comments per change keep rising with size up to about 1250 lines before falling (large changes are generated code or deletions); the paper cites prior work that useful comments decrease with size but does not measure defect-finding per line itself.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "dos Santos & Nunes 2018 (review and patch size): Review comments per 100 LOC fall as patches grow, but the drop is concentrated among small patches and levels off past about 600 LOC; it counts comments of any kind, not defects found, so it supports less reviewer contribution per line on larger changes but not a sharp break at a few hundred lines. [partial: review comments of any kind per 100 lines fall as patches grow, mostly among small patches, and level off past about 600 lines; no defects are counted and no sharp drop at a few hundred lines is shown]",
+        "Bosu et al. 2015 (useful review comments): Across 1.5 million review comments in five Microsoft projects, the proportion of comments the author found useful falls steadily as the number of files in a change rises; it measures usefulness by files, not defects by lines, and shows a gradual trend rather than a sharp threshold. [partial: the share of useful review comments falls gradually with the number of files in a change at Microsoft; usefulness, not defects, by files, not lines, and no threshold]",
+        "McIntosh et al. 2014 (review coverage): Changes approved faster than 200 lines per hour ('hastily reviewed') are associated with more post-release defects in Qt 5.1.0, and only 10% of such changes are needed before a component is expected to have a defect; this is about review rate, not a fixed lines-per-review threshold.",
+        "Sadowski et al. 2018 (Google code review): Google data show comments per change keep rising with size up to about 1250 lines before falling (large changes are generated code or deletions); the paper cites prior work that useful comments decrease with size but does not measure defect-finding per line itself."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 4 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Smaller changes mean less rework, fewer incidents and faster restoration",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
+          "cite": "software-practices/sources/mockus2000-change-risk.txt#L375-L391"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Mockus & Weiss 2000 (change risk)",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "In a logistic model of 5ESS telephone-switch software updates, a change's failure probability rose with lines of code added, number of deltas and subsystems touched; this is a per-change association in one system that supports the incident part only, and says nothing about rework or restoration time.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "a change with more added lines, deltas and subsystems is more likely to cause a field failure in one telecom system; that is the incidents part as a per-change association, with nothing on rework or restoration time"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
+          "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1272-L1283"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "DORA State of DevOps 2019",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "DORA tested whether extra approvals lead to larger, less frequent batches with higher impact and higher change failure rates and reports the hypothesis was supported, linking batch size to incident rate; rework and restoration time are not tied to change size directly.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "a survey finding that extra approvals go with larger, less frequent batches and higher change failure; batch size is inferred through the approval process, and rework and restoration are not tied to change size"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Mockus & Weiss 2000 (change risk): In a logistic model of 5ESS telephone-switch software updates, a change's failure probability rose with lines of code added, number of deltas and subsystems touched; this is a per-change association in one system that supports the incident part only, and says nothing about rework or restoration time. [partial: a change with more added lines, deltas and subsystems is more likely to cause a field failure in one telecom system; that is the incidents part as a per-change association, with nothing on rework or restoration time]",
+        "DORA State of DevOps 2019: DORA tested whether extra approvals lead to larger, less frequent batches with higher impact and higher change failure rates and reports the hypothesis was supported, linking batch size to incident rate; rework and restoration time are not tied to change size directly. [partial: a survey finding that extra approvals go with larger, less frequent batches and higher change failure; batch size is inferred through the approval process, and rework and restoration are not tied to change size]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     }
+    ]
+   },
+   "chainCandidates": [
+    "decision:static-vs-dynamic-typing",
+    "decision:10x-developers-and-productivity"
    ]
   },
   {
@@ -1517,7 +1897,7 @@
    },
    "chainCandidates": [
     "decision:static-vs-dynamic-typing",
-    "decision:10x-developers-and-productivity"
+    "decision:pairing-and-code-review"
    ]
   },
   {
@@ -2289,261 +2669,6 @@
     "decision:10x-developers-and-productivity",
     "decision:static-vs-dynamic-typing"
    ]
-  },
-  {
-   "id": "decision:pairing-and-code-review",
-   "kind": "decision",
-   "title": "Are Small Pull Requests Really Better?",
-   "alternates": [
-    "How Big Should a Pull Request Be?",
-    "What Google's Review Data Say About Change Size"
-   ],
-   "question": "Do small pull requests really get reviewed faster and break less?",
-   "whyWatch": "Keep your PRs small is the most repeated code-review advice. The data show part of it and leave the rest unmeasured.",
-   "tension": "Small changes are said to be reviewed faster, reviewed better and to break less; the evidence here shows the first only partly and the others indirectly.",
-   "evidenceNeeded": "Review-to-merge time by change size, defect-finding by review size, and incident rates by change size.",
-   "evidenceAvailable": [
-    "Sadowski et al. 2018 (Google code review): right (0.55, partial)",
-    "McIntosh et al. 2014 (review coverage): partly (0.35, direct)",
-    "Sadowski et al. 2018 (Google code review): partly (0.3, direct)",
-    "DORA State of DevOps 2019: partly (0.4, partial)"
-   ],
-   "gaps": [
-    "Reviewer: Sadowski et al. show only that small changes get first feedback sooner at Google, not that they merge faster; McIntosh et al. measure review rate, not review size; DORA ties batch size to failures only through approvals. Unblock with review-to-merge latency broken down by change size (for example Rigby and Bird's cross-project review data), a measured link between lines under review and defects found (for example the Cisco review study), and change size against change failure or restore time.",
-    "No study strong enough to decide: \"Reviewer defect-finding effectiveness drops sharply once a single review exceeds a few hundred lines\"",
-    "No study strong enough to decide: \"Smaller changes mean less rework, fewer incidents and faster restoration\""
-   ],
-   "premise": "6 claims bear on this choice; studies decide 1 of them. Walk the viewer from the claims they have heard to the decision the evidence supports.",
-   "claims": [
-    "software-practices/small-pull-requests-picked-merged-faster",
-    "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
-    "software-practices/smaller-changes-mean-less-rework-fewer"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "The decision a viewer faces, in their terms.",
-    "conflict": "The claims pulling in different directions: \"Pairing or mobbing puts the best of each participant into the code and rarely the worst\"; \"Mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person\"; \"Pair programming provides continuous code review without adding a separate review step that slows delivery\"; \"Small pull requests are picked up and merged faster\"; \"Reviewer defect-finding effectiveness drops sharply once a single review exceeds a few hundred lines\"; \"Smaller changes mean less rework, fewer incidents and faster restoration\".",
-    "evidence": "Each claim's verdict, strongest study first.",
-    "resolution": "What the evidence settles and what it leaves open.",
-    "takeaway": "A decision rule the viewer can apply."
-   },
-   "coherence": {
-    "score": 0.75,
-    "basis": "review",
-    "explanation": "The group mixed pairing and mobbing beliefs with change size; pruned to one question, should you keep changes small for review. The pairing and mob claims are unchecked beliefs and the pair-review claim rests on a 0.25 recommendation."
-   },
-   "scores": {
-    "coherence": 0.75,
-    "relevance": 0.79,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 1,
-    "originality": 1,
-    "evidence": 0.33,
-    "editorial": 0.75,
-    "overall": 0.58,
-    "explanation": "editorial 0.75 = mean of coherence 0.75 (review), relevance 0.79 (10 sources, 10 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 1 (3 studies, 3 claims, tension); evidence 0.33 = strongest Sadowski et al. 2018 (Google code review) at 0.55 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: Sadowski et al. show only that small changes get first feedback sooner at Google, not that they merge faster; McIntosh et al. measure review rate, not review size; DORA ties batch size to failures only through approvals. Unblock with review-to-merge latency broken down by change size (for example Rigby and Bird's cross-project review data), a measured link between lines under review and defects found (for example the Cisco review study), and change size against change failure or restore time.",
-   "blocking": [
-    "Reviewer: Sadowski et al. show only that small changes get first feedback sooner at Google, not that they merge faster; McIntosh et al. measure review rate, not review size; DORA ties batch size to failures only through approvals. Unblock with review-to-merge latency broken down by change size (for example Rigby and Bird's cross-project review data), a measured link between lines under review and defects found (for example the Cisco review study), and change size against change failure or restore time."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Small pull requests are picked up and merged faster",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "software-practices/small-pull-requests-picked-merged-faster",
-        "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L358-L362"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Sadowski et al. 2018 (Google code review)",
-       "verdict": "right",
-       "confidence": 0.55,
-       "note": "At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines.",
-       "applicability": "partial",
-       "basis": "review",
-       "why": "establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "Sadowski et al. 2018 (Google code review): At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines. [partial: establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company]"
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): no direct support, 1 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "Small pull requests are picked up and merged faster",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/small-pull-requests-picked-merged-faster",
-          "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L358-L362"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Sadowski et al. 2018 (Google code review)",
-         "verdict": "right",
-         "confidence": 0.55,
-         "note": "At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines.",
-         "applicability": "partial",
-         "basis": "review",
-         "why": "establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Sadowski et al. 2018 (Google code review): At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines. [partial: establishes that small changes get first reviewer feedback sooner at Google; the passage gives overall review latency, not merge time by change size, so only the picked-up half of the sentence is shown, at one company]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f1",
-       "text": "Reviewer defect-finding effectiveness drops sharply once a single review exceeds a few hundred lines",
-       "kind": "fact",
-       "modality": "possibility",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
-          "cite": "software-practices/sources/mcintosh2014-code-review-coverage.txt#L604-L611"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "McIntosh et al. 2014 (review coverage)",
-         "verdict": "partly",
-         "confidence": 0.35,
-         "note": "Changes approved faster than 200 lines per hour ('hastily reviewed') are associated with more post-release defects in Qt 5.1.0, and only 10% of such changes are needed before a component is expected to have a defect; this is about review rate, not a fixed lines-per-review threshold.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/reviewer-defect-finding-effectiveness-drops-sharply",
-          "cite": "software-practices/sources/sadowski2018-code-review-google.txt#L405-L412"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Sadowski et al. 2018 (Google code review)",
-         "verdict": "partly",
-         "confidence": 0.3,
-         "note": "Google data show comments per change keep rising with size up to about 1250 lines before falling (large changes are generated code or deletions); the paper cites prior work that useful comments decrease with size but does not measure defect-finding per line itself.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "McIntosh et al. 2014 (review coverage): Changes approved faster than 200 lines per hour ('hastily reviewed') are associated with more post-release defects in Qt 5.1.0, and only 10% of such changes are needed before a component is expected to have a defect; this is about review rate, not a fixed lines-per-review threshold.",
-        "Sadowski et al. 2018 (Google code review): Google data show comments per change keep rising with size up to about 1250 lines before falling (large changes are generated code or deletions); the paper cites prior work that useful comments decrease with size but does not measure defect-finding per line itself."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 2 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f2",
-       "text": "Smaller changes mean less rework, fewer incidents and faster restoration",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "software-practices/smaller-changes-mean-less-rework-fewer",
-          "cite": "software-practices/sources/dora2019-state-of-devops.txt#L1272-L1283"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "DORA State of DevOps 2019",
-         "verdict": "partly",
-         "confidence": 0.4,
-         "note": "DORA tested whether extra approvals lead to larger, less frequent batches with higher impact and higher change failure rates and reports the hypothesis was supported, linking batch size to incident rate; rework and restoration time are not tied to change size directly.",
-         "applicability": "partial",
-         "basis": "review",
-         "why": "a survey finding that extra approvals go with larger, less frequent batches and higher change failure; batch size is inferred through the approval process, and rework and restoration are not tied to change size"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "DORA State of DevOps 2019: DORA tested whether extra approvals lead to larger, less frequent batches with higher impact and higher change failure rates and reports the hypothesis was supported, linking batch size to incident rate; rework and restoration time are not tied to change size directly. [partial: a survey finding that extra approvals go with larger, less frequent batches and higher change failure; batch size is inferred through the approval process, and rework and restoration are not tied to change size]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
-      }
-     }
-    ]
-   }
   },
   {
    "id": "decision:microservices-vs-monolith",

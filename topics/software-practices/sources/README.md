@@ -6,6 +6,7 @@ Plain-text copies (`pdftotext -layout`) of open-access empirical studies. PDFs a
 - berger2019-languages-reproduction.txt — Berger, Hollenbeck, Maj, Vitek & Vitek, 2019, TOPLAS (arXiv 1901.10220): reproduction of Ray et al. 2014; most language-vs-bug associations disappear after fixing data and statistical issues.
 - bernstein2018-open-workspace.txt — Bernstein & Turban, 2018, Phil Trans B: wearable-sensor field studies of two firms moving to open-plan offices; face-to-face interaction fell ~70%, electronic messaging rose.
 - bird2011-ownership.txt — Bird, Nagappan, Murphy, Gall & Devanbu, 2011, FSE: code ownership metrics vs pre/post-release defects in Windows Vista and 7; many minor contributors predict more defects.
+- bosu2015-useful-reviews.txt — Bosu, Greiler & Bird, 2015, MSR: 1.5 million review comments in five Microsoft projects classified for usefulness; the useful share rises with reviewer experience and falls as the number of files in a change grows.
 - buse2010-readability.txt — Buse & Weimer, 2010, TSE (preprint): learned code readability metric from 120 human raters; correlates with defects and churn.
 - dora2019-state-of-devops.txt — Forsgren, Smith, Humble & Frazelle, 2019, DORA/Google Cloud Accelerate State of DevOps report: survey-based four key metrics, elite vs low performers, cloud, CD and culture practices.
 - dyba2008-agile-review.txt — Dybå & Dingsøyr, 2008, IST: systematic review of 36 empirical studies of agile development (mostly XP), strength of evidence rated low.
@@ -21,6 +22,7 @@ Plain-text copies (`pdftotext -layout`) of open-access empirical studies. PDFs a
 - mark2008-cost-of-interrupted-work.txt — Mark, Gudith & Klocke, 2008, CHI: lab experiment; interrupted work finishes faster but with higher stress, frustration and time pressure.
 - mcintosh2014-code-review-coverage.txt — McIntosh, Kamei, Adams & Hassan, 2014, MSR: review coverage and participation vs post-release defects in Qt, VTK, ITK; low coverage/participation predicts more defects.
 - meyer2014-perceptions-productivity.txt — Meyer, Fritz, Murphy & Zimmermann, 2014, FSE: survey of 379 and observation of 11 developers on what makes a productive day; task completion and few interruptions.
+- mockus2000-change-risk.txt — Mockus & Weiss, 2000, Bell Labs Technical Journal (author copy): logistic model of failure probability for 5ESS software-update changes; size, diffusion and low developer experience raise a change's risk.
 - nagappan2008-org-structure.txt — Nagappan, Murphy & Basili, 2008, ICSE (MSR tech report): organizational metrics predict Windows Vista failure-proneness better than code metrics.
 - parnin2011-resumption.txt — Parnin & Rugaber, 2011, SQJ: 10,000 recorded programming sessions and a 414-developer survey on resuming after interruptions; resumption takes 15+ minutes, often with warm-up activity.
 - pencavel2014-working-hours.txt — Pencavel, 2014, IZA discussion paper: WWI munitions-worker data; output per hour falls past ~50 hours a week, little extra output beyond ~55-60.
@@ -28,9 +30,11 @@ Plain-text copies (`pdftotext -layout`) of open-access empirical studies. PDFs a
 - prechelt2000-seven-languages.txt — Prechelt, 2000, IEEE Computer (submission): 80 implementations of one task in C, C++, Java, Perl, Python, Rexx, Tcl; scripting languages half the length and time, within-language variance larger than between.
 - ray2014-languages-github.txt — Ray, Posnett, Filkov & Devanbu, 2014, FSE: 729 GitHub projects; small but significant association of language class (static/functional) with fewer bug-fix commits.
 - sadowski2018-code-review-google.txt — Sadowski, Söderberg, Church, Sipko & Bacchelli, 2018, ICSE SEIP: case study of Google's review practice; small changes, one reviewer, fast turnaround, education as major motive.
+- santos2018-review-distributed.txt — dos Santos & Nunes, 2018, JSERD (open access): 8,329 reviews from one 201-member industrial project plus a practitioner survey; larger patches take longer to approve and draw fewer comments per line.
 - scalabrino2019-understandability.txt — Scalabrino, Bavota, Vendome, Linares-Vásquez, Poshyvanyk & Oliveto, 2019, TSE: 121 code/doc/developer metrics vs 444 human understandability judgments; none captures understandability well.
 - soldani2018-microservices-pains-gains.txt — Soldani, Tamburri & Van Den Heuvel, 2018, JSS (preprint): systematic grey literature review of 51 industrial sources on microservice pains and gains across design, development and operation.
 - tornhill2022-code-red.txt — Tornhill & Borg, 2022, arXiv 2203.04374: 39 proprietary codebases; low-quality (CodeHealth) files take ~2x development time and have 15x more defects.
+- yu2015-pull-request-latency.txt — Yu, Wang, Filkov, Devanbu & Vasilescu, 2015, MSR (author copy): regression on about 40,000 merged, CI-tested pull requests from 40 GitHub projects; size, commits and discussion length dominate time to close.
 
 ## Not found (paywalled or no open copy)
 

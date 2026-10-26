@@ -54,8 +54,10 @@
           "note": "The SmartBear Cisco field study found defect density per line falling past roughly 200-400 lines per review, though it is a single vendor-run industrial dataset rather than a controlled experiment.",
           "source": null,
           "documents": [
+            "software-practices/sources/bosu2015-useful-reviews.txt",
             "software-practices/sources/mcintosh2014-code-review-coverage.txt",
-            "software-practices/sources/sadowski2018-code-review-google.txt"
+            "software-practices/sources/sadowski2018-code-review-google.txt",
+            "software-practices/sources/santos2018-review-distributed.txt"
           ]
         },
         {
@@ -1908,10 +1910,12 @@
             "google-github-small-cls",
             "graphite-the-ideal-pr-is-50-lines-long"
           ],
-          "note": "At Google the median wait for first reviewer feedback is under an hour for small changes versus about 5 hours for very large ones; overall median review latency is under 4 hours with a median change of 24 lines.",
-          "source": "software-practices/sources/sadowski2018-code-review-google.txt#L358-L362",
+          "note": "Regression on about 40,000 merged, CI-tested pull requests from 40 GitHub projects finds that pull requests adding more lines and more commits take significantly longer from creation to close, with size and discussion length the dominant predictors; an observational preliminary study of open-source projects.",
+          "source": "software-practices/sources/yu2015-pull-request-latency.txt#L164-L172",
           "documents": [
-            "software-practices/sources/sadowski2018-code-review-google.txt"
+            "software-practices/sources/sadowski2018-code-review-google.txt",
+            "software-practices/sources/santos2018-review-distributed.txt",
+            "software-practices/sources/yu2015-pull-request-latency.txt"
           ]
         },
         {
@@ -1941,7 +1945,8 @@
           "note": "DORA's small-batch findings and defect-per-line research support the direction, but the evidence is correlational and vendor-sourced.",
           "source": null,
           "documents": [
-            "software-practices/sources/dora2019-state-of-devops.txt"
+            "software-practices/sources/dora2019-state-of-devops.txt",
+            "software-practices/sources/mockus2000-change-risk.txt"
           ]
         },
         {
@@ -10290,8 +10295,10 @@
             "note": "The SmartBear Cisco field study found defect density per line falling past roughly 200-400 lines per review, though it is a single vendor-run industrial dataset rather than a controlled experiment.",
             "source": null,
             "documents": [
+              "software-practices/sources/bosu2015-useful-reviews.txt",
               "software-practices/sources/mcintosh2014-code-review-coverage.txt",
-              "software-practices/sources/sadowski2018-code-review-google.txt"
+              "software-practices/sources/sadowski2018-code-review-google.txt",
+              "software-practices/sources/santos2018-review-distributed.txt"
             ]
           },
           "prior": "right",
@@ -18415,7 +18422,7 @@
         "software-practices/smaller-changes-mean-less-rework-fewer"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18496,7 +18503,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18635,7 +18642,7 @@
         "software-practices/trunk-based-development-one-small-change"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18830,7 +18837,7 @@
         "software-practices/smaller-changes-mean-less-rework-fewer"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18962,7 +18969,7 @@
         "software-practices/teams-stop-reading-agent-written-code"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19113,7 +19120,7 @@
         "software-practices/small-pull-requests-picked-merged-faster"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19452,7 +19459,7 @@
         "software-practices/trunk-based-development-requires-developers-learn"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19572,7 +19579,7 @@
         "software-practices/smaller-changes-mean-less-rework-fewer"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19599,7 +19606,7 @@
         "software-practices/smaller-changes-mean-less-rework-fewer"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20398,7 +20405,7 @@
         "software-practices/using-code-review-metrics-performance-evaluation"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
