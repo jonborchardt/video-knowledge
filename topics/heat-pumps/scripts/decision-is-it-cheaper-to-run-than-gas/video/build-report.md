@@ -1,10 +1,10 @@
 # Build report: Is a Heat Pump Cheaper Than Gas, and Does It Pay for Itself?
 
-heat-pumps / decision:is-it-cheaper-to-run-than-gas, 2026-10-26T06:43:59.305Z. `npm run video -- spike heat-pumps decision:is-it-cheaper-to-run-than-gas`
+heat-pumps / decision:is-it-cheaper-to-run-than-gas, 2026-10-26T08:06:36.286Z. `npm run video -- spike heat-pumps decision:is-it-cheaper-to-run-than-gas`
 
 **Segment.** 35 of 34 storyboard scenes (sc01 to end), 43 sentences. Kinds: sc01 list, sc02 question, sc03 quote, sc04 quote, sc05 quote, sc06 question, sc07 list, sc08 stat-tiles, sc09 bar, sc10 excerpt, sc11 question, sc12 bar, sc13 bar, sc14 question, sc15 excerpt, sc16 stat-tiles, sc17 excerpt, sc18 excerpt, sc19 list, sc20 title, sc21 transition, sc22 quote, sc23 question, sc24 title, sc25 bar, sc26 stat-tiles, sc27 stat-tiles, sc28 transition, sc29 stat-tiles, sc30 title, sc31 list, sc32 list, sc33 title, sc34 list, end close-card.
 
-**Output.** topics/heat-pumps/scripts/decision-is-it-cheaper-to-run-than-gas/video/segment.mp4: 490.47s, 1920x1080 @ 30 fps, h264 + aac, 14714 frames, rendered in 2141.6s ($0 (local CPU)).
+**Output.** topics/heat-pumps/scripts/decision-is-it-cheaper-to-run-than-gas/video/segment.mp4: 490.47s, 1920x1080 @ 30 fps, h264 + aac, 14714 frames, rendered in 1846s ($0 (local CPU)).
 
 **Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 458.5s of speech at about 175 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
@@ -98,7 +98,7 @@ heat-pumps / decision:is-it-cheaper-to-run-than-gas, 2026-10-26T06:43:59.305Z. `
 | excerpts resolve | ok | 4 excerpts with their highlights |
 | assets and kinds supported | ok | 9 kinds |
 | music cues resolve | ok | 3 cues over 1 compositions |
-| soundtrack mixed | ok | 3 cues, 2026-10-26T06:41:27.633Z |
+| soundtrack mixed | ok | 3 cues, 2026-10-26T08:04:50.550Z |
 | mix is of this cue sheet | ok | mix 1a2b55ffc4, cue sheet 1a2b55ffc4 |
 | every cue sounded | ok | 3 cues audible where placed |
 | music under the voice | ok | -20.9 dB relative to speech (want -40 to -10) |
