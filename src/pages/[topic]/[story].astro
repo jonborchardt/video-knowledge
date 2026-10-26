@@ -14,13 +14,15 @@ import HeatingCost from '../../components/tools/HeatingCost.astro';
 import MatterList from '../../components/MatterList.astro';
 import NextSteps from '../../components/NextSteps.astro';
 import { loadCta, resolveCtas } from '../../lib/cta';
-import { contentGraph, matterItem, matterPath, related, storyNode } from '../../lib/content-graph';
+import { isPreview, matterItem, matterPath, related, storyNode } from '../../lib/content-graph';
+import { siteGraph } from '../../lib/site-graph';
 import { toolOf } from '../../tools';
 import { articleModified, loadArticleRelease } from '../../lib/article';
 import { articleView, type FigureDraw } from '../../lib/article-view';
 import { chartProblems, datasetChart } from '../../lib/chart-geometry';
 import { dataRef, loadDatasets } from '../../lib/datasets';
-import { FILES } from '../../lib/script';
+import { reviewMediaHref } from '../../lib/review-view';
+import { FILES, storySlug } from '../../lib/script';
 import type { Storyboard } from '../../lib/storyboard';
 import { storyOutputs } from '../../lib/outputs';
 import { articleJsonLd, breadcrumbJsonLd, videoJsonLd } from '../../lib/seo';
@@ -36,10 +38,13 @@ import { readJson, ROOT, topicDir } from '../../lib/io';
 import { citeLabel, datasetSource, href } from '../../lib/url';
 
 export function getStaticPaths() {
+  const g = siteGraph();
   return publicTopicNames().flatMap((name) => {
     const t = loadTopic(name);
     const stories = loadStories(name)?.stories ?? [];
-    return stories.map((s) => ({ params: { topic: name, story: storyUrlSlug(s) }, props: { t, s, stories } }));
+    return stories
+      .filter((s) => g.nodes.get(storyNode(name, s.id))?.public)
+      .map((s) => ({ params: { topic: name, story: storyUrlSlug(s) }, props: { t, s, stories } }));
   });
 }
 const { t, s, stories } = Astro.props as { t: Topic; s: Story; stories: Story[] };
@@ -53,7 +58,10 @@ const groups = FINDING_LABELS.map((label) => ({
 })).filter((g) => g.claims.length);
 // The sources this matter rests on: every source that asserts or denies one of its claims, by exhibit number.
 const exhibitIds = new Set(claims.flatMap((c) => c.sources.map((x) => x.id)));
-const exhibits = t.sources.filter((x) => exhibitIds.has(x.id) && x.exhibit).sort((a, b) => a.exhibit! - b.exhibit!);
+// A preview (dev server) also lists sources without a number yet, last.
+const exhibits = t.sources
+  .filter((x) => exhibitIds.has(x.id) && (x.exhibit || import.meta.env.DEV))
+  .sort((a, b) => (a.exhibit ?? Infinity) - (b.exhibit ?? Infinity));
 const revisions = claims
   .flatMap((c) => c.revisions.map((r) => ({ r, text: c.text })))
   .sort((a, b) => a.r.at.localeCompare(b.r.at));
@@ -130,12 +138,14 @@ const h2 = 'mb-3 text-featured font-bold';
 // A story's calculator (src/tools); an id without a component here fails the build.
 const tool = toolOf(t.name, s.id);
 if (tool && tool.id !== 'heating-cost') throw new Error(`tool ${tool.id}: no component on the matter page`);
-const graph = contentGraph();
+const graph = siteGraph();
 const node = storyNode(t.name, s.id);
+const preview = isPreview(graph, node);
+const rootId = s.partOf ?? s.id;
 // The calls to action of a ready first question (a follow-up's live on its first question's video); a file error
 // fails the build.
 const ctaFile = loadCta(t.name, s.id);
-const ctas = s.readiness === 'ready' && !first ? resolveCtas(ctaFile, graph, node) : null;
+const ctas = !first ? resolveCtas(ctaFile, graph, node) : null;
 if (ctas?.problems.length) throw new Error(`${t.name}/${s.id} cta.json: ${ctas.problems.join('; ')}`);
 const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => matterItem(graph, n.id));
 ---
@@ -144,13 +154,19 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
   title={`${meta?.seoTitle ?? s.title} · ${commission.name}`}
   description={meta?.description.text ?? s.question}
   image={image}
-  noindex={s.readiness !== 'ready'}
   jsonLd={jsonLd}
 >
   <SourceIcons />
+  {
+    preview && (
+      <p class="dev-only mx-auto max-w-wide p-2 text-sm font-semibold">
+        Preview: not live. <a href={href(`/${t.name}/review/${storySlug(rootId)}`)}>Review</a>
+      </p>
+    )
+  }
   <ReportHeader
     brand={commissionKey(commission)}
-    kind={s.readiness === 'ready' ? 'Matter' : 'Matter under examination'}
+    kind="Matter"
     trail={[
       { label: site.name, href: href('/') },
       { label: commission.ceremonialName, href: href(`/commissions/${commissionKey(commission)}/`) },
@@ -165,20 +181,10 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
       { term: 'Claims', value: `${claims.length} examined` },
       {
         term: 'Status',
-        value:
-          s.readiness === 'ready'
-            ? 'Evidence verified and reviewed; the verdicts below say how far it reaches'
-            : 'Evidence still being weighed; verdicts below are current',
+        value: 'Evidence verified and reviewed; the verdicts below say how far it reaches',
       },
     ]}
   >
-    <Fragment slot="stamp">
-      {
-        s.readiness !== 'ready' && (
-          <Stamp brand={commissionKey(commission)} slot="stamp-examination" form="round" class="size-14" />
-        )
-      }
-    </Fragment>
     {
       first && (
         <p class="text-sm text-muted-foreground">
@@ -190,18 +196,22 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
 
   <section id="answer" aria-labelledby="answer-title">
     <div class="eyebrow text-gold">The answer</div>
-    <h2 class={h2} id="answer-title">{s.readiness === 'ready' ? 'What the Record finds' : 'Not yet answered'}</h2>
+    <h2 class={h2} id="answer-title">What the Record finds</h2>
     <p class="max-w-prose font-heading text-[1.05rem] leading-relaxed">
-      {
-        s.readiness === 'ready'
-          ? s.arc.resolution
-          : 'The evidence is still being weighed. The claims below carry their current verdicts.'
-      }
+      {s.arc.resolution}
     </p>
     <div class="mt-3">
       <LabelStrip counts={labelCounts(claims)} base="#evidence-" />
     </div>
   </section>
+
+  {
+    preview && !first && (
+      <section aria-label="The video">
+        <video controls preload="none" src={reviewMediaHref(t.name, storySlug(rootId))} class="w-full" />
+      </section>
+    )
+  }
 
   {
     outputs.video &&
@@ -310,8 +320,10 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
       {
         exhibits.map((x) => (
           <li>
-            <span class="font-mono text-xs text-muted-foreground">Exhibit {x.exhibit}</span> · <SourceLink source={x} />{' '}
-            <span class="text-sm text-muted-foreground">· {x.channel}</span>
+            <span class="font-mono text-xs text-muted-foreground">
+              {x.exhibit ? `Exhibit ${x.exhibit}` : 'Exhibit number assigned at release'}
+            </span>{' '}
+            · <SourceLink source={x} /> <span class="text-sm text-muted-foreground">· {x.channel}</span>
           </li>
         ))
       }
@@ -327,7 +339,7 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
         </h2>
         <MatterList
           items={s.chain
-            .filter((q) => graph.stories.has(storyNode(t.name, q.id)))
+            .filter((q) => graph.nodes.get(storyNode(t.name, q.id))?.public)
             .map((q) => matterItem(graph, storyNode(t.name, q.id)))}
         />
       </section>
@@ -374,10 +386,6 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
         )
       }
     </div>
-    {
-      s.readiness === 'ready' && (
-        <Stamp brand={commissionKey(commission)} slot="stamp-record" form="rect" class="w-44 shrink-0 sm:w-52" />
-      )
-    }
+    <Stamp brand={commissionKey(commission)} slot="stamp-record" form="rect" class="w-44 shrink-0 sm:w-52" />
   </footer>
 </Base>

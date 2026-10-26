@@ -1,9 +1,13 @@
-import { loadDatasets } from '../../../lib/datasets';
+import { dataRef, loadDatasets } from '../../../lib/datasets';
+import { siteGraph } from '../../../lib/site-graph';
 import { publicTopicNames } from '../../../lib/topics';
 
 export function getStaticPaths() {
+  const g = siteGraph();
   return publicTopicNames().flatMap((topic) =>
-    loadDatasets(topic).map((d) => ({ params: { topic, id: d.id }, props: { table: d } })),
+    loadDatasets(topic)
+      .filter((d) => g.nodes.get(dataRef(topic, d.id))?.public)
+      .map((d) => ({ params: { topic, id: d.id }, props: { table: d } })),
   );
 }
 

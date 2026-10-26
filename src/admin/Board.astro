@@ -21,7 +21,8 @@ import {
   type ShortRow,
   type StoryRow,
 } from '../lib/production';
-import { contentGraph, storyNode } from '../lib/content-graph';
+import { storyNode } from '../lib/content-graph';
+import { siteGraph } from '../lib/site-graph';
 import { loadCta, resolveCtas } from '../lib/cta';
 import { loadLedger } from '../lib/publish';
 import { storySlug } from '../lib/script';
@@ -214,7 +215,7 @@ const stripOf = (r: StoryRow) => {
 };
 // The video's calls to action as its description will carry them (scripts/briefs/cta.md): the primary, and any the
 // value checks dropped. Public topics only: the graph holds no other.
-const graph = contentGraph();
+const graph = siteGraph();
 function ctaNotes(topic: string, id: string): string[] {
   const node = storyNode(topic, id);
   if (!graph.stories.has(node)) return [];
@@ -629,6 +630,10 @@ function ctaNotes(topic: string, id: string): string[] {
           </p>
           <a class="text-sm text-primary" href={href(`/${t.name}/stories/`)}>
             Story ideas
+          </a>
+          {' · '}
+          <a class="text-sm text-primary" href={href(`/${t.name}/register/`)}>
+            Register
           </a>
         </div>
         <div class="grid gap-2">

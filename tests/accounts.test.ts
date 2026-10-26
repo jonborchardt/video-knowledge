@@ -6,6 +6,7 @@ import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { commissions, site } from '../src/config/site';
+import { contentGraph, storyNode } from '../src/lib/content-graph';
 import { readJson, ROOT } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
@@ -97,10 +98,13 @@ describe('brand kits', () => {
     });
   }
 
-  it('every public story has an inquiry card drawn from its current question', () => {
+  it('every live story has an inquiry card drawn from its current question', () => {
+    const g = contentGraph(ROOT, publicTopicNames(), 'live');
     const want = Object.fromEntries(
       publicTopicNames().flatMap((topic) =>
-        (loadStories(topic)?.stories ?? []).map((s) => [`${topic}/${storyUrlSlug(s)}`, s.question]),
+        (loadStories(topic)?.stories ?? [])
+          .filter((s) => g.nodes.get(storyNode(topic, s.id))?.public)
+          .map((s) => [`${topic}/${storyUrlSlug(s)}`, s.question]),
       ),
     );
     // brand/og-inquiry.json is what `npm run brand` drew; a changed or new question needs a re-run

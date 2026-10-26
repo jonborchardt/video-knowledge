@@ -5,14 +5,15 @@
 import Base from '../layouts/Base.astro';
 import InstitutionCard from '../components/InstitutionCard.astro';
 import SourceIcons from '../components/SourceIcons.astro';
-import { contentGraph, matterOrder } from '../lib/content-graph';
+import { matterOrder } from '../lib/content-graph';
+import { siteGraph, siteTopics } from '../lib/site-graph';
 import { commissions, site } from '../config/site';
 import { breadcrumbJsonLd, collectionJsonLd } from '../lib/seo';
-import { loadTopic, publicTopicNames } from '../lib/topics';
+import { loadTopic } from '../lib/topics';
 import { href } from '../lib/url';
 
-const names = new Set(publicTopicNames());
-const graph = contentGraph();
+const graph = siteGraph();
+const names = new Set(siteTopics(graph));
 const institutions = Object.values(commissions).map((c) => {
   const published = c.topics.filter((n) => names.has(n)).map((n) => loadTopic(n));
   // Featured: the first ready matter across the institution's inquiries in the one order (a live video first); a

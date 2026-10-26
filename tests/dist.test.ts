@@ -5,38 +5,47 @@ import { describe, expect, it } from 'vitest';
 import { author, commissionKey, commissionOf, commissions, site } from '../src/config/site';
 import { FINDING_LABELS, FINDING_TEXT } from '../src/lib/finding-label';
 import { loadArticleRelease } from '../src/lib/article';
-import { contentGraph, distPages, hasVideo, loadMoved, manifestProblems } from '../src/lib/content-graph';
+import {
+  contentGraph,
+  distPages,
+  matterPath,
+  storyNode,
+  hasVideo,
+  loadMoved,
+  manifestProblems,
+} from '../src/lib/content-graph';
 import { datasetChart } from '../src/lib/chart-geometry';
 import { dataRef, loadDatasets } from '../src/lib/datasets';
 import { ROOT, readJson, topicDir } from '../src/lib/io';
 import type { Storyboard } from '../src/lib/storyboard';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
-import { publicTopicNames, topicNames } from '../src/lib/topics';
+import { loadPublicRecord } from '../src/lib/public-record';
+import { loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
 
 const DIST = join(ROOT, 'dist');
 // Same switch as astro.config.mjs: the GitHub Pages mirror under a base path, else the root site.
 const PAGES = process.env.DEPLOY_TARGET === 'pages';
 const SITE = PAGES ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com';
 const BASE = PAGES ? '/video-knowledge/' : '/';
-const storyPages = publicTopicNames().flatMap((topic) =>
-  (loadStories(topic)?.stories ?? []).map((s) => ({ topic, slug: storyUrlSlug(s), s })),
+// The live view, never siteGraph: vitest runs with DEV true, which would pick the preview view.
+const live = contentGraph();
+const liveTopics = publicTopicNames().filter((t) => live.nodes.get(t)?.public);
+const storyPages = liveTopics.flatMap((topic) =>
+  (loadStories(topic)?.stories ?? [])
+    .filter((s) => live.nodes.get(storyNode(topic, s.id))?.public)
+    .map((s) => ({ topic, slug: storyUrlSlug(s), s })),
 );
+const liveData = (topic: string) => loadDatasets(topic).filter((d) => live.nodes.get(dataRef(topic, d.id))?.public);
 const pages = [
   'index.html',
   'about/index.html',
   'inquiries/index.html',
   'institutions/index.html',
   ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
-  ...publicTopicNames().map((n) => `${n}/index.html`),
+  ...liveTopics.map((n) => `${n}/index.html`),
   ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
-  ...publicTopicNames()
-    .filter((n) => loadDatasets(n).length > 0)
-    .map((n) => `${n}/data/index.html`),
+  ...liveTopics.filter((n) => liveData(n).length > 0).map((n) => `${n}/data/index.html`),
 ];
-// Pages search engines are pointed at: a matter whose story is not ready is noindex and left out of the sitemap.
-const listed = pages.filter(
-  (p) => !storyPages.some((x) => x.s.readiness !== 'ready' && p === `${x.topic}/${x.slug}/index.html`),
-);
 const sitemapXml = () => {
   const index = readFileSync(join(DIST, 'sitemap-index.xml'), 'utf8');
   const part = index.match(/<loc>[^<]*\/(sitemap-\d+\.xml)<\/loc>/)![1];
@@ -64,12 +73,33 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     }
   });
 
-  it('topic pages have their tab sections', () => {
-    for (const n of publicTopicNames()) {
-      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
-      for (const id of ['recap', 'top', 'claims', 'sources']) expect(html).toContain(`<section id="${id}"`);
-      expect(html).toContain('data-verdict=');
+  it('builds no page or file for a story, topic or dataset that is not live', () => {
+    for (const t of publicTopicNames()) expect(existsSync(join(DIST, t)), t).toBe(!!live.nodes.get(t)?.public);
+    for (const n of live.nodes.values()) {
+      if (n.kind === 'story' && !n.public)
+        expect(existsSync(join(DIST, matterPath(n.topic!, live.stories.get(n.id)!))), n.id).toBe(false);
+      if (n.kind === 'dataset' && !n.public) {
+        const id = n.id.slice(n.id.indexOf('/') + 1); // data:<topic>/<id>
+        expect(existsSync(join(DIST, n.topic!, 'data', `${id}.json`)), n.id).toBe(false);
+      }
     }
+  });
+
+  it('with nothing live the home page and inquiries say so', () => {
+    if (liveTopics.length) return;
+    for (const p of ['index.html', 'inquiries/index.html'])
+      expect(readFileSync(join(DIST, p), 'utf8'), p).toContain('No findings published yet.');
+  });
+
+  it('an inquiry page carries its matters and exhibits, and no register', () => {
+    for (const t of liveTopics) {
+      const html = readFileSync(join(DIST, t, 'index.html'), 'utf8');
+      expect(html).toContain('id="matters"');
+      expect(html).toContain('id="sources"');
+      for (const id of ['recap', 'top', 'wrong-claims', 'contested-claims', 'claims', 'studies'])
+        expect(html).not.toContain(`id="${id}"`);
+    }
+    expect(existsSync(join(DIST, 'heat-pumps', 'register'))).toBe(false);
   });
 
   it('only built pages for topics an institution publishes; no admin pages', () => {
@@ -77,7 +107,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       (d) => d.isDirectory() && !['_astro', 'og', 'stamps'].includes(d.name),
     );
     expect(dirs.map((d) => d.name).sort()).toEqual(
-      ['about', 'commissions', 'inquiries', 'institutions', ...publicTopicNames()].sort(),
+      ['about', 'commissions', 'inquiries', 'institutions', ...liveTopics].sort(),
     );
     for (const n of topicNames()) {
       expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
@@ -101,7 +131,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       if (c.youtube) expect(html).toContain(`href="${c.youtube}"`);
     }
     expect(html).toContain('Channel coming soon');
-    expect(html).toContain('Featured matter');
+    if (liveTopics.length) expect(html).toContain('Featured matter');
     expect(html).toContain('The Commonwealth is fictional. The research is real.');
   });
 
@@ -110,11 +140,22 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       const html = readFileSync(join(DIST, 'commissions', k, 'index.html'), 'utf8');
       expect(html).toContain(c.ceremonialName);
       expect(html).toContain(c.fullName);
-      const published = c.topics.filter((n) => publicTopicNames().includes(n));
+      const published = c.topics.filter((n) => liveTopics.includes(n));
       for (const n of published) expect(html).toContain(`href="${BASE}${n}/"`);
       if (published.length) expect(html).toContain('Matters before the');
       else expect(html).toContain('no inquiry published yet');
     }
+  });
+
+  it('share cards exist only for live stories', () => {
+    const want = new Set(storyPages.map((p) => `${p.topic}/${p.slug}.jpg`));
+    const dir = join(DIST, 'og', 'stories');
+    const have = existsSync(dir)
+      ? readdirSync(dir, { withFileTypes: true }).flatMap((d) =>
+          readdirSync(join(dir, d.name)).map((f) => `${d.name}/${f}`),
+        )
+      : [];
+    for (const f of have) expect(want.has(f), f).toBe(true);
   });
 
   it('story pages carry the question and its claims, and the commission page links to them', () => {
@@ -179,7 +220,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
         drawn++;
       });
     }
-    expect(drawn).toBeGreaterThan(0);
+    if (storyPages.length) expect(drawn).toBeGreaterThan(0);
   });
 
   it('no two story pages share a title', () => {
@@ -191,7 +232,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   });
 
   it('topic pages are branded as the institution that publishes them', () => {
-    for (const n of publicTopicNames()) {
+    for (const n of liveTopics) {
       const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
       const [key, c] = Object.entries(commissions).find(([, c]) => c.topics.includes(n))!;
       // The institution's brand kit: its share card and its seal (written by npm run brand).
@@ -214,16 +255,16 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   });
 
   it('every claim card carries one finding label', () => {
-    for (const n of publicTopicNames()) {
-      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
-      const cards = html.match(/<details[^>]*data-claim/g)!.length;
+    for (const { topic, slug } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const cards = (html.match(/<details[^>]*data-claim/g) ?? []).length;
       expect(html.match(/data-label="(verified|qualification|unresolved|reported)"/g)!.length).toBe(cards);
     }
   });
 
   it('topic, matter and institution pages open with one report header and the seal', () => {
     const heads = [
-      ...publicTopicNames().map((n) => `${n}/index.html`),
+      ...liveTopics.map((n) => `${n}/index.html`),
       ...storyPages.map((p) => `${p.topic}/${p.slug}/index.html`),
       ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
     ];
@@ -240,21 +281,6 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(html.indexOf('id="answer"')).toBeGreaterThan(-1);
       expect(html.indexOf('id="answer"')).toBeLessThan(html.indexOf('aria-labelledby="claims"'));
       if (s.readiness === 'ready') expect(html).toContain(s.arc.resolution); // an unready arc is the writer's brief
-    }
-  });
-
-  it('an unsettled matter is noindex and left out of the sitemap; a ready one is listed', () => {
-    const sitemap = sitemapXml();
-    for (const { topic, slug, s } of storyPages) {
-      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
-      const loc = `<loc>${SITE}${BASE}${topic}/${slug}/</loc>`;
-      if (s.readiness === 'ready') {
-        expect(html).not.toContain('noindex');
-        expect(sitemap).toContain(loc);
-      } else {
-        expect(html).toContain('content="noindex');
-        expect(sitemap).not.toContain(loc);
-      }
     }
   });
 
@@ -280,7 +306,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   });
 
   it('inquiries carry a Report and institutions a CollectionPage, each with breadcrumbs', () => {
-    for (const n of publicTopicNames())
+    for (const n of liveTopics)
       expect(ldOf(readFileSync(join(DIST, n, 'index.html'), 'utf8')).map((x) => x['@type'])).toEqual(
         expect.arrayContaining(['Report', 'BreadcrumbList']),
       );
@@ -293,7 +319,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   it('the front page leads with ready matters and links the directory', () => {
     const html = readFileSync(join(DIST, 'index.html'), 'utf8');
     const ready = storyPages.filter((p) => p.s.readiness === 'ready' && !p.s.partOf);
-    expect(ready.some((p) => html.includes(`href="${BASE}${p.topic}/${p.slug}/"`))).toBe(true);
+    if (ready.length) expect(ready.some((p) => html.includes(`href="${BASE}${p.topic}/${p.slug}/"`))).toBe(true);
     expect(html).toContain(`href="${BASE}institutions/"`);
   });
 
@@ -313,7 +339,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(readFileSync(join(DIST, '404.html'), 'utf8')).toContain('<h1');
   });
 
-  it.each(listed)('%s: canonical and social metadata', (p) => {
+  it.each(pages)('%s: canonical and social metadata', (p) => {
     const html = readFileSync(join(DIST, p), 'utf8');
     expect(html).toContain(`<link rel="canonical" href="${SITE}${BASE}`);
     expect(html).not.toContain('name="robots"');
@@ -334,7 +360,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     const robots = readFileSync(join(DIST, 'robots.txt'), 'utf8');
     expect(robots).toContain(`Sitemap: ${SITE}${BASE}sitemap-index.xml`);
     const sitemap = sitemapXml();
-    for (const p of listed) {
+    for (const p of pages) {
       expect(sitemap).toContain(`<loc>${SITE}${BASE}${p.replace('index.html', '')}</loc>`);
     }
     expect(sitemap).not.toContain('404');
@@ -371,31 +397,28 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(html).not.toMatch(/style="[^"]*width:\s*\d{3,}px/);
   });
 
-  it('topic pages: tabs, table headers and the search box are wired up', () => {
-    for (const n of publicTopicNames()) {
+  it('topic pages: table headers are scoped and the icon sprite is present', () => {
+    for (const n of liveTopics) {
       const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
-      expect(html).toContain('role="tablist"');
-      for (const [tab] of html.matchAll(/<button[^>]*role="tab"[^>]*>/g)) {
-        const id = tab.match(/aria-controls="([^"]+)"/)![1];
-        expect(html).toContain(`<section id="${id}"`);
-      }
       for (const [th] of html.matchAll(/<th[\s>][^>]*>/g)) expect(th).toContain('scope="col"');
-      expect(html).toContain('role="status"');
       expect(html).toContain('<symbol id="icon-video"'); // the shared icon sprite SourceLink points at
     }
   });
 
-  it('the tool section informs without JavaScript', () => {
-    const html = readFileSync(join(DIST, 'heat-pumps', 'is-it-cheaper-to-run-than-gas', 'index.html'), 'utf8');
-    expect(html).toContain('data-tool="heating-cost"');
-    expect(html).toContain('3.28'); // the U.S. break-even in the worked examples
-    expect(html).toContain('not a prediction');
-    expect(html).toContain('Gas used for heating'); // not the whole bill: winter use minus summer use
-  });
+  it.skipIf(!storyPages.some((p) => p.slug === 'is-it-cheaper-to-run-than-gas'))(
+    'the tool section informs without JavaScript',
+    () => {
+      const html = readFileSync(join(DIST, 'heat-pumps', 'is-it-cheaper-to-run-than-gas', 'index.html'), 'utf8');
+      expect(html).toContain('data-tool="heating-cost"');
+      expect(html).toContain('3.28'); // the U.S. break-even in the worked examples
+      expect(html).toContain('not a prediction');
+      expect(html).toContain('Gas used for heating'); // not the whole bill: winter use minus summer use
+    },
+  );
 
   it('a topic with datasets has a data page with each table and its downloads', () => {
-    for (const n of publicTopicNames()) {
-      const ds = loadDatasets(n);
+    for (const n of liveTopics) {
+      const ds = liveData(n);
       expect(existsSync(join(DIST, n, 'data/index.html'))).toBe(ds.length > 0);
       for (const d of ds) {
         expect(readFileSync(join(DIST, n, 'data', `${d.id}.csv`), 'utf8').split('\n')[0]).toBe(
@@ -418,7 +441,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
         expect(h, s.id).not.toBe(`${BASE}${topic}/${slug}/`);
       }
     }
-    expect(seen).toBeGreaterThan(0);
+    // A lone live story has no one to relate to: require a list only where a topic has two live root stories.
+    const roots = (t: string) => storyPages.filter((p) => p.topic === t && !p.s.partOf).length;
+    if (liveTopics.some((t) => roots(t) >= 2)) expect(seen).toBeGreaterThan(0);
   });
 
   it('the built site keeps every url in public-urls.json', () => {
@@ -429,7 +454,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it('a redirect page is noindex, points at its target and is not in the sitemap', () => {
     const sitemap = sitemapXml();
-    for (const topic of publicTopicNames())
+    for (const topic of liveTopics)
       for (const [from, to] of Object.entries(loadMoved(topic))) {
         const [old, now] = [from, to].map((id) => `${topic}/${storyUrlSlug({ id })}/`);
         const html = readFileSync(join(DIST, old, 'index.html'), 'utf8');
@@ -477,9 +502,18 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(depth.get(`${topic}/${slug}/index.html`), s.id).toBeLessThanOrEqual(3);
   });
 
+  it('every source on a live matter page has an exhibit number', () => {
+    for (const { topic, s } of storyPages) {
+      const rec = loadPublicRecord(topic);
+      const claims = new Set(s.claims);
+      for (const c of loadTopic(topic).claims.filter((c) => claims.has(c.id)))
+        for (const x of c.sources) expect(rec.exhibits[x.id], `${s.id} ${x.id}`).toBeGreaterThan(0);
+    }
+  });
+
   it('an inquiry page links every matter of the inquiry and marks the live videos', () => {
     const g = contentGraph();
-    for (const n of publicTopicNames()) {
+    for (const n of liveTopics) {
       const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
       const sec = html.match(/<section id="matters"[\s\S]*?<\/section>/)?.[0] ?? '';
       for (const { slug, s } of storyPages.filter((x) => x.topic === n)) {
@@ -497,10 +531,10 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(header(readFileSync(join(DIST, 'commissions', key, 'index.html'), 'utf8')), key).toContain(
         `href="${BASE}"`,
       );
-    for (const n of publicTopicNames()) {
+    for (const n of liveTopics) {
       const inst = `href="${BASE}commissions/${commissionKey(commissionOf(n)!)}/"`;
       expect(header(readFileSync(join(DIST, n, 'index.html'), 'utf8')), n).toContain(inst);
-      if (loadDatasets(n).length)
+      if (liveData(n).length)
         expect(header(readFileSync(join(DIST, n, 'data', 'index.html'), 'utf8'))).toContain(`href="${BASE}${n}/"`);
     }
     for (const { topic, slug } of storyPages)
@@ -511,10 +545,11 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
 
   it('a list that mixes kinds of page marks each kind; an inquiry is never called a matter', () => {
     const dir = readFileSync(join(DIST, 'institutions', 'index.html'), 'utf8');
-    for (const k of ['inquiry', 'matter', 'external']) expect(dir, k).toContain(`href="#icon-${k}"`);
-    expect(dir).toContain('Featured matter');
+    for (const k of liveTopics.length ? ['inquiry', 'matter', 'external'] : ['external'])
+      expect(dir, k).toContain(`href="#icon-${k}"`);
+    if (liveTopics.length) expect(dir).toContain('Featured matter');
     expect(dir).not.toContain('Featured inquiry');
-    for (const n of publicTopicNames())
+    for (const n of liveTopics)
       expect(header(readFileSync(join(DIST, n, 'index.html'), 'utf8')), n).not.toMatch(/>Matter</);
   });
 });

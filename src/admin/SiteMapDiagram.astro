@@ -4,7 +4,8 @@
 // templates in src/pages and src/components). Each box links to a live example on this dev server: the first public
 // topic with a live video if there is one, else the first with a matter page.
 import { commissionKey, commissionOf } from '../config/site';
-import { contentGraph, inquiryMatters, matterPath, type Node, urlOf } from '../lib/content-graph';
+import { inquiryMatters, matterPath, type Node, urlOf } from '../lib/content-graph';
+import { siteGraph } from '../lib/site-graph';
 import { loadDatasets } from '../lib/datasets';
 import { scriptDirs } from '../lib/script';
 import { publicTopicNames } from '../lib/topics';
@@ -12,7 +13,7 @@ import { href } from '../lib/url';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-const g = contentGraph();
+const g = siteGraph();
 const nodes = [...g.nodes.values()];
 const liveVideo = nodes.find((n) => n.kind === 'video' && n.public);
 const liveShort = nodes.find((n) => n.kind === 'short' && n.public);
@@ -69,10 +70,10 @@ const pub: Page[] = [
   },
   {
     level: 3,
-    t: 'Inquiry: the full report',
+    t: 'Inquiry',
     path: '/<topic>/',
     obj: 'one Topic',
-    why: 'every source as a numbered exhibit, every claim and verdict',
+    why: 'the question, its live matters and the numbered exhibits',
     href: `/${topic}/`,
   },
   {
@@ -158,6 +159,15 @@ const dev: Page[] = [
     dev: true,
   },
   {
+    level: 4,
+    t: 'Register',
+    path: '/<topic>/register',
+    obj: 'one Topic',
+    why: 'the full report: every source as an exhibit, every claim and verdict, recap groups',
+    href: `/${topic}/register`,
+    dev: true,
+  },
+  {
     level: 1,
     t: 'Story ideas',
     path: '/<topic>/stories/',
@@ -198,11 +208,11 @@ const dev: Page[] = [
 const states = [
   {
     t: 'Under examination',
-    d: 'readiness is not ready: the matter page is built and listed (marked Under examination), but the story is not a public node: urlOf is null, so nothing features it, no call to action may point at it and no description links it.',
+    d: 'no live video and not packaged: not a public node, so no page is built; urlOf is null, nothing features it and no call to action or description links it.',
   },
   {
-    t: 'Ready, no video',
-    d: 'a public node: listed, featured and related like any matter; the page shows the answer and the evidence, and the article and tool once released; no video box, no "coming soon".',
+    t: 'Packaged, no live video',
+    d: 'a public node on the dev server only (the preview view): the matter page shows a dev-only banner linking its review page and plays the local mp4; a build leaves it out.',
   },
   {
     t: 'Live video',
@@ -272,17 +282,27 @@ const links: { page: string; file: string; links: Link[] }[] = [
   },
   {
     page: 'Inquiry',
-    file: 'src/pages/[topic]/index.astro, MatterList, SourceLink',
+    file: 'src/pages/[topic]/index.astro, MatterList, SourceDetails',
     links: [
       {
         to: 'Matter (all)',
-        why: '#matters: every matter of the topic in matterOrder, marked Video or Under examination',
+        why: '#matters: every live matter of the topic in matterOrder',
       },
-      { to: 'Matter (one)', why: 'a recap group heading whose title is a story links to that matter' },
       { to: 'Data', why: 'when the topic has a dataset: all its figures in one place' },
-      { to: 'outside: every source', why: 'the exhibits, numbered as in public-record.json, each to its original' },
+      {
+        to: 'outside: every source',
+        why: '#sources: the exhibits of live claims, numbered as in public-record.json, each to its original',
+      },
+    ],
+  },
+  {
+    page: 'Register (dev only)',
+    file: 'src/admin/register.astro, SourceDetails',
+    links: [
+      { to: 'Matter (one)', why: 'a recap group heading whose title is a story links to that matter' },
       { to: 'About #verdicts', why: 'how to read the labels' },
-      { to: 'Story ideas (dev only)', why: 'guarded by import.meta.env.DEV' },
+      { to: 'Story ideas', why: 'guarded by import.meta.env.DEV' },
+      { to: 'outside: every source', why: 'every exhibit, to its original' },
     ],
   },
   {

@@ -56,9 +56,9 @@ export function descriptionLinks(
   shortParent: string | null,
   root = ROOT,
 ): DescriptionLinks {
-  const g = contentGraph(root, [topic]);
   const id = shortParent ?? story;
   const node = storyNode(topic, id);
+  const g = contentGraph(root, [topic], 'live', [node]);
   const s = g.stories.get(node);
   if (!s) return { cta: 'default', links: [recordLink(topic)] };
   const matter = absolute(matterPath(topic, s));

@@ -13,6 +13,7 @@ import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
 import { commissionBody, commissionKey, commissionOf, commissions, site } from '../src/config/site';
+import { contentGraph, storyNode } from '../src/lib/content-graph';
 import { ROOT, readJson } from '../src/lib/io';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
@@ -224,15 +225,18 @@ for (const key of ['cor', ...Object.keys(commissions)]) {
   }
   console.log(`${key}: ${assets.length} files`);
 }
-// The per-inquiry share cards (template og-inquiry): one per public story at public/og/stories/<topic>/<story slug>.jpg,
+// The per-inquiry share cards (template og-inquiry): one per live story at public/og/stories/<topic>/<story slug>.jpg,
 // all rewritten each run so a removed story's card goes too. brand/og-inquiry.json records the question each was drawn
 // from; tests/accounts.test.ts fails when a story's question has changed since.
 const CARDS = join(ROOT, 'public/og/stories');
 rmSync(CARDS, { recursive: true, force: true });
 const cardQuestions: Record<string, string> = {};
+const liveGraph = contentGraph(ROOT, publicTopicNames(), 'live');
 for (const topic of publicTopicNames()) {
   const key = commissionKey(commissionOf(topic)!);
-  const stories = loadStories(topic)?.stories ?? [];
+  const stories = (loadStories(topic)?.stories ?? []).filter(
+    (s) => liveGraph.nodes.get(storyNode(topic, s.id))?.public,
+  );
   if (!stories.length) continue;
   const data = JSON.stringify(brandData(key, readJson<Kit>(join(BRAND, key, 'kit.json'))!));
   const cards = await drawn<{ svg: string; w: number; h: number }>(

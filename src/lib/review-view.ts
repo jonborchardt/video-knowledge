@@ -17,6 +17,11 @@ import {
 import { FILES, type ScriptValidation, scriptDir, shortId, shortOf, storySlug } from './script';
 import { loadShorts } from './shorts';
 import { loadStories } from './stories';
+import { href } from './url';
+
+/** The packaged file of a story folder, streamed from disk by the dev server's review-media route. */
+export const reviewMediaHref = (topic: string, path: string, file = 'review.mp4') =>
+  href(`/${topic}/review-media/${file}/${path}`);
 
 export interface Moment {
   label: string;

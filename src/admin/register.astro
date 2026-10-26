@@ -1,0 +1,571 @@
+---
+import TabBar from '../components/TabBar.astro';
+import Base from '../layouts/Base.astro';
+import ClaimCard from '../components/ClaimCard.astro';
+import ReportHeader from '../components/ReportHeader.astro';
+import { revisionLine } from '../lib/public-record';
+import { breadcrumbJsonLd, reportJsonLd } from '../lib/seo';
+import SourceIcons from '../components/SourceIcons.astro';
+import Stamp from '../components/Stamp.astro';
+import SourceDetails from '../components/SourceDetails.astro';
+import SourceLink from '../components/SourceLink.astro';
+import SurpriseItem from '../components/SurpriseItem.astro';
+import VerdictBadge from '../components/VerdictBadge.astro';
+import { groupSlug, loadStories, storyUrlSlug } from '../lib/stories';
+import { storyNode } from '../lib/content-graph';
+import { siteGraph } from '../lib/site-graph';
+import { loadTopic, publicTopicNames, type Topic } from '../lib/topics';
+import { commissionBody, commissionKey, commissionOf, site } from '../config/site';
+import { loadDatasets } from '../lib/datasets';
+import { href } from '../lib/url';
+
+export function getStaticPaths() {
+  return publicTopicNames().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
+}
+const { t } = Astro.props as { t: Topic };
+const hasData = loadDatasets(t.name).length > 0;
+const stories = import.meta.env.DEV ? loadStories(t.name) : null; // the story ideas page exists on the dev server only
+const commission = commissionOf(t.name)!; // the institution that publishes this inquiry (every public topic has one)
+// A claim group that is a story's links its matter, only when that matter page exists (the story is public).
+const graph = siteGraph();
+const groupMatter = new Set(
+  (loadStories(t.name)?.stories ?? [])
+    .filter((s) => graph.nodes.get(storyNode(t.name, s.id))?.public)
+    .map(storyUrlSlug),
+);
+
+// The report reads as an inquiry (brand/charter.md lexicon): findings, exhibits, the record. Each tab is a numbered
+// section of the document.
+const tabs = [
+  { id: 'recap', label: 'Findings' },
+  { id: 'top', label: 'Commended' },
+  ...(t.superseded.length ? [{ id: 'minds', label: 'Changed minds' }] : []),
+  { id: 'wrong-claims', label: `Judged wrong (${t.wrong.length})` },
+  { id: 'contested-claims', label: `Contested (${t.contested.length})` },
+  { id: 'claims', label: `All claims (${t.claims.length})` },
+  { id: 'sources', label: `Exhibits (${t.counted})` },
+  ...(t.changed.length + t.held.length ? [{ id: 'studies', label: 'Overruled guesses' }] : []),
+];
+const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
+const body = commissionBody(commission); // "Findings of the Commission / Bureau / Office / Society"
+const sec = (id: string) => `Section ${ROMAN[tabs.findIndex((x) => x.id === id)]}`;
+const filters = (['right', 'partly', 'wrong', 'untestable', 'unknown'] as const)
+  .map((v) => ({ v, n: t.claims.filter((c) => (c.verdict ?? 'unknown') === v).length }))
+  .filter((f) => f.n);
+// Hero: the verdict bar and the three nugget cards. Nuggets deep-link into tabs (the tab script listens for hashchange).
+const bar = filters.map((f) => ({
+  ...f,
+  bg: {
+    right: 'bg-success',
+    partly: 'bg-warning',
+    wrong: 'bg-destructive',
+    untestable: 'bg-muted-foreground/45',
+    unknown: 'bg-muted-foreground/25',
+  }[f.v],
+}));
+const mostWrong = [...t.wrong].sort((a, b) => b.asserted - a.asserted)[0];
+const flip = t.changed.find((s) => s.text !== mostWrong?.text) ?? t.changed[0]; // the biggest flip is often the same claim
+const mostContested = [...t.contested].sort((a, b) => b.asserted + b.denied - (a.asserted + a.denied))[0];
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+const nuggets = [
+  mostWrong && {
+    k: 'Most-repeated wrong claim',
+    colour: 'text-destructive',
+    big: `${mostWrong.asserted} sources`,
+    text: mostWrong.text,
+    note: mostWrong.note,
+    href: '#wrong-claims',
+    go: `See the ${plural(t.wrong.length, 'wrong claim')}`,
+  },
+  flip && {
+    k: 'Study overturned the AI guess',
+    colour: 'text-warning',
+    big: `${flip.prior} → ${flip.evidence}`,
+    text: flip.text,
+    note: `${flip.study}: ${flip.note}`,
+    href: '#studies',
+    go: 'Where the studies overruled the guess',
+  },
+  mostContested && {
+    k: 'Most contested',
+    colour: 'text-primary',
+    big: `${mostContested.asserted} vs ${mostContested.denied}`,
+    text: mostContested.text,
+    note: mostContested.note,
+    href: '#contested-claims',
+    go: `See the ${plural(t.contested.length, 'contested claim')}`,
+  },
+].filter((n) => !!n);
+const fmt = (n: number) => n.toLocaleString('en-US');
+const tiles = [
+  { v: fmt(t.counted), l: 'sources checked', s: `${t.videos} videos · ${t.posts} posts` },
+  { v: fmt(t.channels), l: 'channels and authors', s: `${t.counted - t.channels} repeat appearances` },
+  t.hours && {
+    v: `${Math.round(t.hours)} h`,
+    l: 'of video, so you need not',
+    s: `median ${Math.round(t.medianMinutes)} min`,
+  },
+  {
+    v: fmt(t.claims.length),
+    l: 'distinct claims',
+    s: `${fmt(t.claims.reduce((n, c) => n + c.asserted + c.denied, 0))} times asserted`,
+  },
+  { v: fmt(t.studies), l: 'studies and reports', s: t.studies ? `decide ${t.decided} claims` : 'none checked yet' },
+  t.studies && { v: fmt(t.changed.length), l: 'AI guesses overturned', s: 'by a study', colour: 'text-destructive' },
+].filter((x) => !!x);
+const scoreColour = (s: number | null) =>
+  s === 2 ? 'text-success' : s === 1 ? 'text-primary' : s === -1 ? 'text-destructive' : 'text-muted-foreground';
+const h2 = 'mb-3 text-featured font-semibold';
+const h3 = 'mt-5 mb-2 text-title font-semibold';
+const small = 'text-sm text-muted-foreground';
+const list = 'grid list-disc gap-2.5 pl-[1.2em] [&>li]:max-w-prose';
+---
+
+<Base
+  title={`${t.label} · ${commission.name}`}
+  description={t.bottomLine ?? undefined}
+  image={`/og/${commissionKey(commission)}.jpg`}
+  jsonLd={[
+    reportJsonLd(
+      t.hero.title ?? t.label,
+      t.bottomLine ?? `The public inquiry into ${t.label}.`,
+      `/${t.name}/`,
+      t.revised,
+      commission.fullName,
+      Astro.site!,
+    ),
+    breadcrumbJsonLd(
+      [
+        { name: site.name, path: '/' },
+        { name: commission.name, path: `/commissions/${commissionKey(commission)}/` },
+        { name: t.label, path: `/${t.name}/` },
+      ],
+      Astro.site!,
+    ),
+  ]}
+>
+  <SourceIcons />
+  <div class="grid gap-5">
+    <!-- The inquiry docket: who opened the matter, what it is, and where it stands. -->
+    <ReportHeader
+      brand={commissionKey(commission)}
+      kind="Public inquiry"
+      revised={t.revised}
+      trail={[
+        { label: site.name, href: href('/') },
+        { label: commission.ceremonialName, href: href(`/commissions/${commissionKey(commission)}/`) },
+      ]}
+      title={t.hero.title ?? `What ${t.counted} videos and posts claim about ${t.label}`}
+      lede={t.hero.lede ??
+        `Every claim gets an AI guess with a one-line reason${t.studies ? `, and the ${t.studies} studies in the sources folder override it where they speak` : ''}. The sections below say what holds up and which sources the ${body} commends.`}
+      facts={[
+        { term: 'Inquiry', value: t.label },
+        { term: 'Published by', value: commission.fullName },
+        commission.youtube
+          ? {
+              term: 'Channel',
+              value: `YouTube ${commission.handle}`,
+              href: commission.youtube,
+              rel: 'me',
+              kind: 'external' as const,
+            }
+          : { term: 'Channel', value: 'coming soon' },
+        {
+          term: 'Evidence',
+          value: `${t.counted} sources examined · ${t.studies ? `${t.studies} studies and reports` : 'no studies checked yet'}`,
+        },
+        ...(hasData
+          ? [
+              {
+                term: 'Data',
+                value: 'Tables and downloads (CSV, JSON)',
+                href: href(`/${t.name}/data/`),
+                kind: 'data' as const,
+              },
+            ]
+          : []),
+        { term: 'Status', value: 'Entered into the public record; verdicts update as evidence is added' },
+      ]}
+    >
+      {
+        stories && (
+          <p class="dev-only text-sm">
+            <a href={href(`/${t.name}/stories/`)}>
+              {stories.stories.length} story ideas for videos,{' '}
+              {stories.stories.filter((s) => s.readiness === 'ready').length} ready
+            </a>
+          </p>
+        )
+      }
+    </ReportHeader>
+    <ul
+      class="grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 lg:[grid-template-columns:var(--cols)]"
+      style={`--cols: repeat(${tiles.length}, minmax(0, 1fr))`}
+      aria-label="At a glance"
+    >
+      {
+        tiles.map((x) => (
+          <li class="grid gap-0.5 rounded-md border bg-card px-3.5 py-3">
+            <span class:list={['text-[1.75rem] leading-tight font-semibold tracking-tight', x.colour]}>{x.v}</span>
+            <span class="text-[.8rem] text-muted-foreground">{x.l}</span>
+            <span class="font-mono text-xs text-muted-foreground">{x.s}</span>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="grid gap-2">
+      <div
+        class="flex h-3.5 gap-0.5 overflow-hidden rounded"
+        role="img"
+        aria-label={`Verdicts: ${bar.map((f) => `${f.n} ${f.v}`).join(', ')}`}
+      >
+        {bar.map((f) => <span class={f.bg} style={`flex:${f.n}`} />)}
+      </div>
+      <div class="flex flex-wrap gap-x-5 gap-y-1 font-mono text-[.8rem] text-muted-foreground" aria-hidden="true">
+        {
+          bar.map((f) => (
+            <span>
+              <i class:list={['mr-1.5 inline-block size-[.6em] rounded-xs', f.bg]} /> {f.v} {f.n}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+    {
+      nuggets.length > 0 && (
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(16rem,1fr))] gap-3">
+          {nuggets.map((n) => (
+            <a
+              class="grid content-start gap-2 rounded-md border bg-card p-4 text-card-foreground no-underline hover:border-primary"
+              href={n.href}
+            >
+              <span class:list={['eyebrow', n.colour]}>{n.k}</span>
+              <span class="text-[2rem] leading-none font-semibold tracking-tight">{n.big}</span>
+              <span class="text-[.95rem] leading-snug">{n.text}</span>
+              {n.note && <span class={small}>{n.note}</span>}
+              <span class="text-[.8rem] text-primary">{n.go}</span>
+            </a>
+          ))}
+        </div>
+      )
+    }
+    <p class="dev-only text-sm">
+      The register. The matters are on the <a href={href(`/${t.name}/`)}>public inquiry page</a>.
+    </p>
+  </div>
+
+  <TabBar tabs={tabs} label="Report sections" />
+
+  <section id="recap">
+    <div class="eyebrow text-gold">{sec('recap')}</div>
+    <h2 class={h2}>Findings of the {body}</h2>
+    <p class={small}>
+      {
+        t.studies
+          ? `Studies decide ${t.decided} claims; the rest use an AI guess, which counts for at most 50% confidence.`
+          : 'No studies have been checked yet, so every verdict is an AI guess.'
+      }{t.noCaptions ? ` ${t.noCaptions} more videos had no captions and are not counted.` : ''}{' '}
+      <a href={href('/about/#verdicts')}>How to read the verdict labels.</a>
+    </p>
+    {
+      t.bottomLine && (
+        <figure class="mt-4 max-w-wide border-l-4 border-gold bg-card p-4 pl-5">
+          {/* The (decorative) stamp sits in the caption so the caption stays the figure's first child; it still floats over the text below. */}
+          <figcaption class="eyebrow text-muted-foreground">
+            <Stamp
+              brand={commissionKey(commission)}
+              slot="stamp-finding"
+              form="round"
+              class="float-right ml-3 size-16 sm:size-20"
+            />
+            Finding
+          </figcaption>
+          <p class="mt-2 font-heading text-[1.05rem] leading-relaxed">
+            {t.bottomLine[0].toUpperCase() + t.bottomLine.slice(1)}
+          </p>
+          <p class:list={[small, 'mt-3']}>
+            The verdicts below update automatically as evidence is added; the finding is a hand-written summary of them
+            and claims no more than they do.
+          </p>
+        </figure>
+      )
+    }
+    {
+      t.recap.map((g) => (
+        <>
+          <h3 class={h3} id={groupSlug(g.title)}>
+            {groupMatter.has(groupSlug(g.title)) ? (
+              <a href={href(`/${t.name}/${groupSlug(g.title)}/`)}>{g.title}</a>
+            ) : (
+              g.title
+            )}
+          </h3>
+          <ul class={list}>
+            {g.claims.map((c) => (
+              <li>
+                {c.text} <VerdictBadge verdict={c.verdict} confidence={c.confidence} />{' '}
+                <span class={small}>
+                  ·{' '}
+                  {c.decidedBy
+                    ? `${c.decidedBy}${c.studies > 1 ? ` + ${c.studies - 1} more` : ''}`
+                    : `AI guess${c.studies ? ` (${c.studies} weaker ${c.studies > 1 ? 'studies' : 'study'} as context)` : ''}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      ))
+    }
+  </section>
+
+  <section id="top">
+    <div class="eyebrow text-gold">{sec('top')}</div>
+    <h2 class={h2}>Five sources the {body} commends</h2>
+    <p class:list={[small, 'mb-3']}>
+      Ranked by score, then novelty (rare claims that hold up, weighted by verdict confidence).
+    </p>
+    <ol class="grid list-decimal gap-2.5 pl-[1.2em] [&>li]:max-w-prose">
+      {
+        t.top.map((s) => (
+          <li>
+            <SourceDetails source={s} group="top" meta={`${s.channel} · novelty ${s.novelty.toFixed(2)}`}>
+              {s.summary && <span class:list={[small, 'ml-[1.4em] block']}>{s.summary}</span>}
+            </SourceDetails>
+          </li>
+        ))
+      }
+    </ol>
+    {
+      t.next.length > 0 && (
+        <p class:list={[small, 'mt-3']}>
+          Next:{' '}
+          {t.next.map((s, i) => (
+            <>
+              {i > 0 && ', '}
+              <SourceLink source={s} /> ({s.novelty.toFixed(2)})
+            </>
+          ))}
+          .
+        </p>
+      )
+    }
+  </section>
+
+  {
+    t.superseded.length > 0 && (
+      <section id="minds">
+        <div class="eyebrow text-gold">{sec('minds')}</div>
+        <h2 class={h2}>Changed minds</h2>
+        <p class:list={[small, 'mb-3']}>
+          When a speaker later reverses a position, the older source is superseded: it stays listed but no longer counts
+          toward claims or novelty. Evidence recorded on it still counts.
+        </p>
+        <ul class={list}>
+          {t.superseded.map((s) => (
+            <li>
+              {s.title} → superseded by {s.by}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section id="wrong-claims">
+    <div class="eyebrow text-gold">{sec('wrong-claims')}</div>
+    <h2 class={h2}>Claims judged wrong</h2>
+    <p class:list={[small, 'mb-3']}>
+      The claim's deciding verdict is "wrong". The stat line shows whether a study decided it or only the AI guess.
+    </p>
+    {t.wrong.map((c) => <ClaimCard claim={c} group="wrong" />)}
+    {t.wrong.length === 0 && <p class={small}>None.</p>}
+  </section>
+
+  <section id="contested-claims">
+    <div class="eyebrow text-gold">{sec('contested-claims')}</div>
+    <h2 class={h2}>Contested claims</h2>
+    <p class:list={[small, 'mb-3']}>Claims some sources assert and others deny.</p>
+    {t.contested.map((c) => <ClaimCard claim={c} group="contested" />)}
+    {t.contested.length === 0 && <p class={small}>None.</p>}
+  </section>
+
+  <section id="claims">
+    <div class="eyebrow text-gold">{sec('claims')}</div>
+    <h2 class={h2}>The register of claims</h2>
+    <div class="mb-3 flex flex-wrap gap-2" role="group" aria-label="Filter by verdict" data-filters>
+      <input
+        id="q"
+        type="search"
+        placeholder="Search claims"
+        aria-label="Search claims"
+        class="min-w-0 flex-[1_1_200px] rounded-md border border-input bg-card px-2.5 py-1.5 text-sm"
+      />
+      {
+        [{ v: 'all', n: t.claims.length }, ...filters].map((f) => (
+          <button
+            type="button"
+            data-filter={f.v}
+            aria-pressed={f.v === 'all' ? 'true' : 'false'}
+            class="cursor-pointer rounded-md border border-input bg-card px-2.5 py-1.5 text-sm aria-pressed:border-primary aria-pressed:font-medium aria-pressed:text-primary"
+          >
+            {f.v} ({f.n})
+          </button>
+        ))
+      }
+    </div>
+    <p class:list={[small, 'mb-3']} role="status" data-status>
+      Showing {t.claims.length} of {t.claims.length} claims.
+    </p>
+    <div data-claims>
+      {t.claims.map((c) => <ClaimCard claim={c} group="all" />)}
+    </div>
+  </section>
+
+  <section id="sources">
+    <div class="eyebrow text-gold">{sec('sources')}</div>
+    <h2 class={h2}>Exhibits: the videos and posts examined</h2>
+    <p class:list={[small, 'mb-3']}>
+      Score: −1 mostly wrong, 0 mixed, 1 mostly right, 2 right, from the verdicts on the claims each source makes.
+      Novelty adds up, for each claim a source gets right or correctly refutes, the verdict's confidence divided by how
+      many sources take the same stance; 1 is about one unique, well-supported point.
+    </p>
+    <div class="overflow-x-auto">
+      <table
+        class="w-full border-collapse text-sm [&_td]:border-t [&_td]:px-1.5 [&_td]:py-2 [&_td]:align-top [&_th]:px-1.5 [&_th]:py-2 [&_th]:text-left [&_th]:font-mono [&_th]:text-xs [&_th]:font-normal [&_th]:tracking-[.04em] [&_th]:text-muted-foreground [&_th]:uppercase"
+      >
+        <thead>
+          <tr>
+            <th scope="col">Score</th>
+            <th scope="col">Source</th>
+            <th scope="col">Novelty</th>
+            <th scope="col" class="max-sm:hidden">Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            t.sources.map((s) => (
+              <tr class:list={[s.superseded && 'text-muted-foreground [&_a]:text-muted-foreground']}>
+                <td class:list={['font-mono font-semibold whitespace-nowrap tabular-nums', scoreColour(s.score)]}>
+                  {s.score == null ? '–' : `${s.score > 0 ? '+' : ''}${s.score}`}
+                </td>
+                <td>
+                  <SourceDetails
+                    source={s}
+                    group="sources"
+                    meta={`${s.channel}${s.superseded ? ' · superseded' : ''}`}
+                  />
+                </td>
+                <td class="font-mono whitespace-nowrap tabular-nums">{s.novelty.toFixed(2)}</td>
+                <td class:list={[small, 'max-sm:hidden']}>{s.worthWatching}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {
+    t.changed.length + t.held.length > 0 && (
+      <section id="studies">
+        <div class="eyebrow text-gold">{sec('studies')}</div>
+        <h2 class={h2}>Where the studies overruled the guess</h2>
+        <p class={small}>
+          Each claim first got an <em>AI guess</em>, then was checked against the studies. Listed: claims where a study
+          pointed a different way. An AI guess counts for at most 50% confidence; a study at least that confident
+          replaces it, a weaker one is shown as context. Biggest changes first.
+        </p>
+        <h3 class={h3}>Verdict changed by a study ({t.changed.length})</h3>
+        <ul class={list}>
+          {t.changed.map((s) => (
+            <SurpriseItem s={s} />
+          ))}
+        </ul>
+        {t.held.length > 0 && (
+          <details class="mt-3">
+            <summary class:list={[small, 'cursor-pointer']}>
+              {t.held.length} more where a study disagreed but was less confident, so the AI guess stands
+            </summary>
+            <ul class:list={[list, 'mt-3']}>
+              {t.held.map((s) => (
+                <SurpriseItem s={s} />
+              ))}
+            </ul>
+          </details>
+        )}
+      </section>
+    )
+  }
+
+  <!-- The record close: outside the tab panels, so it ends every section. -->
+  <footer
+    class="flex flex-wrap items-center justify-between gap-4 border-y-4 border-double py-5 text-sm text-muted-foreground"
+  >
+    <div class="grid gap-2">
+      <div class="eyebrow text-gold">Entered into the Public Record</div>
+      <p class="font-heading text-[1.05rem] text-foreground">The matter is now part of the public record.</p>
+      <p class="max-w-prose">
+        {commission.fullName}. Every verdict links to the quote it judges and the lines of evidence it rests on.
+        Corrections are welcome and recorded with their date: <a href={`${site.repo}/issues`}>raise one</a>.
+      </p>
+      {
+        t.revisions.length > 0 && (
+          <>
+            <h2 class="eyebrow text-gold">Revisions</h2>
+            <ul class="grid list-none gap-1 p-0">
+              {t.revisions.map((r) => (
+                <li>
+                  {revisionLine(r)}{' '}
+                  <span class="text-muted-foreground">({t.claims.find((c) => c.id === r.id)?.text ?? r.id})</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </div>
+    <Stamp brand={commissionKey(commission)} slot="stamp-record" form="rect" class="w-44 shrink-0 sm:w-52" />
+  </footer>
+</Base>
+
+<style is:global>
+  /* Source chips: the checked radio decides which claim rows show. No script needed. */
+  [data-source]:has([value='novel']:checked) li:not([data-novel]),
+  [data-source]:has([value='right']:checked) li:not([data-v='right']),
+  [data-source]:has([value='wrong']:checked) li:not([data-v='wrong']),
+  [data-source]:has([value='partly']:checked) li:not([data-v='partly']),
+  [data-source]:has([value='untestable']:checked) li:not([data-v='untestable'], [data-v='unknown']) {
+    display: none;
+  }
+</style>
+
+<script>
+  // Claim filter and search: the cards are already on the page; this only hides the ones that don't match.
+  const q = document.getElementById('q') as HTMLInputElement;
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-claims] > [data-verdict]')].map((el) => ({
+    el,
+    text: el.textContent!.toLowerCase(),
+  }));
+  const status = document.querySelector<HTMLElement>('[data-status]')!;
+  let filter = 'all';
+  function apply() {
+    const s = q.value.toLowerCase();
+    let shown = 0;
+    for (const c of cards) {
+      const on = (filter === 'all' || c.el.dataset.verdict === filter) && (!s || c.text.includes(s));
+      c.el.hidden = !on;
+      shown += Number(on);
+    }
+    status.textContent = shown ? `Showing ${shown} of ${cards.length} claims.` : 'No claims match.';
+  }
+  apply();
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      filter = b.dataset.filter!;
+      buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      apply();
+    }),
+  );
+  q.addEventListener('input', apply);
+</script>

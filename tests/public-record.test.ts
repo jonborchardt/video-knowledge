@@ -21,17 +21,20 @@ import {
   publicRecordProblems,
   revisionLine,
 } from '../src/lib/public-record';
+import { contentGraph, liveClaims } from '../src/lib/content-graph';
 import { ROOT, toJson, topicDir } from '../src/lib/io';
 import { type ClaimView, loadTopic, publicTopicNames, type SourceView, type Verdict } from '../src/lib/topics';
 
 const claim = (id: string, verdict: Verdict | null, confidence: number | null, decidedBy: string | null = 'S') =>
-  ({ id, verdict, confidence, decidedBy }) as ClaimView;
+  ({ id, verdict, confidence, decidedBy, sources: [] }) as unknown as ClaimView;
 const src = (id: string) => ({ id }) as SourceView;
+const withSrc = (c: ClaimView, ...ids: string[]) => ({ ...c, sources: ids.map(src) }) as unknown as ClaimView;
 const empty = { exhibits: {}, revisions: [] };
 
 describe('public record', () => {
   it('seeds exhibits 1..n in source-id order with no revisions', () => {
-    const r = nextPublicRecord(empty, null, { claims: [], sources: [src('b'), src('a')] }, '2026-10-24');
+    const claims = [withSrc(claim('c', 'right', 0.9), 'b', 'a')];
+    const r = nextPublicRecord(empty, null, { claims, sources: [src('b'), src('a')] }, '2026-10-24', new Set(['c']));
     expect(r).toEqual({ exhibits: { a: 1, b: 2 }, revisions: [] });
   });
 
@@ -39,8 +42,9 @@ describe('public record', () => {
     const r = nextPublicRecord(
       { exhibits: { a: 1, b: 2 }, revisions: [] },
       null,
-      { claims: [], sources: [src('b'), src('c')] },
+      { claims: [withSrc(claim('k', 'right', 0.9), 'b', 'c')], sources: [src('b'), src('c')] },
       'd',
+      new Set(['k']),
     );
     expect(r.exhibits).toEqual({ a: 1, b: 2, c: 3 });
   });
@@ -53,7 +57,7 @@ describe('public record', () => {
       claims: [claim('x', 'partly', 0.9), claim('y', 'wrong', 0.9), claim('z', 'right', 0.95)],
       sources: [],
     };
-    const r = nextPublicRecord(empty, before, after, '2026-11-02');
+    const r = nextPublicRecord(empty, before, after, '2026-11-02', new Set(['x', 'y', 'z']));
     expect(r.revisions.map((v) => v.id)).toEqual(['x', 'y']);
     expect(r.revisions[1]).toEqual({
       at: '2026-11-02',
@@ -71,14 +75,35 @@ describe('public record', () => {
       claimStates({ claims: [claim('x', 'right', 0.9)] }),
       { claims: [claim('n', 'right', 0.9)], sources: [] },
       'd',
+      new Set(['x', 'n']),
     );
     expect(r.revisions).toEqual([expect.objectContaining({ id: 'x', to: null })]);
   });
 
+  it('numbers only the sources of live claims, in id order, after the current max', () => {
+    const after = {
+      claims: [withSrc(claim('c1', 'right', 0.9), 'z', 'b'), withSrc(claim('c2', 'wrong', 0.9), 'a')],
+      sources: [src('a'), src('b'), src('z')],
+    };
+    expect(nextPublicRecord(empty, null, after, 'T', new Set(['c1'])).exhibits).toEqual({ b: 1, z: 2 });
+    const prev = { exhibits: { b: 1, z: 2 }, revisions: [] };
+    expect(nextPublicRecord(prev, null, after, 'T', new Set(['c1', 'c2'])).exhibits).toEqual({ b: 1, z: 2, a: 3 });
+  });
+
+  it('records revisions only for live claims', () => {
+    const before = claimStates({ claims: [claim('c1', 'right', 0.9), claim('c2', 'right', 0.9)] });
+    const after = { claims: [claim('c1', 'wrong', 0.9), claim('c2', 'wrong', 0.9)], sources: [] };
+    const r = nextPublicRecord(empty, before, after, 'T', new Set(['c1']));
+    expect(r.revisions.map((v) => v.id)).toEqual(['c1']);
+  });
+
   it('applying the same state twice adds nothing', () => {
     const t = { claims: [claim('x', 'partly', 0.9)], sources: [src('a')] };
-    const once = nextPublicRecord(empty, claimStates({ claims: [claim('x', 'right', 0.9)] }), t, 'd');
-    expect(nextPublicRecord(noteRevision(once, 'x', 'new study'), claimStates(t), t, 'e').revisions).toHaveLength(1);
+    const lv = new Set(['x']);
+    const once = nextPublicRecord(empty, claimStates({ claims: [claim('x', 'right', 0.9)] }), t, 'd', lv);
+    expect(nextPublicRecord(noteRevision(once, 'x', 'new study'), claimStates(t), t, 'e', lv).revisions).toHaveLength(
+      1,
+    );
   });
 
   it('an unexplained revision is a problem; noteRevision explains the latest one', () => {
@@ -87,6 +112,7 @@ describe('public record', () => {
       claimStates({ claims: [claim('x', 'right', 0.9)] }),
       { claims: [claim('x', 'wrong', 0.9)], sources: [] },
       'd',
+      new Set(['x']),
     );
     expect(publicRecordProblems(r)).toEqual(['revision 0 (x, d): no note']);
     expect(publicRecordProblems(noteRevision(r, 'x', 'Smith 2026 overturned it'))).toEqual([]);
@@ -104,7 +130,7 @@ describe('public record', () => {
       publicRecordProblems({ exhibits: {}, revisions: [{ ...art, from: { label: 'verified', verdict: 'right' } }] }),
     ).toEqual(['revision 0: malformed']);
     const t = { claims: [claim('q:s', 'wrong', 0.9)], sources: [] };
-    const next = nextPublicRecord(rec, claimStates({ claims: [claim('q:s', 'right', 0.9)] }), t, 'e');
+    const next = nextPublicRecord(rec, claimStates({ claims: [claim('q:s', 'right', 0.9)] }), t, 'e', new Set(['q:s']));
     expect(next.revisions[0]).toEqual(art);
     expect(next.revisions).toHaveLength(2);
     expect(() => noteRevision({ ...rec, revisions: [{ ...art, note: '' }] }, 'q:s', 'x')).toThrow();
@@ -120,12 +146,14 @@ describe('public record', () => {
     expect(revisionLine(r)).toBe('Revised 2026-11-02: n');
   });
 
-  it('every public topic has a public record with exhibit numbers for its sources and no unexplained revision', () => {
+  it('every public topic has a public record with exhibit numbers for the sources of its live claims and no unexplained revision', () => {
     for (const n of publicTopicNames()) {
       expect(existsSync(publicRecordPath(n)), n).toBe(true);
       const rec = loadPublicRecord(n);
       expect(publicRecordProblems(rec), n).toEqual([]);
-      for (const s of loadTopic(n).sources) expect(rec.exhibits[s.id], `${n} ${s.id}`).toBeGreaterThan(0);
+      const lv = liveClaims(contentGraph(ROOT, [n]), n);
+      for (const c of loadTopic(n).claims.filter((c) => lv.has(c.id)))
+        for (const s of c.sources) expect(rec.exhibits[s.id], `${n} ${s.id}`).toBeGreaterThan(0);
     }
   });
 

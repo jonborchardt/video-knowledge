@@ -26,13 +26,5 @@
     }
   ],
   "headers": ["X-Content-Type-Options: nosniff", "Referrer-Policy:", "Content-Security-Policy:", "Permissions-Policy:"],
-  "exceptions": [
-    {
-      "check": "axe",
-      "rule": "nested-interactive",
-      "page": "^[^/]+/(index\\.html|[^/]+/index\\.html)$",
-      "target": "summary|details-marker",
-      "reason": "WCAG 4.1.2, open since 2026-10-24: ClaimCard and SourceDetails put the stat-line shortcut buttons (data-pick) inside <summary>, itself a control. Fixing it means moving the chips out of the summary, a component restructure."
-    }
-  ]
+  "exceptions": []
 }

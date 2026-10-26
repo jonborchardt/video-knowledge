@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { isListed, unlistedPaths } from './src/lib/seo.ts';
-import { movedRedirects } from './src/lib/content-graph.ts';
+import { contentGraph, movedRedirects } from './src/lib/content-graph.ts';
+import { publicTopicNames } from './src/lib/topics.ts';
 
 // Two deploy targets while both run: Cloudflare serves https://commonwealthofreason.com/ at the root (the default,
 // wrangler.jsonc); DEPLOY_TARGET=pages builds the GitHub Pages mirror at https://jonborchardt.github.io/video-knowledge/.
@@ -17,6 +17,7 @@ const admin = {
       if (command !== 'dev') return;
       injectRoute({ pattern: '/admin', entrypoint: './src/admin/index.astro' });
       injectRoute({ pattern: '/[topic]/stories', entrypoint: './src/admin/stories.astro' });
+      injectRoute({ pattern: '/[topic]/register', entrypoint: './src/admin/register.astro' });
       injectRoute({ pattern: '/[topic]/scripts/[slug]', entrypoint: './src/admin/script.astro' });
       injectRoute({ pattern: '/[topic]/review/[...path]', entrypoint: './src/admin/review.astro', prerender: false });
       // the review page's media: the packaged build streamed from disk, never copied into public/ or dist/
@@ -34,17 +35,18 @@ const admin = {
   },
 };
 
-const unlisted = new Set(unlistedPaths());
+// A topic with no live story builds no page, so its moved.json emits no redirect either.
+const g = contentGraph();
+const liveTopics = publicTopicNames().filter((t) => g.nodes.get(t)?.public);
 
 export default defineConfig({
   site: pages ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com',
   base: pages ? '/video-knowledge' : '/',
-  // A matter whose story is not ready stays out of the sitemap (and is noindex) until it is; both read stories.json.
   // A story whose id changed keeps its old matter URL as a redirect page (topics/<topic>/moved.json).
   // Astro prefixes the base to the old path but not to the destination.
   redirects: Object.fromEntries(
-    Object.entries(movedRedirects()).map(([from, to]) => [from, `${pages ? '/video-knowledge' : ''}${to}`]),
+    Object.entries(movedRedirects(liveTopics)).map(([from, to]) => [from, `${pages ? '/video-knowledge' : ''}${to}`]),
   ),
-  integrations: [sitemap({ filter: (page) => isListed(page, pages ? '/video-knowledge/' : '/', unlisted) }), admin],
+  integrations: [sitemap(), admin],
   vite: { plugins: [tailwindcss()] },
 });

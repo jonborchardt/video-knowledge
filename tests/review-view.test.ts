@@ -14,7 +14,8 @@ import {
   recordUploaded,
   saveLedger,
 } from '../src/lib/publish';
-import { parseNotes, reviewView } from '../src/lib/review-view';
+import { parseNotes, reviewMediaHref, reviewView } from '../src/lib/review-view';
+import { href } from '../src/lib/url';
 import { type Fixture, syntheticProduction, syntheticShort } from './production-helpers';
 
 const now = new Date('2026-10-26T00:00:00Z');
@@ -170,4 +171,8 @@ describe('review fixes', () => {
       saveLedger(publishPath(f.topic, f.story, f.root), l);
       expect(reviewView(f.topic, f.story, f.root).title).toBe('Override');
     }));
+});
+
+it('reviewMediaHref names the packaged file of a story folder', () => {
+  expect(reviewMediaHref('heat-pumps', 'some-slug')).toBe(href('/heat-pumps/review-media/review.mp4/some-slug'));
 });
