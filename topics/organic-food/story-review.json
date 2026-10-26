@@ -15,6 +15,22 @@
     "organic-food/most-people-carry-detectable-glyphosate-their|asserts|organic-food/sources/ospina-2024-nhanes-glyphosate.txt#L22-L22": {
       "level": "direct",
       "reason": "a nationally representative CDC sample measuring the claim itself (detection in urine, 70-82% across three cycles); the falling concentrations do not narrow detection, and the story states it for the U.S. population the sample represents"
+    },
+    "organic-food/heavy-glyphosate-exposure-raises-risk-non|asserts|organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616": {
+      "level": "direct",
+      "reason": "the top quartile of intensity-weighted lifetime glyphosate use among licensed applicators is heavy exposure as the claim means it, and NHL is the outcome; self-reported exposure is a measurement caveat, not a narrower scope"
+    },
+    "organic-food/heavy-glyphosate-exposure-raises-risk-non|asserts|organic-food/sources/leon-2019-agricoh-nhl.txt#L909-L921": {
+      "level": "partial",
+      "reason": "the pooled cohorts compare ever with never use, not heavy use, so they bear on the exposure question only in a broader, diluted form"
+    },
+    "organic-food/heavy-glyphosate-exposure-raises-risk-non|denies|organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616": {
+      "level": "direct",
+      "reason": "the top quartile of intensity-weighted lifetime glyphosate use among licensed applicators is heavy exposure as the claim means it, and NHL is the outcome; self-reported exposure is a measurement caveat, not a narrower scope"
+    },
+    "organic-food/heavy-glyphosate-exposure-raises-risk-non|denies|organic-food/sources/leon-2019-agricoh-nhl.txt#L909-L921": {
+      "level": "partial",
+      "reason": "the pooled cohorts compare ever with never use, not heavy use, so they bear on the exposure question only in a broader, diluted form"
     }
   },
   "stories": {
@@ -421,6 +437,28 @@
     },
     "gap:small-farms-can-organic-practice-without": {
       "research": "No study bears on it. Unblocking it needs the regulation's small-operation exemption (7 CFR 205.101) recorded as a verdict, plus survey data on how uncertified small growers actually farm."
+    },
+    "conflict:heavy-glyphosate-exposure-raises-risk-non": {
+      "coherence": {
+        "score": 0.85,
+        "reason": "One question: why the cohort and case-control studies of heavily exposed farmers disagree on glyphosate and non-Hodgkin lymphoma."
+      },
+      "question": "Why do studies disagree on whether heavy glyphosate use causes lymphoma?",
+      "title": "Glyphosate and Lymphoma: Why the Studies Split",
+      "alternates": [
+        "Does Heavy Glyphosate Use Cause Non-Hodgkin Lymphoma?",
+        "Farmers, Glyphosate and Lymphoma: Cohort Versus Case-Control"
+      ],
+      "whyWatch": "The same question gets opposite answers depending on how the study was built; seeing why tells you how much weight either headline deserves.",
+      "tension": "A large prospective cohort of heavy users found no raised lymphoma risk, while meta-analyses that lean on case-control studies found a raised risk of up to 41% in the most exposed.",
+      "evidenceNeeded": "The cohort and case-control results on the most heavily exposed, side by side, with what each design can and cannot rule out.",
+      "premise": "Among the most heavily exposed farmers, the Agricultural Health Study cohort found no raised non-Hodgkin lymphoma risk, while a meta-analysis built mostly from case-control studies found a raised one; a 2026 meta-analysis found the pooled estimate was not significant with the cohorts included and significant only without them, pooled farmer cohorts saw a signal only for one subtype and only for ever use, and regulators split (IARC: limited human evidence; EFSA: no conclusive evidence). The split tracks study design, so the honest answer is unsettled, not yes or no.",
+      "arc": {
+        "hook": "Two kinds of study, the same farmers' question, opposite answers.",
+        "resolution": "The raised risk appears in case-control studies, which ask people with and without lymphoma to recall past use, and fades in prospective cohorts that recorded use before diagnosis; neither design is conclusive, so the claim is unproven rather than proven or disproven.",
+        "takeaway": "Heavy glyphosate exposure is not shown to cause lymphoma, and not ruled out: the signal depends on the design of the study."
+      },
+      "qualificationsAccepted": true
     }
   }
 }

@@ -1385,7 +1385,7 @@
    },
    "chainCandidates": [
     "conflict:regulators-assess-pesticides-one-time-ignore",
-    "decision:glyphosate"
+    "conflict:heavy-glyphosate-exposure-raises-risk-non"
    ]
   },
   {
@@ -2825,8 +2825,8 @@
     ]
    },
    "chainCandidates": [
-    "conflict:pesticide-residues-conventional-produce-too-low",
-    "decision:glyphosate"
+    "conflict:heavy-glyphosate-exposure-raises-risk-non",
+    "conflict:pesticide-residues-conventional-produce-too-low"
    ]
   },
   {
@@ -3405,6 +3405,324 @@
     ]
    },
    "partOf": "conflict:eating-organic-food-has-proven-health"
+  },
+  {
+   "id": "conflict:heavy-glyphosate-exposure-raises-risk-non",
+   "kind": "conflict",
+   "title": "Glyphosate and Lymphoma: Why the Studies Split",
+   "alternates": [
+    "Does Heavy Glyphosate Use Cause Non-Hodgkin Lymphoma?",
+    "Farmers, Glyphosate and Lymphoma: Cohort Versus Case-Control"
+   ],
+   "question": "Why do studies disagree on whether heavy glyphosate use causes lymphoma?",
+   "whyWatch": "The same question gets opposite answers depending on how the study was built; seeing why tells you how much weight either headline deserves.",
+   "tension": "A large prospective cohort of heavy users found no raised lymphoma risk, while meta-analyses that lean on case-control studies found a raised risk of up to 41% in the most exposed.",
+   "evidenceNeeded": "The cohort and case-control results on the most heavily exposed, side by side, with what each design can and cannot rule out.",
+   "evidenceAvailable": [
+    "Zhang 2019 meta-analysis, glyphosate and NHL: right (0.45, direct)",
+    "Andreotti 2018 Agricultural Health Study, glyphosate and cancer: wrong (0.55, direct)",
+    "Gagnier 2026 meta-analysis, glyphosate and NHL: partly (0.45, direct)",
+    "Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL: partly (0.3, partial)",
+    "EPA and IARC on glyphosate: partly (0.4, direct)"
+   ],
+   "gaps": [
+    "What explains the split between Andreotti 2018 Agricultural Health Study, glyphosate and cancer, Zhang 2019 meta-analysis, glyphosate and NHL, Gagnier 2026 meta-analysis, glyphosate and NHL, Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL, EPA and IARC on glyphosate?",
+    "Gagnier 2026 meta-analysis, glyphosate and NHL: A 2026 meta-analysis of ten datasets found the highest-exposure NHL estimate was not significant with all studies included (random-effects OR 1.18, 95% CI 0.97-1.44), and became significant (OR 1.33-1.47) only after dropping the two cohort studies, so the raised risk rests on the case-control evidence.",
+    "Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL: Pooling three farmer cohorts (316,270 farmers in France, Norway and the USA), ever use of glyphosate was not associated with NHL overall but was with diffuse large B-cell lymphoma (meta-HR 1.36, 95% CI 1.00-1.85); it measures ever versus never use, not heavy use.",
+    "EPA and IARC on glyphosate: IARC's pooled analysis of the case-control studies plus the Agricultural Health Study gave a statistically significant NHL association, but the large AHS cohort alone found none and IARC rates the human evidence only 'limited'."
+   ],
+   "premise": "Among the most heavily exposed farmers, the Agricultural Health Study cohort found no raised non-Hodgkin lymphoma risk, while a meta-analysis built mostly from case-control studies found a raised one; a 2026 meta-analysis found the pooled estimate was not significant with the cohorts included and significant only without them, pooled farmer cohorts saw a signal only for one subtype and only for ever use, and regulators split (IARC: limited human evidence; EFSA: no conclusive evidence). The split tracks study design, so the honest answer is unsettled, not yes or no.",
+   "claims": [
+    "organic-food/heavy-glyphosate-exposure-raises-risk-non"
+   ],
+   "related": [
+    "organic-food/heavy-occupational-pesticide-exposure-linked-higher"
+   ],
+   "arc": {
+    "hook": "Two kinds of study, the same farmers' question, opposite answers.",
+    "conflict": "The studies do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (Andreotti 2018 Agricultural Health Study, glyphosate and cancer, Zhang 2019 meta-analysis, glyphosate and NHL, Gagnier 2026 meta-analysis, glyphosate and NHL, Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL, EPA and IARC on glyphosate): design, sample, what was measured.",
+    "resolution": "The raised risk appears in case-control studies, which ask people with and without lymphoma to recall past use, and fades in prospective cohorts that recorded use before diagnosis; neither design is conclusive, so the claim is unproven rather than proven or disproven.",
+    "takeaway": "Heavy glyphosate exposure is not shown to cause lymphoma, and not ruled out: the signal depends on the design of the study."
+   },
+   "coherence": {
+    "score": 0.85,
+    "basis": "review",
+    "explanation": "One question: why the cohort and case-control studies of heavily exposed farmers disagree on glyphosate and non-Hodgkin lymphoma."
+   },
+   "scores": {
+    "coherence": 0.85,
+    "relevance": 0.46,
+    "curiosity": 1,
+    "stakes": 0.7,
+    "depth": 0.75,
+    "originality": 1,
+    "evidence": 0.88,
+    "editorial": 0.75,
+    "overall": 0.8,
+    "explanation": "editorial 0.75 = mean of coherence 0.85 (review), relevance 0.46 (3 sources, 3 channels), curiosity 1 (conflict, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.75 (5 studies, 1 claim, tension); evidence 0.88 = strongest Andreotti 2018 Agricultural Health Study, glyphosate and cancer at 0.55 (direct) across 5 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.85), central conclusion supported, 1 essential finding verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Studies disagree on whether heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma",
+     "kind": "disagreement",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.45,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+        "cite": "organic-food/sources/zhang-2019-glyphosate-nhl-meta.txt#L98-L106"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Zhang 2019 meta-analysis, glyphosate and NHL",
+       "verdict": "right",
+       "confidence": 0.45,
+       "note": "A meta-analysis of the highest exposure groups in the 2018 AHS cohort and five case-control studies found a 41% raised NHL risk (meta-RR 1.41, 95% CI 1.13-1.75); five of the six studies are case-control.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+        "cite": "organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616"
+       },
+       "cited": true,
+       "role": "contradicts",
+       "by": "Andreotti 2018 Agricultural Health Study, glyphosate and cancer",
+       "verdict": "wrong",
+       "confidence": 0.55,
+       "note": "In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected.",
+       "applicability": "direct",
+       "basis": "review",
+       "why": "the top quartile of intensity-weighted lifetime glyphosate use among licensed applicators is heavy exposure as the claim means it, and NHL is the outcome; self-reported exposure is a measurement caveat, not a narrower scope"
+      }
+     ],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+        "cite": "organic-food/sources/gagnier-2026-glyphosate-nhl.txt#L731-L743"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Gagnier 2026 meta-analysis, glyphosate and NHL",
+       "verdict": "partly",
+       "confidence": 0.45,
+       "note": "A 2026 meta-analysis of ten datasets found the highest-exposure NHL estimate was not significant with all studies included (random-effects OR 1.18, 95% CI 0.97-1.44), and became significant (OR 1.33-1.47) only after dropping the two cohort studies, so the raised risk rests on the case-control evidence.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+        "cite": "organic-food/sources/leon-2019-agricoh-nhl.txt#L909-L921"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "Pooling three farmer cohorts (316,270 farmers in France, Norway and the USA), ever use of glyphosate was not associated with NHL overall but was with diffuse large B-cell lymphoma (meta-HR 1.36, 95% CI 1.00-1.85); it measures ever versus never use, not heavy use.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "the pooled cohorts compare ever with never use, not heavy use, so they bear on the exposure question only in a broader, diluted form"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+        "cite": "organic-food/sources/glyphosate-epa-iarc.txt#L179-L195"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "EPA and IARC on glyphosate",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "IARC's pooled analysis of the case-control studies plus the Agricultural Health Study gave a statistically significant NHL association, but the large AHS cohort alone found none and IARC rates the human evidence only 'limited'.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+        "cite": "organic-food/sources/efsa-2023-glyphosate.txt#L123-L125"
+       },
+       "cited": true,
+       "role": "inconclusive",
+       "by": "EFSA 2023 peer review of glyphosate",
+       "verdict": "unknown",
+       "confidence": null,
+       "note": "EFSA concluded the available human epidemiological studies do not provide conclusive evidence that glyphosate exposure is associated with any cancer-related effect, and ECHA rated it unlikely to be carcinogenic; it does not single out heavily exposed groups.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Contradicted by Andreotti 2018 Agricultural Health Study, glyphosate and cancer: In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.45), 1 contradicting, 3 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The evidence does not support \"Heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "disputed",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.55,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+          "cite": "organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Andreotti 2018 Agricultural Health Study, glyphosate and cancer",
+         "verdict": "wrong",
+         "confidence": 0.55,
+         "note": "In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected.",
+         "applicability": "direct",
+         "basis": "review",
+         "why": "the top quartile of intensity-weighted lifetime glyphosate use among licensed applicators is heavy exposure as the claim means it, and NHL is the outcome; self-reported exposure is a measurement caveat, not a narrower scope"
+        }
+       ],
+       "contradicting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+          "cite": "organic-food/sources/zhang-2019-glyphosate-nhl-meta.txt#L98-L106"
+         },
+         "cited": true,
+         "role": "contradicts",
+         "by": "Zhang 2019 meta-analysis, glyphosate and NHL",
+         "verdict": "right",
+         "confidence": 0.45,
+         "note": "A meta-analysis of the highest exposure groups in the 2018 AHS cohort and five case-control studies found a 41% raised NHL risk (meta-RR 1.41, 95% CI 1.13-1.75); five of the six studies are case-control.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+          "cite": "organic-food/sources/gagnier-2026-glyphosate-nhl.txt#L731-L743"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Gagnier 2026 meta-analysis, glyphosate and NHL",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "A 2026 meta-analysis of ten datasets found the highest-exposure NHL estimate was not significant with all studies included (random-effects OR 1.18, 95% CI 0.97-1.44), and became significant (OR 1.33-1.47) only after dropping the two cohort studies, so the raised risk rests on the case-control evidence.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+          "cite": "organic-food/sources/leon-2019-agricoh-nhl.txt#L909-L921"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "Pooling three farmer cohorts (316,270 farmers in France, Norway and the USA), ever use of glyphosate was not associated with NHL overall but was with diffuse large B-cell lymphoma (meta-HR 1.36, 95% CI 1.00-1.85); it measures ever versus never use, not heavy use.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "the pooled cohorts compare ever with never use, not heavy use, so they bear on the exposure question only in a broader, diluted form"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+          "cite": "organic-food/sources/glyphosate-epa-iarc.txt#L179-L195"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "EPA and IARC on glyphosate",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "IARC's pooled analysis of the case-control studies plus the Agricultural Health Study gave a statistically significant NHL association, but the large AHS cohort alone found none and IARC rates the human evidence only 'limited'.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
+          "cite": "organic-food/sources/efsa-2023-glyphosate.txt#L123-L125"
+         },
+         "cited": true,
+         "role": "inconclusive",
+         "by": "EFSA 2023 peer review of glyphosate",
+         "verdict": "unknown",
+         "confidence": null,
+         "note": "EFSA concluded the available human epidemiological studies do not provide conclusive evidence that glyphosate exposure is associated with any cancer-related effect, and ECHA rated it unlikely to be carcinogenic; it does not single out heavily exposed groups.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Contradicted by Zhang 2019 meta-analysis, glyphosate and NHL: A meta-analysis of the highest exposure groups in the 2018 AHS cohort and five case-control studies found a 41% raised NHL risk (meta-RR 1.41, 95% CI 1.13-1.75); five of the six studies are case-control."
+       ],
+       "suggestions": [
+        "Present the disagreement: name the studies on each side instead of stating one side as fact."
+       ],
+       "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.55), 1 contradicting, 3 qualifying."
+      }
+     }
+    ]
+   },
+   "chainCandidates": [
+    "conflict:regulators-assess-pesticides-one-time-ignore",
+    "conflict:pesticide-residues-conventional-produce-too-low"
+   ]
   },
   {
    "id": "decision:can-you-trust-the-label",
@@ -4134,319 +4452,6 @@
    "partOf": "conflict:organic-farming-yields-less-food-per"
   },
   {
-   "id": "conflict:heavy-glyphosate-exposure-raises-risk-non",
-   "kind": "conflict",
-   "title": "Why do studies disagree about whether heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma?",
-   "alternates": [
-    "Heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma: the case for and against",
-    "What we actually know about whether heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma"
-   ],
-   "question": "Why do studies disagree about whether heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma?",
-   "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
-   "tension": "The studies split: Andreotti 2018 Agricultural Health Study, glyphosate and cancer says wrong, Zhang 2019 meta-analysis, glyphosate and NHL says right, Gagnier 2026 meta-analysis, glyphosate and NHL says partly, Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL says partly, EPA and IARC on glyphosate says partly.",
-   "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
-   "evidenceAvailable": [
-    "Zhang 2019 meta-analysis, glyphosate and NHL: right (0.45, direct)",
-    "Andreotti 2018 Agricultural Health Study, glyphosate and cancer: wrong (0.55, partial)",
-    "Gagnier 2026 meta-analysis, glyphosate and NHL: partly (0.45, direct)",
-    "Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL: partly (0.3, direct)",
-    "EPA and IARC on glyphosate: partly (0.4, direct)"
-   ],
-   "gaps": [
-    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.45 after applicability); it cannot carry a narrative.",
-    "What explains the split between Andreotti 2018 Agricultural Health Study, glyphosate and cancer, Zhang 2019 meta-analysis, glyphosate and NHL, Gagnier 2026 meta-analysis, glyphosate and NHL, Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL, EPA and IARC on glyphosate?",
-    "Gagnier 2026 meta-analysis, glyphosate and NHL: A 2026 meta-analysis of ten datasets found the highest-exposure NHL estimate was not significant with all studies included (random-effects OR 1.18, 95% CI 0.97-1.44), and became significant (OR 1.33-1.47) only after dropping the two cohort studies, so the raised risk rests on the case-control evidence.",
-    "Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL: Pooling three farmer cohorts (316,270 farmers in France, Norway and the USA), ever use of glyphosate was not associated with NHL overall but was with diffuse large B-cell lymphoma (meta-HR 1.36, 95% CI 1.00-1.85); it measures ever versus never use, not heavy use.",
-    "EPA and IARC on glyphosate: IARC's pooled analysis of the case-control studies plus the Agricultural Health Study gave a statistically significant NHL association, but the large AHS cohort alone found none and IARC rates the human evidence only 'limited'."
-   ],
-   "premise": "The studies split on \"Heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma\": Andreotti 2018 Agricultural Health Study, glyphosate and cancer says wrong, Zhang 2019 meta-analysis, glyphosate and NHL says right, Gagnier 2026 meta-analysis, glyphosate and NHL says partly, Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL says partly, EPA and IARC on glyphosate says partly. The reasons they differ are the useful part.",
-   "claims": [
-    "organic-food/heavy-glyphosate-exposure-raises-risk-non"
-   ],
-   "related": [
-    "organic-food/heavy-occupational-pesticide-exposure-linked-higher"
-   ],
-   "arc": {
-    "hook": "Two confident, opposite answers to the same question: \"Heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma\".",
-    "conflict": "The studies do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (Andreotti 2018 Agricultural Health Study, glyphosate and cancer, Zhang 2019 meta-analysis, glyphosate and NHL, Gagnier 2026 meta-analysis, glyphosate and NHL, Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL, EPA and IARC on glyphosate): design, sample, what was measured.",
-    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
-    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.46,
-    "curiosity": 1,
-    "stakes": 0.7,
-    "depth": 0.75,
-    "originality": 1,
-    "evidence": 0.72,
-    "editorial": 0.74,
-    "overall": 0.73,
-    "explanation": "editorial 0.74 = mean of coherence 0.8 (heuristic), relevance 0.46 (3 sources, 3 channels), curiosity 1 (conflict, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.75 (5 studies, 1 claim, tension); evidence 0.72 = strongest Zhang 2019 meta-analysis, glyphosate and NHL at 0.45 (direct) across 5 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: The strongest study that bears on the central conclusion is weaker than 0.5 (0.45 after applicability); it cannot carry a narrative.",
-   "blocking": [
-    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.45 after applicability); it cannot carry a narrative."
-   ],
-   "reviewed": false,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Studies disagree on whether heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma",
-     "kind": "disagreement",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0.45,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-        "cite": "organic-food/sources/zhang-2019-glyphosate-nhl-meta.txt#L98-L106"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "Zhang 2019 meta-analysis, glyphosate and NHL",
-       "verdict": "right",
-       "confidence": 0.45,
-       "note": "A meta-analysis of the highest exposure groups in the 2018 AHS cohort and five case-control studies found a 41% raised NHL risk (meta-RR 1.41, 95% CI 1.13-1.75); five of the six studies are case-control.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-        "cite": "organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Andreotti 2018 Agricultural Health Study, glyphosate and cancer",
-       "verdict": "wrong",
-       "confidence": 0.55,
-       "note": "In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected.",
-       "applicability": "partial",
-       "basis": "heuristic",
-       "why": "the verdict note limits its own scope (\"self-reported\")"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-        "cite": "organic-food/sources/gagnier-2026-glyphosate-nhl.txt#L731-L743"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Gagnier 2026 meta-analysis, glyphosate and NHL",
-       "verdict": "partly",
-       "confidence": 0.45,
-       "note": "A 2026 meta-analysis of ten datasets found the highest-exposure NHL estimate was not significant with all studies included (random-effects OR 1.18, 95% CI 0.97-1.44), and became significant (OR 1.33-1.47) only after dropping the two cohort studies, so the raised risk rests on the case-control evidence.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-        "cite": "organic-food/sources/leon-2019-agricoh-nhl.txt#L909-L921"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL",
-       "verdict": "partly",
-       "confidence": 0.3,
-       "note": "Pooling three farmer cohorts (316,270 farmers in France, Norway and the USA), ever use of glyphosate was not associated with NHL overall but was with diffuse large B-cell lymphoma (meta-HR 1.36, 95% CI 1.00-1.85); it measures ever versus never use, not heavy use.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-        "cite": "organic-food/sources/glyphosate-epa-iarc.txt#L179-L195"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "EPA and IARC on glyphosate",
-       "verdict": "partly",
-       "confidence": 0.4,
-       "note": "IARC's pooled analysis of the case-control studies plus the Agricultural Health Study gave a statistically significant NHL association, but the large AHS cohort alone found none and IARC rates the human evidence only 'limited'.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "context": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-        "cite": "organic-food/sources/efsa-2023-glyphosate.txt#L123-L125"
-       },
-       "cited": true,
-       "role": "inconclusive",
-       "by": "EFSA 2023 peer review of glyphosate",
-       "verdict": "unknown",
-       "confidence": null,
-       "note": "EFSA concluded the available human epidemiological studies do not provide conclusive evidence that glyphosate exposure is associated with any cancer-related effect, and ECHA rated it unlikely to be carcinogenic; it does not single out heavily exposed groups.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [],
-     "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.45), 4 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "The evidence does not support \"Heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "unsupported",
-       "decision": "blocked",
-       "review": false,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-          "cite": "organic-food/sources/zhang-2019-glyphosate-nhl-meta.txt#L98-L106"
-         },
-         "cited": true,
-         "role": "contradicts",
-         "by": "Zhang 2019 meta-analysis, glyphosate and NHL",
-         "verdict": "right",
-         "confidence": 0.45,
-         "note": "A meta-analysis of the highest exposure groups in the 2018 AHS cohort and five case-control studies found a 41% raised NHL risk (meta-RR 1.41, 95% CI 1.13-1.75); five of the six studies are case-control.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-          "cite": "organic-food/sources/andreotti-2018-ahs-glyphosate.txt#L610-L616"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Andreotti 2018 Agricultural Health Study, glyphosate and cancer",
-         "verdict": "wrong",
-         "confidence": 0.55,
-         "note": "In the prospective Agricultural Health Study of 54,251 licensed applicators (44,932 glyphosate users), the top quartile of intensity-weighted lifetime use had no raised NHL risk (RR 0.87, 95% CI 0.64-1.20, 440 exposed cases), with no association for any subtype; exposure was self-reported, so some misclassification is expected.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"self-reported\")"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-          "cite": "organic-food/sources/gagnier-2026-glyphosate-nhl.txt#L731-L743"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Gagnier 2026 meta-analysis, glyphosate and NHL",
-         "verdict": "partly",
-         "confidence": 0.45,
-         "note": "A 2026 meta-analysis of ten datasets found the highest-exposure NHL estimate was not significant with all studies included (random-effects OR 1.18, 95% CI 0.97-1.44), and became significant (OR 1.33-1.47) only after dropping the two cohort studies, so the raised risk rests on the case-control evidence.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-          "cite": "organic-food/sources/leon-2019-agricoh-nhl.txt#L909-L921"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Leon 2019 AGRICOH pooled farmer cohorts, pesticides and NHL",
-         "verdict": "partly",
-         "confidence": 0.3,
-         "note": "Pooling three farmer cohorts (316,270 farmers in France, Norway and the USA), ever use of glyphosate was not associated with NHL overall but was with diffuse large B-cell lymphoma (meta-HR 1.36, 95% CI 1.00-1.85); it measures ever versus never use, not heavy use.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-          "cite": "organic-food/sources/glyphosate-epa-iarc.txt#L179-L195"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "EPA and IARC on glyphosate",
-         "verdict": "partly",
-         "confidence": 0.4,
-         "note": "IARC's pooled analysis of the case-control studies plus the Agricultural Health Study gave a statistically significant NHL association, but the large AHS cohort alone found none and IARC rates the human evidence only 'limited'.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "organic-food/heavy-glyphosate-exposure-raises-risk-non",
-          "cite": "organic-food/sources/efsa-2023-glyphosate.txt#L123-L125"
-         },
-         "cited": true,
-         "role": "inconclusive",
-         "by": "EFSA 2023 peer review of glyphosate",
-         "verdict": "unknown",
-         "confidence": null,
-         "note": "EFSA concluded the available human epidemiological studies do not provide conclusive evidence that glyphosate exposure is associated with any cancer-related effect, and ECHA rated it unlikely to be carcinogenic; it does not single out heavily exposed groups.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Contradicted by Zhang 2019 meta-analysis, glyphosate and NHL: A meta-analysis of the highest exposure groups in the 2018 AHS cohort and five case-control studies found a 41% raised NHL risk (meta-RR 1.41, 95% CI 1.13-1.75); five of the six studies are case-control."
-       ],
-       "suggestions": [
-        "The evidence points the other way; reverse the claim or report it as what the sources say."
-       ],
-       "explanation": "unsupported (blocked): no direct support, 1 contradicting, 4 qualifying."
-      }
-     }
-    ]
-   }
-  },
-  {
    "id": "decision:glyphosate",
    "kind": "decision",
    "title": "Should You Buy Organic to Avoid Glyphosate?",
@@ -4772,7 +4777,7 @@
    },
    "chainCandidates": [
     "conflict:regulators-assess-pesticides-one-time-ignore",
-    "conflict:pesticide-residues-conventional-produce-too-low"
+    "conflict:heavy-glyphosate-exposure-raises-risk-non"
    ]
   },
   {
@@ -5148,8 +5153,8 @@
   },
   {
    "id": "contradicted:heavy-glyphosate-exposure-raises-risk-non",
-   "title": "Is it true that heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma?",
-   "reason": "the central conclusion is contradicted by the evidence: Contradicted by Zhang 2019 meta-analysis, glyphosate and NHL: A meta-analysis of the highest exposure groups in the 2018 AHS cohort and five case-control studies found a 41% raised NHL risk (meta-RR 1.41, 95% CI 1.13-1.75); five of the six studies are case-control."
+   "title": "Does Glyphosate Cause Lymphoma in Heavy Users?",
+   "reason": "a variation of conflict:heavy-glyphosate-exposure-raises-risk-non (claims overlap 1)"
   },
   {
    "id": "contradicted:organic-farming-bans-all-synthetic-pesticides",
@@ -5179,7 +5184,7 @@
   {
    "id": "surprise:heavy-glyphosate-exposure-raises-risk-non",
    "title": "Is it really true that heavy glyphosate exposure raises the risk of non-Hodgkin lymphoma?",
-   "reason": "the central conclusion is contradicted by the evidence: Contradicted by Zhang 2019 meta-analysis, glyphosate and NHL: A meta-analysis of the highest exposure groups in the 2018 AHS cohort and five case-control studies found a 41% raised NHL risk (meta-RR 1.41, 95% CI 1.13-1.75); five of the six studies are case-control."
+   "reason": "a variation of conflict:heavy-glyphosate-exposure-raises-risk-non (claims overlap 1)"
   },
   {
    "id": "surprise:imported-organic-products-must-meet-same",
