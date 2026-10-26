@@ -2064,6 +2064,7 @@
           "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2407.00456v2.txt",
             "ai-coding/sources/2507.00788.txt"
           ]
         },
@@ -2093,9 +2094,12 @@
           "note": "Without enough context, models fall back to common internet patterns; instruction files and indexing reduce but do not remove this.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2407.00456v2.txt",
             "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/2509.14745v3.txt",
             "ai-coding/sources/2603.28592v3.txt",
-            "ai-coding/sources/2607.21652v1.txt"
+            "ai-coding/sources/2607.21652v1.txt",
+            "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
           ]
         },
         {
@@ -2669,6 +2673,7 @@
             "ai-coding/sources/2603.28592v3.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/4859137.txt",
+            "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt",
             "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
           ]
         },
@@ -2966,7 +2971,8 @@
           "documents": [
             "ai-coding/sources/2310.02059.txt",
             "ai-coding/sources/2603.28592v3.txt",
-            "ai-coding/sources/2607.21652v1.txt"
+            "ai-coding/sources/2607.21652v1.txt",
+            "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
           ]
         },
         {
@@ -4079,7 +4085,9 @@
           ],
           "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2509.14745v3.txt"
+          ]
         },
         {
           "id": "ai-coding/coding-agents-working-background-will-eliminate",
@@ -9762,7 +9770,9 @@
           ],
           "note": "Telemetry from DX and other vendors shows PR sizes growing alongside AI adoption, though magnitude and causality vary by organization.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2509.14745v3.txt"
+          ]
         },
         {
           "id": "ai-coding/coding-agents-iterating-against-benchmarks-correctness",
@@ -11572,6 +11582,7 @@
             "note": "GitClear's 2024-25 analyses found rising duplicated code and falling refactoring with AI adoption.",
             "source": null,
             "documents": [
+              "ai-coding/sources/2407.00456v2.txt",
               "ai-coding/sources/2507.00788.txt"
             ]
           },
@@ -11589,10 +11600,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "note": "New Code Duplication smells were introduced by 23% of AI-devs vs 11% of non-AI devs, but authors call the differences minor (high variance, identical medians).",
-            "source": "ai-coding/sources/2507.00788.txt#L2003-L2013",
-            "confidence": 0.3,
-            "date": "2026-10-14"
+            "confidence": 0.35,
+            "note": "In 6.6% of cases the project's ground truth calls a function defined in the repository while the models achieve the same with Python built-ins or other libraries (e.g. startswith instead of the repo's match_file_by_prefix), which the authors attribute to missing repository context; a measured but small rate on benchmark tasks with older models.",
+            "source": "ai-coding/sources/2407.00456v2.txt#L753-L763",
+            "date": "2026-10-26"
           }
         },
         {
@@ -11899,7 +11910,8 @@
             "documents": [
               "ai-coding/sources/2310.02059.txt",
               "ai-coding/sources/2603.28592v3.txt",
-              "ai-coding/sources/2607.21652v1.txt"
+              "ai-coding/sources/2607.21652v1.txt",
+              "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
             ]
           },
           "prior": "right",
@@ -13263,6 +13275,52 @@
         },
         {
           "claim": {
+            "id": "ai-coding/adoption-increases-average-pull-request-size",
+            "text": "AI adoption increases average pull request size",
+            "topic": "ai-coding",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "WILFeSGXwio"
+            ],
+            "note": "Telemetry from DX and other vendors shows PR sizes growing alongside AI adoption, though magnitude and causality vary by organization.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2509.14745v3.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "note": "Telemetry from DX and other vendors shows PR sizes growing alongside AI adoption, though magnitude and causality vary by organization.",
+            "confidence": 0.6,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.3,
+            "note": "Initial Claude Code PRs add a median of 48 lines against 24 for matched human PRs in the same projects (both touching a median of 2 files, similar deletions); agent PRs are larger, but this compares PR types, not a team's average PR size before and after adoption.",
+            "source": "ai-coding/sources/2509.14745v3.txt#L454-L458",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/handling-agent-scale-code-volume-requires",
             "text": "Handling agent-scale code volume requires systems that make failures cheap to detect and fix rather than proportionally more human review",
             "topic": "ai-coding",
@@ -14114,9 +14172,12 @@
           "note": "Without enough context, models fall back to common internet patterns; instruction files and indexing reduce but do not remove this.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2407.00456v2.txt",
             "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/2509.14745v3.txt",
             "ai-coding/sources/2603.28592v3.txt",
-            "ai-coding/sources/2607.21652v1.txt"
+            "ai-coding/sources/2607.21652v1.txt",
+            "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
           ]
         },
         {
@@ -14908,36 +14969,6 @@
             "sMujMp4h_EY"
           ],
           "note": "Plausible economic logic and widely argued, but not measured; execution, distribution and maintenance still matter.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/background-coding-agents-assigned-routine-issues",
-          "text": "Background coding agents assigned routine issues can deliver mostly mergeable pull requests",
-          "topic": "ai-coding",
-          "asserted": 8,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 7,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "1GVBRhDI5No",
-            "VJU0rygO03A",
-            "YXdBAaKC-Co",
-            "fly-youre-all-nuts",
-            "i1tZN41VKcE",
-            "o2ohTTcOOXo",
-            "tidINuXB7PA",
-            "vKT59uoByXc"
-          ],
-          "note": "Background agents do produce usable PRs for well-scoped chores, but merge rates vary widely and many PRs need iteration; 'most of the time' is optimistic.",
           "source": null,
           "documents": []
         },
@@ -18210,29 +18241,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/adoption-increases-average-pull-request-size",
-          "text": "AI adoption increases average pull request size",
-          "topic": "ai-coding",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "WILFeSGXwio"
-          ],
-          "note": "Telemetry from DX and other vendors shows PR sizes growing alongside AI adoption, though magnitude and causality vary by organization.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/agent-client-protocol-lets-one-editor",
           "text": "The Agent Client Protocol lets one editor host multiple third-party coding agents",
           "topic": "ai-coding",
@@ -20939,7 +20947,7 @@
       "testable": 3,
       "novelty": 0.049107142857142856,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/background-coding-agents-assigned-routine-issues",
@@ -20948,7 +20956,7 @@
       "wrong": [
         "ai-coding/coding-agents-working-background-will-eliminate"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22956,7 +22964,7 @@
         "ai-coding/security-data-critical-code-auth-payments"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23262,7 +23270,7 @@
       "testable": 11,
       "novelty": 0.3953157953157953,
       "redundancy": 0,
-      "thinEvidence": 0.45454545454545453,
+      "thinEvidence": 0.36363636363636365,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-changes-should-integrated-small-verifiable",
@@ -23278,7 +23286,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23379,7 +23387,7 @@
       "testable": 12,
       "novelty": 1.2825396825396824,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.4166666666666667,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/adoption-increases-average-pull-request-size",
@@ -23396,7 +23404,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23578,7 +23586,7 @@
         "ai-coding/non-engineers-such-pms-can-now"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23649,7 +23657,7 @@
       "testable": 6,
       "novelty": 0.4144496434937612,
       "redundancy": 0,
-      "thinEvidence": 0.16666666666666666,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-run-permission-prompts-disabled-should",
@@ -23660,7 +23668,7 @@
         "ai-coding/planning-alignment-need-human-loop-while"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23738,7 +23746,7 @@
         "ai-coding/will-transform-software-engineering-jobs-rather"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23771,7 +23779,7 @@
         "ai-coding/system-design-architecture-judgment-remain-human"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24115,7 +24123,7 @@
       "wrong": [
         "ai-coding/getting-good-results-coding-tools-takes"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24237,7 +24245,7 @@
         "ai-coding/large-share-code-major-companies-now"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24473,7 +24481,7 @@
       "testable": 12,
       "novelty": 0.9441468253968254,
       "redundancy": 0,
-      "thinEvidence": 0.6666666666666666,
+      "thinEvidence": 0.5833333333333334,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-compile-lint-test-loops-catch",
@@ -24491,7 +24499,7 @@
       "wrong": [
         "ai-coding/will-transform-software-engineering-jobs-rather"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24517,7 +24525,7 @@
       "wrong": [
         "ai-coding/continuous-automated-security-testing-ctem-only"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24920,7 +24928,7 @@
       "testable": 11,
       "novelty": 0.7241071428571428,
       "redundancy": 0,
-      "thinEvidence": 0.6363636363636364,
+      "thinEvidence": 0.5454545454545454,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-development-shifts-developer-effort-toward",
@@ -24937,7 +24945,7 @@
       "wrong": [
         "ai-coding/github-copilot-makes-developers-complete-tasks"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25014,7 +25022,7 @@
         "ai-coding/tools-slowed-experienced-open-source-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25093,7 +25101,7 @@
         "ai-coding/vendor-run-studies-their-own-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25589,7 +25597,7 @@
         "ai-coding/heavy-reliance-coding-assistance-erodes-developers",
         "ai-coding/helps-little-can-hurt-when-working"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25675,7 +25683,7 @@
         "ai-coding/security-data-critical-code-auth-payments"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25796,14 +25804,14 @@
       "testable": 2,
       "novelty": 0.10267857142857142,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-should-keep-notes-external-scratchpad",
         "ai-coding/background-coding-agents-assigned-routine-issues"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25834,7 +25842,7 @@
         "ai-coding/running-coding-agents-parallel-requires-isolating"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25896,7 +25904,7 @@
       "wrong": [
         "ai-coding/generated-code-drifts-codebase-established-conventions"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26079,7 +26087,7 @@
       "wrong": [
         "ai-coding/generated-code-drifts-codebase-established-conventions"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26440,7 +26448,7 @@
       "testable": 8,
       "novelty": 0.3198946886446886,
       "redundancy": 0,
-      "thinEvidence": 0.625,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/acceptance-rate-counts-generated-lines-poor",
@@ -26453,7 +26461,7 @@
         "ai-coding/will-transform-software-engineering-jobs-rather"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26579,7 +26587,7 @@
         "ai-coding/measuring-engineers-token-usage-leaderboards-spend"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26674,7 +26682,7 @@
       "testable": 12,
       "novelty": 0.764233193277311,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.4166666666666667,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-changes-should-integrated-small-verifiable",
@@ -26692,7 +26700,7 @@
       "wrong": [
         "ai-coding/assisted-development-specification-not-code-should"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26926,7 +26934,7 @@
         "ai-coding/splitting-agent-narrowly-scoped-sub-agents"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
