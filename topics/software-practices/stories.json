@@ -3,8 +3,8 @@
  "basis": {
   "claims": 413,
   "sources": 93,
-  "studies": 37,
-  "candidates": 22
+  "studies": 38,
+  "candidates": 21
  },
  "stories": [
   {
@@ -3471,269 +3471,6 @@
    ]
   },
   {
-   "id": "gap:pairing-mobbing-puts-best-each-participant",
-   "kind": "gap",
-   "title": "Does Pair Programming Really Produce Better Code?",
-   "alternates": [
-    "Pairing and Mobbing: Better Code or Just More People?",
-    "Two Heads at One Keyboard: Does It Pay?"
-   ],
-   "question": "Does pair or mob programming really give you the best of everyone in the room?",
-   "whyWatch": "Six sources say pairing and mobbing put each person's best into the code and filter out the worst, and teams pay for that belief in developer hours; nothing in the corpus measures it.",
-   "tension": "Advocates describe fewer mistakes and shared knowledge from experience; a pair costs two people's time, and whether the code is that much better is the open question.",
-   "evidenceNeeded": "Controlled comparisons of pairs or mobs against individuals on the same tasks, measuring defects, design quality and total effort.",
-   "evidenceAvailable": [],
-   "gaps": [
-    "No study in the corpus checks the claim; the story is the search for evidence.",
-    "Has anyone measured whether pairing or mobbing puts the best of each participant into the code and rarely the worst?",
-    "Which study or dataset would settle it?"
-   ],
-   "premise": "6 sources assert \"Pairing or mobbing puts the best of each participant into the code and rarely the worst\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
-   "claims": [
-    "software-practices/pairing-mobbing-puts-best-each-participant"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "How often this gets said, and how confidently.",
-    "conflict": "Ask for the evidence and find none in the corpus.",
-    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
-    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
-    "takeaway": "How to treat the claim until it is checked."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One question: does code written by a pair or a mob take the best of each person? It was pruned from decision:pairing-and-code-review as unchecked and is its own question, about collaboration rather than change size."
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.64,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 0.35,
-    "originality": 1,
-    "evidence": 0,
-    "editorial": 0.6,
-    "overall": 0.36,
-    "explanation": "editorial 0.6 = mean of coherence 0.8 (review), relevance 0.64 (6 sources, 4 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
-   "blocking": [
-    "No study in the corpus checks the claim; the story is the search for evidence."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "6 sources claim \"Pairing or mobbing puts the best of each participant into the code and rarely the worst\"; no study in the corpus has checked it.",
-     "kind": "attribution",
-     "modality": "typical",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-        "source": "5cvaCq1q9_E"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Mob Programming, A Whole Team Approach -  Woody Zuill",
-       "verdict": null,
-       "confidence": null,
-       "note": "when I work with a pair the best of both of us and almost never the worst of either of us gets into it"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-        "source": "UQrlEXU6RM8"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Why Pull Requests Are a Bad Idea • Dave Farley • GOTO 2022",
-       "verdict": null,
-       "confidence": null,
-       "note": "pairs make progress and nearly but not quite twice the rate of an individual working alone but they also produce work with significantly fewer defects"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-        "source": "aItVJprLYkg"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "You Must Be CRAZY To Do Pair Programming",
-       "verdict": null,
-       "confidence": null,
-       "note": "all of the studies that I've ever seen show this increase in quality"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-        "source": "martinfowler-on-pair-programming"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "On Pair Programming",
-       "verdict": null,
-       "confidence": null,
-       "note": "When we pair, we have 4 eyes on the little and the bigger things as we go, more errors will get caught"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-        "source": "martinfowler-pairprogrammingmisconceptions"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Pair Programming Misconceptions",
-       "verdict": null,
-       "confidence": null,
-       "note": "a pair is actually more productive that two separate developers. This is due to the continuous discussion and review"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-        "source": "xS6yH0VqJjw"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "\"Pair Programming Fixed Our Pull Request Bottlenecks\"",
-       "verdict": null,
-       "confidence": null,
-       "note": "on the defects side we have very few defects in production"
-      }
-     ],
-     "problems": [],
-     "limitations": [
-      "Reports what the sources said, not whether it is true."
-     ],
-     "suggestions": [],
-     "explanation": "supported (approved): no direct support, 6 source statements."
-    },
-    "findings": [
-     {
-      "role": "belief",
-      "validation": {
-       "id": "f0",
-       "text": "6 sources claim \"Pairing or mobbing puts the best of each participant into the code and rarely the worst\"; no study in the corpus has checked it.",
-       "kind": "attribution",
-       "modality": "typical",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-          "source": "5cvaCq1q9_E"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Mob Programming, A Whole Team Approach -  Woody Zuill",
-         "verdict": null,
-         "confidence": null,
-         "note": "when I work with a pair the best of both of us and almost never the worst of either of us gets into it"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-          "source": "UQrlEXU6RM8"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Why Pull Requests Are a Bad Idea • Dave Farley • GOTO 2022",
-         "verdict": null,
-         "confidence": null,
-         "note": "pairs make progress and nearly but not quite twice the rate of an individual working alone but they also produce work with significantly fewer defects"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-          "source": "aItVJprLYkg"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "You Must Be CRAZY To Do Pair Programming",
-         "verdict": null,
-         "confidence": null,
-         "note": "all of the studies that I've ever seen show this increase in quality"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-          "source": "martinfowler-on-pair-programming"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "On Pair Programming",
-         "verdict": null,
-         "confidence": null,
-         "note": "When we pair, we have 4 eyes on the little and the bigger things as we go, more errors will get caught"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-          "source": "martinfowler-pairprogrammingmisconceptions"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Pair Programming Misconceptions",
-         "verdict": null,
-         "confidence": null,
-         "note": "a pair is actually more productive that two separate developers. This is due to the continuous discussion and review"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/pairing-mobbing-puts-best-each-participant",
-          "source": "xS6yH0VqJjw"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "\"Pair Programming Fixed Our Pull Request Bottlenecks\"",
-         "verdict": null,
-         "confidence": null,
-         "note": "on the defects side we have very few defects in production"
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Reports what the sources said, not whether it is true."
-       ],
-       "suggestions": [],
-       "explanation": "supported (approved): no direct support, 6 source statements."
-      }
-     }
-    ]
-   }
-  },
-  {
    "id": "gap:writing-tests-first-forces-code-decoupled",
    "kind": "gap",
    "title": "Does Test-First Really Lead to Better Design?",
@@ -3991,6 +3728,243 @@
        ],
        "suggestions": [],
        "explanation": "supported (approved): no direct support, 6 source statements."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "gap:mob-programming-onboards-new-members-quickly",
+   "kind": "gap",
+   "title": "What is the evidence that mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person?",
+   "alternates": [
+    "5 sources say mob programming onboards new members quickly and spreads knowledge so…. Where is the proof?",
+    "An unchecked claim: Mob programming onboards new members quickly and spreads knowledge so…"
+   ],
+   "question": "What is the evidence that mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person?",
+   "whyWatch": "5 sources across 4 channels assert it and nobody shows a measurement. Asking for the evidence on camera is the story, and the claim sells something.",
+   "tension": "Confidence without a check. The AI guess leans \"partly\" (Case studies and surveys of mob teams consistently report faster knowledge spread, but no study measures onboarding time against a control.), which is a guess, not a finding.",
+   "evidenceNeeded": "Any study or dataset that tests whether mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "5 sources assert \"Mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "software-practices/mob-programming-onboards-new-members-quickly"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "heuristic",
+    "explanation": "One claim, one question. Unreviewed."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.59,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.3,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.58,
+    "overall": 0.35,
+    "explanation": "editorial 0.58 = mean of coherence 0.8 (heuristic), relevance 0.59 (5 sources, 4 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.3 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": false,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "5 sources claim \"Mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+        "source": "5cvaCq1q9_E"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Mob Programming, A Whole Team Approach -  Woody Zuill",
+       "verdict": null,
+       "confidence": null,
+       "note": "it's a very fast way to onboard new team members"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+        "source": "aItVJprLYkg"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "You Must Be CRAZY To Do Pair Programming",
+       "verdict": null,
+       "confidence": null,
+       "note": "i know of no better way of spreading learning"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+        "source": "martinfowler-on-pair-programming"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "On Pair Programming",
+       "verdict": null,
+       "confidence": null,
+       "note": "Having two people work on a piece of the code helps the team spread knowledge on technology and domain on a daily basis"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+        "source": "mobprogramming-mob-programming-basics"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Mob Programming Basics – Mob Programming",
+       "verdict": null,
+       "confidence": null,
+       "note": "we transfer knowledge quickly througout the team which quickly improves everyones coding skills"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+        "source": "xS6yH0VqJjw"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "\"Pair Programming Fixed Our Pull Request Bottlenecks\"",
+       "verdict": null,
+       "confidence": null,
+       "note": "I have never seen teams learn as quickly or as effectively without bare programming as with it."
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 5 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "5 sources claim \"Mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+          "source": "5cvaCq1q9_E"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Mob Programming, A Whole Team Approach -  Woody Zuill",
+         "verdict": null,
+         "confidence": null,
+         "note": "it's a very fast way to onboard new team members"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+          "source": "aItVJprLYkg"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "You Must Be CRAZY To Do Pair Programming",
+         "verdict": null,
+         "confidence": null,
+         "note": "i know of no better way of spreading learning"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+          "source": "martinfowler-on-pair-programming"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "On Pair Programming",
+         "verdict": null,
+         "confidence": null,
+         "note": "Having two people work on a piece of the code helps the team spread knowledge on technology and domain on a daily basis"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+          "source": "mobprogramming-mob-programming-basics"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Mob Programming Basics – Mob Programming",
+         "verdict": null,
+         "confidence": null,
+         "note": "we transfer knowledge quickly througout the team which quickly improves everyones coding skills"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/mob-programming-onboards-new-members-quickly",
+          "source": "xS6yH0VqJjw"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "\"Pair Programming Fixed Our Pull Request Bottlenecks\"",
+         "verdict": null,
+         "confidence": null,
+         "note": "I have never seen teams learn as quickly or as effectively without bare programming as with it."
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 5 source statements."
       }
      }
     ]

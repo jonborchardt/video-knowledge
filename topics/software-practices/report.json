@@ -512,9 +512,9 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "partly",
-          "confidence": 0.45,
+          "confidence": 0.6,
           "videos": [
             "5cvaCq1q9_E",
             "UQrlEXU6RM8",
@@ -523,9 +523,11 @@
             "martinfowler-pairprogrammingmisconceptions",
             "xS6yH0VqJjw"
           ],
-          "note": "Pair programming meta-analyses show modest quality gains at higher effort, with effects depending on task complexity and pair expertise; no measurement exists for mobs.",
-          "source": null,
-          "documents": []
+          "note": "A meta-analysis of 18 pair-vs-solo experiments concludes pairing is not uniformly beneficial: the overall quality gain is small (g .23-.33, shrinking to .03-.07 after correcting for publication bias), higher quality on complex tasks costs much more effort, and on simpler tasks pairs finish sooner but with noticeably lower quality, so the code does not reliably get the best of both.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L1016-L1039",
+          "documents": [
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
+          ]
         },
         {
           "id": "software-practices/short-daily-retrospectives-keep-improvement-track",
@@ -4200,17 +4202,18 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "partly",
-          "confidence": 0.5,
+          "confidence": 0.6,
           "videos": [
             "WELBnE33dpY",
             "hillelwayne-what-we-know-we-dont-know"
           ],
-          "note": "Hannay et al.'s meta-analysis found small quality gains and effort increases with high heterogeneity.",
-          "source": null,
+          "note": "Across 18 controlled experiments the effect on quality is small and the evidence shows publication bias, which supports 'little effect on defects', but pairs show a medium gain in duration and a medium loss in effort, so the effect on productivity is measurable rather than little.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L36-L43",
           "documents": [
-            "software-practices/sources/dyba2008-agile-review.txt"
+            "software-practices/sources/dyba2008-agile-review.txt",
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
           ]
         },
         {
@@ -4797,16 +4800,17 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.65,
           "videos": [
             "aItVJprLYkg"
           ],
-          "note": "Meta-analysis finds pairs cut elapsed time but raise total effort; the sixty-percent figure comes from small student studies.",
-          "source": null,
+          "note": "The meta-analysis of 18 experiments finds a medium positive effect of pairing on duration (pairs finish sooner) and a medium negative effect on effort (more total person-hours), with high between-study variance.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L36-L43",
           "documents": [
-            "software-practices/sources/dyba2008-agile-review.txt"
+            "software-practices/sources/dyba2008-agile-review.txt",
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
           ]
         },
         {
@@ -4822,15 +4826,17 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "partly",
           "confidence": 0.5,
           "videos": [
             "aItVJprLYkg"
           ],
-          "note": "Meta-analysis finds pairing's benefit concentrated on complex tasks, consistent with this.",
-          "source": null,
-          "documents": []
+          "note": "Pairing yields higher-quality solutions on complex tasks (at considerably greater effort), but on simple tasks it is not plain waste: pairs finish faster there, at the price of lower quality.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L39-L43",
+          "documents": [
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
+          ]
         },
         {
           "id": "software-practices/skill-mismatch-within-pair-matters-little",
@@ -8116,21 +8122,22 @@
           "denied": 0,
           "tally": {
             "right": 0,
-            "wrong": 1,
-            "partly": 0,
+            "wrong": 0,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
           "strongest": "source",
-          "effective": "wrong",
-          "confidence": 0.35,
+          "effective": "partly",
+          "confidence": 0.4,
           "videos": [
             "martinfowler-on-pair-programming"
           ],
-          "note": "The review describes research on particular practices like pair programming as at an intermediate or even mature state, and cites an earlier review calling pair programming supported by a well-established research stream; the evidence may be mixed, but the authors treat it as a scientifically studiable question, not an unmeasurable one.",
-          "source": "software-practices/sources/dyba2008-agile-review.txt#L1315-L1319",
+          "note": "Controlled experiments do measure pairing's effects on quality, duration and effort, but the meta-analysis concludes that 'is pairing better' has no single answer: it depends on programmer expertise and task complexity, so the value is measurable yet context-bound rather than unprovable.",
+          "source": "software-practices/sources/hannay2009-pair-programming-meta.txt#L839-L846",
           "documents": [
-            "software-practices/sources/dyba2008-agile-review.txt"
+            "software-practices/sources/dyba2008-agile-review.txt",
+            "software-practices/sources/hannay2009-pair-programming-meta.txt"
           ]
         },
         {
@@ -10182,31 +10189,6 @@
           ]
         },
         {
-          "id": "software-practices/pairing-value-cannot-proven-scientifically-because",
-          "text": "Pairing's value cannot be proven scientifically because development output is too hard to measure, so teams must try it themselves",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 1,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "source",
-          "effective": "wrong",
-          "confidence": 0.35,
-          "videos": [
-            "martinfowler-on-pair-programming"
-          ],
-          "note": "The review describes research on particular practices like pair programming as at an intermediate or even mature state, and cites an earlier review calling pair programming supported by a well-established research stream; the evidence may be mixed, but the authors treat it as a scientifically studiable question, not an unmeasurable one.",
-          "source": "software-practices/sources/dyba2008-agile-review.txt#L1315-L1319",
-          "documents": [
-            "software-practices/sources/dyba2008-agile-review.txt"
-          ]
-        },
-        {
           "id": "software-practices/per-change-pull-request-gates-break",
           "text": "Per-change pull request gates break down under continuous delivery with many deployments a day",
           "topic": "software-practices",
@@ -11529,52 +11511,6 @@
         },
         {
           "claim": {
-            "id": "software-practices/pair-finishes-task-faster-one-person",
-            "text": "A pair finishes a task faster than one person but spends more total person-hours on it",
-            "topic": "software-practices",
-            "asserted": 1,
-            "denied": 0,
-            "tally": {
-              "right": 1,
-              "wrong": 0,
-              "partly": 0,
-              "untestable": 0,
-              "unknown": 0
-            },
-            "strongest": "prior",
-            "effective": "right",
-            "confidence": 0.5,
-            "videos": [
-              "aItVJprLYkg"
-            ],
-            "note": "Meta-analysis finds pairs cut elapsed time but raise total effort; the sixty-percent figure comes from small student studies.",
-            "source": null,
-            "documents": [
-              "software-practices/sources/dyba2008-agile-review.txt"
-            ]
-          },
-          "prior": "right",
-          "evidence": "partly",
-          "method": "source",
-          "overrides": false,
-          "priorRecord": {
-            "method": "prior",
-            "verdict": "right",
-            "confidence": 0.7,
-            "note": "Meta-analysis finds pairs cut elapsed time but raise total effort; the sixty-percent figure comes from small student studies.",
-            "date": "2026-10-15"
-          },
-          "evidenceRecord": {
-            "method": "source",
-            "verdict": "partly",
-            "confidence": 0.2,
-            "note": "A survey of 122 IT employees found 73% of those who pair believe it speeds up development; this is perception only and says nothing about total person-hours.",
-            "source": "software-practices/sources/dyba2008-agile-review.txt#L996-L998",
-            "date": "2026-10-15"
-          }
-        },
-        {
-          "claim": {
             "id": "software-practices/skill-mismatch-within-pair-matters-little",
             "text": "Skill mismatch within a pair matters little; every expert and novice combination produces value",
             "topic": "software-practices",
@@ -12590,34 +12526,6 @@
         }
       ],
       "thinEvidence": [
-        {
-          "id": "software-practices/pairing-mobbing-puts-best-each-participant",
-          "text": "Pairing or mobbing puts the best of each participant into the code and rarely the worst",
-          "topic": "software-practices",
-          "asserted": 6,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.45,
-          "videos": [
-            "5cvaCq1q9_E",
-            "UQrlEXU6RM8",
-            "aItVJprLYkg",
-            "martinfowler-on-pair-programming",
-            "martinfowler-pairprogrammingmisconceptions",
-            "xS6yH0VqJjw"
-          ],
-          "note": "Pair programming meta-analyses show modest quality gains at higher effort, with effects depending on task complexity and pair expertise; no measurement exists for mobs.",
-          "source": null,
-          "documents": []
-        },
         {
           "id": "software-practices/writing-tests-first-forces-code-decoupled",
           "text": "Writing tests first forces the code to be decoupled and testable by construction",
@@ -16363,29 +16271,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/pairing-pays-off-novel-hard-work",
-          "text": "Pairing pays off on novel, hard work and wastes effort on routine or repetitive tasks",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "aItVJprLYkg"
-          ],
-          "note": "Meta-analysis finds pairing's benefit concentrated on complex tasks, consistent with this.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/paper-introduced-waterfall-diagram-warned-approach",
           "text": "The paper that introduced the waterfall diagram warned that the approach was risky and invited failure.",
           "topic": "software-practices",
@@ -18150,9 +18035,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 7,
-      "novelty": 1.0875000000000001,
+      "novelty": 1.1,
       "redundancy": 0,
-      "thinEvidence": 0.875,
+      "thinEvidence": 0.75,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/having-whole-team-one-keyboard-eliminates",
@@ -18162,7 +18047,7 @@
         "software-practices/working-one-group-stream-work-removes"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18738,9 +18623,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.8624999999999999,
+      "novelty": 0.875,
       "redundancy": 0,
-      "thinEvidence": 0.25,
+      "thinEvidence": 0.125,
       "worthWatching": "mixed",
       "right": [
         "software-practices/asynchronous-review-loses-two-way-conversation",
@@ -18753,7 +18638,7 @@
         "software-practices/trunk-based-development-one-small-change"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18848,7 +18733,7 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 2.504166666666667,
+      "novelty": 2.529166666666667,
       "redundancy": 0,
       "thinEvidence": 0.18181818181818182,
       "worthWatching": "new and sound",
@@ -18866,7 +18751,7 @@
         "software-practices/test-driven-development-produces-better-quality"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19027,9 +18912,9 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 1.2125,
+      "novelty": 1.375,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.14285714285714285,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/mob-programming-onboards-new-members-quickly",
@@ -19041,7 +18926,7 @@
         "software-practices/skill-mismatch-within-pair-matters-little"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19671,7 +19556,7 @@
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 2.995833333333333,
+      "novelty": 3.0208333333333335,
       "redundancy": 0,
       "thinEvidence": 0.16666666666666666,
       "worthWatching": "new and sound",
@@ -19690,7 +19575,7 @@
         "software-practices/test-driven-development-produces-better-quality"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19964,14 +19849,14 @@
       "channel": "martinfowler.com",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.3333333333333333,
+      "score": 0.5,
       "scaled": 1,
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 1.4125,
+      "novelty": 1.625,
       "redundancy": 0,
-      "thinEvidence": 0.7777777777777778,
+      "thinEvidence": 0.6666666666666666,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/after-fact-code-review-weaker-pairing",
@@ -19980,13 +19865,12 @@
         "software-practices/pairing-all-day-unsustainable-because-sustained",
         "software-practices/pairing-limits-team-work-progress-which",
         "software-practices/pairing-mobbing-puts-best-each-participant",
+        "software-practices/pairing-value-cannot-proven-scientifically-because",
         "software-practices/power-dynamics-such-seniority-gender-distort",
         "software-practices/rote-repetitive-code-design-smell-pairing"
       ],
-      "wrong": [
-        "software-practices/pairing-value-cannot-proven-scientifically-because"
-      ],
-      "lastJudged": "2026-10-15",
+      "wrong": [],
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20000,9 +19884,9 @@
       "rating": null,
       "assertions": 5,
       "testable": 5,
-      "novelty": 0.8999999999999999,
+      "novelty": 0.9125,
       "redundancy": 0,
-      "thinEvidence": 0.4,
+      "thinEvidence": 0.2,
       "worthWatching": "mixed",
       "right": [
         "software-practices/most-developers-who-try-pair-programming",
@@ -20012,7 +19896,7 @@
         "software-practices/rote-repetitive-code-design-smell-pairing"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20581,9 +20465,9 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 1.1458333333333335,
+      "novelty": 1.1583333333333334,
       "redundancy": 0,
-      "thinEvidence": 0.6363636363636364,
+      "thinEvidence": 0.5454545454545454,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/capping-pull-request-size-makes-developers",
@@ -20848,14 +20732,13 @@
         "software-practices/pairing-all-day-unsustainable-because-sustained",
         "software-practices/pairing-limits-team-work-progress-which",
         "software-practices/pairing-mobbing-puts-best-each-participant",
+        "software-practices/pairing-value-cannot-proven-scientifically-because",
         "software-practices/power-dynamics-such-seniority-gender-distort",
         "software-practices/rote-repetitive-code-design-smell-pairing",
         "software-practices/service-boundaries-usually-wrong-first-attempt",
         "software-practices/single-process-monolith-right-default-microservices"
       ],
-      "wrong": [
-        "software-practices/pairing-value-cannot-proven-scientifically-because"
-      ]
+      "wrong": []
     },
     {
       "channel": "GitHub",
