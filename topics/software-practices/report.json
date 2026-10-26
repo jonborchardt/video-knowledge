@@ -454,7 +454,9 @@
           ],
           "note": "Case studies and surveys of mob teams consistently report faster knowledge spread, but no study measures onboarding time against a control.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/buchan2018-mob-mentality.txt"
+          ]
         },
         {
           "id": "software-practices/switching-tasks-fill-time-while-blocked",
@@ -490,19 +492,21 @@
           "tally": {
             "right": 0,
             "wrong": 0,
-            "partly": 0,
-            "untestable": 1,
+            "partly": 1,
+            "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "untestable",
-          "confidence": 0,
+          "strongest": "source",
+          "effective": "partly",
+          "confidence": 0.25,
           "videos": [
             "5cvaCq1q9_E"
           ],
-          "note": "A team norm whose necessity cannot be separated from the practice in available evidence.",
-          "source": null,
-          "documents": []
+          "note": "In the one case team, mobbing made interpersonal interactions more frequent and intense, and unresolved interpersonal problems became an insurmountable barrier to mobbing; it observes the barrier rather than testing kindness as a requirement.",
+          "source": "software-practices/sources/buchan2018-mob-mentality.txt#L138-L145",
+          "documents": [
+            "software-practices/sources/buchan2018-mob-mentality.txt"
+          ]
         },
         {
           "id": "software-practices/pairing-mobbing-puts-best-each-participant",
@@ -8313,7 +8317,9 @@
           ],
           "note": "Case reports from Hunter Industries and others are positive; no controlled studies.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/buchan2018-mob-mentality.txt"
+          ]
         },
         {
           "id": "software-practices/rewrite-viable-when-codebase-small-product",
@@ -12564,33 +12570,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/mob-programming-onboards-new-members-quickly",
-          "text": "Mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person",
-          "topic": "software-practices",
-          "asserted": 5,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "5cvaCq1q9_E",
-            "aItVJprLYkg",
-            "martinfowler-on-pair-programming",
-            "mobprogramming-mob-programming-basics",
-            "xS6yH0VqJjw"
-          ],
-          "note": "Case studies and surveys of mob teams consistently report faster knowledge spread, but no study measures onboarding time against a control.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/preferring-runtime-polymorphism-over-switch-statements",
           "text": "Preferring runtime polymorphism over switch statements makes code slower by forcing pointer indirection and hiding the code path from the compiler",
           "topic": "software-practices",
@@ -15838,29 +15817,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/mob-group-coaches-less-skilled-driver",
-          "text": "In a mob the group coaches a less-skilled driver on the spot, raising everyone's skills",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "mobprogramming-mob-programming-basics"
-          ],
-          "note": "Case reports from Hunter Industries and others are positive; no controlled studies.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/mob-programming-finishes-stories-hours-took",
           "text": "Mob programming finishes stories in hours that took individuals working separately weeks",
           "topic": "software-practices",
@@ -17402,29 +17358,6 @@
           "documents": []
         },
         {
-          "id": "software-practices/sustained-mob-programming-requires-members-treat",
-          "text": "Sustained mob programming requires members to treat each other with kindness, consideration and respect",
-          "topic": "software-practices",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 1,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "untestable",
-          "confidence": 0,
-          "videos": [
-            "5cvaCq1q9_E"
-          ],
-          "note": "A team norm whose necessity cannot be separated from the practice in available evidence.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/switch-based-code-easier-optimise-later",
           "text": "Switch-based code is easier to optimise later than a class hierarchy because all cases are visible in one place",
           "topic": "software-practices",
@@ -17988,19 +17921,20 @@
       "channel": "NDC Conferences",
       "topic": "software-practices",
       "watched": false,
-      "score": 0.6,
+      "score": 0.5833333333333334,
       "scaled": 1,
       "rating": null,
       "assertions": 8,
-      "testable": 7,
-      "novelty": 1.1,
+      "testable": 8,
+      "novelty": 1.225,
       "redundancy": 0,
-      "thinEvidence": 0.75,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/having-whole-team-one-keyboard-eliminates",
         "software-practices/mob-programming-onboards-new-members-quickly",
         "software-practices/pairing-mobbing-puts-best-each-participant",
+        "software-practices/sustained-mob-programming-requires-members-treat",
         "software-practices/switching-tasks-fill-time-while-blocked",
         "software-practices/working-one-group-stream-work-removes"
       ],
@@ -18872,7 +18806,7 @@
       "testable": 7,
       "novelty": 1.375,
       "redundancy": 0,
-      "thinEvidence": 0.14285714285714285,
+      "thinEvidence": 0,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/mob-programming-onboards-new-members-quickly",
@@ -19814,7 +19748,7 @@
       "testable": 9,
       "novelty": 1.625,
       "redundancy": 0,
-      "thinEvidence": 0.6666666666666666,
+      "thinEvidence": 0.5555555555555556,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/after-fact-code-review-weaker-pairing",
@@ -19893,7 +19827,7 @@
       "testable": 4,
       "novelty": 0.5,
       "redundancy": 0,
-      "thinEvidence": 0.75,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "software-practices/mob-group-coaches-less-skilled-driver",
@@ -19902,7 +19836,7 @@
         "software-practices/rotating-driver-every-few-minutes-keeps"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -20425,7 +20359,7 @@
       "testable": 11,
       "novelty": 1.1583333333333334,
       "redundancy": 0,
-      "thinEvidence": 0.5454545454545454,
+      "thinEvidence": 0.45454545454545453,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/capping-pull-request-size-makes-developers",
@@ -20806,6 +20740,7 @@
         "software-practices/pairing-mobbing-puts-best-each-participant",
         "software-practices/skipping-architecture-review-project-first-weeks",
         "software-practices/surviving-mutant-reveals-either-missing-test",
+        "software-practices/sustained-mob-programming-requires-members-treat",
         "software-practices/switching-tasks-fill-time-while-blocked",
         "software-practices/taking-small-third-party-dependencies-trivial",
         "software-practices/work-expands-fill-time-headcount-given",

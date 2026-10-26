@@ -1,0 +1,373 @@
+Leveraging the Mob Mentality: An Experience Report on Mob
+                             Programming*
+
+                       Jim Buchan                                        Mark Pearl
+
+School of Engineering, Computer & Mathematical Sciences                   MYOB NZ Ltd
+              Auckland University of Technology                            Newmarket
+                             New Zealand                                  New Zealand
+                         jbuchan@aut.ac.nz                          mark.pearl@myob.com
+
+ABSTRACT                                                            Programming, based on Woody's experiences and explanations.
+                                                                    The book by Zuill and Meadows [9] is viewed as the seminal
+Mob Programming, or "mobbing", is a relatively new                  work on Mob programming.
+collaborative programming practice being experimented with
+in different organizational contexts. There are a number of           Mob Programming or "mobbing" is when 3 or more people
+claimed benefits to this way of working, but it is not clear if     work at a single computer with a large screen to solve code and
+these are realized in practice and under what circumstances.        problems together. Participants in a mob work collaboratively,
+This paper describes the experience of one team's experiences       with one of the team using the single keyboard as the "typist"
+experimenting with Mob Programming over an 18-month                 (sometimes referred to as the "driver"). The typist writes code,
+period. The context is programming in a software product            mainly at the instruction of the other team members. The others
+organization in the Financial Services sector. The paper details    in the mob form the problem-solving team. At regular intervals
+the benefits and challenges observed as well as lessons learned     the typist is swapped, depending on various factors including
+from these experiences. It also reports some early work on          time at the keyboard, expertise of the individuals and
+understanding others' experiences and perceptions of mobbing        knowledge of the current code base. Woody suggest that there
+through a preliminary international survey of 82 practitioners      is flexibility about the physical layout and frequency of mobbing
+of Mob Programming. The findings from the case and the survey       to suit each team's particular situation.
+generally align well, as well as suggesting several fruitful areas
+for further research into Mob Programming. Practitioners              Mob Programming is a programming practice that leverages
+should find this useful to extract learnings to inform their own    distributed knowledge in real-time and can be seen as taking
+mobbing experiments and its potential impact on collaborative       pair programming to the next level. Distributed knowledge is all
+software development.                                               the knowledge that a group of people possess and might apply
+                                                                    in solving a problem; with Mob Programming the knowledge
+CCS CONCEPTS                                                        and the people are brought together in front of a single
+                                                                    computer.
+· Software creation and its engineering  Software creation
+and management                                                        An overview of the benefits and challenges of mob
+                                                                    programming, based on an analysis of recent literature on Mob
+KEYWORDS                                                            Programming is presented in the paper [1]. This paper also
+                                                                    identifies some strong themes based on a text analysis of 7
+Mob programming, Mobbing, Collaborative programming                 articles and the book by Zuill and Meadows. They find that
+                                                                    words such as "learning", "driver", "whole", "retrospective",
+1 INTRODUCTION                                                      "defect", "idea", "keyboard", "rotation" and "whole" are
+                                                                    emphasized in the conceptualization of mobbing in this
+The term Mob Programming was first coined in the Extreme            literature (p.6). They also identify that more research is needed
+Programming (XP) community in 2003 by Moses Hohman [4] to           in the areas of empirical validation, and theoretical rationale,
+describe their practice of code refactoring in a group of more      which aligns with the areas of future research proposed in this
+than two. The term largely fell into obscurity until Woody Zuill    paper. Given more research like this for mobbing, we could be
+began popularizing it again from 2013 [10]. It was then that        in the position to apply a framework for research into mobbing
+Woody began speaking at developer conferences about how his         similar to the one proposed for pair programming in [3].
+commercial development team of about 8 members was
+"mobbing" fulltime and the successes they were seeing. Since          This paper shares the experiences of a commercial
+then many teams all over the world have begun practicing Mob        development team based in New Zealand, who has been
+                                                                    practicing Mob Programming for an extended period of time. It
+complements other experience reports on Mob Programming                                                         Jim Buchan and Mark Pearl
+such as [8] and [2], adding to the body of empirical knowledge
+in this area.                                                     regularly. Others found it didn't suit them and have not
+                                                                  continued.
+2 BACKGROUND TO THE CASE
+                                                                    Initially management questioned whether mobbing was an
+The organization provides a cloud-based financial product suite   efficient use of time and resources. Moving the focus from
+that is developed and maintained in-house. It is a well-          resource optimization to flow optimization and delivering
+established company (over 25 years old) with around 50            outcomes proved more convincing.
+development teams. The organization supports self-organizing
+teams and different teams work in different ways to suit their    3 THE MOBBING SETUP
+preferences. This paper focuses on the experience of one
+development team that has adopted mobbing as one of its             The mobbing sessions initially took place in a meeting room
+software development practices. The Development Lead came         separate from the team's usual workplace. The specific meeting
+to the organization with 2 years of experience using mobbing in   room depended on availability, but each had a large monitor for
+another company and has been mobbing with the current             use in mobbing. Team members brought their own keyboards
+organization for another 18 months.                               and a single laptop for use while mobbing. Later, a dedicated
+                                                                  area close to the team's usual workspace was set up with a
+  The initial motivation to encourage mobbing with the current    dedicated mobbing machine. In this area there was a 60" screen
+team was to use it as a means to up-skill members in the team     with a central desk which everyone sat around, as well as some
+in coding and testing good practices, as well as for the team to  partitions to reduce ambient noise.
+get a shared understanding of expectations of code quality. The
+team's code base had become fragmented with evidence of very        Most days the team would be involved in mobbing, typically
+different approaches to coding and Test-Driven Development        in two-hour sessions.
+(TDD). Mob Programming was seen as a mechanism to level out
+the team members' skills and get a consistent level of code         During early mobbing sessions, when mobbing was still new
+quality.                                                          to the team, the team followed a rigid cycle of changing typists
+                                                                  every 10 minutes, with everyone taking turns as the typist.
+  The team has nine members, six Developers and one               Later, the team were more intuitive about when to change
+Development Lead, one Tester and one Business Analyst (BA).       typists, either at the request of the current typist or another
+Apart from one new graduate, the team is quite experienced in     developer asking for the opportunity to have the keyboard. Less
+Agile practices and coding with development experience in the     experienced developers were given preference for being at the
+range 4-18 years. When the team was formed the members            keyboard to help identify gaps in their knowledge that could
+were new to each other as a team.                                 then be addressed.
+
+  The team are co-located and use a Kanban-style way of             Generally, it was the only the developers who were involved
+working. They use a physical board to track progress on a         in the mobbing sessions, and occasionally the team's Quality
+product backlog of work items. Work items are estimated as        Analyst and Business Analyst. Early in the mobbing experience
+they come closer to the top of the backlog and most of the team   the mobbing activity was kept quite separate from other
+are planning for the top 2-3 items of the backlog, with a work    activities. As experience was gained, the mobbing became more
+item typically taking 2-5 days to complete. The BA takes a        organic, with the team switching from pair programming to
+longer term planning window, considering work for the next 6      mobbing and back seamlessly, for example.
+months and a coming up with a well-defined timeline of work
+for the next 3 months. The BA also re-visits work prioritization    During a mobbing session, occasionally, some solo work
+with the Dev Lead and Product Manager every 2 weeks.              would be needed and an individual mob member or two may
+                                                                  break away from the rest of the mob to do this work on their
+  The team has a daily standup meeting at 10am every morning.     own laptop for a few minutes. While all solo work required a
+At this meeting the team collectively identifies what the most    code review, via pull request, before merging with the
+important things are that need to completed for the day based     production code, this review was not required for pair or mob
+on external expectations and current work in progress. Team       programming, since a review had effectively taken place during
+members indicate individual preferences for how items should      the coding in a mob or a pair.
+be worked on, whether they are best done as a mob, a pair or
+solo work. They then decide collectively who should work on       4 OBSERVED BENEFITS AND CHALLENGES
+what. Pair and Mob Programming are the most common modes
+of working. A Test-Driven Development (TDD) approach is           Over the past 18 months, as the team has gained experience
+taken to developer coding and testing, with the team's Quality    with regular mobbing, a number of challenges have been
+Analyst focusing on exploratory testing.                          addressed and some benefits to the team, have been realized.
+                                                                  This section describes these challenges and benefits, together
+  Some other development teams in the organization have           with some explanations and evidence.
+experimented with mobbing. Some found it useful and still mob
+                                                                  4.1 Benefits
+2
+ Leveraging the Mob Mentality: An Experience report on Mob          There were also several barriers to effective mobbing that were
+ Programming                                                        overcome in order to embed mobbing into the work practice, as
+                                                                    well as a several risks that became apparent as experience was
+There were several benefits that accrued over time as a result      gained.
+of building mobbing into the team's way of working. These are
+now described.                                                        It takes some effort to get mobbing going, and of value. People
+                                                                    need to believe that it will be valuable and is worth the extra
+  Regular (daily) mobbing reduced the number of in-progress         overhead and change of mind set. There is a risk that this is not
+work items. It was natural with this way of working to finish       accepted by all team members. For example, initially one team
+work items before starting on others. This appeared to improve      member preferred to work on their own, even isolating
+the team's productivity by changing the workflow to a "pull"        themselves with earphones, which added to the effort of
+approach to work items and reducing context switching.              instigating mobbing.
+
+  Code ownership moved from individual ownership to the               Initially code generation was slower using a mobbing
+team ownership. For example, team members now refer to              approach. For example, if someone in the mob had limited
+"our" code, rather than "my" code or "your" code".                  understanding of the area being worked on, the learning
+                                                                    overhead would slow the entire team's work pace. Over time
+  The team members have become more consistent in their             this has become less of a problem and in fact contributes to
+approach to coding and code design. Unlike the situation before     benefit 5., but there is a risk this can reduce momentum with
+mobbing, it is now difficult to distinguish who wrote a             mobbing if time pressure becomes the dominant short-term
+particular piece of code just by looking at the code. There is a    motivation.
+consistent style and approach across the team.
+                                                                      Interpersonal interactions are more frequent and intensified
+  Team members have become more consistent in the tools             with mobbing, this can impact the group's ability to deliver
+used for development and more effective in their use of the         work. Interpersonal challenges need to be resolved quickly or
+tools. This has increased productivity, with the tools fading into  they become an insurmountable barrier to mobbing.
+the background more. For example, changing from team
+members using their favoured text editor for coding to one            Related to the previous risk, there is a risk that an existing
+everyone uses has reduced one of the overheads of changing          interpersonal challenge between two people is amplified with
+typists during mobbing.                                             regular mobbing. For example, there were two people in the
+                                                                    team who did not work well together and avoided each other,
+  The developers gained a broader knowledge of the system,          but with mobbing there was an expectation that they would be
+compared to the more specialized areas they started with.           working closely with each other, and so couldn't avoid each
+Previously there was a very clear divide in skills between the      other. There is a risk that team members who have a preference
+front end code base and the back end services, Now all the          to work on their own are more visible and may be perceived as
+developers are comfortable and capable of working in both the       non-team players and become isolated from the rest of the
+front end and back end services and in almost any area of the       team. There is also a risk that a team member who does not
+system. This means work can be shared in the team more easily,      have good interpersonal skills may find it difficult to
+design decisions are better informed, collaboration is easier,      communicate with the rest of the team, who may have better
+and the risk of knowledge being lost if a team member leaves is     developed interpersonal skills. This may result in that person
+lowered.                                                            feeling isolated.
+
+  The team had more confidence in their new code, particularly        Finding a suitable work space and equipment was a challenge
+when working on complex areas of the codebase. This resulted        initially. Booking an available meeting room some distance
+in, for example, the team being more aggressive about releasing     from the work area and potentially a different room each time,
+new code into production.Team morale has improved since the         was too disruptive and unpredictable for mobbing. Even with a
+team starting mobbing regularly. Written feedback from team         dedicated work space for mobbing, the immoveable furniture
+indicates that regular mobbing was a factor in this. In the         and networking had to be changed to allow the team to all sit at
+weekly retrospectives team members regularly stated that they       a desk and see the large screen. In addition, it was initially
+were enjoying mobbing and the learning it was enabling.             difficult to get a large screen and laptop dedicated to mobbing
+                                                                    sessions.
+  Onboarding a new novice team member (a graduate) was
+quicker than the team leader's previous experience with other         Initially different team members' laptops were used as the
+similar graduates with no mobbing. For example, her learning        mobbing machine. The unpredictability of the features specific
+was at an accelerated rate after a few months compared to           to that machine and the mixed familiarity with the editor used
+experience with others.                                             on the machine was a barrier to mobbing effectively.
+
+  Confidence in the predictability of work became higher. In          It was a challenge to predict accurately if a new member of the
+contrast to mob coding, people working on their own would           team would sustain their motivation to mob, which could be
+often get stuck on a problem for too long before asking for help,   disruptive to the rest of the team's mobbing. For example, one
+throwing the team's estimates out. The team were noticeably
+better at delivering as estimated with regular mobbing.
+
+4.2 Challenges and risks
+
+                                                                    3
+new team member was active and enjoying mobbing for a few                                                        Jim Buchan and Mark Pearl
+weeks, but after that lost motivation, and stopped.
+                                                                   accelerated learning and a more diverse discussion that
+  The role of the Quality Analyst in mobbing took a while to       included a novice point of view.
+understand and stabilize. Initially the Quality Analyst would
+join the mob at inappropriate times, such as during intensive        Time-boxing mobbing sessions were found to be effective,
+coding sessions, and would be unable to contribute. This           with 2 hours a maximum. Individuals in the mob would take
+affected the Quality Analyst's morale negatively. With more        independent regular short breaks every 25-30 minutes worked
+experience, it was found that the Quality Analyst was most         which helped keep the team members fresh. Because often
+valuable during mobbing sessions that were focused more on         these breaks were taken at different times it allowed a piece of
+exploring a problem. Also, it was found to be useful when the      work to continuously progress towards completion which
+Quality Analyst was not part of the mob, but close-by and          further increased the flow of work.
+available for ad-hoc questions and comments.
+                                                                     The need for a prescriptive process for mobbing reduced as
+5 LESSONS LEARNED                                                  the team members' experience with mobbing increased. As the
+                                                                   team moved from novice to competent and expert in their
+This section summarises the main lessons learned from              mobbing their actions were less determined by rules and
+reflecting on the experiences of mob programming over the          became more intuitive. The team need to be empowered to do
+past 18 months in the case organization. This includes lessons     this.
+related to team size and dynamics; elements of the mobbing
+process and its evolution; the mobbing work space; the type of       Setting up a suitable work space with the right equipment was
+work best suited to mobbing; and long-term productivity.           an important success factor for mobbing. Some of the
+                                                                   characteristics of an effective workspace observed are:
+  The size of the mobbing team that emerged as being most
+effective with the case team was mobs of 3-4 people. When                  1. The mobbing workspace should be close to the non-
+forming mobs larger than 4 often people in the mob would self-       mobbing desks and daily workspace of the team. This lowers
+exit, feeling they were not contributing much. The trade-off         the barrier to switching to and from a mobbing mode. It
+between increased quality and the reduced pace of larger mob         should include a desk that the entire mob can sit at with a
+teams was often perceived not worth it unless complex parts of       good view of the central large screen (40-inch screen as a
+the code base were being worked on.                                  minimum size). Also, enough desk space is needed for some
+                                                                     mob team members to occasionally work in solo or pair mode.
+  Often people would come and go from a mob during a
+mobbing time-box, whether as a break or to do pair or                      2. A dedicated machine for mobbing is needed. This
+individual work. Initially these comings and goings could be         lowers the friction of getting into mobbing mode since the
+disruptive to the flow of the team, but after some experience        machine is always available, and it can be set up with the right
+and reflection, team members learned to leave and rejoin the         tools and hardware for mobbing, so there is no setup
+mob quietly and discretely. Another long-term benefit of             overhead each time. Prior to a dedicated machine, one of the
+mobbing was that members of the team were able to take leave         mob's laptops would be used. If they wanted to leave the mob
+without there being any major impact on the ability of the team      for solo work for a while, an alternative machine would need
+to continue to deliver work.                                         to be found.
+
+  New team members need time to adjust to working in a mob.                3. The mobbing area should have some boundaries and
+They can become overwhelmed if just assigned to a mob and            screens to identify it as a separate area for mobbing and lower
+expected to understand when mobbing is appropriate or not. A         surrounding noise and visual distractions.
+combination of independent and mob work, with time for               Some work was well suited to mobbing and some was not. For
+reflective discussion about mobbing became a good approach         example, mobbing proved to be effective for refactoring code.
+for easing new team members into mobbing.                          Mobbing was also used when there was a need for someone in
+                                                                   the team to share their knowledge with the team. When the
+  One of the aspects of the mobbing process is changing who        team was starting new work that was complex and how to even
+drives. Swapping the driver had some important principles to       begin was uncertain, the team would mob, switching to pairs
+enhance the effectiveness of mobbing. Early in the mobbing         and back as different areas of investigation were identified.
+experience there was a tendency to let the "expert" drive for too  Generally, if the coding involved a high level of complexity or
+long, since they made progress quickly. However, this could        would have a high impact if in error, the team would mob, and
+easily lead to the rest of the mob becoming passive spectators,    would not, otherwise. For example a mob would not be involved
+while they watched the expert solve the problem. Conversely it     in a simple UI change. If the knowledge was already shared and
+would have been easy to avoid the novice driving at all, since     complexity low, pair programming was the usual mode. Very
+they were often reluctant because of their lack of knowledge       occasionally a time pressure to deliver multiple work streams
+and slowed progress. However, having the novice drive, even        to a very tight deadline was a factor in deciding not to mob.
+preferentially, had a number of benefits that resulted in            There were several factors related to the team's long-term
+                                                                   productivity that were impacted by regular mobbing. This
+                                                                   included a reduction in multi-tasking, fewer interruptions, a
+
+4
+ Leveraging the Mob Mentality: An Experience report on Mob         6.3 Mobbing in Practice
+ Programming
+                                                                   The size of a typical mob was a fixed number between 3 and 5
+higher level of code craft, less technical debt, and fewer delays  people (81%), with half of the respondents in mobs of 4. A few
+because of unavailable information.                                mobs were larger with 3 respondents (4%) working in mobs of
+                                                                   7 or more. The size of the mob was unpredictable and varied
+  Another lesson, in hindsight, is that identifying the needs of   frequently for 13% of the respondents. Two of those surveyed
+the sponsors of the team as well as the needs of the team are      worked in a mob of two people.
+important. We identified the individuals in the teams needs but
+did not identify clearly the needs of the organization on the        Around half (51%) of the respondents felt their predominant
+team. If we had, we would have probably had more support for       mode of doing software development work was in a mob. This
+mobbing from the start.                                            compared to one third mostly working in pairs and 16% view
+                                                                   working alone as their usual way of working.
+6 OTHER PRACTITIONERS: A PRELIMINARY
+   SURVEY                                                            Just over half (51%) of those surveyed work in a mob most
+                                                                   days with 15% mobbing at least once a week. Another 7 (9%)
+Having reflected on the experience of mobbing in the case          participants worked in a mob at least a few times a month, while
+organization, we wanted to get an idea if others were              26% described their use of mobbing as sporadic.
+implementing mobbing in a similar way to us and if they had
+similar experiences and perceptions of it. This section reports      In a day that teams did mob, two thirds (67%) of the teams
+on an informal survey of practitioners of mobbing around the       mobbed for most of the day, while the other third worked in
+world. Questions were asked about the individual and team          mob for only a couple of hours in a typical day.
+context; their mobbing practice; the importance of personality;
+and the perceived benefits. The survey was conducted online        6.4 Personality Traits
+and participants were invited through word of mouth. A few
+mobbing practitioners known to the authors were invited to         There have been some observations that mobbing may not be
+participate and invite their own contacts to participate. The      effective if the personality traits of individuals are not suited to
+survey was available online for 1 month in October 2017 and 82     close collaboration, particularly introverted people [7]. For this
+respondents completed the survey in this time (available at        reason, perceptions of high and low impact personality traits
+https://myobfuturemakersacademy.typeform.com/to/rHHOrV)            were investigated in the survey. When asked to pick one
+                                                                   personality trait of team members that has the biggest impact
+6.1 The Respondents                                                on being effective in working in a mob, 57% of respondents
+                                                                   chose "Openness to new experience", 17% "Agreeableness",
+Most of the respondents were Developer/Coder (72%) or Team         13% "Conscientiousness", and 2% selected "Emotional
+Leaders (12%). A few Testers (5%) and Business Analysts (1%)       stability". No respondent chose "Degree of extroversion" as
+also participated in the survey. 10% of the participants           important and 11% thought that a personality trait other than
+classified themselves as a role other than these.                  those listed has the biggest impact.
+
+  Almost half of the participants had 1 or more years of             When asked the converse question, which personality trait
+experience mobbing (49%) with 5% over 5 years' experience.         has the least impact on effectiveness in working in a mob, the
+12% of those surveyed had less than 3 months experience with       results aligned with the previous question with "Degree of
+mobbing, with the rest between 3 and 12 months' experience.        extroversion" being viewed as the least impactful by 67% of the
+                                                                   respondents and "Openness to new experience" by none of
+  The personality traits of the respondents is not strongly        them. Between these extremes were "Conscientiousness (13%),
+skewed towards introversion or extroversion, with a slight bias    "Emotional stability" (11%) and "Agreeableness" (9%).
+towards introverts. Almost half the respondents (47%)
+considered themselves to be introverts, with 9% of them            6.5 Benefits
+labelling themselves strong introverts. Almost one third of the
+participants (32%) perceived themselves as extroverts with 9%      When asked the general question if they saw value in doing mob
+being strong extroverts (9%). 22% did not consider themselves      programming, 100% of the respondents answered in the
+to be particularly introverted or extroverted.                     positive.
+
+6.2 The Context                                                      The participants were presented with a list of five potential
+                                                                   benefits of Mob Programming and asked to indicate which ones
+Typically mobbing was used by teams using an Agile software        they thought applied to their experiences of mobbing. The
+development process such as Kanban (56%) and Scrum (17%),          benefits presented in the survey were based on those found in
+with the rest (18%) grouped into "Other". The software             [6]. 89% of the respondents indicated that learning from others
+development teams which the respondents belonged to                was a benefit. An increase in code quality and the opportunity
+typically had 4-8 team members (71%). Some teams were              to share with others were viewed as benefits in the experience
+larger, with 9 or more members (22%) and a few had 2 or 3          of 79% of the participants. Team participation (73%) and
+team members.
+
+                                                                   5
+quicker problem solving (51%) were also seen as benefits in                                                       Jim Buchan and Mark Pearl
+mobbing. Some respondents (15%) thought there were other
+important benefits.                                                   The additional benefit of quicker problem solving when Mob
+                                                                    Programming, identified strongly by survey participants, is also
+7 DISCUSSION                                                        supported by the team in the case organization. As one
+                                                                    developer put it: "Mobbing was a great way to perform
+The results of the survey are discussed and compared with the       collaborative problem solving and context sharing".
+related findings from the case organization in this section.
+                                                                    8 CONCLUSION
+  Mob Programming is most strongly associated with an Agile
+way of working in the survey participants, and is the context of    This paper describes the process, experiences, benefits and
+mobbing with the case organization. This is not surprising since    challenges of Mob Programming for a team in a software
+it embodies the Agile values of collaborative programming, and      product-driven organization. Lesson learned over the past 18
+could be viewed as a natural extension of Pair Programming          months of Mob Programming, as well as success factors, are
+from eXtreme Programming practice.                                  drawn from the experience so far. This provides some guidance
+                                                                    for others experimenting with Mob Programming in a similar
+  The usual mob size for the case organization (3-4) aligned        context. Overall Mob Programming in the case team has been
+well with the experience of those surveyed as discussed in          positive, has become the usual way of working, and has shown
+Section 5. The team size 3-4 also aligns with other research        promising potential long-term benefits. A preliminary online
+suggesting that the optimal team size for collaborative complex     survey of 82 Mob Programming practitioners around the world
+problem solving is 3-5people [5].                                   shows general alignment with the case team's experience and
+                                                                    perceptions.
+  The regularity, frequency and amount of time spent Mob
+Programming with the survey participants leaned towards               Reflecting on the team's experience and the survey results has
+daily mobbing for extended periods of time, as was the situation    suggested several areas that need further investigation. In what
+with the case team, where it became the default mode of             contexts is it better to code in a mob or a pair or solo? What are
+programming.                                                        the perceptions of the mob team members on the value of
+                                                                    mobbing? Are there any theories from other disciplines
+  In the survey, the mobbing teams were balanced between            underpin mobbing practice and explain and predict outcomes?
+introverts and extroverts and also considered this distinction as   Some quantitative empirical evidence of the benefits of
+unimportant to effective mobbing. This does not support the         mobbing (or otherwise) would be informative.
+view that introversion may be a barrier to mobbing.
+                                                                    REFERENCES
+  For effective mobbing the survey respondents clearly
+considered it important that the team members were open to          [1] Balijepally, V., Chaudhry, S. and Nerur, S.P. 2017. Mob Programming - A
+new experiences and agreeable. The former may relate to the         Promising Innovation in the Agile Toolkit. AMCIS. (2017).
+experimental nature of mobbing for teams, with practice and         [2] Boekhout, K. 2016. Mob Programming: Find Fun Faster. Agile Processes, in
+principles still in their early stages of experience. This implies  Software Engineering, and Extreme Programming. Springer International
+that team members need a willingness to try out mobbing, even       Publishing. 185­192.
+with some uncertainty in the process and the outcomes.              [3] Gallis, H., Arisholm, E. and Dyba, T. 2003. An Initial Framework for Research
+Agreeableness may align with the case study where it was            on Pair Programming. ISESE. (2003).
+observed that mobbing amplified any problematic                     [4] Hohman, M.M. and Slocum, A.C. 2003. Mob Programming and the Transition
+relationships between mob members since this way of working         to XP. EXtreme programming perspectives. Addison-Wesley.
+assumed everyone worked closely together. Agreeableness may         [5] Laughlin, P.R., Zander, M.L., Knievel, E.M. and Tan, T.K. 2003. Groups perform
+also imply a willingness to listen to others' ideas, accept that    better than the best individuals on letters-to-numbers problems: Informative
+someone else's idea may be better than yours, and sometimes         equations and effective strategies. Journal of Personality and Social Psychology. 85,
+compromise your ideas.                                              4 (2003), 684­694.
+                                                                    [6] Pyhäjärvi, M. and Falco, L. 2016. The Mob Programming guidebook.
+  The emphasis that the survey participants placed on learning      https://leanpub.com/mobprogrammingguidebook. Accessed: 2018-03-26.
+and sharing from others as positive outcomes of mob                 [7] Schartman, M. My Experience With Mob Programming: 2014.
+programming aligns well with the team in the case study. This       http://engineering.appfolio.com/appfolio-engineering/2014/03/17/my-
+is illustrated by the new graduate in the case organization, who,   experience-with-mob-programming. Accessed: 2018-03-26.
+after six-months of mobbing, notes she has:                         [8] Wilson, A. 2015. Mob Programming - What Works, What Doesn't. Agile
+                                                                    Processes, in Software Engineering, and Extreme Programming. Springer
+  "...learned a lot from mobbing with more experienced              International Publishing. 319­325.
+developers, without me knowing it. I guess the results are only     [9] Zuill, W. and Meadows, K. 2016. Mob Programming.
+seen a bit later. Overall, mobbing has really helped my current     https://leanpub.com/mobprogrammingguidebook. Accessed: 2018-03-26.
+team deliver, spread and solidify our skills/knowledge.             [10] Zuill, W. 2014. Mob Programming ­ A Whole Team Approach,
+                                                                    https://www.agilealliance.org/wp-
+  It is informative to contrast this with her initial experience    content/uploads/2015/12/ExperienceReport.2014.Zuill_.pdf. Accessed: 2018-
+where, after only two weeks of mobbing she feels she is "not        03-26.
+bringing value to the team... they work too fast for me so I'm not
+given time to come up with a solution myself."
+
+6
+
