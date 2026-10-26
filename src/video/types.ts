@@ -116,6 +116,13 @@ export interface TimelineScene {
   assets: string[];
   options: SceneOptions;
 }
+/** The four colour roles of the owning institution's kit (brand/<key>/kit.json), which the video theme is filled from. */
+export interface KitPalette {
+  ground: string;
+  accent: string;
+  paper: string;
+  ink: string;
+}
 // A type alias, not an interface: Remotion composition props need an implicit index signature.
 export type Timeline = {
   topic: string;
@@ -127,6 +134,7 @@ export type Timeline = {
   durationInFrames: number;
   fingerprints: { script: string; storyboard: string; narration: string; config: string };
   narration: { provider: string; voice: string; rate: string; licence: string };
+  palette: KitPalette;
   /** A Short: the format eyebrow, the institution that publishes it (and its key for the seal), the parent story and
    *  its question (the end card's call to action), drawn by the frame. */
   short?: { format: string; commission: string; commissionKey: string | null; question: string; parent: string };

@@ -43,6 +43,7 @@ import {
   syncChecks,
 } from '../src/video/qa';
 import { assemble } from '../src/video/assemble';
+import { kitPalette } from '../src/video/brand';
 import { deepImports, kitSlots, relativeScene, sceneKey } from '../src/video/render';
 import { checkSegment, citationDetail } from '../src/video/select';
 import { buildTimeline } from '../src/video/timeline';
@@ -896,5 +897,31 @@ describe('shorts: end card and length', () => {
     expect(tl.short).toHaveProperty('commissionKey');
     const other = { ...tl, short: { ...tl.short!, question: 'Another?' } };
     expect(sceneKey(tl.scenes[0], tl)).not.toBe(sceneKey(other.scenes[0], other));
+  });
+});
+
+describe('kit palette', () => {
+  it('reads the owning institution kit palette', () => {
+    expect(kitPalette('heat-pumps')).toEqual({
+      ground: '#172A45',
+      accent: '#C5A46A',
+      paper: '#F2EBDD',
+      ink: '#444E59',
+    });
+    expect(kitPalette('ai-coding').ground).toBe('#12283A');
+  });
+  it('a claimed topic without a kit refuses to render', () => {
+    const empty = mkdtempSync(join(tmpdir(), 'vk-nokit-'));
+    try {
+      expect(() => kitPalette('heat-pumps', empty)).toThrow(/run npm run brand/);
+    } finally {
+      rmSync(empty, { recursive: true, force: true });
+    }
+  });
+  it('a palette change moves every scene key', () => {
+    const inp = inputs();
+    const tl = buildTimeline(checkSegment(inp), manifest(inp), 30, read);
+    const other = { ...tl, palette: { ...tl.palette, accent: '#000000' } };
+    for (const s of tl.scenes) expect(sceneKey(s, other)).not.toBe(sceneKey(s, tl));
   });
 });

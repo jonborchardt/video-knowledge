@@ -345,6 +345,7 @@ function timeline(): Timeline {
     durationInFrames: 900,
     fingerprints: { script: 'a', storyboard: 'b', narration: 'c', config: 'd' },
     narration: { provider: 'fake', voice: 'v', rate: '+0%', licence: 'test' },
+    palette: { ground: '#000000', accent: '#111111', paper: '#ffffff', ink: '#222222' },
     scenes: [scene('sc01', 1), scene('sc02', 2), scene('sc03', 3)],
   };
 }

@@ -1,10 +1,11 @@
 // The brand kit inside a render: the story's institution's kit (brand/<key>/, written by `npm run brand`) is copied into
 // the video folder's brand/ before bundling, so a scene loads any slot with staticFile('brand/<slot>.png') (or .svg,
 // .jpg; slot names in brand/slots.json). A topic no institution claims uses the Commonwealth's kit.
-import { copyFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { commissionKey, commissionOf } from '../config/site';
 import { ROOT } from '../lib/io';
+import type { KitPalette } from './types';
 
 export const brandKey = (topic: string): string => {
   const c = commissionOf(topic);
@@ -21,4 +22,13 @@ export function stageBrand(topic: string, publicDir: string): string {
   mkdirSync(to, { recursive: true });
   for (const f of files) copyFileSync(join(from, f), join(to, f));
   return key;
+}
+
+/** The four colour roles of the owning institution's kit; a render refuses a kit `npm run brand` has not written. */
+export function kitPalette(topic: string, root = ROOT): KitPalette {
+  const key = brandKey(topic);
+  const file = join(root, 'brand', key, 'kit.json');
+  if (!existsSync(file)) throw new Error(`brand/${key}/kit.json missing: run npm run brand`);
+  const { ground, accent, paper, ink } = JSON.parse(readFileSync(file, 'utf8')).palette;
+  return { ground, accent, paper, ink };
 }

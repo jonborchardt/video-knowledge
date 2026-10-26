@@ -98,6 +98,7 @@ export const sceneKey = (s: TimelineScene, tl: Timeline, readKit: (topic: string
       fps: tl.fps,
       w: tl.width,
       h: tl.height,
+      palette: tl.palette, // the theme is filled from the kit's colours
       short: tl.short ?? null, // the frame and the end card draw the institution and the question
       code: rendererVersion(s.kind),
       // a scene that draws the kit re-renders when the kit is redrawn (the committed SVGs, not the rasters);
