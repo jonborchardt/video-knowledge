@@ -300,6 +300,7 @@
           "note": "Heat pumps need about 400 cfm/ton versus about 156 for non-condensing furnaces because of cooler supply air, and one expert estimates most duct systems handle only 2-3 tons of airflow.",
           "source": "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt#L821-L829",
           "documents": [
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -318,20 +319,23 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "43XKfuptnik",
             "CVLLNjSLJTQ",
             "DTsQjiPlksA"
           ],
-          "note": "Field studies of US residential HVAC commonly find furnaces and ACs sized well above calculated design loads.",
-          "source": null,
+          "note": "Manual J calculations on 83 newly installed air conditioners and heat pumps in AZ, CA and FL found most systems oversized: on average 135% of the calculated cooling load (0.79 tons over), 70 systems oversized, three quarters of them by more than the half-ton rounding allowance; cooling-dominated climates, partly utility-program installs.",
+          "source": "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt#L206-L226",
           "documents": [
+            "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt",
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
             "heat-pumps/sources/fraunhofer-2025-heat-pumps-existing-buildings.txt",
+            "heat-pumps/sources/james-1997-fsec-residential-equipment-capacity.txt",
             "heat-pumps/sources/lbnl-2021-cost-of-decarbonization-retrofits.txt",
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt",
             "heat-pumps/sources/pnnl-2025-cold-climate-heat-pump-challenge.txt",
             "heat-pumps/sources/wilson-2024-heat-pumps-for-all.txt"
@@ -1381,15 +1385,15 @@
           "asserted": 15,
           "denied": 0,
           "tally": {
-            "right": 1,
+            "right": 2,
             "wrong": 0,
-            "partly": 1,
+            "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "06HSQOhL1hk",
             "58syFyq7H1A",
@@ -1407,10 +1411,12 @@
             "tZlB_O54D48",
             "wnnwGVBwwvQ"
           ],
-          "note": "Field studies link poor sizing, charge, airflow and commissioning to substantially lower measured efficiency.",
-          "source": null,
+          "note": "Side-by-side lab homes with a two-stage heat pump: imposed duct leakage raised cooling energy 17-25% and lost indoor temperature and humidity control at peak, and combined faults (undercharge, duct leak, non-condensables) raised cooling energy 38-40%; cooling only, one Florida test facility.",
+          "source": "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt#L609-L629",
           "documents": [
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
+            "heat-pumps/sources/james-1997-fsec-residential-equipment-capacity.txt",
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
           ]
         },
@@ -4604,7 +4610,9 @@
           ],
           "note": "Surveys rely on assumed U-values and ventilation rates, and comparisons of assessors show a wide spread for the same house.",
           "source": null,
-          "documents": []
+          "documents": [
+            "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt"
+          ]
         },
         {
           "id": "heat-pumps/heat-pump-hot-water-cylinder-gives",
@@ -5097,15 +5105,17 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
             "5aY26YoUXc8"
           ],
-          "note": "Lab and field studies show refrigerant charge errors and mismatched coils cut heat pump capacity and efficiency, more so in heating.",
-          "source": null,
-          "documents": []
+          "note": "Lab tests on a two-stage heat pump found individual over- and undercharge faults raised cooling energy 4-9%, with a 30% undercharge limiting capacity so the set point could not be held at peak.",
+          "source": "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt#L585-L602",
+          "documents": [
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt"
+          ]
         },
         {
           "id": "heat-pumps/outdoor-heat-pump-units-cold-climates",
@@ -5218,22 +5228,24 @@
           "asserted": 1,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
-            "partly": 1,
+            "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "partly",
+          "strongest": "source",
+          "effective": "right",
           "confidence": 0.5,
           "videos": [
             "At2-Ub04Rpk"
           ],
-          "note": "DOE and NIST field studies find most residential HVAC systems have at least one installation fault, though not all faults materially hurt performance.",
-          "source": null,
+          "note": "In 95 Pacific Northwest heat pump installs, 58% were under- or oversized by half a ton or more against the calculated heating load, and program participation did not improve sizing.",
+          "source": "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt#L1259-L1264",
           "documents": [
+            "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt",
             "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
+            "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
             "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
           ]
         },
@@ -6778,67 +6790,6 @@
         },
         {
           "claim": {
-            "id": "heat-pumps/oversized-poorly-installed-heat-pumps-cost",
-            "text": "Oversized or poorly installed heat pumps cost more to run and deliver less comfort",
-            "topic": "heat-pumps",
-            "asserted": 15,
-            "denied": 0,
-            "tally": {
-              "right": 1,
-              "wrong": 0,
-              "partly": 1,
-              "untestable": 0,
-              "unknown": 0
-            },
-            "strongest": "prior",
-            "effective": "right",
-            "confidence": 0.5,
-            "videos": [
-              "06HSQOhL1hk",
-              "58syFyq7H1A",
-              "6ffHk08yqaQ",
-              "9ecd16-eva8",
-              "DMjkzlNZKPM",
-              "KIpxlqqZQxM",
-              "P2WT80noINQ",
-              "XL4ROp_Jh7g",
-              "bostonglobe-heat-pumps-electricity-rates-in-winter",
-              "consumerreports-buying-guide",
-              "e1ud10npF_w",
-              "greenbuildingadvisor-heat-pumps-are-not-delivering-expected-cost-savings",
-              "jbWQV2DTb3Q",
-              "tZlB_O54D48",
-              "wnnwGVBwwvQ"
-            ],
-            "note": "Field studies link poor sizing, charge, airflow and commissioning to substantially lower measured efficiency.",
-            "source": null,
-            "documents": [
-              "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
-              "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
-            ]
-          },
-          "prior": "right",
-          "evidence": "partly",
-          "method": "source",
-          "overrides": false,
-          "priorRecord": {
-            "method": "prior",
-            "verdict": "right",
-            "confidence": 0.8,
-            "note": "Field studies link poor sizing, charge, airflow and commissioning to substantially lower measured efficiency.",
-            "date": "2026-10-18"
-          },
-          "evidenceRecord": {
-            "method": "source",
-            "verdict": "partly",
-            "confidence": 0.4,
-            "note": "Units from one contractor with sloppy installs (up to 30 ft of excess coiled line set) ran 0.5-1.0 lower in COP at all temperatures, which rated efficiency cannot explain; the report adds that cooling oversizing of variable-speed units should not appreciably hurt efficiency.",
-            "source": "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt#L3049-L3066",
-            "date": "2026-10-18"
-          }
-        },
-        {
-          "claim": {
             "id": "heat-pumps/cold-climates-heat-pump-sized-cooling",
             "text": "In cold climates a heat pump sized for the cooling load cannot carry the full heating load",
             "topic": "heat-pumps",
@@ -7872,6 +7823,52 @@
         },
         {
           "claim": {
+            "id": "heat-pumps/heat-loss-calculations-same-home-can",
+            "text": "Heat loss calculations for the same home can differ widely between surveyors",
+            "topic": "heat-pumps",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "JojCZhqd9So"
+            ],
+            "note": "Surveys rely on assumed U-values and ventilation rates, and comparisons of assessors show a wide spread for the same house.",
+            "source": null,
+            "documents": [
+              "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "confidence": 0.7,
+            "note": "Surveys rely on assumed U-values and ventilation rates, and comparisons of assessors show a wide spread for the same house.",
+            "date": "2026-10-18"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.25,
+            "note": "Two load calculators applied to the same 95 homes classed different shares as undersized (32% versus 43%) and oversized (26% versus 17%), showing method-dependent loads, though this compares calculators, not surveyors.",
+            "source": "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt#L1252-L1257",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "heat-pumps/inverter-driven-heat-pumps-run-long",
             "text": "Inverter-driven heat pumps run long low-output cycles, which is easier on the compressor than short cycling",
             "topic": "heat-pumps",
@@ -8158,6 +8155,55 @@
             "note": "With minimum-efficiency heat pumps, 7% discount rate and 15-year life, only 21% of US single-family houses would gain economically.",
             "source": "heat-pumps/sources/deetjen-2021-us-residential-heat-pumps.txt#L886-L889",
             "date": "2026-10-18"
+          }
+        },
+        {
+          "claim": {
+            "id": "heat-pumps/most-heat-pumps-installed-sized-improperly",
+            "text": "Most heat pumps are installed or sized improperly",
+            "topic": "heat-pumps",
+            "asserted": 1,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "source",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "At2-Ub04Rpk"
+            ],
+            "note": "In 95 Pacific Northwest heat pump installs, 58% were under- or oversized by half a ton or more against the calculated heating load, and program participation did not improve sizing.",
+            "source": "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt#L1259-L1264",
+            "documents": [
+              "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt",
+              "heat-pumps/sources/cadmus-2016-ductless-mini-split-evaluation.txt",
+              "heat-pumps/sources/martin-2026-aceee-finding-fault-hvac-installation.txt",
+              "heat-pumps/sources/nrel-2023-cold-climate-field-validation.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": true,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "confidence": 0.55,
+            "note": "DOE and NIST field studies find most residential HVAC systems have at least one installation fault, though not all faults materially hurt performance.",
+            "date": "2026-10-18"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.5,
+            "note": "In 95 Pacific Northwest heat pump installs, 58% were under- or oversized by half a ton or more against the calculated heating load, and program participation did not improve sizing.",
+            "source": "heat-pumps/sources/bpa-2019-ashp-sizing-baseline-field-study.txt#L1259-L1264",
+            "date": "2026-10-26"
           }
         },
         {
@@ -9877,29 +9923,6 @@
           "documents": []
         },
         {
-          "id": "heat-pumps/heat-loss-calculations-same-home-can",
-          "text": "Heat loss calculations for the same home can differ widely between surveyors",
-          "topic": "heat-pumps",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "JojCZhqd9So"
-          ],
-          "note": "Surveys rely on assumed U-values and ventilation rates, and comparisons of assessors show a wide spread for the same house.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "heat-pumps/heat-pump-can-often-reuse-home",
           "text": "A heat pump can often reuse a home's existing radiators and pipework with few changes",
           "topic": "heat-pumps",
@@ -10081,29 +10104,6 @@
             "bW9DlKn-ba0"
           ],
           "note": "Some cold-climate units are installed without strips in moderate climates, but most cold-region installs still include backup heat.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "heat-pumps/heat-pumps-need-correct-refrigerant-charge",
-          "text": "Heat pumps need a correct refrigerant charge and a matched indoor coil to run efficiently",
-          "topic": "heat-pumps",
-          "asserted": 1,
-          "denied": 0,
-          "tally": {
-            "right": 1,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "5aY26YoUXc8"
-          ],
-          "note": "Lab and field studies show refrigerant charge errors and mismatched coils cut heat pump capacity and efficiency, more so in heating.",
           "source": null,
           "documents": []
         },
@@ -10697,7 +10697,7 @@
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 1.4500000000000002,
+      "novelty": 1.4533333333333334,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "new and sound",
@@ -10710,7 +10710,7 @@
         "heat-pumps/oversized-poorly-installed-heat-pumps-cost"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10834,7 +10834,7 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 0.9574151380982501,
+      "novelty": 0.9740818047649169,
       "redundancy": 0,
       "thinEvidence": 0.1,
       "worthWatching": "mixed",
@@ -10894,7 +10894,7 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 0.43511559696342306,
+      "novelty": 0.4384489302967564,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -10927,7 +10927,7 @@
       "testable": 8,
       "novelty": 1.044573476702509,
       "redundancy": 0,
-      "thinEvidence": 0.125,
+      "thinEvidence": 0,
       "worthWatching": "new and sound",
       "right": [
         "heat-pumps/electric-resistance-heat-costs-far-more",
@@ -10941,7 +10941,7 @@
       "wrong": [
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10968,7 +10968,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -10982,7 +10982,7 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 0.3656353102250718,
+      "novelty": 0.36896864355840514,
       "redundancy": 0,
       "thinEvidence": 0.1,
       "worthWatching": "mixed",
@@ -11137,7 +11137,7 @@
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.04420289855072464,
+      "novelty": 0.04753623188405797,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -11185,12 +11185,12 @@
       "channel": "Handy Bros. Home Comfort",
       "topic": "heat-pumps",
       "watched": false,
-      "score": 0.7,
-      "scaled": 1,
+      "score": 0.8,
+      "scaled": 2,
       "rating": null,
       "assertions": 5,
       "testable": 5,
-      "novelty": 0.7102941176470587,
+      "novelty": 0.9602941176470589,
       "redundancy": 0,
       "thinEvidence": 0.2,
       "worthWatching": "mixed",
@@ -11303,7 +11303,7 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 1.0107757296466975,
+      "novelty": 1.027442396313364,
       "redundancy": 0,
       "thinEvidence": 0.1,
       "worthWatching": "new and sound",
@@ -11335,7 +11335,7 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 1.4578571428571432,
+      "novelty": 1.4611904761904762,
       "redundancy": 0,
       "thinEvidence": 0.125,
       "worthWatching": "new and sound",
@@ -11394,7 +11394,7 @@
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 1.116926523297491,
+      "novelty": 1.1335931899641576,
       "redundancy": 0,
       "thinEvidence": 0.08333333333333333,
       "worthWatching": "new and sound",
@@ -11575,7 +11575,7 @@
       "testable": 11,
       "novelty": 1.5799393988924881,
       "redundancy": 0,
-      "thinEvidence": 0.18181818181818182,
+      "thinEvidence": 0.09090909090909091,
       "worthWatching": "new and sound",
       "right": [
         "heat-pumps/boiler-upgrade-scheme-grant-pays-500",
@@ -11669,7 +11669,7 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.7524641577060931,
+      "novelty": 0.7557974910394265,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
       "worthWatching": "mixed",
@@ -11682,7 +11682,7 @@
         "heat-pumps/whether-heat-pump-cheaper-run-gas"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-18",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -11788,7 +11788,7 @@
       "rating": null,
       "assertions": 5,
       "testable": 5,
-      "novelty": 0.2269607843137255,
+      "novelty": 0.23029411764705882,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -12038,7 +12038,7 @@
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.876450980392157,
+      "novelty": 0.8797843137254903,
       "redundancy": 0,
       "thinEvidence": 0.16666666666666666,
       "worthWatching": "mixed",
@@ -12322,7 +12322,7 @@
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 0.21450308529208784,
+      "novelty": 0.21783641862542116,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -12527,7 +12527,7 @@
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 0.5062026322490718,
+      "novelty": 0.5095359655824052,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -12586,7 +12586,7 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 1.3684325294145028,
+      "novelty": 1.3717658627478362,
       "redundancy": 0,
       "thinEvidence": 0.2727272727272727,
       "worthWatching": "new and sound",
@@ -12977,7 +12977,7 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.10114529682840878,
+      "novelty": 0.10447863016174212,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
       "worthWatching": "mixed",
@@ -13171,7 +13171,7 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.6788572237044224,
+      "novelty": 0.6821905570377558,
       "redundancy": 0,
       "thinEvidence": 0.14285714285714285,
       "worthWatching": "mixed",
@@ -13651,7 +13651,7 @@
       "rating": null,
       "assertions": 13,
       "testable": 13,
-      "novelty": 1.4358695652173914,
+      "novelty": 1.4392028985507248,
       "redundancy": 0,
       "thinEvidence": 0.07692307692307693,
       "worthWatching": "new and sound",
@@ -13672,7 +13672,7 @@
         "heat-pumps/heat-pumps-need-more-maintenance-repairs",
         "heat-pumps/heating-heat-pump-costs-less-natural"
       ],
-      "lastJudged": "2026-10-20",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -14001,7 +14001,7 @@
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 0.6438241106719368,
+      "novelty": 0.6471574440052702,
       "redundancy": 0,
       "thinEvidence": 0.08333333333333333,
       "worthWatching": "mixed",
@@ -14569,6 +14569,20 @@
         "heat-pumps/modern-cold-climate-heat-pumps-keep",
         "heat-pumps/running-heat-pump-emergency-instead-sharply",
         "heat-pumps/setting-auxiliary-heat-lockout-temperature-keeps"
+      ],
+      "wrong": []
+    },
+    {
+      "channel": "Handy Bros. Home Comfort",
+      "videos": 1,
+      "mean": 2,
+      "harmful": 0,
+      "right": [
+        "heat-pumps/heat-pump-incentives-have-drawn-inexperienced",
+        "heat-pumps/heat-pump-reliability-problems-mostly-come",
+        "heat-pumps/heat-pumps-not-work-cold-climates",
+        "heat-pumps/heat-pumps-used-successfully-cold-countries",
+        "heat-pumps/most-heat-pumps-installed-sized-improperly"
       ],
       "wrong": []
     },
@@ -15311,20 +15325,6 @@
       "wrong": [
         "heat-pumps/most-homes-would-save-money-over"
       ]
-    },
-    {
-      "channel": "Handy Bros. Home Comfort",
-      "videos": 1,
-      "mean": 1,
-      "harmful": 0,
-      "right": [
-        "heat-pumps/heat-pump-incentives-have-drawn-inexperienced",
-        "heat-pumps/heat-pump-reliability-problems-mostly-come",
-        "heat-pumps/heat-pumps-not-work-cold-climates",
-        "heat-pumps/heat-pumps-used-successfully-cold-countries",
-        "heat-pumps/most-heat-pumps-installed-sized-improperly"
-      ],
-      "wrong": []
     },
     {
       "channel": "Heat Geek",
