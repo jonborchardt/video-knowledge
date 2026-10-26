@@ -3484,7 +3484,8 @@
           "note": "DORA's 2024 survey estimates that each 25% increase in AI adoption is associated with about 1.5% lower delivery throughput and 7.2% lower delivery stability, contrary to the authors' expectations; an association in survey data, not a causal estimate.",
           "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1310",
           "documents": [
-            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
           ]
         },
         {
@@ -3799,7 +3800,8 @@
           "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1335",
           "documents": [
             "ai-coding/sources/anthropic-work-at-anthropic.txt",
-            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
           ]
         },
         {
@@ -4226,7 +4228,8 @@
           "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
           "source": null,
           "documents": [
-            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
           ]
         },
         {
@@ -4256,7 +4259,9 @@
           ],
           "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/top-down-usage-mandates-unrealistic-productivity",
@@ -4304,21 +4309,22 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "4piZEfozUmA",
             "Sz8NWaTiWfE",
             "redmonk-dora2025",
             "s9slFT52Pgw"
           ],
-          "note": "DORA 2025 found ~59% reporting positive quality impact; it's self-report, which other studies show overstates measured effects.",
-          "source": null,
+          "note": "Asked directly how AI has affected their code quality, 59% of DORA's 2025 survey respondents (nearly 5,000 technology professionals) said it improved, 31% only slightly, 30% saw no impact and 10% said it worsened; a large survey measuring exactly the reported perception the claim describes, from a non-random sample of technology professionals rather than developers alone.",
+          "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L1312-L1325",
           "documents": [
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/4859137.txt",
-            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
           ]
         },
         {
@@ -7026,7 +7032,8 @@
           "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
           "source": null,
           "documents": [
-            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
           ]
         },
         {
@@ -7036,7 +7043,7 @@
           "asserted": 7,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
             "partly": 2,
             "untestable": 0,
@@ -7056,7 +7063,9 @@
           ],
           "note": "DORA 2025 data shows AI outcomes depend on surrounding capabilities, which supports the framing, though 'amplifier' is an interpretation of correlational survey results.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/high-quality-internal-developer-platforms-needed",
@@ -7065,7 +7074,7 @@
           "asserted": 3,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
             "partly": 2,
             "untestable": 0,
@@ -7081,7 +7090,9 @@
           ],
           "note": "DORA 2025 reports this association, but it is correlational survey evidence and platform quality is hard to separate from overall engineering maturity.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+          ]
         },
         {
           "id": "ai-coding/coding-agents-tend-write-silent-fallbacks",
@@ -12355,54 +12366,53 @@
         },
         {
           "claim": {
-            "id": "ai-coding/higher-adoption-associated-delivery-throughput-but",
-            "text": "Higher AI adoption is associated with higher delivery throughput but also more delivery instability",
+            "id": "ai-coding/clear-policy-access-internal-data-small",
+            "text": "A clear AI policy, AI access to internal data and small-batch work amplify the benefits teams get from AI",
             "topic": "ai-coding",
-            "asserted": 8,
+            "asserted": 7,
             "denied": 0,
             "tally": {
-              "right": 4,
+              "right": 0,
               "wrong": 0,
-              "partly": 0,
+              "partly": 5,
               "untestable": 0,
               "unknown": 0
             },
             "strongest": "prior",
-            "effective": "right",
+            "effective": "partly",
             "confidence": 0.5,
             "videos": [
               "4piZEfozUmA",
+              "DfrAaDgFgjc",
               "Sz8NWaTiWfE",
-              "WILFeSGXwio",
-              "blog-robbowley-dora-2025-ai-assisted-dev-report-some-benefit-most-dont",
-              "redmonk-dora2025",
               "s9slFT52Pgw",
-              "tFffUnSq7VA",
-              "wEbdRqDV1CA"
+              "wEbdRqDV1CA",
+              "xHHlhoRC8W4",
+              "xyqim74uZtY"
             ],
-            "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
+            "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
             "source": null,
             "documents": [
-              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+              "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
             ]
           },
-          "prior": "right",
-          "evidence": "partly",
+          "prior": "partly",
+          "evidence": "right",
           "method": "source",
           "overrides": false,
           "priorRecord": {
             "method": "prior",
-            "verdict": "right",
-            "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
-            "confidence": 0.65,
+            "verdict": "partly",
+            "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
+            "confidence": 0.55,
             "date": "2026-10-14"
           },
           "evidenceRecord": {
             "method": "source",
-            "verdict": "partly",
-            "confidence": 0.35,
-            "note": "DORA's 2024 survey found higher AI adoption associated with lower delivery stability (about 7.2% per 25% more adoption), as the claim says, but also with slightly lower throughput (about 1.5%), not higher; the claim's throughput half may rest on a later year's data.",
-            "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1310",
+            "verdict": "right",
+            "confidence": 0.45,
+            "note": "Of 15 candidate capabilities tested in DORA's 2025 survey, seven, including a clear and communicated AI stance, AI-accessible internal data and working in small batches, showed an interaction with AI adoption that amplified its effect on key outcomes; survey interactions, not experiments.",
+            "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L2185-L2206",
             "date": "2026-10-26"
           }
         },
@@ -13130,7 +13140,8 @@
             "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
             "source": null,
             "documents": [
-              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt",
+              "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
             ]
           },
           "prior": "partly",
@@ -13148,8 +13159,108 @@
             "method": "source",
             "verdict": "right",
             "confidence": 0.45,
-            "note": "DORA's 2024 survey found toil and burnout essentially unchanged with AI adoption (burnout about -0.6% per 25% more adoption), saying AI is not helping with meetings, bureaucracy and other toil; survey associations.",
-            "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1115-L1126",
+            "note": "In DORA's 2025 survey, higher AI adoption showed no relationship with friction or burnout (similar levels for higher and lower adopters) while it was associated with more delivery instability; a cross-sectional association.",
+            "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L1677-L1690",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
+            "text": "AI amplifies an organization's existing strengths and weaknesses rather than fixing them",
+            "topic": "ai-coding",
+            "asserted": 7,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 2,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "LOHgRw43fFk",
+              "PkITOx9lIT8",
+              "Sz8NWaTiWfE",
+              "WILFeSGXwio",
+              "blog-robbowley-dora-2025-ai-assisted-dev-report-some-benefit-most-dont",
+              "s9slFT52Pgw",
+              "wEbdRqDV1CA"
+            ],
+            "note": "DORA 2025 data shows AI outcomes depend on surrounding capabilities, which supports the framing, though 'amplifier' is an interpretation of correlational survey results.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "DORA 2025 data shows AI outcomes depend on surrounding capabilities, which supports the framing, though 'amplifier' is an interpretation of correlational survey results.",
+            "confidence": 0.6,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.4,
+            "note": "DORA 2025's headline conclusion, from nearly 5,000 survey responses and interviews, is that AI acts as an amplifier, magnifying the strengths of high-performing organizations and the dysfunctions of struggling ones; an interpretation of cross-sectional interactions.",
+            "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L56-L66",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/high-quality-internal-developer-platforms-needed",
+            "text": "High-quality internal developer platforms are needed for AI gains to translate into organizational outcomes",
+            "topic": "ai-coding",
+            "asserted": 3,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 2,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "LOHgRw43fFk",
+              "Sz8NWaTiWfE",
+              "s9slFT52Pgw"
+            ],
+            "note": "DORA 2025 reports this association, but it is correlational survey evidence and platform quality is hard to separate from overall engineering maturity.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "DORA 2025 reports this association, but it is correlational survey evidence and platform quality is hard to separate from overall engineering maturity.",
+            "confidence": 0.55,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.4,
+            "note": "DORA 2025 finds with high certainty that AI adoption's effect on organizational performance depends on and is amplified by quality internal platforms, though platforms also make AI users report more friction; a survey interaction, not an experiment.",
+            "source": "ai-coding/sources/dora-2025-state-of-ai-assisted-software-development.txt#L2639-L2668",
             "date": "2026-10-26"
           }
         },
@@ -15203,35 +15314,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
-          "text": "AI amplifies an organization's existing strengths and weaknesses rather than fixing them",
-          "topic": "ai-coding",
-          "asserted": 7,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 2,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "LOHgRw43fFk",
-            "PkITOx9lIT8",
-            "Sz8NWaTiWfE",
-            "WILFeSGXwio",
-            "blog-robbowley-dora-2025-ai-assisted-dev-report-some-benefit-most-dont",
-            "s9slFT52Pgw",
-            "wEbdRqDV1CA"
-          ],
-          "note": "DORA 2025 data shows AI outcomes depend on surrounding capabilities, which supports the framing, though 'amplifier' is an interpretation of correlational survey results.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/best-practices-coding-tools-stale-within",
           "text": "Best practices for AI coding tools go stale within months because model capabilities shift quickly",
           "topic": "ai-coding",
@@ -15257,35 +15339,6 @@
             "i1tZN41VKcE"
           ],
           "note": "Tool-use and long-horizon capability jumps in 2025 changed effective workflows (chat-with-RAG to agentic loops); consistent with practitioner reports.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/clear-policy-access-internal-data-small",
-          "text": "A clear AI policy, AI access to internal data and small-batch work amplify the benefits teams get from AI",
-          "topic": "ai-coding",
-          "asserted": 7,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 5,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "4piZEfozUmA",
-            "DfrAaDgFgjc",
-            "Sz8NWaTiWfE",
-            "s9slFT52Pgw",
-            "wEbdRqDV1CA",
-            "xHHlhoRC8W4",
-            "xyqim74uZtY"
-          ],
-          "note": "These come from DORA's 2025 AI capabilities model, a survey-based correlational analysis; plausible and consistent with older DORA findings on small batches, but not causal evidence.",
           "source": null,
           "documents": []
         },
@@ -16818,31 +16871,6 @@
             "owmJyKVu5f8"
           ],
           "note": "End-to-end checks catch integration failures that unit tests miss, a well-established testing principle that applies to agents.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/high-quality-internal-developer-platforms-needed",
-          "text": "High-quality internal developer platforms are needed for AI gains to translate into organizational outcomes",
-          "topic": "ai-coding",
-          "asserted": 3,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 2,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "LOHgRw43fFk",
-            "Sz8NWaTiWfE",
-            "s9slFT52Pgw"
-          ],
-          "note": "DORA 2025 reports this association, but it is correlational survey evidence and platform quality is hard to separate from overall engineering maturity.",
           "source": null,
           "documents": []
         },
@@ -21148,9 +21176,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.39667366946778715,
+      "novelty": 0.40917366946778716,
       "redundancy": 0,
-      "thinEvidence": 0.375,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/classic-software-engineering-fundamentals-matter-much",
@@ -21783,7 +21811,7 @@
       "testable": 7,
       "novelty": 0.4332212885154062,
       "redundancy": 0,
-      "thinEvidence": 0.42857142857142855,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assistants-tend-agree-users-rather-challenge",
@@ -22226,7 +22254,7 @@
       "testable": 9,
       "novelty": 0.8922619047619047,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.1111111111111111,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -22643,7 +22671,7 @@
       "testable": 11,
       "novelty": 1.2103425006366182,
       "redundancy": 0,
-      "thinEvidence": 0.5833333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -22660,7 +22688,7 @@
       "wrong": [
         "ai-coding/natural-language-prompts-have-become-new"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23044,9 +23072,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.4613095238095238,
+      "novelty": 0.4738095238095238,
       "redundancy": 0,
-      "thinEvidence": 0.375,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -23387,7 +23415,7 @@
       "testable": 12,
       "novelty": 1.2825396825396824,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.25,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/adoption-increases-average-pull-request-size",
@@ -23972,7 +24000,7 @@
       "testable": 3,
       "novelty": 0.3482142857142857,
       "redundancy": 0,
-      "thinEvidence": 0.6666666666666666,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -26131,7 +26159,7 @@
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.5412698412698412,
+      "novelty": 0.5537698412698413,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -26237,9 +26265,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.558531746031746,
+      "novelty": 0.571031746031746,
       "redundancy": 0,
-      "thinEvidence": 0.375,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/adoption-has-not-reduced-developer-burnout",
@@ -26795,7 +26823,7 @@
       "testable": 8,
       "novelty": 0.46329365079365076,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -26886,7 +26914,7 @@
       "testable": 14,
       "novelty": 1.233373015873016,
       "redundancy": 0,
-      "thinEvidence": 0.2857142857142857,
+      "thinEvidence": 0.21428571428571427,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/acceptance-rate-counts-generated-lines-poor",
@@ -26981,7 +27009,7 @@
       "testable": 8,
       "novelty": 0.3654395604395604,
       "redundancy": 0,
-      "thinEvidence": 0.4444444444444444,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/accelerating-merger-testing-operations-product-work",
@@ -26994,7 +27022,7 @@
         "ai-coding/speeds-generation-human-attention-review-understanding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
