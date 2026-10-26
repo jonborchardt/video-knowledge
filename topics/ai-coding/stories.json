@@ -3,8 +3,8 @@
  "basis": {
   "claims": 385,
   "sources": 216,
-  "studies": 28,
-  "candidates": 65
+  "studies": 29,
+  "candidates": 66
  },
  "stories": [
   {
@@ -3444,6 +3444,174 @@
    }
   },
   {
+   "id": "contradicted:frontier-model-improvements-have-become-incremental",
+   "kind": "contradicted",
+   "title": "Is it true that frontier model improvements have become incremental rather than exponential?",
+   "alternates": [
+    "5 sources say frontier model improvements have become incremental rather than…. Does it hold up?",
+    "What the research says about frontier model improvements have become incremental rather than…"
+   ],
+   "question": "Is it true that frontier model improvements have become incremental rather than exponential?",
+   "whyWatch": "5 sources across 6 channels repeat it, and the study that checked it points the other way. Anyone who has heard the claim gains from seeing it tested.",
+   "tension": "What gets repeated against what was measured. Epoch AI acceleration report: Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks.",
+   "evidenceNeeded": "A measurement of whether frontier model improvements have become incremental rather than exponential, on the population and under the conditions the claim describes.",
+   "evidenceAvailable": [
+    "Epoch AI acceleration report: wrong (0.55, direct)",
+    "METR time horizons: wrong (0.4, direct)"
+   ],
+   "gaps": [],
+   "premise": "5 sources assert \"Frontier model improvements have become incremental rather than exponential\". Epoch AI acceleration report: Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks. The gap between what gets repeated and what the data shows is the story.",
+   "claims": [
+    "ai-coding/frontier-model-improvements-have-become-incremental"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Open on the claim in the sources' own words.",
+    "conflict": "Then the study that checked it: Epoch AI acceleration report: Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks.",
+    "evidence": "Walk through Epoch AI acceleration report, METR time horizons: what was measured, on whom, and the caveats.",
+    "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
+    "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "heuristic",
+    "explanation": "One claim, one question. Unreviewed."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.68,
+    "curiosity": 1,
+    "stakes": 0.4,
+    "depth": 0.77,
+    "originality": 1,
+    "evidence": 0.63,
+    "editorial": 0.73,
+    "overall": 0.69,
+    "explanation": "editorial 0.73 = mean of coherence 0.8 (heuristic), relevance 0.68 (7 sources, 6 channels), curiosity 1 (contradicted), stakes 0.4 (lean: calibrating), depth 0.77 (2 studies, 1 claim, tension); evidence 0.63 = strongest Epoch AI acceleration report at 0.55 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.8), central conclusion supported, 1 essential finding verified, no pending review.",
+   "blocking": [],
+   "reviewed": false,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Contrary to the sources that repeat it, the evidence does not support \"Frontier model improvements have become incremental rather than exponential\"",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0.55,
+     "independent": 2,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+        "cite": "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt#L17-L23"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Epoch AI acceleration report",
+       "verdict": "wrong",
+       "confidence": 0.55,
+       "note": "Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks.",
+       "applicability": "direct",
+       "basis": "review",
+       "why": "frontier progress on three of four capability metrics sped up from 2023 to early 2026, which is incompatible with improvements having become incremental; the heuristic read the note's own wording (\"rather than slowed\") as a scope limit"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+        "cite": "ai-coding/sources/2503.14499.txt#L284-L288"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "METR time horizons",
+       "verdict": "wrong",
+       "confidence": 0.4,
+       "note": "Through early 2025 METR's measured time horizon kept rising exponentially, from 2 seconds for GPT-2 to 110 minutes for o3, with o3 above the long-run trend; it covers models only up to early 2025 and one benchmark suite.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [],
+     "problems": [],
+     "limitations": [],
+     "suggestions": [],
+     "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.55)."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "The evidence does not support \"Frontier model improvements have become incremental rather than exponential\"",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.55,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+          "cite": "ai-coding/sources/epoch-have-ai-capabilities-accelerated.txt#L17-L23"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Epoch AI acceleration report",
+         "verdict": "wrong",
+         "confidence": 0.55,
+         "note": "Epoch AI fitted eight growth curves to frontier models' scores from 2023 to early 2026 and checked them by out-of-sample prediction: on three of four metrics (the Epoch Capabilities Index, log METR 50% time horizon and a math index) progress sped up rather than slowed, with reasoning models on a 2-3x faster trend; the fourth (WeirdML V2) kept a steady linear trend, and the authors warn the speed-up is concentrated in easy-to-verify programming and math tasks.",
+         "applicability": "direct",
+         "basis": "review",
+         "why": "frontier progress on three of four capability metrics sped up from 2023 to early 2026, which is incompatible with improvements having become incremental; the heuristic read the note's own wording (\"rather than slowed\") as a scope limit"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+          "cite": "ai-coding/sources/2503.14499.txt#L284-L288"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "METR time horizons",
+         "verdict": "wrong",
+         "confidence": 0.4,
+         "note": "Through early 2025 METR's measured time horizon kept rising exponentially, from 2 seconds for GPT-2 to 110 minutes for o3, with o3 above the long-run trend; it covers models only up to early 2025 and one benchmark suite.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.55)."
+      }
+     }
+    ]
+   },
+   "chainCandidates": [
+    "decision:quality-and-understanding",
+    "conflict:generated-code-contains-more-defects-human"
+   ]
+  },
+  {
    "id": "surprise:vibe-coded-apps-work-prototypes-but",
    "kind": "surprise",
    "title": "Do Vibe-Coded Apps Survive Production?",
@@ -4020,146 +4188,6 @@
    }
   },
   {
-   "id": "conflict:frontier-model-improvements-have-become-incremental",
-   "kind": "conflict",
-   "title": "Is it true that frontier model improvements have become incremental rather than exponential?",
-   "alternates": [
-    "Sources disagree: Frontier model improvements have become incremental rather than…",
-    "Is it true that frontier model improvements have become incremental rather than exponential?"
-   ],
-   "question": "Is it true that frontier model improvements have become incremental rather than exponential?",
-   "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
-   "tension": "The sources split: METR time horizons says wrong.",
-   "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
-   "evidenceAvailable": [
-    "METR time horizons: wrong (0.4, direct)"
-   ],
-   "gaps": [
-    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.4 after applicability); it cannot carry a narrative.",
-    "What explains the split between METR time horizons?"
-   ],
-   "premise": "The sources split on \"Frontier model improvements have become incremental rather than exponential\": METR time horizons says wrong. The reasons they differ are the useful part.",
-   "claims": [
-    "ai-coding/frontier-model-improvements-have-become-incremental"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "Two confident, opposite answers to the same question: \"Frontier model improvements have become incremental rather than exponential\".",
-    "conflict": "The sources do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (METR time horizons): design, sample, what was measured.",
-    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
-    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "heuristic",
-    "explanation": "One claim, one question. Unreviewed."
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.68,
-    "curiosity": 1,
-    "stakes": 0.4,
-    "depth": 0.48,
-    "originality": 1,
-    "evidence": 0.4,
-    "editorial": 0.67,
-    "overall": 0.56,
-    "explanation": "editorial 0.67 = mean of coherence 0.8 (heuristic), relevance 0.68 (7 sources, 6 channels), curiosity 1 (conflict), stakes 0.4 (lean: calibrating), depth 0.48 (1 study, 1 claim); evidence 0.4 = strongest METR time horizons at 0.4 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: The strongest study that bears on the central conclusion is weaker than 0.5 (0.4 after applicability); it cannot carry a narrative.",
-   "blocking": [
-    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.4 after applicability); it cannot carry a narrative."
-   ],
-   "reviewed": false,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "The evidence does not support \"Frontier model improvements have become incremental rather than exponential\"",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0.4,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
-        "cite": "ai-coding/sources/2503.14499.txt#L284-L288"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "METR time horizons",
-       "verdict": "wrong",
-       "confidence": 0.4,
-       "note": "Through early 2025 METR's measured time horizon kept rising exponentially, from 2 seconds for GPT-2 to 110 minutes for o3, with o3 above the long-run trend; it covers models only up to early 2025 and one benchmark suite.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [],
-     "problems": [],
-     "limitations": [],
-     "suggestions": [
-      "The strongest support is weak (0.4); say \"one study suggests\" or find stronger evidence."
-     ],
-     "explanation": "supported (qualify): 1 supporting (1 independent, strongest 0.4)."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "The evidence does not support \"Frontier model improvements have become incremental rather than exponential\"",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0.4,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
-          "cite": "ai-coding/sources/2503.14499.txt#L284-L288"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "METR time horizons",
-         "verdict": "wrong",
-         "confidence": 0.4,
-         "note": "Through early 2025 METR's measured time horizon kept rising exponentially, from 2 seconds for GPT-2 to 110 minutes for o3, with o3 above the long-run trend; it covers models only up to early 2025 and one benchmark suite.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [
-        "The strongest support is weak (0.4); say \"one study suggests\" or find stronger evidence."
-       ],
-       "explanation": "supported (qualify): 1 supporting (1 independent, strongest 0.4)."
-      }
-     }
-    ]
-   }
-  },
-  {
    "id": "gap:open-weight-coding-models-now-handle",
    "kind": "gap",
    "title": "Can a Free Open Model Do Your Everyday Coding?",
@@ -4422,6 +4450,11 @@
    "id": "conflict:engineers-who-adopt-agentic-coding-about",
    "title": "Is it true that engineers who adopt agentic coding are about ten times as productive as peers who don't?",
    "reason": "subsumed by decision:how-much-faster"
+  },
+  {
+   "id": "conflict:frontier-model-improvements-have-become-incremental",
+   "title": "Is it true that frontier model improvements have become incremental rather than exponential?",
+   "reason": "a variation of contradicted:frontier-model-improvements-have-become-incremental (claims overlap 1)"
   },
   {
    "id": "conflict:productivity-gains-concentrate-among-developers-new",
