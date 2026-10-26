@@ -24,9 +24,9 @@ const jsonLd = [websiteJsonLd(siteUrl), ...pageLd].map((x) => JSON.stringify(x).
 // Dev server only: a page injected by astro.config.mjs (src/admin) is framed in pink; so is any link to one and any
 // `.dev-only` section on a public page. A build renders none of it.
 const dev = import.meta.env.DEV;
-const devPage = dev && /^\/(admin|\[topic\]\/(stories|scripts|review))/.test(Astro.routePattern);
+const devPage = dev && /^\/(admin|\[topic\]\/(stories|register|scripts|review))/.test(Astro.routePattern);
 const devCss = `body[data-dev-page]::after { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; border: 4px solid #ff2d95; }
-.dev-only, a[href^="/"]:is([href*="/admin"], [href*="/stories/"], [href*="/scripts/"], [href*="/review/"], [href*="/review-"]) { outline: 2px solid #ff2d95; outline-offset: 2px; }`;
+.dev-only, a[href^="/"]:is([href*="/admin"], [href*="/stories/"], [href*="/register/"], [href*="/scripts/"], [href*="/review/"], [href*="/review-"]) { outline: 2px solid #ff2d95; outline-offset: 2px; }`;
 ---
 
 <!doctype html>

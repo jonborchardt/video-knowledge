@@ -90,12 +90,15 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(readFileSync(join(DIST, p), 'utf8'), p).toContain('No findings published yet.');
   });
 
-  it('topic pages have their tab sections', () => {
-    for (const n of liveTopics) {
-      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
-      for (const id of ['recap', 'top', 'claims', 'sources']) expect(html).toContain(`<section id="${id}"`);
-      expect(html).toContain('data-verdict=');
+  it('an inquiry page carries its matters and exhibits, and no register', () => {
+    for (const t of liveTopics) {
+      const html = readFileSync(join(DIST, t, 'index.html'), 'utf8');
+      expect(html).toContain('id="matters"');
+      expect(html).toContain('id="sources"');
+      for (const id of ['recap', 'top', 'wrong-claims', 'contested-claims', 'claims', 'studies'])
+        expect(html).not.toContain(`id="${id}"`);
     }
+    expect(existsSync(join(DIST, 'heat-pumps', 'register'))).toBe(false);
   });
 
   it('only built pages for topics an institution publishes; no admin pages', () => {

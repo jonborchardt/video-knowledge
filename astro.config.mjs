@@ -17,6 +17,7 @@ const admin = {
       if (command !== 'dev') return;
       injectRoute({ pattern: '/admin', entrypoint: './src/admin/index.astro' });
       injectRoute({ pattern: '/[topic]/stories', entrypoint: './src/admin/stories.astro' });
+      injectRoute({ pattern: '/[topic]/register', entrypoint: './src/admin/register.astro' });
       injectRoute({ pattern: '/[topic]/scripts/[slug]', entrypoint: './src/admin/script.astro' });
       injectRoute({ pattern: '/[topic]/review/[...path]', entrypoint: './src/admin/review.astro', prerender: false });
       // the review page's media: the packaged build streamed from disk, never copied into public/ or dist/
