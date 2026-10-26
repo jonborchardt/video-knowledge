@@ -3,7 +3,7 @@
  "basis": {
   "claims": 708,
   "sources": 171,
-  "studies": 27,
+  "studies": 28,
   "candidates": 38
  },
  "stories": [
@@ -20,6 +20,7 @@
    "tension": "The pitch: discipline and a proven strategy make you consistently profitable. The data: a small minority is predictably profitable, and the longer people trade the smaller their chance of being in it.",
    "evidenceNeeded": "Complete trading records for a population of day traders over at least a year, net of fees, with the share who profit and whether it rises with experience.",
    "evidenceAvailable": [
+    "Taiwan day-trader skill study (Barber et al. 2011): right (0.6, direct)",
     "Brazil day-trader study (Chague et al.): right (0.7, direct)",
     "Taiwan day-trader study (Barber et al.): right (0.7, direct)",
     "FCA CFD consultation 2016: partly (0.4, partial)",
@@ -67,7 +68,7 @@
     "evidence": 1,
     "editorial": 0.86,
     "overall": 0.92,
-    "explanation": "editorial 0.86 = mean of coherence 0.9 (review), relevance 1 (27 sources, 21 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (4 studies, 4 claims, tension); evidence 1 = strongest Brazil day-trader study (Chague et al.) at 0.7 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.86 = mean of coherence 0.9 (review), relevance 1 (27 sources, 21 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (5 studies, 4 claims, tension); evidence 1 = strongest Brazil day-trader study (Chague et al.) at 0.7 (direct) across 5 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.9), central conclusion qualified with accepted qualifications, 4 essential findings verified, no pending review.",
@@ -84,8 +85,24 @@
      "review": true,
      "verbatim": true,
      "strength": 0.7,
-     "independent": 2,
+     "independent": 3,
      "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/most-retail-day-traders-lose-money",
+        "cite": "get-rich-quick/sources/barber-speculator-skill.txt#L796-L800"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Taiwan day-trader skill study (Barber et al. 2011)",
+       "verdict": "right",
+       "confidence": 0.6,
+       "note": "Of about 360,000 individual day traders in Taiwan in an average year, only about 15% profit after a reasonable accounting for trading costs.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
       {
        "ref": {
         "kind": "study",
@@ -163,7 +180,7 @@
      "suggestions": [
       "Add the qualification: the evidence supports a narrower or weaker statement."
      ],
-     "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 2 qualifying."
+     "explanation": "qualified (qualify): 3 supporting (3 independent, strongest 0.7), 2 qualifying."
     },
     "findings": [
      {
@@ -178,8 +195,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.7,
-       "independent": 2,
+       "independent": 3,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/most-retail-day-traders-lose-money",
+          "cite": "get-rich-quick/sources/barber-speculator-skill.txt#L796-L800"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Taiwan day-trader skill study (Barber et al. 2011)",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Of about 360,000 individual day traders in Taiwan in an average year, only about 15% profit after a reasonable accounting for trading costs.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -257,7 +290,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.7), 2 qualifying."
+       "explanation": "qualified (qualify): 3 supporting (3 independent, strongest 0.7), 2 qualifying."
       }
      },
      {
@@ -2976,16 +3009,18 @@
    "title": "Can a Skilled Day Trader Really Multiply a Small Account in a Month?",
    "alternates": [
     "The Momentum-Trading Promise, Checked Against the Data",
-    "What the Best Day Traders in a 1,551-Person Study Actually Made"
+    "What the Best Day Traders Actually Made"
    ],
    "question": "Can an experienced day trader really multiply a small account in a month?",
    "whyWatch": "This is the specific promise in the pitch videos, and it is the one the base-rate studies cannot answer directly.",
-   "tension": "A possibility claim against population data: the data show how rare large gains were, not that they are impossible.",
+   "tension": "A possibility claim against population data: the best day traders on record earn a small daily edge on average, which shows how rare large gains are, not that they are impossible.",
    "evidenceNeeded": "Audited account histories of momentum-stock day traders, or the distribution of monthly account growth across a population of them.",
    "evidenceAvailable": [],
    "gaps": [
-    "Reviewer: The corpus has base-rate studies of futures and stock day traders, which cannot rule out an individual momentum trader's month. It needs audited records of momentum traders or a study of account-growth distributions.",
-    "Brazil day-trader study (Chague et al.) is context only: a base rate for Brazilian index-futures day traders cannot rule out one momentum-stock trader multiplying an account in a month; it shows how rare large gains were in that population"
+    "Reviewer: The corpus has base-rate studies of Brazilian futures day traders and Taiwan stock day traders, including the persistently skilled top 500 (28.1 bps a day after fees on average); group averages cannot rule out an individual momentum trader multiplying an account in a month. It needs audited account histories of momentum-stock day traders or a study of the distribution of monthly account growth (the top tail, with leverage) across such a population.",
+    "Taiwan day-trader skill study (Barber et al. 2011) is context only: a value-weighted group average for the top 500 Taiwan stock day traders (28.1 bps a day after fees) shows the documented skilled edge is small, but an average cannot rule out one momentum trader multiplying an account in a month, and the authors say leverage or sequential trading can change the magnitudes",
+    "Brazil day-trader study (Chague et al.) is context only: a base rate for Brazilian index-futures day traders cannot rule out one momentum-stock trader multiplying an account in a month; it shows how rare large gains were in that population",
+    "Taiwan day-trader skill study (Barber et al. 2011) only partly agrees: Taiwan stock day traders 1992-2006: fewer than 1% (about 1,000 of 360,000 a year) outperform persistently, and the top 500 by prior-year return earn 28.1 bps a day after fees on their day trading (roughly 6% over a trading month), so skilled experienced day traders exist but their documented group edge is nowhere near multiplying an account in a month; it is a value-weighted group average whose magnitude the authors say leverage or sequential trading could change, not momentum-stock specific."
    ],
    "premise": "4 sources assert \"An experienced day trader can multiply a small account many times over within a month by trading momentum stocks\". Brazil day-trader study (Chague et al.): Among 1,551 persistent futures day traders the single best earned US$310 a day on average with a daily standard deviation of US$2,560, and only 0.5% beat a bank teller's wage; nobody shows multiplying an account in a month, though the setting is Brazilian index futures rather than momentum stocks. The gap between what gets repeated and what the data shows is the story.",
    "claims": [
@@ -2995,7 +3030,7 @@
    "arc": {
     "hook": "Open on the claim in the sources' own words.",
     "conflict": "Then the study that checked it: Brazil day-trader study (Chague et al.): Among 1,551 persistent futures day traders the single best earned US$310 a day on average with a daily standard deviation of US$2,560, and only 0.5% beat a bank teller's wage; nobody shows multiplying an account in a month, though the setting is Brazilian index futures rather than momentum stocks.",
-    "evidence": "Walk through Brazil day-trader study (Chague et al.): what was measured, on whom, and the caveats.",
+    "evidence": "Walk through Taiwan day-trader skill study (Barber et al. 2011), Brazil day-trader study (Chague et al.): what was measured, on whom, and the caveats.",
     "resolution": "Say exactly what the evidence rules out and what it leaves open, including any narrower version that survives.",
     "takeaway": "What a viewer should do differently now that the claim is not what it seemed."
    },
@@ -3017,9 +3052,9 @@
     "explanation": "editorial 0.75 = mean of coherence 0.8 (review), relevance 0.53 (4 sources, 2 channels), curiosity 1 (contradicted, a study overturned the guess), stakes 1 (lean: pro-hype), depth 0.4 (0 studies, 1 claim, tension); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: The corpus has base-rate studies of futures and stock day traders, which cannot rule out an individual momentum trader's month. It needs audited records of momentum traders or a study of account-growth distributions.",
+   "readinessWhy": "Essential evidence is missing: Reviewer: The corpus has base-rate studies of Brazilian futures day traders and Taiwan stock day traders, including the persistently skilled top 500 (28.1 bps a day after fees on average); group averages cannot rule out an individual momentum trader multiplying an account in a month. It needs audited account histories of momentum-stock day traders or a study of the distribution of monthly account growth (the top tail, with leverage) across such a population.",
    "blocking": [
-    "Reviewer: The corpus has base-rate studies of futures and stock day traders, which cannot rule out an individual momentum trader's month. It needs audited records of momentum traders or a study of account-growth distributions."
+    "Reviewer: The corpus has base-rate studies of Brazilian futures day traders and Taiwan stock day traders, including the persistently skilled top 500 (28.1 bps a day after fees on average); group averages cannot rule out an individual momentum trader multiplying an account in a month. It needs audited account histories of momentum-stock day traders or a study of the distribution of monthly account growth (the top tail, with leverage) across such a population."
    ],
    "reviewed": true,
    "audit": {
@@ -3042,6 +3077,22 @@
        "ref": {
         "kind": "study",
         "claim": "get-rich-quick/experienced-day-trader-can-multiply-small",
+        "cite": "get-rich-quick/sources/barber-speculator-skill.txt#L478-L486"
+       },
+       "cited": true,
+       "role": "context",
+       "by": "Taiwan day-trader skill study (Barber et al. 2011)",
+       "verdict": "partly",
+       "confidence": 0.35,
+       "note": "Taiwan stock day traders 1992-2006: fewer than 1% (about 1,000 of 360,000 a year) outperform persistently, and the top 500 by prior-year return earn 28.1 bps a day after fees on their day trading (roughly 6% over a trading month), so skilled experienced day traders exist but their documented group edge is nowhere near multiplying an account in a month; it is a value-weighted group average whose magnitude the authors say leverage or sequential trading could change, not momentum-stock specific.",
+       "applicability": "contextual",
+       "basis": "review",
+       "why": "a value-weighted group average for the top 500 Taiwan stock day traders (28.1 bps a day after fees) shows the documented skilled edge is small, but an average cannot rule out one momentum trader multiplying an account in a month, and the authors say leverage or sequential trading can change the magnitudes"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/experienced-day-trader-can-multiply-small",
         "cite": "get-rich-quick/sources/chague-day-trading-for-a-living.txt#L219-L229"
        },
        "cited": true,
@@ -3058,12 +3109,13 @@
      "problems": [],
      "limitations": [
       "The studies on this claim are context only: none decides the sentence as worded.",
+      "Context only, Taiwan day-trader skill study (Barber et al. 2011) (partly): a value-weighted group average for the top 500 Taiwan stock day traders (28.1 bps a day after fees) shows the documented skilled edge is small, but an average cannot rule out one momentum trader multiplying an account in a month, and the authors say leverage or sequential trading can change the magnitudes.",
       "Context only, Brazil day-trader study (Chague et al.) (wrong): a base rate for Brazilian index-futures day traders cannot rule out one momentum-stock trader multiplying an account in a month; it shows how rare large gains were in that population."
      ],
      "suggestions": [
       "Reframe from \"can\" to what the base rate shows (\"most do not\"), which the evidence does decide."
      ],
-     "explanation": "unverified (blocked): no direct support, 1 context only."
+     "explanation": "unverified (blocked): no direct support, 2 context only."
     },
     "findings": [
      {
@@ -3087,6 +3139,22 @@
          "ref": {
           "kind": "study",
           "claim": "get-rich-quick/experienced-day-trader-can-multiply-small",
+          "cite": "get-rich-quick/sources/barber-speculator-skill.txt#L478-L486"
+         },
+         "cited": true,
+         "role": "context",
+         "by": "Taiwan day-trader skill study (Barber et al. 2011)",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Taiwan stock day traders 1992-2006: fewer than 1% (about 1,000 of 360,000 a year) outperform persistently, and the top 500 by prior-year return earn 28.1 bps a day after fees on their day trading (roughly 6% over a trading month), so skilled experienced day traders exist but their documented group edge is nowhere near multiplying an account in a month; it is a value-weighted group average whose magnitude the authors say leverage or sequential trading could change, not momentum-stock specific.",
+         "applicability": "contextual",
+         "basis": "review",
+         "why": "a value-weighted group average for the top 500 Taiwan stock day traders (28.1 bps a day after fees) shows the documented skilled edge is small, but an average cannot rule out one momentum trader multiplying an account in a month, and the authors say leverage or sequential trading can change the magnitudes"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/experienced-day-trader-can-multiply-small",
           "cite": "get-rich-quick/sources/chague-day-trading-for-a-living.txt#L219-L229"
          },
          "cited": true,
@@ -3103,12 +3171,13 @@
        "problems": [],
        "limitations": [
         "The studies on this claim are context only: none decides the sentence as worded.",
+        "Context only, Taiwan day-trader skill study (Barber et al. 2011) (partly): a value-weighted group average for the top 500 Taiwan stock day traders (28.1 bps a day after fees) shows the documented skilled edge is small, but an average cannot rule out one momentum trader multiplying an account in a month, and the authors say leverage or sequential trading can change the magnitudes.",
         "Context only, Brazil day-trader study (Chague et al.) (wrong): a base rate for Brazilian index-futures day traders cannot rule out one momentum-stock trader multiplying an account in a month; it shows how rare large gains were in that population."
        ],
        "suggestions": [
         "Reframe from \"can\" to what the base rate shows (\"most do not\"), which the evidence does decide."
        ],
-       "explanation": "unverified (blocked): no direct support, 1 context only."
+       "explanation": "unverified (blocked): no direct support, 2 context only."
       }
      }
     ]
