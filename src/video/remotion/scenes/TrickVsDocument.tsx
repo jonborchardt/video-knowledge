@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { GUTTER, grow, ramp, theme } from '../theme';
+import { alpha, grow, GUTTER, ramp, theme } from '../theme';
 
 /** A two-column board: onScreenText is [left header, right header, then left/right pairs]. The headers appear on
  *  `line:1`/`line:2`; each row on its left line's cue (`line:3`, `line:5`, ...), the right box a beat later. Each
@@ -69,7 +69,7 @@ export const TrickVsDocument: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 background: theme.raised,
                 border: `3px solid ${theme.glow}`,
                 borderRadius: 14,
-                boxShadow: `0 0 26px ${theme.glow}55`,
+                boxShadow: `0 0 26px ${alpha(theme.glow, 0.33)}`,
                 fontSize: 46,
                 fontWeight: 600,
                 color: theme.fg,
@@ -125,7 +125,7 @@ export const TrickVsDocument: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 overflow: 'hidden',
                 background: theme.data,
                 borderRadius: 14,
-                boxShadow: `0 0 26px ${theme.data}66`,
+                boxShadow: `0 0 26px ${alpha(theme.data, 0.4)}`,
                 fontSize: 32,
                 fontWeight: 600,
                 lineHeight: 1.2,

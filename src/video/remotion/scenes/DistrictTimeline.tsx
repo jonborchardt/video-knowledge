@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { cue, lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { clamp01, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, grow, ramp, theme } from '../theme';
 
 const DC = { x: 160, y: 370, w: 860, h: 330 };
 const US = { x: 360, y: 70, w: 1200, h: 170 };
@@ -112,7 +112,7 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
     borderRadius: 22,
     background: theme.raised,
     border: `4px solid ${color}`,
-    boxShadow: `0 0 ${36 * clamp01(k)}px ${color}66`,
+    boxShadow: `0 0 ${36 * clamp01(k)}px ${alpha(color, 0.4)}`,
     opacity: clamp01(k * 1.5),
     transform: `scale(${0.85 + 0.15 * Math.max(0, k)})`,
   });
@@ -303,7 +303,7 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
           textTransform: 'uppercase',
           opacity: ramp(t, endAt - 4, 4),
           transform: `rotate(-8deg) scale(${1.6 - 0.6 * stamp})`,
-          boxShadow: `0 0 28px ${theme.loss}88`,
+          boxShadow: `0 0 28px ${alpha(theme.loss, 0.53)}`,
         }}
       >
         {txt[5]}

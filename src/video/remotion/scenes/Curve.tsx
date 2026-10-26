@@ -4,7 +4,7 @@ import { pointFrames } from '../../chart';
 import { lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { GUTTER, clamp01, countUp, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, countUp, grow, GUTTER, ramp, theme } from '../theme';
 
 const YEAR = /\b(\d{4})\b/;
 type P = { x: number; y: number };
@@ -287,8 +287,8 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 color: theme.fg,
                 borderLeft: `8px solid ${c}`,
                 borderRadius: 10,
-                background: `linear-gradient(90deg, ${c}44, ${theme.ground}DD)`,
-                boxShadow: `0 0 ${24 + 12 * pulse}px ${c}66`,
+                background: `linear-gradient(90deg, ${alpha(c, 0.27)}, ${alpha(theme.ground, 0.87)})`,
+                boxShadow: `0 0 ${24 + 12 * pulse}px ${alpha(c, 0.4)}`,
                 opacity: a,
                 transform: `translateX(${(1 - a) * (spot.right ? 60 : -60)}px) scale(${0.9 + 0.1 * grow(t, lines[j], 14)})`,
               }}

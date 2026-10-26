@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { GUTTER, clamp01, easeOut, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, easeOut, grow, GUTTER, ramp, theme } from '../theme';
 
 type P = { x: number; y: number };
 const R = 54; // stop radius
@@ -233,9 +233,9 @@ export const Steps: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   boxSizing: 'border-box',
                   padding: '26px 32px',
                   borderRadius: 18,
-                  background: `linear-gradient(150deg, ${c}38, ${theme.raised} 65%)`,
+                  background: `linear-gradient(150deg, ${alpha(c, 0.22)}, ${theme.raised} 65%)`,
                   borderLeft: `8px solid ${c}`,
-                  boxShadow: live ? `0 0 44px ${c}66` : undefined,
+                  boxShadow: live ? `0 0 44px ${alpha(c, 0.4)}` : undefined,
                   fontSize: font,
                   lineHeight: 1.25,
                   color: theme.fg,

@@ -69,10 +69,29 @@ export function alpha(hex: string, a: number): string {
   return `rgba(${r},${g},${b},${a})`;
 }
 
+const hueGap = (a: number, b: number) => {
+  const d = Math.abs(a - b) % 360;
+  return Math.min(d, 360 - d);
+};
+/** The hue nearest `want`, from `below` degrees under it to `above` over it, at least 34 degrees from every kit hue
+ *  in `kit` (else the farthest from them that range allows): a semantic colour never reads as the institution's. */
+function apart(want: number, below: number, above: number, kit: number[]): number {
+  const far = (x: number) => Math.min(...kit.map((k) => hueGap(x, k)));
+  let best = want;
+  for (let o = 0; o <= Math.max(below, above); o++)
+    for (const x of [o <= below ? want - o : null, o <= above ? want + o : null]) {
+      if (x === null) continue;
+      if (far(x) >= 34) return (x + 360) % 360;
+      if (far(x) > far(best)) best = x;
+    }
+  return (best + 360) % 360;
+}
+
 /** Every role from the four kit colours: ground, paper and accent kept, the rest derived (hue stays the kit's). */
 export function themeOf(p: KitPalette): Theme {
   const [h, s] = hslOf(p.accent);
   const [gh, gs] = hslOf(p.ground);
+  const kit = [h, gh]; // the hues of glow and accent2
   return {
     ground: p.ground,
     paper: p.paper,
@@ -86,10 +105,11 @@ export function themeOf(p: KitPalette): Theme {
     accent: p.accent,
     glow: onGround(h, Math.max(s + 0.3, 0.8), 0.6, p.ground),
     accent2: onGround(gh, Math.max(gs, 0.6), 0.6, p.ground),
-    // semantic colour outweighs brand uniformity (design.md 2.3): fixed hues, lifted for the screen
-    data: onGround(203, 0.75, 0.66, p.ground),
-    loss: onGround(12, 0.8, 0.6, p.ground),
-    gain: onGround(100, 0.55, 0.58, p.ground),
+    // semantic colour outweighs brand uniformity (design.md 2.3): bluish data, red loss, green gain, lifted for the
+    // screen and turned away from the kit's own hues so a split or a cycle never pairs two near-identical colours
+    data: onGround(apart(203, 35, 52, kit), 0.75, 0.66, p.ground),
+    loss: onGround(apart(12, 60, 20, kit), 0.8, 0.6, p.ground),
+    gain: onGround(apart(100, 25, 45, kit), 0.55, 0.58, p.ground),
     serif: '"Libre Baskerville", Georgia, "Times New Roman", serif',
     sans: '"IBM Plex Sans", "Segoe UI", Helvetica, Arial, sans-serif',
     mono: '"IBM Plex Mono", Consolas, "Courier New", monospace',

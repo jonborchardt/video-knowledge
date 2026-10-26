@@ -27,7 +27,7 @@ Each scene:
   "purpose": "Show the viewer the pitch in the recruiters' own words before the data arrives.",
   "visual": {
     "category": "typography",
-    "description": "Dark field; the recruiter quote types on in large serif, the channel name small beneath; the word 'leverage' holds and turns amber as the sentence ends.",
+    "description": "Dark field; the recruiter quote types on in large serif, the channel name small beneath; the word 'leverage' holds and turns to the glow as the sentence ends.",
     "onScreenText": ["\"finally create the leverage that you need\""],
     "assetIds": ["quote-card"]
   },

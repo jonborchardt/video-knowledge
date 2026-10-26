@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { cue } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { clamp01, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, grow, ramp, theme } from '../theme';
 
 const N = 4;
 const W = 280; // card
@@ -124,9 +124,9 @@ export const CourtsKit: FC<{ scene: TimelineScene }> = ({ scene }) => {
           width: N * W + (N - 1) * GAP + 40,
           height: 96,
           borderRadius: 14,
-          background: `repeating-linear-gradient(135deg, ${theme.gain}22 0 14px, transparent 14px 28px)`,
+          background: `repeating-linear-gradient(135deg, ${alpha(theme.gain, 0.13)} 0 14px, transparent 14px 28px)`,
           border: `3px solid ${theme.gain}`,
-          boxShadow: `0 0 ${30 * g}px ${theme.gain}66`,
+          boxShadow: `0 0 ${30 * g}px ${alpha(theme.gain, 0.4)}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { pointFrames } from '../../chart';
 import type { TimelineScene } from '../../types';
-import { GUTTER, countUp, grow, ramp, theme } from '../theme';
+import { alpha, countUp, grow, GUTTER, ramp, theme } from '../theme';
 
 /** sc13: one tile per chart point, revealed on its `point:<label>` cue; each tile springs up in its own accent, glowing,
  *  its figure counting up; the tile at options.alert turns red. */
@@ -42,9 +42,9 @@ export const StatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
               width: W,
               height: 420,
               borderRadius: 18,
-              background: `linear-gradient(160deg, ${accent}33, ${theme.raised} 60%)`,
+              background: `linear-gradient(160deg, ${alpha(accent, 0.2)}, ${theme.raised} 60%)`,
               border: `3px solid ${accent}`,
-              boxShadow: `0 0 40px ${accent}55`,
+              boxShadow: `0 0 40px ${alpha(accent, 0.33)}`,
               opacity: a,
               transform: `scale(${0.8 + 0.2 * pop})`,
               padding: 40,
@@ -59,7 +59,7 @@ export const StatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 fontSize: 84,
                 fontWeight: 700,
                 color: accent,
-                textShadow: `0 0 24px ${accent}88`,
+                textShadow: `0 0 24px ${alpha(accent, 0.53)}`,
                 lineHeight: 1.05,
                 letterSpacing: -1,
                 fontVariantNumeric: 'tabular-nums',

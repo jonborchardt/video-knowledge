@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { cue, spokenAt } from '../../cues';
 import type { TimelineScene } from '../../types';
-import { GUTTER, clamp01, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, grow, GUTTER, ramp, theme } from '../theme';
 
 type P = { x: number; y: number };
 const GAP = 56; // between chips in the row
@@ -193,7 +193,7 @@ export const Choices: FC<{ scene: TimelineScene }> = ({ scene }) => {
               padding: `${font * 0.42}px ${font * 0.8}px`,
               borderRadius: 999,
               color: theme.ground,
-              background: `linear-gradient(135deg, ${c}, ${c}AA)`,
+              background: `linear-gradient(135deg, ${c}, ${alpha(c, 0.67)})`,
               border: `4px solid ${c}`,
               boxShadow: `0 0 ${20 + 40 * pulse}px ${c}${hot ? 'AA' : '44'}`,
             }}

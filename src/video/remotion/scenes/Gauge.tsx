@@ -4,7 +4,7 @@ import { pointFrames } from '../../chart';
 import { lineFrames } from '../../cues';
 import { citationTop } from '../Citation';
 import type { TimelineScene } from '../../types';
-import { GUTTER, countUp, ramp, theme } from '../theme';
+import { alpha, countUp, GUTTER, ramp, theme } from '../theme';
 
 /** A damped spring from 0 to 1 over the frames since `from`: overshoots, swings back, settles. For the pointer only. */
 const swing = (frame: number, from: number) => {
@@ -143,7 +143,7 @@ export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
           color: accent,
           fontVariantNumeric: 'tabular-nums',
           opacity: ramp(t, at, 6),
-          textShadow: `0 0 ${26 + 8 * Math.sin(t / 10)}px ${accent}99`,
+          textShadow: `0 0 ${26 + 8 * Math.sin(t / 10)}px ${alpha(accent, 0.6)}`,
         }}
       >
         {countUp(p.display, p.value, fill)}
@@ -177,8 +177,8 @@ export const Gauge: FC<{ scene: TimelineScene }> = ({ scene }) => {
             borderRadius: 18,
             border: claim ? `4px dashed ${theme.glow}` : `2px solid ${theme.line}`,
             borderLeft: claim ? `4px dashed ${theme.glow}` : `10px solid ${theme.data}`,
-            background: claim ? `${theme.glow}14` : theme.raised,
-            boxShadow: `0 0 ${36 + 10 * Math.sin(t / 11)}px ${claim ? theme.glow : theme.data}55`,
+            background: claim ? alpha(theme.glow, 0.08) : theme.raised,
+            boxShadow: `0 0 ${36 + 10 * Math.sin(t / 11)}px ${alpha(claim ? theme.glow : theme.data, 0.33)}`,
             opacity: ramp(t, capAt, 12),
             transform: `translateX(${(1 - ramp(t, capAt, 16)) * 60}px)`,
           }}

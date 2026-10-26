@@ -28,9 +28,12 @@ export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
     const at = words.map((_, k) => aligned?.[k]?.frame ?? fallback + k * 2);
     return { words, at, start: at[0], end: aligned?.at(-1)?.end ?? at[at.length - 1] + 20, carrier };
   });
-  // A card opens when its carrier sentence starts (or the previous card's words are done), before the words.
+  // A card opens a second before its words (a later one: when its carrier sentence starts, or the previous card's words
+  // are done), never an empty card held while the narration leads in.
   const intro = lines.map((l, i) =>
-    i === 0 ? scene.start : Math.max(lines[i - 1].end + 6, Math.min(l.carrier.start, l.start - 30)),
+    i === 0
+      ? Math.max(scene.start, l.start - 30)
+      : Math.max(lines[i - 1].end + 6, Math.min(l.carrier.start, l.start - 30)),
   );
   const active = Math.max(
     0,

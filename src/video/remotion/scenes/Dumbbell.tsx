@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { pointFrames } from '../../chart';
 import { citationTop } from '../Citation';
 import type { TimelineScene } from '../../types';
-import { GUTTER, countUp, grow, ramp, theme } from '../theme';
+import { alpha, countUp, grow, GUTTER, ramp, theme } from '../theme';
 
 /** Points in consecutive pairs, one row per pair on a shared 0..100 axis: on its `point:<label>` cue the pair's first
  *  dot drops in, then the second, and a bar stretches from the first to the second with the gap glowing. Each dot
@@ -173,7 +173,7 @@ export const Dumbbell: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   color: [theme.glow, theme.data][i],
                   fontVariantNumeric: 'tabular-nums',
                   opacity: ramp(t, f + 4, 8),
-                  textShadow: `0 0 18px ${[theme.glow, theme.data][i]}99`,
+                  textShadow: `0 0 18px ${alpha([theme.glow, theme.data][i], 0.6)}`,
                 }}
               >
                 {countUp(p.display, p.value, ramp(t, f, 24))}

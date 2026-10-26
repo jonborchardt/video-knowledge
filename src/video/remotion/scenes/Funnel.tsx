@@ -4,7 +4,7 @@ import { pointFrames } from '../../chart';
 import { lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { GUTTER, countUp, easeOut, grow, ramp, theme } from '../theme';
+import { alpha, countUp, easeOut, grow, GUTTER, ramp, theme } from '../theme';
 
 /** A funnel: one band per chart point, stacked top to bottom, each as wide as its value against the largest. Band i
  *  arrives on its `point:<label>` frame (or the fallback) as a copy of the band above, drops into place and narrows to
@@ -205,8 +205,8 @@ export const Funnel: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 color: theme.fg,
                 borderLeft: `8px solid ${theme.loss}`,
                 borderRadius: 10,
-                background: `linear-gradient(90deg, ${theme.loss}44, ${theme.ground}DD)`,
-                boxShadow: `0 0 ${24 + 12 * pulse}px ${theme.loss}66`,
+                background: `linear-gradient(90deg, ${alpha(theme.loss, 0.27)}, ${alpha(theme.ground, 0.87)})`,
+                boxShadow: `0 0 ${24 + 12 * pulse}px ${alpha(theme.loss, 0.4)}`,
               }}
             >
               {line}

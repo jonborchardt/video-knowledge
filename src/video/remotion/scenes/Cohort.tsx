@@ -4,7 +4,7 @@ import { pointFrames } from '../../chart';
 import { spokenAt } from '../../cues';
 import { citationTop } from '../Citation';
 import type { TimelineScene } from '../../types';
-import { GUTTER, countUp, grow, ramp, theme } from '../theme';
+import { alpha, countUp, grow, GUTTER, ramp, theme } from '../theme';
 
 const N = 100; // icons in the class, one per percent
 
@@ -181,7 +181,7 @@ export const Cohort: FC<{ scene: TimelineScene }> = ({ scene }) => {
             fontVariantNumeric: 'tabular-nums',
             transform: `scale(${0.9 + 0.1 * pop})`,
             transformOrigin: 'left center',
-            textShadow: `0 0 ${30 + 10 * Math.sin(t / 12)}px ${theme.data}88`,
+            textShadow: `0 0 ${30 + 10 * Math.sin(t / 12)}px ${alpha(theme.data, 0.53)}`,
             whiteSpace: 'nowrap',
           }}
         >

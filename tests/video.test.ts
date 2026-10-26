@@ -741,6 +741,27 @@ describe('look', () => {
     expect(theme.glow).toBe(t.glow);
     setTheme(before);
   });
+  it('every kit keeps its own hues apart from the semantic data, loss and gain hues', () => {
+    const kits = readdirSync(join(ROOT, 'brand'), { withFileTypes: true })
+      .filter((d) => d.isDirectory() && existsSync(join(ROOT, 'brand', d.name, 'kit.json')))
+      .map((d) => d.name);
+    expect(kits.length).toBeGreaterThan(1);
+    for (const k of kits) {
+      const t = themeOf(JSON.parse(readFileSync(join(ROOT, 'brand', k, 'kit.json'), 'utf8')).palette);
+      for (const s of [t.data, t.loss, t.gain]) {
+        expect(contrast(s, t.ground), `${k} ${s}`).toBeGreaterThanOrEqual(4.5);
+        for (const b of [t.glow, t.accent2]) {
+          const d = Math.abs(hueOf(s) - hueOf(b)) % 360;
+          expect(Math.min(d, 360 - d), `${k}: ${s} vs ${b}`).toBeGreaterThanOrEqual(30);
+        }
+      }
+    }
+  });
+  it('a hex suffix after a template expression counts as a literal colour', () => {
+    expect(LITERAL_COLOUR.test('color: `${theme.glow}55`')).toBe(true);
+    expect(LITERAL_COLOUR.test('`${x}AA`')).toBe(true);
+    expect(LITERAL_COLOUR.test('alpha(theme.glow, 0.33)')).toBe(false);
+  });
   it('no scene or bespoke file holds a literal colour', () => {
     // theme.ts is the only home of a colour value
     expect(filesWithLiteralColours()).toEqual([]);
@@ -1006,6 +1027,8 @@ function contrast(a: string, b: string): number {
   const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
   return (x + 0.05) / (y + 0.05);
 }
+// a hex or rgb literal, or a hex alpha suffix glued to a template expression (`${theme.glow}55`): a tint is alpha()
+const LITERAL_COLOUR = /#[0-9A-Fa-f]{3,8}\b|rgba?\(|\}[0-9A-Fa-f]{2}\b/;
 function filesWithLiteralColours(): string[] {
   const dirs = ['src/video/remotion', 'src/video/bespoke'].map((d) => join(ROOT, d));
   const files = dirs.flatMap((d) =>
@@ -1013,5 +1036,5 @@ function filesWithLiteralColours(): string[] {
       .filter((f) => /\.tsx?$/.test(f) && basename(f) !== 'theme.ts')
       .map((f) => join(d, f)),
   );
-  return files.filter((f) => /#[0-9A-Fa-f]{3,8}\b|rgba?\(/.test(readFileSync(f, 'utf8')));
+  return files.filter((f) => LITERAL_COLOUR.test(readFileSync(f, 'utf8')));
 }

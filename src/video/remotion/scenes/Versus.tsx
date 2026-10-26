@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { clamp01, easeBack, easeOut, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, easeBack, easeOut, grow, ramp, theme } from '../theme';
 
 type Pace = 'fast' | 'slow';
 
@@ -278,7 +278,7 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   fontWeight: 800,
                   lineHeight: 1.08,
                   color: theme.fg,
-                  textShadow: `0 0 30px ${colors[i]}aa`,
+                  textShadow: `0 0 30px ${alpha(colors[i], 0.67)}`,
                   letterSpacing: -1,
                 }}
               >
