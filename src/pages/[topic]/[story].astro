@@ -154,7 +154,6 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
   title={`${meta?.seoTitle ?? s.title} · ${commission.name}`}
   description={meta?.description.text ?? s.question}
   image={image}
-  noindex
   jsonLd={jsonLd}
 >
   <SourceIcons />
@@ -167,7 +166,7 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
   }
   <ReportHeader
     brand={commissionKey(commission)}
-    kind="Matter under examination"
+    kind="Matter"
     trail={[
       { label: site.name, href: href('/') },
       { label: commission.ceremonialName, href: href(`/commissions/${commissionKey(commission)}/`) },
@@ -182,13 +181,10 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
       { term: 'Claims', value: `${claims.length} examined` },
       {
         term: 'Status',
-        value: 'Evidence still being weighed; verdicts below are current',
+        value: 'Evidence verified and reviewed; the verdicts below say how far it reaches',
       },
     ]}
   >
-    <Fragment slot="stamp">
-      <Stamp brand={commissionKey(commission)} slot="stamp-examination" form="round" class="size-14" />
-    </Fragment>
     {
       first && (
         <p class="text-sm text-muted-foreground">
@@ -200,9 +196,9 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
 
   <section id="answer" aria-labelledby="answer-title">
     <div class="eyebrow text-gold">The answer</div>
-    <h2 class={h2} id="answer-title">Not yet answered</h2>
+    <h2 class={h2} id="answer-title">What the Record finds</h2>
     <p class="max-w-prose font-heading text-[1.05rem] leading-relaxed">
-      The evidence is still being weighed. The claims below carry their current verdicts.
+      {s.arc.resolution}
     </p>
     <div class="mt-3">
       <LabelStrip counts={labelCounts(claims)} base="#evidence-" />
@@ -390,5 +386,6 @@ const relatedItems = related(graph, node, ctaFile?.related ?? {}).map((n) => mat
         )
       }
     </div>
+    <Stamp brand={commissionKey(commission)} slot="stamp-record" form="rect" class="w-44 shrink-0 sm:w-52" />
   </footer>
 </Base>
