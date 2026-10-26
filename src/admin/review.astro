@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import Base from '../layouts/Base.astro';
 import { noteLine, stampOf } from '../lib/publish';
 import { jobStatus } from '../lib/review-job';
-import { type Finding, reviewView, storyIdOfPath } from '../lib/review-view';
+import { type Finding, reviewMediaHref, reviewView, storyIdOfPath } from '../lib/review-view';
 import { scriptDir, storySlug } from '../lib/script';
 import { href } from '../lib/url';
 
@@ -27,7 +27,7 @@ try {
 } catch {
   // no git name: the person types it
 }
-const media = (file: string) => href(`/${topic}/review-media/${file}/${path}`);
+const media = (file: string) => reviewMediaHref(topic, path, file);
 const action = (a: string) => href(`/${topic}/review-action/${a}/${path}`);
 const page = (p: string) => href(`/${topic}/review/${p}`);
 const title = v.title; // the composed upload title (an override in publish.json wins): what an approval binds
