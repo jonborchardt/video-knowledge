@@ -19,7 +19,8 @@ import { dataRef, loadDatasets } from '../src/lib/datasets';
 import { ROOT, readJson, topicDir } from '../src/lib/io';
 import type { Storyboard } from '../src/lib/storyboard';
 import { loadStories, storyUrlSlug } from '../src/lib/stories';
-import { publicTopicNames, topicNames } from '../src/lib/topics';
+import { loadPublicRecord } from '../src/lib/public-record';
+import { loadTopic, publicTopicNames, topicNames } from '../src/lib/topics';
 
 const DIST = join(ROOT, 'dist');
 // Same switch as astro.config.mjs: the GitHub Pages mirror under a base path, else the root site.
@@ -492,6 +493,15 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     for (const p of sitemap) expect(depth.has(p), p).toBe(true);
     for (const { topic, slug, s } of storyPages.filter((x) => !x.s.partOf))
       expect(depth.get(`${topic}/${slug}/index.html`), s.id).toBeLessThanOrEqual(3);
+  });
+
+  it('every source on a live matter page has an exhibit number', () => {
+    for (const { topic, s } of storyPages) {
+      const rec = loadPublicRecord(topic);
+      const claims = new Set(s.claims);
+      for (const c of loadTopic(topic).claims.filter((c) => claims.has(c.id)))
+        for (const x of c.sources) expect(rec.exhibits[x.id], `${s.id} ${x.id}`).toBeGreaterThan(0);
+    }
   });
 
   it('an inquiry page links every matter of the inquiry and marks the live videos', () => {

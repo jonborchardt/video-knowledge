@@ -16,6 +16,7 @@ import {
   publicRecordPath,
   type PublicRecord,
 } from '../src/lib/public-record';
+import { contentGraph, liveClaims } from '../src/lib/content-graph';
 import { ROOT, toJson, TOPICS, topicDir } from '../src/lib/io';
 import { loadTopic, topicNames } from '../src/lib/topics';
 import { watcher } from './watcher.mjs';
@@ -24,7 +25,16 @@ const [cmd, ...args] = process.argv.slice(2);
 const today = new Date().toISOString().slice(0, 10);
 const save = (topic: string, rec: PublicRecord) => writeFileSync(publicRecordPath(topic), toJson(rec));
 const keep = (topic: string, before: Record<string, ClaimState> | null) =>
-  save(topic, nextPublicRecord(loadPublicRecord(topic), before, loadTopic(topic), today));
+  save(
+    topic,
+    nextPublicRecord(
+      loadPublicRecord(topic),
+      before,
+      loadTopic(topic),
+      today,
+      liveClaims(contentGraph(ROOT, [topic]), topic),
+    ),
+  );
 
 if (cmd === 'note') {
   const [topic, claim, note] = args;

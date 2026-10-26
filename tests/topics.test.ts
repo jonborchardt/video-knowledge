@@ -12,9 +12,11 @@ describe('topics', () => {
     expect(names).not.toContain('glp1'); // has a report.json but no claims yet
   });
 
-  it('every counted source carries its exhibit number, unique within the topic', () => {
+  it('a numbered source carries its exhibit number, unique within the topic; a source of no live story has none', () => {
     for (const n of publicTopicNames()) {
-      const nums = loadTopic(n).sources.map((s) => s.exhibit);
+      const nums = loadTopic(n)
+        .sources.map((s) => s.exhibit)
+        .filter((x) => x !== null);
       expect(nums.every((x) => typeof x === 'number')).toBe(true);
       expect(new Set(nums).size).toBe(nums.length);
     }

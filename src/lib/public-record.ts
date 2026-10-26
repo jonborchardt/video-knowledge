@@ -48,20 +48,25 @@ export const claimStates = (t: Pick<Topic, 'claims'>): Record<string, ClaimState
 const same = (a: ClaimState | null, b: ClaimState | null) => a?.label === b?.label && a?.verdict === b?.verdict;
 
 /** The record after a report run. `before` is the claims' states from the previous report, null to seed (exhibit
- *  numbers only). A claim new to the report is not a revision; one that left it is (`to: null`). */
+ *  numbers only). Only claims in `live` count: their sources are numbered, and a claim entering the live set is not a
+ *  revision. A claim new to the report is not a revision; one that left it is (`to: null`). */
 export function nextPublicRecord(
   prev: PublicRecord,
   before: Record<string, ClaimState> | null,
   after: Pick<Topic, 'claims' | 'sources'>,
   today: string,
+  live: Set<string>,
 ): PublicRecord {
   const exhibits = { ...prev.exhibits };
   let n = Math.max(0, ...Object.values(exhibits));
-  for (const id of after.sources.map((s) => s.id).sort()) exhibits[id] ??= ++n;
+  const liveAfter = { claims: after.claims.filter((c) => live.has(c.id)) };
+  for (const id of [...new Set(liveAfter.claims.flatMap((c) => c.sources.map((s) => s.id)))].sort())
+    exhibits[id] ??= ++n;
   const revisions = [...prev.revisions];
   if (before) {
-    const now = claimStates(after);
+    const now = claimStates(liveAfter);
     for (const id of [...new Set([...Object.keys(before), ...Object.keys(now)])].sort()) {
+      if (!live.has(id)) continue;
       const from = before[id] ?? null;
       const to = now[id] ?? null;
       if (from && !same(from, to)) revisions.push({ at: today, kind: 'claim', id, from, to, note: '' });
