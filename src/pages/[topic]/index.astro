@@ -8,7 +8,6 @@ import SourceIcons from '../../components/SourceIcons.astro';
 import Stamp from '../../components/Stamp.astro';
 import { commissionBody, commissionKey, commissionOf, site } from '../../config/site';
 import { inquiryMatters, liveClaims } from '../../lib/content-graph';
-import { loadDatasets } from '../../lib/datasets';
 import { revisionLine } from '../../lib/public-record';
 import { breadcrumbJsonLd, reportJsonLd } from '../../lib/seo';
 import { siteGraph, siteTopics } from '../../lib/site-graph';
@@ -19,9 +18,9 @@ export function getStaticPaths() {
   return siteTopics().map((name) => ({ params: { topic: name }, props: { t: loadTopic(name) } }));
 }
 const { t } = Astro.props as { t: Topic };
-const hasData = loadDatasets(t.name).length > 0;
 const commission = commissionOf(t.name)!; // the institution that publishes this inquiry (every public topic has one)
 const graph = siteGraph();
+const hasData = [...graph.nodes.values()].some((n) => n.kind === 'dataset' && n.topic === t.name && n.public);
 const matters = inquiryMatters(graph, t.name);
 // The exhibits: the sources of the claims the public matters rest on. A build sees live stories only; the dev server
 // also shows packaged ones, so its exhibits match the preview matters.
@@ -34,6 +33,7 @@ const claims = import.meta.env.DEV
   : liveClaims(graph, t.name);
 const sources = t.sources
   .filter((s) => s.claims.some((c) => claims.has(c.id)))
+  .map((s) => ({ ...s, claims: s.claims.filter((c) => claims.has(c.id)) }))
   .sort((a, b) => (a.exhibit ?? Infinity) - (b.exhibit ?? Infinity));
 const body = commissionBody(commission); // "Findings of the Commission / Bureau / Office / Society"
 const h2 = 'mb-3 text-featured font-semibold';
@@ -42,12 +42,11 @@ const small = 'text-sm text-muted-foreground';
 
 <Base
   title={`${t.label} · ${commission.name}`}
-  description={t.bottomLine ?? undefined}
   image={`/og/${commissionKey(commission)}.jpg`}
   jsonLd={[
     reportJsonLd(
       t.hero.title ?? t.label,
-      t.bottomLine ?? `The public inquiry into ${t.label}.`,
+      `The public inquiry into ${t.label}.`,
       `/${t.name}/`,
       t.revised,
       commission.fullName,
@@ -74,7 +73,7 @@ const small = 'text-sm text-muted-foreground';
         { label: site.name, href: href('/') },
         { label: commission.ceremonialName, href: href(`/commissions/${commissionKey(commission)}/`) },
       ]}
-      title={t.hero.title ?? `What ${t.counted} videos and posts claim about ${t.label}`}
+      title={t.hero.title ?? `The public inquiry into ${t.label}`}
       lede={t.hero.lede ??
         `The matters below each answer one question from the evidence. The ${body} lists the exhibits they rest on.`}
       facts={[

@@ -22,7 +22,6 @@ export function getStaticPaths() {
   }));
 }
 const { c, topics } = Astro.props as { c: Commission; topics: Topic[] };
-const fmt = (n: number) => n.toLocaleString('en-US');
 const graph = siteGraph();
 // Every matter of each inquiry in the one order (D9), a chain's follow-ups under their first question.
 const docket = topics.map((t) => ({
@@ -95,9 +94,6 @@ const body = commissionBody(c);
                 {t.glyph && <span class="size-10 text-primary [&>svg]:size-full" set:html={t.glyph} />}
                 <span class="grid gap-1">
                   <span class="font-heading text-title font-bold text-primary">{t.label}</span>
-                  <span class="font-mono text-xs text-muted-foreground">
-                    {fmt(t.counted)} sources · {fmt(t.claims.length)} claims · {t.studies} studies
-                  </span>
                 </span>
               </a>
             </li>

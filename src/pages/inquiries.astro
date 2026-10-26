@@ -77,8 +77,7 @@ const description = `Every public inquiry of ${site.name}, under the institution
               <a href={href(`/${t.name}/`)}>{t.label}</a>
             </h3>
             <p class="font-mono text-xs text-muted-foreground">
-              {fmt(t.counted)} sources · {fmt(t.claims.length)} claims · {fmt(t.studies)} studies · {fmt(items.length)}{' '}
-              {items.length === 1 ? 'matter' : 'matters'}
+              {fmt(items.length)} {items.length === 1 ? 'matter' : 'matters'}
               {videos > 0 && ` · ${fmt(videos)} with a video`}
             </p>
             {items.length > 0 ? (

@@ -14,7 +14,6 @@ interface Props {
   featured: { s: Story; t: Topic } | null;
 }
 const { c, published, featured } = Astro.props;
-const fmt = (n: number) => n.toLocaleString('en-US');
 ---
 
 <article class="grid gap-4 rounded-lg border bg-card p-5 text-card-foreground sm:p-6">
@@ -69,9 +68,6 @@ const fmt = (n: number) => n.toLocaleString('en-US');
                     <KindIcon kind="inquiry" decorative /> Inquiry
                   </span>
                   <span class="font-heading font-bold text-primary">{t.label}</span>
-                  <span class="font-mono text-xs text-muted-foreground">
-                    {fmt(t.counted)} sources · {fmt(t.claims.length)} claims · {t.studies} studies
-                  </span>
                 </span>
               </a>
             </li>

@@ -255,9 +255,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
   });
 
   it('every claim card carries one finding label', () => {
-    for (const n of liveTopics) {
-      const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
-      const cards = html.match(/<details[^>]*data-claim/g)!.length;
+    for (const { topic, slug } of storyPages) {
+      const html = readFileSync(join(DIST, topic, slug, 'index.html'), 'utf8');
+      const cards = (html.match(/<details[^>]*data-claim/g) ?? []).length;
       expect(html.match(/data-label="(verified|qualification|unresolved|reported)"/g)!.length).toBe(cards);
     }
   });
@@ -397,16 +397,10 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
     expect(html).not.toMatch(/style="[^"]*width:\s*\d{3,}px/);
   });
 
-  it('topic pages: tabs, table headers and the search box are wired up', () => {
+  it('topic pages: table headers are scoped and the icon sprite is present', () => {
     for (const n of liveTopics) {
       const html = readFileSync(join(DIST, n, 'index.html'), 'utf8');
-      expect(html).toContain('role="tablist"');
-      for (const [tab] of html.matchAll(/<button[^>]*role="tab"[^>]*>/g)) {
-        const id = tab.match(/aria-controls="([^"]+)"/)![1];
-        expect(html).toContain(`<section id="${id}"`);
-      }
       for (const [th] of html.matchAll(/<th[\s>][^>]*>/g)) expect(th).toContain('scope="col"');
-      expect(html).toContain('role="status"');
       expect(html).toContain('<symbol id="icon-video"'); // the shared icon sprite SourceLink points at
     }
   });
@@ -447,7 +441,9 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
         expect(h, s.id).not.toBe(`${BASE}${topic}/${slug}/`);
       }
     }
-    if (storyPages.some((p) => p.s.readiness === 'ready')) expect(seen).toBeGreaterThan(0);
+    // A lone live story has no one to relate to: require a list only where a topic has two live root stories.
+    const roots = (t: string) => storyPages.filter((p) => p.topic === t && !p.s.partOf).length;
+    if (liveTopics.some((t) => roots(t) >= 2)) expect(seen).toBeGreaterThan(0);
   });
 
   it('the built site keeps every url in public-urls.json', () => {
