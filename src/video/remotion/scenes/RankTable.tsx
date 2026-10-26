@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { cue, lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
-import { GUTTER, ramp, theme } from '../theme';
+import { GUTTER, alpha, ramp, theme } from '../theme';
 
 const share = (label: string) => Number(label.replace(/[^0-9.]/g, '')) || 0.01; // "<0.01%" -> 0.01
 
@@ -85,27 +85,27 @@ export const RankTable: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 y={yAcc}
                 width={700}
                 height={Math.max(1.5, h - (h > 6 ? 3 : 0))}
-                fill={i === 0 ? theme.red : i === n - 1 ? theme.amber : theme.slate}
+                fill={i === 0 ? theme.loss : i === n - 1 ? theme.glow : theme.data}
                 opacity={i === 0 ? 0.9 : 0.8}
               />
               {h > 40 ? (
                 <text
                   x={1060}
                   y={yAcc + h / 2 + 10}
-                  fill={theme.bg}
+                  fill={theme.ground}
                   fontSize={30}
                   fontWeight={700}
                 >{`${p.label}: ${p.display} average`}</text>
               ) : null}
               {i === n - 1 && hot > 0 ? (
                 <g opacity={hot} transform={`translate(1760 ${yAcc})`}>
-                  <circle r={40} fill="none" stroke={theme.amber} strokeWidth={5} />
-                  <line x1={28} y1={28} x2={60} y2={60} stroke={theme.amber} strokeWidth={6} strokeLinecap="round" />
+                  <circle r={40} fill="none" stroke={theme.glow} strokeWidth={5} />
+                  <line x1={28} y1={28} x2={60} y2={60} stroke={theme.glow} strokeWidth={6} strokeLinecap="round" />
                   <text
                     x={-50}
                     y={-56}
                     textAnchor="end"
-                    fill={theme.amber}
+                    fill={theme.glow}
                     fontSize={26}
                   >{`${p.label}: ${p.display}`}</text>
                 </g>
@@ -125,7 +125,7 @@ export const RankTable: FC<{ scene: TimelineScene }> = ({ scene }) => {
           fontSize: 48,
           color: theme.fg,
           opacity: ramp(t, half, 12),
-          textShadow: '0 4px 30px rgba(0,0,0,.9)',
+          textShadow: `0 4px 30px ${alpha(theme.text, 0.9)}`,
         }}
       >
         {scene.onScreenText[2]}

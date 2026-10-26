@@ -82,11 +82,13 @@ export function relativeScene(s: TimelineScene): TimelineScene {
     cues: Object.fromEntries(Object.entries(s.cues).map(([k, v]) => [k, r(v)])),
   };
 }
-/** The kit files a scene draws from the staged brand/ folder: the end scene's cards, and a Short's seal (the portrait
- *  badge on every scene when an institution publishes it). */
+/** The kit files a scene draws from the staged brand/ folder: the end scene's cards, a Short's seal (the portrait
+ *  badge on every scene when an institution publishes it), and in landscape the lockup over an opening typography
+ *  scene (Text.tsx) and the seal at a transition's seam (Transition.tsx). */
 export const kitSlots = (s: TimelineScene, tl: Timeline): string[] => [
   ...(s.kind === 'close-card' ? ['close-card', 'endscreen-subscribe'] : []),
-  ...(tl.short?.commissionKey ? ['seal'] : []),
+  ...(tl.short?.commissionKey || (!tl.short && s.kind === 'transition') ? ['seal'] : []),
+  ...(!tl.short && s.order === 1 && ['title', 'question', 'list'].includes(s.kind) ? ['lockup-horizontal-ground'] : []),
 ];
 const kitSvg = (topic: string, slot: string) =>
   readFileSync(join(ROOT, 'brand', brandKey(topic), `${slot}.svg`), 'utf8');
@@ -98,6 +100,7 @@ export const sceneKey = (s: TimelineScene, tl: Timeline, readKit: (topic: string
       fps: tl.fps,
       w: tl.width,
       h: tl.height,
+      palette: tl.palette, // the theme is filled from the kit's colours
       short: tl.short ?? null, // the frame and the end card draw the institution and the question
       code: rendererVersion(s.kind),
       // a scene that draws the kit re-renders when the kit is redrawn (the committed SVGs, not the rasters);

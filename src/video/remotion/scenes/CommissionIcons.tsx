@@ -14,7 +14,7 @@ export const CommissionIcons: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const n = lines.length;
   const W = (1920 - 2 * GUTTER) / n;
   const Icon: FC<{ i: number; x: number; y: number; dashed: boolean }> = ({ i, x, y, dashed }) => {
-    const c = dashed ? theme.muted : theme.amber;
+    const c = dashed ? theme.muted : theme.glow;
     if (i === 0) return <Box x={x} y={y} s={70} color={c} />;
     if (i === 1)
       return (
@@ -58,7 +58,7 @@ export const CommissionIcons: FC<{ scene: TimelineScene }> = ({ scene }) => {
     <AbsoluteFill style={{ fontFamily: theme.sans }}>
       <svg width={1920} height={1080}>
         <g opacity={ramp(t, scene.start + 4, 10)} transform="translate(960 250)">
-          <circle r={70} fill={theme.raised} stroke={theme.amber} strokeWidth={5} />
+          <circle r={70} fill={theme.raised} stroke={theme.glow} strokeWidth={5} />
           <text textAnchor="middle" dominantBaseline="central" fill={theme.fg} fontSize={28} fontWeight={600}>
             commission
           </text>
@@ -76,7 +76,7 @@ export const CommissionIcons: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 y1={y - 90}
                 x2={960 + (x - 960) * 0.1}
                 y2={330}
-                stroke={dashed ? theme.muted : theme.amber}
+                stroke={dashed ? theme.muted : theme.glow}
                 strokeWidth={4}
                 strokeDasharray={dashed ? '10 8' : undefined}
                 opacity={0.7}

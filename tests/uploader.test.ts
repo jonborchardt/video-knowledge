@@ -103,7 +103,14 @@ describe('uploadProblem', () => {
     expect(uploadProblem({ ...ok, title: 'x'.repeat(101) })).toMatch(/title.*101.*100/);
     expect(uploadProblem({ ...ok, title: 'a <b>' })).toMatch(/title/);
     expect(uploadProblem({ ...ok, description: 'é'.repeat(2501) })).toMatch(/description.*5002.*5000/);
-    expect(uploadProblem({ ...ok, tags: Array.from({ length: 51 }, () => 'tag tag!') })).toMatch(/tags.*510.*500/);
+    expect(uploadProblem({ ...ok, tags: Array.from({ length: 51 }, () => 'tag tag!') })).toMatch(/tags.*560.*500/);
+  });
+  it('counts the commas between tags', () => {
+    expect(uploadProblem({ ...ok, tags: Array(50).fill('abcdefghi') })).toBeNull(); // 450 + 49
+    expect(uploadProblem({ ...ok, tags: Array(46).fill('abcdefghij') })).toMatch(/tags.*505.*500/); // 460 + 45
+  });
+  it('refuses a tag with < or >', () => {
+    expect(uploadProblem({ ...ok, tags: ['fine', 'a < b'] })).toMatch(/tag.*< or >/);
   });
 });
 

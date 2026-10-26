@@ -1,90 +1,90 @@
 # Build report: Is a Heat Pump Cheaper Than Gas, and Does It Pay for Itself?
 
-heat-pumps / decision:is-it-cheaper-to-run-than-gas, 2026-10-22T16:37:11.346Z. `npm run video -- final heat-pumps decision:is-it-cheaper-to-run-than-gas --approved-by Jon`
+heat-pumps / decision:is-it-cheaper-to-run-than-gas, 2026-10-26T08:06:36.286Z. `npm run video -- spike heat-pumps decision:is-it-cheaper-to-run-than-gas`
 
-**Segment.** 34 of 34 storyboard scenes (sc01 to sc34), 43 sentences. Kinds: sc01 list, sc02 question, sc03 quote, sc04 quote, sc05 quote, sc06 question, sc07 list, sc08 stat-tiles, sc09 bar, sc10 excerpt, sc11 question, sc12 bar, sc13 bar, sc14 question, sc15 excerpt, sc16 stat-tiles, sc17 excerpt, sc18 excerpt, sc19 list, sc20 title, sc21 transition, sc22 quote, sc23 question, sc24 title, sc25 bar, sc26 stat-tiles, sc27 stat-tiles, sc28 transition, sc29 stat-tiles, sc30 title, sc31 list, sc32 list, sc33 title, sc34 list.
+**Segment.** 35 of 34 storyboard scenes (sc01 to end), 43 sentences. Kinds: sc01 list, sc02 question, sc03 quote, sc04 quote, sc05 quote, sc06 question, sc07 list, sc08 stat-tiles, sc09 bar, sc10 excerpt, sc11 question, sc12 bar, sc13 bar, sc14 question, sc15 excerpt, sc16 stat-tiles, sc17 excerpt, sc18 excerpt, sc19 list, sc20 title, sc21 transition, sc22 quote, sc23 question, sc24 title, sc25 bar, sc26 stat-tiles, sc27 stat-tiles, sc28 transition, sc29 stat-tiles, sc30 title, sc31 list, sc32 list, sc33 title, sc34 list, end close-card.
 
-**Output.** topics/heat-pumps/scripts/decision-is-it-cheaper-to-run-than-gas/video/segment.mp4: 474.43s, 1920x1080 @ 30 fps, h264 + aac, 14233 frames, rendered in 1773.8s ($0 (local CPU)).
+**Output.** topics/heat-pumps/scripts/decision-is-it-cheaper-to-run-than-gas/video/segment.mp4: 490.47s, 1920x1080 @ 30 fps, h264 + aac, 14714 frames, rendered in 1846s ($0 (local CPU)).
 
-**Narration.** azure / en-US-AndrewMultilingualNeural (rate +0%, neural), wav, 458.51s of speech at about 175 wpm, $0.1099 (estimated from characters). Licence: commercial: Azure AI Speech terms allow the generated audio in published media. Publishable.
+**Narration.** edge / en-US-AndrewMultilingualNeural (rate +0%), mp3, 458.5s of speech at about 175 wpm, $0 (edge-tts, no key). Licence: draft only: unofficial Microsoft Edge read-aloud API, no terms for published media. **Draft only, not publishable.**
 
 | Sentence | Seconds | Boundaries | Audio sha |
 |---|---|---|---|
-| s01 | 8.4 | 28 | 629b495c8e |
-| s02 | 1.82 | 5 | 7972d64664 |
-| s03 | 5.85 | 20 | a8e588d5aa |
-| s04 | 11.825 | 29 | ba39efa849 |
-| s05 | 11.7875 | 35 | 45bb5445ef |
-| s06 | 9.175 | 30 | 9233d22363 |
-| s07 | 3.975 | 8 | a76390680f |
-| s08 | 2.5 | 6 | c0201502fc |
-| s09 | 14.625 | 42 | c818a3f4cc |
-| s10 | 13.175 | 32 | d3649e739b |
-| s11 | 14.825 | 41 | 0b4a4fb0f3 |
-| s12 | 15.05 | 42 | f577c84f1b |
-| s13 | 3.5125 | 15 | 0c8763db8b |
-| s14 | 19.4375 | 48 | d32ac3ebe0 |
-| s15 | 7.7875 | 23 | 803d788f01 |
-| s16 | 8.0875 | 18 | 52ad697926 |
-| s17 | 1.975 | 5 | 9d98f2bdfb |
-| s18 | 13.8125 | 39 | 94ec66cefe |
-| s19 | 16.925 | 47 | c7d927a2a4 |
-| s21 | 15.625 | 43 | 91fc204f66 |
-| s22 | 17.7125 | 51 | 483adc8a8d |
-| s23 | 17.25 | 58 | a268bd167e |
-| s25 | 9.7 | 33 | bf3ea39830 |
-| s26 | 8.3125 | 25 | d42b73f152 |
-| s27 | 10.3 | 33 | 2c0509fabc |
-| s28 | 4.6375 | 14 | 976d50e2db |
-| s29 | 1.82 | 6 | ee696af9e3 |
-| s30 | 12.4125 | 40 | 31b80a489c |
-| s31 | 15.7125 | 44 | 1abd18a694 |
-| s32 | 9.275 | 27 | 81ab263ee7 |
-| s33 | 16.45 | 47 | 30726605fb |
-| s34 | 16.4125 | 44 | 83af9a3ad7 |
-| s35 | 9.475 | 18 | 80a6edbaf5 |
-| s36 | 1.82 | 7 | 7743026965 |
-| s37 | 16.45 | 44 | 5323a02211 |
-| s38 | 13.05 | 37 | 163211b52b |
-| s39 | 5.9 | 19 | 7a0418926c |
-| s40 | 15.3625 | 43 | 93b96712de |
-| s41 | 9.1 | 25 | 457776e455 |
-| s42 | 20.775 | 67 | cfb3157237 |
-| s43 | 10.7 | 32 | 090e768425 |
-| s44 | 9.4125 | 31 | fde26650bd |
-| s45 | 6.3 | 22 | b2639c676b |
+| s01 | 8.616 | 28 | 31e3c0f712 |
+| s02 | 1.872 | 5 | 83c639f543 |
+| s03 | 6.336 | 20 | 4a01267829 |
+| s04 | 11.832 | 29 | b19e2b8060 |
+| s05 | 12.024 | 35 | 470cec304b |
+| s06 | 9.24 | 30 | d4de5be7f2 |
+| s07 | 3.912 | 8 | 37a5cb17af |
+| s08 | 2.832 | 6 | 6bb8a0b76e |
+| s09 | 14.352 | 42 | f457a66b9c |
+| s10 | 13.728 | 32 | e6b07361b5 |
+| s11 | 14.328 | 41 | 30a94ddf46 |
+| s12 | 15.24 | 42 | 9c16d696cc |
+| s13 | 3.528 | 15 | 7277b632c6 |
+| s14 | 19.488 | 48 | 068e45b751 |
+| s15 | 8.352 | 23 | 6c95bcd846 |
+| s16 | 8.016 | 18 | 9b419b2914 |
+| s17 | 1.872 | 5 | 10912d5c81 |
+| s18 | 13.44 | 39 | 6c4d0310d6 |
+| s19 | 17.496 | 47 | e3c13ef9e2 |
+| s21 | 15.816 | 43 | 1c2ae2221f |
+| s22 | 17.232 | 51 | dd7a96254f |
+| s23 | 16.896 | 58 | 20eaba236c |
+| s25 | 9.6 | 33 | 717b66d0b6 |
+| s26 | 8.208 | 25 | 98085d8190 |
+| s27 | 10.776 | 33 | cfde3a7c6f |
+| s28 | 4.848 | 14 | b1c9156699 |
+| s29 | 1.872 | 6 | 92b35a5d88 |
+| s30 | 12.864 | 40 | 6318264f8a |
+| s31 | 15.6 | 44 | 72959514e1 |
+| s32 | 9.312 | 27 | 945b6d61e3 |
+| s33 | 16.368 | 47 | 97c5dd4679 |
+| s34 | 15.192 | 46 | 56c0c55381 |
+| s35 | 8.856 | 19 | 80a4fde9ea |
+| s36 | 1.824 | 7 | c6f2911df0 |
+| s37 | 15.744 | 44 | 46cbb3b3f2 |
+| s38 | 13.632 | 37 | 454e9019e4 |
+| s39 | 5.904 | 19 | 2d44409a32 |
+| s40 | 15.6 | 43 | df055a976e |
+| s41 | 8.904 | 25 | fba704e40a |
+| s42 | 20.64 | 67 | 05e0e36837 |
+| s43 | 10.44 | 32 | 2bbe006909 |
+| s44 | 9.504 | 31 | 21eb8c880f |
+| s45 | 6.36 | 22 | ad9541455d |
 
 **Architecture.** Remotion (React, frame-based) rendered scene by scene into cached chunks through @remotion/renderer; chunks concatenated and the narration track laid down with the ffmpeg in the Remotion compositor (loudnorm to -16 LUFS).
 
-**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 808dcc847e: music -20.9 dB under the voice while it speaks, peak -1.2 dB.
+**Soundtrack.** Undertow (strudel-bench f63f2c5 (songs/undertow.strudel not yet committed), songs/undertow.strudel c7fbeafb07, 84 bpm D:minor; cleared; no samples). Mix 1a2b55ffc4: music -20.9 dB under the voice while it speaks, peak -1 dB.
 
 | Cue | Asset | From | To | Gain | Level |
 |---|---|---|---|---|---|
-| opening | undertow/pulse | 0.0s | 18.0s | -11 dB | -37.6 dB |
-| evidence | undertow/texture | 18.0s | 456.4s | -13 dB | -40.3 dB |
-| ending | undertow/pulse | 456.4s | 474.4s | -11 dB | -38.0 dB |
+| opening | undertow/pulse | 0.0s | 18.8s | -11 dB | -37.6 dB |
+| evidence | undertow/texture | 18.8s | 456.3s | -13 dB | -40.3 dB |
+| ending | undertow/pulse | 456.3s | 490.5s | -11 dB | -35.8 dB |
 
-**Clearance.** Narration and music are both cleared for publication. A passing build is technical completion only; a person approves the release.
+**Clearance.** **Not cleared for public release:** narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; when the draft is accepted, "npm run video -- final heat-pumps decision:is-it-cheaper-to-run-than-gas --approved-by <name>" re-narrates it for release. A passing build is technical completion only; a person approves the release.
 
-**Fingerprints.** script 84f4a5f41a, storyboard 3952ed728a, narration 4499c025a6, config 663417dafc, music 808dcc847e.
+**Fingerprints.** script 84f4a5f41a, storyboard 3952ed728a, narration 8698cab763, config 663417dafc, music 1a2b55ffc4.
 
 ## QA: passed (36 of 36)
 
 | Check | Result | Detail |
 |---|---|---|
-| mp4 decodable | ok | 474.433s |
+| mp4 decodable | ok | 490.474s |
 | video stream | ok | h264 1920x1080 @ 30 |
 | resolution | ok | 1920x1080 |
 | frame rate | ok | 30 |
 | h264 | ok | h264 |
-| frame count | ok | 14233 frames, timeline 14233 |
-| duration in range | ok | 474.43s in [473.4,475.4] |
-| duration matches timeline | ok | 474.433s vs 474.433s (14233 frames) |
+| frame count | ok | 14714 frames, timeline 14714 |
+| duration in range | ok | 490.47s in [489.5,491.5] |
+| duration matches timeline | ok | 490.474s vs 490.467s (14714 frames) |
 | audio stream | ok | aac 48000 Hz x2 |
 | aac | ok | aac |
-| audio length matches video | ok | 0.001s apart |
-| no clipping | ok | peak -1.3 dB, mean -19.3 dB |
-| no long silence | ok | none >= 3s |
+| audio length matches video | ok | 0.007s apart |
+| no clipping | ok | peak -1.3 dB, mean -19.4 dB |
+| no long silence | ok | none >= 3s before the end scene |
 | narration not truncated | ok | 43 sentences fit their slots |
 | scene order | ok | sc01 to sc34 (34) |
 | scenes contiguous in storyboard | ok | from sc01 |
@@ -96,24 +96,25 @@ heat-pumps / decision:is-it-cheaper-to-run-than-gas, 2026-10-22T16:37:11.346Z. `
 | citations present | ok | 32 on-screen citations resolved |
 | chart data matches storyboard | ok | 9 charts |
 | excerpts resolve | ok | 4 excerpts with their highlights |
-| assets and kinds supported | ok | 8 kinds |
+| assets and kinds supported | ok | 9 kinds |
 | music cues resolve | ok | 3 cues over 1 compositions |
-| soundtrack mixed | ok | 3 cues, 2026-10-22T16:35:45.844Z |
-| mix is of this cue sheet | ok | mix 808dcc847e, cue sheet 808dcc847e |
+| soundtrack mixed | ok | 3 cues, 2026-10-26T08:04:50.550Z |
+| mix is of this cue sheet | ok | mix 1a2b55ffc4, cue sheet 1a2b55ffc4 |
 | every cue sounded | ok | 3 cues audible where placed |
 | music under the voice | ok | -20.9 dB relative to speech (want -40 to -10) |
-| mix under the ceiling | ok | peak -1.2 dB, ceiling -1 dB |
-| scene boundaries follow measured audio | ok | 34 scenes, 43 sentences |
+| mix under the ceiling | ok | peak -1 dB, ceiling -1 dB |
+| scene boundaries follow measured audio | ok | 35 scenes, 43 sentences |
 | cues inside their sentences | ok | 5 cues |
-| final scene complete | ok | ends 474.43s |
+| final scene complete | ok | ends 490.47s |
 | no blank sections | ok | none |
 | every scene has content | ok | mid-scene luma varies in every scene |
 
-Inspection frames: 74 in video/frames/; contact sheet topics/heat-pumps/scripts/decision-is-it-cheaper-to-run-than-gas/video/contact-sheet.png.
+Inspection frames: 76 in video/frames/; contact sheet topics/heat-pumps/scripts/decision-is-it-cheaper-to-run-than-gas/video/contact-sheet.png.
 
 ## Known limitations
 
-- narration licence: commercial: Azure AI Speech terms allow the generated audio in published media
+- NOT FOR PUBLICATION: narration is draft only: unofficial Microsoft Edge read-aloud API, no terms for published media; once the draft is accepted, "npm run video -- final <topic> <story-id> --approved-by <name>" re-narrates it with Azure for release
+- word boundaries from edge-tts group a numeral with the word before it; the span is split by letters, so a numeral cue can be a few frames early
 - system fonts (Georgia, Segoe UI): renders on another machine may set type differently
 - scene transitions are a short fade over the field; no cross-dissolve between scenes
 - automated QA checks integrity and consistency, not editorial quality: a person reviews the contact sheet and the video before any publication decision

@@ -4,7 +4,7 @@ import { pointFrames } from '../../chart';
 import type { TimelineScene } from '../../types';
 import { GUTTER, ramp, theme } from '../theme';
 
-const color3 = (i: number) => [theme.red, theme.slate, theme.green][i % 3];
+const color3 = (i: number) => [theme.loss, theme.data, theme.gain][i % 3];
 
 /** sc20: one dot per surveyed person (the count is the leading number of the first on-screen line); the dots recolour
  *  by group on each `point:<label>` cue, round(share x n) at a time; dots outside the stated groups stay neutral. */

@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { clamp01, easeBack, easeOut, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, easeBack, easeOut, grow, ramp, theme } from '../theme';
 
 type Pace = 'fast' | 'slow';
 
@@ -115,7 +115,7 @@ const Picto: FC<{ pace: Pace; d: number; t: number; color: string; x: number; y:
 };
 
 /** sc07, sc17: two lines face off on a split screen. The frame splits on a drifting diagonal seam; line 1 slams into
- *  the left half (amber) on its line frame, line 2 into the right half (slate) on its own, with a jolt; a "VS" badge
+ *  the left half (glow) on its line frame, line 2 into the right half (data) on its own, with a jolt; a "VS" badge
  *  crashes into the seam with a flash when the second lands. Each half carries a pace pictogram (options.pace, e.g.
  *  "fast,slow", the default, or "slow,fast"). The side last landed is lit, the other dimmed. A line "label: rest"
  *  shows the label small above the rest. */
@@ -125,7 +125,7 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const at = lineFrames(scene);
   const paces = String(scene.options.pace ?? 'fast,slow').split(',') as Pace[];
   const bottom = Math.min(citationTop(scene), 1000);
-  const colors = [theme.amber, theme.slate];
+  const colors = [theme.glow, theme.data];
   const seam = 960 + 26 * Math.sin(t / 37); // the seam's midpoint drifts
   const tilt = 130 + 20 * Math.sin(t / 53);
   const land = at.map((f) => ramp(t, f, 10));
@@ -204,8 +204,8 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
           <g
             transform={`translate(${seam} 440) scale(${0.001 + badge * (1 + 0.05 * Math.sin(t / 8))}) rotate(${(1 - badge) * -90 - 8})`}
           >
-            <circle r={92} fill={theme.bg} stroke={theme.fg} strokeWidth={8} filter="url(#vs-glow)" />
-            <circle r={78} fill={theme.red} />
+            <circle r={92} fill={theme.ground} stroke={theme.fg} strokeWidth={8} filter="url(#vs-glow)" />
+            <circle r={78} fill={theme.loss} />
             <text
               y={26}
               textAnchor="middle"
@@ -278,7 +278,7 @@ export const Versus: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   fontWeight: 800,
                   lineHeight: 1.08,
                   color: theme.fg,
-                  textShadow: `0 0 30px ${colors[i]}aa`,
+                  textShadow: `0 0 30px ${alpha(colors[i], 0.67)}`,
                   letterSpacing: -1,
                 }}
               >

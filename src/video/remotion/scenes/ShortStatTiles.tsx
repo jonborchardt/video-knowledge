@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { pointFrames } from '../../chart';
 import { SHORT_LAYOUT as L, type TimelineScene } from '../../types';
-import { brand, countUp, grow, ramp } from '../theme';
+import { countUp, grow, ramp, theme } from '../theme';
 
 const W = L.width - L.gutter - L.right;
 const GAP = 24;
@@ -31,9 +31,9 @@ export const ShortStatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
             left: L.gutter,
             top: top0,
             width: W,
-            fontFamily: brand.sans,
+            fontFamily: theme.sans,
             fontSize: 32,
-            color: brand.muted,
+            color: theme.muted,
             opacity: ramp(t, fills[0] - 12, 10),
             whiteSpace: 'nowrap',
             overflow: 'hidden',
@@ -46,7 +46,7 @@ export const ShortStatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
       {pts.map((p, i) => {
         const a = ramp(t, fills[i], 12);
         const pop = grow(t, fills[i], 14);
-        const accent = i === alert ? brand.loss : brand.gold;
+        const accent = i === alert ? theme.loss : theme.accent;
         return (
           <div
             key={p.label}
@@ -58,7 +58,7 @@ export const ShortStatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
               height: H,
               boxSizing: 'border-box',
               borderLeft: `4px solid ${accent}`,
-              background: brand.raised,
+              background: theme.raised,
               padding: `0 32px`,
               display: 'flex',
               flexDirection: 'column',
@@ -69,11 +69,11 @@ export const ShortStatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
           >
             <div
               style={{
-                fontFamily: brand.sans,
+                fontFamily: theme.sans,
                 fontWeight: 600,
                 fontSize: figure,
                 lineHeight: 1.05,
-                color: i === alert ? brand.loss : brand.fg,
+                color: i === alert ? theme.loss : theme.fg,
                 fontVariantNumeric: 'tabular-nums',
                 letterSpacing: -1,
                 whiteSpace: 'nowrap',
@@ -83,9 +83,9 @@ export const ShortStatTiles: FC<{ scene: TimelineScene }> = ({ scene }) => {
             </div>
             <div
               style={{
-                fontFamily: brand.sans,
+                fontFamily: theme.sans,
                 fontSize: Math.min(34, H * 0.16),
-                color: brand.muted,
+                color: theme.muted,
                 marginTop: 14,
                 lineHeight: 1.25,
               }}

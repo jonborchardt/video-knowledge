@@ -1,16 +1,16 @@
 import type { FC } from 'react';
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, interpolateColors, useCurrentFrame } from 'remotion';
 import { cue } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { alignLine } from '../../words';
 import { Citation } from '../Citation';
-import { GUTTER, ramp, theme } from '../theme';
+import { GUTTER, alpha, ramp, theme } from '../theme';
 
 const strip = (s: string) => s.replace(/^["“”]+|["“”]+$/g, '');
 
 /** Quoted lines, one card at a time. The card and its attribution slide in when the sentence that carries the quote
  *  begins; the words appear as they are spoken (aligned to the boundaries of whichever sentence carries them); the
- *  `emphasis` cue's word turns amber. With one citation per line, the attribution follows the line. */
+ *  `emphasis` cue's word turns glow. With one citation per line, the attribution follows the line. */
 export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const emphasis = scene.cues.emphasis;
@@ -28,7 +28,8 @@ export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
     const at = words.map((_, k) => aligned?.[k]?.frame ?? fallback + k * 2);
     return { words, at, start: at[0], end: aligned?.at(-1)?.end ?? at[at.length - 1] + 20, carrier };
   });
-  // A card opens when its carrier sentence starts (or the previous card's words are done), before the words.
+  // A card opens when its carrier sentence starts (or the previous card's words are done), before the words; its whole
+  // quote shows dim from then, so the card is never empty while the narration leads in.
   const intro = lines.map((l, i) =>
     i === 0 ? scene.start : Math.max(lines[i - 1].end + 6, Math.min(l.carrier.start, l.start - 30)),
   );
@@ -67,7 +68,7 @@ export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
               style={{
                 fontFamily: theme.serif,
                 fontSize: 150,
-                color: theme.amber,
+                color: theme.glow,
                 lineHeight: 0.6,
                 opacity: 0.6,
                 height: 70,
@@ -88,7 +89,8 @@ export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
               }}
             >
               {l.words.map((w, k) => {
-                const o = ramp(t, l.at[k], 6);
+                // the whole quote sits dim from the card's open and brightens word by word as it is spoken
+                const o = 0.2 + 0.8 * ramp(t, l.at[k], 6);
                 const hot = emphasis !== undefined && l.at[k] === emphasis;
                 const e = hot ? ramp(t, emphasis, 8) : 0;
                 return (
@@ -96,12 +98,10 @@ export const Quote: FC<{ scene: TimelineScene }> = ({ scene }) => {
                     key={k}
                     style={{
                       opacity: o,
-                      transform: `translateY(${(1 - o) * 14}px) scale(${1 + 0.06 * e})`,
-                      color: hot
-                        ? `rgb(${236 + (227 - 236) * e}, ${233 + (163 - 233) * e}, ${226 + (58 - 226) * e})`
-                        : theme.fg,
+                      transform: `scale(${1 + 0.06 * e})`,
+                      color: hot ? interpolateColors(e, [0, 1], [theme.fg, theme.glow]) : theme.fg,
                       fontWeight: hot ? 700 : 400,
-                      borderBottom: hot ? `4px solid rgba(227,163,58,${e})` : 'none',
+                      borderBottom: hot ? `4px solid ${alpha(theme.glow, e)}` : 'none',
                       display: 'inline-block',
                     }}
                   >

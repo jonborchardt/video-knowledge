@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { cue, lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { clamp01, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, grow, ramp, theme } from '../theme';
 
 const DC = { x: 160, y: 370, w: 860, h: 330 };
 const US = { x: 360, y: 70, w: 1200, h: 170 };
@@ -78,8 +78,8 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
             width: 28,
             height: 28,
             borderRadius: 14,
-            background: theme.amber,
-            boxShadow: `0 0 20px ${theme.amber}`,
+            background: theme.glow,
+            boxShadow: `0 0 20px ${theme.glow}`,
             opacity: clamp01(d * 2),
           }}
         />
@@ -92,7 +92,7 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
             textAlign: 'center',
             fontSize: 48,
             fontWeight: 700,
-            color: theme.amber,
+            color: theme.glow,
             opacity: ramp(t, at, 10),
           }}
         >
@@ -112,7 +112,7 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
     borderRadius: 22,
     background: theme.raised,
     border: `4px solid ${color}`,
-    boxShadow: `0 0 ${36 * clamp01(k)}px ${color}66`,
+    boxShadow: `0 0 ${36 * clamp01(k)}px ${alpha(color, 0.4)}`,
     opacity: clamp01(k * 1.5),
     transform: `scale(${0.85 + 0.15 * Math.max(0, k)})`,
   });
@@ -136,7 +136,7 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
           y1={axisY}
           x2={X1871 + (X1874 - X1871) * span}
           y2={axisY}
-          stroke={theme.amber}
+          stroke={theme.glow}
           strokeWidth={8}
           strokeLinecap="round"
           opacity={span > 0 ? 1 : 0}
@@ -157,14 +157,14 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
             y1={DC.y - 10}
             x2={X1871}
             y2={DC.y - 10 - (DC.y - 10 - US.y - US.h - 14) * arrowP}
-            stroke={theme.slate}
+            stroke={theme.data}
             strokeWidth={6}
             strokeLinecap="round"
           />
           {arrowP > 0.95 && (
             <polygon
               points={`${X1871},${US.y + US.h + 6} ${X1871 - 18},${US.y + US.h + 34} ${X1871 + 18},${US.y + US.h + 34}`}
-              fill={theme.slate}
+              fill={theme.data}
             />
           )}
         </g>
@@ -176,7 +176,7 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
       {/* the United States */}
       <div
         style={{
-          ...boxStyle(US, theme.slate, grow(t, usAt, 14)),
+          ...boxStyle(US, theme.data, grow(t, usAt, 14)),
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -189,13 +189,13 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
           height={96}
           viewBox="0 0 100 100"
           fill="none"
-          stroke={theme.amber}
+          stroke={theme.glow}
           strokeWidth={6}
           strokeLinejoin="round"
           style={{
             opacity: ramp(t, crownAt, 10),
             transform: `scale(${Math.max(0, grow(t, crownAt, 12))})`,
-            filter: `drop-shadow(0 0 12px ${theme.amber})`,
+            filter: `drop-shadow(0 0 12px ${theme.glow})`,
           }}
         >
           {CROWN}
@@ -240,7 +240,7 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 height={110}
                 viewBox="0 0 100 100"
                 fill="none"
-                stroke={theme.green}
+                stroke={theme.gain}
                 strokeWidth={5}
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -263,7 +263,7 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
           fontSize: 50,
           fontWeight: 700,
           lineHeight: 1.2,
-          color: theme.slate,
+          color: theme.data,
           opacity: ramp(t, L[2], 10),
           transform: `translateX(${(1 - ramp(t, L[2], 14)) * 40}px)`,
         }}
@@ -278,11 +278,11 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
           y1={DC.y + DC.h + 10}
           x2={DC.x - 10 + (DC.w + 20) * strike}
           y2={DC.y + DC.h + 10 - (DC.h + 20) * strike}
-          stroke={theme.red}
+          stroke={theme.loss}
           strokeWidth={10}
           strokeLinecap="round"
           opacity={strike > 0 ? 1 : 0}
-          style={{ filter: `drop-shadow(0 0 10px ${theme.red})` }}
+          style={{ filter: `drop-shadow(0 0 10px ${theme.loss})` }}
         />
       </svg>
       <div
@@ -293,17 +293,17 @@ export const DistrictTimeline: FC<{ scene: TimelineScene }> = ({ scene }) => {
           width: 440,
           textAlign: 'center',
           padding: '6px 0',
-          border: `6px double ${theme.red}`,
+          border: `6px double ${theme.loss}`,
           borderRadius: 10,
-          color: theme.red,
-          background: theme.bg,
+          color: theme.loss,
+          background: theme.ground,
           fontSize: 64,
           fontWeight: 800,
           letterSpacing: 4,
           textTransform: 'uppercase',
           opacity: ramp(t, endAt - 4, 4),
           transform: `rotate(-8deg) scale(${1.6 - 0.6 * stamp})`,
-          boxShadow: `0 0 28px ${theme.red}88`,
+          boxShadow: `0 0 28px ${alpha(theme.loss, 0.53)}`,
         }}
       >
         {txt[5]}

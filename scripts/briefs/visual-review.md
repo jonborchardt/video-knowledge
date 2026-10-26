@@ -17,7 +17,9 @@ it, and record a verdict; you change no code.
      not cut off or overlapping;
    - nothing implies what the data does not show (a scale, a trend, a comparison, a causal arrow
      the cited passages do not support; a figure that is not in `chart.points`);
-   - the citation is on screen when a claim is.
+   - the citation is on screen when a claim is;
+   - colours and marks are the institution's kit through `theme` (its ground, accent, faces); a
+     graphic that picks its own colours is a `revise`.
 4. Verdict `approved`, or `revise` with notes the builder can act on (what is wrong, in which
    frame, what it should show).
 

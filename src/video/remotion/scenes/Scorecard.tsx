@@ -3,10 +3,10 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { lineFrames, spokenAt } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { GUTTER, clamp01, easeOut, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, easeOut, grow, GUTTER, ramp, theme } from '../theme';
 
 type Mark = 'check' | 'cross' | 'question';
-const markColor = (m: Mark) => (m === 'check' ? theme.green : m === 'cross' ? theme.red : theme.amber);
+const markColor = (m: Mark) => (m === 'check' ? theme.gain : m === 'cross' ? theme.loss : theme.glow);
 
 /** A verdict mark drawn in SVG, stroked on over `d` (0..1): a tick, a cross, or a question mark with its dot. */
 const Glyph: FC<{ mark: Mark; d: number; color: string }> = ({ mark, d, color }) => {
@@ -93,9 +93,9 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
               width,
               height: rowH,
               borderRadius: 20 * k + 6,
-              background: `linear-gradient(90deg, ${theme.raised}, ${color}${tint > 0 ? '30' : '00'})`,
+              background: `linear-gradient(90deg, ${theme.raised}, ${alpha(color, tint > 0 ? 0.19 : 0)})`,
               border: `3px solid ${tint > 0.5 ? color : theme.line}`,
-              boxShadow: tint > 0 ? `0 0 ${36 * tint}px ${color}55` : undefined,
+              boxShadow: tint > 0 ? `0 0 ${36 * tint}px ${alpha(color, 0.33)}` : undefined,
               opacity: a * dim,
               transform: `translateX(${(1 - a) * -80}px)`,
               boxSizing: 'border-box',
@@ -146,7 +146,7 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   fontSize: 46 * k,
                   lineHeight: 1.15,
                   color: landed ? color : theme.muted,
-                  textShadow: landed ? `0 0 20px ${color}88` : undefined,
+                  textShadow: landed ? `0 0 20px ${alpha(color, 0.53)}` : undefined,
                   opacity: 0.55 + 0.45 * tint,
                 }}
               >
@@ -185,7 +185,7 @@ export const Scorecard: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 >
                   <circle
                     r={R}
-                    fill={`${color}26`}
+                    fill={alpha(color, 0.15)}
                     stroke={color}
                     strokeWidth={8}
                     style={{ filter: `drop-shadow(0 0 14px ${color})` }}

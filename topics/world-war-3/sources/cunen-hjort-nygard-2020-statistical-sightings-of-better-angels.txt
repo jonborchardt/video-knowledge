@@ -1,0 +1,822 @@
+Source: https://www.gwern.net/doc/history/2020-cunen.pdf (retrieved 2026-10-25)
+
+Statistical sightings of better angels: Analysing the distribution of battle-deaths in interstate conflict over time
+Authors: Celine Cunen, Nils Lid Hjort, Havard Mokleiv Nygard. Journal of Peace Research (2020), 1-14. DOI 10.1177/0022343319896843.
+Date: 2020 (online first).
+Note: the publisher's PDF, retrieved from a mirror on gwern.net; the journal version at journals.sagepub.com is paywalled.
+
+Statistical sightings of better angels:                                                            Journal of Peace Research
+Analysing the distribution of battle-deaths                                                        1–14
+in interstate conflict over time                                                                   ª The Author(s) 2020
+                                                                                                   Article reuse guidelines:
+                                                                                                   sagepub.com/journals-permissions
+                                                                                                   DOI: 10.1177/0022343319896843
+                                                                                                   journals.sagepub.com/home/jpr
+
+Ce´line Cunen
+Department of Mathematics, University of Oslo
+Nils Lid Hjort
+Department of Mathematics, University of Oslo
+Håvard Mokleiv Nygård
+Peace Research Institute Oslo (PRIO)
+
+Abstract
+
+Have great wars become less violent over time, and is there something we might identify as the long peace? We
+investigate statistical versions of such questions, by examining the number of battle-deaths in the Correlates of
+War dataset, with 95 interstate wars from 1816 to 2007. Previous research has found this series of wars to be
+stationary, with no apparent change over time. We develop a framework to find and assess a change-point in this
+battle-deaths series. Our change-point methodology takes into consideration the power law distribution of the
+data, models the full battle-deaths distribution, as opposed to focusing merely on the extreme tail, and evaluates
+the uncertainty in the estimation. Using this framework, we find evidence that the series has not been as stationary
+as past research has indicated. Our statistical sightings of better angels indicate that 1950 represents the most likely
+change-point in the battle-deaths series – the point in time where the battle-deaths distribution might have
+changed for the better.
+
+Keywords
+
+change-point analyses, decline of war, interstate conflict, power law tails, war sizes
+
+Introduction                                                respectful use, to signal the relatively few large interstate
+                                                            wars in the period after World War II (WWII).
+Is the world becoming more peaceful? The question is
+both deceptively simple and quite controversial. Authors       While the empirical pattern constituting the long
+such as Gat (2006), Goldstein (2011) and Pinker (2011)      peace is not in itself disputed, some recent investigations
+have argued that the world is becoming steadily more        have questioned whether the pattern can be said to con-
+peaceful, and a multidimensional quilt of research has      stitute a statistically established trend (see e.g. Cirillo &
+contributed pieces of layers with similar stories and con-  Taleb, 2016; Clauset, 2017, 2018; Braumoeller, 2019).
+clusions.1 Parts of these arguments concern wars and        Could this long period of relative peace simply be a
+armed conflicts, and there, the concept of ‘the long        random occurrence in an otherwise homogeneous war-
+peace’ (Gaddis, 1989) has gained the weight of repeated     generating process, or does it represent a significant
+                                                            change, a trend towards peace? Cirillo & Taleb (2016),
+
+1 See e.g. the collection of review articles in the 50th anniversary issue Corresponding authors:
+
+of the Journal of Peace Research (Volume 51, Issue 1).      cmlcunen@math.uio.no, nils@math.uio.no, havnyg@prio.org
+
+2 journal of PEACE RESEARCH XX(X)
+
+Clauset (2017, 2018) and Braumoeller (2019) answer             Battle deaths, z, in thousands
+the last question negatively: they find that the long peace          1 10 100 1000 10000
+is not a sufficiently unusual pattern when considering the
+variability inherent in long-term datasets of historical                                       1850  1900        1950          2000
+wars. The question investigated by these authors is essen-                                                 year
+tially statistical in nature, and we follow in the same vein.
+We approach a similar question, with similar data, but         Figure 1. War sizes and onset times in the CoW data
+with somewhat different statistical tools.                     The 95 war sizes zi are on the log10 scale.
+
+   We see our contribution as two-fold. First, we intro-       Modelling wars
+duce a set of statistical methods to the peace research
+community, some of them new. We have attempted to              Efforts to uncover trends in armed conflict have a long
+make the presentation of the methods accessible to most        history and date back at least to the seminal contribu-
+peace researchers. Technical details, of separate interest     tions of Lewis Fry Richardson (1948, 1960). Richardson
+also to specialists in statistics, are placed in the Online    assembled datasets of historical wars and sought to
+appendix. Second, we present new results and conclu-           uncover long-term patterns by statistical modelling of
+sions that partly challenge previous works and may gen-        various quantities, for example the time between wars
+erate hypotheses that can form the basis of future             and also the number of fatalities in each war. We will
+investigations. We find evidence that a sequence of war        consider the Correlates of War (CoW) interstate conflict
+sizes from the last two centuries is not entirely homo-        dataset (Sarkees & Wayman, 2010), see Figure 1, which
+geneous. In this sequence, the point of maximal change         we discuss in a bit more detail below. For now, consider a
+is found in 1950, corresponding to the Korean war. The         general war dataset consisting of
+upper quartile of the battle-deaths distribution decreases
+substantially, from 63,545 before the Korean war to                                            ðxi; ziÞ for i ¼ 1; . . . ; n;  ð1Þ
+14,943 after. Note that there is considerable uncertainty
+around these estimates and that the conclusion is open to      for a number n of historical wars, where xi is the onset
+interpretation. Our change-point analysis gives a very         time of war i and zi the number of fatalities; hence-
+wide 95% confidence interval for the point of change,          forth we will call zi the size of war i. Richardson’s
+but it also places considerable confidence on only a small     analyses of historical wars led him to two important
+handful of wars, including the Korean war, which is the
+maximum likelihood estimate. The uncertainty is dis-           statistical insights:
+cussed in detail below. We differ from parts of the liter-
+ature by not focusing exclusively on WWII as the               (i) the between-war times di ¼ xi À xiÀ1 can be
+potential point of change, but by applying change-                   modelled as independent and identically distrib-
+point methodology to investigate distributional changes              uted (i.i.d.), following a simple exponential
+in a time series of wars. We also investigate the role of            distribution;
+covariates, in particular democracy.
+                                                               (ii) the war sizes zi can be modelled as i.i.d. with a
+   In the next section we draw on the existing literature            power law distribution.
+to sharpen the question we will be considering. We also
+present the data we will use and discuss the overall              Both the time between wars and the size of each war
+analysis framework. Then in the following section, we          are relevant for investigating whether the world has
+present the relevant statistical methods in more detail.       become more peaceful. A peaceful world could be char-
+Next, we present our main results: first we perform            acterized by fewer wars (i.e. longer time between wars),
+a homogeneity test, and as this indicates non-                 smaller wars, or both. Note a potential caveat concerning
+homogeneity we go forward with change-point metho-             the assumed connection between a decline in war sizes
+dology, and crucially also present the degree of change.       and arguments about whether the world is becoming
+Then we investigate the effect of democracy. In the            more peaceful. Fazal (2014) argues that the risk of
+final section, we discuss our findings: we examine the         dying in war has declined because of the revolution in
+robustness of our approach to various choices and its
+relationship with previous works, and also consider
+potential theoretical mechanisms.
+
+Cunen et al.                                                    3
+
+military medicine: war may see just as many casualties          power law distributions. The authors find a shift in the
+as before but fewer deaths, since modern medicine is            power law parameter in 1789, indicating larger wars after
+able to save more lives. We will not explore this hypoth-       that year compared to the period before. Cirillo & Taleb
+esis in our article.                                            (2016) build their own database of war deaths from year
+                                                                1 to the present. They use statistical models with power
+   Trends in the number of interstate wars have been            law tails and find that their dataset is well enough
+studied by, for example, Harrison & Wolf (2012),                described by a single, stationary model. Clauset (2017,
+Gleditsch & Pickering (2014), Cirillo & Taleb (2016),           2018) examines the CoW data discussed below, models
+Braumoeller (2019) and Clauset (2018). Harrison &               the size of interstate wars with power laws, and finds that
+Wolf (2012) claim that interstate wars have become              he cannot reject the null hypothesis of no change.
+more frequent over time, while Gleditsch & Pickering            Indeed, he argues that the current trend would have to
+(2014) criticize their approach and claim that wars are in      persist for 150 years until we could statistically claim that
+fact becoming less frequent. Clauset (2018) finds that          the world had become more peaceful.
+the time between wars in the CoW data is adequately
+modelled by a simple exponential distribution, a finding           Now we have decided on a quantity of interest, war
+that supports insight (i) of Richardson above. Clauset          sizes, and have found a class of appropriate statistical
+(2018) takes this finding as an indication of a lack of         distributions to model this quantity. Still, there is a
+trend in the war timings data. In the Online appendix we        major question to resolve: should we normalize the war
+provide a short investigation of the between-war waiting        sizes by population size or should we consider the abso-
+times di in the CoW dataset and find that the observed          lute number of fatalities instead? Here, normalization
+waiting times are more consistent with an exponential-          refers to dividing the number of fatalities by the popu-
+gamma mixture model than with a simple exponential              lation size, typically the world population. Pinker (2011)
+model. This indicates that the waiting times in the CoW         forms most of his arguments around relative quantities,
+dataset are more variable than expected under an expo-          such as deaths per 100,000. Clauset (2017, 2018) dis-
+nential model. For the rest of the article we will leave the    cusses the choice of normalization in some length, and
+waiting times aside and focus on the war sizes.                 decides to analyse the absolute numbers. The choice of
+                                                                normalization in fact translates into different questions:
+   Richardson’s second insight has possibly received even       are we interested in making claims about the absolute
+more attention than the first one. Power laws are a par-        sizes of wars? Or the risk of dying in wars? And in the
+ticular class of probability distributions, with                latter case, with respect to which segment of the popu-
+                                                                lation should this risk be defined? All these questions are
+PðZ > zÞ / zÀ for all large z;  ð2Þ                            valid and interesting, but naturally the answers to one of
+                                                                them will not be directly relevant for the others. We have
+and a positive parameter . This means that the prob-           chosen to consider the absolute numbers. For the pro-
+ability of observing an event, in our case a war, of size       ponents of the long peace theory this is a conservative
+larger than z is inversely proportional to z raised to . If   choice since normalizing by world population inflates
+is large this probability quickly decreases with z, but if     the size of ancient wars compared to more recent wars.
+is smaller PðZ > zÞ can stay considerable even for large
+z. This last characteristic is sometimes referred to as the        Further, there is a choice between different datasets.
+‘fat-tailed’ property and entails a non-negligible prob-        Naturally, we would prefer a dataset stretching as far as
+ability of observing truly enormous events. Often the           possible back in time, with measurements of high quality
+power law distribution is only appropriate for observa-         and constructed with careful and precise definitions. The
+tions larger than some threshold z0, a point we will            previously mentioned study by Cederman, Warren &
+return to in the methods section.                               Sornette (2011) combines data from Levy (1983), the
+                                                                CoW project (Singer & Small, 1994) and the PRIO/
+   Richardson’s insights concerning power laws are dis-         UCDP Armed Conflict Database (ACD) (Gleditsch
+cussed by Pinker (2011) in his international best-seller        et al., 2002). The dataset has a long time span, but is
+The Better Angels of Our Nature. There, he argues that          unfortunately limited to wars involving ‘major powers’.
+violence in a wide sense, including crime, torture, animal      The quality of the reported battle-deaths number can
+cruelty and war, has declined. Power laws also form the         also be an issue. Even for recent wars involving devel-
+basis of empirical investigations that challenge Pinker’s       oped countries the estimates of the number of battle-
+conclusions about the decline of war and the long peace.        deaths can be contested. The Falklands war, for instance,
+In Cederman, Warren & Sornette (2011), a sequence of            is included in the CoW interstate wars dataset with
+118 war sizes from 1495 till 1997 is modelled with
+
+4 journal of PEACE RESEARCH XX(X)
+
+1,001 battle-deaths, even though the actual number is         framework for investigating a certain type of ‘trend’: an
+most likely closer to 900 (Reiter, Stam & Horowitz,           abrupt change in the distribution of the data, with par-
+2016).                                                        ticular emphasis on where the change took place. There is
+                                                              a long tradition in social and political science for study-
+   We have used the Correlates of War (CoW) inter-            ing shifts in history, and for examining conditions for the
+state conflict dataset (Sarkees & Wayman, 2010). This         potential for shifts (see Tilly, 1995; Marx, 1871; Spen-
+dataset contains onset dates xi and the number of battle-     gler, 1918; and e.g. Beck, 1983; Mitchell, Gates &
+deaths zi for all interstate wars with more than 1,000        Hegre, 1999; Western & Kleykamp, 2004; Spirling,
+battle-deaths in the period 1816 to 2007, comprising a        2007; Blackwell, 2018). Change-point methods have
+total of 95 wars. The dates xi range from 1823.27 (the        been applied to sequences of war sizes in Cederman,
+Franco-Spanish war) to 2003.22 (invasion of Iraq). Fig-       Warren & Sornette (2011), and very recently in Fagan
+ure 1 displays these data, with zi on the log10-scale. The    et al. (2018) and Braumoeller (2019).
+choice of the CoW dataset is motivated by its wide-
+spread use (Clauset, 2017, 2018; Fagan et al., 2018;          Methods
+Spagat & van Weezel, 2018), which enables compari-
+sons with other approaches. Also, the CoW dataset is          In the first subsection, we construct a non-parametric
+considered to be of good quality, despite the issue men-      homogeneity test. Since this test indicates non-
+tioned above.                                                 homogeneity (see the results section), we proceed with
+                                                              our change-point framework. First, we present para-
+   Finally, there are several different statistical frame-    metric models for the war sizes, before presenting our
+works for assessing whether a certain sequence of obser-      change-point method. In the last subsection, we explain
+vations, war sizes in our case, supports a trend, or not.     the inclusion of covariates.
+The possible options include regression models with
+respect to time, homogeneity tests and change-point           Testing constancy over time
+analyses. We have not investigated regression models as       Suppose a sequence of observations y1; . . . ; yn is regis-
+these would impose too much of a constraint on the type       tered over time, and that one wishes to query the null
+of change present (also a quick look at Figure 1 clearly
+indicates that there is no simple linear time trend).         hypothesis H0 that the distribution generating the
+                                                              sequence has remained constant, against the alternative
+   Homogeneity tests are a general class of methods
+which aim at testing a null hypothesis of stationarity, that  that somewhere a change has taken place. Assume  is a
+is, to test whether the observed sequence is consistent
+with a single, stationary statistical model or whether        parameter of particular interest, like the median or stan-
+there is sufficient deviation from the model as to indicate
+that there has been a change. Most of the results in          dard deviation, with ^a;b the estimate of this quantity
+Clauset (2017, 2018) are based on tests of homogeneity,       based on the stretch of data ya; . . . ; yb. For each candi-
+where Clauset does not find sufficient evidence to reject     date position , inside a relevant pre-defined interval of
+the null hypothesis of no change. Tests of homogeneity        time ½c; d , consider the relative difference in estimated
+seem attractive because they can potentially discover
+many types of deviations from the stationary model.           , to the left and to the right, via
+However, for partly the same reason, they can often have
+low power in discovering actual changes. There are many       Hnð Þ  ¼  f^L2 =   ^L À ^R     Þg1=2  ð3Þ
+homogeneity tests to choose between, which differ in, for                          þ ^R2 =ðn À
+example, the assumptions made, the choice of test sta-
+tistic and the choice of alternative hypothesis; see Hjort    for  ¼ c; c þ 1; . . . ; d À 1; d :
+& Koning (2002) and Cunen, Hermansen & Hjort
+(2018) for partial reviews and methods. We present a          Here ^L ¼ ^1; and ^R ¼ ^þ1;n, along with ^L and ^R
+general homogeneity test in the methods section.              being estimates of the relevant standard deviations, to the
+
+   If the null hypothesis of homogeneity is rejected,         left and to the right, in the usual setup where ^a;b is
+there may be reasons to believe that the data are incon-      approximately normal with variance of the form
+sistent with a completely stationary model. The rejection     2=ðb À a þ 1Þ. The function HnðÞ can be plotted for
+of the hypothesis does not necessarily give any indication    all potential  values, and also provides natural test sta-
+on where the change took place, nor what type of
+changes the data support. Change-point analysis is a          tistics for H0, for example Hn;max ¼ maxc  d jHnð Þj,
+                                                              along with one-sided versions. The null hypothesis of
+
+                                                              homogeneity is rejected if HnðÞ takes values sufficiently
+                                                              far from zero. In addition, the plot of HnðÞ will indicate
+                                                              the position ^ at which the plot is farthest away from
+
+Cunen et al.                                                   5
+
+zero, which may serve as an estimate of the change-point          There are other distributions with power law tails, and
+(but from an entirely different perspective than the           the choice between these models should ideally not influ-
+change-point method we present below).                         ence the reported results to a great extent, as long as the
+                                                               chosen model has a reasonably good fit to the data. In the
+   Importantly, the Hn plot may be utilized for the one-       Online appendix, we examine goodness of fit, some
+sided case where a change is assumed to have a given           model selection with the focused information criterion,
+direction, on a priori grounds, thus yielding bigger detec-    and also report results using other parametric models.
+tion power than with a two-sided version. Also, the
+method works for non-parametrically defined . In order        Change-point methods
+to find the p-value for the test, one needs to work out the    When faced with a sequence of observations, change-
+distribution of the Hn process. We present these deriva-       point methodology is used to search for where the point
+tions in the Online appendix. There we also investigate a      of maximal distributional change occurs. More formally,
+different homogeneity test based on a weighted                 we have observations z1; . . . ; zn from some parametric
+Kolmogorov-Smirnov statistic.                                  model, say f ðz; Þ, where  is of dimension p. Assume
+                                                               that there is a change-point  in the sequence, where the
+Models with power law tails                                    model parameter changes from L for i  to R for
+                                                               i !  þ 1. The aim of a change-point analysis is to esti-
+In order to use the change-point method from Cunen,            mate  and, importantly, to assess the uncertainty
+                                                               around it. Subsequently, one should also assess the degree
+Hermansen & Hjort (2018) we need a parametric model            of change associated with the change-point, in order to
+                                                               investigate the magnitude and direction of the change,
+for the war sizes, zi. As discussed above, we want to use a    and thereby assess whether the change is large enough to
+model with power law behaviour. One general option is to       have any practical importance.
+
+use the power law distribution directly, see Equation (2).        There are many ways in which to search for a change-
+                                                               point in a sequence of data; see Frigessi & Hjort (2002)
+For most datasets, the power law distribution will not fit     for a broad introduction to a special journal issue on
+                                                               discontinuities. Here we employ change-point machinery
+well for the entire dataset, but only for observations larger  developed in Cunen, Hermansen & Hjort (2018), both
+                                                               for spotting a potential change-point and, crucially, for
+than a certain   threshold, that is,  zi ! z0   has a density  assessing its uncertainty. To assess uncertainty and present
+proportional to  ziÀðþ1Þ. Then, one  needs to  estimate both  our result, we use confidence curves (see Schweder &
+                                                               Hjort, 2016). The confidence curves can be understood
+the parameter  and the tail-index threshold z0. We inves-     as graphical generalizations of confidence intervals. They
+                                                               present the uncertainty at all levels of confidence, instead
+tigate this approach in the Online appendix; related           of just a single confidence interval at some arbitrary level
+                                                               of confidence (typically 95%). See the results section for
+approaches are used in Clauset (2017, 2018). This model        more on the interpretation of confidence curves.
+
+is simple to use, but does not directly utilize the observa-      In the Online appendix we provide a short technical
+                                                               overview of the change-point method we have used. The
+tions below the threshold z0 and may therefore entail          version of the method used here only allows for a single
+some loss of information compared to the next option.          change-point in the sequence of data. Importantly, the
+                                                               method involves maximum likelihood estimators of the
+In the following, we will refer to this model as the ‘simple   model parameters, ^L to the left and ^R to the right, and
+                                                               of the change-point parameter ^. The confidence curve
+power law’ model.                                              ccðÞ is based on the deviance function and its construc-
+                                                               tion requires computer simulations. Ideally, the results
+Another option is to model the entire dataset, which           presented here should not be too sensitive to the choice
+                                                               among various change-point methods. The chosen
+in our case only has wars of sizes 1,001 and more (see         method is easy to use and highly flexible, and relies on
+                                                               a natural extension of general likelihood theory to
+Online appendix Section D), with a distribution that
+
+fulfils the power law requirement in the tails. Generally
+
+speaking, the distribution function F ðzÞ for the zi is said
+to have power law tails, with power index b, if
+zbf1 À F ðzÞg tends to a positive constant as z increases.
+
+One such model is the inverse Burr distribution, taking
+
+F ðz; ; ; Þ ¼ PrfZ  zg  ¼  "                     #
+                                  fðz À 1001Þ=g  1
+
+                               fðz À 1001Þ=g þ
+
+for z ! 1001;                                      ð4Þ
+
+with parameters ð; ; Þ to be estimated from the 95
+wars. When z increases we have F ðzÞ % 1 À ð=zÞ;
+thus  plays the role of the power index, similarly to its
+namesake in the simple power law distribution above.
+
+6 journal of PEACE RESEARCH XX(X)
+
+change-point parameters. It can be used in connection            democracy score of the countries involved in each war,
+with any parametric model for the data and allows for            measured the year before the war started. To measure
+changes in one, some, or all of the p model parameters           democracy, we utilize the Polity index from the Polity IV
+inside L and R. Thus, it allows the user to discover           dataset (Marshall & Jaggers, 2003). The Polity index
+more complex changes than simple jumps in the mean               scores regimes on a À10 to 10 scale, where À10 are the
+level (which parts of the change-point literature are            most autocratic regimes and 10 the most democratic.
+constrained to).                                                 The covariate will be negative when a war involves
+                                                                 mostly autocratic regimes, and large and positive if a war
+   The change-point method of Cunen, Hermansen &                 involves only democracies. Here, we will let the covariate
+Hjort (2018) also allows us to construct confidence curves       influence the scale parameter  of the inverse Burr:
+for the degree of change associated with the change-point.
+The degree of change is a one-dimensional parameter,             L;i ¼ L;0expð
+LwiÞ and R;i ¼ R;0expð
+RwiÞ
+called , defined as a function of the model parameters
+on both sides of , and meant to capture the size and            for i ¼ 1, . . . ,90.  ð5Þ
+direction of the change. Usually it will be in the form of
+a ratio or a difference; here we will study the ratio between    Note that some of the wars have missing democracy
+quantiles of war sizes on each side of . Confidence curves      scores. We remove these observations and end up with
+for the degree of change, ccðÞ, are displayed in the results    90 wars for this analysis. The full model has now become
+section. Importantly, ccðÞ takes into account the uncer-        moderately complex, with parameters L; L;0;
+L to the
+tainty in the change-point position. The confidence curves       left, R; R;0;
+R to the right and a common , in addi-
+for the degree of change can therefore be considered an          tion to the change-point .
+implicit homogeneity test. The change-point method
+described here always gives a point estimate for the                When introducing covariates in this change-point
+change-point position, but if the degree of change analysis      model, there are some issues to consider. First, one can
+indicates that the magnitude of the change is very small, or     either assume that the covariate effect has changed across
+highly uncertain, there is no reason to argue that there really  the change-point, or that it has remained constant (so
+has been a shift in the distribution. Conversely, if the degree
+L ¼
+R). This choice might depend on prior knowl-
+of change analysis indicates a change of large and significant   edge, or be decided based on some model selection cri-
+magnitude, one may put faith in the existence of a change.       teria. Secondly, one must be aware that inclusion of
+                                                                 covariates might alter the change-point inference (com-
+   In our analysis, we will use the change-point                 pared to a model without covariates).
+method briefly discussed here along with the inverse
+Burr model described in the previous section. In addi-           Results
+tion to the choice of distribution, the modeller also
+needs to decide on which parameters of the distribu-             Testing constancy
+tion should be allowed to be (potentially) influenced            For the sequence of log-battle-deaths yi ¼ log zi for
+by the change-point. For the model in Equation (4),              i ¼ 1; . . . ; n ¼ 95, we may compute, display and ana-
+we allow  and  to change, but assume the same                 lyse Hn plots of Equation (3) for any relevant choice of
+across the change-point. We then end up with a total             focus parameter . Figure 2 displays Hn plots for the
+of six parameters to estimate: the change-point ,               median F À1ð0:50Þ and upper quartile F À1ð0:75Þ, with
+along with ð; L; L; R; RÞ.                                  maxima 1.436 and 2.746, respectively. When looking at
+                                                                 the median level we cannot reject the null hypothesis of
+Covariates                                                       homogeneity at any ordinary level. For the upper quar-
+The change-point method above is sufficiently general to         tile, however, the maximum of 2.746 is significantly
+support the inclusion of covariates influencing the model        high. Computing an associated p-value uses theory from
+parameters, for example democracy scores, as we will see.        the results section, with a one-sided version of the test
+For simplicity of presentation, we will present the inclu-       statistic, since we judge it a priori clear that the battle-
+sion of a single covariate to the inverse Burr model             death distribution has not gone up after WWII. The
+described above; in the Online appendix we give a more           exact p-value depends on the time range ½c; d  used.
+general treatment.                                               We take d ¼ 1987, to allow ten wars to the right, in
+                                                                 order for the statistical approximation theory to work
+   Assume that we have covariate information wi for              well. With c ¼ 1909 we find the p-value equal to
+each war. In this illustration, the covariate is the mean
+
+Cunen et al.                                                                                                            7
+
+Hn plots, 0.50 and 0.75 quantiles                                     estimate, especially 1965:103 (the Vietnam war),
+     −1 0 1 2
+                                                                      1939:669 (WW2) and 1982:236 (the Falklands war).
+
+                                                                      For the inverse Burr model in Equation (4), the esti-
+
+                                                                      mated parameters are:      ^    ¼  0:499,   ^L  ¼ 43887,
+                                                                      ^L ¼ 0:702, ^R ¼ 10940,  ^R   ¼  1:022.  We    assess the
+
+                                                                      direction and magnitude of the potential change by com-
+
+                                                                      puting confidence curves for the degree of change. We
+
+                                                                      examine the ratio between certain quantiles before and
+
+                                   1850  1900        1950  2000       after the estimated change-point, 1 ¼ 0:50;L=0:50;R
+                                                                      and 2 ¼ 0:75;L=0:75;R, with L and R again referring
+                                               year
+                                                                      to the parameters to the left and to the right of the
+
+Figure 2. The relative change Hn plot of Equation (3)                 change-point. When the bigger wars are of primary inter-
+The two curves are the median F À1(0.50) (red dashed curve) and
+the upper quartile F À1(0.75) (black full curve). The lower gives     est, the ratio 2 of the upper quartiles would be more
+the point-wise threshold, the upper gives the threshold for the null  relevant to assess than the ratio 1 of medians. With the
+distribution corresponding to the time window [c, d ] ¼ [1909,
+1987].                                                                inverse Burr we have the following expression for the
+
+                                                                      100q% quantile,
+
+                                                                      q  ¼            1001  þ        q1= 1=  :     ð6Þ
+                                                                                                
+0.0351, and with a tighter time range even smaller                                                     À q1=
+p-values.                                                                                           1
+
+   The p-values, for monitoring the no-change hypoth-                 Here we use q ¼ 0:50 and q ¼ 0:75 to estimate the
+esis with respect to quantiles, become even smaller for               medians and the upper quartiles, respectively. Note that
+higher quantiles than 0.75. Thus the battle-death distri-             the number 1,001 here simply serves to bring the quan-
+bution has not remained constant over time. More spe-                 tiles back to the battle-death scale. The point estimates
+cifically, plots such as those in Figure 2 reveal that there          via the inverse Burr are ^1 ¼ 2:15 and ^2 ¼ 4:25. The
+are clearer changes in the upper parts of the distribution            fitted median decreases from 10,129 battle-deaths pre
+than in the lower parts.                                              1950 to 4,721 after the change-point. The upper quar-
+                                                                      tile decreases from 63,545 to 14,943 battle-deaths.
+Change-point results
+Our change-point method provides the maximum like-                       Figure 4A gives the confidence curves for the two
+lihood estimate for the change-point at ^ ¼ 1950:483.                degree of change parameters described above. These are
+Thus, the point of maximal change in the parameters of                computed with the simulation based method described
+the inverse Burr model is found between the 60 wars up                in Section C of the Online appendix. The confidence
+to and including the Korean war on the one side and the               curves reveal that the ratio between upper quartiles is
+35 wars following the Korean war on the other side.                   significantly larger than 1 on the 95% level, whereas the
+                                                                      ratio of medians is larger than 1 only at somewhat lower
+   The full uncertainty around the point estimate is                  confidence levels. Thus, the upper quartiles on each side
+given by the confidence curve in Figure 3. The potential              of the potential change-point are significantly different
+change-point values are on the horizontal axis, while the             on a 5% level. This analysis is not conditional on a given
+degree of confidence is on the vertical axis. The confi-              change-point value, but takes into account the uncer-
+dence curve hits zero at the point estimate (1950), and               tainty in the change-point position.
+we can read off confidence intervals at all levels. Note
+that these intervals can consist of disjoint parts. Clearly              Figure 4B gives a different way to visualize the change
+there is uncertainty in the change-point position; we see             in distribution at the estimated change-point. The red
+that the 95% confidence interval, indicated by the red                dots are wars taking place before the Korean war, and the
+horizontal line in the figure, encompasses the whole                  black dots are the wars after. The lines are the fitted
+range of possible change-point values. The 80% interval               complement cumulative distribution functions (CDFs),
+encompasses only 30 war-onset-times however, most of                  That is, 1 minus the fitted CDFs, on the log-log scale for
+them from 1939 to 1992, but with ‘gaps’. Note that the                the inverse Burr distribution on each side of the esti-
+analysis places considerable confidence on three war-                 mated change-point. The vertical dashed lines indicated
+onset-times in the dataset in addition to the point                   the fitted medians and upper quartiles, and again we
+                                                                      observe that the difference between the two distributions
+                                                                      is larger for the higher quantiles. We also see that for
+
+8 journal of PEACE RESEARCH XX(X)
+
+                                          confidence sets for the changepoint
+                                                0.0 0.2 0.4 0.6 0.8 1.0
+
+                                                                               1867  1881  1895  1909   1923    1937                                                1951  1965          1979  1993
+                                                                                                          year
+
+Figure 3. Confidence curve for the change-point using the inverse Burr model
+The confidence curve points to the Korean war (1950). The red dashed line corresponds to the 0.95 confidence level.
+
+AB
+
+confidence sets for the degree of change                                                                        Fraction of wars with at least z deaths  0.2 0.5 1
+      0.0 0.2 0.4 0.6 0.8 1.0
+                                                                                                                                                         0.05
+
+                                                                                                                                                                        φ0.5     φ0.75
+                                                                                                                                                                    φ φ0.5 0.75
+                                                                                                                                                         0.01
+
+                                                                               2 4 6 8 10                                                                           1 10 100 1000 10000
+                                                                                                     ρ                                                                       Battle deaths , z, in thousands
+
+Figure 4A. Confidence curves for the degree of change, using                                            Figure 4B. log-log plot of the complement CDFs for war sizes
+the inverse Burr model
+The dashed curve belongs to the ratio of medians while the fully                                        The lines are the complement CDFs for the fitted inverse Burr dis-
+drawn one is for the ratio of 75% quantiles. The red horizontal line                                    tribution on each side of the estimated change-point; before 1950
+marks the 0.95 confidence level.                                                                        (red full curve) and after (black dashed). The points give the empirical
+                                                                                                        complement CDFs; before 1950 (red circles) and after (black trian-
+large wars the fitted complement CDF approaches line-                                                   gles). The vertical lines indicate the fitted medians and upper quartiles
+arity on the log-log scale, as expected (the complement                                                 on each side of the change-point.
+CDF of a simple power law distribution is a straight line
+in log-log plots).                                                                                      inclusion of the covariate changes the point estimate of
+                                                                                                        the change-point somewhat, from 1950:483 to
+Covariate results                                                                                       1967:431 (the Six Day war). The Korean war is still
+We include the democracy covariate and allow the effect                                                 given high confidence and we have therefore performed
+of democracy to change across the change-point. The                                                     follow-up analysis taking the 1950.483 change-point as
+                                                                                                        given. When it comes to parameters L; L;0; R; R;0; ,
+                                                                                                        estimates with precision correspond roughly to those
+
+Cunen et al.                                                                                                                                     9
+
+              Battle deaths, z                                                                               10000
+                    10000 15000 20000 25000 30000
+                                                                             Battle deaths, z, in thousands  1000
+
+                                                                                                             100
+
+                                                                                                             10
+
+              5000
+
+                                                                                                             1
+
+              0
+
+                                                   −10 −5  0  5          10                                         −10 −5  0             5  10
+
+                                                   mean democracy score                                             mean democracy score
+
+Figure 5. Regression with inverse Burr model and mean democracy as covariate
+
+The left plot is on the z scale, the right plot is on the log10 scale. Each of the 95 wars is represented by a point; before 1950 (red dots) and after
+(black triangles). The lines are the fitted medians; before 1950 (red full curve) and after (black dashed).
+
+found for the change-point analysis without covariates.                      favouring the ‘no-change’ hypothesis. On the other
+The most interesting parameters, in this context, are
+L                     hand, the figure also indicates that all the most likely
+(estimate À0:007, 90% interval ½À0:202; 0:187) and
+R                       candidates for the change-point positions are found
+(estimate À0:163, 90% interval ½À0:308; À0:018). The                        either at or after WWII. Moreover, the degree of change
+estimated
+L is close to zero and its confidence interval                    analysis shows a significant decrease in battle-deaths after
+covers zero, while the interval for
+R indicates that the                    the change, at least when considering the upper quartiles.
+scale parameter decreases as the mean democracy score                        The change in the parameters of the distribution of
+increases. The changing effect of democracy is reflected                     battle-deaths thus manifests itself in smaller wars in the
+in Figure 5, showing the fitted median as a function of                      period after the change-point. On the whole, we inter-
+mean democracy on both sides of the change-point.                            pret our analyses as supporting a decrease in battle-deaths
+Before 1950 the median number of battle-deaths is almost                     at some point in the time span we are considering. The
+constant across democracy scores, while after 1950 the                       exact position of the shift remains somewhat uncertain,
+median number of battle-deaths decreases sharply with                        but the most likely candidate is the Korean war.
+increasing democracy.
+                                                                                Our claim rests upon two distinct analyses. First, we
+Discussion                                                                   presented a non-parametric test of homogeneity. The
+                                                                             test suggests that the sequence of war sizes has not been
+Recent contributions, reviewed above, argue that there is                    homogeneous when considering the higher quantiles of
+no clear evidence of change in the sizes or the times                        the war size distribution; see the results for the upper
+between interstate wars since 1816. In contrast, we find                     quartiles in Figure 2. With this test the null hypothesis of
+evidence that a change in the distribution of war sizes has                  no change is rejected at the 5% level. Second, we have
+taken place, and that it may have happened in the years                      conducted a change-point analysis. Here, we needed a
+after WWII, rather than in 1945 which is the assumed                         parametric model for the data, and we found suitable
+change-point within the current literature. We stress that                   models among the class of models with power law tails.
+the results from the change-point analysis are open to
+interpretation. On one hand there is considerable uncer-                        We have also introduced the use of covariates – point-
+tainty in the change-point position: the 95% interval for                    ing towards further modelling efforts including mechan-
+ covers the entire range of possible change-point posi-                     isms and explanations. In addition to enriching the long
+tions. Some readers will thus interpret Figure 3 as                          peace debate by generating hypotheses concerning the
+                                                                             long-term characteristics of interstate wars, we have also
+                                                                             introduced models and methods to the peace research
+
+10 journal of PEACE RESEARCH XX(X)
+
+literature. In the rest of this section, we will discuss our  data in the Online appendix: the simple power law dis-
+findings on various levels. First, we will take a critical    tribution and the inverse Pareto distribution. The inverse
+look at our approach and report on some robustness            Pareto, like the inverse Burr, models the full sequence of
+checks we have conducted. Then we will explore con-           95 war sizes, and we obtained very similar results to those
+nections between our contribution and related articles,       presented in Figures 3 and 4: the same point estimate for
+both in terms of methods and results. Finally, we will        the change-point, ^ ¼ 1950:483, and similar looking
+discuss our findings in light of the general peace research   confidence curves for both  and the parameters repre-
+literature, and in particular consider some theoretical       senting the degree of change. This is not surprising
+explanations.                                                 since the inverse Pareto distribution is just a simplifica-
+                                                              tion of the inverse Burr. With the simple power law
+Robustness of our approach                                    model the results were somewhat different. Here, we
+Statistical analyses require a series of assumptions and      needed to set the tail-index threshold z0, and we used
+some level of abstraction to get from a real world ques-      z0 ¼ 7061, see details in the Online appendix. The
+tion to a statistical question. Here, we return to some of    subsequent change-point analysis then makes use of
+the choices we discussed in the beginning and attempt to      only the 51 wars larger than z0. Using this model we
+assess their influence on our results.                        found ^ ¼ 1965:103 as the point estimate for the
+                                                              change, corresponding to the Vietnam war. We provide
+   For our statistical modelling we have been guided by       the full confidence curve in the Online appendix, and it
+previous works using power law distributions. There           displays more uncertainty than we saw with the two
+have been a few attempts to give a theoretical justifica-     other models (i.e. wider confidence intervals). In par-
+tion to the power law behaviour of war sizes (see e.g.        ticular, the degree of change analysis indicates that the
+Cederman, 2003), but for most authors, including              change was non-significant, in contrast with the analy-
+Richardson, the power law models have been used as            ses with the inverse Burr and inverse Pareto models.
+essentially descriptive models, that is, as ‘lower dimen-     The increased uncertainty is related to the reduced
+sional representations’ allowing us to assess potential reg-  sample size.
+ularities given the inherent variation in the data. In that
+case, it is particularly important that the model fits well      The different estimated change-points, for the full
+to the data – that the distribution of war sizes according    battle-deaths distribution and only the large wars (the
+to the model is close to the actually observed war size       simple power law analysis), underscores an important
+distribution. We have therefore conducted various good-       aspect inherent to any change-point exercise. What
+ness of fit evaluations, for example the log-log plot in      constitutes a change-point when analysing some aspects
+Figure 4. We see that the data in general have a good fit     of the available data will not necessarily be recognized as
+to the inverse Burr models on each side of the change-        a change-point when examining other relevant data.
+point. The clearest deviation from the model is found for     Thus it should not be seen as a paradox that the Viet-
+the very largest wars, especially among those taking place    nam war in 1965 can be a change-point for the extreme
+after 1950. The three largest wars in this period have        tail of the battle-death distribution, whereas perhaps
+more battle-deaths than expected under the model. This        the Korean war in 1950 is more of a change-point when
+particular aspect of the data was not successfully            examining more complex models involving the full
+accounted for by any of the models we considered (see         battle-death distribution.
+the corresponding figures in the Online appendix) and
+would necessitate a more complex model than those                Some readers might question our choice of using a
+considered so far. We have also conducted some good-          change-point framework at all. As mentioned in the
+ness of fit tests. On both sides of 1950, the observed data   beginning, change-point methods assume a very
+were consistent with having been generated by the fitted      particular form of change, an abrupt shift in the dis-
+inverse Burr distributions (pL ¼ 0:64 and pR ¼ 0:23,          tribution generating the data. In the case of our
+see details in the Online appendix).                          change-point method, we have in addition assumed
+                                                              that only a single such shift takes place. Is it realistic
+   Several models within the class of distributions with      to assume that the long peace emerged in that way?
+power law tails provide adequate fit to the data. In order    Hardly, but a single change-point model could be
+to investigate the sensitivity of our results to the model-   considered a reasonable approximation to various
+ling assumptions, we present results for similar change-      other patterns, for example to more gradual changes.
+point analyses assuming two different models for the          We are inclined to interpret the change-points we
+                                                              identify here as the culmination of a process that has
+
+Cunen et al.                                                   11
+
+unfolded over some time. This could apply to several           as we would ordinary model parameters. Our method
+of the mechanisms discussed below.                             also allows investigating the magnitude and direction of
+                                                               the change, which Fagan et al. (2018) do not provide.
+Connections to other analyses                                  On the other hand the method in Fagan et al. (2018)
+There are several recent contributions with clear connec-      naturally allows for multiple change-points, while we
+tions to our article. Many of these also analyse the CoW       have only investigated the introduction of a single poten-
+interstate conflict dataset (Clauset, 2017, 2018; Spagat       tial change-point.
+& van Weezel, 2018; Fagan et al., 2018; Braumoeller,
+2019), while Cederman, Warren & Sornette (2011) and               As mentioned in the beginning, Cirillo & Taleb
+Cirillo & Taleb (2016) use datasets with a longer time         (2016) and Clauset (2017, 2018) test a null hypothesis
+span (from year 1494, and year 1, respectively). Cirillo &     of stationarity, and do not find sufficient statistical evi-
+Taleb (2016) and Spagat & van Weezel (2018) normal-            dence to reject it. Cederman, Warren & Sornette (2011)
+ize the war sizes with respect to world population, while      find a shift towards larger wars in 1789, while Spagat &
+Clauset (2017, 2018) and Cederman, Warren & Sorn-              van Weezel (2018) find a shift towards smaller wars after
+ette (2011) analyse the absolute numbers. Fagan et al.         1950. Fagan et al. (2018) find multiple change-points in
+(2018) conduct analyses of both absolute and relative          the sequence of wars between 1816 and 2007, notably
+numbers. As expected, analyses using relative war sizes        around 1950. Braumoeller (2019), using a non-
+find a clearer decline of war than those focusing on           parametric change-point model, finds no change-point
+absolute numbers.                                              in war intensity – measured as battle-deaths per comba-
+                                                               tant population – or in war severity – measured as total
+   Parametric models within the class of distributions         battle-deaths. Braumoeller (2019) does find a change-
+with power law tails are used in Cederman, Warren &            point in the rate of which wars are initiated, but if any-
+Sornette (2011), Cirillo & Taleb (2016) and Clauset            thing this indicates that the Cold War period was more
+(2017, 2018), while Fagan et al. (2018) and Spagat &           not less warlike than other periods.
+Weezel (2018) use non-parametric approaches. Clauset
+(2017, 2018) also investigated a certain semi-parametric          How can all these results be reconciled with each
+model. The articles also differ in their choice of frame-      other, and with ours? First of all it is important to realize
+work for investigating potential trends. Cirillo & Taleb       that they do not necessarily stand in stark opposition to
+(2016) and Clauset (2017, 2018) use types of homoge-           each other. The studies differ in the time span considered
+neity tests. Spagat & van Weezel (2018) test for differ-       and in the specific research question they treat, through
+ences in the probability of observing wars of a certain size   their choices of, for example, normalization and statisti-
+across specific potential years-of-change, namely 1945         cal framework. Also, as usual, non-rejections do not
+and 1950. Initially, Cederman, Warren & Sornette               imply that the null hypothesis is true. Further, the
+(2011) also investigate a single, specific year-of-change,     homogeneity tests used in Cirillo & Taleb (2016) and
+1789, but the authors proceed by searching for a change-       Clauset (2017, 2018) differ from the one we use. The
+point along the full sequence of wars. Their approach          test in Clauset (2017, 2018) investigates whether the
+differs from ours: they do not make use of a formal            observed dataset as a whole is sufficiently different from
+change-point method and their method does not provide          simulated data from a stationary model. Our test focuses
+any measures of uncertainty. Fagan et al. (2018) use a         on specific aspects of the distribution of the data, specif-
+formal change-point method based on work by Killick,           ically the upper quartile for instance. This sharper focus
+Fearnhead & Eckley (2012) and Haynes, Fearnhead &              likely increases the statistical power. This focus is also
+Eckley (2017), but their approach has several differences      shared by our degree of change investigations where we
+from ours. Their methodology relies on an algorithm            study changes in the medians and upper quartiles.
+which introduces distributional changes in the data
+sequence when the change-point leads to a sufficiently            There is no clear consensus among the studies men-
+large increase in the fit to the data. The fit is measured by  tioned here, but neither is there any strong incompatibil-
+some cost function, which the user has to define, along        ity, despite the differences in methodology. Each should
+with some penalty function (against introducing unne-          be considered as providing some evidence to the full pic-
+cessary change-points). In contrast, our change-point          ture, which remains to be fully understood. In further
+method treats the change-point as a parameter in the           work, we hope to draw on these studies and devote energy
+model and we therefore analyse it in a parallel manner         into the development of more realistic models for the
+                                                               underlying processes behind the war characteristics we
+                                                               observe, incorporating explicit theoretical mechanisms.
+
+12 journal of PEACE RESEARCH XX(X)
+
+Mechanisms                                                                  In addition to this norms-based mechanism, we con-
+So far, we have not discussed the mechanisms that may                    sider two other mechanisms particularly plausible. The
+underlie the patterns our analysis has revealed. In this,                first centers around the development of nuclear weapons.
+our exercise is similar to the path-breaking work of                     When the USSR conducted its first atomic weapons test
+Richardson (1960) and the aforementioned articles by                     in 1949, the two superpowers, the USA and the USSR,
+Clauset (2018, 2017), Cirillo & Taleb (2016) and Fagan                   created the basis by which war could escalate to a point
+et al. (2018), which mainly focus on modelling battle-                   where the world would face total annihilation. The devel-
+deaths and uncovering potential trends.2 A full investi-                 opment of the system of mutual assured destruction led all
+gation of mechanisms is beyond the scope of this article.                key actors to fear that low intensity conflict could escalate
+Nonetheless, we will discuss a set of plausible mechan-                  into thermonuclear war (Kahn, 1965). This restraining
+isms that could help explain the change-point our analy-                 effect could operate as a mechanism reducing the intensity
+sis revealed. We base this discussion on existing                        of international conflicts. We could label this the ‘George
+theoretical work.                                                        Orwell Mechanism’. In his essay ‘You and the Atomic
+                                                                         Bomb’ (October 1945), Orwell predicted that power
+   There exists a large literature attempting to explain                 would be consolidated in the hands of the superpowers
+the production of wars at the systems level. Of partic-                  due to the atomic bomb, and that these two would perpe-
+ular relevance are the contributions by Cederman and                     tually threaten atomic war against each other, without
+co-authors. Cederman (2003) builds an agent-based                        actually risking it. As a result, large-scale wars would end
+model for war and state formation that reproduces the                    and instead we would see the rise of a new form of smaller
+power law distribution of war. He argues that ‘techno-                   wars. The restraining effect of nuclear weapons could by
+logical change and contextually activated decision-                      itself be an important mechanism, but this mechanism
+making go a long way toward explaining why power                         may have been further strengthened by the system of
+laws emerge in geopolitical systems’ (Cederman,                          international governance, and especially the United
+2003: 147). As mentioned above, Cederman, Warren                         Nations, which was developed to help defuse conflicts
+& Sornette (2011) find a change-point in 1789, with a                    before they escalated out of control (Goldstein, 2011).
+subsequent increase in the severity of war. They discuss
+potential explanations driving the shift, and argue that                    A second mechanism centers around the role of
+it was driven by a revolution in the technology of                       democracy. Democracies very rarely go to war against
+statecraft, especially in the ability of states to extract               each other, a tendency labelled the democratic peace (see
+resources and organize their militaries.                                 e.g. Maoz & Russett, 1993). Moreover, Mitchell, Gates
+                                                                         & Hegre (1999) show that the relationship between
+   Our analysis identified 1950 and the Korean war as                    democracy and war has become more pronounced over
+the most likely change-point in the distribution of battle-              time, indicating that democracy could be particularly
+deaths in international wars. A change-point in the                      useful for studying change-points in the history of inter-
+period around and following the Korean war fits well                     state wars. In the section ‘Covariate results’ in this article,
+with the thesis developed by Pinker (2011: Ch. 5). Here                  we do indeed find an increasingly pacifying effect of
+the mechanism underlying the change-point would be                       democracy, though this analysis is only indicative, and
+the cultural, political and moral shift that took place                  the results should be treated with caution. In the period
+across especially the Western world. War went from                       before 1950, democracy seems to have no effect on the
+being an appropriate part of statecraft, ‘the continuation               number of battle-deaths. After 1950, however, the wars
+of policy by other means’ (Clausewitz, 1989), to some-                   between more democratic countries have become much
+thing inappropriate or even evil (Mueller, 1989). This                   less violent. The increasing effect of democracy on con-
+shift began in the post-Korean war world, and is partic-                 flict coupled with a simultaneous increase in the number
+ularly associated with the Vietnam war period. As infor-                 of democracies in the world could translate into a more
+mal evidence for the argument Pinker (2011) lists a                      peaceful world in the aggregate.
+multitude of songs and movies from that period with
+clear and explicit anti-war themes, themes that were                     Replication data
+much less present in earlier periods.
+                                                                         The dataset and scripts for the empirical analyses in this
+2 This does not mean that the authors make no attempt to explain the     article, along with the Online appendix, can be found at
+patterns they uncover – Clauset (2017) in particular does discuss this.  http://www.prio.org/jpr/datasets. All analyses were con-
+                                                                         ducted using R v. 3.6.0.
+
+Cunen et al.                                                           13
+
+Acknowledgements                                                       Frigessi, Arnoldo & Nils Lid Hjort (2002) Statistical models
+                                                                          and methods for discontinuous phenomena. Journal of
+We appreciate comments from Aaron Clauset, Jens Kris-                     Nonparametric Statistics 14(1–2): 1–6.
+toffer Haug, Steven Pinker and Michael Spagat. We are
+also very grateful for the detailed and constructive com-              Gaddis, John Lewis (1989) The Long Peace: Inquiries Into the
+ments from three anonymous reviewers.                                     History of the Cold War. Oxford: Oxford University Press.
+
+Funding                                                                Gat, Azar (2006) War in Human Civilization. Oxford: Oxford
+                                                                          University Press.
+We are grateful to the NRC funded five-year project
+FocuStat, and to several of its participants for active                Gleditsch, Kristian Skrede & Steve Pickering (2014) Wars are
+discussions, in particular Gudmund Hermansen and                          becoming less frequent: A response to Harrison and Wolf.
+Emil Stoltenberg, and to the NRC funded ‘Young                            Economic History Review 67(1): 214–230.
+Research Talent’ project MiCE (project no. 275400).
+                                                                       Gleditsch, Nils Petter; Peter Wallensteen, Mikael Eriksson,
+ORCID iD                                                                  Margareta Sollenberg & Håvard Strand (2002) Armed con-
+                                                                          flict 1946–2001: A new dataset. Journal of Peace Research
+Ce´line Cunen https://orcid.org/0000-0002-8215-3080                       39(5): 615–637.
+
+References                                                             Goldstein, Joshua S (2011) Winning the War on War: The
+                                                                          Decline of Armed Conflict Worldwide. New York: Penguin.
+Beck, Nathaniel (1983) Time-varying parameter regression
+   models. American Journal of Political Science 27(3):                Harrison, Mark & Nikolaus Wolf (2012) The frequency of
+   557–600.                                                               wars. Economic History Review 65(3): 1055–1076.
+
+Blackwell, Matthew (2018) Game changers: Detecting shifts              Haynes, Kaylea; Paul Fearnhead & Idris A Eckley (2017)
+   in overdispersed count data. Political Analysis 26(2):                 A computationally efficient nonparametric approach for
+   230–239.                                                               changepoint detection. Statistics and Computing 2(5):
+                                                                          1293–1305.
+Braumoeller, Bear F (2019) Only the Dead. New York: Oxford
+   University Press.                                                   Hjort, Nils Lid & Alexander Koning (2002) Tests for con-
+                                                                          stancy of model parameters over time. Journal of Nonpara-
+Cederman, Lars-Erik (2003) Modeling the size of wars: From                metric Statistics 14(1–2): 113–132.
+   billiard balls to sandpiles. American Political Science Review
+   19(1): 135–150.                                                     Kahn, Herman (1965) On Escalation: Metaphors and Scenarios.
+                                                                          New York: Praeger.
+Cederman, Lars-Erik; T Camber Warren & Didier Sornette
+   (2011) Testing Clausewitz: Nationalism, mass mobiliza-              Killick, Rebecca; Paul Fearnhead & Idris A Eckley (2012)
+   tion, and the severity of war. International Organization              Optimal detection of changepoints with a linear computa-
+   65(4): 605–638.                                                        tional cost. Journal of the American Statistical Association
+                                                                          107(500): 1590–1598.
+Cirillo, Pasquale & Nassim Nicholas Taleb (2016) On the
+   statistical properties and tail risk of violent conflicts. Physica  Levy, Jack S (1983) War in the Modern Great Power System:
+   A: Statistical Mechanics and its Applications 452(4): 29–45.           1495–1975. Lexington, KY: University Press of Kentucky.
+
+Clauset, Aaron (2017) The enduring threat of a large interstate        Maoz, Zeev & Bruce Russett (1993) Normative and structural
+   war. Technical report. One Earth Foundation.                           causes of democratic peace, 1946–1986. American Political
+                                                                          Science Review 87(3): 624–638.
+Clauset, Aaron (2018) Trends and fluctuations in the severity
+   of interstate wars. Science Advances 4(2): 1–9.                     Marshall, Monty G & Keith Jaggers (2003) Polity IV project:
+                                                                          Political regime characteristics and transitions, 1800–2003.
+Clausewitz, Carl (1989) On War. Princeton, NJ: Princeton
+   University Press.                                                   Marx, Karl (1871) The Civil War in France. London: Interna-
+                                                                          tional Working Men’s Association.
+Cunen, Ce´line; Gudmund Hermansen & Nils Lid Hjort
+   (2018) Confidence distributions for change-points and               Mitchell, Sara McLaughlin; Scott Gates & Håvard Hegre
+   regime-shifts. Journal of Statistical Planning and Inference           (1999) Evolution in democracy–war dynamics. Journal of
+   195(1): 14–34.                                                         Conflict Resolution 43(6): 771–792.
+
+Fagan, Brennen; Marina Knight, Niall MacKay & A Jamie                  Mueller, John Paul (1989) Retreat from Doomsday: The Obso-
+   Wood (2018) Change point analysis of historical war                    lence of Major War. New York: Basic Books.
+   deaths. University of York. Working paper available at:
+   https://arxiv.org/abs/1909.02626.                                   Pinker, Steven (2011) The Better Angels of Our Nature: Why
+                                                                          Violence Has Declined. Toronto: Viking.
+Fazal, Tanisha M (2014) Dead wrong? Battle deaths, military
+   medicine, and exaggerated reports of war’s demise. Inter-           Reiter, Dan; Allan C Stam & Michael C Horowitz (2016) A
+   national Security 39(1): 95–125.                                       deeper look at interstate war data: Interstate war data ver-
+                                                                          sion 1.1. Research & Politics 3(4): 1–3.
+
+                                                                       Richardson, Lewis Fry (1948) Variation of the frequency of
+                                                                          fatal quarrels with magnitude. Journal of the American Sta-
+                                                                          tistical Association 43(244): 523–546.
+
+                                                                       Richardson, Lewis Fry (1960) Statistics of Deadly Quarrels. Los
+                                                                          Angeles, CA: Boxwood.
+
+14 journal of PEACE RESEARCH XX(X)
+
+Sarkees, Meredith Reid & Frank Whelon Wayman (2010) Resort             CE´ LINE CUNEN, b. 1988, PhD in Statistics (University of
+   to War: A Data Guide to Inter-state, Extra-state, Intra-state, and  Oslo, 2018); PostDoc, Department of Mathematics,
+   Non-state Wars, 1816–2007. Washington, DC: CQ.                      University of Oslo; recent articles in Annals of Applied
+                                                                       Statistics and Journal of Statistical Planning and Inference;
+Schweder, Tore & Nils Lid Hjort (2016) Confidence, Like-               current research interests: model building, change-point
+   lihood, Probability: Statistical Inference with Confidence          analysis, combination of information.
+   Distributions. Cambridge: Cambridge University Press.
+                                                                       NILS LID HJORT, b. 1953, Professor of Statistics,
+Singer, J David & Melvin Small (1994) Correlates of War                Department of Mathematics, University of Oslo (1991– );
+   Project: International and Civil War Data, 1816–1992. Ann           recent articles in Journal of the American Statistical
+   Arbor, MI: Inter-University Consortium for Political and            Association, Statistical Science, Scandiavian Journal of
+   Social Research codebook and computer file, ICPSR no.               Statistics, Annals of Applied Statistics and Journal of
+   9905 (data also at https://correlatesofwar.org/data-sets/           Multivariate Analysis; current research interests: model
+   COW-war).                                                           building, selection, and averaging; confidence distributions;
+                                                                       Bayesian non-parametrics; stochastic processes; estimation
+Spagat, Michael & Stijn van Weezel (2018) On the decline of            theory; regime shifts.
+   war. Econstor Working Paper Series 18/15 (www.econstor.
+   eu/handle/10419/198568).                                            HÅVARD MOKLEIV NYGÅRD, b. 1983, PhD in
+                                                                       Political Science (University of Oslo, 2014); Research
+Spengler, Oswald (1918) Der Untergang des Abenlandes.                  Director, Peace Research Institute Oslo (PRIO) (2014– );
+   Umrisse einer Morphologie der Weltgeschichte [The                   recent articles in American Journal of Political Science,
+   Decline of the West: Outline of a Morphology of World               Journal of Politics, Annual Review of Political Science and
+   History]. Wien: Braumu¨ller.                                        Journal of Peace Research; current research interests: the
+                                                                       political economy of violence and social order, conflict
+Spirling, Arthur (2007) Bayesian approaches for limited                escalation, forecasting of armed conflict and modelling
+   dependent variable change point problems. Political Analy-          regime shifts.
+   sis 15(4): 387–405.
+
+Tilly, Charles (1995) To explain political processes. American
+   Journal of Sociology 100(6): 1594–1610.
+
+Western, Bruce & Meredith Kleykamp (2004) A Bayesian
+   change point model for historical time series analysis. Polit-
+   ical Analysis 12(4): 354–374.

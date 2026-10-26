@@ -10,6 +10,9 @@ that is not `blocked`.
 
 ## Scenes
 
+Colours and marks come from the institution's kit through the video's `theme`: describe roles
+(the accent, the data colour, a loss) rather than naming colours of your own.
+
 Cut the narration into scenes of one to four sentences, in script order, every sentence in
 exactly one scene. Pace deliberately: a hook scene can hold one sentence; an investigation scene
 can hold three. Add `pauseSeconds` where the viewer needs a beat (after a reveal, before the
@@ -24,7 +27,7 @@ Each scene:
   "purpose": "Show the viewer the pitch in the recruiters' own words before the data arrives.",
   "visual": {
     "category": "typography",
-    "description": "Dark field; the recruiter quote types on in large serif, the channel name small beneath; the word 'leverage' holds and turns amber as the sentence ends.",
+    "description": "Dark field; the recruiter quote types on in large serif, the channel name small beneath; the word 'leverage' holds and turns to the glow as the sentence ends.",
     "onScreenText": ["\"finally create the leverage that you need\""],
     "assetIds": ["quote-card"]
   },

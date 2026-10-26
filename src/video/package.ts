@@ -5,12 +5,13 @@
 // which of the two it is: a draft build carries the private banners and the draft-voice check, a release build carries none.
 import { copyFileSync, existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { site } from '../config/site';
+import { commissionKey, commissionOf, site } from '../config/site';
 import { absolute, contentGraph, matterPath, storyNode } from '../lib/content-graph';
 import { type CtaType, ctaPath, loadCta, resolveCtas } from '../lib/cta';
-import { fileSha, ROOT, sha, toJson } from '../lib/io';
+import { fileSha, readJson, ROOT, sha, toJson, topicDir } from '../lib/io';
 import { loadLedger, mainOutput } from '../lib/publish';
 import { sectionTitle } from '../lib/script';
+import { uploadProblem } from '../lib/uploader';
 import { renderSrt } from './captions';
 import { extractFrame } from './ffmpeg';
 import type { BuildReport } from './report';
@@ -105,6 +106,7 @@ export interface ReviewPackage {
   seconds: number;
   buildReport: string; // sha of video/build-report.json this package was made from; the board compares it
   chapters: Chapter[];
+  tags: string[]; // YouTube keywords, the institution first (keywordsOf)
   sources: { studies: { name: string; file: string }[]; sources: { channel: string; title: string; href: string }[] };
   provenance: {
     narration: BuildReport['narration'] & { publishable: boolean };
@@ -116,6 +118,18 @@ export interface ReviewPackage {
   files: string[];
   /** A Short: its parent story, slug and format, and the full video's live url when the parent is published. */
   short: { parent: string; slug: string; format: string; fullVideo: string | null } | null;
+}
+
+/** YouTube keywords: ordered, de-duplicated without regard to case, each kept while the total as `uploadProblem`
+ *  counts it stays within YouTube's 500 characters; one that does not fit, or holds < or >, is skipped and the later
+ *  ones still tried. */
+export function keywordsOf(k: { institution: string; inquiry: string; question: string; terms: string[] }): string[] {
+  const tags: string[] = [];
+  for (const t of [k.institution, k.inquiry, k.question, ...k.terms].map((x) => x.trim())) {
+    if (!t || tags.some((x) => x.toLowerCase() === t.toLowerCase())) continue;
+    if (!uploadProblem({ title: 't', description: 'd', tags: [...tags, t] })) tags.push(t);
+  }
+  return tags;
 }
 
 const stamp = (s: number) => {
@@ -232,6 +246,13 @@ export function reviewData(
     seconds: report.output?.seconds ?? tl.durationInFrames / tl.fps,
     buildReport: made.buildReport,
     chapters: short ? [] : chapters(seg, tl), // YouTube ignores chapters on a Short
+    tags: keywordsOf({
+      institution: commissionOf(tl.topic)?.name ?? '',
+      inquiry:
+        readJson<{ topics: { label?: string }[] }>(join(topicDir(tl.topic), 'report.json'))?.topics[0]?.label ?? '',
+      question: seg.pkg.question ?? tl.title,
+      terms: seg.pkg.claims.map((c) => c.text).filter((t) => t.length <= 60), // the builder's ranking; a sentence is no keyword
+    }),
     sources: { studies, sources },
     provenance: { narration: report.narration, music: report.music, clearance: report.clearance },
     qa: { ok: report.qa.ok, passed: report.qa.checks.filter((c) => c.ok).length, total: report.qa.checks.length },
@@ -272,7 +293,11 @@ export function renderDescription(
   const release = pkg.status === 'release build';
   // The Links block opens the description: the calls to action (a Short: its parent's matter page) and the record.
   // YouTube allows 5000 bytes; the sources discussed (often forty) live on the topic page, the record link replaces them.
+  // The institution's page sits before the inquiry record (after it when a call to action took the record's place).
+  const c = commissionOf(tl.topic);
   const block = links.links.map((l) => `${l.text}: ${l.url}`);
+  const at = links.links.findIndex((l) => l.type === 'inquiry-record' || l.type === 'inquiry');
+  if (c) block.splice(at < 0 ? block.length : at, 0, `${c.name}: ${absolute(`/commissions/${commissionKey(c)}/`)}`);
   // a Short (brand/design.md 2.6): the hook, the links, the studies, #Shorts; the uploader adds the full video once live
   const body = pkg.short
     ? [seg.pkg.short?.hook ?? tl.title, '', ...block]
@@ -285,6 +310,7 @@ export function renderDescription(
             `PRIVATE REVIEW BUILD, not for publication. Built ${report.generatedAt.slice(0, 10)} from script ${report.fingerprints.script} / storyboard ${report.fingerprints.storyboard}.`,
             '',
           ]),
+      ...(c ? [c.fullName, ...(c.slogan ? [c.slogan] : []), ''] : []),
       ...body,
       '',
       'Studies cited',
@@ -375,6 +401,12 @@ export const renderChecklist = (pkg: ReviewPackage, tl: Timeline) =>
     '',
   ].join('\n');
 
+/** Refuses a package whose title, description or tags YouTube would reject (`uploadProblem`), before it is written. */
+export function assertWithinLimits(m: Parameters<typeof uploadProblem>[0]): void {
+  const problem = uploadProblem(m);
+  if (problem) throw new Error(`package: ${problem}`);
+}
+
 /** Check, copy the mp4, take the thumbnail, then write the package's files: the only part that touches the disk. */
 export function buildReviewPackage(
   seg: Segment,
@@ -394,7 +426,6 @@ export function buildReviewPackage(
   const thumbnail = join(dir, REVIEW_FILES.thumbnail);
   if (card) extractFrame(mp4, (card.start + card.duration - 15) / tl.fps, thumbnail);
   const srt = renderSrt(tl);
-  writeFileSync(join(dir, REVIEW_FILES.captions), srt);
   const pkg = reviewData(seg, tl, report, {
     mp4: reviewMp4Name(videoDir, release),
     mp4Sha: mp4Sha!,
@@ -404,12 +435,16 @@ export function buildReviewPackage(
     generatedAt: new Date().toISOString(),
     fullVideo: seg.pkg.short ? fullVideoUrl(seg.script.topic, seg.pkg.short.parent) : null,
   });
+  // compose and check the description first: a refusal leaves nothing half-written (only the gitignored thumbnail)
+  const links = descriptionLinks(seg.script.topic, seg.script.story, seg.pkg.short?.parent ?? null);
+  const description = renderDescription(pkg, seg, tl, report, links);
+  assertWithinLimits({ title: pkg.title, description, tags: pkg.tags });
+  writeFileSync(join(dir, REVIEW_FILES.captions), srt);
   const other = join(dir, reviewMp4Name(videoDir, !release)); // one mp4 in the folder: the build this package describes
   if (existsSync(other)) unlinkSync(other);
   copyFileSync(mp4, join(dir, pkg.mp4));
   writeFileSync(join(dir, REVIEW_FILES.readme), renderReadme(pkg, tl, report));
-  const links = descriptionLinks(seg.script.topic, seg.script.story, seg.pkg.short?.parent ?? null);
-  writeFileSync(join(dir, REVIEW_FILES.description), renderDescription(pkg, seg, tl, report, links));
+  writeFileSync(join(dir, REVIEW_FILES.description), description);
   writeFileSync(join(dir, REVIEW_FILES.links), toJson(links));
   writeFileSync(join(dir, REVIEW_FILES.checklist), renderChecklist(pkg, tl));
   copyFileSync(join(videoDir, VIDEO_FILES.reportMd), join(dir, REVIEW_FILES.report));

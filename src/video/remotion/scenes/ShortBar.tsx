@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { pointFrames } from '../../chart';
 import { SHORT_LAYOUT as L, type TimelineScene } from '../../types';
-import { brand, countUp, grow, ramp } from '../theme';
+import { countUp, grow, ramp, theme } from '../theme';
 
 const W = L.width - L.gutter - L.right;
 
@@ -32,9 +32,9 @@ export const ShortBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
             left: L.gutter,
             top: top0,
             width: W,
-            fontFamily: brand.sans,
+            fontFamily: theme.sans,
             fontSize: 34,
-            color: brand.fg,
+            color: theme.fg,
             opacity: ramp(t, scene.start + 6, 10),
             lineHeight: 1.2,
           }}
@@ -58,9 +58,9 @@ export const ShortBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
           >
             <div
               style={{
-                fontFamily: brand.sans,
+                fontFamily: theme.sans,
                 fontSize: 32 * k,
-                color: brand.muted,
+                color: theme.muted,
                 marginBottom: 12 * k,
                 whiteSpace: 'nowrap',
                 overflow: 'hidden',
@@ -75,18 +75,18 @@ export const ShortBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    background: brand.raised,
-                    border: `1px solid ${brand.rule}`,
+                    background: theme.raised,
+                    border: `1px solid ${theme.rule}`,
                   }}
                 />
-                <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: w, background: brand.gold }} />
+                <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: w, background: theme.accent }} />
               </div>
               <div
                 style={{
-                  fontFamily: brand.sans,
+                  fontFamily: theme.sans,
                   fontWeight: 600,
                   fontSize: 40 * k,
-                  color: brand.fg,
+                  color: theme.fg,
                   opacity: ramp(t, fills[chart.points.indexOf(p)], 6),
                   fontVariantNumeric: 'tabular-nums',
                   whiteSpace: 'nowrap',
@@ -121,12 +121,12 @@ export const ShortBar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   cx={r + (q % perRow) * (r * 2 + 10)}
                   cy={r + Math.floor(q / perRow) * (r * 2 + 10)}
                   r={r}
-                  fill={brand.gold}
+                  fill={theme.accent}
                   opacity={ramp(t, at + q * 2, 6)}
                 />
               ))}
             </svg>
-            <div style={{ fontFamily: brand.sans, fontSize: 32 * k, color: brand.fg, marginTop: 10 }}>
+            <div style={{ fontFamily: theme.sans, fontSize: 32 * k, color: theme.fg, marginTop: 10 }}>
               <span style={{ fontWeight: 600 }}>{p.display}</span> {p.label}
             </div>
           </div>

@@ -1,0 +1,707 @@
+Source: https://arxiv.org/pdf/2503.05628 (retrieved 2026-10-25)
+
+Superintelligence Strategy: Expert Version (arXiv:2503.05628v2)
+Authors: Dan Hendrycks (Center for AI Safety), Eric Schmidt, Alexandr Wang. Policy paper posted as an arXiv preprint (cs.CY).
+Date: first posted March 5, 2025; this version v2, April 14, 2025.
+Trimmed: 41-page paper; kept the abstract and executive summary (pdf pp. 2-3), the introduction and "AI Is Pivotal for National Security" through strategic competition and destabilization through superweapons (pp. 5-8, ending at the opening of the bioterrorism subsection), existing AI strategies and the whole deterrence chapter on Mutual Assured AI Malfunction (pp. 13-18), and the conclusion with acknowledgements (p. 34); dropped the cover, contents, terrorism and loss-of-control subsections, nonproliferation, competitiveness, bibliography and appendix. Figures appear as their extracted labels.
+
+     Superintelligence Strategy: Expert Version
+
+               Dan Hendrycks Eric Schmidt Alexandr Wang
+
+                                          Abstract
+
+Rapid advances in AI are beginning to reshape national security. Destabilizing AI developments
+could rupture the balance of power and raise the odds of great-power conflict, while widespread
+proliferation of capable AI hackers and virologists would lower barriers for rogue actors to cause
+catastrophe. Superintelligence—AI vastly better than humans at nearly all cognitive tasks—is
+now anticipated by AI researchers. Just as nations once developed nuclear strategies to secure
+their survival, we now need a coherent superintelligence strategy to navigate a new period of
+transformative change. We introduce the concept of Mutual Assured AI Malfunction (MAIM):
+a deterrence regime resembling nuclear mutual assured destruction (MAD) where any state’s
+aggressive bid for unilateral AI dominance is met with preventive sabotage by rivals. Given
+the relative ease of sabotaging a destabilizing AI project—through interventions ranging from
+covert cyberattacks to potential kinetic strikes on datacenters—MAIM already describes the
+strategic picture AI superpowers find themselves in. Alongside this, states can increase their
+competitiveness by bolstering their economies and militaries through AI, and they can engage in
+nonproliferation to rogue actors to keep weaponizable AI capabilities out of their hands. Taken
+together, the three-part framework of deterrence, nonproliferation, and competitiveness outlines a
+robust strategy to superintelligence in the years ahead.
+
+Executive Summary
+
+Rapid advances in AI are poised to reshape nearly every aspect of society. Governments see in these dual-use
+AI systems a means to military dominance, stoking a bitter race to maximize AI capabilities. Voluntary industry
+pauses or attempts to exclude government involvement cannot change this reality. These systems that can
+streamline research and bolster economic output can also be turned to destructive ends, enabling rogue actors
+to engineer bioweapons and hack critical infrastructure. “Superintelligent” AI surpassing humans in nearly
+every domain would amount to the most precarious technological development since the nuclear bomb. Given
+the stakes, superintelligence is inescapably a matter of national security, and an effective superintelligence
+strategy should draw from a long history of national security policy.
+
+Deterrence
+
+A race for AI-enabled dominance endangers all states. If, in a hurried bid for superiority, one state inadvertently
+loses control of its AI, it jeopardizes the security of all states. Alternatively, if the same state succeeds in
+producing and controlling a highly capable AI, it likewise poses a direct threat to the survival of its peers. In
+either event, states seeking to secure their own survival may threaten to sabotage destabilizing AI projects for
+deterrence. A state could try to disrupt such an AI project with interventions ranging from covert operations
+that degrade training runs to physical damage that disables AI infrastructure. Thus, we are already approaching
+a dynamic similar to nuclear Mutual Assured Destruction (MAD), in which no power dares attempt an outright
+grab for strategic monopoly, as any such effort would invite a debilitating response. This strategic condition,
+which we refer to as Mutual Assured AI Malfunction (MAIM), represents a potentially stable deterrence
+regime, but maintaining it could require care. We outline measures to maintain the conditions for MAIM,
+including clearly communicated escalation ladders, placement of AI infrastructure far from population centers,
+transparency into datacenters, and more.
+
+Nonproliferation
+
+While deterrence through MAIM constrains the intent of superpowers, all nations have an interest in limiting
+the AI capabilities of terrorists. Drawing on nonproliferation precedents for weapons of mass destruction
+(WMDs), we outline three levers for achieving this. Mirroring measures to restrict key inputs to WMDs such as
+fissile material and chemical weapons precursors, compute security involves knowing reliably where high-end
+AI chips are and stemming smuggling to rogue actors. Monitoring shipments, tracking chip inventories,
+and employing security features like geolocation can help states account for them. States must prioritize
+information security to protect the model weights underlying the most advanced AI systems from falling
+into the hands of rogue actors, similar to controls on other sensitive information. Finally, akin to screening
+protocols for DNA synthesis services to detect and refuse orders for known pathogens, AI companies can be
+incentivized to implement technical AI security measures that detect and prevent malicious use.
+
+Competitiveness
+
+Beyond securing their survival, states will have an interest in harnessing AI to bolster their competitiveness, as
+successful AI adoption will be a determining factor in national strength. Adopting AI-enabled weapons and
+carefully integrating AI into command and control is increasingly essential for military strength. Recognizing
+that economic security is crucial for national security, domestic capacity for manufacturing high-end AI chips
+will ensure a resilient supply and sidestep geopolitical risks in Taiwan. Robust legal frameworks governing AI
+agents can set basic constraints on their behavior that follow the spirit of existing law. Finally, governments
+can maintain political stability through measures that improve the quality of decision-making and combat the
+disruptive effects of rapid automation.
+
+    By detecting and deterring destabilizing AI projects through intelligence operations and targeted disruption,
+restricting access to AI chips and capabilities for malicious actors through strict controls, and guaranteeing a
+stable AI supply chain by investing in domestic chip manufacturing, states can safeguard their security while
+opening the door to unprecedented prosperity.
+
+Introduction
+
+Artificial Intelligence (AI) is rapidly transforming multiple facets of society, with advances arriving at a pace
+and scale that few anticipated. These developments compel policymakers, technologists, and strategists to
+address a widening spectrum of issues, from economic shifts driven by automation to strategic concerns about
+global competition. As with any transformative technology, AI presents both significant opportunities and
+formidable risks.
+
+    Among these challenges, the dual-use nature of AI—its capacity for both civilian and military applications—
+emerges as a critical factor. Unlike specialized technological tools, AI spans virtually every sector, including
+finance, healthcare, and defense. This broad applicability, coupled with its rapid evolution, creates a risk
+landscape that is expansive and difficult to predict. Strategic actors must contend with potential misuse, risks
+of geopolitical escalation, and the need for frameworks to govern systems whose capabilities may surpass
+human oversight.
+
+    To navigate these complexities, many have turned to analogies. AI has been compared to electricity for
+its general-purpose nature, to traditional software for its economic importance, or to the printing press for its
+cultural impact. While these comparisons provide useful entry points, they fail to emphasize the grave national
+security implications of AI. A more productive analogy lies between AI and catastrophic dual-use nuclear,
+chemical, and biological technologies. Like them, AI will be integral to a nation’s power while posing the
+potential for mass destruction. A brief examination of the historical parallels between AI and the nuclear age
+can highlight the gravity of our current situation.
+
+    In 1933, the leading scientist Ernest Rutherford dismissed the notion of harnessing atomic power as
+“moonshine.” The very next day, Leo Szilard read Rutherford’s remarks and sketched the idea of a nuclear
+chain reaction that ultimately birthed the nuclear age. Eventually figures such as J. Robert Oppenheimer
+recognized the dual nature of their work. Today, AI is at a similar stage. Previously considered science fiction,
+AI has advanced to the point where machines can learn, adapt, and potentially exceed human intelligence
+in certain areas. AI experts including Geoffrey Hinton and Yoshua Bengio, pioneers in deep learning, have
+expressed existential concerns about the technologies they helped create [1].
+
+    As AI’s capabilities are becoming more evident, nations and corporations are heavily investing to gain a
+strategic advantage. The Manhattan Project, which consumed 0.4% of the U.S. GDP, was driven by the need to
+develop nuclear capabilities ahead of others. Currently, a similar urgency is evident in the global effort to lead
+in AI, with investment in AI training doubling every year for nearly the past decade. Several “AI Manhattan
+Projects” aiming to eventually build superintelligence are already underway, financed by many of the most
+powerful corporations in the world.
+
+                                         Strategy
+
+        Deterrence                  Nonproliferation            Competitiveness
+
+         Detect and deter         Reliably know the location    Guarantee access to AI
+ destabilizing AI projects with  of AI chips and prevent rogue  chips through domestic
+(cyber) espionage and sabotage    actors from smuggling them
+                                                                     manufacturing
+
+Figure 2.1: Effective strategies for managing advanced AI can draw from national security precedents in
+handling previous potentially catastrophic dual-use technology.
+
+However, the rapid advancement of AI technologies introduces significant uncertainties for international
+
+stability and security. The introduction of nuclear weapons altered international relations, granting influence
+
+to those who possessed them and leading to an arms race. The Cuban Missile Crisis highlighted how close
+
+the world came to nuclear war. Nuclear annihilation has been avoided thus far despite significant tensions
+
+between nuclear states in part through the deterrence principle of Mutual Assured Destruction (MAD), where
+
+any nuclear use would provoke an in-kind response. In the AI era, a parallel form of deterrence could
+
+emerge—what might be termed “Mutual Assured AI Malfunction” (MAIM)—where states’ AI projects are
+
+constrained by mutual threats of sabotage.
+
+The risks are not limited to state competition; ad-
+
+vanced dual-use technologies can also be exploited
+
+by non-state actors. Just as the spread of nuclear
+
+capabilities raised concerns about misuse, the avail-
+
+ability of AI systems presents new challenges. Mali-
+
+cious actors could use AI to develop weapons of mass
+
+destruction or conduct large-scale cyberattacks on
+
+critical infrastructure. The accessibility of unsecured
+
+or open-weight AI increases these risks, highlighting
+
+the need for careful policies and safeguards.
+
+In the nuclear era, uranium became the linchpin
+
+of atomic power. States that secured it could enforce
+
+regulations, negotiate treaties, and limit the spread of
+
+destructive capabilities. In the realm of AI, comput-
+
+ing resources—especially AI chips—have a similar
+
+strategic weight, fueling rivalries and shaping geopo-    Figure 2.2: The amount of compute used to create AI
+litical calculations. This dynamic is evident in places   models has been increasing exponentially for decades
+such as Taiwan, central to AI chip production, where      [2].
+rising tensions could have extensive consequences.
+
+Nations have a shared interest in controlling access to AI chips to keep them out of the hands of “rogue
+
+actors”—terrorist groups and small pariah states—echoing the logic once applied to uranium.
+
+Despite these challenges, AI offers significant opportunities. Nuclear technology, while introducing the
+
+threat of mass destruction, also provided a new energy source that transformed societies. AI has the potential to
+
+drive advancements across various sectors, from medical breakthroughs to economic automation. Embracing
+
+AI’s benefits is important for economic growth and progress in the modern world.
+
+The challenges AI poses are far too broad, and far too serious, for piecemeal measures. What is needed
+
+is a comprehensive strategy, one that does not shy from the unsettling implications of advanced AI. As with
+
+Herman Kahn’s famous analysis of nuclear strategy [3], superintelligence strategy requires “thinking about the
+
+unthinkable.” In this paper, we propose such a strategy and grapple with these fundamental questions along
+
+the way: What should be done about lethal autonomous weapons? Catastrophic malicious use? Powerful
+
+open-weight AIs? AI-powered mass surveillance? How can society maintain a shared grasp of reality? What
+
+should be done about AI rights? How can humans maintain their status in a world of mass automation?
+
+We argue that the most effective framework for addressing AI’s challenges is to view it through a national
+
+security lens. Drawing on lessons from previous dual-use technologies while tailoring them to the distinct
+
+demands of AI can help safeguard against catastrophic misuse, maintain geopolitical stability, and ensure that
+
+the broader Western world remains at the forefront.
+
+AI Is Pivotal for National Security
+
+AI holds the potential to reshape the balance of power. In the hands of state actors, it can lead to disruptive
+military capabilities and transform economic competition. At the same time, terrorists may exploit its dual-use
+
+Topic                 Tame Technical Subproblem Wicked Problems
+Malicious Use
+Deterrence            Train AI systems to             Coordinate nonproliferation among countries,
+Compute Security      refuse harmful requests         incentivize AI deployers to prevent misuse,
+Information Security                                  validate know-your-customer information
+Military Strength
+                      Prepare cyberattacks for        Define escalation thresholds and signal intent,
+Economic Strength     AI datacenters                  surveil rival AI projects,
+                                                      adapt verification measures as AI evolves
+Loss of Control
+                      Upgrade AI chip firmware to     Enforce export controls to track AI chips,
+                      add geolocation functionality   report suspicious shipments to allies,
+                                                      verify the decommissioning of obsolete AI chips
+
+                      Patch known vulnerabilities in Counter insider threats, balance security measures
+
+                      AI developers’ computer systems with productivity, prevent ideological leaks
+
+                                                      Secure supply chains, adapt military
+
+                      Design military drones          organizational structures to diffuse AI,
+                                                      maintain meaningful human control over
+
+                                                      AI-augmented command and control
+
+                      Improve AI performance on       Draw from legal frameworks for AI agents,
+                      economically valuable tasks     establish and evolve multiagent infrastructure,
+                                                      preserve stability amid automation
+
+                                                      Steer a population of rapidly evolving AIs
+
+                      Research methods to make        during an intelligence recursion,
+
+                      current AIs follow instructions co-evolve safeguards with AI systems,
+
+                                                      red team AIs to identify unknown unknowns
+
+Figure 2.3: AI risk management contains multiple wicked problems and is not primarily a technical challenge.
+Tame technical problems have well-defined boundaries and criteria for success, lending themselves to system-
+atic experimentation. By contrast, wicked problems [4] are open-ended, carry ambiguous requirements, and
+often produce unintended consequences. They demand ongoing adaptation rather than purely technical fixes,
+since each attempt at a solution can give rise to new difficulties.
+
+nature to orchestrate attacks once within the exclusive domain of great powers. It could also slip free of human
+oversight.
+
+    This chapter examines these three threats to national security: rival states, rogue actors, and uncontrolled
+AI systems. It closes by assessing why existing strategies fall short of managing these intertwined threats.
+
+3.1 Strategic Competition
+
+In an international system with no central authority, states prioritize their own strength to ensure their own
+security. This competition arises not from a desire for dominance but from the necessity of safeguarding
+national interests. They exist in an environment where threats can emerge unexpectedly and assistance from
+others is uncertain. Some states may rise in their power and provoke alarm in their rivals, a pattern called the
+Thucydides Trap [5]. Consequently, states seek to preserve their relative power.
+
+    In this environment, the impact of AI on state power looms large. AI may transform the foundations of
+economic and military power. Its ability to automate labor could become the source of economic competitive-
+ness. In the military sphere, it could be used to dominate rivals. We begin by looking at economic power, then
+turn to its greatest military implications.
+
+                                    Problems
+
+ Strategic Competition                         Terrorism                       Loss of Control
+
+States may race on AI capabilities   Rogue actors could use AI systems       An autonomous AI system
+in destabilizing bids for economic      to create bioweapons or launch              could slip from
+
+      and military dominance        cyberattacks on critical infrastructure  meaningful human control
+
+Figure 3.1: States, terrorists, and AIs are threats to national security.
+
+3.1.1 Shifting Basis of Economic Power
+
+AI Chips as the Currency of Economic Power. As AI becomes more and more integrated in the economy,
+the possession of advanced AI chips may define a nation’s power. Historically, wealth and population size
+underpinned a state’s influence; however, the automation of tasks through AI alters this dynamic. A collection
+of highly capable AI agents, operating tirelessly and efficiently, rivals a skilled workforce, effectively turning
+capital into labor. In this new paradigm, power will depend both on the capability of AI systems and the
+number of AI chips on which they could run. Nations with greater access to AI chips could outcompete others
+economically.
+
+3.1.2 Destabilization Through Superweapons
+
+States have long pursued weapons that could confer a decisive advantage over rivals. AI systems introduce new
+avenues for such pursuit, raising questions about whether certain breakthroughs could undermine deterrence
+and reorder global power structures.
+
+AI Could Enable Military Dominance. Advanced AI systems may drive technological breakthroughs that
+alter the strategic balance, similar to the introduction of nuclear weapons, and could generate strategic surprise
+that catches rivals off-guard [6]. Such a “superweapon” may grant two tiers of advantages. One, which might
+be called “subnuclear dominance,” would allow a state to project power widely and subdue adversaries without
+disrupting nuclear deterrence. The second possibility—a “strategic monopoly” on power—would upend the
+nuclear balance entirely and could establish one state’s complete dominance and control, leaving the fate of
+rivals subject to its will.
+
+Possible Superweapons. Subnuclear superweapons—such as an AI-enabled cyberweapon that can suddenly
+and comprehensively destroy a state’s critical infrastructure, exotic EMP devices, and next-generation drones—
+could confer sweeping advantages without nullifying an adversary’s nuclear deterrent. Some superweapons
+might erode mutual assured destruction outright. A “transparent ocean” would threaten submarine stealth,
+revealing the location of nuclear submarines. AIs might be able to pinpoint all hardened mobile nuclear
+launchers, further undermining the nuclear triad. AIs could undermine situational awareness and sow confusion
+by generating elaborate deceptions—a “fog of war machine” [7]—that mask true intentions or capabilities. A
+defensive superweapon possibility is an anti-ballistic missile system that eliminates an adversary’s ability to
+strike back. Lastly, some superweapons remain beyond today’s foresight—“unknown unknowns” that could
+undermine strategic stability.
+
+we cannot run repeated large-scale tests of later stages of the recursion without risking disaster, so it is
+less amenable to the empirical iterative tinkering we usually rely on. Even with our best existing technical
+safeguards in place, if people initiate a full-throttle intelligence recursion, losing control is highly likely and
+the default.
+
+Intelligence Recursion as a Path to Strategic Monopoly. Despite the danger, intelligence recursion remains
+a powerful lure for states seeking to overtake their rivals. If the process races ahead fast enough to produce a
+superintelligence, the outcome could be a strategic monopoly. Even if the improvements are not explosive, a
+recursion could still advance capabilities fast enough to outpace rivals and potentially enable technological
+dominance. First-mover advantage might then persist for years—or indefinitely—spurring states to take bigger
+risks in pursuit of that prize.
+
+Geopolitical Competitive Pressures Yield a High Loss of Control Risk Tolerance. In the Cold War, the
+phrase “Better dead than Red” implied that losing to an adversary was seen as worse than risking nuclear war.
+In a future AI race, similar reasoning could push officials to tolerate a double-digit risk of losing control if the
+alternative—lagging behind a rival—seems unacceptable. If the choice is stark—risk omnicide or lose—some
+might take that gamble. Carried out by multiple competing powers, this amounts to global Russian roulette
+and drives humanity toward an alarming probability of annihilation. In sharp contrast, after the defeat of Nazi
+Germany, Manhattan Project scientists feared the first atomic device might ignite the atmosphere. Robert
+Oppenheimer asked Arthur Compton what the acceptable threshold should be, and Compton set it at three in a
+million (a “6σ” threshold)—anything higher was too risky. Calculations suggested the real risk was below
+Compton’s threshold, so the test went forward. We should work to have our risk tolerance stay near Compton’s
+threshold rather than in double-digit territory. However, in the absence of coordination, whether states trigger
+a recursion depends on their probability of a loss of control. The prospect of a loss of control shows that in the
+push to develop novel technologies, “superiority is not synonymous with security” [18], but the drive toward
+strategic monopoly may override caution, potentially handing the final victory not to any state, but to the AIs
+themselves.
+
+    Therefore, loss of control can emerge structurally, as society gradually yields decision-making to automated
+systems that become indispensable but insidiously acquire more and more effective control. It can occur
+intentionally, such as a rogue actor unleashing an AI to do harm. It can also occur by accident, when a
+fast-moving intelligence recursion loops repeatedly ad mortem. All it takes is one loss of control event to
+jeopardize human security.
+
+   As AI continues to evolve and approach expert-level capabilities, it could redefine national competitiveness
+to be based on a nation’s access to AI chips, and it could discover a “superweapon” that could enable a state
+to have a strategic monopoly. Additionally, AI’s general and dual-use nature amplifies existing risks such as
+bioterrorism and cyberattacks on critical infrastructure. Unfortunately, there is a strong attacker’s advantage
+for bioterrorism and cyberattacks on critical infrastructure. Therefore, access to AI systems that can engineer
+weapons of mass destruction must have restrictions. Moreover, there are several paths to a loss of control of
+powerful AI systems. These factors imply that AI’s importance for national security will become not only
+undeniable but also at least as pivotal as previous weapons of mass destruction.
+
+3.4 Existing AI Strategies
+
+States grappling with terrorist threats, destabilizing weaponization capabilities, and the specter of losing control
+to AI face difficult choices on how to preserve themselves in a shifting landscape. Against this backdrop, three
+proposals have gained prominence: the first lifts all restraints on development and dissemination, treating AI
+like just another computer application; the second envisions a voluntary halt when programs cross a danger
+threshold, hoping that every great power will collectively stand down; and the third advocates concentrating
+development in a single, government-led project that seeks a strategic monopoly over the globe. Each path
+
+carries its own perils, inviting either malicious use risks, toothless treaties, or a destabilizing bid for dominance.
+Here we briefly examine these three strategies and highlight their flaws.
+
+   1. Hands-off (“Move Fast and Break Things”, or “YOLO”) Strategy. This strategy advocates for
+       no restrictions on AI developers, AI chips, and AI models. Proponents of this strategy insist that the
+       U.S. government impose no requirements—including testing for weaponization capabilities—on AI
+       companies, lest it curtail innovation and allow China to win. They likewise oppose export controls
+       on AI chips, claiming such measures would concentrate power and enable a one-world government;
+       in their view, these chips should be sold to whoever can pay, including adversaries. Finally, they
+       encourage that advanced U.S. model weights continue to be released openly, arguing that even if China
+       or rogue actors use these AIs, no real security threat arises because, they maintain, AI’s capabilities are
+       defense-dominant. From a national security perspective, this is neither a credible nor a coherent strategy.
+
+   2. Moratorium Strategy. The voluntary moratorium strategy proposes halting AI development—either
+       immediately or once certain hazardous capabilities, such as hacking or autonomous operation, are
+       detected. Proponents assume that if an AI model test crosses a hazard threshold, major powers will pause
+       their programs. Yet militaries desire precisely these hazardous capabilities, making reciprocal restraint
+       implausible. Even with a treaty, the absence of verification mechanisms [19] means the treaty would be
+       toothless; each side, fearing the other’s secret work, would simply continue. Without the threat of force,
+       treaties will be reneged, and some states will pursue an intelligence recursion. This dynamic, reminiscent
+       of prior arms-control dilemmas, renders the voluntary moratorium more an aspiration than a viable plan.
+
+   3. Monopoly Strategy. The Monopoly strategy envisions one project securing a monopoly over advanced
+       AI. A less-cited variant—a CERN for AI reminiscent of the Baruch Plan from the atomic era—suggests
+       an international consortium to lead AI development, but this has gained less policymaker interest.
+       By contrast, the U.S.-China Economic and Security Review Commission [20] has suggested a more
+       offensive path: a Manhattan Project to build superintelligence. Such a project would invoke the Defense
+       Production Act to channel AI chips into a U.S. desert compound staffed by top researchers, a large
+       fraction of whom are necessarily Chinese nationals, with the stated goal of developing superintelligence
+       to gain a strategic monopoly. Yet this facility, easily observed by satellite and vulnerable to preemptive
+       attack, would inevitably raise alarm. China would not sit idle waiting to accept the US’s dictates once
+       they achieve superintelligence or wait as they risk a loss of control. The Manhattan Project assumes
+       that rivals will acquiesce to an enduring imbalance or omnicide rather than move to prevent it. What
+       begins as a push for a superweapon and global control risks prompting hostile countermeasures and
+       escalating tensions, thereby undermining the very stability the strategy purports to secure.
+
+    Rival states, rogue actors, and the risk of losing control call for more than a single remedy. We propose
+three interconnected lines of effort. First, deterrence: a standoff akin to the nuclear stalemate of MAD, in
+which no power can gamble human security on an unbridled grab for dominance without expecting disabling
+sabotage. Next, nonproliferation: just as fissile materials, chemical weapons, and biological agents have
+long been denied to terrorists by great powers, AI chips and weaponizable AI systems can similarly be kept
+from rogue actors. Finally, competitiveness: states can protect their economic and military power through a
+variety of measures including legal guardrails for AI agents and domestic AI chip and drone manufacturing.
+Our superintelligence strategy, the Multipolar Strategy, echoes the Cold War framework of deterrence,
+nonproliferation, and containment, adapted to AI’s unique challenges.
+
+Deterrence with Mutual Assured AI Malfunction (MAIM)
+
+In the nuclear age, an initial pursuit of monopoly—one nation seeking unchallenged command of nuclear
+weapons—eventually gave way to the standoff of deterrence known as mutual assured destruction (MAD).
+As nuclear arsenals matured and the capability for mutual destruction became undeniable, nations eventually
+
+Do Superintelligence  China Maims Project  China Outpaces U.S.  Recursion Not Controlled  Create Superweapon   Escalation
+Manhattan Project     China Does Not Maim  U.S Outpaces China     Recursion Controlled      No Superweapon      Omnicide
+                                                                  Recursion Controlled                        US Crushed
+                                                                                          Create Superweapon   Escalation
+                                                                Recursion Not Controlled                      Crush China
+                                                                                                                Omnicide
+
+Figure 3.3: Possible outcomes of a U.S. Superintelligence Manhattan Project. An example pathway to
+Escalation: the U.S. Project outpaces China without being maimed, and maintains control of a recursion but
+doesn’t achieve superintelligence or a superweapon. Though global power shifts little, Beijing condemns
+Washington’s bid for strategic monopoly as a severe escalation. The typical outcome of a Superintelligence
+Manhattan Project is extreme escalation, and omnicide is the worst foreseeable outcome.
+
+accepted that any bold attempt to dominate all opposition risked drawing a preemptive strike. A similar state
+of mutual strategic vulnerability looms in AI. If a rival state races toward a strategic monopoly, states will
+not sit by quietly. If the rival state loses control, survival is threatened; alternatively, if the rival state retains
+control and the AI is powerful, survival is threatened. A rival with a vastly more powerful AI would amount to
+a severe national security emergency, so superpowers will not accept a large disadvantage in AI capabilities.
+Rather than wait for a rival to weaponize a superintelligence against them, states will act to disable threatening
+AI projects, producing a deterrence dynamic that might be called Mutual Assured AI Malfunction, or MAIM.
+
+4.1 MAIM Is the Default Regime
+
+Paths to Disabling a Rival’s AI Project. States intent on blocking an AI-enabled strategic monopoly can
+employ an array of tactics, beginning with espionage, in which intelligence agencies quietly obtain details
+about a rival’s AI projects. Knowing what to target, they may undertake covert sabotage: well-placed or
+extorted insiders can tamper with model weights or training data or AI chip fabrication facilities, while hackers
+quietly degrade the training process so that an AI’s performance when it completes training is lackluster. This
+is akin to Stuxnet which aimed to covertly sabotage Iran’s nuclear enrichment program. When subtlety proves
+too constraining, competitors may escalate to overt cyberattacks, targeting datacenter chip-cooling systems
+or nearby power plants in a way that directly—if visibly—disrupts development. Should these measures
+falter, some leaders may contemplate kinetic attacks on datacenters, arguing that allowing one actor to risk
+dominating or destroying the world are graver dangers, though kinetic attacks are likely unnecessary. Finally,
+under dire circumstances, states may resort to broader hostilities by climbing up existing escalation ladders or
+threatening non-AI assets. We refer to attacks against rival AI projects as “maiming attacks.”
+
+Infeasibility of Preventing Maiming. Since above-ground datacenters cannot currently be defended from
+hypersonic missiles, a state seeking to protect its AI-enabled strategic monopoly project might attempt to
+bury datacenters deep underground to shield them. In practice, the costs and timelines are daunting, and
+vulnerabilities remain. Construction timelines can stretch to three to five times longer than standard datacenter
+builds, amounting to several additional years. Costs balloon as well, diverting funds away from the project’s
+AI chips and pushing total expenditures into the several hundreds of billions. Cooling the world’s largest
+supercomputer underground introduces complex engineering challenges that go well beyond what is required
+for smaller underground setups. Should the supercomputer require an order-of-magnitude AI chip expansion,
+retrofitting the facility would become prohibitively difficult. Even those with the wealth and foresight to
+
+                             U.S. Nuclear     MAD vs MAIM                                                  U.S. AI
+                              Aggression                                                                 Aggression
+                                                                                               Mutual
+                    Mutual     U.S. Develops                                               Disarmament    U.S. Begins
+                Disarmament  Nuclear Weapons                                                               Developing
+                                                                                             (Unstable)    Powerful AI
+                 (Unstable)
+                                                                                                                            U.S. AI Project
+                                                                                                                               Sabotaged
+
+Soviet Nuclear  Soviets      Mutual Assured   U.S. Nuclear      Chinese AI  China Begins                 Mutual Assured  U.S. Bid for
+  Aggression    Develop        Destruction    First Strike      Aggression    Developing                 AI Malfunction    Strategic
+                Nuclear           (Stable)     (Unstable)                    Powerful AI                                  Dominance
+                Weapons                                                                                       (Stable)    (Unstable)
+                             Soviet Nuclear      Mutual                                                    Chinese Bid      Mutual
+                                First Strike  Destruction                   Chinese AI                   for Dominance
+                                (Unstable)                                    Project                       (Unstable)   Destruction
+
+                                                                            Sabotaged
+
+Figure 4.1: The strategic stability of MAIM can be paralleled with Mutual Assured Destruction (MAD). Note
+MAIM does not displace MAD but characterizes an additional shared vulnerability. Once MAIM is common
+knowledge, MAD and MAIM can both describe the current strategic situation between superpowers.
+
+pursue this route would still face the potent risks of insider threats and hacking. In addition, the entire project
+could be sabotaged during the lengthy construction phase. Last, states could threaten non-AI assets to deter
+the project long before it goes online.
+
+MAIM Is the Default. The relative ease of (cyber) espionage and sabotage of a rival’s destabilizing AI
+project yields a form of deterrence. Much like nuclear rivals concluded that attacking first could trigger their
+own destruction, states seeking an AI monopoly while risking a loss of control must assume competitors will
+maim their project before it nears completion. A state can expect its AI project to be disabled if any rival
+believes it poses an unacceptable risk. This dynamic stabilizes the strategic landscape without lengthy treaty
+negotiations—all that is necessary is that states collectively recognize their strategic situation. The net effect
+may be a stalemate that postpones the emergence of superintelligence, curtails many loss of control scenarios,
+and undercuts efforts to secure a strategic monopoly, much as mutual assured destruction once restrained the
+nuclear arms race.
+
+4.2 How to Maintain a MAIM Regime
+
+States eventually came to accept that mutual deterrence, while seemingly a natural byproduct of nuclear stock-
+piling, demanded deliberate maintenance. Each superpower recognized that advanced defensive measures—
+particularly anti-ballistic missile (ABM) systems—could unravel the fragile balance that restrained either side
+from a catastrophic first strike. They responded by safeguarding mutual vulnerabilities, culminating in the
+1972 ABM Treaty. By analogy, we should not leave to chance today’s default condition of MAIM: where
+would-be monopolists, gambling not to cause omnicide, can expect their projects to be disabled. Even if
+attempting to harden massive datacenters is extraordinarily prohibitive and unwise, rumors alone can spark
+fears that a rival is going to risk national security and human security. Formal understandings not to pursue
+such fortifications help keep the standoff steady. We now discuss additional measures that curb unintended
+escalation and limit collateral damage, so that MAIM does not unravel into broader conflict.
+
+Preserve Rational Decision-Making. Just as nuclear rivals once mapped each rung on the path to a launch
+to limit misunderstandings, AI powers must clarify the escalation ladder of espionage, covert sabotage, overt
+
+cyberattacks, possible kinetic strikes, and so on. For deterrence to hold, each side’s readiness to maim must be
+common knowledge, ensuring that any maiming act—such as a cyberattack—cannot be misread and cause
+needless escalation. However, clarity about escalation holds little deterrence value if rogue regimes or extremist
+factions acquire large troves of AI chips. Measures to prevent smuggling of AI chips keep decisions in the
+hands of more responsible states rather than rogue actors, which helps preserve MAIM’s deterrent value. Like
+MAD, MAIM requires that destabilizing AI capabilities be restricted to rational actors.
+
+Expand the Arsenal of AI Project Cyberattacks. To avoid resorting to kinetic attacks, states could improve
+their ability to maim destabilizing AI projects with cyberattacks. They could identify AI developers’ projects
+or collect information on the professional activities of AI developers’ scientists. To spy on AI projects at most
+companies, all that is necessary is a Slack or iPhone zero-day software exploit. States could also poison data,
+corrupt model weights and gradients, disrupt software that handles faulty GPUs, or undermine cooling or
+power systems. Training runs are non-deterministic and their outcomes are difficult to predict even without
+bugs, providing cover to many cyberattacks. Unlike kinetic attacks, some of these attacks leave few overt signs
+of intrusion, yet they can severely disrupt destabilizing AI projects with minimal diplomatic fallout.
+
+Build Datacenters in Remote Locations. During the nuclear
+
+era, superpowers intentionally placed missile silos and com-         Large scale attack on many datacenters;
+mand facilities far from major population centers. This principle       threatening non-AI-related assets
+of city avoidance would, by analogy, advise placing large AI
+
+datacenters in remote areas. If an aggressive maiming action         Escalation to Broader Hostilities
+
+ever occurs, that action would not put cities into the crossfire.    Kinetic attacks on datacenters or
+
+Distinguish Between Destabilizing AI Projects and Accept-            corresponding power plants
+
+able Use. The threat of a maiming attack gives states the            Kinetic Threshold
+
+leverage to demand transparency measures from rivals, such as           Cyberattacks on datacenters or
+inspection, so they need not rely on espionage alone to decide       corresponding power plants; deleting
+whether maiming is justified. Coordinating can help states re-
+duce the risk of maiming datacenters that merely run consumer-                          code
+
+facing AI services. The approach of mutual observation echoes        Overt Sabotage Threshold
+
+the spirit of the Open Skies Treaty, which employed unarmed          Model weights stolen; covert attacks to
+overflights to demonstrate that neither side was hiding missile      degrade training runs of destabilizing AI
+deployments. In a similar spirit, increased transparency spares      projects; cyberattacks causing GPUs to
+the broader ecosystem of everyday AI services and lowers the
+risk of blanket sabotage.                                                           fail more often
+
+                                                                     Covert Sabotage Threshold
+
+AI-Assisted Inspections. Speculative but increasingly plau-           Espionage of AI developer workspace
+sible, confidentiality-preserving AI verifiers offer a path to con-  communications, personnel devices, and
+firming that AI projects abide by declared constraints without
+revealing proprietary code or classified material. By analyzing                         facilities
+
+code and commands on-site, AIs could issue a confidentiality- Figure 4.2: An example MAIM escalation
+preserving report or simple compliance verdict, potentially re- ladder with maiming actions.
+vealing nothing beyond whether the facility is creating new
+
+destabilizing models. Humans cannot perform the same role
+
+as easily, given the danger of inadvertently gleaning or leaking
+
+information, so AIs could reshape the classic tension between security and transparency [21]. Information
+
+from these AI inspections could help keep any prospective conflict confined to the disabling of AI development
+
+programs rather than escalating to the annihilation of populations. Such a mechanism can help in the far future
+
+when AI development requires less centralization or requires fewer computational resources.
+
+    MAIM can be made more stable with unilateral information acquisition (espionage), multilateral informa-
+tion acquisition (verification), unilateral maiming (sabotage), and multilateral maiming (joint off-switches).
+Mutual assured AI malfunction, under these conditions, need not devolve into mutual assured human destruc-
+tion.
+
+    A standoff of destabilizing AI projects may arise by default, but it is not meant to persist for decades or
+serve as an indefinite stalemate. During the standoff, states seeking the benefits from creating a more capable
+AI have an incentive to improve transparency and adopt verification measures [22], thereby reducing the risk
+of sabotage or preemptive attacks. In the Conclusion, we illustrate how this standoff might end, allowing AI’s
+benefits to grow without global destabilization.
+
+    This section concludes the principal idea of this paper. Readers could skip to the Conclusion, or read the
+following two sections for a discussion of nonproliferation and competitiveness.
+
+                                      Nonproliferation
+
+Compute Security             Information Security                       AI Security
+
+Reliably know the location         Limit proliferation of          Prevent rogue actors from
+       of AI chips and      potentially catastrophic dual-use  accessing potentially catastrophic
+
+  prevent their smuggling       AI weights to rogue actors           dual-use AI capabilities
+
+Figure 4.3: Due to the unprecedented scale of harm that terrorists armed with AI could cause, several lines of
+defense are necessary to realistically prevent proliferation.
+
+Nonproliferation
+
+States that embrace the logic of mutual sabotage may hold each other at bay by constraining each others’
+intent. But because rogue actors are less predictable, we have a second imperative: limiting their capabilities.
+Much as the Nonproliferation Treaty united powers to keep fissile material out of terrorists’ hands, states can
+find similar common ground on AI. States can restrict the capabilities of rogue actors with compute security,
+information security, and AI security, each targeting crucial elements of the AI development and deployment
+pipeline.
+
+    Compute security is about ensuring that AI chips are allocated to legitimate actors for legitimate purposes.
+This echoes the export controls employed to limit the spread of fissile materials, chemical weapons, and
+biological agents.
+
+    Information security involves securing sensitive AI research and model weights that form the core intellec-
+tual assets of AI. Protecting these elements prevents unwarranted dissemination and malicious use, paralleling
+the measures taken to secure sensitive information in the context of WMDs.
+
+    AI security focuses on implementing safeguards that make AI models controllable and reliable, thereby
+securing their applications in civilian contexts. If AI is used to automate AI research, extensive monitoring and
+control measures can reduce the risk of loss of control. Ensuring that AI systems are resistant to manipulation
+or do not cause catastrophic accidents aligns with the domestic safeguards designed to prevent accidents and
+unauthorized use of catastrophic dual-use technologies.
+
+    By adapting proven strategies from the nonproliferation of WMDs to the realm of AI, we aim to address the
+challenges inherent in AI development and deployment. This nonproliferation playbook provides a structured
+
+Wealth and Power Distribution. To share some of the benefits of automation, policymakers can weigh
+options such as a targeted value-added tax on AI services, complemented by rebates, though the exact structure
+of a tax policy will of course need to be determined in the future. Yet distributing wealth alone can prove
+fleeting if governments later withhold that wealth. A more durable, long-term approach would also distribute
+power: states could equip each individual with a unique key tied to a portion of compute, which that citizen
+alone can activate or lease to others. This arrangement would give them leverage in the economy akin to how
+laborers currently have the power to withhold their work, tempering the concentration of wealth and authority
+that might otherwise arise from the coming automation waves.
+
+   AI competitiveness requires an expansion of drone manufacturing, a legal framework that keeps AI agents
+tethered to human accountability, and an unblinking recognition of how automation can roil the labor market.
+Most importantly, the dependence on Taiwan for advanced AI chips presents a critical vulnerability. A blockade
+or invasion may spell the end of the West’s advantage in AI. To mitigate this foreseeable risk, Western countries
+should develop guaranteed supply chains for AI chips. Though this requires considerable investment, it is
+potentially necessary for national competitiveness.
+
+Conclusion
+
+Some observers have adopted a doomer outlook, convinced that calamity from AI is a foregone conclusion.
+Others have defaulted to an ostrich stance, sidestepping hard questions and hoping events will sort themselves
+out. In the nuclear age, neither fatalism nor denial offered a sound way forward. AI demands sober attention
+and a risk-conscious approach: outcomes, favorable or disastrous, hinge on what we do next.
+
+    A risk-conscious strategy is one that tackles the wicked problems of deterrence, nonproliferation, and
+strategic competition. Deterrence in AI takes the form of Mutual Assured AI Malfunction (MAIM)—today’s
+counterpart to MAD—in which any state that pursues a strategic monopoly on power can expect a retaliatory
+response from rivals. To preserve this deterrent and constrain intent, states can expand their arsenal of
+cyberattacks to disable threatening AI projects. This shifts the focus from “winning the race to superintelligence”
+to deterrence. Next, nonproliferation, reminiscent of curbing access to fissile materials, aims to constrain the
+capabilities of rogue actors by restricting AI chips and open-weight models if they have advanced virology
+or cyberattack capabilities. Strategic competition, echoing the Cold War’s containment strategy, channels
+great-power rivalry into increasing power and resilience, including through domestic AI chip manufacturing.
+These measures do not halt but stabilize progress.
+
+    States that act with pragmatism instead of fatalism or denial may find themselves beneficiaries of a great
+surge in wealth. As AI diffuses across countless sectors, societies can raise living standards and individuals
+can improve their wellbeing however they see fit. Meanwhile leaders, enriched by AI’s economic dividends,
+see even more to gain from economic interdependence and a spirit of détente could take root. During a period
+of economic growth and détente, a slow, multilaterally supervised intelligence recursion—marked by a low
+risk tolerance and negotiated benefit-sharing—could slowly proceed to develop a superintelligence and further
+increase human wellbeing. By methodically constraining the most destabilizing moves, states can guide AI
+toward unprecedented benefits rather than risk it becoming a catalyst of ruin.
+
+Acknowledgements
+
+We would like to specially thank Adam Khoja for his close involvement in the creation of this paper. We
+would also like to thank Suryansh Mehta for his contributions to the analysis and drafting process. We would
+like to thank Corin Katzke, Daniel King, and Laura Hiscott for contributing to the draft. We would also like
+to thank Iskander Rehman, Jim Shinn, Max Tegmark, Andrew Critch, Jaan Tallinn, Nathan Labenz, Robert
+Miles, Aidan O’Gara, Nathaniel Li, Richard Ren, Will Hodgkins, Avital Morris, Joshua Clymer, Long Phan,
+
+

@@ -4,11 +4,11 @@ import { pointFrames } from '../../chart';
 import { cue, lineFrames } from '../../cues';
 import { citationTop } from '../Citation';
 import type { TimelineScene } from '../../types';
-import { GUTTER, countUp, grow, ramp, theme } from '../theme';
+import { alpha, countUp, grow, GUTTER, ramp, theme } from '../theme';
 
-const COLORS = ['red', 'green', 'slate', 'amber'] as const;
+const COLORS = ['loss', 'gain', 'data', 'glow', 'accent2'] as const;
 const named = (c: string) =>
-  (COLORS as readonly string[]).includes(c) ? theme[c as (typeof COLORS)[number]] : theme.slate;
+  (COLORS as readonly string[]).includes(c) ? theme[c as (typeof COLORS)[number]] : theme.data;
 
 /** Horizontal bars for the percent points: the labelled tracks appear with the chart, each bar fills on its
  *  `point:<label>` cue, drawn against options.max (so two charts can share a scale); a count point is drawn as that
@@ -19,7 +19,7 @@ const named = (c: string) =>
 export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const chart = scene.chart!;
-  const color = named(String(scene.options.color ?? 'slate'));
+  const color = named(String(scene.options.color ?? 'data'));
   const bars = chart.points.filter((p) => p.unit === 'percent');
   const dots = chart.points.filter((p) => p.unit === 'count');
   const max = Number(scene.options.max ?? Math.max(...bars.map((p) => p.value)) * 1.25);
@@ -31,7 +31,7 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const chartAt = captionIdx >= 0 ? Math.max(scene.start, Math.min(fills[0] - 20, captionAt + 60)) : scene.start + 6;
   const W = 1000;
   const top = 300;
-  const rows = bars.length + (dots.length ? 1 : 0);
+  const rows = bars.length + dots.length;
   const room = citationTop(scene) - top;
   const inline = rows * 96 > room;
   const rowH = inline ? Math.min(72, room / rows) : 96;
@@ -48,7 +48,7 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
             left: GUTTER,
             top: 150,
             fontSize: 44,
-            color: theme.amber,
+            color: theme.glow,
             opacity: ramp(t, captionAt, 12),
           }}
         >
@@ -115,8 +115,8 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                       bottom: 0,
                       width: w,
                       borderRadius: 6,
-                      background: `linear-gradient(90deg, ${theme.violet}, ${color})`,
-                      boxShadow: `0 0 ${newest ? 34 : 12}px ${color}${newest ? 'AA' : '55'}`,
+                      background: `linear-gradient(90deg, ${theme.accent2}, ${color})`,
+                      boxShadow: `0 0 ${newest ? 34 : 12}px ${alpha(color, newest ? 0.67 : 0.33)}`,
                     }}
                   />
                 </div>
@@ -138,7 +138,7 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
         );
       })}
       {dots.map((p) => {
-        const i = bars.length;
+        const i = bars.length + dots.indexOf(p); // one row per count point
         const at = fills[chart.points.indexOf(p)];
         const a = ramp(t, at, 14);
         return (
@@ -161,12 +161,12 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
                   cx={(22 + j * 44) * k}
                   cy={22 * k}
                   r={16 * k}
-                  fill={theme.amber}
+                  fill={theme.glow}
                   opacity={ramp(t, at + j * 8, 8)}
                 />
               ))}
             </svg>
-            <div style={{ fontSize: 38 * k, color: theme.amber }}>
+            <div style={{ fontSize: 38 * k, color: theme.glow }}>
               <span style={{ fontWeight: 700 }}>{p.display}</span> {p.label}
             </div>
           </div>
@@ -183,8 +183,8 @@ export const Bar: FC<{ scene: TimelineScene }> = ({ scene }) => {
             fontSize: 72,
             fontWeight: 700,
             letterSpacing: 6,
-            color: theme.red,
-            border: `8px solid ${theme.red}`,
+            color: theme.loss,
+            border: `8px solid ${theme.loss}`,
             borderRadius: 16,
             padding: '10px 30px',
             textTransform: 'uppercase',

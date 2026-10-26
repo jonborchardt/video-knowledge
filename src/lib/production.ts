@@ -64,6 +64,7 @@ import { chainOf, discover, loadStories, storiesPath, type Story } from './stori
 import { type Storyboard, type StoryboardPlan, buildStoryboard } from './storyboard';
 import { loadTopic, topicNames, type Topic } from './topics';
 import type { BuildSummary, Clearance } from './build-report';
+import { type Commission, commissionOf } from '../config/site';
 
 /** Why a stage halted, for a loop that decides what to do next without parsing prose. */
 export type HaltKind =
@@ -81,6 +82,7 @@ export type HaltKind =
   | 'lock'
   | 'qa-failed'
   | 'story-left'
+  | 'no-institution' // no commission claims the topic: its videos have no brand to carry
   | 'published'; // the main output is live or scheduled: nothing rebuilds it; a re-release is a new output
 /** A blocked validation: the writer revises, unless the pass has spent its revisions. */
 export const validationHaltKind = (live: ScriptValidation): 'revision-limit' | 'blocking-findings' =>
@@ -1030,7 +1032,15 @@ export interface BoardNext {
   halt: Production['halt'];
   done: boolean;
 }
-export function boardNext(topic: string, storyId: string, root = ROOT): BoardNext {
+/** The stop for a topic no institution claims: the board row and boardNext say the same. */
+const unclaimed = (topic: string) =>
+  `stop: no institution claims ${topic}: add it to commissions in src/config/site.ts`;
+export function boardNext(
+  topic: string,
+  storyId: string,
+  root = ROOT,
+  owner: (topic: string) => Commission | null = commissionOf,
+): BoardNext {
   const short = shortOf(storyId);
   const story = loadStories(topic, root)?.stories.find((s) => s.id === storyId);
   // A follow-up question in another story's chain is produced inside that story's video, never on its own.
@@ -1065,6 +1075,19 @@ export function boardNext(topic: string, storyId: string, root = ROOT): BoardNex
       done: true,
     };
   }
+  if (!owner(topic)) {
+    const next = unclaimed(topic);
+    const stage = prod?.stage ?? 'package';
+    return {
+      topic,
+      story: storyId,
+      stage,
+      next,
+      steps: stepsOf(next, topic, storyId),
+      halt: { kind: 'no-institution', stage, why: `no institution claims ${topic}` },
+      done: false,
+    };
+  }
   const { stage, next, halt } = prod ?? {
     stage: 'package' as const,
     next: ready ? `npm run script -- package ${topic} ${storyId}` : `stop: ${why}`,
@@ -1083,7 +1106,12 @@ interface StoreVideo {
 }
 
 /** The research pipeline for one topic, as the store records it, then every story with its production (if any). */
-export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(root)): TopicBoard {
+export function topicBoard(
+  name: string,
+  root = ROOT,
+  decisions = loadDecisions(root),
+  owner: (topic: string) => Commission | null = commissionOf,
+): TopicBoard {
   const dir = topicDir(name, root);
   const topic = loadTopic(name);
   const checks: Check[] = [];
@@ -1160,6 +1188,7 @@ export function topicBoard(name: string, root = ROOT, decisions = loadDecisions(
       if (decision?.decision === 'parked') n = `parked: ${decision.note}`;
       else if (live?.live) n = `live: ${live.url}`;
       else if (live?.status === 'scheduled') n = live.next;
+      else if (!owner(name)) n = unclaimed(name);
       else if (story.partOf) n = `part of ${story.partOf}: answered in that video`;
       else if (production) n = production.next;
       else if (story.readiness === 'ready') n = `npm run script -- package ${name} ${story.id}`;

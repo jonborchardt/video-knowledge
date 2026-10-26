@@ -54,7 +54,10 @@ export function uploadProblem(m: Pick<UploadMetadata, 'title' | 'description' | 
   const bytes = Buffer.byteLength(m.description, 'utf8');
   if (bytes > LIMITS.description)
     return `description is ${bytes} bytes, YouTube allows ${LIMITS.description}: npm run video -- package writes one that fits`;
-  const tagChars = m.tags.reduce((n, t) => n + t.length + (t.includes(' ') ? 2 : 0), 0);
+  if (m.tags.some((t) => /[<>]/.test(t))) return 'a tag contains < or >, which YouTube refuses';
+  // YouTube counts a space-holding tag with its quotes, and the comma between two tags
+  const tagChars =
+    m.tags.reduce((n, t) => n + t.length + (t.includes(' ') ? 2 : 0), 0) + Math.max(0, m.tags.length - 1);
   if (tagChars > LIMITS.tags) return `tags are ${tagChars} characters together, YouTube allows ${LIMITS.tags}`;
   return null;
 }

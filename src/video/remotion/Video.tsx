@@ -15,7 +15,7 @@ import { Citation } from './Citation';
 import { FONT_FACES, fontCss } from './fonts';
 import { Captions, PortraitBackdrop, PortraitBadge } from './Portrait';
 import { SCENES } from './scenes';
-import { easeOut, theme } from './theme';
+import { alpha, easeOut, setTheme, theme, themeOf } from './theme';
 
 const FADE = 8;
 const TOL = 2; // px at full size
@@ -125,26 +125,26 @@ const SceneView: FC<{ scene: TimelineScene; short: Timeline['short'] }> = ({ sce
   );
 };
 
-/** The pulse backdrop, in segment time so it flows across scene cuts: three soft colour fields drifting on slow
- *  loops over the ink, and a faint dot grid sliding up. */
+/** The pulse backdrop, in segment time so it flows across scene cuts: three soft fields of the kit's colours drifting
+ *  on slow loops over its ground, and a faint dot grid sliding up. */
 const Backdrop: FC = () => {
   const f = useCurrentFrame() / 30;
-  const blob = (color: string, x: number, y: number, r: number) =>
-    `radial-gradient(circle ${r}px at ${x}% ${y}%, ${color}55, transparent 70%)`;
+  const blob = (color: string, x: number, y: number, r: number, a: number) =>
+    `radial-gradient(circle ${r}px at ${x}% ${y}%, ${alpha(color, a)}, transparent 70%)`;
   return (
     <AbsoluteFill
       style={{
         background: [
-          blob(theme.violet, 25 + 12 * Math.sin(f / 7), 30 + 14 * Math.cos(f / 9), 900),
-          blob(theme.red, 80 + 10 * Math.cos(f / 8), 75 + 12 * Math.sin(f / 6), 750),
-          blob(theme.slate, 60 + 18 * Math.sin(f / 11), 10 + 10 * Math.cos(f / 10), 650),
-          theme.bg,
+          blob(theme.accent2, 25 + 12 * Math.sin(f / 7), 30 + 14 * Math.cos(f / 9), 900, 0.24),
+          blob(theme.glow, 80 + 10 * Math.cos(f / 8), 75 + 12 * Math.sin(f / 6), 750, 0.24),
+          blob(theme.accent2, 60 + 18 * Math.sin(f / 11), 10 + 10 * Math.cos(f / 10), 650, 0.16),
+          theme.ground,
         ].join(', '),
       }}
     >
       <AbsoluteFill
         style={{
-          backgroundImage: 'radial-gradient(rgba(255,255,255,0.10) 1.5px, transparent 1.5px)',
+          backgroundImage: `radial-gradient(${alpha(theme.paper, 0.1)} 1.5px, transparent 1.5px)`,
           backgroundSize: '48px 48px',
           backgroundPosition: `0 ${-(f * 12) % 48}px`,
         }}
@@ -156,6 +156,7 @@ const Backdrop: FC = () => {
 /** The whole segment: scenes and their narration placed by the timeline's measured frames. The studio plays the
  *  narration from here; the renderer mutes it and lays one continuous track at assembly. */
 export const Video: FC<Timeline> = (tl) => {
+  setTheme(themeOf(tl.palette)); // the owning institution's kit, before any scene reads the theme
   const portrait = tl.height > tl.width;
   // the embedded brand faces: hold the render until the browser has them (a fallback face would shift every layout)
   useEffect(() => {
@@ -167,7 +168,7 @@ export const Video: FC<Timeline> = (tl) => {
       .catch(() => continueRender(handle));
   }, []);
   return (
-    <AbsoluteFill style={{ background: portrait ? '#172A45' : theme.bg }}>
+    <AbsoluteFill style={{ background: theme.ground }}>
       <style>{fontCss()}</style>
       {portrait ? <PortraitBackdrop /> : <Backdrop />}
       {tl.scenes.map((s) => (

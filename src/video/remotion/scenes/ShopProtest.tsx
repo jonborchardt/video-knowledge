@@ -15,8 +15,8 @@ const RIGHT_X = 1040;
 
 /** A cardboard box, 70 square, its bottom-left at the origin. */
 const Box: FC = () => (
-  <g stroke={theme.amber} strokeWidth={4} strokeLinejoin="round">
-    <rect x={0} y={-70} width={70} height={70} rx={4} fill={theme.bg} />
+  <g stroke={theme.glow} strokeWidth={4} strokeLinejoin="round">
+    <rect x={0} y={-70} width={70} height={70} rx={4} fill={theme.ground} />
     <line x1={0} y1={-48} x2={70} y2={-48} />
     <line x1={35} y1={-70} x2={35} y2={-48} />
   </g>
@@ -73,14 +73,14 @@ export const ShopProtest: FC<{ scene: TimelineScene }> = ({ scene }) => {
             height={cardH}
             rx={22}
             fill={theme.raised}
-            stroke={theme.green}
+            stroke={theme.gain}
             strokeWidth={4}
           />
           <text
             x={CARD.x + CARD.w / 2}
             y={CARD.y + cardH - 48}
             textAnchor="middle"
-            fill={theme.green}
+            fill={theme.gain}
             fontSize={52}
             fontWeight={700}
           >
@@ -92,18 +92,18 @@ export const ShopProtest: FC<{ scene: TimelineScene }> = ({ scene }) => {
             {/* ground */}
             <line x1={120} y1={ground} x2={1800} y2={ground} stroke={theme.line} strokeWidth={4} />
             {/* the shop: wall, awning, open door on the right */}
-            <g stroke={theme.violet} strokeWidth={6} strokeLinejoin="round" fill="none">
+            <g stroke={theme.accent2} strokeWidth={6} strokeLinejoin="round" fill="none">
               <rect x={220} y={top + 90} width={830} height={ground - top - 90} fill={theme.raised} />
-              <path d={`M 190 ${top + 90} L 240 ${top} H 1030 L 1080 ${top + 90} Z`} fill={theme.bg} />
+              <path d={`M 190 ${top + 90} L 240 ${top} H 1030 L 1080 ${top + 90} Z`} fill={theme.ground} />
               {[0, 1, 2, 3, 4, 5, 6].map((i) => (
                 <line key={i} x1={300 + i * 110} y1={top + 4} x2={280 + i * 116} y2={top + 86} strokeWidth={4} />
               ))}
-              <rect x={940} y={ground - 260} width={110} height={260} fill={theme.bg} />
+              <rect x={940} y={ground - 260} width={110} height={260} fill={theme.ground} />
             </g>
             {/* the counter */}
-            <g stroke={theme.slate} strokeWidth={6} strokeLinejoin="round">
-              <rect x={300} y={ground - 170} width={440} height={170} fill={theme.bg} />
-              <rect x={280} y={ground - 190} width={480} height={22} rx={6} fill={theme.slate} />
+            <g stroke={theme.data} strokeWidth={6} strokeLinejoin="round">
+              <rect x={300} y={ground - 170} width={440} height={170} fill={theme.ground} />
+              <rect x={280} y={ground - 190} width={480} height={22} rx={6} fill={theme.data} />
             </g>
             {/* the stack behind the door */}
             {Array.from({ length: shown }, (_, i) => (
@@ -123,10 +123,10 @@ export const ShopProtest: FC<{ scene: TimelineScene }> = ({ scene }) => {
               );
             })}
             {/* the truck, tailgate at the door */}
-            <g stroke={theme.fg} strokeWidth={5} strokeLinejoin="round" fill={theme.bg}>
+            <g stroke={theme.fg} strokeWidth={5} strokeLinejoin="round" fill={theme.ground}>
               <rect x={1340} y={ground - 300} width={300} height={240} rx={8} fill={theme.raised} />
               <path d={`M 1640 ${ground - 200} H 1720 L 1770 ${ground - 130} V ${ground - 60} H 1640 Z`} />
-              <path d={`M 1660 ${ground - 185} H 1712 L 1748 ${ground - 135} H 1660 Z`} fill={theme.slate} />
+              <path d={`M 1660 ${ground - 185} H 1712 L 1748 ${ground - 135} H 1660 Z`} fill={theme.data} />
               <circle cx={1420} cy={ground - 40} r={38} />
               <circle cx={1690} cy={ground - 40} r={38} />
               <circle cx={1420} cy={ground - 40} r={12} fill={theme.fg} />
@@ -138,11 +138,11 @@ export const ShopProtest: FC<{ scene: TimelineScene }> = ({ scene }) => {
               {[-80, -54, -28, -2].map((y, i) => (
                 <rect key={y} x={-64} y={y} width={i === 3 ? 70 : 128} height={10} rx={4} fill={theme.muted} />
               ))}
-              <rect x={10} y={80} width={60} height={14} rx={4} fill={theme.bg} />
+              <rect x={10} y={80} width={60} height={14} rx={4} fill={theme.ground} />
               <g transform={`rotate(-14) scale(${1.8 - 0.8 * stamp})`} opacity={stamp}>
-                <rect x={-96} y={-30} width={192} height={64} rx={6} fill="none" stroke={theme.red} strokeWidth={7} />
-                <rect x={-76} y={-14} width={152} height={10} rx={4} fill={theme.red} />
-                <rect x={-76} y={6} width={104} height={10} rx={4} fill={theme.red} />
+                <rect x={-96} y={-30} width={192} height={64} rx={6} fill="none" stroke={theme.loss} strokeWidth={7} />
+                <rect x={-76} y={-14} width={152} height={10} rx={4} fill={theme.loss} />
+                <rect x={-76} y={6} width={104} height={10} rx={4} fill={theme.loss} />
               </g>
             </g>
           </g>
@@ -173,7 +173,7 @@ export const ShopProtest: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 y1={y + rowH / 2}
                 x2={RIGHT_X + 30 + (w - 60) * strike}
                 y2={y + rowH / 2}
-                stroke={theme.red}
+                stroke={theme.loss}
                 strokeWidth={4}
                 strokeLinecap="round"
                 opacity={strike > 0 ? 1 : 0}

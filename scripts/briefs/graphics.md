@@ -14,8 +14,11 @@ still fails its visual review after three revisions; say so in your reply when y
 2. Reuse an existing component in `src/video/remotion/scenes/` only when it draws what the
    description says. Otherwise write a new one there, in the style of its neighbours (theme colours
    and type from `../theme`, `GUTTER`, `ramp`/`easeOut`, `cue()` and `lineFrames()` from `../../cues`).
+   - Colours and marks come from the owning institution's kit through `theme` (roles such as
+     `theme.glow`, `theme.data`, `alpha(theme.paper, 0.4)`; marks via `staticFile('brand/<slot>.png')`):
+     a graphic never picks its own colours, and a literal hex or rgba fails the test.
    - Text comes from `onScreenText`, figures from `chart.points` (their `display`), never typed into
-     the component. `render.json` `options` carry layout only (colours, counts of columns, which
+     the component. `render.json` `options` carry layout only (theme role names, counts of columns, which
      side), never a figure.
    - Time each element to the narration: name cues on spoken words in `render.json`
      (`"line:2": { "sentence": "s29", "word": "meters" }`); the timeline fails if the word is not

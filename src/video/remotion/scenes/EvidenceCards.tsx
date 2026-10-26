@@ -37,7 +37,7 @@ export const EvidenceCards: FC<{ scene: TimelineScene }> = ({ scene }) => {
             }}
           >
             <svg width={W - 72} height={150}>
-              <G x={(W - 72) / 2} y={75} scale={1.2} color={i === 2 ? theme.amber : theme.slate} />
+              <G x={(W - 72) / 2} y={75} scale={1.2} color={i === 2 ? theme.glow : theme.data} />
             </svg>
             <div style={{ fontSize: 40, color: theme.fg, marginTop: 30, lineHeight: 1.2 }}>{head}</div>
             <div style={{ fontSize: 30, color: theme.muted, marginTop: 14, lineHeight: 1.3 }}>{tail.join(', ')}</div>

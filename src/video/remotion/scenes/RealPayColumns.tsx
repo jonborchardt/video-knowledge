@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { cue } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { GUTTER, grow, ramp, theme } from '../theme';
+import { alpha, grow, GUTTER, ramp, theme } from '../theme';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 /** A row of the BLS real-earnings table: "2026-04    11.254     -0.2   (    3.6,     3.8)" -> month and the
@@ -63,12 +63,12 @@ export const RealPayColumns: FC<{ scene: TimelineScene }> = ({ scene }) => {
           width: (R - L + 40) * axisIn,
           background: theme.fg,
           borderRadius: 2,
-          boxShadow: `0 0 14px ${theme.fg}88`,
+          boxShadow: `0 0 14px ${alpha(theme.fg, 0.53)}`,
         }}
       />
       {rows.map((r, i) => {
         const up = r.value >= 0;
-        const color = up ? theme.green : theme.red;
+        const color = up ? theme.gain : theme.loss;
         const h = (Math.abs(r.value) / maxAbs) * reach * Math.max(0, grow(t, at(i), 16));
         const x = L + pitch * i + (pitch - cw) / 2;
         const label = ramp(t, at(i) + 6, 10);
@@ -84,9 +84,9 @@ export const RealPayColumns: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 height: h,
                 borderRadius: up ? '8px 8px 0 0' : '0 0 8px 8px',
                 background: up
-                  ? `linear-gradient(0deg, ${theme.violet}, ${color})`
-                  : `linear-gradient(180deg, ${theme.violet}, ${color})`,
-                boxShadow: `0 0 ${newest ? 34 : 12}px ${color}${newest ? 'AA' : '55'}`,
+                  ? `linear-gradient(0deg, ${theme.accent2}, ${color})`
+                  : `linear-gradient(180deg, ${theme.accent2}, ${color})`,
+                boxShadow: `0 0 ${newest ? 34 : 12}px ${alpha(color, newest ? 0.67 : 0.33)}`,
               }}
             />
             <div

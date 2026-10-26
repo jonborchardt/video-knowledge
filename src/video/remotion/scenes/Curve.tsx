@@ -4,18 +4,18 @@ import { pointFrames } from '../../chart';
 import { lineFrames } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { citationTop } from '../Citation';
-import { GUTTER, clamp01, countUp, grow, ramp, theme } from '../theme';
+import { alpha, clamp01, countUp, grow, GUTTER, ramp, theme } from '../theme';
 
 const YEAR = /\b(\d{4})\b/;
 type P = { x: number; y: number };
 
-/** The colour an on-screen line speaks in: red for a loss, green for survival, amber otherwise. */
+/** The colour an on-screen line speaks in: loss for a loss, gain for survival, glow otherwise. */
 const tone = (line: string) =>
   /clos|gone|lost|fail|dead|died/i.test(line)
-    ? theme.red
+    ? theme.loss
     : /operat|surviv|still|open/i.test(line)
-      ? theme.green
-      : theme.amber;
+      ? theme.gain
+      : theme.glow;
 
 /** Does the segment a-b pass through the rectangle (sampled; good enough at screen scale)? */
 const hits = (a: P, b: P, r: { x: number; y: number; w: number; h: number }) => {
@@ -151,12 +151,12 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
             <rect x={L - 40} y={T - 40} width={R - L + 80} height={B - T + 40} />
           </clipPath>
           <linearGradient id={`${id}-area`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor={theme.slate} stopOpacity={0.55} />
-            <stop offset="1" stopColor={theme.violet} stopOpacity={0.03} />
+            <stop offset="0" stopColor={theme.data} stopOpacity={0.55} />
+            <stop offset="1" stopColor={theme.accent2} stopOpacity={0.03} />
           </linearGradient>
           <linearGradient id={`${id}-stroke`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor={theme.violet} />
-            <stop offset="1" stopColor={theme.slate} />
+            <stop offset="0" stopColor={theme.accent2} />
+            <stop offset="1" stopColor={theme.data} />
           </linearGradient>
           <filter id={`${id}-glow`} x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation={9} />
@@ -176,7 +176,7 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
             const lit = t >= arrive[i];
             return (
               <g key={pts[i].label} opacity={o}>
-                <line x1={p.x} x2={p.x} y1={B} y2={B + 12} stroke={lit ? theme.slate : theme.muted} strokeWidth={3} />
+                <line x1={p.x} x2={p.x} y1={B} y2={B + 12} stroke={lit ? theme.data : theme.muted} strokeWidth={3} />
                 <text
                   x={p.x}
                   y={B + 48}
@@ -192,9 +192,9 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
           })}
         </g>
         <g clipPath={`url(#${id}-clip)`} opacity={lineIn}>
-          {lost ? <path d={lost} fill={theme.red} opacity={0.16 + 0.05 * pulse} /> : null}
+          {lost ? <path d={lost} fill={theme.loss} opacity={0.16 + 0.05 * pulse} /> : null}
           <path d={area} fill={`url(#${id}-area)`} />
-          <path d={path} fill="none" stroke={theme.slate} strokeWidth={14} opacity={0.6} filter={`url(#${id}-glow)`} />
+          <path d={path} fill="none" stroke={theme.data} strokeWidth={14} opacity={0.6} filter={`url(#${id}-glow)`} />
           <path
             d={path}
             fill="none"
@@ -211,24 +211,24 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 cx={p.x}
                 cy={p.y}
                 r={9 * g}
-                fill={theme.bg}
-                stroke={i === newest ? theme.amber : theme.slate}
+                fill={theme.ground}
+                stroke={i === newest ? theme.glow : theme.data}
                 strokeWidth={4}
               />
             ) : null;
           })}
           {/* the head: a halo, a pulsing ring once it rests, the dot */}
-          <circle cx={head.x} cy={head.y} r={26} fill={theme.slate} opacity={0.35} filter={`url(#${id}-glow)`} />
+          <circle cx={head.x} cy={head.y} r={26} fill={theme.data} opacity={0.35} filter={`url(#${id}-glow)`} />
           <circle
             cx={head.x}
             cy={head.y}
             r={16 + 16 * pulse}
             fill="none"
-            stroke={theme.amber}
+            stroke={theme.glow}
             strokeWidth={3}
             opacity={0.7 * (1 - pulse)}
           />
-          <circle cx={head.x} cy={head.y} r={11} fill={theme.amber} />
+          <circle cx={head.x} cy={head.y} r={11} fill={theme.glow} />
         </g>
       </svg>
       {screen.map((p, i) => {
@@ -246,11 +246,11 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
               fontSize: fs,
               fontWeight: 700,
               lineHeight: 1,
-              color: hot ? theme.amber : theme.fg,
+              color: hot ? theme.glow : theme.fg,
               opacity: a * (hot ? 1 : 0.85),
               transform: `scale(${0.6 + 0.4 * grow(t, arrive[i], 12)})`,
               transformOrigin: d.left ? 'right bottom' : 'left bottom',
-              textShadow: hot ? `0 0 18px ${theme.amber}` : undefined,
+              textShadow: hot ? `0 0 18px ${theme.glow}` : undefined,
               fontVariantNumeric: 'tabular-nums',
               whiteSpace: 'nowrap',
             }}
@@ -287,8 +287,8 @@ export const Curve: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 color: theme.fg,
                 borderLeft: `8px solid ${c}`,
                 borderRadius: 10,
-                background: `linear-gradient(90deg, ${c}44, ${theme.bg}DD)`,
-                boxShadow: `0 0 ${24 + 12 * pulse}px ${c}66`,
+                background: `linear-gradient(90deg, ${alpha(c, 0.27)}, ${alpha(theme.ground, 0.87)})`,
+                boxShadow: `0 0 ${24 + 12 * pulse}px ${alpha(c, 0.4)}`,
                 opacity: a,
                 transform: `translateX(${(1 - a) * (spot.right ? 60 : -60)}px) scale(${0.9 + 0.1 * grow(t, lines[j], 14)})`,
               }}

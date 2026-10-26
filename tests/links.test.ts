@@ -8,7 +8,15 @@ import { readJson, toJson, topicDir } from '../src/lib/io';
 import { loadStories } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
 import { scriptDir } from '../src/lib/script';
-import { descriptionLinks, type DescriptionLinks, renderDescription, type ReviewPackage } from '../src/video/package';
+import { uploadProblem } from '../src/lib/uploader';
+import {
+  assertWithinLimits,
+  descriptionLinks,
+  type DescriptionLinks,
+  keywordsOf,
+  renderDescription,
+  type ReviewPackage,
+} from '../src/video/package';
 import type { BuildReport } from '../src/video/report';
 import type { Segment } from '../src/video/select';
 import type { Timeline } from '../src/video/types';
@@ -79,10 +87,11 @@ describe('links that cannot silently break', () => {
   it('the description opens with the primary call to action and the record link', () => {
     story({ primary: { type: 'evidence', text: 'Every claim and its evidence' } });
     const lines = describe_(descriptionLinks('heat-pumps', 'decision:a', null, root));
-    expect(lines.slice(0, 5)).toEqual([
+    expect(lines.slice(3, 9)).toEqual([
       'Is it?',
       '',
       `Every claim and its evidence: ${matter}`,
+      `Commission on Spending: ${site.url}commissions/spending/`,
       `The full record on this inquiry: ${site.url}heat-pumps/`,
       '',
     ]);
@@ -92,7 +101,7 @@ describe('links that cannot silently break', () => {
     story();
     const links = descriptionLinks('heat-pumps', 'decision:a', null, root);
     expect(links.cta).toBe('default');
-    expect(describe_(links)[2]).toBe(`The evidence and the full answer: ${matter}`);
+    expect(describe_(links)[5]).toBe(`The evidence and the full answer: ${matter}`);
   });
 
   it("a Short links its parent's matter page", () => {
@@ -114,9 +123,88 @@ describe('links that cannot silently break', () => {
     });
     const links = descriptionLinks('heat-pumps', 'decision:a', null, root);
     const lines = describe_(links);
-    const block = lines.slice(2, lines.indexOf('', 2));
-    expect(block.map((l) => l.slice(l.lastIndexOf(' ') + 1))).toEqual(links.links.map((l) => l.url));
+    const block = lines.slice(5, lines.indexOf('', 5));
+    expect(block.map((l) => l.slice(l.lastIndexOf(' ') + 1))).toEqual([
+      ...links.links.slice(0, -1).map((l) => l.url),
+      `${site.url}commissions/spending/`,
+      links.links.at(-1)!.url,
+    ]);
     expect(links.links.map((l) => l.type)).toEqual(['evidence', 'reference', 'inquiry-record']);
+  });
+
+  const record: DescriptionLinks = { cta: 'default', links: [] };
+  const as = (topic: string) =>
+    renderDescription(
+      { status: 'release build', short: null, chapters: [], sources: { studies: [] } } as unknown as ReviewPackage,
+      { pkg: { question: 'Is it?' } } as unknown as Segment,
+      { title: 'T', topic } as Timeline,
+      { music: null } as unknown as BuildReport,
+      record,
+    );
+
+  it('the description opens as the institution', () => {
+    const d = as('heat-pumps');
+    expect(
+      d.startsWith('Commonwealth of Reason: Commission on Spending\nAn inquiry into what things actually cost.\n'),
+    ).toBe(true);
+    expect(d).toContain('https://commonwealthofreason.com/commissions/spending/');
+  });
+  it('an institution without a slogan opens with its name only, and an unclaimed topic with none', () => {
+    expect(as('ai-coding').split('\n').slice(0, 3)).toEqual([
+      'Commonwealth of Reason: Office of Code Pending',
+      '',
+      'Is it?',
+    ]);
+    expect(as('nobody-claims-this')).not.toContain('Commonwealth of Reason:');
+  });
+  it('the institution line sits right before the record, whether it is typed inquiry or inquiry-record', () => {
+    for (const type of ['inquiry', 'inquiry-record'] as const) {
+      const links: DescriptionLinks = {
+        cta: 'default',
+        links: [
+          { type: 'matter', node: null, url: 'https://x.test/m/', text: 'Matter' },
+          { type, node: null, url: 'https://x.test/rec/', text: 'Record' },
+        ],
+      };
+      const d = renderDescription(
+        { status: 'release build', short: null, chapters: [], sources: { studies: [] } } as unknown as ReviewPackage,
+        { pkg: { question: 'Is it?' } } as unknown as Segment,
+        { title: 'T', topic: 'heat-pumps' } as Timeline,
+        { music: null } as unknown as BuildReport,
+        links,
+      ).split('\n');
+      const i = d.indexOf('Record: https://x.test/rec/');
+      expect(d[i - 1]).toBe(`Commission on Spending: ${site.url}commissions/spending/`);
+    }
+  });
+  it('packaging refuses a description over 5000 bytes', () => {
+    const tags = ['Commission on Spending'];
+    expect(() => assertWithinLimits({ title: 't', description: 'x'.repeat(5000), tags })).not.toThrow();
+    expect(() => assertWithinLimits({ title: 't', description: 'x'.repeat(5001), tags })).toThrow(
+      /YouTube allows 5000/,
+    );
+  });
+  it('keywords fit YouTube; a tag too long for the budget is skipped, shorter ones still fit', () => {
+    const terms = Array(80)
+      .fill(0)
+      .map((_, i) => `term number ${i}`);
+    const tags = keywordsOf({ institution: 'Commission on Spending', inquiry: 'Heat pumps', question: 'q', terms });
+    expect(uploadProblem({ title: 't', description: 'd', tags })).toBeNull();
+    expect(tags[0]).toBe('Commission on Spending');
+    expect(keywordsOf({ institution: 'a'.repeat(490), inquiry: 'b'.repeat(20), question: 'c', terms: ['C'] })).toEqual([
+      'a'.repeat(490),
+      'c',
+    ]);
+    // the comma between two tags counts: 490 + 9 + 1 leaves no room for 'c'
+    expect(keywordsOf({ institution: 'a'.repeat(490), inquiry: 'b'.repeat(9), question: 'c', terms: [] })).toEqual([
+      'a'.repeat(490),
+      'b'.repeat(9),
+    ]);
+  });
+  it('a term with < or > is no keyword', () => {
+    expect(
+      keywordsOf({ institution: 'I', inquiry: 'Q', question: 'Why', terms: ['cost < gas', 'heat <b>', 'COP'] }),
+    ).toEqual(['I', 'Q', 'Why', 'COP']);
   });
 
   it('a description always links its matter page, whatever the primary', () => {

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { cue } from '../../cues';
 import type { TimelineScene } from '../../types';
-import { ramp, theme } from '../theme';
+import { alpha, ramp, theme } from '../theme';
 
 const Arrow: FC<{ x1: number; y1: number; x2: number; y2: number; p: number; color: string }> = ({
   x1,
@@ -76,19 +76,19 @@ export const Tree: FC<{ scene: TimelineScene }> = ({ scene }) => {
       <svg width={1920} height={1080}>
         <g opacity={ramp(t, scene.start, 10) * (1 - 0.7 * ramp(t, sell, 15))} transform="translate(700 120)">
           <rect width={520} height={110} rx={28} fill={theme.raised} stroke={theme.line} strokeWidth={2} />
-          <rect x={34} y={30} width={300} height={14} rx={7} fill="rgba(236,233,226,.55)" filter="url(#blur)" />
-          <rect x={34} y={64} width={420} height={14} rx={7} fill="rgba(236,233,226,.35)" filter="url(#blur)" />
+          <rect x={34} y={30} width={300} height={14} rx={7} fill={alpha(theme.paper, 0.55)} filter="url(#blur)" />
+          <rect x={34} y={64} width={420} height={14} rx={7} fill={alpha(theme.paper, 0.35)} filter="url(#blur)" />
         </g>
         <defs>
           <filter id="blur">
             <feGaussianBlur stdDeviation={4} />
           </filter>
         </defs>
-        <Arrow x1={520} y1={400} x2={870} y2={400} p={ramp(t, sell, 9)} color={theme.amber} />
-        <text x={695} y={366} textAnchor="middle" fill={theme.amber} fontSize={34} opacity={ramp(t, sell, 9)}>
+        <Arrow x1={520} y1={400} x2={870} y2={400} p={ramp(t, sell, 9)} color={theme.glow} />
+        <text x={695} y={366} textAnchor="middle" fill={theme.glow} fontSize={34} opacity={ramp(t, sell, 9)}>
           {sellLabel}
         </text>
-        <Node x={960} y={400} r={74} s={pop(s.start + 6)} color={theme.amber} label="YOU" />
+        <Node x={960} y={400} r={74} s={pop(s.start + 6)} color={theme.glow} label="YOU" />
         {below.map((x, i) => {
           const at = tier2 + i * 9;
           return (
@@ -99,13 +99,13 @@ export const Tree: FC<{ scene: TimelineScene }> = ({ scene }) => {
                 x2={960 + (x - 960) * 0.14}
                 y2={490}
                 p={ramp(t, at + 4, 9)}
-                color={theme.slate}
+                color={theme.data}
               />
-              <Node x={x} y={780} r={54} s={pop(at)} color={theme.slate} />
+              <Node x={x} y={780} r={54} s={pop(at)} color={theme.data} />
             </g>
           );
         })}
-        <text x={960} y={900} textAnchor="middle" fill={theme.slate} fontSize={34} opacity={ramp(t, tier2 + 12, 9)}>
+        <text x={960} y={900} textAnchor="middle" fill={theme.data} fontSize={34} opacity={ramp(t, tier2 + 12, 9)}>
           {tierLabel}
         </text>
       </svg>

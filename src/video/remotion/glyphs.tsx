@@ -1,12 +1,12 @@
 // Small SVG glyphs shared by scenes: no logos, no faces, no brands.
 import type { FC } from 'react';
-import { theme } from './theme';
+import { alpha, theme } from './theme';
 
 export const Person: FC<{ x: number; y: number; r?: number; color?: string; opacity?: number }> = ({
   x,
   y,
   r = 26,
-  color = theme.slate,
+  color = theme.data,
   opacity = 1,
 }) => (
   <g transform={`translate(${x} ${y})`} opacity={opacity}>
@@ -19,7 +19,7 @@ export const Person: FC<{ x: number; y: number; r?: number; color?: string; opac
 export const DocStack: FC<{ x: number; y: number; color?: string; scale?: number }> = ({
   x,
   y,
-  color = theme.slate,
+  color = theme.data,
   scale = 1,
 }) => (
   <g transform={`translate(${x} ${y}) scale(${scale})`}>
@@ -45,7 +45,7 @@ export const DocStack: FC<{ x: number; y: number; color?: string; scale?: number
 export const PeopleGrid: FC<{ x: number; y: number; color?: string; scale?: number }> = ({
   x,
   y,
-  color = theme.slate,
+  color = theme.data,
   scale = 1,
 }) => (
   <g transform={`translate(${x} ${y}) scale(${scale})`}>
@@ -58,7 +58,7 @@ export const PeopleGrid: FC<{ x: number; y: number; color?: string; scale?: numb
 export const Spreadsheet: FC<{ x: number; y: number; color?: string; scale?: number }> = ({
   x,
   y,
-  color = theme.slate,
+  color = theme.data,
   scale = 1,
 }) => (
   <g transform={`translate(${x} ${y}) scale(${scale})`}>
@@ -75,8 +75,8 @@ export const Spreadsheet: FC<{ x: number; y: number; color?: string; scale?: num
 
 export const Coin: FC<{ x: number; y: number; r?: number; opacity?: number }> = ({ x, y, r = 11, opacity = 1 }) => (
   <g transform={`translate(${x} ${y})`} opacity={opacity}>
-    <circle r={r} fill={theme.amber} />
-    <circle r={r * 0.6} fill="none" stroke={theme.bg} strokeWidth={r / 6} opacity={0.6} />
+    <circle r={r} fill={theme.glow} />
+    <circle r={r * 0.6} fill="none" stroke={theme.ground} strokeWidth={r / 6} opacity={0.6} />
   </g>
 );
 
@@ -88,12 +88,7 @@ export const Snowball: FC<{ x: number; y: number; r?: number; roll?: number }> =
   </g>
 );
 
-export const Box: FC<{ x: number; y: number; s?: number; color?: string }> = ({
-  x,
-  y,
-  s = 34,
-  color = theme.amber,
-}) => (
+export const Box: FC<{ x: number; y: number; s?: number; color?: string }> = ({ x, y, s = 34, color = theme.glow }) => (
   <g transform={`translate(${x} ${y})`}>
     <rect x={-s / 2} y={-s / 2} width={s} height={s} rx={4} fill={theme.raised} stroke={color} strokeWidth={3} />
     <line x1={0} y1={-s / 2} x2={0} y2={s / 2} stroke={color} strokeWidth={3} />
@@ -110,7 +105,7 @@ export const BlurLines: FC<{
   gap?: number;
   color?: string;
   seed?: number;
-}> = ({ x, y, w, rows, gap = 14, color = 'rgba(236,233,226,.45)', seed = 1 }) => (
+}> = ({ x, y, w, rows, gap = 14, color = alpha(theme.paper, 0.45), seed = 1 }) => (
   <g transform={`translate(${x} ${y})`} filter="url(#blur-lines)">
     <defs>
       <filter id="blur-lines">
