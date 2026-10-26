@@ -482,6 +482,7 @@ interface ReviewJson {
   mp4: string;
   thumbnailSha?: string | null;
   captionsSha?: string | null;
+  tags?: string[];
   files?: string[];
 }
 /** The parent output's live url for a derivative (its description links the full video), else null. */
@@ -527,7 +528,7 @@ export function uploadMetadataOf(
   const text = {
     title: m.title ?? rp.title,
     description,
-    tags: m.tags ?? [],
+    tags: m.tags ?? rp.tags ?? [],
     category: m.category,
     language: m.language,
     playlist: m.playlist,

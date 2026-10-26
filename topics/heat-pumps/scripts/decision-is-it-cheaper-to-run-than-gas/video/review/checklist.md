@@ -1,6 +1,6 @@
 # Review checklist
 
-Is a Heat Pump Cheaper Than Gas, and Does It Pay for Itself?, release build 2026-10-25.
+Is a Heat Pump Cheaper Than Gas, and Does It Pay for Itself?, release build 2026-10-26.
 
 - [ ] Opening: does the cold open land before the music enters, and does the title card read cleanly?
 - [ ] Narration: is every sentence intelligible at normal volume on headphones and on a laptop speaker?

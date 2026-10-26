@@ -352,6 +352,15 @@ describe('uploadMetadataOf', () => {
     expect(m.tags).toEqual([]);
   });
 
+  it("takes the package's tags unless the ledger sets them", () => {
+    const f = join(dir, 'video', 'review', 'review.json');
+    const rp = JSON.parse(readFileSync(f, 'utf8'));
+    writeFileSync(f, JSON.stringify({ ...rp, tags: ['Commission on Spending'] }));
+    expect(uploadMetadataOf(dir, rel, out())!.tags).toEqual(['Commission on Spending']);
+    expect(uploadMetadataOf(dir, rel, out({ tags: ['ai'] }))!.tags).toEqual(['ai']);
+    writeFileSync(f, JSON.stringify(rp));
+  });
+
   it('applies the overrides', () => {
     const m = uploadMetadataOf(dir, rel, out({ title: 'Faster?', descriptionAppend: 'More.', tags: ['ai'] }))!;
     expect(m.title).toBe('Faster?');

@@ -8,7 +8,14 @@ import { readJson, toJson, topicDir } from '../src/lib/io';
 import { loadStories } from '../src/lib/stories';
 import { publicTopicNames } from '../src/lib/topics';
 import { scriptDir } from '../src/lib/script';
-import { descriptionLinks, type DescriptionLinks, renderDescription, type ReviewPackage } from '../src/video/package';
+import { uploadProblem } from '../src/lib/uploader';
+import {
+  descriptionLinks,
+  type DescriptionLinks,
+  keywordsOf,
+  renderDescription,
+  type ReviewPackage,
+} from '../src/video/package';
 import type { BuildReport } from '../src/video/report';
 import type { Segment } from '../src/video/select';
 import type { Timeline } from '../src/video/types';
@@ -79,11 +86,12 @@ describe('links that cannot silently break', () => {
   it('the description opens with the primary call to action and the record link', () => {
     story({ primary: { type: 'evidence', text: 'Every claim and its evidence' } });
     const lines = describe_(descriptionLinks('heat-pumps', 'decision:a', null, root));
-    expect(lines.slice(0, 5)).toEqual([
+    expect(lines.slice(3, 9)).toEqual([
       'Is it?',
       '',
       `Every claim and its evidence: ${matter}`,
       `The full record on this inquiry: ${site.url}heat-pumps/`,
+      `Commission on Spending: ${site.url}commissions/spending/`,
       '',
     ]);
   });
@@ -92,7 +100,7 @@ describe('links that cannot silently break', () => {
     story();
     const links = descriptionLinks('heat-pumps', 'decision:a', null, root);
     expect(links.cta).toBe('default');
-    expect(describe_(links)[2]).toBe(`The evidence and the full answer: ${matter}`);
+    expect(describe_(links)[5]).toBe(`The evidence and the full answer: ${matter}`);
   });
 
   it("a Short links its parent's matter page", () => {
@@ -114,9 +122,46 @@ describe('links that cannot silently break', () => {
     });
     const links = descriptionLinks('heat-pumps', 'decision:a', null, root);
     const lines = describe_(links);
-    const block = lines.slice(2, lines.indexOf('', 2));
-    expect(block.map((l) => l.slice(l.lastIndexOf(' ') + 1))).toEqual(links.links.map((l) => l.url));
+    const block = lines.slice(5, lines.indexOf('', 5));
+    expect(block.map((l) => l.slice(l.lastIndexOf(' ') + 1))).toEqual([
+      ...links.links.map((l) => l.url),
+      `${site.url}commissions/spending/`,
+    ]);
     expect(links.links.map((l) => l.type)).toEqual(['evidence', 'reference', 'inquiry-record']);
+  });
+
+  const record: DescriptionLinks = { cta: 'default', links: [] };
+  const as = (topic: string) =>
+    renderDescription(
+      { status: 'release build', short: null, chapters: [], sources: { studies: [] } } as unknown as ReviewPackage,
+      { pkg: { question: 'Is it?' } } as unknown as Segment,
+      { title: 'T', topic } as Timeline,
+      { music: null } as unknown as BuildReport,
+      record,
+    );
+
+  it('the description opens as the institution', () => {
+    const d = as('heat-pumps');
+    expect(
+      d.startsWith('Commonwealth of Reason: Commission on Spending\nAn inquiry into what things actually cost.\n'),
+    ).toBe(true);
+    expect(d).toContain('https://commonwealthofreason.com/commissions/spending/');
+  });
+  it('an institution without a slogan opens with its name only, and an unclaimed topic with none', () => {
+    expect(as('ai-coding').split('\n').slice(0, 2)).toEqual(['Commonwealth of Reason: Office of Code Pending', '']);
+    expect(as('nobody-claims-this')).not.toContain('Commonwealth of Reason:');
+  });
+  it('keywords fit YouTube; a tag too long for the budget is skipped, shorter ones still fit', () => {
+    const terms = Array(80)
+      .fill(0)
+      .map((_, i) => `term number ${i}`);
+    const tags = keywordsOf({ institution: 'Commission on Spending', inquiry: 'Heat pumps', question: 'q', terms });
+    expect(uploadProblem({ title: 't', description: 'd', tags })).toBeNull();
+    expect(tags[0]).toBe('Commission on Spending');
+    expect(keywordsOf({ institution: 'a'.repeat(490), inquiry: 'b'.repeat(20), question: 'c', terms: ['C'] })).toEqual([
+      'a'.repeat(490),
+      'c',
+    ]);
   });
 
   it('a description always links its matter page, whatever the primary', () => {
