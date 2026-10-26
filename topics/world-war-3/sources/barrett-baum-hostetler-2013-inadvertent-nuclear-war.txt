@@ -1,0 +1,1384 @@
+Source: https://gcrinstitute.org/papers/005_inadvertent.pdf (retrieved 2026-10-25)
+
+Analyzing and Reducing the Risks of Inadvertent Nuclear War Between the United States and Russia
+Authors: Anthony M. Barrett, Seth D. Baum, Kelly R. Hostetler. Global Catastrophic Risk Institute. Published in Science and Global Security 21(2): 106-133 (2013), DOI 10.1080/08929882.2013.798984.
+Date: preprint dated 28 June 2013.
+Note: the authors' preprint; the journal version is paywalled and, per the authors, differs significantly, with model details moved to an online supplement.
+
+Analyzing and Reducing the Risks of Inadvertent Nuclear War
+                                  Between the United States and Russia
+
+                   Anthony M. Barrett,1,*, Seth D. Baum1,2,3 and Kelly R. Hostetler1,2
+
+                                1. Global Catastrophic Risk Institute, http://gcrinstitute.org
+                                2. Center for Research on Environmental Decisions, Columbia University
+                                3. Department of Geography, Pennsylvania State University
+
+           Science and Global Security 21(2): 106-133. This version dated 28 June 2013.
+  Note that the final published version differs significantly from this preprint, with many model
+
+                          details being placed in a separate online supplement.
+
+ABSTRACT
+
+This paper develops a mathematical modeling framework using fault trees and Poisson processes
+for analyzing the risks of inadvertent nuclear war from U.S. or Russian misinterpretation of false
+alarms in early warning systems, and for assessing the potential value of options to reduce the
+risks of inadvertent nuclear war. The model also uses publicly available information on early-
+warning systems, near-miss incidents, and other factors to estimate probabilities of a U.S.-Russia
+crisis, the rates of false alarms, and the probabilities that leaders will launch missiles in response
+to a false alarm. The paper discusses results, uncertainties, limitations, and policy implications.
+
+INTRODUCTION
+
+         War involving significant fractions of the U.S. and Russian nuclear arsenals, which are
+by far the largest of any nations, could have globally catastrophic effects such as severely
+reducing food production for years,1 potentially leading to collapse of modern civilization
+worldwide and even the extinction of humanity.2 Nuclear war between the United States and
+Russia could occur by various routes, including accidental or unauthorized launch; deliberate
+first attack by one nation; and inadvertent attack. In an accidental or unauthorized launch or
+detonation, system safeguards or procedures to maintain control over nuclear weapons fail in
+such a way that a nuclear weapon or missile launches or explodes without direction from leaders.
+In a deliberate first attack, the attacking nation decides to attack based on accurate information
+about the state of affairs. In an inadvertent attack, the attacking nation mistakenly concludes that
+it is under attack and launches nuclear weapons in what it believes is a counterattack.3
+(Brinkmanship strategies incorporate elements of all of the above, in that they involve intentional
+manipulation of risks from otherwise accidental or inadvertent launches.4)
+
+         Over the years, nuclear strategy was aimed primarily at minimizing risks of intentional
+attack through development of deterrence capabilities, though numerous measures were also
+taken to reduce probabilities of accidents, unauthorized attack, and inadvertent war. For purposes
+of deterrence, both U.S. and Soviet/Russian forces have maintained significant capabilities to
+have some forces survive a first attack by the other side and to launch a subsequent counter-
+attack. However, concerns about the extreme disruptions that a first attack would cause in the
+other side’s forces and command-and-control capabilities led to both sides’ development of
+capabilities to detect a first attack and launch a counter-attack before suffering damage from the
+first attack.5
+
+                                                          1
+
+         Many people believe that with the end of the Cold War and with improved relations
+between the United States and Russia, the risk of East-West nuclear war was significantly
+reduced.6 However, it has also been argued that inadvertent nuclear war between the United
+States and Russia has continued to present a substantial risk.7 While the United States and Russia
+are not actively threatening each other with war, they have remained ready to launch nuclear
+missiles in response to indications of attack.8
+
+         False indicators of nuclear attack could be caused in several ways. First, a wide range of
+events have already been mistakenly interpreted as indicators of attack, including weather
+phenomena, a faulty computer chip, wild animal activity, and control-room training tapes loaded
+at the wrong time.9 Second, terrorist groups or other actors might cause attacks on either the
+United States or Russia that resemble some kind of nuclear attack by the other nation by actions
+such as exploding a stolen or improvised nuclear bomb,10 especially if such an event occurs
+during a crisis between the United States and Russia.11 A variety of nuclear terrorism scenarios
+are possible.12 Al Qaeda has sought to obtain or construct nuclear weapons and to use them
+against the United States.13 Other methods could involve attempts to circumvent nuclear weapon
+launch control safeguards or exploit holes in their security.14
+
+         It has long been argued that the probability of inadvertent nuclear war is significantly
+higher during U.S.-Russian crisis conditions,15 with the Cuban Missile Crisis being a prime
+historical example. It is possible that U.S.-Russian relations will significantly deteriorate in the
+future, increasing nuclear tensions. There are a variety of ways for a third party to raise tensions
+between the United States and Russia, making one or both nations more likely to misinterpret
+events as attacks.16
+
+         Although many deterrence system failure modes have been identified, additional research
+could be valuable in identifying residual hazards, quantifying their relative risks, and informing
+policies.17 Many analysts have recommended that analysis be performed of risks of inadvertent
+nuclear war. Hellman18 suggested employing probabilistic risk analysis (PRA) methods, such as
+those used in assessing risks at nuclear power plants. These can assess overall system failure
+probabilities using fault trees to define relationships between failure-initiating events and
+enabling conditions. The methods also incorporate information on system component failure
+rates and interactions, with statistical estimation of system component failure rates and other risk
+model parameters using available empirical data.19 Complete characterization of all relevant
+nuclear weapons system component failure rates and interactions would require significantly
+more information than is publicly available, though such interactions also may be impossible to
+fully predict because of the complexity of relevant systems and their interactions.20 However,
+useful characterization of at least some potential failure modes is provided in the literature on
+inadvertent nuclear war hazards, and relatively limited amounts of such information have yielded
+important insights in previous estimates of probabilities of specific nuclear inadvertent nuclear
+war or other war scenarios.21 This paper incorporates and builds on that work.
+
+         This paper uses mathematical modeling to estimate the annual probability of inadvertent
+nuclear war between the United States and Russia, as well as estimating how much that
+probability could be reduced with specific risk-reduction strategies. Assessing the risks in those
+terms could be useful in comparing options for reducing the risks of inadvertent nuclear war. It
+also facilitates comparison of the risks of nuclear war to other types of global catastrophic risks
+such as asteroids or pandemics, which often can be characterized in terms of annual probability
+of a catastrophic event, i.e. one with impacts above some threshold chosen to distinguish a truly
+catastrophic event from less-consequential events.22
+
+                                                          2
+
+         Some previous work has been done to estimate the annual probability of nuclear war.
+Hellman23 provided a rough estimate of the overall annual probability of nuclear war between the
+United States and Russia. This paper makes use of some of Hellman’s analysis, e.g. regarding
+the probability of a U.S.-Russia crisis, though this paper uses other sources and approaches for
+other components of its risk model, partly in order to assess relative risks of various types of
+inadvertent nuclear war scenarios and to assess potential value of risk-reduction strategies.
+Wallace et al.24 estimated the conditional probability of unresolved serious false alarms arising in
+U.S. or Russian early-warning systems during a crisis, under which conditions a leader might
+face great pressure to launch missiles in response to indications of attack. However, Wallace et
+al. did not estimate the probability of a crisis, nor did they assess the probabilities of other
+scenarios that could provide indications of an attack.
+
+         This paper goes beyond previous nuclear war probability assessments in two main ways:
+First, it applies risk analysis methods using fault trees and mathematical modeling to assess
+relative risks of multiple inadvertent nuclear war scenarios previously identified in the literature.
+Second, it combines the fault tree based risk models with parameter estimates based on the
+literature, characterizing uncertainties in the form of probability distributions, with propagation
+of uncertainties in the fault tree using Monte Carlo simulation methods. This paper also performs
+sensitivity analyses to identify dominant risks under various assumptions.
+
+SCOPE AND APPROACH
+
+Modeled Systems and Scenarios
+
+         The analysis considers characteristics of U.S. and Russian nuclear arsenals, doctrines,
+systems for early warning of attack from the other nation, and systems for command, control,
+communications and intelligence (C3I). The model is based primarily on a synthesis of
+statements regarding the U.S. and Soviet/Russian nuclear arsenals, doctrines, and systems for
+early warning and C3I, which were made by analysts that used unclassified information and
+interviews to construct their own models in the 1980s and 1990s, such as Marsh and Wallace et
+al.25 It presumes that the assumptions of its model continue to apply to the United States and
+Russia, which seems roughly consistent with descriptions of both U.S. and Russian forces over
+the past two decades.26 It is also assumed that at the level of analysis presented here,
+Soviet/Russian early-warning systems and response procedures can be reasonably approximated
+as being functionally equivalent to those of the United States27 despite some known differences
+(e.g. as succinctly summarized by Mian et al.28).
+
+         Both the United States and Russia have systems designed to provide indications of
+missile attack underway, including satellites to detect hot plume gases from a missile launch and
+radar to detect missiles in flight. As with any sensor, both satellite and radar systems are
+susceptible to false positives, so in general the early-warning systems are looking for events that
+resemble missile launches on multiple detector systems, e.g. on both satellite and radar systems,
+at the same time. If indications of an attack seem sufficiently convincing, leaders are contacted
+and briefed on the situation, and must decide whether to launch their own missiles in response to
+the indications of attack.
+
+         Figure 1 shows the basic attack indicator and response decision steps in the U.S. system
+run by the North American Aerospace Defense Command (NORAD). A first indication of a
+
+                                                          3
+
+possible attack from one sensor system prompts a Missile Display Conference (MDC) and
+system operators investigate the information. If that information is found to be a false indication
+of an attack, then nothing further occurs. If the information is corroborated by a second sensor
+system, then a Threat Assessment Conference (TAC) is called. Depending on available
+information and the number of confirmatory attack indications from separate sensor systems,
+NORAD will issue either high or low confidence in its attack threat assessment. With a high
+confidence assessment, NORAD will call a Missile Attack Conference (MAC), including a brief
+to the President and Secretary of Defense, who then decide whether to launch missiles in
+response before the use-it-or-lose-it point after which an incoming nuclear attack could prevent a
+coordinated counter attack.29 (Terms such as “TAC-level” and “MAC-level” events refer to
+Soviet/Russian decision procedure steps that are assumed to be roughly analogous to U.S. steps.)
+
+Attack Indicator               Decisions on Responses to Attack Indicators                        Outcomes
+Generating Events
+
+Indicator(s)       Missile     Promotion  Threat      High                  Missile     Launch    Inadvertent
+of Missile         Display                Assessment  Confidence            Attack      Response  Nuclear War
+Attack                                                                                            No Launch in
+                   Conference             Conference                        Conference            Response to
+                                                                                                  Indicator(s)
+                   Resolve                Low                               No Launch             of Missile
+                   Indicator(s)           Confidence                        Response              Attack
+
+Figure 1. Basic steps in responses to false indicators of missile attack
+
+         Attack indicators may or may not be resolved (identified as a false alarm) before passage
+of the decision time, i.e. the time available for leaders to decide whether to launch missiles in
+response to indicators of an attack before the use-it-or-lose-it point.30 If attack indicators remain
+unresolved before elapse of the decision time, then leaders must decide whether to launch a
+counter-attack despite uncertainty. Depending on the warning system used and the apparent
+location of the attack indicated, decision times can range from up to a half an hour for an
+intercontinental ballistic missile (in an “optimistic” case) down to effectively zero time between
+confirmed detection of a submarine-launched ballistic missile (or an equivalent attack launched
+very near that nation’s borders) and the time when the order for a coordinated counter-attack
+would need to be given.31
+
+         It is assumed that the United States and Russia use a combination of Launch Under
+Attack (LUA) and Launch On Warning (LOW) capabilities and postures,32 along with decisions
+by leaders on whether to actually launch in response to early warning attack indicators or to ride
+out the indicated incoming attack instead. Both LUA and LOW postures are designed to allow a
+missile launch in response to a perceived attack once attack indicators are provided by early
+warning systems and before the perceived attack is expected to impact or disable command and
+communication capabilities (neither the LUA nor LOW postures rely on “riding out” an attack
+before launching a counter-attack). The primary difference between the LUA and LOW postures
+is in the level of early warning system evidence of impending attack required to pass the attack
+indication signal detection threshold (at which point “decision time” begins), and the amount of
+time required to obtain that level of evidence. With LOW, indications of an attack with only one
+“family of sensors”, i.e. either satellite or radar, would be sufficient evidence to decide whether
+
+                                          4
+
+or not to give the launch order; with LUA, attack indications from two separate families of
+sensors, i.e. both satellite and radar, are required.33 Launch Under Attack takes more time to
+collect evidence than Launch On Warning (i.e. LUA provides less decision time than LOW,
+therefore LUA is more susceptible to disruptions from short flight time attacks. However, LUA
+is more effective at ruling out false alarms because it collects more early-warning data than
+LOW. It is assumed here that the United States and Russia use the less responsive and less false-
+positive prone LUA posture during periods of normal or low tension and the more-responsive but
+more error-prone LOW posture during periods of high tensions or crisis.34 There is some
+uncertainty and debate about whether and when the United States and the USSR/Russia
+employed or employ LUA/LOW postures.35 At least some of this uncertainty is may be
+intentional and cultivated by defense planners to complicate the adversaries’ planning efforts.36
+This uncertainty is addressed implicitly in the model by assuming that both nations use
+LUA/LOW capabilities and postures but by also including model parameters representing the
+probability that leaders would launch a counterattack in response to attack indicators. It assumes
+that there is some probability that leaders would choose to ride out the apparent incoming attack
+and rely on second-strike capabilities, for example, instead of launching a counter-attack before
+the use-it-or-lose-it point). The analysis adapts the launch decision time and event duration time
+model of Marsh and Wallace et al. Assumptions are made about the distribution of decision
+times, based on decision time parameter values given by Wallace et al. In cases where a MAC is
+due to an unresolved MDC during a U.S.-Russia crisis, this paper assumes that neither the United
+States nor Russia will launch an attack in response to the unresolved MDC before the decision
+time elapses.
+
+         The appendix contains additional information on modeled early warning systems,
+response procedures, and scenarios.
+
+Qualitative Modeling Assumptions
+
+         Synthesizing available information as given above and in the Appendix, the following are
+the base-case assumptions about the combinations of circumstances and false alarms assumed to
+be regarded as sufficient evidence to produce a MAC. Under low U.S.-Russia tensions, some
+fraction of TACs from typical false positive events could be considered serious enough to be
+promoted to a MAC. Under high U.S.-Russia tensions, some fraction of TACs from typical false
+positives, or one unresolved MDC, could be considered serious enough to be promoted to a
+MAC. In addition, regardless of tension level, the analysis assumes that some fraction of possible
+nuclear terrorist attacks could produce indications of nuclear attack from the other nation.
+
+         The preceding describes the base-case or “Danger Calm” case set of assumptions used in
+this paper. For sensitivity analysis, this paper also considers a “Safe Calm” case where it is
+assumed that launch of missiles by the United States or Russia in response to mistaken indicators
+of attack during low U.S.-Russia tensions is essentially impossible, i.e. that U.S. and Russian
+leadership would only believe early warning system indications of attack during a U.S.-Russia
+crisis. The Safe Calm case is roughly consistent with the implicit assumptions of Wallace et al.,
+Hellman and other analysts that focus on the risk of an inadvertent launch due to false alarms
+during crises, though some analysts also consider cases where U.S. or Russian leaders would
+have some probability of believing false alarms of attack during low U.S.-Russia tensions.37 The
+analysis assumes that in the Danger Calm base case, the annual rate of launch of U.S. or Russian
+missiles in response to mistaken indicators of nuclear attack is the sum of the rates of such
+
+                                                          5
+
+launches during both low U.S.-Russia tensions and during U.S.-Russia crisis periods. In the Safe
+Calm sensitivity case, the annual rate of inadvertent nuclear war is simply equal to the rate of
+inadvertent launches during U.S.-Russia crisis periods.
+
+         The probability that there is a U.S.-Russia crisis at any particular point in time is treated
+as an independent or exogenous variable in the model. Although some real-world crisis
+probability factors could be affected by U.S. and Russian decisions, such as escalation or de-
+escalation strategies employed in a crisis, such factors are not addressed in the current model.
+Furthermore, the probability of a crisis has several factors that are exogenous to U.S. and
+Russian decisions, such as probabilities of conflicts affecting Russian interests in the Baltic
+states.38
+
+         This paper considers two basic types of events that could cause serious mistaken
+indications of attack by the other nation. First is a generic category of usual false alarm events
+defined to include the kinds of events that caused historical false-alarms, in order to incorporate
+publicly available empirical data on frequencies of false alarm indications in U.S. systems
+between 1977 and 1983.39 The second category of event is nuclear terrorist attacks, some of
+which could be perceived by the United States or Russia as an indication of an attack from the
+other nation. Such scenarios could include overcoming one nation’s security measures and
+launching one or more of their missiles at the other nation40 or potentially other means. Estimates
+of probabilities of nuclear terrorist attack were given by national security experts surveyed by
+Lugar;41 a roughly consistent range of estimates resulted from the mathematical modeling of
+Bunn42 and from the estimates of Allison43 and Garwin.44 Presumably, there would be a number
+of factors used to determine the resemblance of a nuclear terrorist attack to an attack from other
+nations, including decision time. Those factors are not specifically addressed, partly because of
+paucity of data and partly to avoid assisting terrorists. Instead, at the risk of inaccuracy, the
+model makes simple assumptions to derive the associated parameter estimate ranges.
+
+Fault Tree Representation of Inadvertent Nuclear War Scenarios
+
+Figure 2 is a compact graphical representation of the inadvertent nuclear war pathways. The
+figure is a simple fault tree constructed to analyze the probability of inadvertent nuclear war
+between the United States and Russia (the “top event”, in fault tree terminology) as a function of
+the probabilities of various conditions and events (which are below the top event in the fault
+tree). The relationship between the conditions and events is expressed in all-caps Boolean terms,
+including “AND”, “OR”, and “NOT”. For example, the inadvertent launch of U.S. missiles in
+response to mistaken indicators of nuclear attack occurs if a TAC-level false-alarm event occurs
+in combination with two specific failure conditions: if the false alarm is promoted to the level of
+a MAC, and if a decision to launch is made in response to the MAC-level false indicators of
+attack. The Boolean algebra is then used in event rate and failure condition probability
+calculations, described in the next section. The fault tree shows this paper’s two main categories
+of false alarms, the “usual” false alarms and nuclear terrorist attacks. The fault tree also shows
+two U.S.-Russia tension levels, low tension and crisis.
+
+                                                          6
+
+                                                 Inadvertent nuclear war (i.e. launch in response
+                                                 to mistaken indicators of nuclear missile attack)
+
+                                                               OR
+
+                              Launch in response to mistaken       Launch in response to mistaken
+                              MAC-levelindicators of nuclear       MAC-levelindicators of nuclear
+                              missile attack during low US-        missile attack during US-Russia
+                              Russia tensions                      crisis
+
+                                            AND     NOT                                             AND
+                                                 US-Russia
+Mistaken TAC-     Promotion   Launch             crisis        Mistaken TAC-        Promotion            Launch
+level indicators  of TAC to   response to                      level indicators of  of TAC to            response to
+of nuclear        MAC during  MAC-level                        nuclear attack       MAC                  MAC-level
+missile attack    low US-     indicators                       from other side      during US-           indicators
+during low US-    Russia      during low US-                   during US-Russia     Russia               during US-
+Russia tensions   tensions    Russia tensions                  crisis               crisis               Russia crisis
+
+       OR                                                              OR
+Mistaken TAC-
+level indicators              Mistaken TAC-levelindicators of      Mistaken TAC-levelindicators of nuclear
+of nuclear                    nuclear missile attack due to        missile attack due to usual false alarm
+missile attack                nuclear terrorist attack             events during US-Russia crisis
+due to usual
+false alarm                                    AND                                                  OR
+events during
+low US-Russia                 Nuclear       Resemblance            TAC-level mistaken                    MDC-level mistaken
+tensions                      terrorist     of nuclear             indicators of nuclear                 unresolved indicators
+                              attack on US  terrorist attack       missile attack due to                 of nuclear missile
+                              or Russia     to TAC-level           usual false alarm events              attack during US-
+                                            indicators of          during US-Russia crisis               Russia crisis
+                                            nuclear missile
+                                            attack                                                       AND
+
+                                                                   MDC-level                             Duration of
+                                                                   indicator of                          indicator
+                                                                   nuclear missile                       exceeds implied
+                                                                   attack                                decision time
+
+Figure 2. Simple fault tree of inadvertent nuclear war pathways and conditions
+
+Mathematical Modeling of Event Rates and Probabilities
+
+         Given the large uncertainties in critical model forms and parameters, the analysis does
+not seek single best-estimate model parameter values, but rather seeks credible input parameter
+ranges to produce a range of model output estimates.45 Exploratory, sensitivity and uncertainty
+analyses are performed to identify which input uncertainties have the greatest influence on the
+uncertainty of the results and to assess the robustness of conclusions given model limitations and
+uncertainties.
+
+         Following the example of several earlier probabilistic models of inadvertent nuclear
+war,46 it is assumed that the occurrence of mistaken attack indicators are independent random
+events with constant occurrence rates, which this paper models as Poisson arrival processes.47
+There are several types of mistaken attack indicators, each of which occur at their own rates, as
+in a merging of Poisson processes. There is also some probability that any particular mistaken
+attack indicator will be part of a combination of other events that produce inadvertent nuclear
+war, as in a splitting or thinning of Poisson processes. These ideas are developed more formally
+in the following description.
+
+                                                 7
+
+         Let the arrival rate of a type of event A (e.g. a false indication of an attack from the other
+nation) be the expected or average number of events per year x. In a Poisson process, the
+probability of an event A occurring during a period of time t is then given by the cumulative
+distribution function FA(t) of the exponential lifetime distribution:48
+
+                                                                                                             (Eq. 1)
+         For any given type of event A, suppose there are sets of subtypes of events Ai, any of
+which would be considered an instance of event type A. Let xi be the arrival rate of event type Ai.
+Note that event types Ai are linked by OR gates to event types A in the fault tree, meaning that an
+instance of event A will have occurred if there is an occurrence of event type A1, or type A2, or
+A3, etc. Equivalently, consider the Poisson process producing event A to represent a merging or
+aggregation of the Poisson processes producing events Ai so that the arrival rate x equals the sum
+over i of xi. As indicated in the fault tree in Figure 2, the model assumes there are three types of
+false attack indicators (i.e. A1 denotes Threat Assessment Conference level attack indicators, A2
+denotes Missile Display Conference level attack indicators that normally would not be treated as
+TACs but might be if not quickly resolved during a crisis, and A3 denotes nuclear terrorist
+attacks).
+         Furthermore, suppose that for a particular type of event Ai, conditions Cij are necessary
+for a specific event of type Ai to be considered an occurrence of event type A. Let pij be the
+probability of condition Cij. For example, the model assumes that one condition for the
+occurrence of inadvertent nuclear war is that given a false indication of attack, there is also a
+failure to prevent a launch of missiles in response to the mistaken indications of attack. Note that
+conditions Cij are linked by AND gates to events Ai in the fault tree, meaning e.g. that an instance
+of inadvertent nuclear war only occurs if there is a false indication of attack, and there is a launch
+of missiles in response to the mistaken indications of attack. Equivalently, consider the Poisson
+processes producing events Ai under conditions Cij to represent a splitting, disaggregation, or
+thinning of those Poisson processes so that the effective arrival rate of events Ai as events of type
+A is the product of xi and pij. Incorporating all the above, the arrival rate x is given by
+
+                                                                                                             (Eq. 2)
+         For example, consider the probability FNRA(t) of a non-resolved MDC-level alarm (NRA)
+occurring during a period of time t in either the United States or Russia. The OR statement
+indicates that the two nations’ processes are merged. x2 is the arrival rate of MDC-level alarms in
+each nation. p[NR] is the conditional probability that a particular MDC-level false alarm would
+not be resolved, given false alarm event A2. The annual (t = 1) probability of this event can be
+estimated using the following equation:
+
+                                                                                                             (Eq. 3)
+         MDC false alarm resolution times are assumed to be exponentially distributed with a
+mean resolution time y.49 So, for decision time w, the probability p[NR] that a particular MDC
+false alarm would still be non-resolved (NR) before decision time elapses is
+
+                                                                                                             (Eq. 4)
+         For probability of conditions with some duration, the analysis assumes that the
+probability of a condition at any point in time is the product of the annual rate or probability of
+the condition and the duration of the condition if it occurs. For example, the probability that there
+is a U.S.-Russia crisis at any point in time is the product of the annual probability of a crisis and
+the duration of a crisis if one occurs (where duration is in terms of fraction of a year).
+
+                                                          8
+
+         For probability of other conditions (and for most other model parameters), this paper uses
+the following procedures to estimate probability distributions for use in Monte Carlo simulation
+uncertainty of model inputs and outputs. Where limited estimates or data are available, such as
+from surveys or judgment of analysts50 or small empirical samples,51 the model used here
+generally represents parameters using one of the following: uniform distributions that define only
+the lower and upper bounds of the parameter value; triangular distributions that define a most-
+likely value as well as lower and upper bounds; or probabilistic sampling directly from the
+empirically observed historical data.52 In addition, for conditional probabilities of occurrence p
+for which effectively zero historical occurrences have been observed out of n total cases when it
+could have occurred, this paper uses a probability distribution function f(p) given by
+
+                                                                                                             (Eq. 5)
+which can be derived as a Bayesian posterior distribution with a uniform prior and binomial
+likelihood function.53 The main uses of Equation 5 in this paper are the estimation of (A) the
+conditional probability that TAC-level attack indicators will be promoted to a MAC, and (B) the
+conditional probability of leaders’ decision to launch in response to mistaken MAC-level
+indicators of being under attack.
+
+         These model parameter estimation procedures have several advantages. First, they allow
+the use of available empirical data, even where data are very limited and/or where no failure
+events are known, to estimate failure rates and event probabilities. Second, they allow estimation
+of uncertainties in model parameters, at least in terms of possible ranges for parameter values,
+which is generally recommended for quantitative risk and simulation models with a high degree
+of uncertainty.54 The analysis includes exploratory, sensitivity and uncertainty analyses.
+
+         However, some probabilities or failure rates are likely to be over-estimated (e.g.
+parameters for which uniform probability distributions are used). Nevertheless, the overall risk
+model may result in under-estimation of the overall risks of inadvertent nuclear war because of
+the many possible failure modes that the model does not account for. On balance, less weight
+should be given to specific model output values than to ranges and overall trends in results.
+
+Modeled Risk Reduction Measures
+
+         For inadvertent nuclear war risk reduction, the analysis focuses on two measures that
+appear to have the following characteristics: they have potential to reduce inadvertent nuclear
+war risks; they have not received much attention or modeling in previous publicly available
+analyses; and they seem (at least initially) relatively unlikely to introduce the kinds of risk-
+inducing strategic instabilities that critics have argued would result from some “de-alerting”
+measures and even with total nuclear disarmament.55
+
+         The first measure is the suggestion of Mosher et al. for either, or preferably both, of the
+United States and Russia to move and keep strategic ballistic missile submarines (SSBNs) far
+enough away from each other’s coasts to substantially increase the amount of time between when
+the launch of submarine-launched ballistic missiles (SLBMs) would be detectable and when they
+would arrive at their targets. In other words, the move could effectively increase counterattack
+launch decision time for indicated SLBM attacks. Limited decision time is an important
+inadvertent nuclear war risk factor for both SLBMs and land-based ICBMs, especially for short
+flight time SLBMs.56 There is some potential for verification of exchanged information on
+location of SSBNs to make the overall implementation of the SSBN moves credible to the other
+nation, unlike some de-alerting measures that would be unobservable by the other nation and
+
+                                                          9
+
+therefore perhaps not credible.57 Both Russian and U.S. SLBMs have sufficient range to be
+launched from inter-continental ballistic missile (ICBM) distances, i.e. from the continental
+United States to locations in Russia or vice versa. This paper assumes that moving SSBNs would
+increase decision times, and therefore would increase the probability that any particular MDC
+would be resolved before decision time elapses, but moving SSBNs would not change the
+underlying annual MDC occurrence rates or resolution times.
+
+         The second inadvertent nuclear war risk reduction measure is the suggestion of Podvig
+for part-time lowering of alert level. This paper considers cases where one or both nations would
+be at lowered alert half of the time and at normal alert levels half of the time. It assumes that if a
+false indication of an attack occurred during a period when that nation is at lowered alert, it
+would not lead to a counter-attack. The analysis also assumes that lowering of alert levels would
+be performed in such a way that at any particular moment, it would not be detected reliably by
+the other nation, as suggested by Podvig,58 who stated that, “If the forces can be taken off and on
+alert covertly, the attacker could never determine the right moment for his attack. Both sides
+would have to assume that the forces of their adversary are on full alert.” If de-alerting can be
+detected more reliably, then more extensive de-alerting schemes may be more appropriate for
+risk reduction. A major reason that a number of potential de-alerting measures have not yet been
+implemented is because of difficulties with verification of alert status and detection of re-alerting
+in all relevant areas.59
+
+COMPUTATIONAL MODEL
+
+         The inadvertent nuclear war probability estimation computational model was
+implemented with the Analytica software package from Lumina Decision Systems.60 The
+computational model modules are shown in the on-line supplement to this paper.61 The complete
+model is available from the authors by request.
+
+         To estimate probability distributions of outputs, the computational model performs Latin
+hypercube (a type of Monte Carlo) sampling of input parameter values. The model sample size is
+10,000 iterations, which is expected to be sufficiently large to avoid introducing excessive
+sampling error.62 The model varies input parameter values according to the probability
+distributions given later in this section and in the Appendix.
+
+         The following are several of the most important model parameter values and rationales.
+Except where specifically noted (e.g. in parametric sensitivity analyses), the parameter values
+from this section and the Appendix are used throughout this paper. It is also assumed that
+random parameter values are uncorrelated except where noted due to conditionality.
+
+         The assumed annual probability of occurrence of a U.S.-Russia crisis is given by the
+Triangular (0, 0.02, 0.06) distribution. The lower bound is 0 if U.S.-Russia crises are no longer
+possible. The most likely value of 0.02 is based on the Hellman best estimate of one crisis in 50
+years; that corresponds to counting Cuban Missile Crisis as only historical crisis. The upper
+bound value of 0.06 is based on the Hellman estimate of three possible events in 50 years, and
+roughly corresponds to counting as several of the historical alerting incidents in the Appendix.
+The upper bound value is also somewhat consistent with Gottfried and Blair63 that a crisis might
+arise “perhaps once in a generation.” If a U.S.-Russia crisis occurs, its assumed duration in days
+is Uniform (13, 30). Tension levels and inadvertent nuclear war probabilities were high in the
+Cuban Missile Crisis for a period somewhere between 13 days64 and 30 days65 depending on
+
+                                                         10
+
+whether leaders’ tensions or military alert levels dominate risks in crisis.
+         The model assumes equal probabilities of selection of the annual rates of “usual” MDC
+
+and TAC level mistaken indicators of nuclear attack for 1977 through 1983 as given by Marsh
+and Wallace et al. Consistent with that empirical data, the model uses an annual TAC rate of zero
+TACs per year with probability 4/7 and two TACs/year with probability 3/7, and the model has
+an equal probability of using any one of the following annual MDC rates: 43; 70; 78; 149; 186;
+218; or 255 MDCs per year. In the principal analyses, it is assumed that ranges of MDC and
+TAC rates have not substantially changed since the period between 1977 and 1983. This paper
+also includes parametric analysis of the sensitivity of model results to effects of changes in
+assumed false alarm rates, e.g. if false alarm rates have been only some fraction of what they
+were between 1977 and 1983.
+
+         The model’s assumed rates of a nuclear terrorist attack are calculated using likelihood-
+weighted selection from the Lugar survey’s estimates of probability of a nuclear attack
+somewhere in the world over a ten-year span, converted to implied expected annual rates using a
+rearrangement of Equation 1, and using other factors given in the Appendix. The Lugar survey’s
+10 year nuclear attack probability estimate bins range from 0 to 1 probability of attack, but the
+survey-indicated likelihood of each probability bin varies. The survey-indicated most likely
+probability bin, 0.05 probability of attack, has a 23 percent likelihood of being selected by the
+model in this paper. (The model uses 0.99 instead of 1 as the highest 10 year attack probability
+bin, to avoid nonsensical results when converting from 10 year probabilities to implied expected
+annual rates.) To find the probabilities of a nuclear terrorist attack, the survey’s nuclear attack
+probabilities are multiplied by a factor of 0.79, because 79 percent of Lugar survey respondents
+thought that nuclear attack would be by terrorists (with the other attacks being made by a
+government).
+
+MODEL RESULTS
+
+Results of Inadvertent Nuclear War Risk Estimation
+
+         In general, estimates are reported to only one significant digit, to help avoid giving a false
+impression of precision. Table 1 gives the mean and median estimated annual probability of
+inadvertent nuclear war for both the Danger Calm base case set of assumptions and for the Safe
+Calm sensitivity case set of assumptions. The mean estimated annual probability with the Safe
+Calm case that assumes that inadvertent nuclear war is impossible during periods of low U.S.-
+Russia tensions, 0.01, is approximately half of the inadvertent nuclear war probability with the
+Danger Calm base case assumptions, 0.02. (A slightly lower ratio is present with median values.)
+In other words, the overall inadvertent nuclear war rate associated with high U.S.-Russia tensions
+comprises roughly half of the Danger Calm base case model estimated inadvertent nuclear war
+risk. That also means that the overall inadvertent nuclear war rate associated with low U.S.-
+Russia tensions comprises the other half of the base case model estimated inadvertent nuclear
+war risk.
+
+         There is significant uncertainty in the model-estimated annual inadvertent nuclear war
+probability, which can be represented by model-generated output probability distributions.
+Figure 3 gives the probability density functions (PDFs) for the annual probability of inadvertent
+nuclear war. The PDFs indicate that the model-estimated most-likely values are at the bottom
+
+                                                         11
+
+end of the distributions in both cases, but that the probability distributions are long-tailed. The 90
+percent confidence interval (extending from the 5th percentile estimate to the 95th percentile
+model estimate) ranges from 0.0002 to 0.07 in the base case, and from 0.00001 to 0.05 if
+excluding launch during low tensions.
+
+Table 1. Model-Estimated Annual Probability of U.S. or Russian Launch in Response to
+
+        Mistaken Indicators of Attack by Other Nation
+
+Probability Statistic Danger Calm Assumptions Safe Calm Assumptions
+
+Mean    0.02                                           0.01
+
+Median  0.009                                          0.003
+
+  Figure 3. Probability Density Function of Model-Estimated Annual Inadvertent Nuclear War
+                                                    Probability
+
+         Table 2 gives the median model-estimated annual rates of mistaken MAC-level
+indications of attack associated with both the usual types of false alarms that have already been
+seen in U.S. early warning systems, as well as from nuclear terrorist attack. The median
+estimated overall rate for the usual false alarm events is at least an order of magnitude higher
+than for nuclear terrorist attack (i.e. one order of magnitude with the Danger Calm base case
+assumptions and three orders of magnitude with the Safe Calm sensitivity case assumptions).
+Given the assumptions in this model, nuclear terrorist attack appears far less likely to cause
+inadvertent nuclear war than the other types of events that have already caused false alarms in
+U.S. and Russian early warning systems.
+
+Moving Strategic Submarines far from Other Nation’s Borders to Increase Decision Time
+
+         Table 3 gives the results of moving SSBNs far enough away from the other nation’s
+borders that any submarine-launched missiles would have flight times equivalent to land-based
+ICBMs, credibly enough that the other nation believes it. Results for the following cases are
+
+                                                         12
+
+presented: the status quo case; where only one nation credibly moves SSBNs; and the case where
+both nations credibly move SSBNs. The results indicate that substantial inadvertent nuclear war
+risk reductions could be achieved by moving SSBNs further away from each other’s borders,
+even if the move is only implemented by just one nation.
+
+Table 2. Median Estimated Overall Annual Rates of Mistaken MAC-level Indicators of Nuclear
+
+                                        Attack
+
+Assumptions               Due to Usual False    Due to Nuclear
+                             Alarm Events       Terrorist Attack
+
+Danger Calm                      0.01                      0.0006
+
+Safe Calm                        0.003               0.0000008
+
+Table 3. Effect of Moving SSBNs on Median Model-Estimated Annual Inadvertent Nuclear War
+
+                                 Probability
+
+Assumptions Status Quo One Nation Moves Both Nations Move
+
+                                        SSBNs Credibly             SSBNs Credibly
+
+Danger Calm               0.009               0.005                0.003
+
+Safe Calm                 0.003               0.001                0.0003
+
+Effects of Inadvertent Nuclear War Risk Reduction Options
+
+Part-time Lowered Alerts
+
+         Table 4 gives the results of modeling the effects of the part-time lowered alert suggested
+by Podvig, where a false indication of an attack during a period of lowered alert would not lead
+to a counter-attack. The results indicate that the reduction in probability of the inadvertent
+nuclear war scenarios considered is approximately proportional to the average lowered-alert time
+fraction for the two nations. For example, if both the United States and Russia are temporarily
+de-alerted half the time, that cuts the overall modeled inadvertent nuclear war risk by
+approximately half. Even if only one nation uses a half-time lowered alert policy, that reduces
+overall modeled inadvertent nuclear war risk by approximately 25 percent.
+
+Table 4. Effect of Temporary Lowering of Alert Level on Median Model-Estimated Annual
+
+                          Inadvertent Nuclear War Probability
+
+Assumptions Status Quo One Nation at Lowered Both Nations at Lowered
+
+             Alert Levels Alert 50 Percent of Time Alert 50 Percent of Time
+
+Danger Calm  0.009                      0.007                      0.005
+
+Safe Calm    0.003                      0.002                      0.001
+
+Additional Sensitivity Analysis and Uncertainty Analysis
+
+         This section presents further exploration of model sensitivities to assumptions. First is a
+relatively simple sensitivity analysis involving parametric variation of the “usual” MDC and
+TAC rates. For the purposes of this specific analysis, a factor is introduced that allows simple
+parametric adjustment of the ratio of (1) the MDC and TAC rates used in the model for the
+
+                                        13
+
+period 1975 to 2012 as compared to (2) the rates observed in the United States in between 1977
+and 1983.66 The ratio is parametrically varied over the range from 0 to 1. (A value of 1 for this
+ratio implies that the distribution of rates observed between 1977 and 1983 were applicable from
+1975 until 2012; a value of 0.5 for the ratio implies that the actual rates are now, and have been,
+only half of what they were in the period 1977–1983.) Figure 4 shows the results of this
+parametric analysis where all other assumptions are as previously stated. The figure shows that
+the effect of a reduction in “usual” false alarm rates on inadvertent nuclear war probability is not
+entirely proportional to the change in false alarm rates. This is more evident with the Danger
+Calm assumptions than with the Safe Calm assumptions, but is present for both (and is also more
+evident with mean than median inadvertent nuclear war probabilities, though only median
+estimates are shown in Figure 4). This nonlinearity is mainly because the model assumes that the
+probability of promotion of a TAC to a MAC depends on the number of TACs estimated to have
+occurred (using Equation 5 with n equal to the number of model-estimated TAC occurrences to
+date). In the model, a lower rate of usual false alarms results in a higher model-estimated
+probability that a TAC would be promoted to a MAC. These effects offset false alarm rate
+reductions.
+
+Figure 4. Dependence of Median Model-Estimated Annual Inadvertent Nuclear War Probability
+                                            on MDC and TAC Rates
+
+         Second, to identify the input parameters whose uncertainties (as reflected in assumed
+probability distributions) most affect uncertainties in model outputs, uncertainty importance
+analysis is performed using Analytica. It uses the absolute rank-order correlation between each
+input sample and the output sample as an indicator of the strength of monotonic relations
+between each uncertain input and a selected output.67 The analysis suggests that relatively
+important sets of factors include the decision times associated with MDCs (sampled over the
+nation receiving the indicators), the annual number of TACs, the baseline probability that an
+indicated attack is an ICBM instead of an SLBM, and the probabilities that leaders will launch
+missiles in response to mistaken MAC-level indicators of nuclear attack. (The relative
+importance of those factors depends on whether the Danger Calm or Safe Calm assumptions are
+
+                                                         14
+
+used, and on the level of U.S.-Russia tension.) Those results are not surprising, given the role of
+those factors in the inadvertent nuclear war models of Wallace et al. and Sennott,68 and because
+features of their models are incorporated here. Other model input parameter uncertainties
+generally have significantly less effect on model output uncertainties. For example, even though
+the model has seemingly great uncertainty about nuclear terrorist attack probability, that
+uncertainty has relatively little importance in this context, probably because of the much lower
+estimated annual rate of nuclear terrorism as compared with other, more frequent false indicators
+of nuclear attack.
+
+DISCUSSION
+
+Evaluating Model Validity
+
+         Given that no nuclear war between the United States and the USSR or Russia has
+occurred in the last four decades, relatively low war probability predictions seem intuitively
+more likely than relatively high war probability predictions. Statistical significance tests may
+provide a more quantitative check of the sensibility of the estimates of the model. For example,
+with the use of a binomial distribution to find the confidence interval for an event probability p,
+given that zero such events has yet occurred in n independent random trials, p lies within the
+
+interval [0, u] with (1 – α) confidence, where      gives the upper limit of the confidence
+
+interval.69 If using α = 0.05 to find u as the upper limit of a 95 percent confidence interval, and
+
+given n = 37 independent trials (i.e. each year from 1975 to 2012) without an event occurring,
+
+then u = 0.08. In other words, given that there has been no inadvertent nuclear war between the
+
+United States and Russia during the 37-year period for which this paper assumes its modeled
+
+systems and response procedures have been in place, there could be a statistical argument for
+
+rejecting (with 95 percent confidence) a probabilistic model that produced a best estimate (i.e. a
+
+mean value) for annual nuclear war probability above 0.08. Because the model used in this paper
+
+produce best estimates of annual probability of inadvertent U.S.-Russia war that are well below
+
+0.08, this statistical test does not suggest rejecting the model’s estimates with 95 percent
+
+confidence. However, many readers may intuitively feel that even an annual nuclear war
+
+probability of eight percent seems too high to be useful discriminator of the model’s validity. In
+
+any case, it could be more productive to check or revise specific assumptions or parameters
+
+within the model, such as with additional data on rates and probabilities of false-alarm events,
+
+when new information becomes available. It could also be useful to use additional empirical data
+
+to check assumptions of the model that were based primarily on mathematical-modeling
+
+reasoning rather than on empirical data, because of the limited amounts of empirical data
+
+available. One example is the assumption in Equation 4 that MDC false alarm resolution times
+
+are exponentially distributed.70
+
+One additional validity check often used in simulation modeling is the comparison of
+
+results of different models or assessments. Perhaps the model with the most easily comparable
+
+outputs (i.e. annual probability of nuclear war) is that of Hellman, which used an approach and
+
+assumptions different from the approach in this paper to estimate that “the failure rate of [US-
+
+Russia nuclear war] deterrence from all sources is on the order of one percent per year.” That is
+
+approximately equivalent to this paper’s Danger Calm median estimated annual probability of
+
+inadvertent nuclear war. However, it should be noted that the estimate of Hellman is for “all
+
+                                                15
+
+sources” and not just for the inadvertent nuclear war scenarios examined here. The Hellman
+estimate does not depend on explicitly estimating false-alarm rates, nor on estimating the
+probability of a U.S. or Russian leader launching an attack in response to a false alarm.
+
+Model Limitations
+
+         The model applied here necessarily employs numerous approximations to reality. As
+previously stated, the model assumes that the Soviet/Russian early-warning systems and
+response procedures are similar enough that they can be approximated as being equivalent to
+those of the United States, at least at the level of detail assumed in the model. Even if the basic
+structure of the model is reasonably accurate, it is quite possible that there are significant
+differences between the United States and Russia in the real-world values of some model
+parameters, such as in rates of false attack indicators.
+
+         As previously mentioned, this paper assumes that all variables in the model are random
+and uncorrelated, except where conditionality is specified. It also assumes that the timing of
+specific false attack indicator events are (at least as far as can be determined from the
+perspectives of the U.S. or Russian early warning systems and decision makers) essentially
+random. For example, the model assumes that terrorists do not intentionally time their attack to
+coincide with a U.S.-Russia crisis, so if both occur at the same time, that is due entirely to
+chance. However, that may not be true. In addition, some terrorist nuclear attack scenarios seem
+more likely than others to be interpreted by U.S. or Russian early warning systems as indications
+of nuclear attack from the other nation. For example, Blair71 provides one publicly available
+discussion of a nuclear terrorist attack scenario that could arguably provide indications to Russia
+of a nuclear attack from the United States. Such scenarios might be pursued by terrorists without
+intent to cause inadvertent nuclear war, perhaps because a related opportunity presents itself to
+them before an opportunity for another nuclear attack that would otherwise seem easier or more
+likely to succeed. This paper does not identify such scenarios. However, assessment of such
+issues can and should be made, partly by building upon the framework developed here.
+
+         The parameter estimation sources and methods used here have important limitations.
+None of them seem inconsistent with the paper’s primary goal of providing ranges of estimates
+using available information, because the sources and methods are used primarily to establish
+parameter value distributions or that reflect uncertainties in available data. However, the
+limitations do seem likely to introduce biases, or at least somewhat surprising estimates. One
+example is the use of asymmetric distributions to represent uncertainties in several parameters, in
+which mean and median values are greater than the most likely value. Another important
+category of examples results from the fact that for many scenarios considered, very few or no
+applicable historical cases are publicly known to have occurred. The methods used to estimate
+failure rates for system components without known failures are better suited to providing a range
+of estimated failure rates than to producing a best-estimate value of the failure rate based on
+small amounts of data, though the latter depends on the statistical estimation approach used.72
+The shortcomings of the approach may be most obvious in the treatment of the probability of a
+decision by leaders to launch an attack in response to false indicators of nuclear attack. No such
+event has yet occurred. The authors of this paper are currently aware of just one historical
+instance of a MAC-level event, the 1995 Norwegian rocket incident, where early warning system
+indicators of nuclear attack led to either a U.S. or Russian leader explicitly considering an
+immediate nuclear response to indicators of an attack.73 The extensive descriptive, normative and
+
+                                                         16
+
+prescriptive literatures on nuclear decision making address a number of complex and diverse
+organizational and cognitive processes and patterns that could affect actual responses to
+indicators but most of which is not specifically incorporated in this paper.
+
+         Using information on the occurrence of historical incidents to estimate the frequency or
+probability of similar events occurring in the future also has other shortcomings. For example,
+some of the conditions and procedures present during the time of the historical incident may
+have already changed, or may change in the near future. The data on MDC and TAC rates used
+in this paper are approximately three decades old, and it is important to note that this paper’s
+principal analyses assume that these rates have not changed substantially despite any underlying
+changes in technology, procedures and strategies between the 1970s and 2013. (Although the
+authors of this paper are not aware of more recent false alarms in the U.S. than reflected in the
+MAC and TAC rate data used in this paper, that may be primarily because NORAD has chosen
+not to release information on false alarm rates since the mid-1980s74 rather than because false
+alarms have not been occurring. In addition, other kinds of notable incidents have occurred
+recently, such as the unintended flight in 2007 of six U.S. nuclear-armed cruise missiles75 and the
+break in communication between 50 U.S. nuclear ICBMs and their controllers for 45 minutes on
+23 October 2010,76 suggesting that nuclear operations, systems and safeguards have not become
+free of surprising errors since the end of the Cold War.) This paper assumes that the overall
+structure of dual phenomenology sensors used by the United States and Russia is essentially
+unchanged, which seems consistent with more recent discussions77 though it also seems likely
+that some details of sensors in use have changed by now. Even if the overall structure is
+generally unchanged, the rates of MDC and TAC-equivalent events may have changed. In
+addition, even if nothing important has changed in early-warning sensor systems since 1983, the
+limited number of data years, from 1977 to 1983, provides only a small sample for event rate
+estimation.
+
+         The estimates used in this paper for the probability of a nuclear terrorist attack, and of
+U.S.-Russia crisis, also seem likely to be overestimates. The Lugar survey estimates of
+probability of nuclear terrorist attack seem likely to be overestimates of the respondents’ true
+beliefs, because the apparent design of the survey seems likely to have introduced a combination
+of anchoring bias78 and range equalizing bias.79 The Hellman estimate of the annual probability
+of a crisis between the United States and Russia is based on fairly simple extrapolation from both
+U.S.–USSR and U.S.-Russia relations, which is dominated by U.S–USSR relations during the
+Cold War because of their longer history (the U.S.–USSR Cold War lasted for approximately
+four decades, and Russia has been in place for only two decades). One might reasonably presume
+that the probability of a U.S.–Russia crisis is lower than a U.S.–USSR crisis was during the Cold
+War. However, relations could also degrade in a variety of scenarios and may already be
+somewhat strained by events such as the presence of U.S. missile defenses in Europe.80 On a
+related topic, according to the model, if inadvertent nuclear war during periods of low U.S.-
+Russia tension is impossible, then the overall annual probability of inadvertent nuclear war is
+approximately proportional to the probability of a crisis.
+
+POLICY IMPLICATIONS AND IMPLEMENTATION CONSIDERATIONS
+
+         Based on the assumptions of the model, nuclear systems and postures of the United States
+and Russia continue to pose significant risks of inadvertent nuclear war; consistent with earlier
+
+                                                         17
+
+studies of inadvertent nuclear war risks. The analysis also indicates that there could be
+substantial value in the risk-reduction strategies considered here, though there are issues to
+consider before implementation.
+
+         The model estimates probability of inadvertent nuclear war for periods of both low
+tensions and high (crisis-level) tensions between the U.S. and Russia. Although the model
+assumes that U.S.-Russia crises are rare, such crises represent approximately half of the model-
+estimated total inadvertent nuclear war risk under Danger Calm base case assumptions. False
+alarms occurring during low U.S.-Russia tensions comprise the other half of the base case model
+estimated inadvertent nuclear war risk. Although many authors focus on stability in crisis
+situations, if the Danger Calm base case assumptions are correct (i.e., that U.S. or Russian
+leaders would consider launching missiles in response to attack indications during a period of
+apparently low tensions between the U.S. and Russia) then the model suggests that there could
+also be substantial danger during periods of low tension. Though much has been done in the past
+to minimize risks of inadvertent nuclear war during peacetime, there could be significant value in
+seeking adjustments to U.S. and Russian nuclear postures to further reduce the probability of
+inadvertent nuclear war during low-tension periods.
+
+         The analysis in this paper agrees with other work such as Mosher et al. in suggesting that
+one of the most important inadvertent nuclear war risk factors is the short launch decision times
+that result from a strategy of launching counterattack missiles before an arriving attack takes
+effect. The analysis suggests that there could be significant benefit from each nation moving its
+strategic submarines (SSBNs) far enough away from each other’s coasts to substantially increase
+the amount of time between when the launch of submarine-launched ballistic missiles (SLBMs)
+would be detectable and when they would arrive at their targets. However, additional work may
+be necessary to develop appropriate methods for verification of exchanged information on
+location of SSBNs to make the moves credible to the other nation. In addition, it would be
+appropriate to assess new risks, such as the potential for one nation to use an expectation by the
+other nation that it would no longer use SSBNs for short-range attacks in order to launch a
+surprise attack using SSBNs.
+
+         This analysis also corroborates the inadvertent nuclear war risk-reduction suggestion of
+Podvig for part-time lowering of alert levels, assuming that lowering of alert levels could not be
+detected reliably by the other nation. If temporary lowering of alert levels is implemented, it
+would be prudent for detectability of temporary lowering of alert levels to be continually tested
+(i.e. via red teams). If lowering of alert level becomes verifiable, alert-level verification could
+become part of a more extensive de-alerting agreement. However, there is a possibility that one
+nation would develop an alert-level detection means before the other, which could increase first-
+strike instability.
+
+         The way in which the suggestion of Podvig for part-time lowered alert has been modeled
+in this paper was somewhat simplistic to facilitate analysis. The original suggestion of Podvig
+was for the United States and Russia to “introduce a policy of keeping their forces off alert most
+of the time”. Presumably this would be especially true during low-tension periods; in the limiting
+case, both sides might keep their forces at lowered alert close to 100 percent of the time during
+low tension periods. This would essentially mimic the Safe Calm sensitivity case where
+inadvertent nuclear war could occur anytime during crisis periods but not at all during a non-
+crisis period.
+
+         Finally, both the United States and Russia should work to identify and assess the
+probabilities of a scenario by which terrorists could cause inadvertent nuclear war, either as a
+
+                                                         18
+
+specific objective of the terrorists, or as an unintended consequence of a nuclear terrorist attack.
+Although the model indicates that the annual rate or probability of such events is orders of
+magnitude less likely to be a source of inadvertent nuclear war than the false alarms that the
+United States and Russia are used to dealing with, it is also possible that the analysis has
+neglected important aspects of intelligent-adversary behavior of terrorists81 that would result in
+higher probability that terrorists would initiate nuclear war between the United States and Russia.
+For example, terrorists might have both the intent and capability to (1) carry out attacks that
+resemble first-strike nuclear missile attacks from the other nation, such as by launching nuclear
+missiles,82 (2) increase the probability of a crisis between the United States and Russia either
+with a nuclear attack or via other actions, or (3) detonate a nuclear device specifically during a
+period of crisis between the United States and Russia.83
+
+APPENDIX
+
+Additional Information on Modeled Systems and Scenarios
+
+         Systems and response procedures described here are assumed to have been used since
+approximately 1975, and current C3I systems and launch protocols have been in place for the
+past 37 years. There is limited publically available data on the historical frequency of MDCs,
+TACs or MACs in the United States, or their equivalents in the USSR and Russia, over the same
+period. In the United States, during the period 1977–1983, the number of MDCs per year ranged
+from 43 to 255, and the number of TACs per year were either zero or two.84 No MACs are
+known to have ever occurred in the United States.85 In the USSR or Russia, the 1983 satellite
+sensor warning incident was roughly equivalent to a TAC that was not promoted to the level of a
+MAC, and the 1995 Norwegian scientific rocket incident was roughly equivalent to a MAC in
+which leaders made a decision not to counterattack in response to the initially serious indicators
+of a possible submarine-launched Trident missile.86
+
+         The decision procedures depend on the level of tensions between the United States and a
+nuclear adversary, and associated strategic intelligence. In the United States, a high level of
+nuclear tensions would produce high strategic-intelligence estimates of the current likelihood of
+an attack (somewhat similar to a Bayesian prior estimate of attack probability, to be combined
+with incoming satellite and radar data). As Blair87 put it, “NORAD in effect assigned equal
+weight to infrared satellite sensors, ground radar sensors, and strategic intelligence. Positive
+indications from any two of these sources were sufficient to justify a high-confidence
+assessment. This formula posed a danger that heightened nuclear tensions (strategic warning)
+could have combined with a false alarm from a tactical sensor to convince NORAD that a Soviet
+attack was under way.”
+
+         Strategic intelligence warning has not necessarily been used in precisely the same way in
+Soviet/Russian systems as in U.S. systems. However, statements about their procedures suggest
+that in a crisis, Soviet/Russian nuclear forces could or would be put on “high alert”, that “putting
+the troops on high alert probably would be accompanied by the transfer of the battle management
+system from regular combat duty to combat mode.” Under such conditions “the satellite signal
+may not play such a significant role” as it otherwise would in activating the Kazbek
+communication system for leaders’ orders, i.e. in a crisis situation Soviet/Russian satellite
+systems may not have the same dual-phenomenology role that they would during low-tension
+
+                                                         19
+
+conditions in confirming indications of an incoming first strike attack. Furthermore, “a ‘missile
+attack’ signal can be transmitted even if it is based only on data reported by radars” though in
+those cases “the criteria for the reliable identification of targets could be somewhat stricter and
+the tracking time somewhat longer than for missile launches detected directly by the satellite
+system.”88
+
+         Historical information on frequency and duration of U.S.-Russia crises (roughly
+corresponding with periods of significant heightening of nuclear alert levels) is somewhat
+limited. In U.S. forces, the main instance of significantly heightened strategic alert, i.e. at least a
+Defense Condition / DEFCON 3 alert level is the 1962 Cuban Missile Crisis. The main period of
+high tension is often regarded to been the 13 days from 15 October 1962 when senior U.S.
+leaders were told of the missiles in Cuba, until U.S. and Soviet leaders reached agreements on 28
+October 1962,89 though U.S. forces were at either DEFCON 3 or DEFCON 2 alert levels for a
+total of 30 days beginning on 22 October 1962 when U.S. President Kennedy announced the
+blockade90 and Soviet forces were on alert for virtually the same 30 day period.91 Other known
+cases of U.S. forces at alert levels of at least DEFCON 3, such as the brief DEFCON 3 alert in
+the Yom Kippur War of October 1973, arguably do not qualify as U.S.-Russia crises posing the
+same risk of inadvertent war between the United States and Russia as the Cuban Missile Crisis,
+though they also arguably posed greater than normal peacetime risks.92 Another case of
+DEFCON 3 alert was during the terrorist attacks of 11 September 2001.93
+
+         In Soviet and Russian forces, instances of heightened alert include several during the
+Cuban Missile Crisis,94 with combined durations that may have been somewhat longer than the
+U.S. forces’ alerts;95 during the 1968 invasion of Czechoslovakia and during parts of the period
+of high East-West tensions in the early 1980s96, especially around the time of the KAL 007
+shoot-down and the ABLE ARCHER exercises in late 1983.97
+
+         Early warning systems could provide dangerous signals besides ones that specifically
+indicated the launch or movement of a missile. Even sensor outages could be interpreted as an
+indication of an attack. In the United States, “NORAD had become worried that an inexplicable
+outage of a tactical sensor might actually be the handiwork of saboteurs. This threat (and
+jamming) was considered serious enough to justify treating an outage as a positive indication of
+attack in the context of a nuclear crisis.”98 (Soviet/Russian procedures were somewhat analogous.
+Under conditions of a crisis “the delivery of a first strike can be considered, under Russian
+military doctrine, in the case of an attack on key elements of the early warning system or the
+command, control and communications systems.” 99) This paper treats unresolved MDCs as one
+example of an outage of a tactical sensor, based partly on the similarities in MDC occurrence
+rates and durations given by Marsh and Wallace et al. and the sensor outage rates and durations
+given by Blair.100
+
+         Usually, TACs comprise a small subset of MDCs where one detector system (usually, a
+satellite with infrared detectors of hot missile plume gases) indicates a launch and a different
+detector system (i.e. a ground-based radar) provides a confirming indication of launch. If there
+are confirming indications of launch from more than one separate ground-based radar systems,
+then NORAD reports high confidence in its assessment of the threat, otherwise NORAD reports
+low confidence. At least under normal circumstances, only high-confidence threat assessments
+will lead to a MAC where the leader then decides whether to launch an attack in response.101
+However, during periods of high U.S.-Russia tensions or crises, “positive indication from only
+one tactical sensor system” would be required for a high-confidence threat assessment. In
+addition, “the loss of a tactical sensor to presumed hostile action” would be treated as the
+
+                                                         20
+
+equivalent of a “a positive tactical indication” of an attack.102 Thus, under conditions of a U.S.-
+Russia crisis, this paper treats an unresolved MDC as an additional type of event that would be
+treated as a TAC-level indication of an attack, similar to Wallace et al. and Sennott.
+
+         This paper separately estimates rates of inadvertent nuclear war during both low-tension
+and high-tension periods, to account for the possibility that conditional probabilities of launch
+prevention failure could be substantially higher in periods of high U.S.-Russia tensions than
+during low-tension periods. This is partly because the literature suggests that leaders will be
+more psychologically or strategically predisposed to launch missiles in response to apparently
+credible indicators of an attack during a crisis period than during a low-tension period.103 It is
+also because of this paper’s assumptions about the technical features of early warning systems
+and nuclear postures.
+
+Additional Model Input Parameter Values
+
+                         Table A1: Decision Times (minutes)
+
+Scenarios                Launch Under Launch On          References and Comments
+
+                         Attack            Warning
+
+For Russia     ICBM      Triangular        Triangular “Clean and informed decision
+ receiving   SLBM or
+indications  equivalent  (2, 11, 20)       (9, 16, 23)       time” values based on
+ of attack
+               ICBM      Triangular        Triangular “Optimistic”, “Best Guess”, and
+For United
+   States    SLBM or     (0, 0.001, 1) (0, 0.001, 1)     “Pessimistic” values from
+             equivalent
+ receiving                 Triangular      Triangular      Wallace et al.104 The mode
+indications              (8, 15.25, 22.5)  (15, 20.25,    values of 0.001 minutes are
+ of attack                                               effectively 0 minutes, as in the
+                                              25.5)
+
+                         Triangular        Triangular    “Best Guess” values of 0
+
+                         (0, 0.001, 2.5) (0, 3.25, 5.5)  minutes in Wallace et al.
+
+                                           21
+
+            Table A2: Other Model Input Parameter Values
+
+Parameter Name                   Values                    References and Comments
+
+P(Launch response | mistaken                               One historical case seemed
+MAC-level indicators of i.e. Equation 5 with n = applicable, the 1995 Norwegian
+                                 1 rocket event in Russia,105 so n = 1
+nuclear attack during low
+
+U.S.-Russia tensions)                                      in Equation 5.
+
+P(Launch response | mistaken     Uniform(0, 1)                 No historical cases seemed
+   MAC-level indicators of                                       applicable, so a uniform
+ nuclear attack during U.S.-
+          Russia crisis)                                      distribution was used (i.e. an
+                                                           uninformative Bayesian prior, or n
+
+                                                                    = 0 in Equation 5).
+
+Mean resolution time y for       Triangular( 1, 3.5, 6 )   Based on Wallace et al.106 and
+     MDCs (minutes)                                                   Sennott.107
+
+                                                           Both nations can operate SSBNs
+
+                                                           near each other. Russia has long
+
+                                                           been concerned about U.S. SSBNs
+
+Probability of ICBM attack                                 near Russia.108 Though Russian
+
+indicators vs. SLBM or           Uniform(0,1)              SSBNs may have been using
+
+equivalent attack indicators                               relatively limited patrol areas in
+
+                                                           recent years,109 reportedly they are
+
+                                                           resuming permanent patrols in
+
+                                                           international waters110
+
+Probability of nation              Equal probability for   –
+receiving indicators             United States and Russia
+
+P(Nuclear terrorist attack
+
+would be in United States or     Uniform(0,1)                 These are somewhat arbitrary
+   Russia | nuclear terrorist    Uniform(0,1)                 because of the lack of data or
+                                 Uniform(0,1)               expert judgment. However, this
+ attack somewhere in world)                                 simple parameter decomposition
+                                                           roughly parallels the “usual” false
+  P(Resemblance of nuclear                                 alarm fault tree, and the product of
+terrorist attack to TAC-level                                 uniform distributions gives a
+ indicators of nuclear attack                              probability distribution with most
+                                                           density much closer to 0 than to 1,
+    from the other nation |
+   nuclear terrorist attack)                                     which seems reasonable.
+
+   P(Promotion of nuclear
+     terrorism TAC-level
+
+indicators of nuclear attack to
+
+MAC level)
+
+                                 22
+
+1. Alan Robock, Luke Oman, and Georgiy L. Stenchikov, "Nuclear Winter Revisited with a Modern
+Climate Model and Current Nuclear Arsenals: Still Catastrophic Consequences," Journal of
+Geophysical Research 112, D13107 (2007), 9.
+2. Carl Sagan, "Nuclear War and Climatic Catastrophe: Some Policy Implications," Foreign Affairs 62,
+2 (1983), 274, 291-293. Paul R. Ehrlich et al., "Long-Term Biological Consequences of Nuclear War,"
+Science 222, 4630 (1983), 1299.
+3. Bruce G. Blair, The Logic of Accidental Nuclear War (Washington, DC: Brookings, 1993), 2-9.
+4. Robert Powell, Nuclear Deterrence Theory: The Search for Credibility (New York: Cambridge
+University Press, 1990), 3. Thomas C. Schelling, The Strategy of Conflict (Cambridge, Massachusetts:
+Harvard University Press, 1960), 187-203.
+5. Scott D. Sagan, Moving Targets (Princeton, New Jersey: Princeton University Press, 1990), 176-178.
+Karas, De-Alerting Strategic Nuclear Weapons, 7-22.
+6. Pavel Podvig, "The Operational Status of the Russian Space-Based Early Warning System," Science
+& Global Security 4 (1994), 364.
+7. Bradley A. Thayer, "The Risk of Nuclear Inadvertence: A Review Essay," Security Studies 3, 3
+(1994), 442-445. Joseph Cirincione, "The Continuing Threat of Nuclear War," in Global Catastrophic
+Risks, ed. Nick Bostrom and Milan M. Cirkovic (Oxford: Oxford University Press, 2008), 381-401.
+Martin Hellman, "How Risky Is Nuclear Optimism?" Bulletin of the Atomic Scientists 67, 2 (2011), 47-
+56.
+8. Hans M. Kristensen and Robert M. Norris, "Reviewing Nuclear Guidance: Putting Obama's Words
+into Action", Arms Control Association
+http://www.armscontrol.org/act/2011_11/Reviewing_Nuclear_Guidance_Putting_Obama_Words_Into_
+Action (accessed 10 January 2012). Pavel Podvig, "Reducing the Risk of an Accidental Launch,"
+Science & Global Security 14 (2006), 75-76.
+9. Scott D. Sagan, The Limits of Safety: Organizations, Accidents, and Nuclear Weapons (Princeton,
+New Jersey: Princeton University Press, 1993), 99-100,221,225-246.
+.10 Michael D. Intriligator and Dagobert L. Brito, "Accidental Nuclear War: An Important Issue for
+Arms Control," in Proceedings of the 18th Pugwash Workshop on Nuclear Forces, ed. Derek Paul,
+Michael D. Intriligator, and Paul Smoker (Ontario, Canada: Samuel Stevens & Company, 1990), 9.
+David Mosher, Lowell H. Schwartz, David R. Howell, Lynne E. Davis, Beyond the Nuclear Shadow: A
+Phased Approach for Improving Nuclear Safety and U.S-Russian Relations (Santa Monica, California:
+RAND, 2003), MR-1666-NSRD, 14-15.
+.11 Robert Ayson, "After a Terrorist Nuclear Attack: Envisaging Catalytic Effects," Studies in Conflict
+& Terrorism 33, 7 (2010), 20.
+.12 Graham T. Allison, Nuclear Terrorism: The Ultimate Preventable Catastrophe (New York: Times
+Books, 2004), 1-120.
+.13 NCTAUUS, The 9/11 Commission Report (Washington, DC: National Commission on Terrorist
+Attacks Upon the United States, 2004), 380. Matthew Bunn, “Guardians at the Gates of Hell:
+Estimating the Risk of Nuclear Theft and Terrorism–and Identifying the Highest-Priority Risks of
+Nuclear Theft” (Massachusetts Institute of Technology, 2007), 37–43.
+.14 Bruce G. Blair and Garry D. Brewer, "The Terrorist Threat to World Nuclear Programs," The
+Journal of Conflict Resolution 31, 3 (1977), 379-403. Bruce G. Blair, "Could Terrorists Launch
+America's Nuclear Missiles?" Time.com
+http://www.time.com/time/nation/article/0,8599,2030685,00.html (accessed October 19th, 2010).
+.15 Schelling, Strategy of Conflict, 186-203. Blair, Logic of Accidental Nuclear War, 1-9.
+.16 Henry S. Rowen, "Catalytic Nuclear War," in Hawks, Doves & Owls: An Agenda for Avoiding
+Nuclear War, ed. Graham T. Allison, Albert Carnesale, and Joseph S. Nye Jr. (New York: W.W.
+Norton & Co., 1985), 148-163.
+
+.17 Paul J. Bracken, "Accidental Nuclear War," in Hawks, Doves & Owls: An Agenda for Avoiding
+Nuclear War, ed. Graham T. Allison, Albert Carnesale, and Joseph S. Nye Jr. (New York: W.W.
+Norton & Co., 1985), 25-53.
+.18 Martin Hellman, "Risk Analysis of Nuclear Deterrence," The Bent of Tau Beta Pi, Spring (2008), 18.
+.19 T.J. Bedford and R.M. Cooke, Probabilistic Risk Analysis: Foundations and Methods (New York:
+Cambridge University Press, 2001), 99-152.
+.20 Charles Perrow, Normal Accidents: Living with High-Risk Technologies (New York: Princeton
+University Press, 1984), 62-100. Sagan, The Limits of Safety, 11-52.
+.21 Daniel Frei, Risks of Unintentional Nuclear War (Totowa, New Jersey: Allanheld, Osmun & Co.,
+1983), 222–223. Michael D. Wallace, Brian L. Crissey, and Linn I. Sennott, "Accidental Nuclear War:
+A Risk Assessment," Journal of Peace Research 23, 1 (1986), 23-24.
+.22 Nick Bostrom and Milan M. Cirkovic, "Introduction," in Global Catastrophic Risks, ed. Nick
+Bostrom and Milan M. Cirkovic (New York: Oxford University Press, 2008), 2-3. Anders Sandberg
+and Nick Bostrom, "Global Catastrophic Risks Survey", Future of Humanity Institute, Oxford
+University http://www.fhi.ox.ac.uk/__data/assets/pdf_file/0020/3854/global-catastrophic-risks-
+report.pdf (accessed 12 January 2012).
+.23 Hellman, "Risk Analysis of Nuclear Deterrence", 20-21.
+.24 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 11-23.
+.25 Barbara Marsh, “The Probability of Accidental Nuclear War: A Graphical Model of the Ballistic
+Early Warning System” (Naval Postgraduate School, 1985), 23-71. Wallace, Crissey, and Sennott,
+"Accidental Nuclear War", 11-27.
+.26 Blair, Logic of Accidental Nuclear War, 55. Pavel Podvig, ed., Russian Strategic Nuclear Forces,
+Paperback ed. (Cambridge, Massachusetts: MIT Press, 2004), 567,577-578.
+.27 Wallace, Crissey, and Sennott, "Accidental Nuclear War," 13, 26–27.
+.28 Zia Mian, R. Rajaraman, and M.V. Ramana, "Early Warning in South Asia – Constraints and
+Implications," Science and Global Security 11 (2003): 128–131.
+.29 Blair, Logic of Accidental Nuclear War, 168-218. Sagan, The Limits of Safety, 119.
+.30 Marsh, “Probability of Accidental Nuclear War”, 33-60. Wallace, Crissey, and Sennott, "Accidental
+Nuclear War", 13-15.
+.31 Wallace, Crissey, and Sennott, "Accidental Nuclear War”, 15-20.
+.32 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 14-23. Blair, Logic of Accidental Nuclear
+War, 155, 168-218.
+.33 Marsh, “Probability of Accidental Nuclear War”, 26–27,47–49,63–66.
+.34 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 14, 22-24. Blair, Logic of Accidental
+Nuclear War, 168-218.
+.35 James R. Low, “De-Alerting the U.S. And Russian Nuclear Arsenals: An Unlikely Method of Arms
+Control” (Master's Thesis, Naval Postgraduate School, 1999), 66-68. Pavel Podvig, "History and the
+Current Status of the Russian Early-Warning System," Science & Global Security 10 (2002), 21-26.
+.36 Podvig, "Reducing Risk of Accidental Launch,” 80. Albert Carnesale, Joseph S. Nye Jr., and
+Graham T. Allison, "An Agenda for Action," in Hawks, Doves & Owls: An Agenda for Avoiding
+Nuclear War, ed. Graham T. Allison, Albert Carnesale, and Joseph S. Nye Jr. (New York: W.W.
+Norton & Co., 1985), 232.
+.37 M.E. Pate-Cornell and Paul Fischbeck, "Probabilistic Interpretation of Command and Control
+Signals: Bayesian Updating of the Probability of Nuclear Attack," Reliability Engineering & System
+Safety 47, 1 (1995), 27-36.
+.38 Karas, De-Alerting Strategic Nuclear Weapons, 17.
+.39 Marsh, “Probability of Accidental Nuclear War”, 62. Wallace, Crissey, and Sennott, "Accidental
+Nuclear War", 21.
+.40 Blair, "Could Terrorists Launch America's Missiles?".
+
+.41 Richard G. Lugar, The Lugar Survey on Proliferation Threats and Responses (Washington, DC,
+2005), 13-17.
+.42 Matthew Bunn, "A Mathematical Model of the Risk of Nuclear Terrorism," The Annals of the
+American Academy of Political and Social Science 607, 1 (2006), 106-107. Bunn, “Guardians at the
+Gates of Hell”, 119-121.
+.43 Graham T. Allison, "Nuclear Deterrence in the Age of Nuclear Terrorism," Technology Review,
+October 20, 2008, 68-73.
+.44 CDI, "Hearing of the Energy and Water Subcommittee of the House Appropriations Committee;
+Subject: Weapons Activities Oversight; Chaired by Representative Peter Visclosky (D-in); Witnesses:
+Senator Sam Nunn, Co-Chairman and Ceo, Nuclear Threat Initiative; Dr. William Perry, Former
+Secretary of Defense; General James E. Cartwright, Commander, U.S. Strategic Command; Dr.
+Richard Garwin, IBM Fellows Emeritus at the Thomas J. Watson Research Center; Location: 2362b
+Rayburn House Office Building, Washington, D.C.; Time: 10:00 AM EDT; Date: Thursday, March 29,
+2007", Center for Defense Information / Federal News Service http://www.cdi.org/PDFs/Energy
+%20and%20Water%20Subcommittee%20Hearing.pdf (accessed 28 May 2012).
+.45 Elizabeth A. Casman, M. Granger Morgan, and Hadi Dowlatabadi, "Mixed Levels of Uncertainty in
+Complex Policy Models," Risk Analysis 19, 1 (1999), 33-42. M.G. Morgan and M. Henrion,
+Uncertainty: A Guide to Dealing with Uncertainty in Quantitative Risk and Policy Analysis
+(Cambridge: Cambridge University Press, 1990), 39-44.
+.46 Bernard Bereanu, "On the Probability of Self-Activation of the World Nuclear Weapons Stockpile,"
+Methods of Operations Research 44 (1981), 507-520. Marsh, “Probability of Accidental Nuclear War,”
+61-71. Wallace, Crissey, and Sennott, "Accidental Nuclear War," 21.
+.47 Dimitri P. Bertsekas and John N. Tsitsiklis, Introduction to Probability, 2nd ed. (Belmont,
+Massachusetts: Athena Scientific, 2002), 309-325.
+.48 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 21.
+.49 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 22.
+.50 Lugar, Lugar Survey on Proliferation, 13-17. Hellman, "Risk Analysis of Nuclear Deterrence", 20-
+21.
+.51 Marsh, “Probability of Accidental Nuclear War”, 62. Wallace, Crissey, and Sennott, "Accidental
+Nuclear War", 21.
+.52 Morgan and Henrion, Uncertainty, 85-96, 198-205.
+.53 Robert T. Bailey, "Estimation from Zero-Failure Data," Risk Analysis 17, 3 (1997), 380.
+.54 Morgan and Henrion, Uncertainty, 39-44. Averill M. Law and W. David Kelton, Simulation
+Modeling and Analysis, Third ed. (New York, New York: McGraw-Hill, 2000), 292-298.
+.55 K.C. Bailey and F.D. Barish, De-Alerting of U. S. Nuclear Forces: A Critical Appraisal (Livermore,
+California: Lawrence Livermore National Laboratory, 1998), UCRL-LR-132030, 8-13. Josef Joffe and
+James Davis, "Less Than Zero: Bursting the New Disarmament Bubble," Foreign Affairs 90, 1 (2011),
+7-13.
+.56 Mosher et al., Beyond the Nuclear Shadow, 39-44, 67-77. Wallace, Crissey, and Sennott, "Accidental
+Nuclear War", 13-25.
+.57 Mosher et al., Beyond the Nuclear Shadow, 70-77. Bailey and Barish, De-Alerting of Nuclear
+Forces, 10-13.
+.58 Podvig, "Reducing Risk of Accidental Launch,” 89.
+.59 Bailey and Barish, De-Alerting of Nuclear Forces, 10.
+60 Lumina Decision Systems, professional version 4.2.3.7.
+61 The on-line supplement has been published with the article at the Journal Website and at
+http://scienceandglobalsecurity.org/archive/2013/06/analyzing_and_reducing_the_ris.html
+.62 Gerald J. Hahn and Samuel S. Shapiro, Statistical Models in Engineering (New York: John Wiley &
+Sons, 1967), 241–245.
+
+.63 Bruce G. Blair and Kurt Gottfried, "Introduction," in Crisis Stability and Nuclear War, ed. Bruce
+Blair and Kurt Gottfried (New York: Oxford University Press, 1988), 3.
+.64 Hellman, "Risk Analysis of Nuclear Deterrence", 21.
+.65 Wallace, Crissey, and Sennott, "Accidental Nuclear War."
+.66 Marsh, “Probability of Accidental Nuclear War.” Wallace, Crissey, and Sennott, "Accidental
+Nuclear War", 21, 26.
+.67 Morgan and Henrion, Uncertainty, 275-276. Lonnie Chrisman et al., "Analytica User Guide," (Los
+Gatos, California: Lumina Decision Systems, 2007), 277-278.
+.68 Linn I. Sennott, "Overlapping False Alarms: Reason for Concern?," in Breakthrough: Emerging
+New Thinking, ed. Anatolii Andreevich Gromyko and Martin E. Hellman (New York: Walker and
+Company, 1988), 39-44.
+.69 James A. Hanley and Abby Lippman-Hand, "If Nothing Goes Wrong, Is Everything All Right?"
+Journal of the American Medical Association 249, 13 (1983), 1743-1745. John Quigley and Matthew
+Revie, "Estimating the Probability of Rare Events: Addressing Zero Failure Data," Risk Analysis 31, 7
+(2011), 1120-1132.
+.70 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 22, 27.
+.71 Blair, "Could Terrorists Launch America's Missiles?".
+.72 Quigley and Revie, "Estimating Probability of Rare Events", 1120-1132.
+.73 Low, “De-Alerting Nuclear Arsenals”, 70-73.
+.74 Lyle V. Anderson, "“Unintended” Nuclear War: The American Cosmos and Global Chaos," Journal
+for Peace and Justice Studies 1, 1 (1988), 26.
+.75 Barbara Starr, "Air Force Investigates Mistaken Transport of Nuclear Warheads", CNN.com
+http://articles.cnn.com/2007-09-05/us/loose.nukes_1_nuclear-weapons-nuclear-warheads-missiles?
+_s=PM:US (accessed July 22nd, 2012).
+.76 Blair, "Could Terrorists Launch America's Missiles?".
+.77 Mosher et al., Beyond the Nuclear Shadow, 15-31.
+.78 Morgan and Henrion, Uncertainty, 106-107.
+.79 R.L. Boring, "A Review of Expertise and Judgment Processes for Risk Estimation," in Proceedings
+of the European Safety and Reliability Conference (ESREL 2007) (2007), 6.
+.80 Hellman, "Risk Analysis of Nuclear Deterrence", 17.
+.81 Vicki M. Bier, Louis Anthony Cox Jr., and M. Naceur Azaiez, "Why Both Game Theory and
+Reliability Theory Are Important in Defending Infrastructure against Intelligent Attacks," in Game
+Theoretic Risk Analysis of Security Threats, ed. Vicki M. Bier and M. Naceur Azaiez (New York:
+Springer, 2009), 1-11.
+.82 Blair, "Could Terrorists Launch America's Missiles?".
+.83 Ayson, "After Terrorist Nuclear Attack": 20.
+.84 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 21.
+.85 Marsh, “Probability of Accidental Nuclear War”, 49.
+.86 Low, “De-Alerting Nuclear Arsenals”, 68–74. Peter Vincent Pry, War Scare: Russia and America on
+the Nuclear Brink (Westport, Connecticut: Praeger, 1999), 37,214–238. Geoffrey Forden, Pavel
+Podvig, and Theodore A. Postol, "False Alarm, Nuclear Danger," IEEE Spectrum 37, 3 (2000).
+.87 Blair, Logic of Accidental Nuclear War, 192–193.
+.88 Podvig, ed., Russian Strategic Nuclear Forces, 60–62.
+89.Bruce G. Blair and Kurt Gottfried, eds., Crisis Stability and Nuclear War (New York: Oxford
+University Press, 1988), 18–19, 172–189.
+.90 Sagan, The Limits of Safety, 62–65,95–96.
+.91 David Larson, The 'Cuban Crisis' of 1962: Selected Documents and Chronology (Boston,
+Massachusetts: Houghton Mifflin, 1963), 315, 326. Wallace, Crissey, and Sennott, "Accidental Nuclear
+War," 21, 26.
+
+.92 Sagan, The Limits of Safety, 212–216. Blair and Gottfried, eds., Crisis Stability and Nuclear War,
+198–212.
+.93 NCTAUUS, The 9/11 Commission Report, 544.
+.94 Blair, Logic of Accidental Nuclear War, 23–25.
+.95 Matthew Aid, "National Security Agency Releases History of Cold War Intelligence Activities:
+Soviet Strategic Forces Went on Alert Three Times During September-October 1962 Because of
+Apprehension over Cuban Situation, Top Secret Codeword History of National Security Agency
+Shows" http://www.gwu.edu/~nsarchiv/NSAEBB/NSAEBB260/index.htm (accessed 5 July 2012).
+Thomas R. Johnson, American Cryptology During the Cold War, 1945-1989: Book Ii: Centralization
+Wins, 1960-1972 (Declassified, Excised Copy) (Center for Cryptological History, US National Security
+Agency, 1995), 330–331.
+.96 Blair, Logic of Accidental Nuclear War, 25.
+.97 Pry, War Scare, 41–44. Benjamin Fischer, "A Cold War Conundrum: The 1983 Soviet War Scare",
+Center for the Study of Intelligence, US Central Intelligence Agency
+https://www.cia.gov/library/center-for-the-study-of-intelligence/csi-publications/books-and-
+monographs/a-cold-war-conundrum/source.htm (accessed 5 July 2012).
+.98 Blair, Logic of Accidental Nuclear War, 194.
+.99 Podvig, ed., Russian Strategic Nuclear Forces, 60.
+.100 Blair, Logic of Accidental Nuclear War, 193.
+.101 Marsh, “Probability of Accidental Nuclear War”, 49.
+.102 Blair, Logic of Accidental Nuclear War, 193.
+.103 Blair, Logic of Accidental Nuclear War, 1.
+.104 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 16-20.
+.105 Low, “De-Alerting Nuclear Arsenals”, 68–74. Mosher et al., Beyond the Nuclear Shadow,17–18.
+Pry, War Scare, 214–238.
+.106 Wallace, Crissey, and Sennott, "Accidental Nuclear War", 22, 27.
+.107 Sennott, "Overlapping False Alarms", 39-44.
+.108 Mosher et al., Beyond the Nuclear Shadow, 68.
+.109 Hans M. Kristensen, "Russian Nuclear Submarine Patrols", Federation of American Scientists
+http://www.nukestrat.com/russia/subpatrols.htm (accessed December 2, 2012). Hans M. Kristensen,
+"Russian Nuclear Missile Submarine Patrols Decrease Again", Federation of American Scientists
+http://www.fas.org/blog/ssp/2008/04/russian-nuclear-missile-submarine-patrols-decrease-again.php
+(accessed December 2, 2012).
+.110 NT, "Russian SSBNs to Resume Patrols in International Waters in June 2012", Naval Today
+http://navaltoday.com/2012/02/07/russian-nuclear-powered-ballistic-missile-submarines-to-resume-
+patrols-in-international-waters-in-june-2012/ (accessed December 2, 2012).

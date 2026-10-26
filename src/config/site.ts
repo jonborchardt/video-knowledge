@@ -74,7 +74,7 @@ export const commissions: Record<string, Commission> = {
     fullName: 'Commonwealth of Reason: Bureau of Public Beliefs',
     ceremonialName: 'Bureau of Public Beliefs',
     remit: 'Social beliefs, fringe movements and popular convictions: what people hold true, and how it stands up.',
-    topics: ['sovereign-citizens'],
+    topics: ['sovereign-citizens', 'world-war-3'],
   },
   'synthetic-arts': {
     name: 'Society of Synthetic Arts',
