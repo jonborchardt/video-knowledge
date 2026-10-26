@@ -21,6 +21,12 @@ const image = absoluteUrl(imagePath, siteUrl);
 const imageAlt = title === site.name ? site.name : `${title} - ${site.name}`;
 // JSON-LD sits in a <script>: escape < so no value can close the tag.
 const jsonLd = [websiteJsonLd(siteUrl), ...pageLd].map((x) => JSON.stringify(x).replaceAll('<', '\\u003c'));
+// Dev server only: a page injected by astro.config.mjs (src/admin) is framed in pink; so is any link to one and any
+// `.dev-only` section on a public page. A build renders none of it.
+const dev = import.meta.env.DEV;
+const devPage = dev && /^\/(admin|\[topic\]\/(stories|scripts|review))/.test(Astro.routePattern);
+const devCss = `body[data-dev-page]::after { content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none; border: 4px solid #ff2d95; }
+.dev-only, a[href^="/"]:is([href*="/admin"], [href*="/stories/"], [href*="/scripts/"], [href*="/review/"], [href*="/review-"]) { outline: 2px solid #ff2d95; outline-offset: 2px; }`;
 ---
 
 <!doctype html>
@@ -91,8 +97,10 @@ const jsonLd = [websiteJsonLd(siteUrl), ...pageLd].map((x) => JSON.stringify(x).
         addEventListener('afterprint', () => root.classList.toggle('dark', wasDark));
       })();
     </script>
+    {/* eslint-disable-next-line astro/no-set-html-directive -- a constant stylesheet, dev server only */}
+    {dev && <style is:inline set:html={devCss} />}
   </head>
-  <body class="flex min-h-svh flex-col">
+  <body class="flex min-h-svh flex-col" data-dev-page={devPage || undefined}>
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:border focus:bg-background focus:px-3 focus:py-2 focus:text-foreground print:hidden"
