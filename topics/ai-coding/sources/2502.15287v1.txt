@@ -1,0 +1,700 @@
+                                        Time Warp: The Gap Between Developers' Ideal vs
+                                               Actual Workweeks in an AI-Driven Era
+
+                                              Sukrit Kumar, Drishti Goel§, Thomas Zimmermann, Brian Houck§, B. Ashok¶, Chetan Bansal§
+                                                      Georgia Institute of Technology, §Microsoft, ¶Microsoft Research, University of California, Irvine
+
+arXiv:2502.15287v1 [cs.SE] 21 Feb 2025     Abstract--Software developers balance a variety of different             This misalignment between the ideal and actual workweek
+                                        tasks in a workweek, yet the allocation of time often differs            raises several intriguing research questions. Key among them
+                                        from what they consider ideal. Identifying and addressing these          is how these deviations impact developers' productivity and
+                                        deviations is crucial for organizations aiming to enhance the            satisfaction. By examining these deviations, we can uncover
+                                        productivity and well-being of the developers. In this paper, we         patterns that may not only reveal the activities where devel-
+                                        present the findings from a survey of 484 software developers            opers struggle the most but also where they feel most pro-
+                                        at Microsoft, which aims to identify the key differences between         ductive and satisfied. Understanding these dynamics provides
+                                        how developers would like to allocate their time during an ideal         actionable insights for engineers, managers and organizations
+                                        workweek versus their actual workweek. Our analysis reveals              to create more effective work environments.
+                                        significant deviations between a developer's ideal workweek and
+                                        their actual workweek, with a clear correlation: as the gap be-             Furthermore, gaining deeper insights into the relationship
+                                        tween these two workweeks widens, we observe a decline in both           between time allocation across activities, productivity, and
+                                        productivity and satisfaction. By examining these deviations in          satisfaction could inform the development of future and current
+                                        specific activities, we assess their direct impact on the developers'    AI-driven automation tools. With the growing role of AI in
+                                        satisfaction and productivity. Additionally, given the growing           software engineering, understanding which tasks developers
+                                        adoption of AI tools in software engineering, both in the industry       are most eager to automate becomes crucial. For instance,
+                                        and academia, we identify specific tasks and areas that could be         certain tasks may seem to offer high productivity but are inher-
+                                        strong candidates for automation. In this paper, we make three           ently dissatisfying for developers to engage with. Identifying
+                                        key contributions: 1) We quantify the impact of workweek devi-           these tasks can help guide future research and development of
+                                        ations on developer productivity and satisfaction 2) We identify         these tools to be better aligned with real-world needs of the
+                                        individual tasks that disproportionately affect satisfaction and         developers, allowing them to focus on more satisfying work.
+                                        productivity 3) We provide actual data-driven insights to guide
+                                        future AI automation efforts in software engineering, aligning              In this paper, we present the findings from our study aimed
+                                        them with the developers' requirements and ideal workflows for           at analyzing the differences between a developer's `ideal' and
+                                        maximizing their productivity and satisfaction.                          `actual' workweek. Our study builds upon existing research in
+
+                                           Index Terms--developer productivity, satisfaction, software
+                                        development, ideal workweek, automation
+
+                                                                  I. INTRODUCTION                                this field, particularly those exploring developers' typical and
+                                                                                                                 optimal workdays [3]. By analyzing deviations at the weekly
+                                           In software engineering, the productivity and satisfaction of         level, we capture the cumulative effects of task allocation,
+                                        developers are pivotal factors that influence both individual            while providing a more fine-grained understanding of how var-
+                                        performance, customer experience and ultimately, organiza-               ious activities impact productivity and satisfaction. To the best
+                                        tional success [1], [2]. The day-to-day activities which define          of our knowledge, this study is the first work that focuses on
+                                        a developer's workweek encompass a broad spectrum of                     how deviations, both at the overall workweek and individual
+                                        tasks; from coding and designing new systems, to preparing               activity levels, affect developers' productivity and satisfaction.
+                                        documents, attending meetings, on-boarding new employees,                Our research additionally quantifies how deviations across
+                                        adhering to security and compliance tasks, etc [3]. Each of              different activities impact self-reported developer productivity
+                                        these tasks is integral to the software development life cycle.          and satisfaction. We also explore how AI tool usage influences
+                                        Ideally, developers would prefer to allocate their time across           the productivity and satisfaction of developers. In addition to
+                                        these tasks in a way that optimizes both productivity and                that, we systematically analyze and present the developers'
+                                        satisfaction-- this can be referred to as their `ideal work-             feedback on which tasks they would prefer to see automated
+                                        week'. However, in practice, their `actual workweek', can vary           using AI, providing valuable insights for future AI tool devel-
+                                        significantly from their `ideal' due to fluctuating workloads,           opment.
+                                        shifting organizational priorities, dependencies on other teams,
+                                        technical challenges, the influence of the work environment,                An outline of the key research questions driving this study
+                                        etc [4], [5], [6].                                                       are as follows:
+
+                                            Contacts: chetanb@microsoft.com, brian.houck@microsoft.com,          RQ1: How do developers allocate their time during a typical
+                                        bash@microsoft.com.                                                              workweek, and how does this compare to their perception
+                                                                                                                         of an ideal workweek?
+                                            Sukrit Kumar and Drishti Goel are joint first authors of this work.
+RQ2: How are developer's satisfaction and productivity affected                                               TABLE I
+        by deviations from their ideal workweek?                       KEY ACTIVITIES IDENTIFIED DURING THE EXPLORATORY INTERVIEWS
+
+RQ3: For which tasks do developers prefer using AI tools, and                                          Developer Activities
+        how does the frequency of AI tool usage influence their
+        satisfaction and productivity?                                                     Architecting and designing new systems
+                                                                                                       Coding new features
+     The remainder of the paper is structured as follows. In
+  Section II, we describe our survey design and limitations. In                                 Development Environment Setup
+  Section III we perform an analysis on the developers' ideal                                              Documentation
+  and actual workweeks. In Section IV, we analyze the impact of
+  deviation from an ideal workweek on developer productivity                                       Pull Requests/Code Review
+  and satisfaction. Section V discusses the impact of AI tool                                            Code Refactoring
+  usage on developers and identifies activities that developers
+  want to automate. In Section VI, we discuss the implications                                   Debugging during development
+  of our findings for developers, managers and organizations. In                            Setting-up Monitoring and Dashboards
+  Section VII, we discuss related works and, we finally present
+  the conclusion in Section VIII.                                                                         Authoring Tests
+                                                                                                     Security and Compliance
+                            II. METHODOLOGY                                                  Addressing Customer Support Tickets
+                                                                                                  Communication and Meetings
+     In this section, we provide a detailed description of the                                  Task Creation and Management
+  methodology used to design and conduct the survey. We then                                     Giving Technical Presentations
+  discuss potential limitations of our study.                                                      Mentoring and Onboarding
+                                                                                                   Learning New Technologies
+  A. Survey Design
+                                                                     thought could offer interesting new insights. A brief summary
+     To gain insights into the types of activities developers en-    of the questions is given below:
+  gage in during a typical workweek, we first conducted a series
+  of exploratory interviews with 12 randomly selected partici-          · Their current role and years of experience in the industry
+  pants. These semi-structured exploratory interviews provided             and team
+  a qualitative foundation, allowing us to iteratively develop a
+  comprehensive list of high-level activities that reflect what a       · The number of hours spent on various activities in the
+  developer does over the course of a workweek. The findings               previous workweek
+  from these interviews were instrumental in refining our survey
+  design.                                                               · The percentage of time they would want to allocate to
+                                                                           each activity in an ideal workweek
+     The survey was distributed to software engineers working in
+  Microsoft teams across India and the United States between            · How productive and satisfied they felt in the past work-
+  June to July 2024. A total of 6000 randomly selected indi-               week
+  vidual contributor (IC) developers were invited to participate
+  in the survey via email across multiple batches. We also sent         · Activities they found to be most cognitively challenging
+  follow-ups to people who had started the survey but had not           · How often do they use AI tools to assist them in various
+  finished it and also to those who hadn't started it. We framed it
+  as a study aimed at boosting developer productivity by helping           activities
+  us understand how they allocate their time in a workweek.             · Two open-ended questions about the tasks they would
+  The survey received 484 complete responses (a response rate
+  of 8.06%). In the invite, the participants were also informed            want to automate using AI tools, and advice for new hires
+  that they could enter a sweepstake to win one out of ten $50             to boost their productivity and satisfaction levels
+  Amazon.com Gift Cards after finishing the survey. The ethics
+  for this survey were reviewed and approved by the Microsoft        B. Limitations
+  Research Institutional Review Board (MSR-IRB), which is an
+  IRB federally registered with the United States Department of         This study presents an exploratory survey, which, to the
+  Health & Human Services.                                           best of our knowledge, is the first of its kind to introduce
+                                                                     the concept of a developer's perceived ideal workweek and
+     From the exploratory interviews, we identified sixteen key      assess how deviations from it impact productivity and satisfac-
+  high-level activities, which were subsequently used to quantify    tion. Additionally, it explores the specific activities developers
+  the developers' time allocation in the survey. The list of         would prefer to automate using AI tools. While this research
+  activities are listed out in Table I. We designed the survey       provides valuable insights, the following limitations should be
+  questions to broadly cover the main research questions that we     addressed by future studies.
+  had in mind and also included additional questions which we
+                                                                        External Validity: Since the study was conducted within
+                                                                     a single company, the results may not be generalizable to
+                                                                     organizations of different sizes, structures, or roles. Addition-
+                                                                     ally, the low response rate and the survey's confinement to
+                                                                     specific teams further limit the generalizability of the findings
+                                                                     to developers in other contexts.
+
+                                                                        Construct Validity: The survey relies on the developers
+                                                                     to accurately self-report the time they spend on the key
+activities, productivity and satisfaction levels, which may
+introduce inaccuracies and biases. Additionally, the sequence
+of questions could have influenced the responses (e.g. activities
+to automate)
+
+   Internal Validity: The key activities identified in the survey
+may vary across different developers and organizations. While
+we sought to minimize this variability through exploratory
+interviews, the findings may still differ for other developer
+populations. Additionally, the survey data was collected during
+a security push at Microsoft, which may have impacted the
+typical workweek. To mitigate this, we distributed the survey
+in batches over a month and asked developers to report time
+spent on activities over the last five workdays, helping to
+average out short-term fluctuations from the security push and
+feature releases.
+
+    III. COMPARING DEVELOPER'S ACTUAL VS. IDEAL                    Fig. 1. Box Plot of Percentage Time Spent in an Actual Workweek and Ideal
+                              WORKWEEK                             Workweek. (a) Top plot: Real Workweek. (b) Bottom plot: Ideal Workweek.
+
+   To answer RQ1, we asked the developers to specify the
+number of hours that they spend on key activities during a
+typical workweek, as well as the percentage of time they would
+ideally allocate to these activities. We transform the actual
+workweek responses into the percentage scale by dividing
+the time spent on each activity by the total number of hours
+in the response. We present the developers' actual and ideal
+workweek responses in Fig. 1(a) and Fig. 1(b) respectively,
+and also highlight the key differences in the percentage of
+time spent between them in Fig. 2.
+
+A. The Actual Week: How Developers Spend Their Time                Fig. 2. Average percentage of time spent on the key activities in the Actual
+                                                                   vs Ideal Workweek
+   In the actual workweek, as depicted in Fig. 1(a), there is
+a considerable variation in the time developers spend across       needed to prevent burn out, and start with the activities that
+activities, specifically for `Coding', `Architecting & designing   you find interesting."
+new systems', `Security & Compliance', `Debugging', and
+`Communication & Meetings', with wide inter-quartile ranges           The most striking differences are observed in `Commu-
+and the presence of many outliers. This could be attributed to     nication & Meetings' and `Task Creation & Management',
+the differences in the type of project, team structure, level      where developers show a strong preference for reducing the
+of experience, or individual roles. Furthermore, developers        time spent. These activities are marked by high variability
+dedicate the majority of their time on `Communication &            in the actual workweek, but are more contained in the ideal
+Meetings' (12%), `Coding' (11%), `Debugging' (9%),                 scenario, reflecting a widespread desire to minimize the time
+`Architecting and designing new systems' (6%), and `Pull           spent on these activities. Developer D342 emphasizes this
+Requests/Code Reviews' (5%). Conversely, they spend the            sentiment: "Optimize for operations. Automate EVERYTHING
+least time on `Learning New Technologies', `Mentoring and          for Continuous Delivery. The word `manual' should not be in
+Onboarding', `Giving Technical Presentations', and `Setting-       your vocabulary unless referring to something to read. This
+up Monitoring and Dashboards'.                                     way, you will have more time to focus on the creative process
+                                                                   that is software engineering and be able to release often and
+B. The Ideal Week: How Developers Want to Spend Their Time         with confidence.". Similarly, D238 adds, "More focus time and
+                                                                   fewer meetings."
+   In contrast to the actual workweek, the ideal workweek
+shows a less varied distribution across most activities, as           In Fig. 2 we highlight several areas where there is a signif-
+seen in Fig. 1(b). Developers prefer to allocate their time
+primarily to `coding' ( 20%) and `Architecting & designing
+new systems' ( 15%), while maintaining a more balanced
+distribution across the remaining activities. This desire for
+balance is echoed by individual developers in their personal
+experiences. For instance, developer D223 offers this advice to
+new employees: "Maintain a good balance of all the activities
+icant gap between the developers' ideal and actual workweek,       Fig. 3. (a) Spearman's Rank Correlation Coefficient for different categories
+shown by the percentage of time spent on each development          of productivity and the deviation between the ideal and actual workweek. (b)
+related activity. Developers want to spend more time on core       Mean Absolute Error quantifying the difference in time allocation between
+activities such as `Coding', `Architecting and designing new       the ideal and typical week for different productivity levels.
+systems', and less time on `Communication', `Addressing
+Customer Support Tickets', and `Security & Compliance'.
+Additionally, the developers desire to spend less time on
+debugging code, and instead want to invest more time on
+preventative measures like `PR/Code Reviews', `Documen-
+tation', and `Mentoring/Onboarding' that could potentially
+alleviate pains fixing issues due to poor documentation or
+code. This indicates a potential desire for improving code qual-
+ity and reducing long-term maintenance costs and focusing
+and reducing technical debt [7]. Similarly, the preference to
+spend more time on learning new technologies, and engaging
+in technical presentations suggests that developers consider
+continuous learning and knowledge-sharing an essential part
+of their workweek. Developer D158 shares their personal
+experience regarding the importance of continuous learning
+in a workweek: "Initially, my learning somewhat slowed as I
+was too caught up in the urgency to release features. The
+workweek was about completing as many ADO items as
+possible. However, my development as an engineer actually
+came from setting aside blocks of 2-3 hours whenever possible
+to go deep into certain topics. In my opinion, each team should
+have a mini boot-camp for onboarding engineers. The material
+does not need to be fully comprehensive but there should at
+least be a list of topics that the new member can deeply
+research. For example, if your job is to connect two internal
+systems together, you should make it your responsibility to
+deeply understand both systems even though it's not directly
+related to your task."
+
+     Takeaway: A developer's perception of an ideal work-          Fig. 4. (a) Spearman's Rank Correlation Coefficient for different categories
+  week is not well aligned with their actual workweek.             of satisfaction and the deviation between the ideal and actual workweek. (b)
+  Developers want to spend more time on core development           Mean Absolute Error quantifying the difference in time allocation between
+  activities such as coding, designing new systems, learning       the ideal and typical week for different satisfaction levels.
+  new technologies, and knowledge sharing, while wanting
+  to reduce the time spent on dealing with tasks related
+  to security & compliance, communication, debugging,
+  addressing incident/support tickets, and task management.
+
+IV. IMPACT OF DEVIATIONS FROM THE IDEAL WORKWEEK
+      ON DEVELOPER PRODUCTIVITY & SATISFACTION
+
+   In this section, we address RQ2 by evaluating how devia-        `Productive', `Neither productive nor unproductive', `Unpro-
+tions from a developer's self-perceived ideal workweek influ-      ductive', and `Very unproductive') and satisfaction (`Very
+ence their levels of satisfaction and productivity. Additionally,  satisfied', `Satisfied', `Neither satisfied nor dissatisfied', `Dis-
+we identify the specific activity-level deviations and how they    satisfied', and `Very Dissatisfied'). We split the developers
+contribute to the observed effects.                                based on each of these different categories and calculate and
+                                                                   plot the Spearman rank correlation coefficient [8], and mean
+A. Bridging the Gap: How Deviations from the Ideal Work-           absolute error [9] between the actual and ideal workweek,
+week affect Developers' Productivity and Satisfaction              which are defined by the time they spend on the 16 key
+                                                                   activities and the time they would ideally allocate to each
+   In the survey, we asked the developers to rate their previous   activity.
+week on five different levels of productivity (`Very productive',
+   Fig. 3(a) and Fig. 3(b), show how differences between                                    TABLE II
+actual and ideal workweeks affect developers' productivity. We       OLS REGRESSION RESULTS - PRODUCTIVITY
+observe two interesting trends in both the computed metrics.
+Developers who felt very productive had the highest median           Variable                   coef   std err     t    P> |t|
+Spearman correlation (about 0.52) between their actual and
+ideal workweeks. This correlation decreased for less produc-         const                    4.1078    0.055   74.621  0.000
+tive developers, reaching about 0.18 for unproductive and 0.34       Arch. & Design           0.0009    0.003   0.355   0.723
+for very unproductive developers. For the mean absolute error        Coding                   0.0061    0.002   3.027   0.003
+(MAE), the difference between actual and ideal workweeks             Dev. Environment         -0.0158   0.005   -3.422  0.001
+increased as productivity decreased. The MAE rose from 5.3           Docs                     0.0103    0.005   1.995   0.047
+for very productive developers to 7.5 for very unproductive          PR/Code Review           -0.0046   0.006   -0.803  0.423
+ones. This shows that the deviation from the ideal work-week         Refactoring              0.0130    0.004   2.935   0.003
+is relatively lower for developers who felt productive during        Debugging                -0.0021   0.003   -0.643  0.521
+a work-week.                                                         Monitoring & Dashboards  0.0063    0.005   1.197   0.232
+                                                                     Testing                  0.0045    0.004   1.093   0.275
+   A similar, but more pronounced pattern is observed in the         Security & Compliance    -0.0033   0.002   -1.431  0.153
+satisfaction levels (Fig. 4(a) and Fig. 4(b)). The Spearman's        Customer Support         -0.0051   0.003   -1.651  0.099
+rank correlation between their actual and ideal workweek was         Communication            -0.0079   0.004   -2.120  0.034
+again highest for developers who felt very satisfied in that         Task Mgmt.               -0.0149   0.010   -1.451  0.147
+workweek (0.59) and it's lower at 0.10 for those who were            Tech-Talks               0.0001    0.012   0.011   0.992
+very dissatisfied. Likewise, the MAE demonstrates a similar          Mentoring/Onboarding     0.0007    0.006   0.119   0.905
+pattern, showing that developers who are more satisfied tend         Learning Tech.           0.0118    0.005   2.372   0.018
+to be closer to their ideal workweek, hence having lower MAE
+values (4.73 for very satisfied vs. 10.37 for the very dissatisfied     We highlight activities having statistically significant pos-
+group).                                                              itive relations in the color green and significant negative
+                                                                     relations in red in both the tables. Conventionally, a p-value
+     Takeaway: As developers' actual workweek diverges               of < 0.05 indicates statistically significant results at a 95%
+  from their perceived ideal workweek, both productivity             confidence level, suggesting that the observed deviations in
+  and satisfaction show a downward trend. This suggests              these activities are likely to have a meaningful impact on
+  that aligning with an ideal workweek is not merely a               productivity or satisfaction.
+  preference, but also crucial for maintaining high levels of
+  performance. It also underscores the necessity of stream-             In Table II we observe statistically significant positive
+  lining current research efforts on automation using AI to          relations between the time spent on coding, documentation,
+  effectively bridge the gap between the actual and ideal            code refactoring and learning, on developer productivity, while
+  workweek.                                                          a negative relation for maintaining development environment,
+                                                                     and communication. Moreover, for satisfaction, Table III high-
+B. Impact of activity-level deviations on productivity & satis-      lights a statistically significant positive relation of satisfaction
+faction                                                              with documentation and learning, while a negative relation
+                                                                     for development environment, PR/Code reviews, security and
+   In the previous section, we highlighted the impact of devi-       compliance, and communication. As described by developer
+ation from a developer's ideal workweek on their productivity        D141 and D18 respectively: "Keeping organized documen-
+and satisfaction levels. To gain a more detailed understanding       tation of project related knowledge will certainly improve
+of these deviations, we calculate the differences between the        productivity", "S360 takes up the majority of my time, which
+time spent on these activities in the actual and ideal workweek      means I spend almost no time creating useful features and
+(Actual - Ideal). Each variable in the Table II and Table III        responding to customer requests."
+is the difference between the actual and ideal workweek for
+that particular activity. Positive difference values imply more      C. Mapping Activity Time Across Productivity-Satisfaction
+time being spent on the activity than desired (over-allocation),     Profiles: A Path Toward Smart Automation
+while negative values imply less time being spent than desired
+(under-allocation). We apply an Ordinary Least Squares (OLS)            In Fig. 5, we categorize developers into three distinct
+regression model to identify specific activities that significantly  groups: `High Productivity, High Satisfaction,' `High Produc-
+influence developers' productivity and satisfaction. OLS was         tivity, Low Satisfaction,' and `Low Productivity, Low Satisfac-
+chosen for its ability to model linear relationships for contin-     tion,' based on their self-reported productivity and satisfaction
+uous variables. Since the primary goal is to assess how incre-       levels from the previous workweek (as detailed in IV-A). For
+mental changes in activity allocation impact productivity and        the sake of simplicity, we merged the `Very Productive' and
+satisfaction, OLS provides a straightforward, and interpretable      `Productive' groups into a single `High Productivity' category,
+framework for the same.                                              and similarly for other categories. The `Low Productivity, High
+                                                                     Satisfaction' group was excluded due to its small sample size
+                                                                     of two developers. For each remaining group, we visualize the
+                                                                     average hours spent on the 16 key activities, highlighting pat-
+                                                                     terns in how time allocation varies across different productivity
+                                                                     and satisfaction combinations.
+                      TABLE III                                         developers report lower satisfaction levels. This suggests that
+OLS REGRESSION RESULTS - SATISFACTION                                   while they recognize the value of these tasks, they prefer
+                                                                        spending less time on them, making these activities ideal
+const                      coef   std err     t    P> |t|               candidates for automation.
+Arch. & Design
+Coding                   4.0436    0.061   66.061  0.000                     Takeaway: Developers who experience a sense of pro-
+Dev. Environment         0.0057    0.003   1.950   0.052                  ductivity, yet feel dissatisfied with their workweek present
+Docs                     0.0043    0.002   1.907   0.057                  an excellent opportunity for task automation. Our analysis
+PR/Code Review           -0.0151   0.005   -2.935  0.004                  reveals that this group invests significant time in activi-
+Refactoring              0.0161    0.006   2.803   0.005                  ties such as `PR/Code Reviews', `Monitoring & Dash-
+Debugging                -0.0133   0.006   -2.086  0.038                  boards', `Communication', and `Mentoring/Onboarding'.
+Monitoring & Dashboards  0.0128    0.005   2.584   0.010                  Consequently, these tasks emerge as ideal candidates for
+Testing                  -0.0010   0.004   -0.267  0.789                  automation.
+Security & Compliance    -0.0098   0.006   -1.692  0.091
+Customer Support         0.0031    0.005   0.684   0.494                       V. IMPACT OF AI TOOL USAGE ON DEVELOPER
+Communication            -0.0090   0.003   -3.470  0.001                               PRODUCTIVITY AND SATISFACTION
+Task Mgmt.               -0.0065   0.003   -1.900  0.058
+Tech-Talks               -0.0129   0.004   -3.114  0.002                   The rapid advancement of artificial intelligence (AI) and its
+Mentoring/Onboarding     0.0085    0.011   0.743   0.458                growing adoption across industries, particularly in automating
+Learning Tech.           -0.0032   0.013   -0.243  0.808                development tasks, brings forth a crucial question: Which tasks
+                         0.0077    0.007   1.142   0.254                should be automated using AI to maximize both productivity
+                         0.0126    0.006   2.279   0.023                and satisfaction? In this section, we observe how the fre-
+                                                                        quency of AI tool usage impacts the developers' productivity
+   The developers who felt highly productive and satisfied were         and satisfaction and analyze the responses gathered from
+the ones who spent the most time on activities such as `Ar-             developers, examining which tasks they believe are most suited
+chitecting & designing new systems', `Coding', `Debugging',             for automation.
+`Refactoring Code', and `Learning New Technologies', while
+lesser time on `Documentation', `Security & Compliance',                A. How does the Frequency of AI Tool Usage Influence
+`Addressing Customer Support Tickets', `Communication',                 Productivity & Satisfaction
+`ADO Task Creation and Management' and `Mentoring &
+Onboarding'. An opposite trend is observed for the developers              In the survey, we asked the developers to indicate how
+from the `Low Productivity, Low Satisfaction' group, as they            frequently they incorporate AI tools during their workweek,
+tend to spend more time on `Security & Compliance', `Ad-                (`Daily', `Weekly', `Monthly', `Once every 6 months', or
+dressing Customer Support Tickets', and `Communication'.                `Once every year'). We again collapse the top 2 and bottom 2
+                                                                        categories for both productivity and satisfaction into a single
+                                                                        category (Productive/Unproductive).
+
+                                                                           Fig. 6 reveals that developers who use AI tools daily report
+                                                                        the highest levels of productivity, with 83.7% reporting to
+                                                                        be "productive" However, as the frequency of AI tool usage
+                                                                        decreases (e.g., from weekly to annually), the proportion
+                                                                        of productive developers also declines, while the percentage
+                                                                        of those reporting neutrality or even negative productivity
+                                                                        outcomes increases.
+
+                                                                           Fig. 7 shows a similar trend between AI tool usage and
+                                                                        satisfaction levels. Developers who utilize AI tools on a daily
+                                                                        basis experience the highest levels of satisfaction (74.5%),
+                                                                        with most of them reporting to be "satisfied." Again, as
+                                                                        AI usage frequency decreases, dissatisfaction becomes more
+                                                                        prevalent.
+
+Fig. 5. Average actual Weekly Hours Allocated to Various Activities by  B. Which tasks do developers want to automate?
+Developers in High vs. Low Productivity-Satisfaction Groups
+                                                                           In the survey, we asked the developers to answer the
+   Developers in the `High Productivity, Low Satisfaction'              question "Which of your current tasks would you most like
+category dedicate most of their time to activities such as              to see automated? Which processes do you think could be
+`Pull Requests/Code Review,' `Setting up Monitoring and                 enhanced to minimize repetitive work?"
+Dashboards,' `Communication,' and `Mentoring and Onboard-
+ing.' Despite feeling highly productive during the week, these             We received 242 open-ended responses from the develop-
+                                                                        ers. To analyze the responses, we utilized the GPT-4 model
+                                                                        to identify an initial set of task categories highlighted in
+      Fig. 6. Effect of the frequency of AI tools usage on productivity   category, we provide the name and a short description. The
+                                                                          table also illustrates the results from the manual annotation
+       Fig. 7. Effect of the frequency of AI tools usage on satisfaction  process and the frequency of each category based on the
+                                                                          manual annotation results.
+the data. The model identified 17 distinct categories. To
+ensure comprehensive coverage, we uniformly sampled 60                       Documentation emerged as the most frequent category
+responses based on their length. Four annotators independently            in our analysis of tasks that could be automated with AI.
+reviewed these responses using a closed-coding approach.                  Developers suggested the use of AI to create and update
+They assigned labels to each response based on the initial                documentation, maintain team knowledge bases, and also to
+categories suggested by GPT-4, while also identifying any                 efficiently understand existing code and systems from the
+new categories that emerged during the process. The inter-                available information. For example, D302 highlighted the
+rater agreement, measured using the Jaccard similarity metric,            importance of efficient documentation by saying: "I would
+was 81.5%, indicating a substantial level of agreement among              love to see automated documentation of infrastructure and
+annotators. Additionally, through discussions, the annotators             code. A lot of time is lost trying to understand the current
+agreed to introduce one new category ("Cloud Infrastructure               resources that go into securing, building, and deploying our
+Maintenance"), resulting in a final list of 18 categories of              products and trying to understand how the different parts of
+tasks that developers would like to automate using AI. The                our code base interact and depend on each other. It'd really
+remaining 182 responses were distributed equally amongst                  lessen the cognitive load if this was well-documented in a way
+the four annotators and manually labelled using the extended              that is automatically kept up-to-date." Similarly, developer
+taxonomy to identify the frequency of each category.                      D165 expressed the growing need for automating code docu-
+                                                                          mentation to keep pace with the rapid development cycles:
+   The final categories are summarized in Table IV. For each              "I would love it if there were some way to automatically
+                                                                          generate architectural documentation or either a data flow or
+                                                                          call stack diagram based on the structure of the actual code
+                                                                          in the repository. While tools like CodeFlow exist for VSCode
+                                                                          and Visual Studio, there's a learning curve and the lack
+                                                                          of reward for better internal documentation means creating
+                                                                          and updating documentation is on a volunteer basis. This,
+                                                                          and the rapid pace of development means that onboarding
+                                                                          any new engineer or existing engineer to a new area is a
+                                                                          time-consuming manual process of last-minute documentation
+                                                                          updates, or passing down tribal knowledge verbally. Would be
+                                                                          nice if there were some way to tie internal documentation to
+                                                                          a particular code base, so that every PR also `refreshes' the
+                                                                          internal documentation or diagrams."
+
+                                                                             Following this, several developers emphasized the need for
+                                                                          automating tasks associated with the setup and maintenance
+                                                                          of development environments, which often involve complex
+                                                                          processes such as configuring SSH keys, installing software
+                                                                          dependencies, and initializing new development instances. De-
+                                                                          veloper D81 points out the current challenges, stating, "Setting
+                                                                          up the Dev. environment could be way simpler. Right now it is
+                                                                          somewhat involved, time consuming, and brittle." Furthermore,
+                                                                          D403 emphasizes the significant impact of automation on
+                                                                          productivity, noting, "Setting up a development environment
+                                                                          takes up a huge amount of time in the development cycle, hence
+                                                                          I feel that enhancing the same will greatly boost developer
+                                                                          productivity."
+
+                                                                             Developers also suggested the need to automate tasks sur-
+                                                                          rounding the authoring, execution and monitoring of tests.
+                                                                          For instance, D81 envisions a future where AI could generate
+                                                                          comprehensive acceptance tests based on system usage logs:
+                                                                          "Dreaming wild, what I would like AI to do is to create all the
+                                                                          (missing) acceptance tests of the system (maybe by looking at
+                                                                          all the usage logs?) because currently any attempt to improve
+                                                                          or refactor the code monolith is a risky venture. The only thing
+                                                                          that would make it less risky is to have tests that validate that
+the system functionality is still there."                             These findings present several opportunities for software
+   Beyond the aforementioned technologies, developers also         developers, teams, organizations and researchers working in
+                                                                   this field. Organizations can potentially redesign or optimize
+convey the importance of enhancing automation efforts to           existing workflows to better align with the needs of developers.
+improve various aspects of project management. This in-            There may also be opportunities to adjust team structures to
+cludes the efficient creation and management of tasks in           distribute tasks more effectively, allowing developers to focus
+systems like Azure DevOps (ADO), which encompasses han-            more on their preferred activities. Additionally, introducing
+dling sub-tasks and repeatable tasks, as well as tracking          new tools or improving existing ones could help streamline
+project status effectively. Developer D38 shares his insights      less desirable tasks, freeing up more time for core development
+on utilizing AI to generate work items in ADO using a              activities.
+structured prompt, such as: "Create work item with title
+[Task][GIVE TASK DESCRIPTION] related to work [Fea-                   A potential interesting direction for future research would be
+ture Item], work description [1 line description] - assigned       to explore the long-term impact of better aligning developers'
+to [UserName](Given the user name it path to correct team)."       workweeks with their ideal ones. This could involve examining
+                                                                   changes in code quality, project success metrics, and overall
+     Takeaway: Incorporating AI tools is crucial for en-           user experience over time. However, it's important to note
+  hancing developers' productivity, while also boosting their      that finding the right balance will likely require ongoing
+  overall professional satisfaction. However, to maximize          assessment and adjustment, as the ideal workweek may vary
+  the benefits of automation, it is essential to align AI          not only between individuals but also evolve over time for
+  development efforts with the specific tasks and activities       each developer.
+  that developers most desire to automate. By focusing on
+  these areas, research and automation initiatives can more        B. Future impact of AI tools
+  effectively streamline workflows and address developers'
+  real-world needs.                                                   We observed a strong relation between how frequently
+                                                                   developers used AI tools and their reported satisfaction and
+                           VI. DISCUSSION                          productivity levels. Developers who use these tools daily
+                                                                   tended to report the highest level of both satisfaction and
+   Our study provides valuable insight into the complex dy-        productivity. This underscores the importance of these tools
+namics of a software developers' workweek. We aim to un-           in the modern software development landscape.
+derstand how the deviations from ideal and actual workweeks
+impact productivity and satisfaction levels. Additionally, we         As discussed earlier, developers most want to see activities
+explored the role of up and coming AI tools and how we can         automated, which we observed to correlate with lower satis-
+modify our approach towards building new tools to build more       faction and higher productivity levels. These findings present
+tools that developers want. In this sections we will discuss a     a new exciting direction for future AI tools and automation
+short summary of our findings and discuss the implications         development efforts. By focusing the development of AI
+of our findings and impact on developers, managers and             tools on areas which can have the dual benefit of boosting
+organizations in the software development industry as a whole.     developer productivity and satisfaction whilst at the same
+                                                                   time allowing them to focus on tasks they enjoy and find
+A. Time allotment vs productivity/satisfaction                     more fulfilling, organizations can foster a more motivated and
+                                                                   effective workforce.
+   Our results show most developers generally have very
+different workweeks from their ideal ones. This deviation has         Currently a large number of AI tools focus specifically
+a measurable impact on both productivity and satisfaction          on helping developers write code [10]­[12]. However, our
+levels. We quantitatively showed that as the gap between the       findings suggest a strong desire for automation in non-coding
+actual and ideal workweek increases there is a substantial         related tasks such as documentation, task management, secu-
+negative impact on both productivity and satisfaction levels.      rity and compliance, and communication. This reveals a gap
+This finding highlights the importance of having a better          in the current AI tool landscape and presents a significant
+balance between what a developer wants to do and what they         opportunity for innovation. Developing new AI tools that
+typically do in practice.                                          address these areas could offer substantial benefits not only
+                                                                   to individual developers but also to organizations as a whole.
+   Unsurprisingly, activities that positively influence both pro-
+ductivity and satisfaction are those typically considered core        The potential impact of such targeted AI tool development
+development tasks, such as coding, documentation, and code         is far-reaching. By automating tasks that developers find less
+refactoring. Conversely, time spent on maintaining and creat-      productive or satisfying, we could see a shift in how developers
+ing development environments, dealing with security and com-       allocate their time, potentially bringing their actual workweeks
+pliance issues, and excessive communication negatively im-         more in line with their ideal ones. This could lead to higher job
+pacts both metrics. These activity-level insights offer broader    satisfaction, increased productivity, and potentially even im-
+suggestions for how organizations can optimize their work-         provements in code quality and project outcomes as developers
+flows to maximize time on core development activities while        are able to focus more on core development tasks they find
+minimizing time on less preferred tasks.                           most engaging. However, as the adoption of these tools grow,
+                                                                   there might be a change in what a developer considers to be
+                                                                TABLE IV
+                                    WHICH TASKS DO DEVELOPERS WANT TO AUTOMATE?
+
+Category                            Category description                                                                               Count
+Documentation
+                                    Creating & updating documentation, generating API docs from code comments, & maintaining                  82
+Environment set-up/maintenance      team knowledge bases. Efficiently understanding existing code, APIs, & systems from docu-
+Write/maintain tests                mentation & reports.                                                                                     66
+Task Tracking & Backlog Management                                                                                                          60
+Security & Compliance               Setting up SSH keys, installing software dependencies, syncing Git repositories, updating local      47
+Incident/Customer Issue Management  branches, initializing new development instances/containers.                                        40
+Communication                                                                                                                          38
+                                    Unit test creation for routine/similar coding tasks. Authoring, execution, & monitoring of tests.  33
+Deployment & Release Management
+                                    Task creation & management in systems such as Azure DevOps, sub-tasks, repeatable tasks, or        26
+PR/Code Review/Change Management    project status tracking.
+                                                                                                                                       25
+Infrastructure Monitoring & Alerts  Reviews, tracking, addressing issues (S360 tasks), handling security wave items, & managing
+Debugging                           renewals or permissions.                                                                              23
+Code Refactoring                                                                                                                         15
+Build Automation                    Live site reporting, root cause analysis, incident correlation, triage, customer communication,     13
+Maintenance of Internal Tools       and ICM handling.                                                                                   11
+Onboarding                                                                                                                              10
+Cloud Infrastructure Maintenance    Summarizing long email threads, creating ADO tasks, answering frequent technical questions         7
+Workflow Integration                from different developers. Efficient ways to handle meeting minutes, schedules, notes, action      5
+Reworking Legacy Code               items, etc.                                                                                        3
+                                                                                                                                       3
+                                    Deployments along with build-and-release pipelines often involve many manual steps and
+                                    repetitive tasks. This includes validation checks, release notes creation, and understanding
+                                    deployment health metrics.
+
+                                    Code review feedback & formatting, detection of anti-patterns, merge conflict resolutions,
+                                    branch management, rerunning flaky jobs, merging development branches, handling pull request
+                                    iterations, reviews, & descriptions.
+
+                                    The setup, maintenance, and interpretation of monitoring dashboards, alert rules, and other
+                                    telemetry data.
+
+                                    Automation around debugging processes, particularly surrounding build failures, errors, and
+                                    runtime exceptions.
+
+                                    Automating parts of the refactoring process, enforcing code quality standards, and detecting
+                                    anti-patterns.
+
+                                    Faster and reliable build systems to swiftly integrate and manage new code changes into existing
+                                    codebases.
+
+                                    Maintenance tasks related to the upkeep of existing tools and systems.
+
+                                    Adding new team members, giving them walk-throughs of the best practices, resources, setting
+                                    up their development environment, and access permissions are areas suggested for improvement.
+
+                                    Resource provisioning, scaling, performance monitoring, security patching, backups, cost
+                                    optimization, network management, and incident response for efficient cloud operations.
+
+                                    Better integration between version control systems, issue trackers, & other development tools.
+
+                                    Assistance in dealing with codebase legacies, updating old systems, or adapting to new systems.
+
+an ideal workweek. Future research should not only focus on       spectives present an interesting avenue for future researchers.
+developing these tools but also on understanding their broader    Future studies could investigate how these workload deviations
+impacts on the software development as a whole.                   influence both productivity and satisfaction­particular in a
+                                                                  role-specific context­and how these insights can inform the
+   As we identify automation candidates that developers per-      selection of tasks for automation.
+ceive as associated with lower satisfaction but high productiv-
+ity levels, it is crucial to consider the diversity of roles and                         VII. RELATED WORK
+workloads across the team. For instance, team leads (TLs)
+often have workloads that differ significantly from those of         To our knowledge, this is the first work that compares
+individual contributors, due to the inherent responsibilities     a developer's ideal and typical workweek and assesses the
+of their roles. A potential impact on satisfaction could stem     impact of their deviations on productivity and satisfaction. We
+from these deviations, where some developers may feel dis-        also explore the role of AI tools in the software development
+connected from their regular or prior tasks­tasks they found      process and capture potential future directions for AI tool
+fulfilling or technically engaging. At the same time, there       development. We give a brief summary of existing work in
+may be developers who view this shift as an opportunity to        three areas: developer activities and time spent, developer
+explore new activities, broaden their skill sets, or maintain     productivity and satisfaction, and AI tools and automation.
+cognitive engagement in their workweek. This duality in per-
+A. Developer activities and time allotment                           1) There is a large deviation between the ideal and actual
+                                                                         workweeks, with developers clearly wanting to spend
+   Understanding how developers spend their time across                  more time on core developmental activities and less on
+various activities has been a very well explored topic. Prior            communication/maintenance ones.
+work analyzed how developers spend their time within the
+IDE by specifically tracking IDE usage, monitoring test and          2) As the deviation between the ideal and actual workweek
+other refactoring feature usage [13], [14]. This work did not            increases the productivity and satisfaction levels tend to
+focus on other activities outside the IDE like collaboration,            fall.
+communication and planning.
+                                                                     3) Usage of AI tools by a software developer is positively
+   More recent works have captured a more holistic picture               correlated with higher levels of productivity and satis-
+of what a developer does and aimed to capture the time                   faction. This effect is especially more pronounced when
+spent through various methods of capturing data like surveys             the frequency of usage increases.
+[3], [15], [16], observations and interviews [17], and through
+tracking usage of the computer [13], [14]. While many studies        4) Developers have strong preferences towards automation
+focus on understanding the daily activities, fewer have looked           on activities like documentation, environment setup,
+at patterns across an entire workweek. Our study builds on this          testing, monitoring etc. These insights will inform the
+gap, extending our window to the past work week allowing us              research and development of future AI tools.
+to get a more comprehensive understanding of how a developer
+spends their time and also reducing the impact of day to day         The insights we present in this paper have important impli-
+variations. In addition, we compare the actual workweek with      cations for developers, managers and companies as a whole.
+an ideal workweek.                                                Teams and companies can potentially boost satisfaction and
+                                                                  productivity levels by working on more closely aligning a
+B. Developer productivity and satisfaction                        typical workweek with a developer's ideal workweek. Fur-
+                                                                  thermore, the development of future AI tools can take into
+   There exists a substantial amount of prior work on trying      account the needs of a developer as discussed in our paper
+to understand the factors that influence developer productivity   and fill gaps in this area.
+and satisfaction [2], [18]­[20]. There is significant work in
+understanding how different factors like interruptions [21],         While our work is restricted to Microsoft, it would be
+[22], emails and communication [23] impact both productivity      interesting to see how our research fits into different organiza-
+and satisfaction.                                                 tional contexts and over longer intervals of time. Additionally,
+                                                                  another interesting aspect to look at would be how AI-tools
+   Prior work [24]­[27] showed also a link between developer      potentially change a typical and ideal workweek of a developer
+happiness and increased productivity. Therefore, it is important  as the adoption and scope of AI increases.
+to analyze how different activities affect a developers satis-
+faction and in-turn productivity. Masood et al. [28] analyzed        In conclusion, we try to understand how time spent on
+how different tasks and activities affect developer happiness     different activities over a workweek and the deviation from a
+and productivity.                                                 developers "ideal" workweek impact productivity and satisfac-
+                                                                  tion levels. Our findings reveal significant potential to reshape,
+C. AI tools and automation in software development                innovate, and streamline workflows, enhancing developer pro-
+                                                                  ductivity and satisfaction. This will lead to more fulfilling
+   The rapid development and adoption of AI tools and au-         work experiences and higher quality outcomes, benefiting both
+tomation in software development has opened new avenues           developers and the organizations.
+for understanding their impacts on the field. There have been
+works [29]­[32] that analyze how different AI tools impact                                ACKNOWLEDGMENTS
+developer productivity. There is also a body of work [33],
+[34] on understanding specific tasks that developers want to         We thank our survey participants for their participation. We
+use AI tools.                                                     also thank the exploratory interview participants for helping
+                                                                  guide our study design. We thank the ICSE reviewers for their
+   We build upon these existing studies by analyzing the          insightful and constructive comments.
+impact of AI tool usage on productivity and satisfaction. We
+further investigate whether developers want particular tasks to                                REFERENCES
+be automated. This can drive future development of AI tools
+and ensure that they are aligned with the actual requirements      [1] D. Graziotin, F. Fagerholm, X. Wang, and P. Abrahamsson, "What
+of the developers.                                                      happens when software developers are (un)happy," Journal of Systems
+                                                                        and Software, vol. 140, pp. 32­47, 2018. [Online]. Available:
+                         VIII. CONCLUSION                               https://www.sciencedirect.com/science/article/pii/S0164121218300323
+
+   In this paper, we provide valuable insights on the complex      [2] M.-A. Storey, T. Zimmermann, C. Bird, J. Czerwonka, B. Murphy,
+relationship between software developers' workweek and how              and E. Kalliamvakou, "Towards a theory of software developer
+it's deviation from their ideal workweek affects their produc-          job satisfaction and perceived productivity," IEEE Transactions
+tivity and satisfaction levels. Here are our key findings:              on Software Engineering, September 2019. [Online]. Available:
+                                                                        https://www.microsoft.com/en- us/research/publication/towards- a- theor
+                                                                        y-of-software-developer-job-satisfaction-and-perceived-productivity/
+
+                                                                   [3] A. N. Meyer, E. T. Barr, C. Bird, and T. Zimmermann, "Today was a
+                                                                        good day: The daily life of software developers," IEEE Transactions on
+                                                                        Software Engineering, vol. 47, no. 5, pp. 863­880, 2021.
+ [4] T. DeMarco and T. Lister, "Programmer performance and the effects of       [21] G. Mark, D. Gudith, and U. Klocke, "The cost of interrupted work: more
+      the workplace," in Proceedings of the 8th International Conference on           speed and stress," in Proceedings of the SIGCHI conference on Human
+      Software Engineering, ser. ICSE '85. Washington, DC, USA: IEEE                  Factors in Computing Systems, 2008, pp. 107­110.
+      Computer Society Press, 1985, p. 268­272.
+                                                                                [22] B. P. Bailey, J. A. Konstan, and J. V. Carlis, "The effects of interruptions
+ [5] J. Singer, T. Lethbridge, N. Vinson, and N. Anquetil, "An examination of         on task performance, annoyance, and anxiety in the user interface." in
+      software engineering work practices," in Proceedings of the 1997 Con-           Interact, vol. 1, 2001, pp. 593­601.
+      ference of the Centre for Advanced Studies on Collaborative Research,
+      ser. CASCON '97. IBM Press, 1997, p. 21.                                  [23] B. Houck, H. Yelin, J. Butler, N. Forsgren, and A. McMartin,
+                                                                                      "The best of both worlds: Unlocking the potential of hybrid work
+ [6] D. Perry, N. Staudenmayer, and L. Votta, "People, organizations, and             for software engineers," May 2023. [Online]. Available: https:
+      process improvement," IEEE Software, vol. 11, no. 4, pp. 36­45, 1994.           //www.microsoft.com/en- us/research/publication/the- best- of- both- wor
+                                                                                      lds-unlocking-the-potential-of-hybrid-work-for-software-engineers/
+ [7] M. Fowler, Refactoring: improving the design of existing code.
+      Addison-Wesley Professional, 2018.                                        [24] D. Graziotin, X. Wang, and P. Abrahamsson, "Happy software devel-
+                                                                                      opers solve problems better: psychological measurements in empirical
+ [8] C. Spearman, "The proof and measurement of association between two               software engineering," PeerJ, vol. 2, p. e289, 2014.
+      things." International journal of epidemiology, vol. 39 5, pp. 1137­50,
+      2015. [Online]. Available: https://api.semanticscholar.org/CorpusID:      [25] ----, "Software developers, moods, emotions, and performance," IEEE
+      14780428                                                                        Software, vol. 31, no. 4, pp. 24­27, 2014.
+
+ [9] C. J. Willmott and K. Matsuura, "Advantages of the mean absolute error     [26] Y.-H. Kim, E. K. Choe, B. Lee, and J. Seo, "Understanding personal
+      (mae) over the root mean square error (rmse) in assessing average model         productivity: How knowledge workers define, evaluate, and reflect on
+      performance," Climate Research, vol. 30, pp. 79­82, 2005. [Online].             their productivity," in Proceedings of the 2019 CHI Conference on
+      Available: https://api.semanticscholar.org/CorpusID:120556606                   Human Factors in Computing Systems, 2019, pp. 1­12.
+
+[10] "Github copilot," https://github.com/features/copilot, accessed: 2024-     [27] D. Girardi, F. Lanubile, N. Novielli, and A. Serebrenik, "Emotions and
+      10-10.                                                                          perceived productivity of software developers at the workplace," IEEE
+                                                                                      Transactions on Software Engineering, vol. 48, no. 9, pp. 3326­3341,
+[11] "Cursor," https://www.cursor.com/, accessed: 2024-10-10.                         2022.
+[12] "Cody by sourcegraph," https://sourcegraph.com/cody, accessed: 2024-
+                                                                                [28] Z. Masood, R. Hoda, K. Blincoe, and D. Damian, "Like, dislike,
+      10-10.                                                                          or just do it? how developers approach software development tasks,"
+[13] R. Minelli, A. Mocci, and M. Lanza, "I know what you did last summer-            Information and Software Technology, vol. 150, p. 106963, 2022.
+                                                                                      [Online]. Available: https://www.sciencedirect.com/science/article/pii/
+      an investigation of how developers spend their time," in 2015 IEEE 23rd         S0950584922001045
+      international conference on program comprehension. IEEE, 2015, pp.
+      25­35.                                                                    [29] A. Ziegler, E. Kalliamvakou, X. A. Li, A. Rice, D. Rifkin, S. Simister,
+[14] S. Amann, S. Proksch, S. Nadi, and M. Mezini, "A study of visual                 G. Sittampalam, and E. Aftandilian, "Measuring github copilot's impact
+      studio usage in practice," in 2016 IEEE 23rd International Conference           on productivity," Commun. ACM, vol. 67, no. 3, p. 54­63, Feb. 2024.
+      on Software Analysis, Evolution, and Reengineering (SANER), vol. 1.             [Online]. Available: https://doi.org/10.1145/3633453
+      IEEE, 2016, pp. 124­134.
+[15] M. Beller, V. Orgovan, S. Buja, and T. Zimmermann, "Mind the gap:          [30] M. Borg, D. Hewett, D. Graham, N. Couderc, E. So¨derberg,
+      On the relationship between automatically measured and self-reported            L. Church, and D. Farley, "Does co-development with ai assistants
+      productivity," IEEE Software, vol. 38, no. 5, pp. 24­31, 2021.                  lead to more maintainable code? a registered report," arXiv preprint
+[16] D. Russo, P. H. Hanel, S. Altnickel, and N. van Berkel, "The daily               arXiv:2408.10758, 2024.
+      life of software engineers during the covid-19 pandemic," in 2021
+      IEEE/ACM 43rd International Conference on Software Engineering:           [31] R. Ulfsnes, N. B. Moe, V. Stray, and M. Skarpen, "Transforming soft-
+      Software Engineering in Practice (ICSE-SEIP), 2021, pp. 364­373.                ware development with generative ai: Empirical insights on collaboration
+[17] M. K. Gonc¸alves, C. R. de Souza, and V. M. Gonza´lez, "Collaboration,           and workflow," in Generative AI for Effective Software Development.
+      information seeking and communication: An observational study of                Springer, 2024, pp. 219­234.
+      software developers' work practices." J. Univers. Comput. Sci., vol. 17,
+      no. 14, pp. 1913­1930, 2011.                                              [32] S. Peng, E. Kalliamvakou, P. Cihon, and M. Demirer, "The impact of ai
+[18] N. Forsgren, M.-A. Storey, C. Maddila, T. Zimmermann, B. Houck,                  on developer productivity: Evidence from github copilot," arXiv preprint
+      and J. Butler, "The space of developer productivity: There's more to it         arXiv:2302.06590, 2023.
+      than you think." Queue, vol. 19, no. 1, p. 20­48, Mar. 2021. [Online].
+      Available: https://doi.org/10.1145/3454122.3454124                        [33] M. Khemka and B. Houck, "Towards effective ai support for developers:
+[19] E. Murphy-Hill, C. Jaspan, C. Sadowski, D. Shepherd, M. Phillips,                A survey of desires and concerns," ACM Queue, vol. 22, no. 3, July
+      C. Winter, A. Knight, E. Smith, and M. Jorde, "What predicts software           2024. [Online]. Available: https://www.microsoft.com/en-us/research/p
+      developers' productivity?" IEEE Transactions on Software Engineering,           ublication/towards-effective-ai-support-for-developers-a-survey-of-des
+      vol. 47, no. 3, pp. 582­594, 2021.                                              ires-and-concerns/
+[20] C. Sadowski and T. Zimmermann, Eds., Rethinking productivity in
+      software engineering. Apress, 2019.                                       [34] C. Bird, D. Ford, T. Zimmermann, N. Forsgren, E. Kalliamvakou,
+                                                                                      T. Lowdermilk, and I. Gazit, "Taking flight with copilot: Early in-
+                                                                                      sights and opportunities of ai-powered pair-programming tools," Queue,
+                                                                                      vol. 20, no. 6, pp. 35­57, 2022.
+

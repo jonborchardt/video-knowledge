@@ -3,7 +3,7 @@
  "basis": {
   "claims": 385,
   "sources": 216,
-  "studies": 18,
+  "studies": 20,
   "candidates": 69
  },
  "stories": [
@@ -2196,6 +2196,261 @@
    "partOf": "decision:who-benefits"
   },
   {
+   "id": "conflict:writing-code-never-main-bottleneck-software",
+   "kind": "conflict",
+   "title": "Was Writing Code Ever the Bottleneck?",
+   "alternates": [
+    "Why a Faster Keyboard Doesn't Ship Software Faster",
+    "The Part of Software Delivery AI Doesn't Touch"
+   ],
+   "question": "If writing code was never the bottleneck, how much can faster code generation help?",
+   "whyWatch": "Eighteen sources say it and three deny it; the two reports that touch it both found review and rollout, not typing, set the pace.",
+   "tension": "A plausible systems argument with only indirect measurements.",
+   "evidenceNeeded": "End-to-end delivery time with and without AI tools, decomposed by phase.",
+   "evidenceAvailable": [
+    "DORA 2024 report: partly (0.45, direct)",
+    "Microsoft workweek survey (Time Warp): partly (0.3, partial)",
+    "Google migrations report: partly (0.45, partial)",
+    "Microsoft/Accenture field RCTs: partly (0.4, partial)"
+   ],
+   "gaps": [
+    "Reviewer: DORA 2024 now ties more AI adoption to slightly lower delivery throughput despite higher individual productivity, and a Microsoft survey puts coding at about 11% of the workweek, but both are cross-sectional self-reports and none measures delivery time by phase; the claim that coding was never the bottleneck needs a value-stream measurement (lead time split into coding, review, test and release) with and without AI tools.",
+    "What explains the split between DORA 2024 report, Microsoft workweek survey (Time Warp), Google migrations report, Microsoft/Accenture field RCTs?",
+    "DORA 2024 report: DORA's 2024 survey (about 3,000 professionals) found that a 25% rise in AI adoption went with faster code review and approval and higher individual productivity, yet an estimated 1.5% lower delivery throughput and 7.2% lower stability, which it attributes to larger changes; this supports limited end-to-end gains from faster coding, but it is cross-sectional and does not measure delivery time by phase or show coding was never the bottleneck.",
+    "Microsoft workweek survey (Time Warp): In a survey of 484 Microsoft developers, coding took about 11% of the reported workweek, behind communication and meetings (12%), with debugging 9% and code review 5%; coding being a small share of time fits the claim, but self-reported time shares at one company do not measure what limits delivery.",
+    "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
+    "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured)."
+   ],
+   "premise": "The sources split on \"Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains\": DORA 2024 report says partly, Microsoft workweek survey (Time Warp) says partly, Google migrations report says partly, Microsoft/Accenture field RCTs says partly. The reasons they differ are the useful part.",
+   "claims": [
+    "ai-coding/writing-code-never-main-bottleneck-software"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "Two confident, opposite answers to the same question: \"Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains\".",
+    "conflict": "The sources do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (DORA 2024 report, Microsoft workweek survey (Time Warp), Google migrations report, Microsoft/Accenture field RCTs): design, sample, what was measured.",
+    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One question: if coding was never the bottleneck, how much can faster coding help end to end?"
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 1,
+    "curiosity": 1,
+    "stakes": 0.4,
+    "depth": 0.9,
+    "originality": 1,
+    "evidence": 0.65,
+    "editorial": 0.82,
+    "overall": 0.75,
+    "explanation": "editorial 0.82 = mean of coherence 0.8 (review), relevance 1 (21 sources, 20 channels), curiosity 1 (conflict), stakes 0.4 (lean: calibrating), depth 0.9 (4 studies, 1 claim, tension); evidence 0.65 = strongest DORA 2024 report at 0.45 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: DORA 2024 now ties more AI adoption to slightly lower delivery throughput despite higher individual productivity, and a Microsoft survey puts coding at about 11% of the workweek, but both are cross-sectional self-reports and none measures delivery time by phase; the claim that coding was never the bottleneck needs a value-stream measurement (lead time split into coding, review, test and release) with and without AI tools.",
+   "blocking": [
+    "Reviewer: DORA 2024 now ties more AI adoption to slightly lower delivery throughput despite higher individual productivity, and a Microsoft survey puts coding at about 11% of the workweek, but both are cross-sectional self-reports and none measures delivery time by phase; the claim that coding was never the bottleneck needs a value-stream measurement (lead time split into coding, review, test and release) with and without AI tools."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains",
+     "kind": "fact",
+     "modality": "universal",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+        "cite": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1335"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "DORA 2024 report",
+       "verdict": "partly",
+       "confidence": 0.45,
+       "note": "DORA's 2024 survey (about 3,000 professionals) found that a 25% rise in AI adoption went with faster code review and approval and higher individual productivity, yet an estimated 1.5% lower delivery throughput and 7.2% lower stability, which it attributes to larger changes; this supports limited end-to-end gains from faster coding, but it is cross-sectional and does not measure delivery time by phase or show coding was never the bottleneck.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+        "cite": "ai-coding/sources/2502.15287v1.txt#L163-L177"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Microsoft workweek survey (Time Warp)",
+       "verdict": "partly",
+       "confidence": 0.3,
+       "note": "In a survey of 484 Microsoft developers, coding took about 11% of the reported workweek, behind communication and meetings (12%), with debugging 9% and code review 5%; coding being a small share of time fits the claim, but self-reported time shares at one company do not measure what limits delivery.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"self-reported\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+        "cite": "ai-coding/sources/2501.06972.txt#L605-L617"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Google migrations report",
+       "verdict": "partly",
+       "confidence": 0.45,
+       "note": "Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"though\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+        "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L778-L782"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Microsoft/Accenture field RCTs",
+       "verdict": "partly",
+       "confidence": 0.4,
+       "note": "Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured).",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"not directly\")"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "DORA 2024 report: DORA's 2024 survey (about 3,000 professionals) found that a 25% rise in AI adoption went with faster code review and approval and higher individual productivity, yet an estimated 1.5% lower delivery throughput and 7.2% lower stability, which it attributes to larger changes; this supports limited end-to-end gains from faster coding, but it is cross-sectional and does not measure delivery time by phase or show coding was never the bottleneck.",
+      "Microsoft workweek survey (Time Warp): In a survey of 484 Microsoft developers, coding took about 11% of the reported workweek, behind communication and meetings (12%), with debugging 9% and code review 5%; coding being a small share of time fits the claim, but self-reported time shares at one company do not measure what limits delivery. [partial: the verdict note limits its own scope (\"self-reported\")]",
+      "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped. [partial: the verdict note limits its own scope (\"though\")]",
+      "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured). [partial: the verdict note limits its own scope (\"not directly\")]",
+      "\"never\" is stronger than the evidence (strongest support 0)."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 4 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains",
+       "kind": "fact",
+       "modality": "universal",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+          "cite": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1335"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "DORA 2024 report",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "DORA's 2024 survey (about 3,000 professionals) found that a 25% rise in AI adoption went with faster code review and approval and higher individual productivity, yet an estimated 1.5% lower delivery throughput and 7.2% lower stability, which it attributes to larger changes; this supports limited end-to-end gains from faster coding, but it is cross-sectional and does not measure delivery time by phase or show coding was never the bottleneck.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+          "cite": "ai-coding/sources/2502.15287v1.txt#L163-L177"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Microsoft workweek survey (Time Warp)",
+         "verdict": "partly",
+         "confidence": 0.3,
+         "note": "In a survey of 484 Microsoft developers, coding took about 11% of the reported workweek, behind communication and meetings (12%), with debugging 9% and code review 5%; coding being a small share of time fits the claim, but self-reported time shares at one company do not measure what limits delivery.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-reported\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+          "cite": "ai-coding/sources/2501.06972.txt#L605-L617"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Google migrations report",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"though\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/writing-code-never-main-bottleneck-software",
+          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L778-L782"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Microsoft/Accenture field RCTs",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured).",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"not directly\")"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "DORA 2024 report: DORA's 2024 survey (about 3,000 professionals) found that a 25% rise in AI adoption went with faster code review and approval and higher individual productivity, yet an estimated 1.5% lower delivery throughput and 7.2% lower stability, which it attributes to larger changes; this supports limited end-to-end gains from faster coding, but it is cross-sectional and does not measure delivery time by phase or show coding was never the bottleneck.",
+        "Microsoft workweek survey (Time Warp): In a survey of 484 Microsoft developers, coding took about 11% of the reported workweek, behind communication and meetings (12%), with debugging 9% and code review 5%; coding being a small share of time fits the claim, but self-reported time shares at one company do not measure what limits delivery. [partial: the verdict note limits its own scope (\"self-reported\")]",
+        "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped. [partial: the verdict note limits its own scope (\"though\")]",
+        "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured). [partial: the verdict note limits its own scope (\"not directly\")]",
+        "\"never\" is stronger than the evidence (strongest support 0)."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 4 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
    "id": "conflict:generated-code-drifts-codebase-established-conventions",
    "kind": "conflict",
    "title": "Does AI Code Follow Your Team's Conventions?",
@@ -2513,6 +2768,219 @@
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
        "explanation": "qualified (qualify): no direct support, 6 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "conflict:most-developers-report-has-improved-quality",
+   "kind": "conflict",
+   "title": "Why do studies disagree about whether most developers report that AI has improved the quality of their code?",
+   "alternates": [
+    "Most developers report that AI has improved the quality of their code: the case for and against",
+    "What we actually know about whether most developers report that AI has improved the quality of their code"
+   ],
+   "question": "Why do studies disagree about whether most developers report that AI has improved the quality of their code?",
+   "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
+   "tension": "The studies split: DORA 2024 report says right, Shan et al. field study + RCT says partly, Vibe-coding literature review says wrong.",
+   "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
+   "evidenceAvailable": [
+    "Vibe-coding literature review: wrong (0.3, direct)",
+    "DORA 2024 report: right (0.4, partial)",
+    "Shan et al. field study + RCT: partly (0.35, direct)"
+   ],
+   "gaps": [
+    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.35 after applicability); it cannot carry a narrative.",
+    "What explains the split between DORA 2024 report, Shan et al. field study + RCT, Vibe-coding literature review?",
+    "Shan et al. field study + RCT: Developers reporting more workplace AI use rated their code's reusability and testability higher (+0.3 on the scale), but rated reliability and complexity no differently. The follow-up found lower maintainability."
+   ],
+   "premise": "The studies split on \"Most developers report that AI has improved the quality of their code\": DORA 2024 report says right, Shan et al. field study + RCT says partly, Vibe-coding literature review says wrong. The reasons they differ are the useful part.",
+   "claims": [
+    "ai-coding/most-developers-report-has-improved-quality"
+   ],
+   "related": [
+    "ai-coding/developers-report-saves-more-time-debugging"
+   ],
+   "arc": {
+    "hook": "Two confident, opposite answers to the same question: \"Most developers report that AI has improved the quality of their code\".",
+    "conflict": "The studies do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (DORA 2024 report, Shan et al. field study + RCT, Vibe-coding literature review): design, sample, what was measured.",
+    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "heuristic",
+    "explanation": "One claim, one question. Unreviewed."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.53,
+    "curiosity": 1,
+    "stakes": 0.7,
+    "depth": 0.8,
+    "originality": 1,
+    "evidence": 0.45,
+    "editorial": 0.77,
+    "overall": 0.64,
+    "explanation": "editorial 0.77 = mean of coherence 0.8 (heuristic), relevance 0.53 (4 sources, 3 channels), curiosity 1 (conflict), stakes 0.7 (lean: pro), depth 0.8 (3 studies, 1 claim, tension); evidence 0.45 = strongest Shan et al. field study + RCT at 0.35 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: The strongest study that bears on the central conclusion is weaker than 0.5 (0.35 after applicability); it cannot carry a narrative.",
+   "blocking": [
+    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.35 after applicability); it cannot carry a narrative."
+   ],
+   "reviewed": false,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Studies disagree on whether most developers report that AI has improved the quality of their code",
+     "kind": "disagreement",
+     "modality": "typical",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/most-developers-report-has-improved-quality",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L2227-L2231"
+       },
+       "cited": true,
+       "role": "contradicts",
+       "by": "Vibe-coding literature review",
+       "verdict": "wrong",
+       "confidence": 0.3,
+       "note": "Quality outcomes in the corpus are mixed and framed as trade-offs; the cited Fawzy et al. grey review found 68% of practitioners perceive vibe-coded output as 'fast but flawed'.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/most-developers-report-has-improved-quality",
+        "cite": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1222-L1229"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "DORA 2024 report",
+       "verdict": "right",
+       "confidence": 0.4,
+       "note": "In DORA's 2024 survey, 67% of respondents reported that AI is helping them improve their code; a self-report from a large survey, which the report says fits its estimated association of AI adoption with higher code quality.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"self-report\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/most-developers-report-has-improved-quality",
+        "cite": "ai-coding/sources/4859137.txt#L1149-L1155"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Shan et al. field study + RCT",
+       "verdict": "partly",
+       "confidence": 0.35,
+       "note": "Developers reporting more workplace AI use rated their code's reusability and testability higher (+0.3 on the scale), but rated reliability and complexity no differently. The follow-up found lower maintainability.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Contradicted by Vibe-coding literature review: Quality outcomes in the corpus are mixed and framed as trade-offs; the cited Fawzy et al. grey review found 68% of practitioners perceive vibe-coded output as 'fast but flawed'."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 1 contradicting, 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Most developers report that AI has improved the quality of their code",
+       "kind": "fact",
+       "modality": "typical",
+       "status": "unsupported",
+       "decision": "blocked",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/most-developers-report-has-improved-quality",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L2227-L2231"
+         },
+         "cited": true,
+         "role": "contradicts",
+         "by": "Vibe-coding literature review",
+         "verdict": "wrong",
+         "confidence": 0.3,
+         "note": "Quality outcomes in the corpus are mixed and framed as trade-offs; the cited Fawzy et al. grey review found 68% of practitioners perceive vibe-coded output as 'fast but flawed'.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/most-developers-report-has-improved-quality",
+          "cite": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1222-L1229"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "DORA 2024 report",
+         "verdict": "right",
+         "confidence": 0.4,
+         "note": "In DORA's 2024 survey, 67% of respondents reported that AI is helping them improve their code; a self-report from a large survey, which the report says fits its estimated association of AI adoption with higher code quality.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-report\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/most-developers-report-has-improved-quality",
+          "cite": "ai-coding/sources/4859137.txt#L1149-L1155"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Shan et al. field study + RCT",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Developers reporting more workplace AI use rated their code's reusability and testability higher (+0.3 on the scale), but rated reliability and complexity no differently. The follow-up found lower maintainability.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Contradicted by Vibe-coding literature review: Quality outcomes in the corpus are mixed and framed as trade-offs; the cited Fawzy et al. grey review found 68% of practitioners perceive vibe-coded output as 'fast but flawed'."
+       ],
+       "suggestions": [
+        "The evidence points the other way; reverse the claim or report it as what the sources say."
+       ],
+       "explanation": "unsupported (blocked): no direct support, 1 contradicting, 2 qualifying."
       }
      }
     ]
@@ -2860,189 +3328,6 @@
         "Present the disagreement: name the studies on each side instead of stating one side as fact."
        ],
        "explanation": "disputed (qualify): 1 supporting (1 independent, strongest 0.3), 1 contradicting, 2 qualifying."
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "conflict:writing-code-never-main-bottleneck-software",
-   "kind": "conflict",
-   "title": "Was Writing Code Ever the Bottleneck?",
-   "alternates": [
-    "Why a Faster Keyboard Doesn't Ship Software Faster",
-    "The Part of Software Delivery AI Doesn't Touch"
-   ],
-   "question": "If writing code was never the bottleneck, how much can faster code generation help?",
-   "whyWatch": "Eighteen sources say it and three deny it; the two reports that touch it both found review and rollout, not typing, set the pace.",
-   "tension": "A plausible systems argument with only indirect measurements.",
-   "evidenceNeeded": "End-to-end delivery time with and without AI tools, decomposed by phase.",
-   "evidenceAvailable": [
-    "Google migrations report: partly (0.45, partial)",
-    "Microsoft/Accenture field RCTs: partly (0.4, partial)"
-   ],
-   "gaps": [
-    "Reviewer: Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement.",
-    "What explains the split between Google migrations report, Microsoft/Accenture field RCTs?",
-    "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
-    "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured)."
-   ],
-   "premise": "The sources split on \"Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains\": Google migrations report says partly, Microsoft/Accenture field RCTs says partly. The reasons they differ are the useful part.",
-   "claims": [
-    "ai-coding/writing-code-never-main-bottleneck-software"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "Two confident, opposite answers to the same question: \"Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains\".",
-    "conflict": "The sources do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (Google migrations report, Microsoft/Accenture field RCTs): design, sample, what was measured.",
-    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
-    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One question: if coding was never the bottleneck, how much can faster coding help end to end?"
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 1,
-    "curiosity": 1,
-    "stakes": 0.4,
-    "depth": 0.77,
-    "originality": 1,
-    "evidence": 0.31,
-    "editorial": 0.79,
-    "overall": 0.6,
-    "explanation": "editorial 0.79 = mean of coherence 0.8 (review), relevance 1 (21 sources, 20 channels), curiosity 1 (conflict), stakes 0.4 (lean: calibrating), depth 0.77 (2 studies, 1 claim, tension); evidence 0.31 = strongest Google migrations report at 0.45 (partial) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement.",
-   "blocking": [
-    "Reviewer: Google's migration report and the Microsoft field trial each note that coding is only part of the job, but neither measures end-to-end delivery time by phase; the claim needs a value-stream measurement."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains",
-     "kind": "fact",
-     "modality": "universal",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/writing-code-never-main-bottleneck-software",
-        "cite": "ai-coding/sources/2501.06972.txt#L605-L617"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Google migrations report",
-       "verdict": "partly",
-       "confidence": 0.45,
-       "note": "Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
-       "applicability": "partial",
-       "basis": "heuristic",
-       "why": "the verdict note limits its own scope (\"though\")"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/writing-code-never-main-bottleneck-software",
-        "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L778-L782"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Microsoft/Accenture field RCTs",
-       "verdict": "partly",
-       "confidence": 0.4,
-       "note": "Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured).",
-       "applicability": "partial",
-       "basis": "heuristic",
-       "why": "the verdict note limits its own scope (\"not directly\")"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped. [partial: the verdict note limits its own scope (\"though\")]",
-      "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured). [partial: the verdict note limits its own scope (\"not directly\")]",
-      "\"never\" is stronger than the evidence (strongest support 0)."
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): no direct support, 2 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "Writing code was never the main bottleneck in software delivery, so faster code generation yields limited end-to-end gains",
-       "kind": "fact",
-       "modality": "universal",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/writing-code-never-main-bottleneck-software",
-          "cite": "ai-coding/sources/2501.06972.txt#L605-L617"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Google migrations report",
-         "verdict": "partly",
-         "confidence": 0.45,
-         "note": "Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"though\")"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/writing-code-never-main-bottleneck-software",
-          "cite": "ai-coding/sources/cui-demirer-copilot-field-experiments.txt#L778-L782"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Microsoft/Accenture field RCTs",
-         "verdict": "partly",
-         "confidence": 0.4,
-         "note": "Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured).",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"not directly\")"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Google migrations report: Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped. [partial: the verdict note limits its own scope (\"though\")]",
-        "Microsoft/Accenture field RCTs: Authors explain why field gains (26%) are smaller than lab gains: coding is only part of a developer's job and some tasks are less assistable, so time saved on coding only partly becomes extra output (interpretation, not directly measured). [partial: the verdict note limits its own scope (\"not directly\")]",
-        "\"never\" is stronger than the evidence (strongest support 0)."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 2 qualifying."
       }
      }
     ]
@@ -4274,243 +4559,6 @@
        ],
        "suggestions": [],
        "explanation": "supported (approved): no direct support, 7 source statements."
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "gap:open-weight-coding-models-now-handle",
-   "kind": "gap",
-   "title": "Can a Free Open Model Do Your Everyday Coding?",
-   "alternates": [
-    "Open-Weight vs Closed Coding Models: How Big Is the Gap?",
-    "Do You Still Need to Pay for the Best Coding Model?"
-   ],
-   "question": "Are free open-weight models now good enough for everyday coding?",
-   "whyWatch": "Five sources say open-weight models now handle routine coding and only trail at the top, which decides whether a team can self-host instead of paying per token; none shows a measurement, and vendor leaderboard posts are the only numbers in circulation.",
-   "tension": "Benchmark announcements say the gap has nearly closed; the sources who say so offer impressions, and nothing in the corpus tests either model family on real work.",
-   "evidenceNeeded": "An independent evaluation running open-weight and closed models on the same realistic coding tasks, with contamination controls, reporting success rates on routine tasks and the gap at the hardest ones.",
-   "evidenceAvailable": [],
-   "gaps": [
-    "No study in the corpus checks the claim; the story is the search for evidence.",
-    "Has anyone measured whether open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models?",
-    "Which study or dataset would settle it?"
-   ],
-   "premise": "5 sources assert \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
-   "claims": [
-    "ai-coding/open-weight-coding-models-now-handle"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "How often this gets said, and how confidently.",
-    "conflict": "Ask for the evidence and find none in the corpus.",
-    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
-    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
-    "takeaway": "How to treat the claim until it is checked."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One question: can a free, self-hostable model do everyday coding work, and how far behind the best closed models is it?"
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.72,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 0.35,
-    "originality": 1,
-    "evidence": 0,
-    "editorial": 0.61,
-    "overall": 0.37,
-    "explanation": "editorial 0.61 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
-   "blocking": [
-    "No study in the corpus checks the claim; the story is the search for evidence."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "5 sources claim \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\"; no study in the corpus has checked it.",
-     "kind": "attribution",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "hFzapS8rhEs"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Two People Vibe Coded a $1.8B Company. Yes, This is AI Takeoff.",
-       "verdict": null,
-       "confidence": null,
-       "note": "85.2 compares to 92% for GPT 5.4 ... So, it's not all the way there, but these are tiny models"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "tFffUnSq7VA"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
-       "verdict": null,
-       "confidence": null,
-       "note": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "ulfZwEa1x_o"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "DeepSeek R1 vs Kimi K2 vs Qwen3 Coder vs GLM 4.5 - Head-to-Head Testing!",
-       "verdict": null,
-       "confidence": null,
-       "note": "every single one of these is something that is open source ... All of the results were acceptable"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "zanlib-do-you-still-read-the-code"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "\"Do You Still Read the Code?\" • zanlib",
-       "verdict": null,
-       "confidence": null,
-       "note": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/open-weight-coding-models-now-handle",
-        "source": "zuJyJP517Uw"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
-       "verdict": null,
-       "confidence": null,
-       "note": "they're seven months behind and that gap is gradually narrowing"
-      }
-     ],
-     "problems": [],
-     "limitations": [
-      "Reports what the sources said, not whether it is true."
-     ],
-     "suggestions": [],
-     "explanation": "supported (approved): no direct support, 5 source statements."
-    },
-    "findings": [
-     {
-      "role": "belief",
-      "validation": {
-       "id": "f0",
-       "text": "5 sources claim \"Open-weight coding models now handle typical coding tasks reasonably well, though they trail the best closed models\"; no study in the corpus has checked it.",
-       "kind": "attribution",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "hFzapS8rhEs"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Two People Vibe Coded a $1.8B Company. Yes, This is AI Takeoff.",
-         "verdict": null,
-         "confidence": null,
-         "note": "85.2 compares to 92% for GPT 5.4 ... So, it's not all the way there, but these are tiny models"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "tFffUnSq7VA"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Birgitta Böckeler - State of Play: AI Coding Assistants - AI Native DevCon June 2026",
-         "verdict": null,
-         "confidence": null,
-         "note": "even that model was still struggling a bit with tool calling, which is really crucial for our workflows"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "ulfZwEa1x_o"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "DeepSeek R1 vs Kimi K2 vs Qwen3 Coder vs GLM 4.5 - Head-to-Head Testing!",
-         "verdict": null,
-         "confidence": null,
-         "note": "every single one of these is something that is open source ... All of the results were acceptable"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "zanlib-do-you-still-read-the-code"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "\"Do You Still Read the Code?\" • zanlib",
-         "verdict": null,
-         "confidence": null,
-         "note": "we have access to many providers of open-weights models of high enough quality to trundle along if it comes to it"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/open-weight-coding-models-now-handle",
-          "source": "zuJyJP517Uw"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Steve Yegge's Vibe Coding Manifesto: Why Claude Code Isn't It & What Comes After the IDE",
-         "verdict": null,
-         "confidence": null,
-         "note": "they're seven months behind and that gap is gradually narrowing"
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Reports what the sources said, not whether it is true."
-       ],
-       "suggestions": [],
-       "explanation": "supported (approved): no direct support, 5 source statements."
       }
      }
     ]

@@ -2455,7 +2455,9 @@
           "source": null,
           "documents": [
             "ai-coding/sources/2501.06972.txt",
-            "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
+            "ai-coding/sources/2502.15287v1.txt",
+            "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -3457,24 +3459,26 @@
           "asserted": 4,
           "denied": 0,
           "tally": {
-            "right": 2,
+            "right": 3,
             "wrong": 0,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.55,
           "videos": [
             "redmonk-dora2025",
             "wEbdRqDV1CA",
             "xHHlhoRC8W4",
             "zqTxwlcWS-Q"
           ],
-          "note": "DORA 2024 estimated a 25% AI-adoption increase associated with ~1.5% lower throughput and ~7.2% lower stability; DORA 2025 found throughput improved but instability persisted.",
-          "source": null,
-          "documents": []
+          "note": "DORA's 2024 survey estimates that each 25% increase in AI adoption is associated with about 1.5% lower delivery throughput and 7.2% lower delivery stability, contrary to the authors' expectations; an association in survey data, not a causal estimate.",
+          "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1310",
+          "documents": [
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+          ]
         },
         {
           "id": "ai-coding/developers-using-assistants-write-less-secure",
@@ -3764,7 +3768,7 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
           "confidence": 0.5,
           "videos": [
@@ -3783,10 +3787,11 @@
             "s9slFT52Pgw",
             "xu0QI0N0EmU"
           ],
-          "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
-          "source": null,
+          "note": "DORA 2024 found AI adoption improved process measures (code review speed, approval speed, code quality) and individual productivity, yet was associated with lower delivery throughput and stability, concluding that improving the development process does not automatically improve software delivery; survey associations, not causal estimates.",
+          "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1335",
           "documents": [
-            "ai-coding/sources/anthropic-work-at-anthropic.txt"
+            "ai-coding/sources/anthropic-work-at-anthropic.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -4211,7 +4216,9 @@
           ],
           "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+          ]
         },
         {
           "id": "ai-coding/clear-policy-access-internal-data-small",
@@ -4301,7 +4308,8 @@
           "source": null,
           "documents": [
             "ai-coding/sources/2607.21652v1.txt",
-            "ai-coding/sources/4859137.txt"
+            "ai-coding/sources/4859137.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -6585,8 +6593,10 @@
           "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2502.15287v1.txt",
             "ai-coding/sources/2507.00788.txt",
-            "ai-coding/sources/2507.09089v2.txt"
+            "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -6751,7 +6761,8 @@
           "note": "DORA reported this pattern in one year's data, but other surveys find AI users report higher satisfaction, so the effect is mixed.",
           "source": null,
           "documents": [
-            "ai-coding/sources/anthropic-work-at-anthropic.txt"
+            "ai-coding/sources/anthropic-work-at-anthropic.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -6988,7 +6999,7 @@
           "asserted": 2,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
             "partly": 1,
             "untestable": 0,
@@ -7003,7 +7014,9 @@
           ],
           "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+          ]
         },
         {
           "id": "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -11812,7 +11825,9 @@
             "source": null,
             "documents": [
               "ai-coding/sources/2501.06972.txt",
-              "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
+              "ai-coding/sources/2502.15287v1.txt",
+              "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
             ]
           },
           "prior": "right",
@@ -11829,10 +11844,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "note": "Google: code review and rollout still need humans and quickly become the bottleneck, though AI still cut end-to-end migration time by about 50% or more, so the gains were real even though capped.",
-            "source": "ai-coding/sources/2501.06972.txt#L605-L617",
             "confidence": 0.45,
-            "date": "2026-10-14"
+            "note": "DORA's 2024 survey (about 3,000 professionals) found that a 25% rise in AI adoption went with faster code review and approval and higher individual productivity, yet an estimated 1.5% lower delivery throughput and 7.2% lower stability, which it attributes to larger changes; this supports limited end-to-end gains from faster coding, but it is cross-sectional and does not measure delivery time by phase or show coding was never the bottleneck.",
+            "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1335",
+            "date": "2026-10-26"
           }
         },
         {
@@ -12272,65 +12287,6 @@
         },
         {
           "claim": {
-            "id": "ai-coding/individual-productivity-gains-have-not-reliably",
-            "text": "Individual AI productivity gains have not reliably translated into team- or organization-level delivery gains",
-            "topic": "ai-coding",
-            "asserted": 14,
-            "denied": 0,
-            "tally": {
-              "right": 8,
-              "wrong": 0,
-              "partly": 0,
-              "untestable": 0,
-              "unknown": 0
-            },
-            "strongest": "prior",
-            "effective": "right",
-            "confidence": 0.5,
-            "videos": [
-              "4piZEfozUmA",
-              "CS5Cmz5FssI",
-              "DfrAaDgFgjc",
-              "EO3_qN_Ynsk",
-              "FoXHScf1mjA",
-              "LOHgRw43fFk",
-              "NstgZHMU2XY",
-              "Sz8NWaTiWfE",
-              "WILFeSGXwio",
-              "i1tZN41VKcE",
-              "jerodsanto-real-artists-still-ship",
-              "redmonk-dora2025",
-              "s9slFT52Pgw",
-              "xu0QI0N0EmU"
-            ],
-            "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
-            "source": null,
-            "documents": [
-              "ai-coding/sources/anthropic-work-at-anthropic.txt"
-            ]
-          },
-          "prior": "right",
-          "evidence": "partly",
-          "method": "source",
-          "overrides": false,
-          "priorRecord": {
-            "method": "prior",
-            "verdict": "right",
-            "note": "DORA 2024/25 and Faros 2025 found individual output up while organizational delivery metrics stayed flat or worsened; review and integration become the bottleneck.",
-            "confidence": 0.65,
-            "date": "2026-10-14"
-          },
-          "evidenceRecord": {
-            "method": "source",
-            "verdict": "partly",
-            "note": "Anthropic reports a 67% rise in merged PRs per engineer per day after adopting Claude Code across the engineering org, but PR counts are a weak proxy for delivery. (Narrow setting, so it limits the claim rather than refuting it.)",
-            "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L35-L35",
-            "confidence": 0.25,
-            "date": "2026-10-14"
-          }
-        },
-        {
-          "claim": {
             "id": "ai-coding/commit-counts-overstate-productivity-because-increases",
             "text": "Commit and PR counts overstate AI productivity because AI increases rework of recent code",
             "topic": "ai-coding",
@@ -12385,13 +12341,13 @@
         },
         {
           "claim": {
-            "id": "ai-coding/most-developers-report-has-improved-quality",
-            "text": "Most developers report that AI has improved the quality of their code",
+            "id": "ai-coding/higher-adoption-associated-delivery-throughput-but",
+            "text": "Higher AI adoption is associated with higher delivery throughput but also more delivery instability",
             "topic": "ai-coding",
-            "asserted": 4,
+            "asserted": 8,
             "denied": 0,
             "tally": {
-              "right": 3,
+              "right": 4,
               "wrong": 0,
               "partly": 0,
               "untestable": 0,
@@ -12403,14 +12359,17 @@
             "videos": [
               "4piZEfozUmA",
               "Sz8NWaTiWfE",
+              "WILFeSGXwio",
+              "blog-robbowley-dora-2025-ai-assisted-dev-report-some-benefit-most-dont",
               "redmonk-dora2025",
-              "s9slFT52Pgw"
+              "s9slFT52Pgw",
+              "tFffUnSq7VA",
+              "wEbdRqDV1CA"
             ],
-            "note": "DORA 2025 found ~59% reporting positive quality impact; it's self-report, which other studies show overstates measured effects.",
+            "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
             "source": null,
             "documents": [
-              "ai-coding/sources/2607.21652v1.txt",
-              "ai-coding/sources/4859137.txt"
+              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
             ]
           },
           "prior": "right",
@@ -12420,17 +12379,17 @@
           "priorRecord": {
             "method": "prior",
             "verdict": "right",
-            "note": "DORA 2025 found ~59% reporting positive quality impact; it's self-report, which other studies show overstates measured effects.",
-            "confidence": 0.6,
+            "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
+            "confidence": 0.65,
             "date": "2026-10-14"
           },
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "note": "Developers reporting more workplace AI use rated their code's reusability and testability higher (+0.3 on the scale), but rated reliability and complexity no differently. The follow-up found lower maintainability.",
-            "source": "ai-coding/sources/4859137.txt#L1149-L1155",
             "confidence": 0.35,
-            "date": "2026-10-14"
+            "note": "DORA's 2024 survey found higher AI adoption associated with lower delivery stability (about 7.2% per 25% more adoption), as the claim says, but also with slightly lower throughput (about 1.5%), not higher; the claim's throughput half may rest on a later year's data.",
+            "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1295-L1310",
+            "date": "2026-10-26"
           }
         },
         {
@@ -12983,6 +12942,58 @@
         },
         {
           "claim": {
+            "id": "ai-coding/coding-assistants-improve-developer-satisfaction-help",
+            "text": "AI coding assistants improve developer satisfaction and help them stay in flow",
+            "topic": "ai-coding",
+            "asserted": 3,
+            "denied": 1,
+            "tally": {
+              "right": 0,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "Rjlzm0psfB4",
+              "SWcDfPVTizQ",
+              "research-ai-in-software-engineering-at-google-progress-and-the-path-ahead",
+              "xu0QI0N0EmU"
+            ],
+            "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2502.15287v1.txt",
+              "ai-coding/sources/2507.00788.txt",
+              "ai-coding/sources/2507.09089v2.txt",
+              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
+            "confidence": 0.55,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.45,
+            "note": "DORA 2024 estimates that a 25% rise in an individual's AI adoption is associated with roughly 2 to 2.6% higher flow, job satisfaction and productivity; modest effects from survey associations rather than a trial.",
+            "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L996-L1036",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/organizational-adoption-needs-active-enablement-training",
             "text": "Organizational AI adoption needs active enablement (training, showcased wins, champions), not just tool licenses",
             "topic": "ai-coding",
@@ -13078,6 +13089,53 @@
             "source": "ai-coding/sources/4859137.txt#L1219-L1229",
             "confidence": 0.4,
             "date": "2026-10-14"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/adoption-has-not-reduced-developer-burnout",
+            "text": "AI adoption has not reduced developer burnout or workflow friction",
+            "topic": "ai-coding",
+            "asserted": 2,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "partly",
+            "confidence": 0.5,
+            "videos": [
+              "redmonk-dora2025",
+              "s9slFT52Pgw"
+            ],
+            "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
+            "confidence": 0.55,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.45,
+            "note": "DORA's 2024 survey found toil and burnout essentially unchanged with AI adoption (burnout about -0.6% per 25% more adoption), saying AI is not helping with meetings, bureaucracy and other toil; survey associations.",
+            "source": "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt#L1115-L1126",
+            "date": "2026-10-26"
           }
         },
         {
@@ -13502,7 +13560,9 @@
           "source": null,
           "documents": [
             "ai-coding/sources/2501.06972.txt",
-            "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
+            "ai-coding/sources/2502.15287v1.txt",
+            "ai-coding/sources/cui-demirer-copilot-field-experiments.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -14142,8 +14202,10 @@
           "note": "Self-reported surveys consistently show higher satisfaction and flow, but these are vendor-run perception data and other reports show added review burden and fatigue.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2502.15287v1.txt",
             "ai-coding/sources/2507.00788.txt",
-            "ai-coding/sources/2507.09089v2.txt"
+            "ai-coding/sources/2507.09089v2.txt",
+            "ai-coding/sources/dora-2024-accelerate-state-of-devops.txt"
           ]
         },
         {
@@ -15060,36 +15122,6 @@
             "uRuLgar5XZw"
           ],
           "note": "Model quality tracks training-data volume; benchmarks such as MultiPL-E show much lower scores in less common languages.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/higher-adoption-associated-delivery-throughput-but",
-          "text": "Higher AI adoption is associated with higher delivery throughput but also more delivery instability",
-          "topic": "ai-coding",
-          "asserted": 8,
-          "denied": 0,
-          "tally": {
-            "right": 4,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "4piZEfozUmA",
-            "Sz8NWaTiWfE",
-            "WILFeSGXwio",
-            "blog-robbowley-dora-2025-ai-assisted-dev-report-some-benefit-most-dont",
-            "redmonk-dora2025",
-            "s9slFT52Pgw",
-            "tFffUnSq7VA",
-            "wEbdRqDV1CA"
-          ],
-          "note": "DORA 2025 reports AI adoption now positively associated with throughput while still associated with higher delivery instability (change failure and rework).",
           "source": null,
           "documents": []
         },
@@ -16313,32 +16345,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/higher-adoption-has-associated-lower-team",
-          "text": "Higher AI adoption has been associated with lower team delivery throughput and stability",
-          "topic": "ai-coding",
-          "asserted": 4,
-          "denied": 0,
-          "tally": {
-            "right": 2,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "redmonk-dora2025",
-            "wEbdRqDV1CA",
-            "xHHlhoRC8W4",
-            "zqTxwlcWS-Q"
-          ],
-          "note": "DORA 2024 estimated a 25% AI-adoption increase associated with ~1.5% lower throughput and ~7.2% lower stability; DORA 2025 found throughput improved but instability persisted.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/llm-coding-assistants-favor-libraries-well",
           "text": "LLM coding assistants favor libraries well represented in their training data, making it harder for new libraries to gain adoption",
           "topic": "ai-coding",
@@ -17225,30 +17231,6 @@
             "fly-youre-all-nuts"
           ],
           "note": "Minimal agent loops (read file, list dir, run shell) are well documented to work with modern tool-calling models; production harnesses add much more but the core loop is small.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/adoption-has-not-reduced-developer-burnout",
-          "text": "AI adoption has not reduced developer burnout or workflow friction",
-          "topic": "ai-coding",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "redmonk-dora2025",
-            "s9slFT52Pgw"
-          ],
-          "note": "DORA 2025 found no measurable effect of AI on burnout or friction, but this rests on survey data from one research program.",
           "source": null,
           "documents": []
         },
@@ -21150,7 +21132,7 @@
       "testable": 8,
       "novelty": 0.39667366946778715,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.375,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/classic-software-engineering-fundamentals-matter-much",
@@ -21163,7 +21145,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21741,7 +21723,7 @@
         "ai-coding/tools-slowed-experienced-open-source-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21795,7 +21777,7 @@
         "ai-coding/measuring-impact-developers-requires-multidimensional-metrics"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21856,7 +21838,7 @@
         "ai-coding/most-professional-developers-now-use-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22010,7 +21992,7 @@
         "ai-coding/updating-agent-rules-workflows-after-each"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22240,7 +22222,7 @@
         "ai-coding/substantially-shortens-time-takes-developers-onboard"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22328,7 +22310,7 @@
         "ai-coding/ide-based-assistants-like-cursor-obsolete",
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22458,7 +22440,7 @@
         "ai-coding/investing-upfront-comprehensive-written-context-requirements",
         "ai-coding/running-many-coding-agents-parallel-not"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22508,7 +22490,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22935,7 +22917,7 @@
         "ai-coding/measuring-impact-developers-requires-multidimensional-metrics"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22998,7 +22980,7 @@
       "wrong": [
         "ai-coding/coding-assistants-improve-developer-satisfaction-help"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23046,7 +23028,7 @@
       "testable": 8,
       "novelty": 0.4613095238095238,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.375,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -23059,7 +23041,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23387,7 +23369,7 @@
       "testable": 12,
       "novelty": 1.2825396825396824,
       "redundancy": 0,
-      "thinEvidence": 0.4166666666666667,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/adoption-increases-average-pull-request-size",
@@ -23529,7 +23511,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23834,7 +23816,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23972,7 +23954,7 @@
       "testable": 3,
       "novelty": 0.3482142857142857,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.6666666666666666,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -23980,7 +23962,7 @@
         "ai-coding/only-minority-software-teams-currently-positioned"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24879,7 +24861,7 @@
       "wrong": [
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25125,7 +25107,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25293,7 +25275,7 @@
       "wrong": [
         "ai-coding/coding-tools-amplify-experienced-engineers-far"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25323,7 +25305,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25563,7 +25545,7 @@
         "ai-coding/coding-productivity-gains-appear-only-after",
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26131,9 +26113,9 @@
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.5287698412698413,
+      "novelty": 0.5412698412698412,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/adoption-has-not-reduced-developer-burnout",
@@ -26144,7 +26126,7 @@
         "ai-coding/most-professional-developers-now-use-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26171,7 +26153,7 @@
         "ai-coding/large-share-code-major-companies-now"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26239,7 +26221,7 @@
       "testable": 8,
       "novelty": 0.558531746031746,
       "redundancy": 0,
-      "thinEvidence": 0.625,
+      "thinEvidence": 0.375,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/adoption-has-not-reduced-developer-burnout",
@@ -26252,7 +26234,7 @@
         "ai-coding/most-professional-developers-now-use-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26280,7 +26262,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26352,7 +26334,7 @@
       "testable": 12,
       "novelty": 0.6531250000000001,
       "redundancy": 0,
-      "thinEvidence": 0.4166666666666667,
+      "thinEvidence": 0.3333333333333333,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assisted-development-shifts-developer-effort-toward",
@@ -26369,7 +26351,7 @@
         "ai-coding/updating-agent-rules-workflows-after-each"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26555,7 +26537,7 @@
         "ai-coding/coding-tools-amplify-experienced-engineers-far",
         "ai-coding/frontier-model-improvements-have-become-incremental"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26728,7 +26710,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26793,9 +26775,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.4507936507936508,
+      "novelty": 0.46329365079365076,
       "redundancy": 0,
-      "thinEvidence": 0.75,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/amplifies-organization-existing-strengths-weaknesses-rather",
@@ -26808,7 +26790,7 @@
         "ai-coding/most-professional-developers-now-use-coding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26884,9 +26866,9 @@
       "rating": null,
       "assertions": 14,
       "testable": 14,
-      "novelty": 1.220873015873016,
+      "novelty": 1.233373015873016,
       "redundancy": 0,
-      "thinEvidence": 0.35714285714285715,
+      "thinEvidence": 0.2857142857142857,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/acceptance-rate-counts-generated-lines-poor",
@@ -26906,7 +26888,7 @@
       "wrong": [
         "ai-coding/large-share-code-major-companies-now"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26965,7 +26947,7 @@
       "wrong": [
         "ai-coding/much-developer-use-agentic-tools-driven"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -27062,9 +27044,9 @@
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 0.9493551587301589,
+      "novelty": 0.9618551587301589,
       "redundancy": 0,
-      "thinEvidence": 0.3333333333333333,
+      "thinEvidence": 0.2222222222222222,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/developers-overestimate-how-much-tools-speed",
@@ -27078,7 +27060,7 @@
         "ai-coding/writing-code-never-main-bottleneck-software"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
