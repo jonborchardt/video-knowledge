@@ -31,6 +31,10 @@
     "heat-pumps/heat-pumps-not-work-cold-climates|denies|heat-pumps/sources/rmi-2018-economics-of-electrifying-buildings.txt#L356-L358": {
       "level": "contextual",
       "reason": "background sentence citing a footnote about rated models; RMI did not test cold-weather operation"
+    },
+    "heat-pumps/real-world-heat-pump-efficiency-lower|asserts|heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L413-L419": {
+      "level": "partial",
+      "reason": "three Minnesota sites compared at the 17F and 47F rating points only, not seasonal efficiency against the rating; it shows the claim failing in a narrower setting, like Cadmus shows it holding in one"
     }
   },
   "stories": {
@@ -66,7 +70,9 @@
         "takeaway": "Before switching, divide your electricity price by your gas price and compare it with the seasonal efficiency of the unit you are quoted."
       },
       "qualificationsAccepted": true,
-      "chain": ["decision:when-does-it-pay-for-itself"],
+      "chain": [
+        "decision:when-does-it-pay-for-itself"
+      ],
       "chainWhy": "Once the viewer learns a heat pump is cheaper to run than gas in most homes with efficient equipment, the next question is whether those savings ever repay its higher price, and the answer turns on when you buy."
     },
     "decision:does-the-upfront-cost-eat-the-savings": {
@@ -100,7 +106,9 @@
         "takeaway": "Compare quotes against the system you would otherwise buy, and ask up front whether your panel and service can carry the load."
       },
       "qualificationsAccepted": true,
-      "chain": ["decision:what-incentives-are-left"],
+      "chain": [
+        "decision:what-incentives-are-left"
+      ],
       "chainWhy": "Once the viewer sees what a heat pump costs installed and where the extra thousands come from, the next question is what tax credits and rebates are left in 2026 to cut that price."
     },
     "decision:what-happens-when-it-gets-cold": {
@@ -202,7 +210,10 @@
         "score": 0.85,
         "reason": "One question: does a heat pump beat oil, propane and electric resistance heat. The claim that these homes save the most is the same question counted over the equipment's life, so it is added; it moved here from the payback story so that story stays on timing."
       },
-      "claims": ["heat-pumps/heat-pump-costs-less-run-heating", "heat-pumps/heat-pumps-save-most-money-homes"],
+      "claims": [
+        "heat-pumps/heat-pump-costs-less-run-heating",
+        "heat-pumps/heat-pumps-save-most-money-homes"
+      ],
       "question": "Does a heat pump always beat oil, propane and electric baseboard heat on running cost?",
       "title": "Heat Pump vs Oil, Propane and Baseboard Heat",
       "alternates": [
@@ -263,17 +274,29 @@
         "score": 0.8,
         "reason": "One question: must a home be insulated first for a heat pump to pay. The advice to air-seal and insulate before or alongside is the same question, so it is added."
       },
-      "claims": ["heat-pumps/heat-pumps-need-home-well-insulated", "heat-pumps/air-sealing-insulation-should-come-before"],
+      "claims": [
+        "heat-pumps/heat-pumps-need-home-well-insulated",
+        "heat-pumps/air-sealing-insulation-should-come-before"
+      ],
       "question": "Do you have to insulate your home before a heat pump will pay off?",
       "title": "Do You Need to Insulate Before Getting a Heat Pump?",
-      "alternates": ["Heat Pumps in Drafty Houses: Do They Still Save?", "Insulation First or Heat Pump First?"],
+      "alternates": [
+        "Heat Pumps in Drafty Houses: Do They Still Save?",
+        "Insulation First or Heat Pump First?"
+      ],
       "research": "the evidence is NREL's model (envelope upgrades cut bill increases but add about $9,000, helping mainly in cold climates), RMI and LBNL modelling of a few archetypes, and small Minnesota field data, plus measured efficiency from the UK Electrification of Heat trial and Fraunhofer ISE (no SPF difference by house age, but in homes screened as suitable or already partly insulated, with no bills), none above 0.45 and none measuring heat pump bills in leaky against insulated homes; a measured comparison of heat pump running cost and payback with and without envelope work, by climate, would unblock it"
     },
     "conflict:contractors-routinely-oversize-heating-cooling-equipment": {
-      "coherence": { "score": 0.75, "reason": "One claim, one question: do installers routinely oversize." },
+      "coherence": {
+        "score": 0.75,
+        "reason": "One claim, one question: do installers routinely oversize."
+      },
       "question": "Do contractors usually install heating and cooling systems that are too big?",
       "title": "Is Your HVAC Contractor Oversizing Your System?",
-      "alternates": ["Bigger Is Not Better: Oversized Heat Pumps and Furnaces", "How Often Are Heating Systems Sized Wrong?"],
+      "alternates": [
+        "Bigger Is Not Better: Oversized Heat Pumps and Furnaces",
+        "How Often Are Heating Systems Sized Wrong?"
+      ],
       "research": "the only evidence is a dozen NREL field sites, mostly undersized; a large audit comparing installed capacity with Manual J loads would unblock it"
     },
     "conflict:real-world-heat-pump-efficiency-lower": {
@@ -281,11 +304,28 @@
         "score": 0.75,
         "reason": "One question: how efficient installed heat pumps really are, against their ratings and against the seasonal efficiency of about four that some sources promise for good installs; that claim is the same question, so it is added."
       },
-      "claims": ["heat-pumps/real-world-heat-pump-efficiency-lower", "heat-pumps/well-installed-air-source-heat-pumps"],
+      "claims": [
+        "heat-pumps/real-world-heat-pump-efficiency-lower",
+        "heat-pumps/well-installed-air-source-heat-pumps"
+      ],
       "question": "Do heat pumps in real homes reach the efficiency on the label?",
       "title": "Do Heat Pumps Live Up to Their Efficiency Ratings?",
-      "alternates": ["Rated vs Real: How Efficient Are Installed Heat Pumps?", "What the Meters Say About Heat Pump Efficiency"],
-      "research": "the field studies split (Cadmus measured below rating, CEE within error at one rating point, NREL matched at 7 of 12 sites) and the seasonal COPs measured (NREL 12 sites averaging 2.5, CEE three Minnesota sites at 2.5-2.8) are all small cold-climate samples; a metered study of many installs across climates, reporting seasonal COP against rated HSPF2, would unblock it"
+      "alternates": [
+        "Rated vs Real: How Efficient Are Installed Heat Pumps?",
+        "What the Meters Say About Heat Pump Efficiency"
+      ],
+      "whyWatch": "The label is the number people buy on, and the meters in real homes tell a more useful story than either the marketing or the sceptics: which installs fall short, by how much, and why.",
+      "tension": "Cadmus metered 152 mini-splits in Massachusetts and Rhode Island and found most below their ratings; CEE found rated COPs within measurement error at three Minnesota sites; NREL matched the rating at 7 of 12 sites; Efficiency Maine metered 160 newer units and found field COP between the rated minimum- and maximum-capacity values.",
+      "evidenceNeeded": "Metered field studies that compare installed efficiency with the rating, set side by side on equipment age, sample, climate and what was compared (rating points or a season).",
+      "premise": "Every field study here that compares metered efficiency with the rating comes from the cold northern US (Massachusetts, Rhode Island, Minnesota, the Northwest and Maine); none covers a mild climate. Cadmus 2016 metered 152 mini-splits and found most seasonal efficiencies below their ratings, though some met or beat them, and blamed usage and test conditions rather than misrated equipment. CEE 2018 found rated COPs at 17F within measurement error at three sites. NREL 2023 found steady-state COP matched the manufacturer value at 7 of 12 sites and fell short at 5. Efficiency Maine 2026 metered 160 units in whole-home systems rebated from late 2023 and found field COP between the rated minimum- and maximum-capacity values at each temperature, higher than earlier Maine studies, in a sample drawn from the lower-using two-thirds of homes. Seasonal efficiency measured across studies sits below four: about 3.15 in Maine, 2.5 across NREL's 12 sites, 2.5-2.8 at three Minnesota sites, a UK median of 2.8, and a German air-to-water average of 3.4 (range 2.6 to 4.9). So the claim holds for many older or poorly used installs and less for newer whole-home systems, and \"around four\" is beyond what the meters show in these climates.",
+      "arc": {
+        "hook": "The label says one number; what do the meters in real homes say?",
+        "conflict": "Some field studies find installs falling short of the rating, others find them on it.",
+        "evidence": "Lay the four rating comparisons side by side (Cadmus 2016, CEE 2018, NREL 2023, Efficiency Maine 2026): equipment age, sample size, what was compared, all in cold northern US states. Then the measured seasonal efficiencies (Maine 3.15, NREL 2.5, Minnesota 2.5-2.8, UK median 2.8, Germany 3.4 with a range of 2.6 to 4.9).",
+        "resolution": "Older and underused installs ran below their ratings; newer whole-home systems in Maine landed within their rated range. No study here tests a mild climate, and none finds seasonal efficiency near four on average.",
+        "takeaway": "Treat the label as a ceiling the install and how you run it decide; expect a seasonal efficiency near three in a cold climate, not four."
+      },
+      "qualificationsAccepted": true
     },
     "gap:through-2025-federal-tax-credit-covered": {
       "reject": "a historical rule about a geothermal credit that ended after 2025, not a question a viewer pricing a heat pump now would ask; what money is left in 2026 is decision:what-incentives-are-left"
@@ -294,10 +334,16 @@
       "reject": "one source voices it, and the question (how efficient are real installs) is the one conflict:real-world-heat-pump-efficiency-lower asks, which now carries this claim; its only evidence is two small cold-climate field samples"
     },
     "conflict:heat-pumps-need-more-maintenance-repairs": {
-      "coherence": { "score": 0.8, "reason": "One claim, one question: does a heat pump need more upkeep than a gas furnace." },
+      "coherence": {
+        "score": 0.8,
+        "reason": "One claim, one question: does a heat pump need more upkeep than a gas furnace."
+      },
       "question": "Does a heat pump break down or need servicing more often than a gas furnace?",
       "title": "Are Heat Pumps Less Reliable Than Gas Furnaces?",
-      "alternates": ["Heat Pump vs Furnace: Which Needs More Repairs?", "What Owning a Heat Pump Costs in Upkeep"],
+      "alternates": [
+        "Heat Pump vs Furnace: Which Needs More Repairs?",
+        "What Owning a Heat Pump Costs in Upkeep"
+      ],
       "research": "the only evidence is seven repair visits on prototype units in the DOE cold-climate challenge (0.2); repair-frequency or maintenance-cost data for many installed heat pumps against gas furnaces, such as a large owner reliability survey or program warranty records, would unblock it"
     },
     "conflict:installing-heat-pump-can-require-costly": {

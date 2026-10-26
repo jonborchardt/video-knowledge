@@ -3,7 +3,7 @@
  "basis": {
   "claims": 199,
   "sources": 119,
-  "studies": 22,
+  "studies": 23,
   "candidates": 31
  },
  "stories": [
@@ -2505,7 +2505,7 @@
    },
    "chainCandidates": [
     "decision:what-happens-when-it-gets-cold",
-    "conflict:heat-pumps-cut-home-carbon-emissions"
+    "conflict:real-world-heat-pump-efficiency-lower"
    ]
   },
   {
@@ -2856,7 +2856,7 @@
    },
    "chainCandidates": [
     "conflict:heat-pump-costs-less-run-heating",
-    "decision:what-happens-when-it-gets-cold"
+    "conflict:real-world-heat-pump-efficiency-lower"
    ]
   },
   {
@@ -2872,6 +2872,7 @@
    "tension": "Skeptics say heat pumps stop working when it is cold. Advocates say modern units heat at -15F. The meters say both efficiency and capacity fall, the heat keeps coming, and the bill depends on how much the backup runs.",
    "evidenceNeeded": "Measured efficiency and capacity at low outdoor temperatures in occupied homes, how often and why backup heat runs, and how dual-fuel switching performs.",
    "evidenceAvailable": [
+    "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: right (0.6, direct)",
     "CEE 2017, cold-climate heat pumps in Minnesota: right (0.65, direct)",
     "Wilson 2024 (NREL and LBNL), heat pumps for all?: right (0.6, direct)",
     "Deetjen 2021, private economics of US residential heat pumps: right (0.55, direct)",
@@ -2882,6 +2883,7 @@
     "Edwards 2024, inequities in heat pump bill savings: right (0.45, direct)",
     "Canadian Climate Institute 2023, heat pumps pay off: right (0.35, direct)",
     "Energy Systems Catapult 2023, Electrification of Heat trial performance: partly (0.45, direct)",
+    "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: wrong (0.55, direct)",
     "CEE 2018, ducted and ductless cold-climate heat pumps in the field: wrong (0.6, direct)",
     "Cadmus 2016, ductless mini-split evaluation (MA and RI): wrong (0.55, direct)",
     "PNNL 2025, DOE Cold Climate Heat Pump Challenge field results: wrong (0.55, direct)",
@@ -2896,6 +2898,7 @@
     "CEE 2018, ducted and ductless cold-climate heat pumps in the field: right (0.55, direct)",
     "CEE 2017, cold-climate heat pumps in Minnesota: right (0.55, direct)",
     "Edwards 2024, inequities in heat pump bill savings: partly (0.4, direct)",
+    "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: partly (0.35, direct)",
     "Winkler 2023 (NREL), cold-climate heat pump field validation: partly (0.5, direct)",
     "CEE 2018, ducted and ductless cold-climate heat pumps in the field: partly (0.45, partial)",
     "Wilson 2024 (NREL and LBNL), heat pumps for all?: partly (0.4, partial)",
@@ -2955,7 +2958,7 @@
     "evidence": 1,
     "editorial": 0.85,
     "overall": 0.91,
-    "explanation": "editorial 0.85 = mean of coherence 0.85 (review), relevance 1 (68 sources, 51 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (10 studies, 8 claims, tension); evidence 1 = strongest CEE 2017, cold-climate heat pumps in Minnesota at 0.65 (direct) across 9 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "explanation": "editorial 0.85 = mean of coherence 0.85 (review), relevance 1 (68 sources, 51 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (11 studies, 8 claims, tension); evidence 1 = strongest CEE 2017, cold-climate heat pumps in Minnesota at 0.65 (direct) across 10 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "ready",
    "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 8 essential findings verified, no pending review.",
@@ -2972,8 +2975,24 @@
      "review": true,
      "verbatim": true,
      "strength": 0.65,
-     "independent": 8,
+     "independent": 9,
      "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+        "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+       "verdict": "right",
+       "confidence": 0.6,
+       "note": "Metered COP across 166 units in Maine fell as the outdoor temperature dropped, averaging 2 at -10F against a season average of 3.15.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      },
       {
        "ref": {
         "kind": "study",
@@ -3146,7 +3165,7 @@
      "suggestions": [
       "Add the qualification: the evidence supports a narrower or weaker statement."
      ],
-     "explanation": "qualified (qualify): 9 supporting (8 independent, strongest 0.65), 1 qualifying."
+     "explanation": "qualified (qualify): 10 supporting (9 independent, strongest 0.65), 1 qualifying."
     },
     "findings": [
      {
@@ -3161,8 +3180,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.65,
-       "independent": 8,
+       "independent": 9,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/heat-pump-efficiency-capacity-fall-outdoor",
+          "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Metered COP across 166 units in Maine fell as the outdoor temperature dropped, averaging 2 at -10F against a season average of 3.15.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -3335,7 +3370,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 9 supporting (8 independent, strongest 0.65), 1 qualifying."
+       "explanation": "qualified (qualify): 10 supporting (9 independent, strongest 0.65), 1 qualifying."
       }
      },
      {
@@ -3350,8 +3385,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.6,
-       "independent": 4,
+       "independent": 5,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/heat-pumps-not-work-cold-climates",
+          "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L555-L557"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+         "verdict": "wrong",
+         "confidence": 0.55,
+         "note": "In 78 metered Maine homes with whole-home heat pump systems, the heat pumps provided over 70% of total heating needs, with wood 10% and fossil fuel 19%.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -3462,7 +3513,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 4 supporting (4 independent, strongest 0.6), 1 qualifying, 1 context only."
+       "explanation": "qualified (qualify): 5 supporting (5 independent, strongest 0.6), 1 qualifying, 1 context only."
       }
      },
      {
@@ -3604,8 +3655,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.6,
-       "independent": 4,
+       "independent": 5,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/heat-pump-still-uses-less-energy",
+          "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1913-L1916"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Metered COP averaged 2 at -10F across 166 units in Maine homes, so even in very cold weather the heat pumps used about half the electricity resistance heat would.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -3714,7 +3781,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 5 supporting (4 independent, strongest 0.6), 1 qualifying."
+       "explanation": "qualified (qualify): 6 supporting (5 independent, strongest 0.6), 1 qualifying."
       }
      },
      {
@@ -3750,6 +3817,22 @@
        ],
        "contradicting": [],
        "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/cold-climate-heat-pumps-often-rely",
+          "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1714-L1726"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -3818,6 +3901,7 @@
        "context": [],
        "problems": [],
        "limitations": [
+        "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: In 78 metered Maine homes, backup heat rose below 10F, but it was fossil fuel: 13% of homes had some electric resistance heat and only one regularly used it, so reliance on resistance backup was rare in these whole-home installs.",
         "Winkler 2023 (NREL), cold-climate heat pump field validation: Auxiliary heat runtime generally rose in colder bins and heavy use cut system COP over 30% at two sites, but the heavy users were undersized or faulty while six sites used little auxiliary heat.",
         "CEE 2018, ducted and ductless cold-climate heat pumps in the field: In all-electric systems the booster resistance heat ran at COP 1 below about 30F, but because the heat pump was prioritized the system COP stayed above 1.0 even at -7F, so backup use dented rather than erased efficiency. [partial: the verdict note limits its own scope (\"rather than\")]",
         "Wilson 2024 (NREL and LBNL), heat pumps for all?: In Minnesota a high-efficiency heat pump sized for the heating load saves a median $182/yr, but sized for cooling it raises bills $96/yr through more resistance backup; reliance and the bill hit depend on sizing, not cold-climate units as such. [partial: the verdict note limits its own scope (\"not cold-climate units as such\")]",
@@ -3826,7 +3910,7 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.45), 4 qualifying."
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.45), 5 qualifying."
       }
      },
      {
@@ -4105,8 +4189,8 @@
     ]
    },
    "chainCandidates": [
-    "conflict:heat-pump-costs-less-run-heating",
-    "conflict:heat-pumps-cut-home-carbon-emissions"
+    "conflict:real-world-heat-pump-efficiency-lower",
+    "conflict:heat-pump-costs-less-run-heating"
    ]
   },
   {
@@ -6023,24 +6107,26 @@
     "What the Meters Say About Heat Pump Efficiency"
    ],
    "question": "Do heat pumps in real homes reach the efficiency on the label?",
-   "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
-   "tension": "The studies split: Cadmus 2016, ductless mini-split evaluation (MA and RI) says right, Winkler 2023 (NREL), cold-climate heat pump field validation says partly, CEE 2018, ducted and ductless cold-climate heat pumps in the field says wrong.",
-   "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
+   "whyWatch": "The label is the number people buy on, and the meters in real homes tell a more useful story than either the marketing or the sceptics: which installs fall short, by how much, and why.",
+   "tension": "Cadmus metered 152 mini-splits in Massachusetts and Rhode Island and found most below their ratings; CEE found rated COPs within measurement error at three Minnesota sites; NREL matched the rating at 7 of 12 sites; Efficiency Maine metered 160 newer units and found field COP between the rated minimum- and maximum-capacity values.",
+   "evidenceNeeded": "Metered field studies that compare installed efficiency with the rating, set side by side on equipment age, sample, climate and what was compared (rating points or a season).",
    "evidenceAvailable": [
-    "CEE 2018, ducted and ductless cold-climate heat pumps in the field: wrong (0.35, direct)",
+    "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: partly (0.55, direct)",
     "Cadmus 2016, ductless mini-split evaluation (MA and RI): right (0.65, partial)",
     "Winkler 2023 (NREL), cold-climate heat pump field validation: partly (0.55, direct)",
+    "CEE 2018, ducted and ductless cold-climate heat pumps in the field: wrong (0.35, partial)",
+    "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: wrong (0.5, direct)",
     "Energy Systems Catapult 2023, Electrification of Heat trial performance: wrong (0.45, direct)",
     "Winkler 2023 (NREL), cold-climate heat pump field validation: wrong (0.5, direct)",
     "Fraunhofer ISE 2025, heat pumps in existing buildings: partly (0.3, direct)",
     "CEE 2017, cold-climate heat pumps in Minnesota: wrong (0.4, partial)"
    ],
    "gaps": [
-    "Reviewer: the field studies split (Cadmus measured below rating, CEE within error at one rating point, NREL matched at 7 of 12 sites) and the seasonal COPs measured (NREL 12 sites averaging 2.5, CEE three Minnesota sites at 2.5-2.8) are all small cold-climate samples; a metered study of many installs across climates, reporting seasonal COP against rated HSPF2, would unblock it",
-    "What explains the split between Cadmus 2016, ductless mini-split evaluation (MA and RI), Winkler 2023 (NREL), cold-climate heat pump field validation, CEE 2018, ducted and ductless cold-climate heat pumps in the field?",
+    "What explains the split between Efficiency Maine 2026, whole-home heat pumps metered in Maine homes, Cadmus 2016, ductless mini-split evaluation (MA and RI), Winkler 2023 (NREL), cold-climate heat pump field validation, CEE 2018, ducted and ductless cold-climate heat pumps in the field?",
+    "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: Metering 160 heat pumps in 78 Maine homes over winter 2024-25, the field COP at each outdoor temperature fell between the manufacturers' AHRI COPs at maximum and minimum capacity, and was higher than earlier Maine studies of units installed 2014 to 2021; newer units roughly meet their ratings while older field results ran lower (one cold state, sample drawn from the lower two-thirds of users).",
     "Winkler 2023 (NREL), cold-climate heat pump field validation: Steady-state COPs at 7 of 12 sites matched manufacturer values while the other 5 were lower, and measured capacity aligned with maximum rated capacity at only 5 of 12 sites."
    ],
-   "premise": "The studies split on \"Real-world heat pump efficiency is lower than manufacturers' rated figures\": Cadmus 2016, ductless mini-split evaluation (MA and RI) says right, Winkler 2023 (NREL), cold-climate heat pump field validation says partly, CEE 2018, ducted and ductless cold-climate heat pumps in the field says wrong. The reasons they differ are the useful part.",
+   "premise": "Every field study here that compares metered efficiency with the rating comes from the cold northern US (Massachusetts, Rhode Island, Minnesota, the Northwest and Maine); none covers a mild climate. Cadmus 2016 metered 152 mini-splits and found most seasonal efficiencies below their ratings, though some met or beat them, and blamed usage and test conditions rather than misrated equipment. CEE 2018 found rated COPs at 17F within measurement error at three sites. NREL 2023 found steady-state COP matched the manufacturer value at 7 of 12 sites and fell short at 5. Efficiency Maine 2026 metered 160 units in whole-home systems rebated from late 2023 and found field COP between the rated minimum- and maximum-capacity values at each temperature, higher than earlier Maine studies, in a sample drawn from the lower-using two-thirds of homes. Seasonal efficiency measured across studies sits below four: about 3.15 in Maine, 2.5 across NREL's 12 sites, 2.5-2.8 at three Minnesota sites, a UK median of 2.8, and a German air-to-water average of 3.4 (range 2.6 to 4.9). So the claim holds for many older or poorly used installs and less for newer whole-home systems, and \"around four\" is beyond what the meters show in these climates.",
    "claims": [
     "heat-pumps/real-world-heat-pump-efficiency-lower",
     "heat-pumps/well-installed-air-source-heat-pumps"
@@ -6049,11 +6135,11 @@
     "heat-pumps/seer-hspf-ratings-not-fully-capture"
    ],
    "arc": {
-    "hook": "Two confident, opposite answers to the same question: \"Real-world heat pump efficiency is lower than manufacturers' rated figures\".",
-    "conflict": "The studies do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (Cadmus 2016, ductless mini-split evaluation (MA and RI), Winkler 2023 (NREL), cold-climate heat pump field validation, CEE 2018, ducted and ductless cold-climate heat pumps in the field): design, sample, what was measured.",
-    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
-    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+    "hook": "The label says one number; what do the meters in real homes say?",
+    "conflict": "Some field studies find installs falling short of the rating, others find them on it.",
+    "evidence": "Lay the four rating comparisons side by side (Cadmus 2016, CEE 2018, NREL 2023, Efficiency Maine 2026): equipment age, sample size, what was compared, all in cold northern US states. Then the measured seasonal efficiencies (Maine 3.15, NREL 2.5, Minnesota 2.5-2.8, UK median 2.8, Germany 3.4 with a range of 2.6 to 4.9).",
+    "resolution": "Older and underused installs ran below their ratings; newer whole-home systems in Maine landed within their rated range. No study here tests a mild climate, and none finds seasonal efficiency near four on average.",
+    "takeaway": "Treat the label as a ceiling the install and how you run it decide; expect a seasonal efficiency near three in a cold climate, not four."
    },
    "coherence": {
     "score": 0.75,
@@ -6067,16 +6153,14 @@
     "stakes": 0.7,
     "depth": 0.75,
     "originality": 1,
-    "evidence": 0.72,
+    "evidence": 0.8,
     "editorial": 0.71,
-    "overall": 0.71,
-    "explanation": "editorial 0.71 = mean of coherence 0.75 (review), relevance 0.36 (2 sources, 2 channels), curiosity 1 (conflict, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.75 (5 studies, 2 claims, tension); evidence 0.72 = strongest Winkler 2023 (NREL), cold-climate heat pump field validation at 0.55 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "overall": 0.75,
+    "explanation": "editorial 0.71 = mean of coherence 0.75 (review), relevance 0.36 (2 sources, 2 channels), curiosity 1 (conflict, a study overturned the guess), stakes 0.7 (lean: pro), depth 0.75 (6 studies, 2 claims, tension); evidence 0.8 = strongest Efficiency Maine 2026, whole-home heat pumps metered in Maine homes at 0.55 (direct) across 4 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: the field studies split (Cadmus measured below rating, CEE within error at one rating point, NREL matched at 7 of 12 sites) and the seasonal COPs measured (NREL 12 sites averaging 2.5, CEE three Minnesota sites at 2.5-2.8) are all small cold-climate samples; a metered study of many installs across climates, reporting seasonal COP against rated HSPF2, would unblock it",
-   "blocking": [
-    "Reviewer: the field studies split (Cadmus measured below rating, CEE within error at one rating point, NREL matched at 7 of 12 sites) and the seasonal COPs measured (NREL 12 sites averaging 2.5, CEE three Minnesota sites at 2.5-2.8) are all small cold-climate samples; a metered study of many installs across climates, reporting seasonal COP against rated HSPF2, would unblock it"
-   ],
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.75), central conclusion supported, 2 essential findings verified, no pending review.",
+   "blocking": [],
    "reviewed": true,
    "audit": {
     "central": {
@@ -6091,25 +6175,24 @@
      "strength": 0,
      "independent": 0,
      "supporting": [],
-     "contradicting": [
+     "contradicting": [],
+     "qualifying": [
       {
        "ref": {
         "kind": "study",
         "claim": "heat-pumps/real-world-heat-pump-efficiency-lower",
-        "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L413-L419"
+        "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L507-L512"
        },
        "cited": true,
-       "role": "contradicts",
-       "by": "CEE 2018, ducted and ductless cold-climate heat pumps in the field",
-       "verdict": "wrong",
-       "confidence": 0.35,
-       "note": "Installed furnace efficiencies ran below rating, but the heat pumps' rated COPs at 17F were within the measurement error of the field data at all sites; small sample.",
+       "role": "qualifies",
+       "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+       "verdict": "partly",
+       "confidence": 0.55,
+       "note": "Metering 160 heat pumps in 78 Maine homes over winter 2024-25, the field COP at each outdoor temperature fell between the manufacturers' AHRI COPs at maximum and minimum capacity, and was higher than earlier Maine studies of units installed 2014 to 2021; newer units roughly meet their ratings while older field results ran lower (one cold state, sample drawn from the lower two-thirds of users).",
        "applicability": "direct",
        "basis": "heuristic",
        "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "qualifying": [
+      },
       {
        "ref": {
         "kind": "study",
@@ -6141,15 +6224,29 @@
        "applicability": "direct",
        "basis": "heuristic",
        "why": "the verdict bears on the claim as worded"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "heat-pumps/real-world-heat-pump-efficiency-lower",
+        "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L413-L419"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "CEE 2018, ducted and ductless cold-climate heat pumps in the field",
+       "verdict": "wrong",
+       "confidence": 0.35,
+       "note": "Installed furnace efficiencies ran below rating, but the heat pumps' rated COPs at 17F were within the measurement error of the field data at all sites; small sample.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "three Minnesota sites compared at the 17F and 47F rating points only, not seasonal efficiency against the rating; it shows the claim failing in a narrower setting, like Cadmus shows it holding in one"
       }
      ],
      "context": [],
      "problems": [],
-     "limitations": [
-      "Contradicted by CEE 2018, ducted and ductless cold-climate heat pumps in the field: Installed furnace efficiencies ran below rating, but the heat pumps' rated COPs at 17F were within the measurement error of the field data at all sites; small sample."
-     ],
+     "limitations": [],
      "suggestions": [],
-     "explanation": "supported (approved): no direct support, 1 contradicting, 2 qualifying."
+     "explanation": "supported (approved): no direct support, 4 qualifying."
     },
     "findings": [
      {
@@ -6159,32 +6256,31 @@
        "text": "Real-world heat pump efficiency is lower than manufacturers' rated figures",
        "kind": "fact",
        "modality": "plain",
-       "status": "unsupported",
-       "decision": "blocked",
-       "review": false,
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
        "verbatim": true,
        "strength": 0,
        "independent": 0,
        "supporting": [],
-       "contradicting": [
+       "contradicting": [],
+       "qualifying": [
         {
          "ref": {
           "kind": "study",
           "claim": "heat-pumps/real-world-heat-pump-efficiency-lower",
-          "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L413-L419"
+          "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L507-L512"
          },
          "cited": true,
-         "role": "contradicts",
-         "by": "CEE 2018, ducted and ductless cold-climate heat pumps in the field",
-         "verdict": "wrong",
-         "confidence": 0.35,
-         "note": "Installed furnace efficiencies ran below rating, but the heat pumps' rated COPs at 17F were within the measurement error of the field data at all sites; small sample.",
+         "role": "qualifies",
+         "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+         "verdict": "partly",
+         "confidence": 0.55,
+         "note": "Metering 160 heat pumps in 78 Maine homes over winter 2024-25, the field COP at each outdoor temperature fell between the manufacturers' AHRI COPs at maximum and minimum capacity, and was higher than earlier Maine studies of units installed 2014 to 2021; newer units roughly meet their ratings while older field results ran lower (one cold state, sample drawn from the lower two-thirds of users).",
          "applicability": "direct",
          "basis": "heuristic",
          "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "qualifying": [
+        },
         {
          "ref": {
           "kind": "study",
@@ -6216,17 +6312,36 @@
          "applicability": "direct",
          "basis": "heuristic",
          "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/real-world-heat-pump-efficiency-lower",
+          "cite": "heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L413-L419"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "CEE 2018, ducted and ductless cold-climate heat pumps in the field",
+         "verdict": "wrong",
+         "confidence": 0.35,
+         "note": "Installed furnace efficiencies ran below rating, but the heat pumps' rated COPs at 17F were within the measurement error of the field data at all sites; small sample.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "three Minnesota sites compared at the 17F and 47F rating points only, not seasonal efficiency against the rating; it shows the claim failing in a narrower setting, like Cadmus shows it holding in one"
         }
        ],
        "context": [],
        "problems": [],
        "limitations": [
-        "Contradicted by CEE 2018, ducted and ductless cold-climate heat pumps in the field: Installed furnace efficiencies ran below rating, but the heat pumps' rated COPs at 17F were within the measurement error of the field data at all sites; small sample."
+        "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes: Metering 160 heat pumps in 78 Maine homes over winter 2024-25, the field COP at each outdoor temperature fell between the manufacturers' AHRI COPs at maximum and minimum capacity, and was higher than earlier Maine studies of units installed 2014 to 2021; newer units roughly meet their ratings while older field results ran lower (one cold state, sample drawn from the lower two-thirds of users).",
+        "Cadmus 2016, ductless mini-split evaluation (MA and RI): Directly metered seasonal efficiencies of 152 mini-splits fell below their rated values on average, though some units met or exceeded their ratings; the evaluators blame usage patterns and test conditions, not misrated equipment. [partial: the verdict note limits its own scope (\"though\")]",
+        "Winkler 2023 (NREL), cold-climate heat pump field validation: Steady-state COPs at 7 of 12 sites matched manufacturer values while the other 5 were lower, and measured capacity aligned with maximum rated capacity at only 5 of 12 sites.",
+        "CEE 2018, ducted and ductless cold-climate heat pumps in the field: Installed furnace efficiencies ran below rating, but the heat pumps' rated COPs at 17F were within the measurement error of the field data at all sites; small sample. [partial: three Minnesota sites compared at the 17F and 47F rating points only, not seasonal efficiency against the rating; it shows the claim failing in a narrower setting, like Cadmus shows it holding in one]"
        ],
        "suggestions": [
-        "The evidence points the other way; reverse the claim or report it as what the sources say."
+        "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "unsupported (blocked): no direct support, 1 contradicting, 2 qualifying."
+       "explanation": "qualified (qualify): no direct support, 4 qualifying."
       }
      },
      {
@@ -6241,8 +6356,24 @@
        "review": true,
        "verbatim": true,
        "strength": 0.5,
-       "independent": 2,
+       "independent": 3,
        "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "heat-pumps/well-installed-air-source-heat-pumps",
+          "cite": "heat-pumps/sources/efficiencymaine-2026-whole-home-heat-pump-study.txt#L1911-L1918"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Efficiency Maine 2026, whole-home heat pumps metered in Maine homes",
+         "verdict": "wrong",
+         "confidence": 0.5,
+         "note": "Across 166 metered indoor units of whole-home systems in Maine, the combined field-metered heating COP over the season was 3.15 including defrost, about 2 at -10F, not around four (a cold climate; milder climates would score higher).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
         {
          "ref": {
           "kind": "study",
@@ -6320,11 +6451,15 @@
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.5), 2 qualifying."
+       "explanation": "qualified (qualify): 3 supporting (3 independent, strongest 0.5), 2 qualifying."
       }
      }
     ]
-   }
+   },
+   "chainCandidates": [
+    "decision:what-happens-when-it-gets-cold",
+    "conflict:heat-pump-costs-less-run-heating"
+   ]
   },
   {
    "id": "conflict:contractors-routinely-oversize-heating-cooling-equipment",
