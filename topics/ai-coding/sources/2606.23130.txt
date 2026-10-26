@@ -1,0 +1,954 @@
+                                        Understanding the (In)Security of Vibe-Coded Applications
+
+                                                   Junquan Deng                                                             Zhiyu Fan
+                                             Independent Researcher                                                          Microsoft
+                                        junquanpdeng@gmail.com                                                 fanzhiyu@microsoft.com
+
+arXiv:2606.23130v4 [cs.CR] 14 Sep 2026              Ruijie Meng
+                                        National University of Singapore
+                                        ruijie_meng@u.nus.edu
+
+                                                                Abstract                                       into autonomous AI coding agents [2, 13] that design, imple-
+                                                                                                               ment, and deploy complete, runnable software applications
+                                        Recent advances in large language models (LLMs) have                   from natural language instructions. This evolution has led to
+                                        enabled vibe coding, an emerging software development                  a new development paradigm commonly referred to as vibe
+                                        paradigm in which users create applications primarily through          coding [10, 35]. In this paradigm, users describe high-level
+                                        natural-language interactions with AI agents. Due to its               requirements in natural language and rely on AI coding agents
+                                        low barrier to entry, vibe coding is rapidly gaining adoption          to generate entire software applications from scratch, with
+                                        in practice. Unlike conventional AI-assisted programming,              minimal human intervention.
+                                        where developers remain responsible for implementation and
+                                        code review, vibe coding delegates a substantial portion of the           Since its introduction, vibe coding has rapidly gained trac-
+                                        development process to AI systems. This shift raises a funda-          tion across the software development ecosystem, evolving
+                                        mental question: how (in)secure are applications developed             from an experimental concept into a production reality. The
+                                        through vibe coding? In this paper, we conduct a systematic            appeal of vibe coding lies in substantially lowering the techni-
+                                        study of the security of real-world vibe-coded applications.           cal barrier to application creation by abstracting away much
+                                        We collect 9,041 open-source applications developed using              of the development process. As a result, individuals with
+                                        popular AI agents (Claude Code and Lovable), and audit 200             limited programming experience can now create and deploy
+                                        publicly deployed applications, uncovering 1,186 vulnera-              applications that previously required significant development
+                                        bilities. Our study of these applications and vulnerabilities          expertise. AI agents such as Claude Code [2] and Lovable [13]
+                                        reveals several key findings: (1) insecurity is the norm rather        have attracted millions of users and enabled the creation of
+                                        than the exception: 91.0% of audited applications contain              applications at an unprecedented scale. For example, Lovable
+                                        at least one vulnerability, and 65.77% of identified vulner-           reported more than eight million users and over 100,000 new
+                                        abilities are rated Critical or High severity, concentrated in         applications created every day as of early 2026 [24]. More-
+                                        broken access control, injection, and authentication failures;         over, more than 10% of the applications are deployed as live,
+                                        (2) these vulnerabilities are traceable to eight recurring failure     publicly accessible systems, as we later show in this study.
+                                        modes rooted in three systematic limitations of AI agents:
+                                        memory defects, objective defects, and knowledge defects;                 With the popularity of vibe coding, a critical concern arises:
+                                        and (3) while improved agent harness and prompting strate-             how (in)secure are vibe-coded applications in practice? In the
+                                        gies can reduce the incidence of vulnerabilities, they do not          vibe-coding paradigm, even non-expert individuals can create
+                                        eliminate the underlying security risks. Overall, our study pro-       and directly deploy applications without fully understanding
+                                        vides an empirical understanding of the security landscape of          the underlying implementation, which may leave security-
+                                        vibe-coded applications and lays the groundwork for address-           critical decisions made by AI agents unaudited. This concern
+                                        ing the security risks in the growing delegation of software           is not merely hypothetical, and practitioners continue to report
+                                        development to AI systems.                                             applications that expose serious vulnerabilities [6, 22, 34]. For
+                                                                                                               example, an official vulnerability record (CVE-2025-48757,
+                                        1 Introduction                                                         CVSS 9.3) documented insufficient Row-Level Security poli-
+                                                                                                               cies in the databases backing sites generated by Lovable,
+                                        Recent advances in large language models (LLMs) are fun-               allowing unauthenticated attackers to access arbitrary user
+                                        damentally reshaping how software is developed [9]. What               data [16]. Similarly, in our study, we identified a publicly de-
+                                        began as code-completion assistants [14, 17] capable of gen-           ployed vibe-coded application: a healthcare provider platform
+                                        erating individual functions or features has rapidly evolved           that exposed a large volume of customer information due to
+                                                                                                               broken access control. We also identified a command injec-
+
+                                                                                                            1
+tion vulnerability that enabled remote code execution and full           Through answering these questions, we characterize the se-
+control of its backend. Such incidents underscore the need for        curity risks of vibe-coded applications and provide actionable
+a systematic study of the security of vibe-coded applications.        insights for different stakeholders (e.g., agent and harness
+                                                                      developers, and end users). Our key findings are summarized
+   Although a growing body of work has examined the secu-             as follows. For RQ.1, we find that vibe coding is often used
+rity of LLM-generated code [4, 12, 25, 35], prior studies fall        to develop large-scale applications within a short time frame.
+short of capturing the security risks of vibe-coded applica-          Moreover, web applications form the dominant application
+tions. Existing research has primarily focused on evaluating          category, and more than 11% of these applications are publicly
+the security of AI-assisted programming. In this paradigm,            deployed. For RQ.2, we find that 91.0% of deployed vibe-
+AI coding agents operate within established codebases and             coded applications contain at least one vulnerability, with
+are tasked with completing specific development activities,           65.77% of identified vulnerabilities rated Critical or High
+such as implementing new features [4,35], where software de-          severity and risk concentrated in broken access control, in-
+velopment is largely reduced to mere code-filling tasks. This         jection, and authentication failures. For RQ.3, we show that
+paradigm fundamentally differs from vibe coding, where AI             these vulnerabilities are traceable to eight recurring failure
+coding agents are instructed to create entire software applica-       modes across three defect classes--memory, objective, and
+tions from scratch. In vibe-coded applications, security vul-         knowledge defects--that reflect systematic limitations of AI
+nerabilities may arise not only from insecure code generation,        agents throughout the vibe-coding lifecycle. For RQ.4, nearly
+but also from architectural and trust-boundary decisions that         all investigated conditions mitigate security vulnerabilities to
+AI agents make autonomously throughout the development                varying degrees, where production-ready prompting strategy
+lifecycle without much human review. Therefore, findings              and a security-hardened agent harness are the most effective.
+from prior studies cannot be generalized to characterize the          Nevertheless, mitigating vulnerabilities introduced by differ-
+security of vibe-coded applications.                                  ent factors requires different mitigation strategies.
+
+Our Work. To this end, we conduct the first systematic                Contributions. We make the following contributions:
+study to understand the security of vibe-coded applications.
+We construct VIBEAPPS, a large-scale corpus of 9,041 open-            · We construct VIBEAPPS, a large-scale dataset of 9,041 real-
+source vibe-coded applications. From this corpus, we ran-               world vibe-coded applications, and build VIBEVULNS, a
+domly sample 200 deployed applications that are publicly                dataset of 1,186 validated vulnerabilities from 200 publicly
+accessible and use them as the target of our security analysis.         deployed vibe-coded applications. Both datasets serve as a
+We then develop a human-in-the-loop vulnerability-discovery             foundation for future research in this domain.
+workflow, combining multi-agent code auditing with struc-
+tured human validation. Using this workflow, we identify              · We present the first large-scale empirical study of the secu-
+1,186 vulnerabilities across the sampled applications, form-            rity of vibe-coded applications, providing a systematic char-
+ing our vulnerability dataset VIBEVULNS. To the best of our             acterization of the prevalence, severity, and failure modes
+knowledge, this is the first large-scale dataset for studying the       of security risks in vibe coding.
+security of real-world vibe-coded applications. In the study,
+we seek to answer the following research questions:                   · Our findings provide actionable guidance for securing vibe-
+                                                                        coded applications, which requires safeguards embedded
+· RQ.1: What is the landscape of real-world vibe-coded                  throughout the vibe-coding lifecycle beyond improvements
+  applications? We characterize the ecosystem of vibe-coded             to code-generation quality alone.
+  applications, including their scales, development character-
+  istics, application categories, and deployment status.              2 Background and Related Work
+
+· RQ.2: How prevalent and severe are vulnerabilities in               AI-Assisted Programming and Vibe Coding. LLMs are
+  deployed vibe-coded applications? We measure the preva-             increasingly used in software development through tools that
+  lence and severity of their vulnerabilities, including the          support code completion, bug fixing, and even repository-
+  distribution, to assess their overall security posture.             level modification. We refer to this paradigm as AI-assisted
+                                                                      programming: LLMs provide code-level assistance, while
+· RQ.3: What factors contribute to these vulnerabilities?             developers remain responsible for application design, imple-
+  We examine how these vulnerabilities are introduced in the          mentation decisions, and code review. Industry-grade tools
+  vibe-coding lifecycle.                                              such as GitHub Copilot are now used by millions of develop-
+                                                                      ers [30], leading to a substantial fraction of code in production
+· RQ.4: What conditions can mitigate the vulnerabili-                 repositories being generated with assistance from LLMs [3].
+  ties of vibe-coded applications? We examine whether ad-
+  vanced agent harnesses, stronger foundation models, and                Building on these advances, vibe coding has emerged as
+  carefully-crafted user prompts can mitigate vulnerabilities         an AI-led development paradigm in which users describe
+  in vibe-coded applications.
+
+                                                                   2
+desired application behavior in natural language and rely           sions are precisely where autonomous coding agents exercise
+on coding agents or development platforms to design, im-            the greatest degree of control in the vibe-coding paradigm.
+plement, and iteratively refine complete applications [5, 10].
+Unlike AI-assisted programming, where humans remain the                This gap is becoming increasingly consequential as vibe
+primary authors and decision-makers, vibe coding shifts sub-        coding enters the mainstream. AI coding agents such as
+stantial authorship and oversight toward AI agents, leaving         Claude Code and Lovable already enable large numbers of
+humans primarily specifying high-level goals and providing          users, many with limited software engineering expertise, to
+feedback. This distinction is central to our study because          build and deploy production applications. Security risks in
+security-relevant decisions in vibe-coded applications may be       these systems therefore have immediate implications for real
+made as part of an AI-led development workflow rather than          users. To address this gap, we provide the first empirical char-
+through explicit human design and review.                           acterization of the security risks of real-world vibe-coded
+                                                                    applications. We move beyond controlled benchmarks to ex-
+Security of AI-Assisted Programming. In recent years, the           amine vulnerabilities emerging in real-world applications al-
+security of AI-generated code has attracted growing attention.      ready operating on the public Internet.
+However, existing studies mainly focus on AI-assisted pro-
+gramming, where LLMs generate code snippets or modifica-            3 Dataset Construction
+tions integrated into existing codebases. Early work, including
+ASLEEP [25] and SECODEPLT [15], evaluated the security              To investigate the security risks of vibe-coded applications,
+of AI-generated code on synthetic CWE-based tasks involv-           we need a high-quality dataset of their vulnerabilities. To this
+ing individual functions or single-file programs. More recent       end, we first construct VIBEAPPS, a representative corpus of
+studies, such as A.S.E [12], SECUREVIBEBENCH [4], and               real-world vibe-coded applications. We then develop a frame-
+SUSVIBES [35], have expanded the scope to repository-level          work that combines multi-agent code auditing with human
+settings, where coding agents modify multiple files within          validation to discover vulnerabilities. The resulting vulnera-
+established codebases. Despite this increased realism, the          bilities constitute our dataset VIBEVULNS, which serves as
+common characteristic of these studies is that AI-generated         the foundation for the security analysis.
+code is evaluated in the context of existing software systems.
+                                                                    3.1 Vibe-Coded Application Collection
+   Evidence regarding the security of AI assistance is mixed.
+A large body of work has shown that LLMs frequently                 To collect real-world vibe-coded applications, the primary
+generate vulnerable code. For example, Pearce et al. [25]           challenge lies in how to identify them, as they are not ex-
+found that approximately 40% of GitHub Copilot comple-              plicitly labeled as vibe-coded. To address this, we design a
+tions for CWE-targeted prompts contained security vulner-           three-step pipeline. We first discover potential vibe-coded ap-
+abilities. Subsequent studies have reported similar findings        plications using fingerprints associated with AI coding agents.
+across a variety of models, programming languages, and task         We then filter these candidates according to a set of criteria to
+settings [7, 8, 11, 27­29, 32]. However, the presence of vul-       obtain a high-quality subset. Finally, we determine applica-
+nerabilities in generated code does not necessarily imply that      tions to be vibe-coded based on the degree of AI contributions.
+AI-assisted development produces less secure software appli-
+cations, since developers may identify and correct these issues     Step 1: Potential Application Discovery. Although there
+during review [26]. Collectively, these findings suggest that       are no explicit indicators for vibe-coded applications, the
+LLMs often generate insecure code and that the ultimate se-         repositories with AI-generated code usually retain fin-
+curity outcome depends critically on the expertise, vigilance,      gerprints left by the corresponding coding agents. For
+and review practices of the human developers.                       example, repositories using Claude Code include the
+                                                                    configuration directory .claude/, while those developed
+Security of Vibe Coding. Despite this growing body of               with Lovable contain metadata <meta name="author"
+literature, to the best of our knowledge, no prior study has        content="Lovable" />. These fingerprints provide use-
+examined the security of real-world vibe-coded applications.        ful signals for discovering potential vibe-coded applications.
+Existing research focused on AI-generated code integrated           Based on this observation, we query the GitHub Code Search
+into human-authored codebases [8, 28] or benchmark tasks            API to collect repositories that contain the relevant fin-
+conducted in controlled experimental settings [4, 12, 33, 35].      gerprints. In this study, we focus on two popular AI cod-
+Consequently, the current evidence is largely restricted to         ing agents: Claude Code, representing command-line-based
+localized vulnerabilities evaluated against a predefined ora-       agents, and Lovable, representing AI-based development plat-
+cle, which cannot capture how application security emerges          forms. They capture distinct development workflows and pro-
+from the interplay of architectural decisions, implementation       vide broader coverage of the current vibe-coding ecosystems.
+choices, and deployment configurations across an entire soft-       This step results in an initial dataset of 74,800 repositories.
+ware system exposed to real users. Yet these higher-level deci-
+
+                                                                 3
+Step 2: High-Quality Application Selection. To ensure                  hardly detect such a diverse set of applications effectively.
+that our study is conducted on high-quality applications, we           To address the challenges, we adopt code-auditing agents
+further select those from the initial dataset that are likely to       for vulnerability discovery. Nevertheless, auditing different
+be used in practice. Specifically, we select the repositories          types of applications requires different agent capabilities and
+that satisfy the following criteria: (1) they provide sufficiently     auditing workflows. Therefore, we focus on the dominant
+complete documentation, with a README containing at least              type of vibe-coded applications: web applications. As shown
+100 characters; (2) they have a GitHub repository size be-             in Section 4, among the 9,041 collected applications, 8,695
+tween 10 and 500,000 KB, 500 to 1M lines of code, at least             (over 96%) are web applications, making their vulnerabilities
+five files, and 10 to 5,000 commits, where the lower bounds            broadly representative of the overall security landscape of
+filter out small repositories with trivial functionality and the       vibe coding.
+upper bounds filter out the extremely large repositories that
+typically contain substantial redundant implementations (e.g.,            Based on this, we develop the vulnerability-discovery
+third-party libraries) based on our observation; and (3) they          framework that combines multi-agent code auditing with
+are implemented as applications or tools, thereby excluding            structured human validation. Specifically, we first leverage a
+repositories intended primarily for documentation, tutorials           multi-agent system to analyze repositories and generate struc-
+or illustrative examples. After applying these filters, 38,078         tured vulnerability reports. We then perform both AI-assisted
+repositories were retained from the initial dataset.                   and manual validation to select true vulnerabilities, producing
+                                                                       the final set of vulnerabilities for security analysis.
+
+Step 3: Vibe-Coded Application Determination. After                    Step 1: Multi-Agent Code Auditing. We leverage LLM-
+the previous two steps, we obtain a high-quality dataset               based code auditors to identify potential vulnerabilities in
+of real-world repositories that contain AI-generated code.             repositories. To maximize vulnerability coverage, we adopt
+We next determine whether an application is vibe-coded.                a 2 × 2 auditing design that combines two agent frameworks
+Specifically, a vibe-coded application should be created               with two security auditing pipelines, yielding four indepen-
+by AI from scratch, instead of filling features in existing            dent audit reports for each repository. The two agent frame-
+codebases. To capture this property, we require the initial            works are Claude Code with Claude Sonnet 4.6 and GitHub
+commit of a repository to be AI-authored. In addition,                 Copilot with GPT-5.3-Codex. Each agent is paired with two
+vibe-coded applications should be developed predominantly              complementary security skill sets: OpenAI's official security-
+by AI coding agents, with minimal human intervention.                  best-practices skill [18], which provides guidance for detect-
+This requires us to identify AI-authored commits within                ing web application vulnerabilities across a range of technol-
+each repository. Many coding agents and vibe-coding                    ogy stacks, and Antigravity Awesome Skills [31], a widely
+platforms leave their identification in commit messages,               adopted collection of security skills with nearly 40k GitHub
+author fields, or commit trailers, such as "Co-authored-by:            stars that integrates conventional static application security
+Claude <noreply@anthropic.com>" or "Generated                          testing tools and vulnerability-detection rules.
+with Claude Code". Therefore, we label commits contain-
+ing such markers as AI-authored. To quantify the degree of                Each skill set is organized around a primary security-
+AI involvement, we measure two metrics: the proportion                 analysis agent and a collection of technology-specific sub-
+of AI-authored commits and the proportion of AI-authored               agents. The primary agent, defined by the top-level SKILL.md,
+code lines. We classify an application as vibe-coded only              first analyzes the repository structure, framework usage, and
+if both metrics are at least 90%. We selected 90% because,             technology stack. Based on this assessment, it automatically
+in our inspection, repositories below this threshold still             invokes specialized subagents tailored to the detected tech-
+contained non-trivial human-authored logic, while a higher             nologies. These subagents implement security auditing strate-
+cutoff would exclude repositories whose human contribution             gies specific to individual frameworks and ecosystems, such
+was purely ancillary (e.g., README edits and dependency                as React and Node.js. This hierarchical architecture helps
+bumps). Applying these AI-authorship criteria retained 9,041           reduce missed vulnerabilities arising from the limitations of
+applications, forming our dataset VIBEAPPS.                            any single model or auditing strategy.
+
+3.2 Vulnerability Discovery                                               We apply this 2 × 2 design to audit web applications. To
+                                                                       ensure that the discovered vulnerabilities reflect realistic se-
+After collecting vibe-coded applications, we further build their       curity exposure, we restrict our analysis to applications with
+vulnerability dataset for security analysis. However, discov-          publicly accessible deployments. These account for 984 of
+ering vulnerabilities across these applications poses another          the 8,695 web applications (11.32%, as shown in Section 4).
+challenge: they vary substantially in scale, programming lan-          Auditing all deployed applications would require substantial
+guage, technology stack, and even application type (as shown           computational resources and manual validation effort. There-
+in Section 4). Conventional vulnerability-detection tools can          fore, we randomly sampled 200 applications from the 984 de-
+                                                                       ployed repositories for detailed security auditing. The whole
+                                                                       audit process consumed 2.85 billion tokens and 128.47 hours
+
+                                                                    4
+     Web applications                96.17% (8,695) JavaScript                     98.68% (8,922)  React                                  97.09% (8,778)
+               Games 1.08% (98)                                                                                                          96.65% (8,738)
+                                     HTML                                          98.17% (8,876)  Vite                                  96.55% (8,729)
+   Mobile applications 0.88% (80)                                                                                                        94.41% (8,536)
+             CLI tools 0.54% (49)    CSS                                           98.15% (8,874) Tailwind CSS                54.88% (4,962)
+                                     TypeScript                                    97.80% (8,842) shadcn-ui
+  Desktop applications 0.53% (48)    PLpgSQL                       28.28% (2,557)                  Supabase
+Libraries & frameworks 0.49% (44)
+                                     Python 3.26% (295)                                            Capacitor     3.44% (311)
+   Browser extensions 0.19% (17)     Shell 3.23% (292)                                             Vitest        3.26% (295)
+           Utility tools 0.11% (10)  Dockerfile 2.20% (199)                                        React Router  2.67% (241)
+                                     Batchfile 1.18% (107)                                         Node.js       2.23% (202)
+                                     PowerShell 0.73% (66)                                         Playwright    2.02% (183)
+
+0 25 50 75 100 125                                              0 25 50 75 100 125                               0 25 50 75 100 125
+   Application category share (%)                                  Repositories with language (%)                  Repositories with technology (%)
+
+Figure 1: Application categories and the most-used development languages and technology stacks in vibe-coded applications.
+
+of compute time. It yielded 800 audit reports and contained           independent audit on a stratified random sample of 20 reposi-
+11,150 raw vulnerability reports.                                     tories from our corpus. Two security researchers uninvolved
+                                                                      in framework design perform security reviews without ac-
+Step 2: Vulnerability Deduplication and Validation. The               cess to our reports. The vulnerabilities they identified were
+raw vulnerability reports contain substantial redundancy, as          already captured by our framework, corresponding to an es-
+the four auditors frequently identify the same vulnerability          timated miss rate below 15% given the sample size (95%
+using different descriptions. To address this, we review the          CI, Rule of Three). Second, we evaluate our framework on
+four audit reports for each repository with assistance from AI        Juice Shop [19] with a continuously maintained set of known
+agents. Specifically, we normalize their outputs, deduplicate         vulnerabilities, including some disclosed after our models'
+overlapping candidate vulnerabilities, and merge semantically         training cutoff. Our framework achieves a recall of 95.70%
+similar reports into canonical entries. We further examine the        on this dataset. Together, these results suggest that our frame-
+vulnerability-introducing commits to ensure that all retained         work does not systematically miss vulnerabilities.
+vulnerabilities were introduced by AI. As a result, we obtain
+2,125 vulnerability candidates.                                       4 RQ.1: What Is the Landscape of Real-World
+                                                                          Vibe-Coded Applications?
+   To assess whether these candidates are true positives, we
+first built a validation agent that investigates the exploitabil-     To answer RQ.1, we characterize the 9,041 applications in our
+ity of each reported issue. The agent examines the relevant           corpus VIBEAPPS along four dimensions: repository scale,
+source files, traces whether user-controlled input can reach the      development characteristics, application categories, and de-
+reported sink, and checks for any sanitization or guard condi-        ployment status. This characterization establishes the land-
+tions along the execution path. It then attempts to construct a       scape of real-world vibe-coded applications and motivates our
+harmless proof-of-concept probe to the deployed application           subsequent security analysis of deployed web applications.
+that would trigger the vulnerability if it were exploitable. Vul-
+nerability candidates with clearly invalid exploitation paths         Repository Scale and Development Characteristics.
+are discarded, while confirmed cases are forwarded for human          Real-world vibe-coded applications are often large-scale. The
+review. This process retained 1,287 vulnerability candidates.         median repository contains 8,254 lines of code (LoC) across
+                                                                      100 files, while repositories at the 90th percentile reach 20,239
+   Each remaining candidate is then independently reviewed            LoC and 193 files. Overall, 95.62% of repositories contain
+by two authors with security expertise. They reviewed its au-         more than 5,000 LoC, and 34.32% exceed 10,000 LoC. De-
+dit report, inspected the relevant application source code, and       spite their considerable scale, these applications are typically
+examined the deployed website to verify the exploitability. A         developed within a short time. Measured from the first to
+candidate is only considered a vulnerability if both authors          the last commit, the median development span is 8.39 days.
+classify it as exploitable. Furthermore, the two authors as-          Furthermore, 67.81% of repositories have development spans
+sign each vulnerability a severity level (Low, Medium, High,          no longer than 30 days, and 84.87% are completed within 90
+or Critical) following OWASP risk-rating criteria [21], and           days. However, these short development spans do not imply
+map it to the corresponding OWASP Top 10 category [23].               limited development activities: 64.22% of repositories con-
+Disagreements are resolved through discussion. Inter-rater            tain at least 25 commits, indicating substantial development
+agreement was Cohen's  = 0.87. This produced 1,186 vul-               activity within compressed periods.
+nerabilities, which form our dataset VIBEVULNS.
+
+   In addition, we assess whether our framework potentially
+misses vulnerabilities in two ways. First, we conduct a blind
+
+                                                                   5
+   0 (n=18) 1-5 (n=84) 6-10 (n=68) 11-20 (n=27) >20 (n=3)             Table 1: Vulnerability count and density by repository size.
+
+   9% 42%  34% 14%                                                    Size #LoC #Repos #Vuln/repo VulnDensity/kLoC
+
+                                                                      Small 5k 15 2.13        0.85
+                                                                                              0.67
+0  Re2p0ositories by40vulnerability6-0count band8(0%)      100        Medium 5k­8k  78  4.31  0.53
+                                                                                              0.22
+                                                                      Large 8k­20k  83  6.28
+
+                                                                      xLarge >20k   24 12.38
+
+Figure 2: Distribution of applications by vulnerability count.        Overall -- 200 5.93     0.41
+
+   To better characterize the development process, we exam-             RQ.1 Findings. Vibe-coded applications are typically both
+ine the relationships between repository scale, development             code-heavy and rapidly developed, indicating rapid project-level
+span, and commit counts. Commit count correlates strongly               iteration rather than only small-scale code generation. Moreover,
+with repository size (Spearman  = 0.60 for LoC) but only                they are strongly concentrated in web applications, accounting
+moderately with development span ( = 0.40). Accordingly,                for about 96%, and about 11% are publicly deployed.
+commit density drops sharply as development span increases,
+from a median of 316.41 commits per day for repositories              5 RQ.2: How Prevalent and Severe are Vulner-
+completed within a day to 0.58 commits per day for those                  abilities in Vibe-Coded Applications?
+spanning over 90 days. This indicates that vibe-coded appli-
+cations are typically built in short, high-intensity periods.         To answer RQ.2, we analyze the 1,186 vulnerabilities from
+                                                                      our dataset VIBEVULNS from two perspectives: how widely
+   Taken together, these findings reveal a distinctive scale-         they appear across applications, and how severe they are in
+and-speed profile: many vibe-coded applications combine               terms of OWASP category, a widely recognized taxonomy of
+large codebases with highly concentrated development activ-           web application security [23].
+ity. Rather than emerging through the gradual accumulation
+of small code generations, they are often produced through            Vulnerability Prevalence. Figure 2 shows that vulnerabil-
+intense bursts of project-level iteration. This development           ities are broadly distributed across vibe-coded applications.
+pattern suggests that human reviews and hardening are un-             Of the 200 audited applications, 182 (91.00%) contain at least
+likely to be applied before deployment. This confirms our             one vulnerability. Among these vulnerable applications, the
+motivation to study the security of vibe-coded applications.          median number of vulnerabilities is 6, and the mean number
+                                                                      is 6.52, with an interquartile range of approximately 3­9 and
+Application Categories and Deployment Status. We                      a 90th percentile of 12. These results indicate that vulnerabil-
+present the categories of vibe-coded applications, and their          ities are highly prevalent across vibe-coded applications.
+most-widely used programming languages and technology
+stacks in Figure 1. It is interesting to note that vibe-coded ap-        Table 1 further shows that repository scale affects vulner-
+plications are highly biased towards web applications, which          ability prevalence in two different ways. In absolute terms,
+account for 96.17%. In contrast, the second-largest category,         larger applications contain more vulnerabilities on average.
+Games, only represents 1.08% of the applications. The dis-            The mean number of vulnerabilities per repository rises from
+tributions of development languages and technology stacks             2.13 in Small applications to 4.31 in Medium, 6.28 in Large,
+further reinforce this trend. JavaScript, HTML, CSS, and              and 12.38 in xLarge. In contrast, vulnerability density declines
+TypeScript are the most commonly used programming lan-                steadily as repository scale increases. Small applications have
+guages, while React, Vite, Tailwind CSS, and shadcn-ui                0.85 vulnerabilities per 1,000 LoC, compared with 0.67 for
+are the predominant technologies adopted in vibe-coded ap-            Medium, 0.53 for Large, and 0.22 for xLarge applications.
+plications. This finding suggests that vibe coding is primarily       Thus, while larger applications accumulate more vulnerabili-
+used to develop web applications. Applications developed by           ties overall, smaller applications contain vulnerabilities more
+a single agent exhibit highly similar patterns.                       densely relative to their code scales. This result suggests that
+                                                                      small vibe-coded applications should not be assumed to be
+   We further examine whether the vibe-coded applications             more secure simply because they contain less code.
+are actively deployed. Among all 9,041 applications, 1,007
+(11.14%) contain validated and reachable deployment links.            Vulnerability Severity and Distribution. From Table 2,
+Restricting our analysis to web applications, 984 of 8,695            vibe-coded applications exhibit a high prevalence of severe
+(11.32%) are actively deployed. Therefore, vibe-coded appli-          vulnerabilities. Among the 1,186 identified vulnerabilities,
+cations are not merely repository artifacts, but also deployed        65.77% are classified as Critical or High severity, including
+systems with externally observable attack surfaces.
+
+                                                                   6
+Table 2: Vulnerability severity and distribution across OWASP categories. Each vulnerability category is decomposed into
+Frontend, Backend, and Configuration components. Critical, High, Medium, and Low report the vulnerability number at each
+severity level within that component. Total reports the total vulnerability number in the category and its share. Repo reports the
+incidence rate of audited repositories containing at least one vulnerability in the category, with the corresponding rank shown as
+(#). OWASP reports OWASP's application-level incidence rate [20], with the corresponding rank shown as (#). The OWASP
+incidence values are provided for reference only and are not intended for direct comparison.
+
+Category                   Component Critical High Medium Low        Total  Repo  OWASP
+
+Broken Access Control        Frontend      9 43                      21 4
+Injection                     Backend     61 154                     39 7 339 (28.58%) 64.00% (#1) 3.74% (#4)
+Authentication Failures    Configuration   10
+Cryptographic Failures                                                00
+Security Misconfiguration    Frontend     17 52
+Supply Chain Failures         Backend     15 61                      17 9
+Security Logging Failures  Configuration                             24 2 199 (16.78%) 54.00% (#2) 3.08% (#5)
+Insecure Design                            02
+Exception Mishandling        Frontend                                 00
+Data Integrity Failures       Backend     19 27
+                           Configuration  26 49                      25 8
+                                           22                         7 3 176 (14.84%) 51.50% (#3) 2.92% (#8)
+                             Frontend                                 53
+                              Backend     16 13
+                           Configuration   8 18                      15 2
+                                          28 5                        7 0 112 (9.44%) 36.50% (#4) 3.80% (#3)
+                             Frontend                                 00
+                              Backend      36
+                           Configuration   2 37                       91
+                                           76                        27 3 108 (9.11%) 36.50% (#4) 3.00% (#6)
+                             Frontend                                 61
+                              Backend      24
+                           Configuration   10                         00
+                                           2 36                       1 2 73 (6.16%) 28.00% (#7) 5.72% (#1)
+                             Frontend                                16 9
+                              Backend      07
+                           Configuration   02                        12 22
+                                           01                         9 10 64 (5.40%) 28.50% (#6) 3.91% (#2)
+                             Frontend                                 01
+                              Backend      08
+                           Configuration   0 16                      19 8
+                                           00                        11 0 62 (5.23%) 25.00% (#8) 1.86% (#10)
+                             Frontend
+                              Backend      02                         00
+                           Configuration   06
+                                           00                        11 9
+                             Frontend                                 9 4 41 (3.46%) 16.00% (#9) 2.95% (#7)
+                              Backend      01                         00
+                           Configuration   03
+                                           00                         32
+                                                                      1 0 12 (1.01%) 6.00% (#10) 2.75% (#9)
+                                                                      11
+
+18.47% Critical and 47.30% High. In contrast, only 9.36% of          all, backend code accounts for 625 of the 1,186 vulnerabilities
+vulnerabilities are classified as Low severity.                      (52.70%), compared with 426 (35.92%) in frontend code and
+                                                                     135 (11.38%) in configurations. This indicates that vulnera-
+   To further characterize these vulnerabilities, Table 2 pro-       bilities are concentrated in server-side logic rather than being
+vides their distribution across OWASP categories. Broken Ac-         distributed evenly across the application stack. The compo-
+cess Control is the largest category, with 339 vulnerabilities       nent mix also differs across OWASP categories. Broken Ac-
+(28.58%) and affecting 64.00% of vibe-coded applications.            cess Control is backend-centric: 261 of its 339 vulnerabilities
+Injection and Authentication Failures are the next largest cat-      (76.99%) appear in backend code, compared with 77 (22.71%)
+egories, with 199 (16.78%) and 176 (14.84%) vulnerabilities          in frontend code and only 1 (0.30%) in configurations. By
+and affecting 54.00% and 51.50% of applications, respec-             contrast, Injection is almost evenly split between backend and
+tively. Together, these three categories account for 60.20%          frontend code, with 102 of 199 vulnerabilities (51.26%) in
+of all vulnerabilities, which aligns with failures at security-      backend code and 95 (47.74%) in frontend code. Similarly, for
+critical trust boundaries. Broken Access Control stems from          Authentication Failures, 79 of 176 vulnerabilities (44.89%)
+missing or incomplete authorization checks; Injection cap-           occur in frontend code, and 85 (48.30%) occur in backend
+tures cases where untrusted input reaches SQL, HTML, or              code. Taken together, these results suggest that while backend
+other sensitive sinks without sufficient validation or sanitiza-     code is the main location of vulnerabilities overall, different
+tion; and Authentication Failures reflect missing or ineffective     OWASP categories concentrate in different components.
+identity and session checks. These findings suggest that the
+main failures directly affect who can access protected re-              We additionally report the OWASP Top 10 (2025) inci-
+sources, how users are authenticated, and how untrusted input        dence statistics (OWASP) alongside our category distribution,
+flows through the application.                                       as a contextual reference. Because the two datasets differ sub-
+                                                                     stantially in scope and detection methodology, this compari-
+   Table 2 further shows that these vulnerabilities are un-          son can only be interpreted as a qualitative signal rather than a
+evenly distributed across implementation components. Over-
+
+                                                                  7
+               Lifecycle stage     01 Specification                     02 Implementation                      03 Iteration                        04 Deployment
+
+                  Memory                                                                                       1 Incomplete change propagation     2 Forgotten obligations
+                  160 vulns 13.5%
+                                                                                                               110 vulns 9.3%  C 12 H 61 M 32 L 5  50 vulns 4.2%  C 20 H 25 M 3 L 2
+                  Objective
+Agent defects     274 vulns 23.1%   3 Demo-oriented design                                                     4 Function-fix side effects
+                                   174 vulns 14.7% C 54 H 83 M 26 L 11
+                  Knowledge                                                                                    100 vulns 8.4%  C 31 H 46 M 18 L 5
+                  752 vulns 63.4%
+                                   5 Insecure instructions               6 Hallucination  C1 H7 M5 L0                                              8 User-dependent security
+                                                                        13 vulns 1.1%
+
+                                   9 vulns 0.8%  C4 H5 M0 L0             7 Hidden security rules                                                   72 vulns 6.1%  C 10 H 38 M 17 L 7
+                                                                        658 vulns 55.5% C 87 H 296 M 194 L 81
+                                                                                                                               Severity Critical High Medium Low
+
+Figure 3: Eight failure modes (1 ­8 ) for vibe-coded vulnerabilities, grouped by three defects (i.e., memory, objective, and
+knowledge) and mapped to the vibe-coding lifecycle (from specification and implementation, to iteration and deployment).
+
+precise measurement. With this caveat in mind, our result sug-                               tion stage, the agent generates code for the intended design.
+gests that Injection and Authentication Failures are relatively                              In the iteration stage, the user and agent repeatedly test, de-
+more prominent in our sample than in the OWASP reference                                     bug, and revise the codebase. In the deployment stage, the
+distribution. This qualitative pattern is consistent with the                                application is released to production and exposed to real users.
+hypothesis that vibe-coding workflows may underweight au-                                    These stages are not strictly linear and may recur as the user
+thorization checks and input validation at trust boundaries.                                 and agent repeatedly refine the application. We also report the
+                                                                                             number and severity of vulnerabilities in each failure mode.
+  RQ.2 Findings. Over 90% of deployed vibe-coded web appli-                                  We next detail each failure mode using concrete real-world
+  cations are insecure with at least one vulnerability, and 65.77%                           examples from our dataset.
+  of their vulnerabilities are classified as Critical or High sever-
+  ity. Vulnerabilities are concentrated in Broken Access Control,                            6.1 Memory Defects
+  Injection, and Authentication Failures, which together account
+  for 60.2% of all vulnerabilities. Backend code constitutes the                             Memory defects arise when security obligations introduced
+  largest share of vulnerable components.                                                    earlier in development are not reliably retained, propagated,
+                                                                                             or revisited as the project evolves. Although coding agents
+6 RQ.3: What Factors Contribute to These                                                     can reconstruct context from prompts, files, and recent interac-
+    Vulnerabilities?                                                                         tions, they do not maintain a complete and reliable memory of
+                                                                                             all project-wide security requirements over time. In the vibe-
+To understand how vulnerabilities are introduced in vibe-                                    coding lifecycle, these defects are primarily in later-stage de-
+coded applications, we qualitatively analyze each vulnerabil-                                velopment, especially during iteration, when security-relevant
+ity. For each case, two authors independently examine the                                    changes must be propagated consistently across the codebase,
+vulnerable code, the commit history that produced it, and any                                and deployment, when deferred obligations must still be com-
+surrounding inline comments. Each author then assigns an                                     pleted before release. Together, these defects account for 160
+open-ended label that describes how the vulnerability was in-                                (13.5%) vulnerabilities.
+troduced, instead of forcing cases into a predefined taxonomy.
+The initial labels showed substantial agreement between the                                  Iteration Stage: 1 incomplete change propagation. This
+two authors (Cohen's  = 0.82). The authors subsequently                                      failure mode occurs when the agent applies a security require-
+consolidated their labels through discussion, merging over-                                  ment in one part of the codebase but fails to propagate it to
+lapping tags and refining boundary cases until no new failure-                               other relevant locations. Sometimes, this manifests as a "for-
+mode categories emerged from additional cases. This process                                  ward propagation failure", where a newly introduced security
+identified eight recurring failure modes and grouped them                                    property is applied only to new code and never back-fitted to
+into three broader defect classes: memory defect, objective                                  pre-existing paths. In other cases, it manifests as a "backward
+defect, and knowledge defect, as illustrated in Figure 3.                                    conformance failure", where a new code path is introduced
+                                                                                             that bypasses a security property already enforced throughout
+   Furthermore, we map the failure modes into the vibe-                                      the rest of the codebase. The following code snippet illus-
+coding lifecycle, which comprises four development stages.                                   trates the forward variant. A validateApiKey middleware is
+In the specification stage, the user provides instructions, and                              added for a newly introduced router, but the same protection
+the agent plans the solution architecture. In the implementa-
+
+                                                                                          8
+is not applied to 11 pre-existing handlers. As a result, those               Specification Stage: 3 demo-oriented design. This fail-
+                                                                             ure mode occurs when the application is designed around
+handlers remain reachable without the intended authorization                 immediate usability, convenience, or demonstrability rather
+                                                                             than secure-by-default practice. In these cases, insecure mech-
+check. We identify 110 vulnerabilities (9.3%) caused by this                 anisms are not merely left to be fixed later. Instead, they
+failure mode. Their severity is also substantial. 66.36% are                 are incorporated into the intended design. Examples include
+rated Critical or High. These vulnerabilities are especially                 dummy encryption functions, static demo keys, or placeholder
+                                                                             authorization logic that remains acceptable as long as the
+common in Broken Access Control, Injection and Authenti-                     application appears to work. The following example illus-
+                                                                             trates this pattern. The application stores secret OAuth to-
+cation Failures, where the same protection often needs to be                 kens in front-end localStorage after applying only base64
+                                                                             encoding, with the choice described as suitable for demon-
+applied across multiple endpoints, handlers, or sinks.                       stration. This exposes sensitive credentials to client-side ac-
+                                                                             cess. Demo-oriented design accounts for 174 vulnerabilities
+const validateApiKey  = async (req, res, next)              => {             (14.7%), mainly in Broken Access Control, Authentication
+                                                                             Failures, and Cryptographic Failures. These vulnerabilities
+if (! apiKey )                                                               often lead to authentication bypasses or secret exposure, and
+                                                                             78.74% are classified as Critical or High.
+       return res.status ( 401 )                     Guarded new handler
+}
+
+app.use ( '/ api /v1' , validateApiKey      , v 1 Router)
+
+                                                            Failed to
+
+app .post ( '/ extract - frames - scene' , handler)         propagate
+
+app.post ( '/ whisper - transcribe' , handler)
+
+                                                Unguarded old handlers
+
+Deployment Stage: 2 forgotten obligations. This fail-                        private securelyStoreTokens       ( sessionId , accessToken )         {
+ure mode occurs when a security-relevant task is explicitly
+marked as temporary, incomplete, or deferred during devel-                      localStorage . setItem ( `fuyou_tokens_ ${ sessionId } ` ,
+opment, but is never revisited before deployment. The code
+may contain a TODO, FIXME, or other indication that the                         this . encrypt (accessToken))
+logic is not yet complete. As development progresses, the
+obligation may fall out of the active context, and no external               }        encrypt ( text ) { Use insecure encryption for a quick demo
+mechanism ensures that it is resolved before release. This re-               private
+sults in temporary code shipped in the same unfinished state.
+In the following example, the log-in route leaves password                      return btoa (text)        // Base64, for demo
+verification as a TODO because the password field has not yet
+been added to the database. This task is never completed, and                }
+the deployed application accepts incomplete authentication
+logic. Forgotten obligations account for 50 vulnerabilities                  Iteration stage: 4 function-fix side effects. This failure
+(4.2%), where 90.0% are rated Critical or High. They concen-                 mode arises during debugging or feature iteration, when a
+trate on Broken Access Control and Authentication Failures,                  visible error is resolved by weakening or bypassing a security
+where temporary logic takes the form of authentication or                    control. For example, an authentication error, failed CORS
+authorization bypass.                                                        preflight, or blocked operation may be addressed by relax-
+                                                                             ing the security boundary check. These insecure fixes appear
+app.post( '/api/auth/signin'            , async (req, res)        => {       to make the application work, so they often remain in the
+                                                                             codebase. The following is an example: a bypass-login route
+const { email, password } = req.body                                         with hard-coded credentials is introduced to work around
+                                                                             a Supabase authentication error, creating a critical authen-
+const user = await storage.getUserByEmail(email)                             tication vulnerability. Function-fix side effects lead to 100
+                                                                             vulnerabilities (8.4%), mainly in Broken Access Control. Like
+// TODO: Add password verification here when                                 demo-oriented design, this frequently produces high-impact
+                                                                             failures. 77.0% of its vulnerabilities are Critical or High.
+// password field is added to users table.
+                                                                                  export async function POST ( request ) {
+// For now, just log them in.                                                        const { email , password } = await request . json ()
+                                                                                     // Hardcoded check since Supabase Auth is broken
+req.login({ userId: user.id }, (err)                 => { ... })                     if ( email === `mpa****@meridianswfl.com'
+                                                                                         && password === `Mer****' ) {
+}) TODO never completed                                                                  return NextResponse. json ({success : true })}
+
+6.2 Objective Defects                                                             } Bypass authentication to fix function
+
+   Objective defects occur when immediate functional goals                   6.3 Knowledge Defects
+are prioritized over long-term correctness or security dur-
+ing development. In these cases, security is systematically                     Knowledge defects refer to the fact that both agents and
+subordinated to short-term objectives such as making the ap-                 users may fail to recognize the security requirements of the
+plication demo-ready, unblocking a visible error, or restoring               application during its development. In the vibe-coding work-
+functionality as quickly as possible. Objective defects are                  flow, many security constraints are not explicitly stated, and
+most prevalent in the specification and iteration stages. In                 agents may not derive them from the surrounding application
+total, they account for 274 (23.1%) vulnerabilities.                         context. On the user side, developers may overlook necessary
+
+                                                                          9
+security steps. These knowledge gaps on both sides result in                        Implementation Stage: 7 hidden security rules. This cap-
+insufficient, incorrect, or fabricated security practices. This                     tures cases where generated code violates a security require-
+is the largest defect class, accounting for 752 vulnerabilities                     ment that is necessary for safe implementation but is not ex-
+(63.4%). Knowledge defects span the specification, implemen-                        plicit in the user request. Such requirements include hashing
+tation, and deployment stages.                                                      credentials before storage, validating input before sensitive
+                                                                                    sinks, and enforcing security checks on the server side. Since
+Specification Stage: 5 insecure instructions. This cap-                             these requirements often do not affect visible functionality,
+tures cases where the specification itself contains an insecure                     their absence may go unnoticed. The following shows a repre-
+requirement, and the implementation follows that requirement                        sentative example. The vulnerable code serializes an external
+faithfully. Unlike hidden security rules, where a necessary                         response and writes it into the page using document.write,
+security property is omitted, insecure instructions explicitly                      but omits the required escaping step, resulting in reflected
+direct development toward an unsafe design. The following                           XSS. Hidden security rules account for 658 vulnerabilities
+shows an example in which CLAUDE.md instructs to embed an                           (55.5%), making it the most common reason in our analysis.
+OpenAI API key in the code and "protect" it using a Caesar                          These vulnerabilities appear most frequently in Broken Ac-
+cipher. The agent implements this faithfully, resulting in the                      cess Control and Injection, where a single missing security
+exposure of the secret. This mode accounts for 9 vulnerabil-                        requirement can affect many routes, handlers, or sinks. Al-
+ities (0.8%), all of which are classified as Critical or High.                      though the violated rules vary in immediate impact, 58.21%
+This number is low because it is only observed when the inse-                       of these vulnerabilities are classified as Critical or High.
+cure instruction is preserved in the repository or referenced
+by surrounding comments.                                                                               Violate hidden rule: external data must be sanitized before use
+                                                                                                    const data = await res . json ()
+# Development Guide              Insecure prompts                                                   const formatted = JSON . stringify ( data )
+                                                                                                    window . document . write ( `
+Use a positional cipher (Caesar) to protect the
+                                                                                                        <h1>System Identity Diagnostics</h1>
+OpenAI API key, allowing the encrypted key to be                                                        <pre> ${ formatted } </pre>` ) Injection
+
+safely committed to Git while preventing it from
+
+being exposed in plain text.                                 CLAUDE.md
+
+                                 Follow instructions                                Deployment stage: 8 user-dependent security. This fail-
+                                                                                    ure occurs when the vibe-coded application depends on a
+const DEFAULT_CONFIG = {                                                            security-sensitive deployment or maintenance step that is left
+                                                                                    to the user. Examples include excluding generated secret files
+    // Encrypted OpenAI API Key                                                     from Git, configuring necessary environment variables, and
+                                                                                    updating vulnerable dependencies. These may be routine for
+    // (position  - based shift: odd +1, even +2)                                   experienced developers, but vibe coding does not make the
+                                                                                    obligation explicit or enforced, creating a responsibility gap
+    encryptedOpenAIKey : 'ul - qtpl - UIy98mWG_P5 **** ' ,                          between what the agent assumes will happen and what the
+                                                                                    user is actually aware of. In the following example, the ap-
+};                               Secrets exposure            src/lib/config.ts      plication exports database contents into files for backup and
+                                                                                    implicitly expects the user to exclude these files from Git.
+Implementation Stage: 6 hallucination. This failure                                 However, the user directly commits them to a public GitHub
+mode captures cases where the generated code relies on                              repository. This mode leads to 72 vulnerabilities (6.1%), most
+fabricated technical assumptions in security-sensitive logic.                       commonly Supply Chain Failures due to exposed secrets,
+The assumption may concern a library API, a database                                committed environment files, or unrotated default credentials.
+schema, or the security property of a primitive. Many                               66.67% of vulnerabilities are classified as Critical or High.
+hallucination-induced mistakes break functionality and are
+therefore corrected during development. The cases that                                                The agent exports backups, expecting the user to gitignore them
+remain in our dataset are those that do not immediately
+cause an obvious error, allowing the application to keep                                                         The user commits without modifying .gitignore
+running while the intended security mechanism is ineffec-
+tive. The following illustrates this failure. The code invokes                      { "_id" : "689****" ,               ,
+crypto.createCipherGCM as the encryption primitive, but                                "name" : "kirikab" ,             Secrets exposure
+this API does not exist in Node's crypto module. The encryp-                           "email" : "kab2****@gmail.com"
+tion call therefore fails, and the surrounding error handling                          "password" : "$2b$12$Y **** " ,                  backups/backup-xxx.json
+allows the secrets store to continue operating without effec-
+tive encryption. Hallucination accounts for 13 vulnerabilities                      ... }
+(1.1%) in our dataset. Though this is a small category, it is
+analytically important as the code may implement a security
+mechanism while failing to provide the intended protection.
+
+encrypt ( plaintext ) { Fabricated, non-existent cipher function                    RQ.3 Findings. Insecurities in vibe-coded applications largely
+                                                                                    stem from systematic limitations in how agents retain, prioritize,
+    const iv = crypto . randomBytes ( this .ivLength)                               and reason about security requirements across the development
+                                                                                    lifecycle. We identify eight recurring failure modes across three
+    const cipher = crypto . createCipherGCM (                                       defect classes: memory, objective, and knowledge, with knowl-
+
+    this .algorithm,          this .masterKey,     iv )
+
+    return cipher . update (plaintext,             'utf8' , 'hex' )
+
+}
+
+    Every call throws TypeError, the logic runs unencrypted
+
+                                                                                10
+Table 3: Eight experimental configurations in the OFAT de-                    manually evaluate whether the target vulnerability has been
+sign (each changes one factor relative to the baseline).                      reintroduced. We flag it as triggered if the same or similar
+                                                                              vulnerability reappears; otherwise not.
+Condition Configuration Setting
+                                                                                 To investigate how these conditions affect vulnerability in-
+Baseline  Baseline           default harness, GPT-5.6-Terra, short            troduction, we adopt a one-factor-at-a-time (OFAT) design in
+                             prompt                                           which each run differs from the baseline by exactly one fac-
+                                                                              tor, as shown in Table 3. The baseline uses the default agent
+Agent harness Hardened       default plus a security-hardening skill [1]      harness, the mid-capability GPT-5.6-Terra model, and a short
+                                                                              non-expert prompt. We then vary each of the three factors. For
+Model     Luna               weaker model                                     the agent harness, we compare the default with that augmented
+          Sol                stronger model                                   with a security-hardening skill [1]. For the underlying model,
+                                                                              we compare GPT-5.6-Terra with the weaker GPT-5.6-Luna
+          Professional detailed prompt with technical instructions            and the stronger GPT-5.6-Sol. For user prompts, we apply
+                                                                              four strategies to the baseline prompt: (1) making it more
+                   Polished  baseline plus "write well-structured code"       professional and detailed, (2) requesting a polished imple-
+User prompt Production       baseline plus "ready for production"             mentation, (3) specifying that the code should be production-
+                                                                              ready, and (4) asking the agent to perform a self-check. All
+          Self-check baseline plus "review your changes"                      prompts request identical functionality and do not reveal the
+                                                                              target security criterion. This yields eight configurations per
+  edge defects (63.4%) the most prevalent.                                    target. We repeat each configuration three times to mitigate
+                                                                              the stochasticity of agent behaviors. As a result, we have
+7 RQ.4: What Conditions Can Mitigate Vul-                                     70 × 8 × 3 = 1,680 controlled runs.
+    nerabilities?
+                                                                              Analysis Results. The results are shown in Table 4. Overall,
+To understand when vibe coding is likely to mitigate vulnera-                 the target vulnerability is reintroduced in 434 of 1,680 runs
+bilities, we study three potential conditions that may influence              (25.8%). For the baseline, it is reintroduced in 54 of 210
+its behavior: (1) agent harness, (2) underlying language model,               runs (25.7%), showing that vulnerability reintroduction is not
+and (3) user prompt. To isolate the effect of each condition,                 limited to isolated one-time outcomes.
+we conduct a controlled replay experiment that re-executes
+the original vibe-coding scenarios in which vulnerabilities                      Effect of Each Factor: Overall, most investigated conditions
+were introduced and measures whether the agent reintroduces                   mitigate vulnerabilities to varying degrees. Compared with
+them under a different configuration.                                         the baseline, the production-ready prompt achieves the largest
+                                                                              reduction (14.8 pp), followed closely by the hardened harness
+Experimental Setup. We first select the vulnerability tar-                    (13.8 pp). This indicates that security guidance is effective
+gets to replay. For this purpose, we identify the vulnerabilities             at both the workflow level, through reusable security checks,
+in VIBEVULNS that are feasible to replay: the repository state                and the task level, by making robustness an explicit comple-
+before vulnerability introduction is available, the original task             tion criterion. Other prompting strategies are less impactful,
+can be reconstructed faithfully, and the security outcome can                 reducing vulnerability reintroduction by only 2.9 pp (polished
+be explicitly judged. We then stratify this replayable corpus                 prompt) and 1.9 pp (self-check prompt). The professional
+by failure mode and randomly select 70 vulnerabilities. The                   prompt even raises it by 20.0 pp. Based on our trace observa-
+resulting sample spans seven failure modes across all three                   tions, the detailed technical instructions in the professional
+defect classes, with multiple targets in every stratum. This                  prompt cause the agent to follow the requested specification
+includes 17 targets with memory defects, 23 with objective                    more literally, leaving less room for its own security judgment.
+defects, and 30 with knowledge defects. We exclude only                       Stronger models also improve security, reducing vulnerability
+hallucination, as it is difficult to reproduce reliably.                      reintroduction by 13.8 pp from Luna to Terra. However, gains
+                                                                              diminish and even reverse by 0.5 pp from Terra to Sol, sug-
+   For each target, we reconstruct the pre-state in which the                 gesting that scaling model capability alone is not a reliable
+vulnerability has not been introduced yet, while the surround-                path to improved security.
+ing feature context remains intact. To achieve this, we either
+roll back to the parent commit or surgically remove only                         Effect by Defect Class and Failure Mode: At the defect-
+the code change that introduces the vulnerability when the                    class level, the interventions show distinct strengths. Com-
+original commit contained significant feature changes that                    pared with Terra, Sol reduces objective defects by 8.7 pp
+affected the whole context. After that, we manually issue a                   but increases memory defects and knowledge defects by 3.9
+task prompt that requests the same functionality as the origi-                and 5.6 pp. Likewise, polished and self-check prompts re-
+nal vulnerability-introducing scenario. We then run the agent                 duce objective defects by 10.1 and 5.8 pp but do not improve
+to complete the task and collect both the generated artifacts                 knowledge defects, which improve only under the hardened
+and traces of the agentic process. Using these artifacts, we
+
+                                                                          11
+Table 4: Vulnerability reintroduction rates by defect class, failure mode, and OFAT configuration in the controlled replay
+experiment. Each cell reports the number of triggered replay runs over evaluated runs, followed by the corresponding percentage.
+nt denotes the number of vulnerability targets, with each target contributing three repeats per configuration. The bottom row
+reports the change in the overall reintroduction rate for each configuration relative to the baseline ( vs. Base). Green indicates a
+decrease, red an increase, and white little or no change; darker shading denotes a larger absolute change.
+
+Defect Failure Mode          nt  Base Hardened                     Luna  Sol Polished Production Professional Self-check
+
+           Forgotten obligations 7 6/21 (28.6%)    6/21 (28.6%) 9/21 (42.9%) 6/21 (28.6%)    6/21 (28.6%)   3/21 (14.3%) 11/21 (52.4%)  6/21 (28.6%)
+                                                     1/30 (3.3%) 6/30 (20.0%) 6/30 (20.0%)     2/30 (6.7%)   1/30 (3.3%) 9/30 (30.0%)   3/30 (10.0%)
+Memory     Incomplete change prop.10 4/30 (13.3%)                                            8/51 (15.7%)    4/51 (7.8%) 20/51 (39.2%)  9/51 (17.6%)
+                                                   7/51 (13.7%) 15/51 (29.4%) 12/51 (23.5%)
+           Defect aggregate  17 10/51 (19.6%)
+
+           Demo-oriented design 14 13/42 (31.0%) 5/42 (11.9%) 18/42 (42.9%) 10/42 (23.8%) 10/42 (23.8%) 5/42 (11.9%) 23/42 (54.8%) 11/42 (26.2%)
+
+Objective Function-fix side effects 9 13/27 (48.1%) 7/27 (25.9%) 11/27 (40.7%) 10/27 (37.0%) 9/27 (33.3%) 7/27 (25.9%) 15/27 (55.6%) 11/27 (40.7%)
+
+           Defect aggregate  23 26/69 (37.7%) 12/69 (17.4%) 29/69 (42.0%) 20/69 (29.0%) 19/69 (27.5%) 12/69 (17.4%) 38/69 (55.1%) 22/69 (31.9%)
+
+           Hidden security rules 22 16/66 (24.2%)  6/66 (9.1%) 27/66 (40.9%) 16/66 (24.2%) 16/66 (24.2%)     4/66 (6.1%) 24/66 (36.4%) 16/66 (24.2%)
+                                                   0/12 (0.0%) 8/12 (66.7%) 4/12 (33.3%) 5/12 (41.7%)       3/12 (25.0%) 7/12 (58.3%) 3/12 (25.0%)
+           Insecure instructions 4 1/12 (8.3%)     0/12 (0.0%) 4/12 (33.3%) 3/12 (25.0%) 0/12 (0.0%)         0/12 (0.0%) 7/12 (58.3%) 0/12 (0.0%)
+                                                   6/90 (6.7%) 39/90 (43.3%) 23/90 (25.6%) 21/90 (23.3%)     7/90 (7.8%) 38/90 (42.2%) 19/90 (21.1%)
+KnowledgeUser-dependent security 4 1/12 (8.3%)
+
+           Defect aggregate  30 18/90 (20.0%)
+
+Overall                      7054/210 (25.7%)25/210 (11.9%)83/210 (39.5%)55/210 (26.2%)48/210 (22.9%)23/210 (11.0%)96/210 (45.7%)50/210 (23.8%)
+ vs. Base
+                                 0.0 pp -13.8 pp   +13.8 pp              +0.5 pp             -2.9 pp -14.8 pp  +20.0 pp                 -1.9 pp
+
+harness and production-ready prompt. Broad quality cues                  awareness­action gap shows that recognizing a security re-
+therefore appear more effective against insecure prioritisation          quirement is not sufficient unless the agent is also required to
+than against missing security requirements. The failure-mode             enforce it before task completion.
+results clarify this pattern. The hardened harness leaves forgot-
+ten obligations unchanged at 28.6% but reduces incomplete                  RQ.4 Findings. Nearly all conditions, including hardened
+change propagation from 13.3% to 3.3%, suggesting that                     agent harness, enhanced underlying models, and carefully-
+reusable checks catch inconsistent protections more readily                crafted prompts, can help mitigate vibe-coding vulnerabilities to
+than deferred tasks. Meanwhile, the production-ready prompt                varying degrees. Among them, a production-ready prompt and
+reduces hidden security rules from 24.2% to 6.1% but raises                a hardened agent harness are the most effective, and vulnerabili-
+insecure instructions from 8.3% to 25.0%. It may thus sur-                 ties with different defects respond differently to the conditions.
+face omitted requirements without overriding an explicitly                 Furthermore, our analysis reveals a security awareness­action
+insecure request. Overall, effective mitigation depends on the             gap: agents often recognize security risks but fail to translate
+source of the defect.                                                      this awareness into secure implementation.
+
+   Persistence and Stochasticity: Vulnerabilities remain per-            8 Discussion
+sistent under the evaluated conditions. 35 vulnerabilities are
+triggered under at least three of the eight configurations,              Insecurity Sources. Our findings suggest that insecurity in
+and no configuration eliminates all target vulnerabilities.              vibe coding arises from three interacting sources.
+Agent behavior is also stochastic. Of the 560 vulnerability­
+configuration cells, 123 (22.0%) are non-unanimous across                   Agent-level limitations: Many of the observed defects can
+their three identical repeats, indicating that the same task,            be traced to the behavior of the agent itself. First, agents do
+repository state, and configuration can produce both secure              not reliably retain or propagate security-relevant context as
+and insecure outcomes. This suggests that vibe coding secu-              the project evolves, which leaves earlier security properties
+rity is inherently variable.                                             unenforced in newly added or modified code. Second, agents
+                                                                         tend to prioritize completing the immediate task over verify-
+   Security Awareness­Action Gap: We further examine                     ing the security implications of a proposed fix. Third, agents
+whether agents possess the security knowledge needed to                  may lack, or fail to surface, security requirements that are not
+recognize the vulnerabilities they introduce and whether they            explicit in the user's request, and may occasionally rely on
+act on that knowledge. We manually review the execution                  fabricated technical assumptions in security-sensitive logic.
+traces of triggered runs and identify cases in which the agent
+explicitly acknowledges the associated security risk. In 90                 Workflow-level weaknesses: Conventional software devel-
+of 434 triggered runs (20.7%), the agent recognizes the risk             opment workflows may also forget plans and write tempo-
+yet still produces and ships insecure code. Rather than im-              rary code, but they mitigate these by requirement checks,
+plementing a secure solution, it often substitutes warnings,             code review, and release gates before deployment. In con-
+comments, or recommendations for corrective action. This                 trast, vibe-coded applications are typically developed in short,
+
+                                                                   12
+high-intensity bursts, leaving little room for such checks, and       eliminated all vulnerabilities, so generated applications should
+non-expert users also cannot provide safeguards on their own.         be treated as prototypes and not casually exposed to real users.
+As a result, vulnerabilities that would ordinarily be caught at
+distinct stages can propagate through the pipeline together.          Limitations and Threats to Validity. We identify several
+                                                                      limitations that may threaten the validity and generalizability
+   Responsibility misalignment: Vibe coding is asymmetric:            of our findings. First, to collect vibe-coded applications, we
+the agent performs most of the design and implementation              rely on fingerprints associated with two widely-used coding
+work, while the user often has minimal technical participation.       agents (Claude Code and Lovable), although some collected
+However, many AI agents still assign responsibility for de-           repositories show evidence of development using multiple
+sign quality, security review, deployment, and maintenance to         agents. Consequently, our findings may not generalize to the
+the user. This creates a mismatch between responsibility and          entire vibe-coding landscape. To mitigate this threat, we an-
+capability. Users who lack security expertise are not well po-        alyze the two agent-associated repository groups separately.
+sitioned to judge secure design choices, detect security flaws        The main findings replicate across both groups: vulnerability
+in generated code, or maintain secure deployments, leaving            prevalence is similarly high, the OWASP category rankings
+vulnerabilities to emerge and persist unchecked.                      are correlated ( = 0.73), and the root-cause rankings show
+                                                                      strong concordance ( = 0.86). Although several composi-
+Takeaways for Different Stakeholders. Our findings point              tional differences remain, these results suggest that our main
+to distinct, actionable takeaways for the key stakeholders in-        conclusions are not confined to repositories associated with a
+volved in the vibe-coding pipeline.                                   single agent. Second, our dataset consists exclusively of open-
+                                                                      source applications hosted on GitHub, and our findings may
+   For agent and harness developers: Recurring implicit re-           therefore be limited to this setting. Third, our vulnerability-
+quirements (e.g., server-side authorization) should be com-           detection framework may produce false positives or false
+piled into a checkable rule set and enforced at every stage of        negatives. To mitigate false positives, we conduct human val-
+the agent lifecycle, akin to policy-as-code integrated into the       idation of the detected vulnerabilities. We also evaluate our
+agent harness. Developers should also address the awareness­          approach against human analysis and a set of known vulnera-
+action gap directly. In our study, agents explicitly recognized       bilities. The results indicate that our framework is unlikely to
+the risks yet still produced insecure code; therefore, unre-          miss a substantial number of vulnerabilities. Finally, we use
+solved risks should trigger a structured blocking mechanism           Claude Code as one of our security auditors to discover vulner-
+rather than being relegated to warnings or code comments. Fi-         abilities in applications generated by Claude Code, which is
+nally, before deployment, agents should automatically verify          due to its strong capabilities and widespread adoption among
+critical safeguards, such as excluding secret files and rotating      vibe-coding users. This overlap may introduce a potential
+default credentials. This shifts responsibility away from end         bias in vulnerability detection. To mitigate this, we employ
+users, who may lack the expertise to assess such risks.               two independent auditors to cross-validate results. We further
+                                                                      validate our framework against human security analysis and a
+   For foundation model developers: While scaling model ca-           known vulnerability set, providing additional evidence that
+pability is important, it does not provide a uniformly reliable       the results are unlikely to be driven by this potential bias.
+path to secure-by-default behavior. While stronger models
+reduce the incidence of vulnerabilities (from GPT-5.6-Luna            9 Conclusion
+to GPT-5.6-Terra), they reach a point of diminishing returns
+(from GPT-5.6-Terra to GPT-5.6-Sol). Therefore, improving             In this paper, we study the prevalence, severity, and contribut-
+security-by-default behavior may require alignment interven-          ing factors of vulnerabilities in vibe-coded applications, and
+tions specifically designed to preserve security properties           investigate what conditions can mitigate them. Our study
+under such pressure.                                                  of 1,186 vulnerabilities from real-world, publicly deployed
+                                                                      vibe-coded applications shows that (1) vulnerabilities are
+   For end users: End users can mitigate security risks by op-        widespread, with 91.0% of applications containing at least
+timizing the development workflow. In the specification stage,        one vulnerability; (2) these vulnerabilities are often severe,
+they should provide agents with explicit security instructions.       with 65.77% rated as Critical or High, concentrated in broken
+In our study, requesting a production-ready implementation            access control, injection, and authentication failures; and (3)
+and installing a security-hardening skill substantially reduced       they are traced to eight recurring failure modes across three
+the vulnerability-triggering rate. Conversely, users should           defect classes--memory, objective, and knowledge defects--
+avoid supplying technical details they do not fully understand,       reflecting how security obligations are forgotten, deprioritized
+as detailed professional prompts can sometimes lead agents            in favor of immediate functionality, or never recognized in
+to follow insecure specifications too literally. During devel-        the first place. We further show that, while better agent har-
+opment and iteration, users should take security warnings
+seriously rather than approving immediately. Before public
+deployment, they should also request a self-check covering
+deferred tasks, authentication and authorization paths, input
+handling, and secrets. Nevertheless, no evaluated condition
+
+                                                                  13
+nesses and prompts can reduce these risks to some extent, they                empirical study. ACM Trans. Softw. Eng. Methodol.,
+do not eliminate them, and agents often recognize security                    34(8), October 2025. doi:10.1145/3716848.
+risks yet still ship insecure code. Our study suggests that se-
+curing vibe-coded applications requires treating vibe coding             [9] Ahmed E. Hassan, Gustavo A. Oliva, Dayi Lin, Boyuan
+as a pipeline-level security problem, rather than relying on                  Chen, and Zhen Ming (Jack) Jiang. Towards ai-native
+code-generation quality alone.                                                software engineering (se 3.0): A vision and a challenge
+                                                                              roadmap. ACM Trans. Softw. Eng. Methodol., April
+References                                                                    2026. Just Accepted. doi:10.1145/3807901.
+
+ [1] Addy Osmani. Agent Skills: Security and Hardening.                 [10] Andrej Karpathy. There's a new kind of coding I call
+      Accessed: 2026-08-20. URL: https://github.com                           "vibe coding". Post on X (formerly Twitter), February
+      /addyosmani/agent-skills/blob/main/skills/s                             2025. Accessed: 2026-08-20. URL: https://x.com/
+      ecurity-and-hardening/SKILL.md.                                         karpathy/status/1886192184808149383.
+
+ [2] Anthropic. Claude Code. Accessed: 2026-08-20. URL:                 [11] Raphaël Khoury, Anderson R. Avila, Jacob Brunelle,
+      https://claude.com/product/claude-code.                                 and Baba Mamadou Camara. How secure is code gener-
+                                                                              ated by chatgpt? In 2023 IEEE International Conference
+ [3] Satish Chandra. Ai in software engineering at google:                    on Systems, Man, and Cybernetics (SMC), pages 2445­
+      Progress and the path ahead (invited talk). In Proceed-                 2451, 2023. URL: https://arxiv.org/abs/2304.0
+      ings of the 1st ACM International Conference on AI-                     9655.
+      Powered Software, pages 182­182, 2024.
+                                                                        [12] Keke Lian, Bin Wang, Lei Zhang, Libo Chen, Junjie
+ [4] Junkai Chen, Huihui Huang, Yunbo Lyu, Junwen An,                         Wang, Ziming Zhao, Yujiu Yang, et al. A.S.E: A
+      Jieke Shi, Chengran Yang, Ting Zhang, Haoye Tian,                       repository-level benchmark for evaluating security in
+      Yikun Li, Zhenhao Li, Xin Zhou, Xing Hu, and David                      AI-generated code, 2025. URL: https://arxiv.org/
+      Lo. Securevibebench: Evaluating secure coding capabil-                  abs/2508.18106, arXiv:2508.18106.
+      ities of code agents with realistic vulnerability scenarios,
+      2026. URL: https://arxiv.org/abs/2509.22097,                      [13] Lovable. Lovable. Accessed: 2026-08-20. URL: https:
+      arXiv:2509.22097.                                                       //lovable.dev/.
+
+ [5] Yi-Hung Chou, Boyuan Jiang, Yi Wen Chen, Mingyue                   [14] Microsoft. GitHub Copilot--Your AI pair programmer.
+      Weng, Victoria Jackson, Thomas Zimmermann, and                          Accessed: 2026-08-20. URL: https://github.com
+      James A. Jones. Building software by rolling the dice:                  /features/copilot.
+      A qualitative study of vibe coding. In Proceedings of
+      the ACM Joint European Software Engineering Con-                  [15] Yuzhou Nie, Zhun Wang, Yu Yang, Ruizhe Jiang,
+      ference and Symposium on the Foundations of Soft-                       Yuheng Tang, Xander Davies, Yarin Gal, Bo Li, Wenbo
+      ware Engineering (ESEC/FSE), 2026. Accepted; to                         Guo, and Dawn Song. Secodeplt: A unified benchmark
+      appear. URL: https://arxiv.org/abs/2512.22418,                          for evaluating the security risks and capabilities of code
+      arXiv:2512.22418.                                                       genai. Advances in Neural Information Processing Sys-
+                                                                              tems, 38, 2026. URL: https://arxiv.org/abs/24
+ [6] Databricks. Passing the security vibe check: The dan-                    10.11096.
+      gers of vibe coding, 2025. Accessed: 2026-04-29. URL:
+      https://www.databricks.com/blog/passing- s                        [16] NVD. CVE-2025-48757. Accessed: 2026-08-20. URL:
+      ecurity-vibe-check-dangers-vibe-coding.                                 https://nvd.nist.gov/vuln/detail/CVE-202
+                                                                              5-48757.
+ [7] Swaroop Dora, Deven Lunkad, Naziya Aslam,
+      S Venkatesan, and Sandeep Kumar Shukla. The hidden                [17] OpenAI. Codex CLI. Accessed: 2026-08-20. URL:
+      risks of llm-generated web application code: A security-                https://github.com/openai/codex.
+      centric evaluation of code generation capabilities in
+      large language models. In International Conference                [18] OpenAI. Security Best Practices Skill. Accessed: 2026-
+      on Information Systems Security, pages 27­37, 2025.                     08-20. URL: https://github.com/openai/skills
+      URL: https://arxiv.org/abs/2504.20612.                                  /tree/main/skills/.curated/security-best-p
+                                                                              ractices.
+ [8] Yujia Fu, Peng Liang, Amjed Tahir, Zengyang Li, Mo-
+      jtaba Shahin, Jiaxin Yu, and Jinfu Chen. Security weak-           [19] OWASP. OWASP Juice Shop. Accessed: 2026-08-20.
+      nesses of copilot-generated code in github projects: An                 URL: https://owasp.org/www-project-juice-s
+                                                                              hop/.
+
+                                                                    14
+[20] OWASP Data Factors. OWASP top 10:2025--what                       [30] Inbal Shani and GitHub Staff. Survey reveals AI's im-
+      are application security risks? (data factors), 2025. Ac-              pact on the developer experience. GitHub Blog (Re-
+      cessed: 2026-06-12. URL: https://owasp.org/Top1                        search), 2023. Accessed: 2026-08-20. URL: https:
+      0/2025/0x02_2025-What_are_Application_Secu                             //github.blog/news-insights/research/surve
+      rity_Risks/#Data%20Factors.                                            y-reveals-ais-impact-on-the-developer-exp
+                                                                             erience/.
+[21] OWASP Foundation. OWASP risk rating methodology.
+      Accessed: 2026-06-12. URL: https://owasp.org/ww                  [31] sickn33. Antigravity Awesome Skills: Security Audit.
+      w-community/OWASP_Risk_Rating_Methodology.                             Accessed: 2026-08-20. URL: https://github.com
+                                                                             /sickn33/antigravity-awesome-skills/blob/m
+[22] OWASP Foundation. OWASP top 10 for LLM appli-                           ain/skills/security-audit/SKILL.md.
+      cations 2025, 2025. Accessed: 2026-04-29. URL:
+      https://genai.owasp.org/resource/owasp-t                         [32] Norbert Tihanyi, Tamas Bisztray, Mohamed Amine Fer-
+      op-10-for-llm-applications-2025/.                                      rag, Ridhi Jain, and Lucas C. Cordeiro. How secure is
+                                                                             AI-generated code: A large-scale comparison of large
+[23] OWASP Top 10 Security Risk. OWASP top 10:2025--                         language models. Empirical Software Engineering,
+      the ten most critical web application security risks, 2025.            30(2):47, 2025. doi:10.1007/s10664-024-10590-1.
+      Accessed: 2026-05-21. URL: https://owasp.org/
+      Top10/2025/.                                                     [33] Mark Vero, Niels Mündler, Victor Chibotaru, Veselin
+                                                                             Raychev, Maximilian Baader, Nikola Jovanovic´, Jingx-
+[24] Panto. Lovable AI Statistics 2026--Users, Revenue,                      uan He, and Martin Vechev. BaxBench: Can LLMs
+      Adoption & Market Metrics. Accessed: 2026-08-20.                       generate correct and secure backends? In Proceedings
+      URL: https://www.getpanto.ai/blog/lovable-s                            of the 42nd International Conference on Machine Learn-
+      tatistics.                                                             ing, volume 267 of Proceedings of Machine Learning
+                                                                             Research, pages 61344­61390. PMLR, 13­19 Jul 2025.
+[25] Hammond Pearce, Baleegh Ahmad, Benjamin Tan, Bren-                      URL: https://proceedings.mlr.press/v267/ver
+      dan Dolan-Gavitt, and Ramesh Karri. Asleep at the                      o25a.html.
+      keyboard? Assessing the security of GitHub Copilot's
+      code contributions. In 2022 IEEE Symposium on Se-                [34] Vibe Graveyard. Vibe graveyard: Real-world security
+      curity and Privacy (SP), pages 754­768, 2022. doi:                     incidents in vibe-coded applications, 2025. Accessed:
+      10.1109/SP46214.2022.9833571.                                          2026-04-29. URL: https://www.vibegraveyard.ai
+                                                                             /.
+[26] Neil Perry, Megha Srivastava, Deepak Kumar, and Dan
+      Boneh. Do users write more insecure code with AI                 [35] Songwen Zhao, Danqing Wang, Kexun Zhang, Jiaxuan
+      assistants? In Proceedings of the 2023 ACM SIGSAC                      Luo, Zhuo Li, and Lei Li. Is vibe coding safe? bench-
+      Conference on Computer and Communications Security,                    marking vulnerability of agent-generated code in real-
+      CCS '23, pages 2785­2799. ACM, November 2023. do                       world tasks. arXiv preprint arXiv:2512.03262, 2025.
+      i:10.1145/3576915.3623157.                                             URL: https://arxiv.org/abs/2512.03262.
+
+[27] Andreas Schaad, Stefan Götz, and Dominik Binder. You
+      still have to study on the security of llm generated code.
+      In Lili Nemec Zlatolas, Kai Rannenberg, Tatjana Welzer,
+      and Joaquin Garcia-Alfaro, editors, ICT Systems Secu-
+      rity and Privacy Protection, pages 111­124, 2025. URL:
+      https://link.springer.com/chapter/10.1007/
+      978-3-031-92886-4_8.
+
+[28] Maximilian Schreiber and Pascal Tippe. Security vulner-
+      abilities in ai-generated code: A large-scale analysis of
+      public github repositories. In International Conference
+      on Information and Communications Security, pages
+      153­172. Springer, 2025.
+
+[29] Muhammad Usman Shahid, Chuadhry Mujeeb Ahmed,
+      and Rajiv Ranjan. LLM-CSEC: Empirical evaluation
+      of security in C/C++ code generated by large language
+      models, 2025. URL: https://arxiv.org/abs/2511
+      .18966, arXiv:2511.18966.
+
+                                                                   15
+

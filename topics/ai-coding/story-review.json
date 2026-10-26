@@ -51,6 +51,10 @@
     "ai-coding/specs-code-workflows-ignore-generated-not|asserts|ai-coding/sources/2607.09902.txt#L543-L556": {
       "level": "partial",
       "reason": "a cross-project association between merging pull requests without review and later corrective maintenance of agentic code (R2 6%); it is not causal and has no spec dimension, so it bears on unreviewed merging, not on whether a good spec lets you ignore the code"
+    },
+    "ai-coding/vibe-coded-apps-work-prototypes-but|asserts|ai-coding/sources/2606.23130.txt#L457-L464": {
+      "level": "partial",
+      "reason": "shows deployed vibe-coded apps commonly ship with serious security flaws, one way of breaking down in production; it does not measure functional failure, scaling or maintenance, and has no human-built baseline"
     }
   },
   "stories": {
@@ -286,10 +290,19 @@
         "Prototype in a Day, Rewrite in a Month?",
         "Where the Evidence on Vibe Coding Runs Out"
       ],
-      "whyWatch": "Sixteen sources say vibe-coded apps break in production. The review says the prototype half is well supported and the break-down half is mostly unstudied.",
-      "tension": "A widely shared belief whose interesting half has no evidence.",
-      "evidenceNeeded": "Case series or longitudinal data on vibe-coded apps taken to production.",
-      "research": "The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data."
+      "whyWatch": "Sixteen sources say vibe-coded apps break in production. A review says the prototype half is well supported; an audit of 200 live vibe-coded apps shows what breaking looks like, and what nobody has measured yet.",
+      "tension": "The literature review finds almost no production evidence; the first audit of deployed vibe-coded apps finds 91% of them with at least one security flaw. The belief is half shown on security and unmeasured on everything else.",
+      "evidenceNeeded": "Case series or longitudinal data on vibe-coded apps taken to production, with a human-built comparison group, on security, reliability, scaling and maintenance.",
+      "premise": "Before checking, the best guess was \"right\". Two documents bear on it, each on one half. The 47-source multivocal review (2022 to October 2025) finds evidence strongest for prototyping and UI work and weakest for production, data-intensive and safety-critical use: the prototype half is supported, the production half mostly unstudied. The security audit (Deng, Fan, Meng 2026) took 200 randomly sampled publicly deployed open-source apps that were at least 90% AI-authored with Claude Code or Lovable and found at least one manually validated vulnerability in 91% of them, 65.8% of the 1,186 rated Critical or High, mostly broken access control, injection and authentication; one failure mode it names is demo-oriented design (static demo keys, placeholder auth). Limits the video must carry: the audit measures security only, not whether the apps stop working or fail to scale; it has no human-built comparison group, and ordinary web apps also often carry flaws; it covers GitHub apps from two agents; and no study follows vibe-coded apps over time in production.",
+      "arc": {
+        "hook": "State the expectation everyone shares, with the sources that voice it: fine for a prototype, falls over in production.",
+        "conflict": "The one systematic review finds the production half barely studied, so the belief rested on anecdote.",
+        "evidence": "The review's map of where evidence is strong (prototypes, UI) and weak (production); then the audit of 200 live vibe-coded apps: 91% with a validated vulnerability, two thirds of them Critical or High, and agents building for the demo rather than for safety.",
+        "resolution": "On security, deployed vibe-coded apps do commonly break, in the sense of shipping exploitable flaws to real users. Whether they also fail under load or become unmaintainable has not been measured, and without a human-built baseline the audit cannot say how much worse they are than ordinary apps.",
+        "takeaway": "Treat a vibe-coded app as a prototype until someone has checked its access control, inputs and authentication; the claim that it breaks at scale is still an expectation, not a finding."
+      },
+      "qualificationsAccepted": true,
+      "research": "Strongest study 0.36 after applicability. The review supports only the prototype half; the security audit of 200 deployed vibe-coded apps (91% with a validated vulnerability) shows one kind of production failure but measures neither functional breakdown nor scaling and has no human-built baseline. Unblocked by a study comparing vibe-coded with conventionally built apps in production (incidents, outages, rewrites or vulnerabilities per app), or following vibe-coded apps over time as they gain users."
     },
     "conflict:goal-loop-commands-prompt-agent-until": {
       "coherence": {

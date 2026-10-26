@@ -3,7 +3,7 @@
  "basis": {
   "claims": 385,
   "sources": 216,
-  "studies": 21,
+  "studies": 22,
   "candidates": 69
  },
  "stories": [
@@ -667,474 +667,6 @@
      "id": "conflict:developers-overestimate-how-much-tools-speed",
      "question": "Do developers know whether AI is actually making them faster?"
     }
-   ]
-  },
-  {
-   "id": "decision:quality-and-understanding",
-   "kind": "decision",
-   "title": "Is AI-Written Code Harder to Maintain?",
-   "alternates": [
-    "The Technical-Debt Fear, Tested in a Randomized Trial",
-    "More Code, Less Understanding: What AI Does to Code Ownership"
-   ],
-   "question": "Is AI-written code harder to maintain?",
-   "whyWatch": "Eight sources warn that fast AI code piles up debt. The one preregistered trial that handed AI-written code to new developers found no difference, and a 302k-commit study found persisting issues with no human baseline. The viewer gets to see what a null result does and does not prove.",
-   "tension": "Widespread fear of debt against a null trial, with self-reports and an uncontrolled commit study in between.",
-   "evidenceNeeded": "Later developers' time and code health when evolving AI-written versus human-written code, and issue rates in AI commits against a human baseline.",
-   "evidenceAvailable": [
-    "Echoes of AI maintainability RCT: right (0.7, direct)",
-    "Shan et al. field study + RCT: wrong (0.3, partial)",
-    "Vibe-coding literature review: wrong (0.2, partial)",
-    "Post-merge fate study (182 repos): partly (0.4, direct)",
-    "CodeRabbit AI vs human PRs report: partly (0.25, direct)",
-    "2310.02059.txt: partly (0.55, direct)",
-    "Debt study (302k AI commits): partly (0.5, partial)",
-    "Vibe-coding literature review: partly (0.35, direct)",
-    "2601.20245v2.txt: partly (0.45, direct)",
-    "Code-ownership experiment (Martin-Lopez): partly (0.45, direct)"
-   ],
-   "gaps": [
-    "Code-ownership experiment (Martin-Lopez) is context only: a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers",
-    "No study strong enough to decide: \"Developers should be able to explain AI-generated code without the AI's help before it is merged\""
-   ],
-   "premise": "The Echoes trial (75 mostly professional developers manually evolving a small Java app written with or without AI, preregistered) found no reliable difference in completion time, CodeHealth or coverage, and was powered only to rule out large effects; that is the central finding and its limit. Against it: Shan's follow-up survey linked AI use to lower self-rated maintainability (self-reports), 11 of 47 review sources raise concerns (reports, not comparisons), and the 302k-commit study found 22.7% of AI-introduced issues persisting with no human-written baseline, most of them smells rather than vulnerabilities. The code-ownership experiment adds the mechanism that worries people: after AI-assisted tasks, authors answered fewer questions about their own code correctly (median 87.5% versus 100%). The claim that AI code 'accumulates more debt than hand-built' is therefore the belief the trial contradicts, not a finding the video can assert.",
-   "claims": [
-    "ai-coding/assisted-code-harder-later-developers-maintain",
-    "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
-    "ai-coding/developers-should-able-explain-generated-code"
-   ],
-   "related": [
-    "ai-coding/generated-code-contains-more-defects-human",
-    "ai-coding/developers-often-ship-generated-code-without"
-   ],
-   "arc": {
-    "hook": "The warning everyone repeats: AI code is a debt bomb. One team ran the experiment.",
-    "conflict": "The null trial against the commit study, the survey and the review's concerns.",
-    "evidence": "Echoes design and result with its power limit; the 302k-commit persistence figures and the missing baseline; the security issue rates and what counts as an issue; the code-ownership understanding gap.",
-    "resolution": "No measured maintainability penalty yet, within the limits of one small trial; a measured understanding penalty for the author; and issue counts that need a baseline before they mean 'more'.",
-    "takeaway": "Review for understanding, not just correctness: the one measured harm is that authors know their AI-assisted code less well."
-   },
-   "coherence": {
-    "score": 0.85,
-    "basis": "review",
-    "explanation": "One question, whether AI-written code is harder to live with, answered by the maintainability trial, the issue rates in AI commits, and what AI assistance does to the author's own understanding. The technical-debt claim is carried in the premise as the belief the trial contradicts, not as a finding."
-   },
-   "scores": {
-    "coherence": 0.85,
-    "relevance": 0.91,
-    "curiosity": 0.7,
-    "stakes": 0.7,
-    "depth": 1,
-    "originality": 1,
-    "evidence": 0.91,
-    "editorial": 0.83,
-    "overall": 0.86,
-    "explanation": "editorial 0.83 = mean of coherence 0.85 (review), relevance 0.91 (15 sources, 14 channels), curiosity 0.7 (decision, a study overturned the guess), stakes 0.7 (lean: pro), depth 1 (9 studies, 3 claims, tension); evidence 0.91 = strongest Echoes of AI maintainability RCT at 0.7 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "ready",
-   "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
-   "blocking": [],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0.7,
-     "independent": 1,
-     "supporting": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-        "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
-       },
-       "cited": true,
-       "role": "supports",
-       "by": "Echoes of AI maintainability RCT",
-       "verdict": "right",
-       "confidence": 0.7,
-       "note": "Preregistered RCT, 75 mostly professional developers manually evolving Java code written with or without AI: no reliable difference in completion time or perceived productivity, and the study is only powered to rule out large effects.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-        "cite": "ai-coding/sources/4859137.txt#L1219-L1229"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Shan et al. field study + RCT",
-       "verdict": "wrong",
-       "confidence": 0.3,
-       "note": "The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers.",
-       "applicability": "partial",
-       "basis": "heuristic",
-       "why": "the verdict note limits its own scope (\"self-reports\")"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-        "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Vibe-coding literature review",
-       "verdict": "wrong",
-       "confidence": 0.2,
-       "note": "11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code.",
-       "applicability": "partial",
-       "basis": "heuristic",
-       "why": "the verdict note limits its own scope (\"rather than\")"
-      }
-     ],
-     "context": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-        "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892"
-       },
-       "cited": true,
-       "role": "context",
-       "by": "Code-ownership experiment (Martin-Lopez)",
-       "verdict": "right",
-       "confidence": 0.3,
-       "note": "The related work cites Borg et al.'s 151-participant controlled experiment, which found no consistent sign that AI-assisted code was harder for later developers to maintain, while warning of cognitive debt. This is secondary evidence; the study's own data cover only the original author.",
-       "applicability": "contextual",
-       "basis": "review",
-       "why": "a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers"
-      },
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-        "cite": "ai-coding/sources/2603.28592v3.txt#L1031-L1035"
-       },
-       "cited": true,
-       "role": "inconclusive",
-       "by": "Debt study (302k AI commits)",
-       "verdict": "unknown",
-       "confidence": null,
-       "note": "The mining study of 302k AI-authored commits explicitly has no human-written baseline, so its counts of surviving debt cannot show that AI code is harder to maintain than human code.",
-       "applicability": "direct",
-       "basis": "heuristic",
-       "why": "the verdict bears on the claim as worded"
-      }
-     ],
-     "problems": [],
-     "limitations": [
-      "Shan et al. field study + RCT: The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers. [partial: the verdict note limits its own scope (\"self-reports\")]",
-      "Vibe-coding literature review: 11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code. [partial: the verdict note limits its own scope (\"rather than\")]",
-      "Context only, Code-ownership experiment (Martin-Lopez) (right): a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers."
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying, 1 context only."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0.7,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-          "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Echoes of AI maintainability RCT",
-         "verdict": "right",
-         "confidence": 0.7,
-         "note": "Preregistered RCT, 75 mostly professional developers manually evolving Java code written with or without AI: no reliable difference in completion time or perceived productivity, and the study is only powered to rule out large effects.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-          "cite": "ai-coding/sources/4859137.txt#L1219-L1229"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Shan et al. field study + RCT",
-         "verdict": "wrong",
-         "confidence": 0.3,
-         "note": "The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"self-reports\")"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-          "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Vibe-coding literature review",
-         "verdict": "wrong",
-         "confidence": 0.2,
-         "note": "11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"rather than\")"
-        }
-       ],
-       "context": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892"
-         },
-         "cited": true,
-         "role": "context",
-         "by": "Code-ownership experiment (Martin-Lopez)",
-         "verdict": "right",
-         "confidence": 0.3,
-         "note": "The related work cites Borg et al.'s 151-participant controlled experiment, which found no consistent sign that AI-assisted code was harder for later developers to maintain, while warning of cognitive debt. This is secondary evidence; the study's own data cover only the original author.",
-         "applicability": "contextual",
-         "basis": "review",
-         "why": "a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
-          "cite": "ai-coding/sources/2603.28592v3.txt#L1031-L1035"
-         },
-         "cited": true,
-         "role": "inconclusive",
-         "by": "Debt study (302k AI commits)",
-         "verdict": "unknown",
-         "confidence": null,
-         "note": "The mining study of 302k AI-authored commits explicitly has no human-written baseline, so its counts of surviving debt cannot show that AI code is harder to maintain than human code.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Shan et al. field study + RCT: The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers. [partial: the verdict note limits its own scope (\"self-reports\")]",
-        "Vibe-coding literature review: 11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code. [partial: the verdict note limits its own scope (\"rather than\")]",
-        "Context only, Code-ownership experiment (Martin-Lopez) (right): a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying, 1 context only."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f1",
-       "text": "AI-generated code frequently contains security vulnerabilities",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
-          "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Post-merge fate study (182 repos)",
-         "verdict": "partly",
-         "confidence": 0.4,
-         "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
-          "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "CodeRabbit AI vs human PRs report",
-         "verdict": "partly",
-         "confidence": 0.25,
-         "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
-          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "2310.02059.txt",
-         "verdict": "partly",
-         "confidence": 0.55,
-         "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
-          "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Debt study (302k AI commits)",
-         "verdict": "partly",
-         "confidence": 0.5,
-         "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
-         "applicability": "partial",
-         "basis": "review",
-         "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
-          "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Vibe-coding literature review",
-         "verdict": "partly",
-         "confidence": 0.35,
-         "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
-        "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
-        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
-        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
-        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 5 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f2",
-       "text": "Developers should be able to explain AI-generated code without the AI's help before it is merged",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/developers-should-able-explain-generated-code",
-          "cite": "ai-coding/sources/2601.20245v2.txt#L468-L484"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "2601.20245v2.txt",
-         "verdict": "partly",
-         "confidence": 0.45,
-         "note": "Preregistered RCT, 52 crowd-recruited developers (mostly freelance or professional) learning a new Python library: those allowed AI scored 17% lower on a 27-point quiz on its concepts, code reading and debugging (d=0.74), with no significant time saving. Supports the reason behind the norm; no merge gate was tested.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/developers-should-able-explain-generated-code",
-          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Code-ownership experiment (Martin-Lopez)",
-         "verdict": "partly",
-         "confidence": 0.45,
-         "note": "Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "2601.20245v2.txt: Preregistered RCT, 52 crowd-recruited developers (mostly freelance or professional) learning a new Python library: those allowed AI scored 17% lower on a 27-point quiz on its concepts, code reading and debugging (d=0.74), with no significant time saving. Supports the reason behind the norm; no merge gate was tested.",
-        "Code-ownership experiment (Martin-Lopez): Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested."
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 2 qualifying."
-      }
-     }
-    ]
-   },
-   "chainCandidates": [
-    "conflict:generated-code-contains-more-defects-human"
    ]
   },
   {
@@ -1805,6 +1337,492 @@
      "id": "surprise:assistance-must-reliable-save-experts-time",
      "question": "Why can AI assistance cost expert programmers more time than it saves?"
     }
+   ]
+  },
+  {
+   "id": "decision:quality-and-understanding",
+   "kind": "decision",
+   "title": "Is AI-Written Code Harder to Maintain?",
+   "alternates": [
+    "The Technical-Debt Fear, Tested in a Randomized Trial",
+    "More Code, Less Understanding: What AI Does to Code Ownership"
+   ],
+   "question": "Is AI-written code harder to maintain?",
+   "whyWatch": "Eight sources warn that fast AI code piles up debt. The one preregistered trial that handed AI-written code to new developers found no difference, and a 302k-commit study found persisting issues with no human baseline. The viewer gets to see what a null result does and does not prove.",
+   "tension": "Widespread fear of debt against a null trial, with self-reports and an uncontrolled commit study in between.",
+   "evidenceNeeded": "Later developers' time and code health when evolving AI-written versus human-written code, and issue rates in AI commits against a human baseline.",
+   "evidenceAvailable": [
+    "Echoes of AI maintainability RCT: right (0.7, direct)",
+    "Shan et al. field study + RCT: wrong (0.3, partial)",
+    "Vibe-coding literature review: wrong (0.2, partial)",
+    "Vibe-coded apps security audit (200 deployed): right (0.6, direct)",
+    "Post-merge fate study (182 repos): partly (0.4, direct)",
+    "CodeRabbit AI vs human PRs report: partly (0.25, direct)",
+    "2310.02059.txt: partly (0.55, direct)",
+    "Debt study (302k AI commits): partly (0.5, partial)",
+    "Vibe-coding literature review: partly (0.35, direct)",
+    "2601.20245v2.txt: partly (0.45, direct)",
+    "Code-ownership experiment (Martin-Lopez): partly (0.45, direct)"
+   ],
+   "gaps": [
+    "Code-ownership experiment (Martin-Lopez) is context only: a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers",
+    "No study strong enough to decide: \"Developers should be able to explain AI-generated code without the AI's help before it is merged\""
+   ],
+   "premise": "The Echoes trial (75 mostly professional developers manually evolving a small Java app written with or without AI, preregistered) found no reliable difference in completion time, CodeHealth or coverage, and was powered only to rule out large effects; that is the central finding and its limit. Against it: Shan's follow-up survey linked AI use to lower self-rated maintainability (self-reports), 11 of 47 review sources raise concerns (reports, not comparisons), and the 302k-commit study found 22.7% of AI-introduced issues persisting with no human-written baseline, most of them smells rather than vulnerabilities. The code-ownership experiment adds the mechanism that worries people: after AI-assisted tasks, authors answered fewer questions about their own code correctly (median 87.5% versus 100%). The claim that AI code 'accumulates more debt than hand-built' is therefore the belief the trial contradicts, not a finding the video can assert.",
+   "claims": [
+    "ai-coding/assisted-code-harder-later-developers-maintain",
+    "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+    "ai-coding/developers-should-able-explain-generated-code"
+   ],
+   "related": [
+    "ai-coding/generated-code-contains-more-defects-human",
+    "ai-coding/developers-often-ship-generated-code-without"
+   ],
+   "arc": {
+    "hook": "The warning everyone repeats: AI code is a debt bomb. One team ran the experiment.",
+    "conflict": "The null trial against the commit study, the survey and the review's concerns.",
+    "evidence": "Echoes design and result with its power limit; the 302k-commit persistence figures and the missing baseline; the security issue rates and what counts as an issue; the code-ownership understanding gap.",
+    "resolution": "No measured maintainability penalty yet, within the limits of one small trial; a measured understanding penalty for the author; and issue counts that need a baseline before they mean 'more'.",
+    "takeaway": "Review for understanding, not just correctness: the one measured harm is that authors know their AI-assisted code less well."
+   },
+   "coherence": {
+    "score": 0.85,
+    "basis": "review",
+    "explanation": "One question, whether AI-written code is harder to live with, answered by the maintainability trial, the issue rates in AI commits, and what AI assistance does to the author's own understanding. The technical-debt claim is carried in the premise as the belief the trial contradicts, not as a finding."
+   },
+   "scores": {
+    "coherence": 0.85,
+    "relevance": 0.91,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.91,
+    "editorial": 0.79,
+    "overall": 0.84,
+    "explanation": "editorial 0.79 = mean of coherence 0.85 (review), relevance 0.91 (15 sources, 14 channels), curiosity 0.5 (decision), stakes 0.7 (lean: pro), depth 1 (10 studies, 3 claims, tension); evidence 0.91 = strongest Echoes of AI maintainability RCT at 0.7 (direct) across 3 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0.7,
+     "independent": 1,
+     "supporting": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
+       },
+       "cited": true,
+       "role": "supports",
+       "by": "Echoes of AI maintainability RCT",
+       "verdict": "right",
+       "confidence": 0.7,
+       "note": "Preregistered RCT, 75 mostly professional developers manually evolving Java code written with or without AI: no reliable difference in completion time or perceived productivity, and the study is only powered to rule out large effects.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/4859137.txt#L1219-L1229"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Shan et al. field study + RCT",
+       "verdict": "wrong",
+       "confidence": 0.3,
+       "note": "The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"self-reports\")"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coding literature review",
+       "verdict": "wrong",
+       "confidence": 0.2,
+       "note": "11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code.",
+       "applicability": "partial",
+       "basis": "heuristic",
+       "why": "the verdict note limits its own scope (\"rather than\")"
+      }
+     ],
+     "context": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892"
+       },
+       "cited": true,
+       "role": "context",
+       "by": "Code-ownership experiment (Martin-Lopez)",
+       "verdict": "right",
+       "confidence": 0.3,
+       "note": "The related work cites Borg et al.'s 151-participant controlled experiment, which found no consistent sign that AI-assisted code was harder for later developers to maintain, while warning of cognitive debt. This is secondary evidence; the study's own data cover only the original author.",
+       "applicability": "contextual",
+       "basis": "review",
+       "why": "a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+        "cite": "ai-coding/sources/2603.28592v3.txt#L1031-L1035"
+       },
+       "cited": true,
+       "role": "inconclusive",
+       "by": "Debt study (302k AI commits)",
+       "verdict": "unknown",
+       "confidence": null,
+       "note": "The mining study of 302k AI-authored commits explicitly has no human-written baseline, so its counts of surviving debt cannot show that AI code is harder to maintain than human code.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Shan et al. field study + RCT: The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers. [partial: the verdict note limits its own scope (\"self-reports\")]",
+      "Vibe-coding literature review: 11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code. [partial: the verdict note limits its own scope (\"rather than\")]",
+      "Context only, Code-ownership experiment (Martin-Lopez) (right): a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying, 1 context only."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "AI-assisted code is no harder for later developers to maintain than unassisted code",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.7,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/2507.00788.txt#L2519-L2524"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Echoes of AI maintainability RCT",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "Preregistered RCT, 75 mostly professional developers manually evolving Java code written with or without AI: no reliable difference in completion time or perceived productivity, and the study is only powered to rule out large effects.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/4859137.txt#L1219-L1229"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Shan et al. field study + RCT",
+         "verdict": "wrong",
+         "confidence": 0.3,
+         "note": "The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"self-reports\")"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1434-L1452"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "wrong",
+         "confidence": 0.2,
+         "note": "11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"rather than\")"
+        }
+       ],
+       "context": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L880-L892"
+         },
+         "cited": true,
+         "role": "context",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "right",
+         "confidence": 0.3,
+         "note": "The related work cites Borg et al.'s 151-participant controlled experiment, which found no consistent sign that AI-assisted code was harder for later developers to maintain, while warning of cognitive debt. This is secondary evidence; the study's own data cover only the original author.",
+         "applicability": "contextual",
+         "basis": "review",
+         "why": "a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/assisted-code-harder-later-developers-maintain",
+          "cite": "ai-coding/sources/2603.28592v3.txt#L1031-L1035"
+         },
+         "cited": true,
+         "role": "inconclusive",
+         "by": "Debt study (302k AI commits)",
+         "verdict": "unknown",
+         "confidence": null,
+         "note": "The mining study of 302k AI-authored commits explicitly has no human-written baseline, so its counts of surviving debt cannot show that AI code is harder to maintain than human code.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Shan et al. field study + RCT: The follow-up survey linked AI use to lower self-rated maintainability and more technical debt, which points against 'no harder to maintain'. These are self-reports, not measures of later maintainers. [partial: the verdict note limits its own scope (\"self-reports\")]",
+        "Vibe-coding literature review: 11 of 47 sources raise maintainability concerns: conversational code that lacks cohesive structure and documentation, structural complexity from rapid iteration, and long-term debt. These are reported concerns rather than measured comparisons with unassisted code. [partial: the verdict note limits its own scope (\"rather than\")]",
+        "Context only, Code-ownership experiment (Martin-Lopez) (right): a related-work citation of Borg et al.; the study's own data cover only the original author, not later maintainers."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.7), 2 qualifying, 1 context only."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "AI-generated code frequently contains security vulnerabilities",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.6,
+       "independent": 1,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/2606.23130.txt#L457-L464"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Vibe-coded apps security audit (200 deployed)",
+         "verdict": "right",
+         "confidence": 0.6,
+         "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored, 91% contained at least one manually validated vulnerability, 65.8% of them Critical or High, concentrated in broken access control, injection and authentication; open-source GitHub apps from two agents only, with no human-written baseline.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/2607.09902.txt#L469-L477"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Post-merge fate study (182 repos)",
+         "verdict": "partly",
+         "confidence": 0.4,
+         "note": "Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L32-L33"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "CodeRabbit AI vs human PRs report",
+         "verdict": "partly",
+         "confidence": 0.25,
+         "note": "CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/2310.02059.txt#L930-L936"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "2310.02059.txt",
+         "verdict": "partly",
+         "confidence": 0.55,
+         "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/2603.28592v3.txt#L918-L933"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Debt study (302k AI commits)",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L1793-L1803"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "partly",
+         "confidence": 0.35,
+         "note": "Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Post-merge fate study (182 repos): Agentic contributions introduced Semgrep security findings at 1.14 times and high-severity findings at 1.51 times the human per-line rate, and dependency vulnerabilities at 1.10 times (high-severity 1.15 times); more than human code, but a modest relative rate from static analysis that says nothing about how often agentic code is vulnerable in absolute terms.",
+        "CodeRabbit AI vs human PRs report: CodeRabbit reports security issues up to 2.74x higher in AI-co-authored PRs than in human-only ones, mostly improper password handling and insecure object references, with no vulnerability type unique to AI; a relative rate from a vendor report, not how often AI code contains a vulnerability.",
+        "2310.02059.txt: 733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
+        "Debt study (302k AI commits): AI commits introduce more correctness and security issues than they fix, across all five tools. But about 7.5-14.8% of commits introduce any issue at all, and most issues are smells. [partial: counts issues introduced, most of them smells, in 7.5-14.8% of commits; 'frequently contains vulnerabilities' needs a vulnerability prevalence rate]",
+        "Vibe-coding literature review: Security risk is the most-cited open challenge (10 of 20 RQ8 sources); peer-reviewed and practitioner sources agree generated code may contain weaknesses when it is not rigorously verified, but no prevalence rate is synthesized."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 1 supporting (1 independent, strongest 0.6), 5 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Developers should be able to explain AI-generated code without the AI's help before it is merged",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-should-able-explain-generated-code",
+          "cite": "ai-coding/sources/2601.20245v2.txt#L468-L484"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "2601.20245v2.txt",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "Preregistered RCT, 52 crowd-recruited developers (mostly freelance or professional) learning a new Python library: those allowed AI scored 17% lower on a 27-point quiz on its concepts, code reading and debugging (d=0.74), with no significant time saving. Supports the reason behind the norm; no merge gate was tested.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/developers-should-able-explain-generated-code",
+          "cite": "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt#L700-L721"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Code-ownership experiment (Martin-Lopez)",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "2601.20245v2.txt: Preregistered RCT, 52 crowd-recruited developers (mostly freelance or professional) learning a new Python library: those allowed AI scored 17% lower on a 27-point quiz on its concepts, code reading and debugging (d=0.74), with no significant time saving. Supports the reason behind the norm; no merge gate was tested.",
+        "Code-ownership experiment (Martin-Lopez): Crossover experiment, 69 participants (mostly students): after AI-assisted tasks people answered fewer questions about their own just-written code correctly (median 87.5% vs 100%; AME -5.95 pp, OR 0.58). The authors argue this can stop contributors defending their choices in code review. That supports the reason behind the norm, but no merge gate was tested."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     }
+    ]
+   },
+   "chainCandidates": [
+    "conflict:generated-code-contains-more-defects-human"
    ]
   },
   {
@@ -3388,6 +3406,184 @@
    }
   },
   {
+   "id": "surprise:vibe-coded-apps-work-prototypes-but",
+   "kind": "surprise",
+   "title": "Do Vibe-Coded Apps Survive Production?",
+   "alternates": [
+    "Prototype in a Day, Rewrite in a Month?",
+    "Where the Evidence on Vibe Coding Runs Out"
+   ],
+   "question": "Do vibe-coded apps survive contact with production?",
+   "whyWatch": "Sixteen sources say vibe-coded apps break in production. A review says the prototype half is well supported; an audit of 200 live vibe-coded apps shows what breaking looks like, and what nobody has measured yet.",
+   "tension": "The literature review finds almost no production evidence; the first audit of deployed vibe-coded apps finds 91% of them with at least one security flaw. The belief is half shown on security and unmeasured on everything else.",
+   "evidenceNeeded": "Case series or longitudinal data on vibe-coded apps taken to production, with a human-built comparison group, on security, reliability, scaling and maintenance.",
+   "evidenceAvailable": [
+    "Vibe-coded apps security audit (200 deployed): partly (0.5, partial)",
+    "Vibe-coding literature review: partly (0.6, partial)"
+   ],
+   "gaps": [
+    "Reviewer: Strongest study 0.36 after applicability. The review supports only the prototype half; the security audit of 200 deployed vibe-coded apps (91% with a validated vulnerability) shows one kind of production failure but measures neither functional breakdown nor scaling and has no human-built baseline. Unblocked by a study comparing vibe-coded with conventionally built apps in production (incidents, outages, rewrites or vulnerabilities per app), or following vibe-coded apps over time as they gain users."
+   ],
+   "premise": "Before checking, the best guess was \"right\". Two documents bear on it, each on one half. The 47-source multivocal review (2022 to October 2025) finds evidence strongest for prototyping and UI work and weakest for production, data-intensive and safety-critical use: the prototype half is supported, the production half mostly unstudied. The security audit (Deng, Fan, Meng 2026) took 200 randomly sampled publicly deployed open-source apps that were at least 90% AI-authored with Claude Code or Lovable and found at least one manually validated vulnerability in 91% of them, 65.8% of the 1,186 rated Critical or High, mostly broken access control, injection and authentication; one failure mode it names is demo-oriented design (static demo keys, placeholder auth). Limits the video must carry: the audit measures security only, not whether the apps stop working or fail to scale; it has no human-built comparison group, and ordinary web apps also often carry flaws; it covers GitHub apps from two agents; and no study follows vibe-coded apps over time in production.",
+   "claims": [
+    "ai-coding/vibe-coded-apps-work-prototypes-but"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "State the expectation everyone shares, with the sources that voice it: fine for a prototype, falls over in production.",
+    "conflict": "The one systematic review finds the production half barely studied, so the belief rested on anecdote.",
+    "evidence": "The review's map of where evidence is strong (prototypes, UI) and weak (production); then the audit of 200 live vibe-coded apps: 91% with a validated vulnerability, two thirds of them Critical or High, and agents building for the demo rather than for safety.",
+    "resolution": "On security, deployed vibe-coded apps do commonly break, in the sense of shipping exploitable flaws to real users. Whether they also fail under load or become unmaintainable has not been measured, and without a human-built baseline the audit cannot say how much worse they are than ordinary apps.",
+    "takeaway": "Treat a vibe-coded app as a prototype until someone has checked its access control, inputs and authentication; the claim that it breaks at scale is still an expectation, not a finding."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "review",
+    "explanation": "One claim with two halves, only one of them studied."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.93,
+    "curiosity": 0.8,
+    "stakes": 0.5,
+    "depth": 0.77,
+    "originality": 1,
+    "evidence": 0.41,
+    "editorial": 0.76,
+    "overall": 0.62,
+    "explanation": "editorial 0.76 = mean of coherence 0.8 (review), relevance 0.93 (16 sources, 15 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 0.77 (2 studies, 1 claim, tension); evidence 0.41 = strongest Vibe-coding literature review at 0.6 (partial) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: Reviewer: Strongest study 0.36 after applicability. The review supports only the prototype half; the security audit of 200 deployed vibe-coded apps (91% with a validated vulnerability) shows one kind of production failure but measures neither functional breakdown nor scaling and has no human-built baseline. Unblocked by a study comparing vibe-coded with conventionally built apps in production (incidents, outages, rewrites or vulnerabilities per app), or following vibe-coded apps over time as they gain users.",
+   "blocking": [
+    "Reviewer: Strongest study 0.36 after applicability. The review supports only the prototype half; the security audit of 200 deployed vibe-coded apps (91% with a validated vulnerability) shows one kind of production failure but measures neither functional breakdown nor scaling and has no human-built baseline. Unblocked by a study comparing vibe-coded with conventionally built apps in production (incidents, outages, rewrites or vulnerabilities per app), or following vibe-coded apps over time as they gain users."
+   ],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Vibe-coded apps work for prototypes but break down when productionized and scaled",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+        "cite": "ai-coding/sources/2606.23130.txt#L457-L464"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coded apps security audit (200 deployed)",
+       "verdict": "partly",
+       "confidence": 0.5,
+       "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored (Claude Code, Lovable), 91% had at least one validated vulnerability and 65.8% of the 1,186 found were Critical or High, so deployed vibe-coded apps commonly ship insecure; the study measures security only, not whether the apps fail to work or scale, and has no human-built comparison group.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "shows deployed vibe-coded apps commonly ship with serious security flaws, one way of breaking down in production; it does not measure functional failure, scaling or maintenance, and has no human-built baseline"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+        "cite": "ai-coding/sources/2607.21652v1.txt#L18-L28"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Vibe-coding literature review",
+       "verdict": "partly",
+       "confidence": 0.6,
+       "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "supports the prototype half; the production break-down half is mostly unstudied, not shown"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Vibe-coded apps security audit (200 deployed): Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored (Claude Code, Lovable), 91% had at least one validated vulnerability and 65.8% of the 1,186 found were Critical or High, so deployed vibe-coded apps commonly ship insecure; the study measures security only, not whether the apps fail to work or scale, and has no human-built comparison group. [partial: shows deployed vibe-coded apps commonly ship with serious security flaws, one way of breaking down in production; it does not measure functional failure, scaling or maintenance, and has no human-built baseline]",
+      "Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown. [partial: supports the prototype half; the production break-down half is mostly unstudied, not shown]"
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Vibe-coded apps work for prototypes but break down when productionized and scaled",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+          "cite": "ai-coding/sources/2606.23130.txt#L457-L464"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coded apps security audit (200 deployed)",
+         "verdict": "partly",
+         "confidence": 0.5,
+         "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored (Claude Code, Lovable), 91% had at least one validated vulnerability and 65.8% of the 1,186 found were Critical or High, so deployed vibe-coded apps commonly ship insecure; the study measures security only, not whether the apps fail to work or scale, and has no human-built comparison group.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "shows deployed vibe-coded apps commonly ship with serious security flaws, one way of breaking down in production; it does not measure functional failure, scaling or maintenance, and has no human-built baseline"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
+          "cite": "ai-coding/sources/2607.21652v1.txt#L18-L28"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Vibe-coding literature review",
+         "verdict": "partly",
+         "confidence": 0.6,
+         "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "supports the prototype half; the production break-down half is mostly unstudied, not shown"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Vibe-coded apps security audit (200 deployed): Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored (Claude Code, Lovable), 91% had at least one validated vulnerability and 65.8% of the 1,186 found were Critical or High, so deployed vibe-coded apps commonly ship insecure; the study measures security only, not whether the apps fail to work or scale, and has no human-built comparison group. [partial: shows deployed vibe-coded apps commonly ship with serious security flaws, one way of breaking down in production; it does not measure functional failure, scaling or maintenance, and has no human-built baseline]",
+        "Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown. [partial: supports the prototype half; the production break-down half is mostly unstudied, not shown]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     }
+    ]
+   }
+  },
+  {
    "id": "conflict:specs-code-workflows-ignore-generated-not",
    "kind": "conflict",
    "title": "Can You Ignore the Code If the Spec Is Good?",
@@ -3599,149 +3795,6 @@
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
        "explanation": "qualified (qualify): no direct support, 3 qualifying."
-      }
-     }
-    ]
-   }
-  },
-  {
-   "id": "surprise:vibe-coded-apps-work-prototypes-but",
-   "kind": "surprise",
-   "title": "Do Vibe-Coded Apps Survive Production?",
-   "alternates": [
-    "Prototype in a Day, Rewrite in a Month?",
-    "Where the Evidence on Vibe Coding Runs Out"
-   ],
-   "question": "Do vibe-coded apps survive contact with production?",
-   "whyWatch": "Sixteen sources say vibe-coded apps break in production. The review says the prototype half is well supported and the break-down half is mostly unstudied.",
-   "tension": "A widely shared belief whose interesting half has no evidence.",
-   "evidenceNeeded": "Case series or longitudinal data on vibe-coded apps taken to production.",
-   "evidenceAvailable": [
-    "Vibe-coding literature review: partly (0.6, partial)"
-   ],
-   "gaps": [
-    "Reviewer: The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data."
-   ],
-   "premise": "Before checking, the best guess was \"right\": Unreviewed AI-built apps commonly ship with security, scaling and maintainability problems; prototypes are their sweet spot. Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown. 16 sources take a position on it.",
-   "claims": [
-    "ai-coding/vibe-coded-apps-work-prototypes-but"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "State the expectation everyone shares, with the sources that voice it.",
-    "conflict": "A study checked it and found something else.",
-    "evidence": "Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
-    "resolution": "Why the expectation was wrong, or what the sources were missing.",
-    "takeaway": "The corrected belief, with its limits."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One claim with two halves, only one of them studied."
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.93,
-    "curiosity": 0.8,
-    "stakes": 0.5,
-    "depth": 0.63,
-    "originality": 1,
-    "evidence": 0.36,
-    "editorial": 0.73,
-    "overall": 0.58,
-    "explanation": "editorial 0.73 = mean of coherence 0.8 (review), relevance 0.93 (16 sources, 15 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 0.63 (1 study, 1 claim, tension); evidence 0.36 = strongest Vibe-coding literature review at 0.6 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data.",
-   "blocking": [
-    "Reviewer: The review supports the prototype half; whether vibe-coded apps break down in production is mostly unstudied, so the story needs a case series or longitudinal data."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Vibe-coded apps work for prototypes but break down when productionized and scaled",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
-        "cite": "ai-coding/sources/2607.21652v1.txt#L18-L28"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Vibe-coding literature review",
-       "verdict": "partly",
-       "confidence": 0.6,
-       "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
-       "applicability": "partial",
-       "basis": "review",
-       "why": "supports the prototype half; the production break-down half is mostly unstudied, not shown"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown. [partial: supports the prototype half; the production break-down half is mostly unstudied, not shown]"
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): no direct support, 1 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "Vibe-coded apps work for prototypes but break down when productionized and scaled",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "ai-coding/vibe-coded-apps-work-prototypes-but",
-          "cite": "ai-coding/sources/2607.21652v1.txt#L18-L28"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Vibe-coding literature review",
-         "verdict": "partly",
-         "confidence": 0.6,
-         "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
-         "applicability": "partial",
-         "basis": "review",
-         "why": "supports the prototype half; the production break-down half is mostly unstudied, not shown"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Vibe-coding literature review: The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown. [partial: supports the prototype half; the production break-down half is mostly unstudied, not shown]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
       }
      }
     ]

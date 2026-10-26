@@ -712,9 +712,9 @@
           "asserted": 16,
           "denied": 0,
           "tally": {
-            "right": 6,
+            "right": 5,
             "wrong": 0,
-            "partly": 7,
+            "partly": 8,
             "untestable": 0,
             "unknown": 0
           },
@@ -742,6 +742,7 @@
           "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
           "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
           "documents": [
+            "ai-coding/sources/2606.23130.txt",
             "ai-coding/sources/2607.21652v1.txt"
           ]
         },
@@ -2956,26 +2957,27 @@
           "asserted": 4,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
-            "partly": 1,
+            "partly": 0,
             "untestable": 0,
             "unknown": 0
           },
           "strongest": "source",
-          "effective": "partly",
-          "confidence": 0.55,
+          "effective": "right",
+          "confidence": 0.6,
           "videos": [
             "fsFHu56V5ys",
             "minimaxir-ai-agent-coding",
             "neilmadden-a-look-at-cloudflares-ai-coded-oauth-library",
             "xUj4HQt_leg"
           ],
-          "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
-          "source": "ai-coding/sources/2310.02059.txt#L930-L936",
+          "note": "Of 200 randomly sampled publicly deployed apps that were at least 90% AI-authored, 91% contained at least one manually validated vulnerability, 65.8% of them Critical or High, concentrated in broken access control, injection and authentication; open-source GitHub apps from two agents only, with no human-written baseline.",
+          "source": "ai-coding/sources/2606.23130.txt#L457-L464",
           "documents": [
             "ai-coding/sources/2310.02059.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2606.23130.txt",
             "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
@@ -11214,9 +11216,9 @@
             "asserted": 16,
             "denied": 0,
             "tally": {
-              "right": 6,
+              "right": 5,
               "wrong": 0,
-              "partly": 7,
+              "partly": 8,
               "untestable": 0,
               "unknown": 0
             },
@@ -11244,6 +11246,7 @@
             "note": "The 47-source review finds evidence strongest for prototyping and UI work and weakest for production. The break-down half is mostly unstudied, not shown.",
             "source": "ai-coding/sources/2607.21652v1.txt#L18-L28",
             "documents": [
+              "ai-coding/sources/2606.23130.txt",
               "ai-coding/sources/2607.21652v1.txt"
             ]
           },
@@ -11954,59 +11957,6 @@
             "source": "ai-coding/sources/2607.21652v1.txt#L1716-L1722",
             "confidence": 0.35,
             "date": "2026-10-14"
-          }
-        },
-        {
-          "claim": {
-            "id": "ai-coding/generated-code-frequently-contains-security-vulnerabilities",
-            "text": "AI-generated code frequently contains security vulnerabilities",
-            "topic": "ai-coding",
-            "asserted": 4,
-            "denied": 0,
-            "tally": {
-              "right": 0,
-              "wrong": 0,
-              "partly": 1,
-              "untestable": 0,
-              "unknown": 0
-            },
-            "strongest": "source",
-            "effective": "partly",
-            "confidence": 0.55,
-            "videos": [
-              "fsFHu56V5ys",
-              "minimaxir-ai-agent-coding",
-              "neilmadden-a-look-at-cloudflares-ai-coded-oauth-library",
-              "xUj4HQt_leg"
-            ],
-            "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
-            "source": "ai-coding/sources/2310.02059.txt#L930-L936",
-            "documents": [
-              "ai-coding/sources/2310.02059.txt",
-              "ai-coding/sources/2603.28592v3.txt",
-              "ai-coding/sources/2607.09902.txt",
-              "ai-coding/sources/2607.21652v1.txt",
-              "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
-            ]
-          },
-          "prior": "right",
-          "evidence": "partly",
-          "method": "source",
-          "overrides": true,
-          "priorRecord": {
-            "method": "prior",
-            "verdict": "right",
-            "note": "Veracode 2025 found ~45% of AI-generated samples failed security tests; earlier academic studies of Copilot found similar rates.",
-            "confidence": 0.7,
-            "date": "2026-10-14"
-          },
-          "evidenceRecord": {
-            "method": "source",
-            "verdict": "partly",
-            "confidence": 0.55,
-            "note": "733 Copilot (and CodeWhisperer, Codeium) snippets found in public GitHub projects: static analysis plus manual filtering flagged CWE weaknesses in 27.3% (about 30% of Python, 25% of JavaScript). Frequent, but these are tool-flagged weaknesses, not confirmed exploits, and there is no human-written baseline.",
-            "source": "ai-coding/sources/2310.02059.txt#L930-L936",
-            "date": "2026-10-21"
           }
         },
         {
@@ -20823,7 +20773,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21263,7 +21213,7 @@
         "ai-coding/will-transform-software-engineering-jobs-rather"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21870,7 +21820,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21958,7 +21908,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22254,7 +22204,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22403,7 +22353,7 @@
       "wrong": [
         "ai-coding/context-engineering-delivers-order-magnitude-10x"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24552,12 +24502,12 @@
       "channel": "Razorwire Cybersecurity",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.25,
+      "score": 0.375,
       "scaled": 1,
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.16001984126984126,
+      "novelty": 0.24126984126984127,
       "redundancy": 0,
       "thinEvidence": 0,
       "worthWatching": "mixed",
@@ -24956,7 +24906,7 @@
       "wrong": [
         "ai-coding/coding-tools-amplify-experienced-engineers-far"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25616,12 +25566,12 @@
       "channel": "Max Woolf",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.5,
+      "score": 0.5416666666666666,
       "scaled": 1,
       "rating": null,
       "assertions": 12,
       "testable": 12,
-      "novelty": 0.6910984848484848,
+      "novelty": 0.7723484848484848,
       "redundancy": 0,
       "thinEvidence": 0.4166666666666667,
       "worthWatching": "mixed",
@@ -25709,12 +25659,12 @@
       "channel": "Neil Madden",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.5833333333333334,
+      "score": 0.6666666666666666,
       "scaled": 1,
       "rating": null,
       "assertions": 6,
       "testable": 6,
-      "novelty": 0.6771915584415584,
+      "novelty": 0.7584415584415585,
       "redundancy": 0,
       "thinEvidence": 0.5,
       "worthWatching": "mixed",
@@ -26020,7 +25970,7 @@
       "wrong": [
         "ai-coding/coding-tools-amplify-experienced-engineers-far"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26449,7 +26399,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26539,7 +26489,7 @@
         "ai-coding/measuring-engineers-token-usage-leaderboards-spend",
         "ai-coding/top-down-usage-mandates-unrealistic-productivity"
       ],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26799,7 +26749,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26959,12 +26909,12 @@
       "channel": "Cloudflare Developers",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.7857142857142857,
+      "score": 0.8571428571428571,
       "scaled": 2,
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 1.3642045454545455,
+      "novelty": 1.4454545454545453,
       "redundancy": 0,
       "thinEvidence": 0.7142857142857143,
       "worthWatching": "new and sound",
