@@ -3,7 +3,7 @@
  "basis": {
   "claims": 708,
   "sources": 171,
-  "studies": 20,
+  "studies": 21,
   "candidates": 38
  },
  "stories": [
@@ -395,6 +395,7 @@
     ]
    },
    "chainCandidates": [
+    "surprise:commission-free-brokers-sell-order-flow",
     "decision:who-makes-the-money"
    ]
   },
@@ -1148,6 +1149,328 @@
    ]
   },
   {
+   "id": "surprise:commission-free-brokers-sell-order-flow",
+   "kind": "surprise",
+   "title": "Is 'Commission-Free' Trading Actually Free?",
+   "alternates": [
+    "Who Pays When Your Broker Charges Nothing?",
+    "The Hidden Cost Inside Zero-Commission Trades"
+   ],
+   "question": "Is commission-free trading actually free?",
+   "whyWatch": "Most retail traders use a zero-commission app. The paper on retail options trading puts a number on what they pay instead, and it is larger than the commissions were.",
+   "tension": "'Free' on the screen; in options, a 12.3% average quoted spread on the weekly contracts retail prefers, and market makers who pay for the flow giving worse prices.",
+   "evidenceNeeded": "Measured payment for order flow and effective spreads paid by retail, and evidence on whether removing commissions changed how much people trade.",
+   "evidenceAvailable": [
+    "Retail options study (Bryzgalova et al.): right (0.65, partial)",
+    "Order-flow payments study (Ernst and Spatt): partly (0.6, direct)",
+    "Order-flow payments study (Ernst and Spatt): right (0.5, direct)",
+    "Retail options study (Bryzgalova et al.): right (0.7, direct)",
+    "Retail options study (Bryzgalova et al.): right (0.5, direct)",
+    "Brazil day-trader study (Chague et al.): right (0.4, direct)",
+    "eToro crypto retail study (Kogan et al.): wrong (0.25, partial)"
+   ],
+   "gaps": [
+    "Order-flow payments study (Ernst and Spatt) differs: Brokers are paid by wholesalers for routing retail orders, but the cost differs by asset: in stocks wholesaler routing benefits retail with smaller spreads than the exchanges, while in options it harms them, PFOF-paying market makers being causally associated with wider spreads (quasi-random DMM assignments)."
+   ],
+   "premise": "Commission-free brokers are paid for order flow: wholesalers pay the brokerage for the retail orders routed to them (Bryzgalova and colleagues count $284.4m for stock orders and $581.2m for options in the second quarter of 2021). Whether that leaves the trader with a hidden cost depends on the asset, and the video must say so. Ernst and Spatt find that in stocks wholesaler routing benefits retail traders with smaller spreads than the exchanges, so for ordinary stock trades the evidence does not show a hidden cost from order flow; in options it harms them, with PFOF-paying market makers causally associated with wider spreads. Options are also where the spreads are: the average quoted spread on S&P 500 stock options is 17.2%, and half the wholesaler trades in the Bryzgalova sample are options with under a week to expiry at a 12.3% average spread, costs the paper says are masked by zero commissions. The paper's dollar totals ($4.13bn of spread costs against about $800m of commissions) sit in lines no verdict cites yet, so the script either asks for them through record-sources or leaves them out. The evidence is US markets. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one narrow measure of trading behaviour after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
+   "claims": [
+    "get-rich-quick/commission-free-brokers-sell-order-flow",
+    "get-rich-quick/options-have-wider-spreads-higher-trading",
+    "get-rich-quick/commission-free-brokerage-increased-retail-trading"
+   ],
+   "related": [
+    "get-rich-quick/retail-options-trading-has-grown-many"
+   ],
+   "arc": {
+    "hook": "Your trade cost nothing. Someone paid your broker for it. What did you pay?",
+    "conflict": "Free trading was sold as democratising markets; the evidence says the cost moved rather than vanished for options, the product retail likes best, while stock orders routed for payment got better prices than the exchanges offered.",
+    "evidence": "Payment for order flow, the split between stocks (better prices) and options (wider spreads from paying market makers), quoted spreads on options versus stocks, and the post-2019 surge in retail and options volume, with the eToro null result as the caveat.",
+    "resolution": "Free is a pricing model: for stock trades the order-flow deal did not cost retail on price, but in options the cost reappears as wide spreads, heaviest on short-dated contracts.",
+    "takeaway": "Count the spread, not the commission, and be most careful with the products the app makes easiest to trade."
+   },
+   "coherence": {
+    "score": 0.85,
+    "basis": "review",
+    "explanation": "One question, whether zero-commission trading is free, answered by who pays the broker (order flow), where the cost reappears (spreads, especially on options) and what free trading did to trading volume."
+   },
+   "scores": {
+    "coherence": 0.85,
+    "relevance": 0.68,
+    "curiosity": 0.8,
+    "stakes": 0.5,
+    "depth": 1,
+    "originality": 1,
+    "evidence": 0.69,
+    "editorial": 0.77,
+    "overall": 0.74,
+    "explanation": "editorial 0.77 = mean of coherence 0.85 (review), relevance 0.68 (7 sources, 7 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 1 (4 studies, 3 claims, tension); evidence 0.69 = strongest Order-flow payments study (Ernst and Spatt) at 0.6 (direct) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "ready",
+   "readinessWhy": "Coherent (0.85), central conclusion qualified with accepted qualifications, 3 essential findings verified, no pending review.",
+   "blocking": [],
+   "reviewed": true,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "Commission-free brokers sell order flow to market makers, so retail trades still carry a hidden cost.",
+     "kind": "fact",
+     "modality": "plain",
+     "status": "qualified",
+     "decision": "qualify",
+     "review": true,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
+        "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L46-L56"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Retail options study (Bryzgalova et al.)",
+       "verdict": "right",
+       "confidence": 0.65,
+       "note": "Wholesalers pay commission-free brokerages for the orders routed to them (payment for order flow), giving brokers an incentive to push trading in wider-spread assets; in Q2 2021 US brokerages received $284.4m of PFOF for stock orders and $581.2m for options.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "the passage establishes that wholesalers pay brokerages for retail order flow and the incentive it creates; the hidden cost to the trader is shown by the spread passage (L125-L136), not here"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
+        "cite": "get-rich-quick/sources/ernst-spatt-pfof-asset-choice.txt#L80-L91"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "Order-flow payments study (Ernst and Spatt)",
+       "verdict": "partly",
+       "confidence": 0.6,
+       "note": "Brokers are paid by wholesalers for routing retail orders, but the cost differs by asset: in stocks wholesaler routing benefits retail with smaller spreads than the exchanges, while in options it harms them, PFOF-paying market makers being causally associated with wider spreads (quasi-random DMM assignments).",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
+      }
+     ],
+     "context": [],
+     "problems": [],
+     "limitations": [
+      "Retail options study (Bryzgalova et al.): Wholesalers pay commission-free brokerages for the orders routed to them (payment for order flow), giving brokers an incentive to push trading in wider-spread assets; in Q2 2021 US brokerages received $284.4m of PFOF for stock orders and $581.2m for options. [partial: the passage establishes that wholesalers pay brokerages for retail order flow and the incentive it creates; the hidden cost to the trader is shown by the spread passage (L125-L136), not here]",
+      "Order-flow payments study (Ernst and Spatt): Brokers are paid by wholesalers for routing retail orders, but the cost differs by asset: in stocks wholesaler routing benefits retail with smaller spreads than the exchanges, while in options it harms them, PFOF-paying market makers being causally associated with wider spreads (quasi-random DMM assignments)."
+     ],
+     "suggestions": [
+      "Add the qualification: the evidence supports a narrower or weaker statement."
+     ],
+     "explanation": "qualified (qualify): no direct support, 2 qualifying."
+    },
+    "findings": [
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f0",
+       "text": "Commission-free brokers sell order flow to market makers, so retail trades still carry a hidden cost.",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
+          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L46-L56"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Retail options study (Bryzgalova et al.)",
+         "verdict": "right",
+         "confidence": 0.65,
+         "note": "Wholesalers pay commission-free brokerages for the orders routed to them (payment for order flow), giving brokers an incentive to push trading in wider-spread assets; in Q2 2021 US brokerages received $284.4m of PFOF for stock orders and $581.2m for options.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "the passage establishes that wholesalers pay brokerages for retail order flow and the incentive it creates; the hidden cost to the trader is shown by the spread passage (L125-L136), not here"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
+          "cite": "get-rich-quick/sources/ernst-spatt-pfof-asset-choice.txt#L80-L91"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "Order-flow payments study (Ernst and Spatt)",
+         "verdict": "partly",
+         "confidence": 0.6,
+         "note": "Brokers are paid by wholesalers for routing retail orders, but the cost differs by asset: in stocks wholesaler routing benefits retail with smaller spreads than the exchanges, while in options it harms them, PFOF-paying market makers being causally associated with wider spreads (quasi-random DMM assignments).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "Retail options study (Bryzgalova et al.): Wholesalers pay commission-free brokerages for the orders routed to them (payment for order flow), giving brokers an incentive to push trading in wider-spread assets; in Q2 2021 US brokerages received $284.4m of PFOF for stock orders and $581.2m for options. [partial: the passage establishes that wholesalers pay brokerages for retail order flow and the incentive it creates; the hidden cost to the trader is shown by the spread passage (L125-L136), not here]",
+        "Order-flow payments study (Ernst and Spatt): Brokers are paid by wholesalers for routing retail orders, but the cost differs by asset: in stocks wholesaler routing benefits retail with smaller spreads than the exchanges, while in options it harms them, PFOF-paying market makers being causally associated with wider spreads (quasi-random DMM assignments)."
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f1",
+       "text": "Options have wider spreads and higher trading costs than stocks",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0.7,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/options-have-wider-spreads-higher-trading",
+          "cite": "get-rich-quick/sources/ernst-spatt-pfof-asset-choice.txt#L166-L170"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Order-flow payments study (Ernst and Spatt)",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "Option bid-ask spreads are substantially wider than stock spreads, with minimum ticks of 5 to 10 cents on some option exchanges against 1 cent in equities.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/options-have-wider-spreads-higher-trading",
+          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L125-L136"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Retail options study (Bryzgalova et al.)",
+         "verdict": "right",
+         "confidence": 0.7,
+         "note": "Average quoted bid-ask spread of S&P 500 stock options is 17.2% versus 3.55 bps for the stocks; retail's preferred sub-week options carry a 12.3% spread and PFOF for options is about double that for stocks.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
+       "problems": [],
+       "limitations": [],
+       "suggestions": [],
+       "explanation": "supported (approved): 2 supporting (2 independent, strongest 0.7)."
+      }
+     },
+     {
+      "role": "evidence",
+      "validation": {
+       "id": "f2",
+       "text": "Commission-free brokerage increased retail trading frequency and volume.",
+       "kind": "fact",
+       "modality": "plain",
+       "status": "qualified",
+       "decision": "qualify",
+       "review": true,
+       "verbatim": true,
+       "strength": 0.5,
+       "independent": 2,
+       "supporting": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
+          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L393-L396"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Retail options study (Bryzgalova et al.)",
+         "verdict": "right",
+         "confidence": 0.5,
+         "note": "Elimination of commissions fuelled a retail participation boom and rise in day trading; retail options volume grew 143-224% from Nov 2019 to Jul 2021 (descriptive, not a causal test).",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
+          "cite": "get-rich-quick/sources/chague-day-trading-for-a-living.txt#L475-L476"
+         },
+         "cited": true,
+         "role": "supports",
+         "by": "Brazil day-trader study (Chague et al.)",
+         "verdict": "right",
+         "confidence": 0.4,
+         "note": "A strong late-2018 increase in Brazilian day traders is explained in part by retail brokerages zeroing fees for day traders to lure new investors.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
+        }
+       ],
+       "contradicting": [],
+       "qualifying": [
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
+          "cite": "get-rich-quick/sources/kogan-are-cryptos-different.txt#L948-L961"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "eToro crypto retail study (Kogan et al.)",
+         "verdict": "wrong",
+         "confidence": 0.25,
+         "note": "After eToro removed commissions on unlevered stock trades in 18 countries in Apr-May 2019, active investors showed no increase in rebalancing in response to returns (Table A4); a narrow test of trading intensity, not of volume or frequency overall, so only weak evidence against.",
+         "applicability": "partial",
+         "basis": "heuristic",
+         "why": "the verdict note limits its own scope (\"narrow\")"
+        }
+       ],
+       "context": [],
+       "problems": [],
+       "limitations": [
+        "eToro crypto retail study (Kogan et al.): After eToro removed commissions on unlevered stock trades in 18 countries in Apr-May 2019, active investors showed no increase in rebalancing in response to returns (Table A4); a narrow test of trading intensity, not of volume or frequency overall, so only weak evidence against. [partial: the verdict note limits its own scope (\"narrow\")]"
+       ],
+       "suggestions": [
+        "Add the qualification: the evidence supports a narrower or weaker statement."
+       ],
+       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.5), 1 qualifying."
+      }
+     }
+    ]
+   },
+   "chainCandidates": [
+    "decision:trading-and-betting",
+    "decision:who-makes-the-money"
+   ]
+  },
+  {
    "id": "contradicted:network-marketing-success-learnable-skill-rather",
    "kind": "contradicted",
    "title": "Is MLM Success a Skill, or Just Being Early?",
@@ -1784,276 +2107,9 @@
     ]
    },
    "chainCandidates": [
-    "decision:trading-and-betting"
+    "decision:trading-and-betting",
+    "surprise:commission-free-brokers-sell-order-flow"
    ]
-  },
-  {
-   "id": "surprise:commission-free-brokers-sell-order-flow",
-   "kind": "surprise",
-   "title": "Is 'Commission-Free' Trading Actually Free?",
-   "alternates": [
-    "Who Pays When Your Broker Charges Nothing?",
-    "The Hidden Cost Inside Zero-Commission Trades"
-   ],
-   "question": "Is commission-free trading actually free?",
-   "whyWatch": "Most retail traders use a zero-commission app. The paper on retail options trading puts a number on what they pay instead, and it is larger than the commissions were.",
-   "tension": "'Free' on the screen; a 12.3% average quoted spread on the weekly options retail prefers, paid for by order flow.",
-   "evidenceNeeded": "Measured payment for order flow and effective spreads paid by retail, and evidence on whether removing commissions changed how much people trade.",
-   "evidenceAvailable": [
-    "Retail options study (Bryzgalova et al.): right (0.65, partial)",
-    "Retail options study (Bryzgalova et al.): right (0.7, direct)",
-    "Retail options study (Bryzgalova et al.): right (0.5, direct)",
-    "Brazil day-trader study (Chague et al.): right (0.4, direct)",
-    "eToro crypto retail study (Kogan et al.): wrong (0.25, partial)"
-   ],
-   "gaps": [
-    "Reviewer: The central sentence is that brokers sell order flow, but the only cited passage (Bryzgalova L123-L136) shows the masked spread cost, not the payment for order flow. A verdict citing the paper's own PFOF lines (bryzgalova-retail-options.txt L46-L56, brokerages' PFOF in stocks and options, Q2 2021) or the cost totals (L171 or L956, $4.13bn of spread costs against about $800m of commissions) would unblock it; then chain it after decision:trading-and-betting, whose net-of-fees losses raise the question whether zero-commission apps removed the cost."
-   ],
-   "premise": "Bryzgalova and colleagues, studying US retail options trades routed to wholesalers, say the true trading costs are masked by zero commissions: the average quoted spread on S&P 500 stock options is 17.2%, and half the wholesaler trades in their sample are options with under a week to expiry at a 12.3% average spread. The cited passages establish the hidden cost; the sale of order flow and the paper's dollar totals ($4.13bn of spread costs against about $800m of commissions) sit in lines no verdict cites yet, so the script either asks for them through record-sources or leaves them out. The evidence is US options, not stock trades generally. The boom is descriptive, not causal: the same paper and the Brazilian study link zero commissions to a surge in retail and day trading, while an eToro test found no change in one narrow measure of trading behaviour after commissions were removed. The video should present that as a limit on the boom claim, not on the cost claim.",
-   "claims": [
-    "get-rich-quick/commission-free-brokers-sell-order-flow",
-    "get-rich-quick/options-have-wider-spreads-higher-trading",
-    "get-rich-quick/commission-free-brokerage-increased-retail-trading"
-   ],
-   "related": [
-    "get-rich-quick/retail-options-trading-has-grown-many"
-   ],
-   "arc": {
-    "hook": "Your trade cost nothing. Someone paid your broker for it. What did you pay?",
-    "conflict": "Free trading was sold as democratising markets; the paper says the cost moved rather than vanished, and moved most for the products retail likes best.",
-    "evidence": "Payment for order flow, quoted spreads on options versus stocks, the dollar totals, and the post-2019 surge in retail and options volume, with the eToro null result as the caveat.",
-    "resolution": "Free is a pricing model: commissions became spreads and order-flow payments, heaviest on short-dated options.",
-    "takeaway": "Count the spread, not the commission, and be most careful with the products the app makes easiest to trade."
-   },
-   "coherence": {
-    "score": 0.85,
-    "basis": "review",
-    "explanation": "One question, whether zero-commission trading is free, answered by who pays the broker (order flow), where the cost reappears (spreads, especially on options) and what free trading did to trading volume."
-   },
-   "scores": {
-    "coherence": 0.85,
-    "relevance": 0.68,
-    "curiosity": 0.8,
-    "stakes": 0.5,
-    "depth": 1,
-    "originality": 1,
-    "evidence": 0.39,
-    "editorial": 0.77,
-    "overall": 0.62,
-    "explanation": "editorial 0.77 = mean of coherence 0.85 (review), relevance 0.68 (7 sources, 7 channels), curiosity 0.8 (surprise, a study overturned the guess), stakes 0.5 (lean: skeptic), depth 1 (3 studies, 3 claims, tension); evidence 0.39 = strongest Retail options study (Bryzgalova et al.) at 0.65 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: The central sentence is that brokers sell order flow, but the only cited passage (Bryzgalova L123-L136) shows the masked spread cost, not the payment for order flow. A verdict citing the paper's own PFOF lines (bryzgalova-retail-options.txt L46-L56, brokerages' PFOF in stocks and options, Q2 2021) or the cost totals (L171 or L956, $4.13bn of spread costs against about $800m of commissions) would unblock it; then chain it after decision:trading-and-betting, whose net-of-fees losses raise the question whether zero-commission apps removed the cost.",
-   "blocking": [
-    "Reviewer: The central sentence is that brokers sell order flow, but the only cited passage (Bryzgalova L123-L136) shows the masked spread cost, not the payment for order flow. A verdict citing the paper's own PFOF lines (bryzgalova-retail-options.txt L46-L56, brokerages' PFOF in stocks and options, Q2 2021) or the cost totals (L171 or L956, $4.13bn of spread costs against about $800m of commissions) would unblock it; then chain it after decision:trading-and-betting, whose net-of-fees losses raise the question whether zero-commission apps removed the cost."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "Commission-free brokers sell order flow to market makers, so retail trades still carry a hidden cost.",
-     "kind": "fact",
-     "modality": "plain",
-     "status": "qualified",
-     "decision": "qualify",
-     "review": true,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [
-      {
-       "ref": {
-        "kind": "study",
-        "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
-        "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136"
-       },
-       "cited": true,
-       "role": "qualifies",
-       "by": "Retail options study (Bryzgalova et al.)",
-       "verdict": "right",
-       "confidence": 0.65,
-       "note": "Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions.",
-       "applicability": "partial",
-       "basis": "review",
-       "why": "the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines"
-      }
-     ],
-     "context": [],
-     "problems": [],
-     "limitations": [
-      "Retail options study (Bryzgalova et al.): Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions. [partial: the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines]"
-     ],
-     "suggestions": [
-      "Add the qualification: the evidence supports a narrower or weaker statement."
-     ],
-     "explanation": "qualified (qualify): no direct support, 1 qualifying."
-    },
-    "findings": [
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f0",
-       "text": "Commission-free brokers sell order flow to market makers, so retail trades still carry a hidden cost.",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/commission-free-brokers-sell-order-flow",
-          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L123-L136"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "Retail options study (Bryzgalova et al.)",
-         "verdict": "right",
-         "confidence": 0.65,
-         "note": "Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions.",
-         "applicability": "partial",
-         "basis": "review",
-         "why": "the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "Retail options study (Bryzgalova et al.): Zero-commission brokers are paid for order flow by wholesalers, and the true trading cost (12.3% average quoted spread on the weekly options retail prefers) is masked by zero commissions; indirect spread costs of $4.13bn dwarf $0.8bn of direct commissions. [partial: the cited lines establish the hidden cost (quoted spreads of 17.2% and 12.3%, true costs masked by zero commissions, trades routed to a wholesaler) but not the sale of order flow itself, which the paper documents elsewhere in uncited lines]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f1",
-       "text": "Options have wider spreads and higher trading costs than stocks",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0.7,
-       "independent": 1,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/options-have-wider-spreads-higher-trading",
-          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L125-L136"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Retail options study (Bryzgalova et al.)",
-         "verdict": "right",
-         "confidence": 0.7,
-         "note": "Average quoted bid-ask spread of S&P 500 stock options is 17.2% versus 3.55 bps for the stocks; retail's preferred sub-week options carry a 12.3% spread and PFOF for options is about double that for stocks.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [],
-       "problems": [],
-       "limitations": [],
-       "suggestions": [],
-       "explanation": "supported (approved): 1 supporting (1 independent, strongest 0.7)."
-      }
-     },
-     {
-      "role": "evidence",
-      "validation": {
-       "id": "f2",
-       "text": "Commission-free brokerage increased retail trading frequency and volume.",
-       "kind": "fact",
-       "modality": "plain",
-       "status": "qualified",
-       "decision": "qualify",
-       "review": true,
-       "verbatim": true,
-       "strength": 0.5,
-       "independent": 2,
-       "supporting": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
-          "cite": "get-rich-quick/sources/bryzgalova-retail-options.txt#L393-L396"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Retail options study (Bryzgalova et al.)",
-         "verdict": "right",
-         "confidence": 0.5,
-         "note": "Elimination of commissions fuelled a retail participation boom and rise in day trading; retail options volume grew 143-224% from Nov 2019 to Jul 2021 (descriptive, not a causal test).",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        },
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
-          "cite": "get-rich-quick/sources/chague-day-trading-for-a-living.txt#L475-L476"
-         },
-         "cited": true,
-         "role": "supports",
-         "by": "Brazil day-trader study (Chague et al.)",
-         "verdict": "right",
-         "confidence": 0.4,
-         "note": "A strong late-2018 increase in Brazilian day traders is explained in part by retail brokerages zeroing fees for day traders to lure new investors.",
-         "applicability": "direct",
-         "basis": "heuristic",
-         "why": "the verdict bears on the claim as worded"
-        }
-       ],
-       "contradicting": [],
-       "qualifying": [
-        {
-         "ref": {
-          "kind": "study",
-          "claim": "get-rich-quick/commission-free-brokerage-increased-retail-trading",
-          "cite": "get-rich-quick/sources/kogan-are-cryptos-different.txt#L948-L961"
-         },
-         "cited": true,
-         "role": "qualifies",
-         "by": "eToro crypto retail study (Kogan et al.)",
-         "verdict": "wrong",
-         "confidence": 0.25,
-         "note": "After eToro removed commissions on unlevered stock trades in 18 countries in Apr-May 2019, active investors showed no increase in rebalancing in response to returns (Table A4); a narrow test of trading intensity, not of volume or frequency overall, so only weak evidence against.",
-         "applicability": "partial",
-         "basis": "heuristic",
-         "why": "the verdict note limits its own scope (\"narrow\")"
-        }
-       ],
-       "context": [],
-       "problems": [],
-       "limitations": [
-        "eToro crypto retail study (Kogan et al.): After eToro removed commissions on unlevered stock trades in 18 countries in Apr-May 2019, active investors showed no increase in rebalancing in response to returns (Table A4); a narrow test of trading intensity, not of volume or frequency overall, so only weak evidence against. [partial: the verdict note limits its own scope (\"narrow\")]"
-       ],
-       "suggestions": [
-        "Add the qualification: the evidence supports a narrower or weaker statement."
-       ],
-       "explanation": "qualified (qualify): 2 supporting (2 independent, strongest 0.5), 1 qualifying."
-      }
-     }
-    ]
-   }
   },
   {
    "id": "conflict:demeaning-salaried-jobs-college-sales-tactic",
