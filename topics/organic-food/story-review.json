@@ -31,6 +31,14 @@
     "organic-food/heavy-glyphosate-exposure-raises-risk-non|denies|organic-food/sources/leon-2019-agricoh-nhl.txt#L909-L921": {
       "level": "partial",
       "reason": "the pooled cohorts compare ever with never use, not heavy use, so they bear on the exposure question only in a broader, diluted form"
+    },
+    "organic-food/organic-labelling-mainly-marketing-tool-charge|denies|organic-food/sources/ers-2005-organic-produce-premiums.txt#L622-L633": {
+      "level": "partial",
+      "reason": "price spreads for three US produce items between farm and wholesale only; a spread includes handling costs, so it shows where the premium widens, not how much of it is margin"
+    },
+    "organic-food/organic-labelling-mainly-marketing-tool-charge|denies|organic-food/sources/ufc-2017-organic-margins.txt#L751-L757": {
+      "level": "partial",
+      "reason": "decomposes the retail premium, but for fruit and vegetables in French supermarkets only, with gross margins that include store costs"
     }
   },
   "stories": {
@@ -369,8 +377,8 @@
     },
     "conflict:organic-labelling-mainly-marketing-tool-charge": {
       "coherence": {
-        "score": 0.75,
-        "reason": "One question, is the organic premium mostly a marketing markup or the cost of producing to the standard."
+        "score": 0.8,
+        "reason": "One question: how much of the organic price premium pays for producing to the standard, and how much is margin."
       },
       "question": "Is the organic premium mostly marketing, or does it pay for real costs?",
       "title": "Is Organic Just a Label to Charge More?",
@@ -378,7 +386,22 @@
         "Where the Organic Price Premium Goes",
         "Organic: Real Costs or Marketing Markup?"
       ],
-      "research": "The only evidence is the USDA ERS report's description of the certification, segregation, feed and transition costs behind the premium, which notes that willingness to pay also feeds it; it does not measure how much of the premium is cost and how much is margin. Unblocking it needs a cost study that decomposes organic retail premiums into production, handling and certification costs versus retail and brand margins."
+      "claims": [
+        "organic-food/organic-labelling-mainly-marketing-tool-charge"
+      ],
+      "whyWatch": "Following the price from the farm to the shelf shows where the extra money goes, which neither the skeptics nor the defenders of organic usually check.",
+      "tension": "Organic farming does cost more, yet the premium shoppers pay is larger than the extra cost of growing the food.",
+      "evidenceNeeded": "Price studies that split the organic premium between farm-level production cost and later margins, with their markets, products and limits.",
+      "premise": "Organic food really does cost more to grow and certify, and that extra farm cost explains about half of the premium on French supermarket fruit and vegetables; supermarket gross margins, which also cover store costs, explain most of the rest, and at the farm the premiums paid run well above what lower yields and extra labour require. So the label is not mainly a pricing trick, but the premium is not all cost either. The decomposition comes from one consumer-group study of French fruit and vegetables that retailers contest, the farm figures from mostly research-trial comparisons, and the US data from three produce items, so the split is an estimate for those markets, not a rule for every organic product.",
+      "arc": {
+        "hook": "Skeptics say the organic label is a way to charge more; defenders say the price pays for a costlier way of farming.",
+        "conflict": "Both can point to evidence: organic farming has real extra costs, and the premium is bigger than those costs.",
+        "evidence": "Follow the price chain: farm-level premiums against the break-even premium (Crowder and Reganold), US farmgate-to-wholesale spreads for broccoli and carrots (ERS 2005), and the French supermarket basket split into farm cost and retail margin (UFC-Que Choisir 2017), with what each one measured and missed.",
+        "resolution": "Roughly half the premium in the one full decomposition is production cost; much of the rest is retail gross margin, which includes store costs, and growers also earn more than break-even. The estimate covers French fruit and vegetables and is disputed by retailers.",
+        "takeaway": "The organic label marks a real, costlier standard, but shoppers pay more than that standard costs, and the gap goes to sellers along the chain rather than to the label itself."
+      },
+      "qualificationsAccepted": true,
+      "research": "The one decomposition of the retail premium (UFC-Que Choisir 2017: farm cost about half, supermarket gross margin 46%) is a contested consumer-group study of French fruit and vegetables using gross margins that include store costs; the farm-level meta-analysis (Crowder and Reganold 2015) and ERS 2005 spreads cover farm and wholesale prices only, and the official French price observatory (OFPM 2023) splits organic retail prices without comparing them to conventional. Unblocking it needs a peer-reviewed or official farm-to-retail decomposition that compares organic and conventional margins, ideally net margins, across a broad basket."
     },
     "decision:glyphosate": {
       "coherence": {
