@@ -3,8 +3,8 @@
  "basis": {
   "claims": 413,
   "sources": 93,
-  "studies": 38,
-  "candidates": 21
+  "studies": 40,
+  "candidates": 20
  },
  "stories": [
   {
@@ -3471,269 +3471,6 @@
    ]
   },
   {
-   "id": "gap:writing-tests-first-forces-code-decoupled",
-   "kind": "gap",
-   "title": "Does Test-First Really Lead to Better Design?",
-   "alternates": [
-    "TDD and Code Design: Does Testability Come for Free?",
-    "Is Decoupled Code a Side Effect of Writing Tests First?"
-   ],
-   "question": "Does writing tests first really force cleaner, less tangled code?",
-   "whyWatch": "Six sources defend TDD less for bug counts than for design, saying test-first forces decoupled, testable code; the TDD experiments in the corpus measured other outcomes.",
-   "tension": "If the order of tests does not change quality, as the experiments found, the design argument is the one left; nobody here has measured it.",
-   "evidenceNeeded": "Studies comparing coupling, cohesion or other internal design metrics of code written test-first against test-last, on comparable tasks.",
-   "evidenceAvailable": [],
-   "gaps": [
-    "No study in the corpus checks the claim; the story is the search for evidence.",
-    "Has anyone measured whether writing tests first forces the code to be decoupled and testable by construction?",
-    "Which study or dataset would settle it?"
-   ],
-   "premise": "6 sources assert \"Writing tests first forces the code to be decoupled and testable by construction\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
-   "claims": [
-    "software-practices/writing-tests-first-forces-code-decoupled"
-   ],
-   "related": [],
-   "arc": {
-    "hook": "How often this gets said, and how confidently.",
-    "conflict": "Ask for the evidence and find none in the corpus.",
-    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
-    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
-    "takeaway": "How to treat the claim until it is checked."
-   },
-   "coherence": {
-    "score": 0.8,
-    "basis": "review",
-    "explanation": "One question: does writing the test first produce more decoupled, testable design? Distinct from surprise:test-driven-development-produces-better-quality, whose studies measure external quality and productivity, not design structure."
-   },
-   "scores": {
-    "coherence": 0.8,
-    "relevance": 0.64,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 0.35,
-    "originality": 1,
-    "evidence": 0,
-    "editorial": 0.6,
-    "overall": 0.36,
-    "explanation": "editorial 0.6 = mean of coherence 0.8 (review), relevance 0.64 (6 sources, 6 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
-   },
-   "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
-   "blocking": [
-    "No study in the corpus checks the claim; the story is the search for evidence."
-   ],
-   "reviewed": true,
-   "audit": {
-    "central": {
-     "id": "central",
-     "text": "6 sources claim \"Writing tests first forces the code to be decoupled and testable by construction\"; no study in the corpus has checked it.",
-     "kind": "attribution",
-     "modality": "plain",
-     "status": "supported",
-     "decision": "approved",
-     "review": false,
-     "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-        "source": "4SIpyrko-x4"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Why you should write tests first - Uncle Bob",
-       "verdict": null,
-       "confidence": null,
-       "note": "you cannot write the code that's hard to test if you write the test first"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-        "source": "HBqhjLaZejA"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Mutation Testing in Python with Cosmic Ray - Austin Bingham - NDC TechTown 2024",
-       "verdict": null,
-       "confidence": null,
-       "note": "good testing results in better design almost always in my experience"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-        "source": "KoL_or1P4f4"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Accelerate: The State of DevOps with Dr. Nicole Forsgren",
-       "verdict": null,
-       "confidence": null,
-       "note": "when developers help write tests we write better and more testable code"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-        "source": "blog-cleancoder-monogamoustdd"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Clean Coder Blog",
-       "verdict": null,
-       "confidence": null,
-       "note": "Writing tests first requires decoupling that other testing strategies do not"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-        "source": "github-aposd-vs-clean-code"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "GitHub - johnousterhout/aposd-vs-clean-code: A discussion between John Ousterhout and Robert Martin about differences between John's book \"A Philosophy of Software Design\" and Bob's book \"Clean Code\".",
-       "verdict": null,
-       "confidence": null,
-       "note": "every small part of the system must be designed to be testable, and testability requires decoupling"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-        "source": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "A Response to “Why Most Unit Testing is Waste”",
-       "verdict": null,
-       "confidence": null,
-       "note": "I was quite surprised at how much better separated my code become when I started writing unit testing as I was developing."
-      }
-     ],
-     "problems": [],
-     "limitations": [
-      "Reports what the sources said, not whether it is true."
-     ],
-     "suggestions": [],
-     "explanation": "supported (approved): no direct support, 6 source statements."
-    },
-    "findings": [
-     {
-      "role": "belief",
-      "validation": {
-       "id": "f0",
-       "text": "6 sources claim \"Writing tests first forces the code to be decoupled and testable by construction\"; no study in the corpus has checked it.",
-       "kind": "attribution",
-       "modality": "plain",
-       "status": "supported",
-       "decision": "approved",
-       "review": false,
-       "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-          "source": "4SIpyrko-x4"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Why you should write tests first - Uncle Bob",
-         "verdict": null,
-         "confidence": null,
-         "note": "you cannot write the code that's hard to test if you write the test first"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-          "source": "HBqhjLaZejA"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Mutation Testing in Python with Cosmic Ray - Austin Bingham - NDC TechTown 2024",
-         "verdict": null,
-         "confidence": null,
-         "note": "good testing results in better design almost always in my experience"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-          "source": "KoL_or1P4f4"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Accelerate: The State of DevOps with Dr. Nicole Forsgren",
-         "verdict": null,
-         "confidence": null,
-         "note": "when developers help write tests we write better and more testable code"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-          "source": "blog-cleancoder-monogamoustdd"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Clean Coder Blog",
-         "verdict": null,
-         "confidence": null,
-         "note": "Writing tests first requires decoupling that other testing strategies do not"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-          "source": "github-aposd-vs-clean-code"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "GitHub - johnousterhout/aposd-vs-clean-code: A discussion between John Ousterhout and Robert Martin about differences between John's book \"A Philosophy of Software Design\" and Bob's book \"Clean Code\".",
-         "verdict": null,
-         "confidence": null,
-         "note": "every small part of the system must be designed to be testable, and testability requires decoupling"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "software-practices/writing-tests-first-forces-code-decoupled",
-          "source": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "A Response to “Why Most Unit Testing is Waste”",
-         "verdict": null,
-         "confidence": null,
-         "note": "I was quite surprised at how much better separated my code become when I started writing unit testing as I was developing."
-        }
-       ],
-       "problems": [],
-       "limitations": [
-        "Reports what the sources said, not whether it is true."
-       ],
-       "suggestions": [],
-       "explanation": "supported (approved): no direct support, 6 source statements."
-      }
-     }
-    ]
-   }
-  },
-  {
    "id": "gap:mob-programming-onboards-new-members-quickly",
    "kind": "gap",
    "title": "What is the evidence that mob programming onboards new members quickly and spreads knowledge so the team does not depend on one person?",
@@ -3957,6 +3694,243 @@
          "verdict": null,
          "confidence": null,
          "note": "I have never seen teams learn as quickly or as effectively without bare programming as with it."
+        }
+       ],
+       "problems": [],
+       "limitations": [
+        "Reports what the sources said, not whether it is true."
+       ],
+       "suggestions": [],
+       "explanation": "supported (approved): no direct support, 5 source statements."
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "gap:test-first-development-reduces-time-spent",
+   "kind": "gap",
+   "title": "What is the evidence that test-first development reduces time spent debugging?",
+   "alternates": [
+    "5 sources say test-first development reduces time spent debugging. Where is the proof?",
+    "An unchecked claim: Test-first development reduces time spent debugging"
+   ],
+   "question": "What is the evidence that test-first development reduces time spent debugging?",
+   "whyWatch": "5 sources across 5 channels assert it and nobody shows a measurement. Asking for the evidence on camera is the story, and the claim sells something.",
+   "tension": "Confidence without a check. The AI guess leans \"partly\" (Controlled studies show TDD lowers defect density at some cost in development time; direct measurements of debugging time are scarce.), which is a guess, not a finding.",
+   "evidenceNeeded": "Any study or dataset that tests whether test-first development reduces time spent debugging.",
+   "evidenceAvailable": [],
+   "gaps": [
+    "No study in the corpus checks the claim; the story is the search for evidence.",
+    "Has anyone measured whether test-first development reduces time spent debugging?",
+    "Which study or dataset would settle it?"
+   ],
+   "premise": "5 sources assert \"Test-first development reduces time spent debugging\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "claims": [
+    "software-practices/test-first-development-reduces-time-spent"
+   ],
+   "related": [],
+   "arc": {
+    "hook": "How often this gets said, and how confidently.",
+    "conflict": "Ask for the evidence and find none in the corpus.",
+    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
+    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
+    "takeaway": "How to treat the claim until it is checked."
+   },
+   "coherence": {
+    "score": 0.8,
+    "basis": "heuristic",
+    "explanation": "One claim, one question. Unreviewed."
+   },
+   "scores": {
+    "coherence": 0.8,
+    "relevance": 0.59,
+    "curiosity": 0.5,
+    "stakes": 0.7,
+    "depth": 0.3,
+    "originality": 1,
+    "evidence": 0,
+    "editorial": 0.58,
+    "overall": 0.35,
+    "explanation": "editorial 0.58 = mean of coherence 0.8 (heuristic), relevance 0.59 (5 sources, 5 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.3 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+   },
+   "readiness": "needs-research",
+   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "blocking": [
+    "No study in the corpus checks the claim; the story is the search for evidence."
+   ],
+   "reviewed": false,
+   "audit": {
+    "central": {
+     "id": "central",
+     "text": "5 sources claim \"Test-first development reduces time spent debugging\"; no study in the corpus has checked it.",
+     "kind": "attribution",
+     "modality": "plain",
+     "status": "supported",
+     "decision": "approved",
+     "review": false,
+     "verbatim": true,
+     "strength": 0,
+     "independent": 0,
+     "supporting": [],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/test-first-development-reduces-time-spent",
+        "source": "4SIpyrko-x4"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Why you should write tests first - Uncle Bob",
+       "verdict": null,
+       "confidence": null,
+       "note": "it reduces your debug time"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/test-first-development-reduces-time-spent",
+        "source": "blog-cleancoder-monogamoustdd"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "Clean Coder Blog",
+       "verdict": null,
+       "confidence": null,
+       "note": "We spend less time debugging."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/test-first-development-reduces-time-spent",
+        "source": "danluu-p95-skill"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "95%-ile isn't that good",
+       "verdict": null,
+       "confidence": null,
+       "note": "I now test each function as I write it to make sure they work"
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/test-first-development-reduces-time-spent",
+        "source": "github-aposd-vs-clean-code"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "GitHub - johnousterhout/aposd-vs-clean-code: A discussion between John Ousterhout and Robert Martin about differences between John's book \"A Philosophy of Software Design\" and Bob's book \"Clean Code\".",
+       "verdict": null,
+       "confidence": null,
+       "note": "The benefit comes because unit tests expose bugs earlier and in an environment where they are easier to track down."
+      },
+      {
+       "ref": {
+        "kind": "statement",
+        "claim": "software-practices/test-first-development-reduces-time-spent",
+        "source": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+       },
+       "cited": true,
+       "role": "statement",
+       "by": "A Response to “Why Most Unit Testing is Waste”",
+       "verdict": null,
+       "confidence": null,
+       "note": "With unit tests, you get feedback immediately if you make a mistake."
+      }
+     ],
+     "problems": [],
+     "limitations": [
+      "Reports what the sources said, not whether it is true."
+     ],
+     "suggestions": [],
+     "explanation": "supported (approved): no direct support, 5 source statements."
+    },
+    "findings": [
+     {
+      "role": "belief",
+      "validation": {
+       "id": "f0",
+       "text": "5 sources claim \"Test-first development reduces time spent debugging\"; no study in the corpus has checked it.",
+       "kind": "attribution",
+       "modality": "plain",
+       "status": "supported",
+       "decision": "approved",
+       "review": false,
+       "verbatim": true,
+       "strength": 0,
+       "independent": 0,
+       "supporting": [],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/test-first-development-reduces-time-spent",
+          "source": "4SIpyrko-x4"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Why you should write tests first - Uncle Bob",
+         "verdict": null,
+         "confidence": null,
+         "note": "it reduces your debug time"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/test-first-development-reduces-time-spent",
+          "source": "blog-cleancoder-monogamoustdd"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "Clean Coder Blog",
+         "verdict": null,
+         "confidence": null,
+         "note": "We spend less time debugging."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/test-first-development-reduces-time-spent",
+          "source": "danluu-p95-skill"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "95%-ile isn't that good",
+         "verdict": null,
+         "confidence": null,
+         "note": "I now test each function as I write it to make sure they work"
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/test-first-development-reduces-time-spent",
+          "source": "github-aposd-vs-clean-code"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "GitHub - johnousterhout/aposd-vs-clean-code: A discussion between John Ousterhout and Robert Martin about differences between John's book \"A Philosophy of Software Design\" and Bob's book \"Clean Code\".",
+         "verdict": null,
+         "confidence": null,
+         "note": "The benefit comes because unit tests expose bugs earlier and in an environment where they are easier to track down."
+        },
+        {
+         "ref": {
+          "kind": "statement",
+          "claim": "software-practices/test-first-development-reduces-time-spent",
+          "source": "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
+         },
+         "cited": true,
+         "role": "statement",
+         "by": "A Response to “Why Most Unit Testing is Waste”",
+         "verdict": null,
+         "confidence": null,
+         "note": "With unit tests, you get feedback immediately if you make a mistake."
         }
        ],
        "problems": [],

@@ -222,7 +222,9 @@
           "source": null,
           "documents": [
             "software-practices/sources/fucci2016-tdd-replication.txt",
-            "software-practices/sources/karac2018-tdd-what-we-know.txt"
+            "software-practices/sources/janzen2008-tdd-design-quality.txt",
+            "software-practices/sources/karac2018-tdd-what-we-know.txt",
+            "software-practices/sources/siniaalto2007-tdd-design.txt"
           ]
         },
         {
@@ -251,7 +253,10 @@
           ],
           "note": "Studies of TDD find modest improvements in some internal quality metrics such as coupling and cohesion, with mixed results overall and effects that depend on developer experience.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/janzen2008-tdd-design-quality.txt",
+            "software-practices/sources/siniaalto2007-tdd-design.txt"
+          ]
         },
         {
           "id": "software-practices/test-suite-known-gaps-gives-decision",
@@ -2696,7 +2701,9 @@
           ],
           "note": "Test-induced indirection is widely reported in practice and in the DHH debate, but controlled studies of TDD on design quality show small mixed effects.",
           "source": null,
-          "documents": []
+          "documents": [
+            "software-practices/sources/janzen2008-tdd-design-quality.txt"
+          ]
         },
         {
           "id": "software-practices/unit-tests-alone-cannot-catch-integration",
@@ -12527,34 +12534,6 @@
       ],
       "thinEvidence": [
         {
-          "id": "software-practices/writing-tests-first-forces-code-decoupled",
-          "text": "Writing tests first forces the code to be decoupled and testable by construction",
-          "topic": "software-practices",
-          "asserted": 6,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "4SIpyrko-x4",
-            "HBqhjLaZejA",
-            "KoL_or1P4f4",
-            "blog-cleancoder-monogamoustdd",
-            "github-aposd-vs-clean-code",
-            "henrikwarne-a-response-to-why-most-unit-testing-is-waste"
-          ],
-          "note": "Studies of TDD find modest improvements in some internal quality metrics such as coupling and cohesion, with mixed results overall and effects that depend on developer experience.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "software-practices/hype-drives-teams-adopt-microservices-they",
           "text": "Hype drives teams to adopt microservices they do not need, adding cost and risk",
           "topic": "software-practices",
@@ -13663,30 +13642,6 @@
             "graphite-the-ideal-pr-is-50-lines-long"
           ],
           "note": "One vendor dataset shows higher revert rates under ten lines, plausibly from config changes; the pattern has not been replicated.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "software-practices/tdd-biases-design-toward-extra-abstraction",
-          "text": "TDD biases design toward extra abstraction and indirection, which harms clarity unless the designer pushes back.",
-          "topic": "software-practices",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 0,
-            "wrong": 0,
-            "partly": 1,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
-          "videos": [
-            "OAarkiAcsAk",
-            "dhh-tdd-is-dead-long-live-testing"
-          ],
-          "note": "Test-induced indirection is widely reported in practice and in the DHH debate, but controlled studies of TDD on design quality show small mixed effects.",
           "source": null,
           "documents": []
         },
@@ -18012,7 +17967,7 @@
       "testable": 4,
       "novelty": 0.39166666666666666,
       "redundancy": 0,
-      "thinEvidence": 0.6666666666666666,
+      "thinEvidence": 0.5,
       "worthWatching": "mixed",
       "right": [
         "software-practices/test-first-development-reduces-time-spent",
@@ -18021,7 +17976,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18320,7 +18275,7 @@
       "testable": 8,
       "novelty": 2.375,
       "redundancy": 0,
-      "thinEvidence": 0.375,
+      "thinEvidence": 0.25,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/equivalent-mutants-cannot-detected-automatically-require",
@@ -18332,7 +18287,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -18373,7 +18328,7 @@
       "testable": 7,
       "novelty": 1.5,
       "redundancy": 0,
-      "thinEvidence": 0.2857142857142857,
+      "thinEvidence": 0.14285714285714285,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/emergency-changes-made-under-stress-usually",
@@ -18455,7 +18410,7 @@
       "testable": 5,
       "novelty": 1,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/higher-level-tests-often-pay-back",
@@ -18465,7 +18420,7 @@
         "software-practices/unit-tests-alone-cannot-catch-integration"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19038,7 +18993,7 @@
       "testable": 6,
       "novelty": 0.9333333333333332,
       "redundancy": 0,
-      "thinEvidence": 0.8571428571428571,
+      "thinEvidence": 0.7142857142857143,
       "worthWatching": "mixed",
       "right": [
         "software-practices/gui-driven-integration-tests-cannot-reach",
@@ -19049,7 +19004,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19302,7 +19257,7 @@
       "testable": 5,
       "novelty": 0.3333333333333333,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8333333333333334,
       "worthWatching": "mixed",
       "right": [
         "software-practices/higher-level-tests-often-pay-back",
@@ -19312,7 +19267,7 @@
       "wrong": [
         "software-practices/slow-driven-end-test-suites-fragile"
       ],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19389,7 +19344,7 @@
       "testable": 12,
       "novelty": 1.2458333333333333,
       "redundancy": 0,
-      "thinEvidence": 0.5833333333333334,
+      "thinEvidence": 0.5,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/decomposing-code-small-methods-can-too",
@@ -19405,7 +19360,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -19504,7 +19459,7 @@
       "testable": 9,
       "novelty": 1.875,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.9,
       "worthWatching": "new and sound",
       "right": [
         "software-practices/combining-unit-integration-tests-catches-more",
@@ -19518,7 +19473,7 @@
         "software-practices/writing-tests-first-forces-code-decoupled"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {

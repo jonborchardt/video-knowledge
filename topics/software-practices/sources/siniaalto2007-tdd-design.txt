@@ -1,0 +1,603 @@
+A Comparative Case Study on the Impact of Test-Driven Development on Program Design and Test Coverage
+By Siniaalto, M., & Abrahamsson P
+
+This is the author's version of the work.
+
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the
+impact of test-driven development on program design and test coverage. In Empirical Software Engineering and
+Measurement, 2007. ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+Copyright holder’s version: http://ieeexplore.ieee.org/abstract/document/4343755/
+
+DOI: 10.1109/ESEM.2007.35
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of
+test-driven development on program design and test coverage. In Empirical Software Engineering and Measurement, 2007.
+ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+                           First International Symposium on Empirical Software Engineering and Measurement
+
+             A Comparative Case Study on the Impact of
+Test-Driven Development on Program Design and Test Coverage
+
+                                      Maria Siniaalto and Pekka Abrahamsson
+                                     VTT Technical Research Centre of Finland
+                                      P.O.Box 1100, FIN-90571 Oulu, Finland
+
+                                              {firstname.lastname}@vtt.fi
+
+                       Abstract                                      Both the literature and practice indicate that the use of
+                                                                  TDD yields several benefits. Among others, TDD leads to
+   Test-driven development (TDD) is a programming                 improved test coverage [2] and simplifies the design by
+technique in which the tests are written prior to the             producing loosely coupled and highly cohesive systems
+source code. It is proposed that TDD is one of the most           [5]. TDD also enables the implementation scope to be
+fundamental practices enabling the development of                 more explicit [5]. As a positive side effect, TDD may lead
+software in an agile and iterative manner. Both the               to enhanced job satisfaction and confidence [5]. Also,
+literature and practice suggest that TDD practice yields          larger teams of developers can work on the same code
+several benefits. Essentially, it is claimed that TDD leads       base because of the more frequent integration [1]. On the
+to an improved software design, which has a dramatic              other hand, TDD has received criticism for not
+impact on the maintainability and further development of          compensating the lack of up-front design and not being
+the system. The impact of TDD on program design has               very suitable for systems such as security software or
+seldom come under the researchers’ focus. This paper              multithreaded applications, since it cannot mechanically
+reports the results from a comparative case study of              demonstrate that their goals have been met [6]. It is also
+three software development projects where the effect of           claimed that rapid changes may cause expensive
+TDD on program design was measured using object-                  breakage in tests and that the lack of application or
+oriented metrics. The results show that the effect of TDD         testing skills may produce inadequate test coverage [7].
+on program design was not as evident as expected, but             However, the scientific empirical evidence behind these
+the test coverage was significantly superior to iterative         claims is currently scattered and disorganized, and thus it
+test-last development.                                            is difficult to draw meaningful conclusions. Moreover,
+                                                                  studies addressing the impact of TDD on program design
+1. Introduction                                                   are currently very scarce. To our knowledge, there are a
+                                                                  few studies in which the quality of the code design has
+   Test-driven development (TDD) is not, despite its              been studied, but only one has really addressed the
+name, a testing technique but rather a development                impact of TDD on program design [8].
+technique in which the tests are written prior to the
+source code [1]. The tests are added gradually during the            The purpose of this paper is twofold. First, it reviews
+implementation process and when the tests are passed,             the empirical body of evidence and organizes it
+the code is refactored to improve its internal structure.         systematically. Second, the paper presents the results
+This incremental cycle is repeated until all the                  from a comparative case study on the impact of TDD on
+functionality is implemented. [2]                                 program design in semi-industry settings by comparing a
+                                                                  TDD project with two iterative test-last projects using a
+   The idea of TDD was popularized by Beck [3] in the             suite of agreed object-oriented metrics.
+Extreme Programming (XP) method. Therefore, although
+TDD seems to have just recently emerged, it has existed              The explicit focus of this empirical study is to
+for decades; an early reference to the use of TDD features        investigate whether TDD improves design quality and
+in the NASA Project Mercury in the 1960s [4].                     test-coverage as claimed by its proponents. The object-
+                                                                  oriented (OO) metrics used for inspecting the design
+                                                                  quality are as follows: weighted methods per class
+                                                                  (WMC), depth of inheritance tree (DIT), number of
+                                                                  children (NOC), coupling between objects (CBO),
+
+                                                             275
+
+0-7695-2886-4/07 $20.00 © 2007 IEEE
+DOI 10.1109/ESEM.2007.35
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of
+test-driven development on program design and test coverage. In Empirical Software Engineering and Measurement, 2007.
+ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+response for a class (RFC) [25] and lack of cohesion in        2.2. TDD in Industrial Settings
+methods (LCOM*)[30].
+                                                                  Bhat and Nagappan [9] present the results of two
+   The results partially contradict the current literature as  industrial case studies conducted at Microsoft. They
+the empirical evidence shows that TDD does not improve         compared the impacts of TDD and non-TDD
+the program design as expected. In particular, TDD does        development processes on quality and overall
+not necessarily produce highly cohesive systems when           development time. Their results show that the quality of
+employed by non-professional developers. However, TDD          the code developed using TDD increased 2.6–4.2 times
+appears to result in significantly better test coverage than   when compared to non-TDD developed code.
+the iterative test-last development. The findings are based    Alternatively, the project managers estimated that TDD
+on three software development projects, two of which           increased the overall development time by 15–35 %. The
+used iterative test-last development and one utilized          block coverage was 79–88 % at unit test level in projects
+TDD.                                                           employing TDD. They also noticed that the tests serve as
+                                                               auto documentation when the code was maintained or
+2. Review of the Empirical Body of Evidence                    used.
+
+   In this section, the existing empirical evidence on            Lui and Chan [10] present the results of TDD and
+TDD is reviewed and summarized. A total of sixteen             software process improvement in China. The authors find
+studies were included in this review. The main results of      that TDD improves task estimation as well as process
+each study are collected in a table in Appendix 1.             tracking. TDD also enhances the following consistent
+                                                               practices and guidelines. Their results show that the
+2.1. Classification of TDD studies                             defect rate was significantly decreased in teams
+                                                               employing TDD. TDD teams were also able to fix their
+   The studies were categorized by their context: four of      defects faster.
+the studies [9-12] were classified as "performed in an
+industrial context" since they were conducted primarily           Williams et al [24] and Maximillien and Williams
+with professional developers in real industrial settings       [11] present the findings of a case study of industrial
+developing a concrete software product to be delivered.        programmers at IBM. They notice a significant defect
+Five studies [8, 13-16], which were either conducted with      rate reduction in the new project using TDD;
+professional developers implementing exercises designed        approximately 50 % when compared to the third release
+for a particular experiment or with students working in        [11] and 40 % when compared to the seventh release [24]
+close-to-industry settings aiming to deliver an industrial     of an old project. They also observe that the developers
+software product , were classified as "performed in a          felt that the daily integration of TDD saved them from
+semi-industrial context". The remaining studies [17-23]        late integration problems as these results were gained
+were categorized as "performed in an academic context"         with minimal impact on developer productivity.
+because their test subjects were mostly undergraduates
+employing TDD in a set of experimental tasks. Table 1             Damm at al. [12] present the experiences of industrial
+presents the TDD study classification schema used to           developers using a customized test automation tool with a
+organize the reviewed studies.                                 component level approach to TDD. Their initial project
+                                                               evaluations indicated significantly decreased fault rates
+Table 1. TDD study classification schema                       and project lead-time.
+
+Type   Subjects Context   # studies                               As the most important finding, the defect density was
+                                                               reduced in all the studies conducted in industrial settings.
+Industry Industrial Real project 4                             There were also indications that TDD may improve test
+                                                               coverage [9], accelerate defect fixing and enhance
+       developers                                              estimation and process tracking [10]. However, the
+                                                               observed productivity effects were contradictory, as in
+Semi-  Industrial Experimental 4                               one study TDD shortened the overall project lead time
+                                                               [12], but in two studies the productivity results were
+industry developers task                                       reduced [9] or slightly reduced [11, 24].
+
+       Student Real project 1                                  2.3. TDD in Semi-Industrial Settings
+
+       developers                                                 Canfora et al. [13] arranged a controlled experiment
+                                                               with professional developers to compare TDD and
+Academic Student Experimental 7                                iterative test-last development in terms of productivity
+
+       developers task
+
+                          Total 16
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of
+test-driven development on program design and test coverage. In Empirical Software Engineering and Measurement, 2007.
+ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+and the quality of the unit tests. The experiment            being very suitable for TDD and the developers would
+consisted of two 5 hour runs. The test subjects              have needed constant mentoring during the project. The
+implemented every assignment using both development          amount of test code was 7.8 % of the total lines of code,
+approaches, but in different runs. The results suggest that  and the total percentage of time used in test code
+TDD supports better performance predictability and may       development was 5.6 %.
+improve unit testing, but it also requires more time.
+                                                                The quality effects of TDD are not as obvious in this
+   Müller [8] studied the effect of test-driven              context as in the studies performed in industrial settings.
+development on program code. He included five TDD            However, there are indications that TDD may help to
+software systems of which three were student projects and    produce more tests [15] and to achieve better test
+compared them with three open source based                   coverage [14]. On the other hand, TDD may result in a
+conventional software systems. He developed a new            false sense of security and therefore cause more failures
+metric called assignment controllability (AC) to             at the acceptance test level. [15] The adoption of TDD
+investigate the effect of test-driven development on the     may also be difficult and it is not necessarily suitable for
+resulting code. Müller used Chidamber and Kemerer’s          all application domains [16].
+[25] object-oriented metric suite to measure the program
+code, which is also used in this study. He observed that     2.4. TDD in Academic Settings
+OO metrics did not show any impact on the use of TDD
+but that the new metric, AC, was able to show a                 Janzen and Saiedian [17] arranged a formal
+difference. More specifically, he identified that the        experiment to study the effects of TDD on programmer
+number of methods where all assignments are completely       productivity, test coverage and internal quality. They
+controllable is higher for systems developed with TDD.       used upper-level undergraduate students as research
+Müller also found some evidence of testability increase in   subjects. The subjects were divided into three teams: the
+TDD projects.                                                first team used TDD while the second one used iterative
+                                                             test-last development and the third team only performed
+   George and Williams [14] performed controlled             manual testing after the implementation phase. The
+structural experimental trials with professional             results indicate that TDD may have a positive impact on
+programmers to compare TDD with the conventional             developer productivity. The test coverage was relatively
+test-last development. Their experimental findings           low regardless of the development approach. They
+indicate that the TDD practice yields code with improved     calculated several structural and OO metrics to evaluate
+external code quality: the TDD pairs passed 18 % more        any possible difference in internal quality. Although most
+test cases. The productivity was found slightly reduced as   of these results were within acceptable limits, there were
+it took 16 % more time to complete the assignments.          some concerns regarding complexity and coupling in
+However, the comparison of the productivity is somewhat      TDD code and manually tested code. The study also
+uneven, because the authors noticed that the control         pointed out that the developers perceive TDD more
+group tended to leave the test cases unwritten. They also    positively after they have tried it.
+report that TDD test cases achieved a mean of 98 %
+method, 92 % statement and 97 % branch coverage.                Kaufmann and Janzen [18] present the results of a
+                                                             controlled experiment conducted with undergraduate
+   Geras et al. [15] conducted an experiment to measure      Computer Science students comparing TDD with test-last
+the differences of TDD and traditional test-last             approach. Their results showed that the TDD group was
+development. The experiment involved experienced             significantly more productive producing 50 % more code
+programmers as research subjects. They noticed no            than the control group. They found no differences in the
+significant differences in developer productivity,           code complexities between the groups. However, there
+although TDD seemed to produce more tests and the            were indications that the design quality of the TDD
+TDD practitioners ran the tests more frequently. The         group was better and their programmer confidence was
+incidence of failures at the acceptance test level appeared  noticeable higher. They also report that these findings
+to be greater when using TDD, but at the unit test level     may be the result of greater programming experience
+that was not an issue.                                       among the subjects practicing TDD.
+
+   Abrahamsson et al. [16] report the results of a              Müller and Hagner [19] analyzed a controlled
+controlled case study on TDD approach in a mobile Java       experiment to compare TDD with traditional test-last
+environment. The developer team consisted of three           development with graduate Computer Science students as
+students and a professional developer. They report that      test subjects. Their experiment did not show any
+the developers did not see the benefit of writing tests and  significant differences between the approaches in terms
+indicated a strong reluctance to adopt TDD. The authors      of the development time. They notice that TDD provides
+suggest that this was due to the application domain not
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of
+test-driven development on program design and test coverage. In Empirical Software Engineering and Measurement, 2007.
+ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+programmers with an improved program understanding           [20] the external code quality slightly decreased. In two
+and therefore they are able to use existing methods faster,  studies [18, 22] program design improved with TDD,
+correctly. The reliability of the final programs was         whereas there were some concerns regarding the design’s
+measured using random and acceptance tests. The              complexity in [17]. The results also indicate that TDD
+random tests did not reveal any notable differences, but     may facilitate implementation work [21, 22] and improve
+the acceptance tests showed that the final reliability of    developer confidence [18, 23], although in [20] the
+the TDD program was significantly lower.                     developers considered TDD ineffective. All studies
+                                                             addressing TDD’s productivity issues observed positive
+   Panþur et al. [20] ran a controlled experiment            effects.
+studying TDD and iterative test-last development. The
+experiment was conducted with 38 senior undergraduate        2.5. Summary
+Computer Science students. Their findings did not show
+any significant differences between the examined                While many of the findings point in a positive
+approaches, although TDD seemed to slightly reduce the       direction, their generalizability and significance remain
+external code quality and average mean of code coverage.     questionable. One reason for this is the fact that often the
+The majority of their test subjects also felt that adopting  metrics used for describing the findings have not been
+TDD was difficult and that TDD was not very effective.       either defined in detail or lack the quality attribute they
+                                                             should be presenting. Another element limiting the
+   Erdogmus et al. [21] compared TDD with iterative          industrial applicability of these study results is the scope
+test-last development. Their experiment involved             of the tasks carried out within the experiments: real
+undergraduates as test subjects. They observe that TDD       software products often consist of several thousands of
+appears to improve productivity. It also seems to improve    lines of code and require several developers’ work
+the understanding of the requirements and to encourage       contribution. However, quite many of the experiments
+better decomposition. The small scope of the tests and       consisted of several short tasks and were as small as only
+more frequent feedback reduced debugging and rework          a few hundred lines of code.
+effort. They found no differences in quality, but TDD
+seemed to produce more consistent quality results. They         Half of the studies included in this review were
+also observed that the minimum quality increased             performed in the academic context and therefore the
+linearly with the number of tests, independent of the        external validity could be limited. However, this is
+development technique used.                                  arguable because the studies comparing students and
+                                                             professionals have concluded that similar improvement
+   Steinberg [22] presents the findings of the use of unit   trends can be identified among both groups [26] and that
+testing in an XP study group consisting of faculty           the students may provide an adequate model for the
+members and some upper level undergraduates.                 professionals [27].
+Although, his work concentrates on discussing on the
+benefits of this phenomenon from the educational point          Based on the findings of the existing studies, it can be
+of view, it also provides information about the effects of   concluded that TDD may improve software quality
+TDD and is thereby included in this study. His results       significantly and enhance and facilitate the work of the
+indicate that TDD facilitates correcting the faults. The     developers. The productivity effects of TDD are not that
+students also tended to write more cohesive code when        obvious, and the results vary regardless of the context of
+using TDD and the coupling was found to be looser,           the study. However, there are indications that TDD does
+since the objects had more clearly defined                   not necessarily decrease developer productivity or extend
+responsibilities.                                            project lead-times.
+
+   Edwards [23] presents the experiences of the use of       3. Empirical Results from a Comparative
+TDD with an automated grading system in a classroom.         Case Study
+A total of 59 Computer Science students participated in a
+course that utilized TDD. The course assignments were           TDD directs the construction of code’s structure and
+the same as previously when also 59 students completed       affects the way of implementing the code as the tests are
+the course without using TDD. Both assignments were          written prior to the source code. Hence, its impacts
+analyzed using the same automated grading tool.              should be visible from the very start. The main goal of
+According to the analyses, the students using TDD and        this comparative empirical evaluation of TDD is to
+the automated grading tool produced code with 45 % less      explore the impact of TDD on program design and test
+defects. Their developer confidence was also improved.       coverage. This section begins with the layout of the
+
+   The findings in academic settings are partly
+contradictory: there are indications that TDD may
+improve software quality significantly [23]. However, in
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of
+test-driven development on program design and test coverage. In Empirical Software Engineering and Measurement, 2007.
+ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+research design for the study. Then, the empirical results   evaluation. The difficulty of implementation was at the
+are presented and discussed and study limitations are        same level in all projects.
+identified.
+                                                             Table 2. Summary of the case projects
+3.1. Research Design
+                                                                           Project 1 Project 2 Project 3
+   The research method in the three case projects is the
+controlled case study approach [28]. It combines aspects     # of 4 5 4
+of experiments, case studies and action research and is
+especially suitable for studying agile methodologies. The    developers
+approach involves conducting a project which has the
+business priority of delivering a specific software product  Development Iterative    Iterative        TDD
+to a customer, in close-to-industry settings, where
+measurement data is constantly collected.                    technique     test-last  test-last
+
+   All three projects aim to deliver a concrete software     Product type Intranet app. Mobile app. Intranet app.
+product to a real customer. The projects were not
+simultaneous. The implementations were realized with         Product       Research   Stock            Project
+Java programming language. The project teams worked
+in a shared co-located development environment during        concept       data       market           management
+the projects. All projects continued for nine weeks,
+comprised of six iterations and followed an agile software                 management browser          tool
+development method, Mobile-D™ [29], which is an
+empirically developed method for the purposes of the         Product size 7700        7000             5800
+research context. It embodies a defined daily
+development rhythm and improvement mechanisms for            (LOC)
+systematic software process improvement. For the
+purposes of this study, the method provides a coherent       3.2. Results
+framework for studying iterative test-last and TDD.
+                                                                The object-oriented design metrics for measuring the
+   Table 2 provides a summary of the parts of the            design quality effects of TDD within this study were
+projects which are not convergent to each other. The         selected from the ones proposed by Chidamber and
+development teams in the projects consisted of               Kemerer [25]: weighted methods per class (WMC), depth
+undergraduates with 5-6 years of completed studies. All      of inheritance tree (DIT), number of children (NOC),
+the team members in projects 1 and 2, which used             coupling between objects (CBO) and response for a class
+iterative test-last development, had some industrial         (RFC). The lack of cohesion in methods (LCOM) was,
+coding experience whereas only one developer in project      however, replaced with the LCOM* proposed by
+3, which used TDD, had previously worked in industrial       Henderson-Sellers [30] because the original LCOM does
+settings. However, all the subjects in project 3 were        not always provide valid results [31]. Table 3 presents the
+Software Production majors and had a personal interest       metrics that were used to investigate the impact of TDD
+in programming. The developers were told and                 on design quality.
+encouraged to write tests in all projects regardless of the
+development technique used. In addition, in project 3, the   Metric          Table 3. Used metrics           Source
+use of TDD was stated mandatory. Intranet applications        WMC          Object Oriented Construct          [25]
+were implemented in projects 1 and 3: in project 1 for         DIT                                            [30]
+managing research data and in project 3 for project           NOC                    Complexity
+management purposes. Both systems consisted of a server        CBO                   Inheritance
+side and graphical user interface. A stock market              RFC                   Inheritance
+browsing system to be used via a mobile device was           LCOM*                    Coupling
+implemented in project 2. The biggest part was handled                     Collaboration / Complexity
+by the server side and the mobile part mainly focused on                              Cohesion
+connecting the server and retrieving data. However, to
+make the comparison of TDD and iterative test-last even,        The test coverage was measured at method, statement
+graphical user interfaces and the mobile client              and branch levels. The method coverage measures the
+application part in project 2 were excluded from the         ratio of executed methods and all possible executable
+                                                             methods during the testing. Statement coverage measures
+                                                             whether each possible statement is executed and branch
+                                                             coverage measures which possible branches in the flow
+                                                             control structures are executed. The subsequent sections
+                                                             present the empirical results of each metric.
+
+                                                             3.2.1. Coupling between Object Classes. CBO [25]
+                                                             presents the number of classes to which the class is
+                                                             coupled. CBO can be used as an indicator of whether the
+                                                             class hierarchy is losing its integrity, since high coupling
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of
+test-driven development on program design and test coverage. In Empirical Software Engineering and Measurement, 2007.
+ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+between object classes means that modules depend on
+each other too much and will be hard to reuse.
+Independent classes are easier to reuse in other
+applications. In order to improve modularity and promote
+reuse, inter-object class couples should be kept to a
+minimum. High coupling also makes the maintenance
+more difficult, because the sensitivity to changes is
+higher as well. Figure 1 presents the coupling results of
+the case projects. As there are indications that the TDD
+code may be less coupled, it should also be noticed that
+the TDD results are the most dispersed and the coupling
+is quite low in all three cases. Whether these small
+differences are explained by the use of a particular
+development technique cannot be concluded.
+
+    Figure 1. Coupling between object classes.                     Figure 2. Lack of cohesion in methods.
+                                                            3.2.3 Other Object-Oriented Metrics. Other OO-
+3.2.2. Lack of Cohesion in Methods. LCOM* [30]              metrics were analyzed as well. However, as they did not
+measures the correlation between the methods and the        show any noticeable differences between the used
+local instance variables of a class. High cohesion          development techniques, they are not included here.
+indicates good class subdivision while lack of cohesion     3.2.4. Test Coverage. Figure 3 presents the method,
+increases complexity. This algorithm produces answers       statement and branch coverage of the projects. All the
+in the range 0 to 1, with the value zero representing       results were significantly better in project 3 which
+perfect cohesion and with value one presenting extreme      employed TDD. This is notable, because all the
+lack of cohesion.                                           developers, regardless of the development technique
+                                                            used, were encouraged to write tests. In projects 1 and 2,
+   Figure 2 presents the LCOM* results of the case          the test classes were implemented, they were not as
+projects. Project 3, in which TDD was used, has clearly     thorough as the ones implemented in project 3. It should
+the worst cohesion. It is also noticeable that the results  be pointed out that the use of TDD and achieved better
+are the most consistent in project 3, which probably        test coverage did not affect the developer productivity as
+indicates that the poor cohesion is not likely to be a      the aimed product was delivered on time.
+coincidence. Whether it is due to TDD or the developers'
+lack of experience remains to be analyzed. However, this                      Figure3. Test coverage.
+result already indicates that TDD does not automatically
+produce highly cohesive code.
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of
+test-driven development on program design and test coverage. In Empirical Software Engineering and Measurement, 2007.
+ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+3.2.5. Summary of Empirical Findings. In the empirical        the developers in the TDD project were not as skilled as
+evaluation, the design quality effects of TDD were            the developers in the iterative test-last projects. However,
+explored through six OO-metrics: WMC, DIT, NOC,               as all of the developers were undergraduates and none of
+CBO, RFC and LCOM*. The evaluation was performed              them was employed by any industrial company, we
+by calculating the values of the metrics using the data       regard them all as non-professionals.
+obtained from the three case projects introduced in
+section 3.1. The results of WMC, DIT, NOC and RFC                The product types and concepts were different in all
+did not reveal any significant differences between TDD        the projects. To make the comparison fair, we excluded
+and iterative test-last development. Based on the results     graphical user interfaces and the mobile client
+of these four metrics, all projects had an acceptable         application part in case 2. We also believe that all
+design.                                                       product implementations presented a similar level of
+                                                              difficulty.
+   The value of CBO indicates that TDD produces
+slightly less coupled code. Nonetheless, the differences         The subjects’ conformance to correct implementation
+between the projects are small and the coupling is low in     of the tests and use of TDD was controlled by assigning a
+all three projects regardless of the development technique    person responsible for testing in all projects. The amount
+used. Therefore final conclusions cannot be drawn in any      of test code was monitored in all projects. The significant
+direction. The value of LCOM* provided contrasting            differences in test coverage between the development
+results: the code produced in the TDD project (project 3)     techniques were not due to a slip in the given
+was significantly less cohesive than code produced in         instructions. The test classes were implemented in all
+projects 1 or 2, in which iterative test-last development     projects, they were more thorough in the TDD project.
+was employed. Especially significant was the fact that the    Possible observation effects were limited, as the
+LCOM* results were clearly most consistent in the TDD         developers were not aware that the program design or the
+project. This finding is also contradictory with the claims   test coverage was to be compared. The measurements
+presented in the literature and it indicates that TDD may     were accomplished after the project endings.
+require a certain level of professional expertise that was
+not evidently present in the TDD project. Therefore, it          The use of students as study subjects places a question
+can be concluded that the impact of TDD on program            about the generalizability of the results. However, the
+design is not necessarily a positive one in the hands of      development environment was designed to relate closely
+less experienced developers. To be precise, TDD does not      to industrial development setting with strict deadlines,
+automatically result in highly cohesive program code.         regular working hours and most importantly, the
+These initial findings support the findings of Müller [8]     developers were developing a real product for real
+who confirmed that the OO-metrics did not cause a             customers. In this respect, it has been observed that
+difference in his study either.                               similar improvement trends can be identified among
+                                                              students and professionals [26], and that students may
+   The test coverage was assessed at method, statement        provide an adequate model for professionals [27].
+and branch coverage levels. The empirical data produced
+by these three projects clearly indicate that the test           Another threat to the external validity arises from the
+coverage of the TDD project can be very high without          size of the software product as well as the distribution of
+sacrificing the productivity, as the aimed end product was    the project work. All the studied projects had less than 10
+delivered to the customer as planned. These results are in    000 lines of code, their development took around 1000
+line with the existing literature.                            person hours and the products were developed by a single
+                                                              team in one location. The impact of TDD on program
+3.3. Threats to Validity                                      design, however, should be visible from the very start and
+                                                              thereby present in the studied projects.
+   The variety of the programming experiences in the
+case projects pose a threat to the internal validity of this  4. Conclusions
+study. In industry, teams usually have a mixed set of
+experience and skills, as many students work in                  Test-driven development is one of the most
+industrial companies before their graduation. When            fundamental practices of agile development. It is said to
+doing industrial case studies, all these developers are       yield several benefits, yet some of these claims have not
+usually regarded as professionals. On the other hand, it      been empirically studied or supported. Especially, the
+can be the case that a student with a strong personal         claim that TDD leads to improved software design has
+interest in programming is more skilled, even though he       not been widely addressed.
+does not have any industrial experience. It is possible that
+                                                                 This research has two main contributions: first, it
+                                                              reviews and organizes the existing empirical body of
+                                                              evidence regarding the impact of test-driven development
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of
+test-driven development on program design and test coverage. In Empirical Software Engineering and Measurement, 2007.
+ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+on software development. Secondly, it presents the results      [10] Lui, K. M. and Chan, K.C.C. Test Driven Development
+of the impact of TDD on program design as well as on            and Software Process Improvement in China. In XP 2004,
+test coverage.                                                  Garmisch-Partenkirchen, Germany, 2004.
+
+   The design metrics listed in this paper provide              [11] Maximilien, E. M. and Williams, L. Assessing Test-
+valuable data for other researchers investigating TDD           Driven Development at IBM. In ICSE'03, Portland, OR, USA,
+either in academic or industrial settings. Practitioners        2003.
+will find it useful to correlate the case metrics to their
+systems in particular in web-based and mobile                   [12] L. Damn, L. Lundberg, and D. Olsson, "Introducing Test
+application areas.                                              Automation and Test-Driven Development: An Experience
+                                                                Report", Electronic Notes in Theoretical Computer Science
+   Interestingly, some of the results obtained in this study    116, Elsevier, Amsterdam, Netherlands, 2005, pp. 3-14.
+contradict some claims in the literature. Here, the
+empirical data indicates that TDD does not always               [13] Canfora, G., Cimitile, A., Garcia, F., Piattini, M. and
+produce highly cohesive code as suggested in the                Visaggio, C. A. Evaluating advantages of test driven
+literature. This is the case, at least, when the TDD users      development: a controlled experiment with professionals. In
+are inexperienced developers. As a positive contribution,       ISESE'06, Rio de Janeiro, Brazil, 2006.
+the test coverage is, however, significantly improved.
+This is an important finding since it strengthens the           [14] B. George and L. Williams, "A structured experiment of
+empirical understanding of a promising programming              test-driven development", Information and Software
+technique. Furthermore, the results presented in this           Technology 46, Elsevier, Amsterdam, Netherlands, 2004, pp.
+paper are important as they contribute to the gradual           337-342.
+build up of empirical evidence on software engineering
+innovations.                                                    [15] Geras, A., Smith, M. and Miller, J. A Prototype Empirical
+                                                                Evaluation of Test Driven Development. In METRICS'04,
+5. References                                                   Chicago, IL, USA, 2004.
+
+[1] Beck, K., Test-Driven Development By Example, Addison-      [16] Abrahamsson, P., A. Hanhineva and J. Jäälinoja,
+Wesley, Boston, MA, USA, 2003.                                  "Improving Business Agility Through Technical Solutions: A
+                                                                Case Study on Test-Driven Development in Mobile Software
+[2] Astels, D., Test-Driven Development: A Practical Guide,     Development", in Business Agility and Information Technology
+Prentice Hall, Upper Saddle River, New Jersey, USA, 2003.       Diffusion, R. Baskerville, L. Mathiassen, J. Pries-Heje and J.
+                                                                DeGross, Springer, New York, USA, 2004.
+[3] Beck, K., Extreme Programming Explained, Second Edition
+:Embrace Change, Addison-Wesley, Boston, MA, USA, 2004.         [17] Janzen, D.S. and Saiedian, H. On the Influence of Test-
+                                                                Driven Development on Software Design. In CSEET'06, Turtle
+[4] G. Larman and V.R. Basili, "Iterative and Incremental       Bay, Hawaii, 2006.
+Development: A Brief History", IEEE Computer 36(6), IEEE
+Computer Soc., Los Alamitos, CA, USA, 2003, pp. 47-56.          [18] Kaufmann, R. and Janzen, D. Implications of Test-Driven
+                                                                Development A Pilot Study. In OOPSLA'03, Anaheim, CA,
+[5] K. Beck, "Aim, fire", IEEE Software 18(5), IEEE Computer    USA, 2003.
+Soc., Los Alamitos, CA, USA, 2001, pp. 87-89.
+                                                                [19] M.M. Müller and O. Hagner, "Experiment about test-first
+[6] Stephens, M. and D. Rosenberg, Extreme Programming          programming", IEE Proceedings Software 149(5), IEE, UK,
+Refactored: The Case Against XP, Apress, Berkeley, CA, USA,     2002, pp. 131-136.
+2003.                                                           [20] Pancur, M., Ciglaric, M., Trampuš, M. and Vidmar, T.
+                                                                Towards Empirical Evaluation of Test-Driven Development in
+[7] Boehm, B. and R. Turner, Balancing Agility and Discipline   a University Environment. In EUROCON 2003, Ljubljana,
+- A Guide for the Perplexed, Addison-Wesley, Boston, MA,        Slovenia, 2003.
+USA, 2004.
+                                                                [21] H. Erdogmus, M. Morisio, and M. Torchiano, "On the
+[8] Müller, M.M. The Effect of Test-Driven Development on       effectiveness of the test-first approach to programming", IEEE
+Program Code. In XP 2006, Oulu, Finland, 2006.                  Trans.Software Eng. 31(3), IEEE Press, Piscataway, NJ, USA,
+                                                                2005, pp. 226-237.
+[9] Bhat, T. and Nagappan, N. Evaluating the efficacy of test-  [22] Steinberg, D. H. The effect of unit tests on entry points,
+driven development: industrial case studies. In ISESE '06, Rio  coupling and cohesion in an introductory Java programming
+de Janeiro, Brazil, 2006.                                       course. In XP Universe, Raleigh, NC, USA, 2001.
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the
+impact of test-driven development on program design and test coverage. In Empirical Software Engineering and
+Measurement, 2007. ESEM 2007. First International Symposium on (pp. 275-284). IEEE.
+
+ [23] Edwards, S. H. Using software testing to move students
+ from trial-and-error to reflection-in-action. In SIGCSE '04,
+ Norfolk, VA, USA, 2004.
+
+ [24] Williams, L., Maximilien, E. M. and Vouk, M. Test-
+ Driven Development as a Defect-Reduction Practice. In
+ ISSRE'03, Denver, CO, USA, 2003.
+
+ [25] S.R. Chidamber and C.F. Kemerer, "A metrics Suite for
+ Object Oriented Design", IEEE Trans.Software Eng. 20(6),
+ IEEE Press, Piscataway, NJ, USA, 1994, pp. 476-493.
+
+ [26] Runeson, P. Using students as Experiment Subjects - An
+ Analysis of Graduate and Freshmen Student Data. In EASE'03,
+ Keele University, Staffordshire, UK, 2003.
+
+ [27] M. Höst, B. Regnell. and C. Wohlin, "Using Students as
+ Subjects—A Comparative Study of Students and Professionals
+ in Lead-Time Impact Assessment", Empirical Software
+ Engineering 5(3), Kluwer Academic Publishers, Boston, MA,
+ USA, 2000, pp. 201-214.
+
+ [28] Salo, O. and Abrahamsson, P. Empirical Evaluation of
+ Agile Software Development: The Controlled Case Study
+ Approach. In PROFES 2004, Keihanna-Plaza, Kansai Science
+ City in Kyoto-Nara area, Japan, 2004.
+
+ [29] T. Ihme and P. Abrahamsson, "Agile Architecting: The
+ Use of Architectural Patterns in Mobile Java Applications",
+ International Journal of Agile Manufacturing 8(2),
+ International Society of Agile Manufacturing, Vaajakoski,
+ Finland, 2005, pp. 97-112.
+
+ [30] Henderson-Sellers, B., Object-Oriented Metrics: Measures
+ of Complexity, Prentice Hall, Upper Saddle River, NJ, USA,
+ 1996.
+
+ [31] V.R. Basili and W.L. Melo, "A validation of Object-
+ Oriented Design Metrics as Quality Indicators", IEEE
+ Transactions on Software Engineering 22(10), IEEE Press,
+ Piscataway, NJ, USA, 1996, pp. 751-761.
+The definite version was published in: Siniaalto, M., & Abrahamsson, P. (2007). A comparative case study on the impact of test-driven development on
+program design and test coverage. In Empirical Software Engineering and Measurement, 2007. ESEM 2007. First International Symposium on (pp. 275-284).
+IEEE.
+
+1                  # of       Study focus/                              Appendix 1. Empirical body of evidence on TDD                                                  ref
+                 subjects     Comparison 2                                                  Empirical findings (+ positive, - negative, * neutral)
+
+                 2 projects,  Non-TDD          + Code quality was 2.6–4.2 times better while the block coverage was 79-88 %. The tests also served as documentation.   [9]
+                 11-14 dev.                    - The project managers estimated that the overall development time increased by 15-35 %.
+
+Industrial       2 teams      Traditional      + Task estimation and process tracking improved, along with the following of practices and rules. The defect density    [10]
+                                test-last      reduced significantly and the developers were able to fix defects faster.
+
+                 9 dev.       Ad-hoc unit + Defect density was reduced by 40–50 %. The developers felt that the daily integration diminishes integration problems.     [11,
+                                                                                                                                                                       24]
+                              testing          - Developer productivity was minimally impacted.
+
+                 2 projects   Specialized      + Defect density and project lead-time reduced significantly.                                                           [12]
+                              testing tool
+
+                 28 dev.      Traditional      + TDD supports better performance predictability and may improve unit testing.                                          [13]
+                                test-last      - TDD extends lead time.
+
+Semi-industrial  5 TDD and    Traditional      + TDD may increase testability.                                                                                         [8]
+                 3 convent.     projects       * Muller developed a new metric called assignment controllability, which is higher with TDD code. Other OO metrics did
+                  projects                     not show any difference.
+
+                 24 dev.      Traditional      + TDD pairs passed 18 % more test cases. The test cases achieved 98% method, 92% statement and 97% branch coverage.     [14]
+                                test-last      - The productivity was reduced as it took 16 % more time to complete the assignments.
+
+                 14 dev.      Traditional      + TDD seemed to produce more test cases and the tests were run more frequently.                                         [15]
+                                test-last      - The incidence of failures at the acceptance test level was higher with TDD.
+
+                 4 dev.       Exploratory - Developers indicated a strong reluctance to adopt TDD and would have needed constant mentoring during the project.         [16]
+                                  data * TDD may not be suitable for all application domains
+
+                 3 teams      Iterative test-  + TDD may have a positive impact on developer productivity.                                                             [17]
+                              last, No tests   - There were some concerns regarding complexity and coupling in TDD code.
+                                               * The developers perceived TDD more positively after they had tried it.
+
+                                               + TDD group produced 50% more code and their programmer confidence was noticeably higher. There were also
+
+                 8 dev.       Test-last indications that the design quality of the TDD group was better.                                                               [18]
+
+                                               * They found no differences in the code complexity.
+
+Academic         19 dev.      Traditional + TDD promotes better program understanding and the developers were able to use existing methods faster correctly.           [19]
+
+                              test-last        - The final reliability of the TDD code was significantly lower at the acceptance test level.
+
+                 38 dev.      Iterative test- -TDD slightly decreased external code quality and the average mean of code coverage. The majority of the test subjects   [20]
+                                   last felt that adopting TDD was difficult and that TDD was not very effective.
+
+                                               + TDD appeared to improve productivity and understanding of the requirements. It also encouraged better decomposition
+
+                 24 dev.      Iterative test- and reduced debugging and rework effort.                                                                                 [21]
+                                   last * TDD produced more consistent quality results. The minimum quality increased linearly with the number of the tests,
+
+                                               independent of the development technique used.
+
+                 Not known    Exploratory      + TDD facilitated the correcting of the faults. The students wrote more cohesive code with looser coupling with TDD.    [22]
+                                  data
+
+1 Study classification as presented in section 2.1.
+2 In some studies, the compared technique was not specified in detail.
+
