@@ -1,7 +1,8 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
-import { movedRedirects } from './src/lib/content-graph.ts';
+import { contentGraph, movedRedirects } from './src/lib/content-graph.ts';
+import { publicTopicNames } from './src/lib/topics.ts';
 
 // Two deploy targets while both run: Cloudflare serves https://commonwealthofreason.com/ at the root (the default,
 // wrangler.jsonc); DEPLOY_TARGET=pages builds the GitHub Pages mirror at https://jonborchardt.github.io/video-knowledge/.
@@ -33,13 +34,17 @@ const admin = {
   },
 };
 
+// A topic with no live story builds no page, so its moved.json emits no redirect either.
+const g = contentGraph();
+const liveTopics = publicTopicNames().filter((t) => g.nodes.get(t)?.public);
+
 export default defineConfig({
   site: pages ? 'https://jonborchardt.github.io' : 'https://commonwealthofreason.com',
   base: pages ? '/video-knowledge' : '/',
   // A story whose id changed keeps its old matter URL as a redirect page (topics/<topic>/moved.json).
   // Astro prefixes the base to the old path but not to the destination.
   redirects: Object.fromEntries(
-    Object.entries(movedRedirects()).map(([from, to]) => [from, `${pages ? '/video-knowledge' : ''}${to}`]),
+    Object.entries(movedRedirects(liveTopics)).map(([from, to]) => [from, `${pages ? '/video-knowledge' : ''}${to}`]),
   ),
   integrations: [sitemap(), admin],
   vite: { plugins: [tailwindcss()] },

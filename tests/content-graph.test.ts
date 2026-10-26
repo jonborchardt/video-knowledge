@@ -13,6 +13,7 @@ import {
   urlOf,
   type View,
 } from '../src/lib/content-graph';
+import { movedRedirects } from '../src/lib/content-graph';
 import { toJson, topicDir } from '../src/lib/io';
 import { addOutput, appendEvent, emptyLedger, type Ledger, publishPath, saveLedger } from '../src/lib/publish';
 import { scriptDir } from '../src/lib/script';
@@ -50,6 +51,10 @@ const live = (l: Ledger, output: string, id: string) =>
   appendEvent(l, output, { at: '2026-10-01T00:00:00Z', type: 'published', by: 'Jon', id }).ledger;
 
 describe('content graph', () => {
+  it('movedRedirects emits only for the topics it is given', () => {
+    expect(movedRedirects([])).toEqual({});
+  });
+
   it('every story of a public topic is a node in its inquiry, and its inquiry is published by its institution', () => {
     const g = contentGraph();
     for (const t of publicTopicNames()) {
