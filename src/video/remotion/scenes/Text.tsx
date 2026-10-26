@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
+import { AbsoluteFill, Img, staticFile, useCurrentFrame } from 'remotion';
 import { cue, lineFrames, spokenAt } from '../../cues';
 import type { TimelineScene } from '../../types';
 import { DocStack, PeopleGrid, Snowball, Spreadsheet } from '../glyphs';
@@ -9,7 +9,36 @@ import { GUTTER, clamp01, grow, ramp, theme } from '../theme';
  *  on their cues or as spoken; `document` option draws a statement outline with callouts).
  *  A title pops in word by word in a gradient, and list lines slide in, each in its own accent, the newest bright and
  *  the earlier ones dimmed. */
-export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => {
+export const Text: FC<{ scene: TimelineScene }> = ({ scene }) => (
+  <>
+    <Body scene={scene} />
+    {scene.order === 1 ? <Lockup scene={scene} /> : null}
+  </>
+);
+
+/** The institution's letterhead over the opening scene (brand/design.md 2.1: a brief mark after the question, never a
+ *  crest animation): the kit's horizontal lockup slides in at the top left a moment after the scene starts, clear of
+ *  the text below it. Its slot is in kitSlots (render.ts). */
+const Lockup: FC<{ scene: TimelineScene }> = ({ scene }) => {
+  const a = ramp(scene.start + useCurrentFrame(), scene.start + 10, 16);
+  return (
+    <Img
+      src={staticFile('brand/lockup-horizontal-ground.png')}
+      alt=""
+      style={{
+        position: 'absolute',
+        left: GUTTER + 20,
+        top: 48,
+        width: 560,
+        height: 140,
+        opacity: a,
+        transform: `translateX(${(1 - a) * -40}px)`,
+      }}
+    />
+  );
+};
+
+const Body: FC<{ scene: TimelineScene }> = ({ scene }) => {
   const t = scene.start + useCurrentFrame();
   const lines = scene.onScreenText;
   const frames = lineFrames(scene);

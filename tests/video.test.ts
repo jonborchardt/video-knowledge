@@ -841,6 +841,17 @@ describe('shorts: portrait frame and kinds', () => {
     expect(kitSlots(unsealed.scenes[0], unsealed)).toEqual([]);
     expect(sceneKey(unsealed.scenes[0], unsealed, kit('a'))).toBe(sceneKey(unsealed.scenes[0], unsealed, kit('b')));
   });
+  it('names the kit marks a landscape scene draws: the opening lockup and the transition seal', () => {
+    const tl = buildTimeline(checkSegment(inputs()), manifest(inputs()), 30, read);
+    const [first, second] = tl.scenes;
+    expect(kitSlots({ ...first, kind: 'title' }, tl)).toEqual(['lockup-horizontal-ground']);
+    expect(kitSlots({ ...first, kind: 'bar' }, tl)).toEqual([]); // a chart opening keeps its top clear
+    expect(kitSlots({ ...second, kind: 'title' }, tl)).toEqual([]);
+    const wipe = { ...second, kind: 'transition' as const };
+    expect(kitSlots(wipe, tl)).toEqual(['seal']);
+    const kit = (seal: string) => (_t: string, slot: string) => (slot === 'seal' ? seal : 'card');
+    expect(sceneKey(wipe, tl, kit('a'))).not.toBe(sceneKey(wipe, tl, kit('b')));
+  });
   it('checks the three-minute rule on portrait builds only', () => {
     expect(shortChecks({ duration: 181 }, { width: 1080, height: 1920 })[0]).toMatchObject({
       name: 'short length',
