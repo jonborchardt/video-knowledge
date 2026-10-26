@@ -3,7 +3,7 @@
  "basis": {
   "claims": 385,
   "sources": 216,
-  "studies": 22,
+  "studies": 23,
   "candidates": 69
  },
  "stories": [
@@ -3805,32 +3805,34 @@
    "kind": "conflict",
    "title": "Can You Leave an AI Agent Running on Your Backlog?",
    "alternates": [
-    "What Airbnb's Migration Loop Proves and What It Doesn't",
-    "Unattended Agents: One Case, Many Claims"
+    "What Happens When Agents Open Their Own Pull Requests",
+    "Unattended Agents: What Gets Merged"
    ],
    "question": "Can you leave an AI agent running on your backlog unattended?",
-   "whyWatch": "Six sources sell the loop; the one documented case is a bespoke pipeline with a retry cap and a 75% first-pass rate.",
-   "tension": "A generic promise and one specific case.",
-   "evidenceNeeded": "Outcomes of generic agent loop commands on real backlogs: completion rate, review burden, regressions.",
+   "whyWatch": "Six sources sell the loop; across hundreds of thousands of agent pull requests in the wild, between a third and two thirds were merged, every one after a human looked at it.",
+   "tension": "The promise of an agent clearing a backlog alone against merge rates well below human contributors'.",
+   "evidenceNeeded": "Outcomes of agents left to work on real backlogs: share merged without rework, human review time per merged change, regressions introduced.",
    "evidenceAvailable": [
+    "AIDev agent PRs (456K): partly (0.45, partial)",
     "Airbnb migration: partly (0.45, partial)"
    ],
    "gaps": [
-    "Reviewer: Only Airbnb's bespoke retry pipeline (75% of 3.5K test files on the first bulk run, with a retry cap); needs a measured study of generic goal or loop commands, or background agents assigned routine issues, on real backlogs: share of pull requests merged without rework, human review time per merged change, and regressions introduced.",
-    "What explains the split between Airbnb migration?",
+    "Reviewer: Strongest study 0.27 after applicability. AIDev (456K agent pull requests) gives only merge rates for autonomous agents (Codex 64%, Devin 49%, Copilot 35%, all below humans), not goal or loop commands and with no rework or regression measure; Airbnb is one bespoke migration pipeline. Needs a controlled or longitudinal study of agents left on real backlogs measuring share merged without rework, human review time per merged change and regressions after merge.",
+    "What explains the split between AIDev agent PRs (456K), Airbnb migration?",
+    "AIDev agent PRs (456K): In AIDev's PRs from popular repositories (over 500 stars), autonomous agents that take a task and open a pull request on their own had 35% (GitHub Copilot), 49% (Devin) and 64% (OpenAI Codex) of their PRs merged, 15 to 40 points below human PRs and lowest on features, bug fixes and performance; the agents do produce work without step-by-step prompting, but every change still went through human review and a third to two thirds were not merged.",
     "Airbnb migration: Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command."
    ],
-   "premise": "The sources split on \"Goal or loop commands that re-prompt an agent until a goal is met let it work through a backlog unattended\": Airbnb migration says partly. The reasons they differ are the useful part.",
+   "premise": "Sources say goal or loop commands let an agent work through a backlog unattended. The evidence says partly. Airbnb's bespoke retry pipeline, with a retry cap, migrated 75% of 3.5K test files on its first bulk run, one migration and not a generic command. In AIDev's pull requests from popular open-source repositories, autonomous agents had 35% (GitHub Copilot), 49% (Devin) and 64% (OpenAI Codex) of their pull requests merged, 15 to 40 points below human contributors and lowest on features and bug fixes; every merge passed human review, and neither source measures rework before merging or regressions after.",
    "claims": [
     "ai-coding/goal-loop-commands-prompt-agent-until"
    ],
    "related": [],
    "arc": {
-    "hook": "Two confident, opposite answers to the same question: \"Goal or loop commands that re-prompt an agent until a goal is met let it work through a backlog unattended\".",
-    "conflict": "The sources do not agree, and both sides have a case.",
-    "evidence": "Lay the studies side by side (Airbnb migration): design, sample, what was measured.",
-    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
-    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
+    "hook": "Several sources say you can hand an agent a goal, let it loop, and come back to a cleared backlog.",
+    "conflict": "The one documented loop is a custom pipeline built for one migration, and the large count of agent pull requests in the wild shows far fewer merged than the promise implies.",
+    "evidence": "Airbnb's retry pipeline (75% of 3.5K files on the first run, with a retry cap) beside AIDev's merge rates for Codex, Devin and Copilot against human pull requests in the same repositories.",
+    "resolution": "Agents do produce work without step-by-step prompting, but on general code a third to two thirds of it is merged, each piece after human review; the narrow, checkable migration went further. Rework and regressions are not measured.",
+    "takeaway": "An agent can work a backlog in the background; it cannot be left unattended, because a person still decides what merges."
    },
    "coherence": {
     "score": 0.8,
@@ -3842,17 +3844,17 @@
     "relevance": 0.72,
     "curiosity": 1,
     "stakes": 0.7,
-    "depth": 0.63,
+    "depth": 0.77,
     "originality": 1,
-    "evidence": 0.27,
-    "editorial": 0.77,
-    "overall": 0.57,
-    "explanation": "editorial 0.77 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 1 (conflict), stakes 0.7 (lean: pro), depth 0.63 (1 study, 1 claim, tension); evidence 0.27 = strongest Airbnb migration at 0.45 (partial) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "evidence": 0.31,
+    "editorial": 0.8,
+    "overall": 0.6,
+    "explanation": "editorial 0.8 = mean of coherence 0.8 (review), relevance 0.72 (8 sources, 8 channels), curiosity 1 (conflict), stakes 0.7 (lean: pro), depth 0.77 (2 studies, 1 claim, tension); evidence 0.31 = strongest AIDev agent PRs (456K) at 0.45 (partial) across 2 independent documents; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: Reviewer: Only Airbnb's bespoke retry pipeline (75% of 3.5K test files on the first bulk run, with a retry cap); needs a measured study of generic goal or loop commands, or background agents assigned routine issues, on real backlogs: share of pull requests merged without rework, human review time per merged change, and regressions introduced.",
+   "readinessWhy": "Essential evidence is missing: Reviewer: Strongest study 0.27 after applicability. AIDev (456K agent pull requests) gives only merge rates for autonomous agents (Codex 64%, Devin 49%, Copilot 35%, all below humans), not goal or loop commands and with no rework or regression measure; Airbnb is one bespoke migration pipeline. Needs a controlled or longitudinal study of agents left on real backlogs measuring share merged without rework, human review time per merged change and regressions after merge.",
    "blocking": [
-    "Reviewer: Only Airbnb's bespoke retry pipeline (75% of 3.5K test files on the first bulk run, with a retry cap); needs a measured study of generic goal or loop commands, or background agents assigned routine issues, on real backlogs: share of pull requests merged without rework, human review time per merged change, and regressions introduced."
+    "Reviewer: Strongest study 0.27 after applicability. AIDev (456K agent pull requests) gives only merge rates for autonomous agents (Codex 64%, Devin 49%, Copilot 35%, all below humans), not goal or loop commands and with no rework or regression measure; Airbnb is one bespoke migration pipeline. Needs a controlled or longitudinal study of agents left on real backlogs measuring share merged without rework, human review time per merged change and regressions after merge."
    ],
    "reviewed": true,
    "audit": {
@@ -3874,6 +3876,22 @@
        "ref": {
         "kind": "study",
         "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+        "cite": "ai-coding/sources/2507.15003.txt#L459-L466"
+       },
+       "cited": true,
+       "role": "qualifies",
+       "by": "AIDev agent PRs (456K)",
+       "verdict": "partly",
+       "confidence": 0.45,
+       "note": "In AIDev's PRs from popular repositories (over 500 stars), autonomous agents that take a task and open a pull request on their own had 35% (GitHub Copilot), 49% (Devin) and 64% (OpenAI Codex) of their PRs merged, 15 to 40 points below human PRs and lowest on features, bug fixes and performance; the agents do produce work without step-by-step prompting, but every change still went through human review and a third to two thirds were not merged.",
+       "applicability": "partial",
+       "basis": "review",
+       "why": "merge rates of autonomous background agents (Codex, Devin, Copilot) on real repositories: the same unattended setting, but not goal or loop commands specifically, and merge rate alone, with no measure of rework before merge or regressions after"
+      },
+      {
+       "ref": {
+        "kind": "study",
+        "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
         "cite": "ai-coding/sources/airbnb-test-migration.txt#L19-L22"
        },
        "cited": true,
@@ -3890,12 +3908,13 @@
      "context": [],
      "problems": [],
      "limitations": [
+      "AIDev agent PRs (456K): In AIDev's PRs from popular repositories (over 500 stars), autonomous agents that take a task and open a pull request on their own had 35% (GitHub Copilot), 49% (Devin) and 64% (OpenAI Codex) of their PRs merged, 15 to 40 points below human PRs and lowest on features, bug fixes and performance; the agents do produce work without step-by-step prompting, but every change still went through human review and a third to two thirds were not merged. [partial: merge rates of autonomous background agents (Codex, Devin, Copilot) on real repositories: the same unattended setting, but not goal or loop commands specifically, and merge rate alone, with no measure of rework before merge or regressions after]",
       "Airbnb migration: Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command. [partial: a bespoke retry pipeline for one migration, not a generic agent loop command on a backlog]"
      ],
      "suggestions": [
       "Add the qualification: the evidence supports a narrower or weaker statement."
      ],
-     "explanation": "qualified (qualify): no direct support, 1 qualifying."
+     "explanation": "qualified (qualify): no direct support, 2 qualifying."
     },
     "findings": [
      {
@@ -3918,6 +3937,22 @@
          "ref": {
           "kind": "study",
           "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
+          "cite": "ai-coding/sources/2507.15003.txt#L459-L466"
+         },
+         "cited": true,
+         "role": "qualifies",
+         "by": "AIDev agent PRs (456K)",
+         "verdict": "partly",
+         "confidence": 0.45,
+         "note": "In AIDev's PRs from popular repositories (over 500 stars), autonomous agents that take a task and open a pull request on their own had 35% (GitHub Copilot), 49% (Devin) and 64% (OpenAI Codex) of their PRs merged, 15 to 40 points below human PRs and lowest on features, bug fixes and performance; the agents do produce work without step-by-step prompting, but every change still went through human review and a third to two thirds were not merged.",
+         "applicability": "partial",
+         "basis": "review",
+         "why": "merge rates of autonomous background agents (Codex, Devin, Copilot) on real repositories: the same unattended setting, but not goal or loop commands specifically, and merge rate alone, with no measure of rework before merge or regressions after"
+        },
+        {
+         "ref": {
+          "kind": "study",
+          "claim": "ai-coding/goal-loop-commands-prompt-agent-until",
           "cite": "ai-coding/sources/airbnb-test-migration.txt#L19-L22"
          },
          "cited": true,
@@ -3934,12 +3969,13 @@
        "context": [],
        "problems": [],
        "limitations": [
+        "AIDev agent PRs (456K): In AIDev's PRs from popular repositories (over 500 stars), autonomous agents that take a task and open a pull request on their own had 35% (GitHub Copilot), 49% (Devin) and 64% (OpenAI Codex) of their PRs merged, 15 to 40 points below human PRs and lowest on features, bug fixes and performance; the agents do produce work without step-by-step prompting, but every change still went through human review and a third to two thirds were not merged. [partial: merge rates of autonomous background agents (Codex, Devin, Copilot) on real repositories: the same unattended setting, but not goal or loop commands specifically, and merge rate alone, with no measure of rework before merge or regressions after]",
         "Airbnb migration: Airbnb's custom loop runner re-prompted the LLM with errors until a step passed or a retry cap was hit, and the first bulk run migrated 75% of 3.5K files in 4 hours; this is a bespoke pipeline, not a generic agent goal command. [partial: a bespoke retry pipeline for one migration, not a generic agent loop command on a backlog]"
        ],
        "suggestions": [
         "Add the qualification: the evidence supports a narrower or weaker statement."
        ],
-       "explanation": "qualified (qualify): no direct support, 1 qualifying."
+       "explanation": "qualified (qualify): no direct support, 2 qualifying."
       }
      }
     ]
