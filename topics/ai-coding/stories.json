@@ -3,8 +3,8 @@
  "basis": {
   "claims": 385,
   "sources": 216,
-  "studies": 27,
-  "candidates": 66
+  "studies": 28,
+  "candidates": 65
  },
  "stories": [
   {
@@ -4020,289 +4020,140 @@
    }
   },
   {
-   "id": "gap:length-tasks-agents-can-complete-autonomously",
-   "kind": "gap",
-   "title": "Are AI Agents Really Doubling Every Seven Months?",
+   "id": "conflict:frontier-model-improvements-have-become-incremental",
+   "kind": "conflict",
+   "title": "Is it true that frontier model improvements have become incremental rather than exponential?",
    "alternates": [
-    "The Seven-Month Doubling Curve, Checked",
-    "What 'Task Horizon' Measures and What It Doesn't"
+    "Sources disagree: Frontier model improvements have become incremental rather than…",
+    "Is it true that frontier model improvements have become incremental rather than exponential?"
    ],
-   "question": "Is the length of task an AI agent can finish on its own really doubling every seven months?",
-   "whyWatch": "Seven sources quote the doubling curve as if it settled where agents are headed; what it measures (a 50%-success time on a fixed task suite) is narrower than how it gets used.",
-   "tension": "A widely quoted trend line whose source study is not in the corpus.",
-   "evidenceNeeded": "METR's time-horizon measurements: the task suite, the 50% and 80% success horizons by model release date, and the fitted doubling time with its error bars.",
-   "evidenceAvailable": [],
+   "question": "Is it true that frontier model improvements have become incremental rather than exponential?",
+   "whyWatch": "Two confident, opposite answers to the same question. Explaining why they differ (population, task, timing, design) teaches more than either headline.",
+   "tension": "The sources split: METR time horizons says wrong.",
+   "evidenceNeeded": "The studies on each side compared on design, population and timing, to explain the split rather than pick a winner.",
+   "evidenceAvailable": [
+    "METR time horizons: wrong (0.4, direct)"
+   ],
    "gaps": [
-    "No study in the corpus checks the claim; the story is the search for evidence.",
-    "Has anyone measured whether the length of tasks AI agents can complete autonomously has been doubling roughly every seven months?",
-    "Which study or dataset would settle it?"
+    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.4 after applicability); it cannot carry a narrative.",
+    "What explains the split between METR time horizons?"
    ],
-   "premise": "7 sources assert \"The length of tasks AI agents can complete autonomously has been doubling roughly every seven months\", and no study in the corpus bears on it. The story is the search for evidence, not a verdict.",
+   "premise": "The sources split on \"Frontier model improvements have become incremental rather than exponential\": METR time horizons says wrong. The reasons they differ are the useful part.",
    "claims": [
-    "ai-coding/length-tasks-agents-can-complete-autonomously"
+    "ai-coding/frontier-model-improvements-have-become-incremental"
    ],
    "related": [],
    "arc": {
-    "hook": "How often this gets said, and how confidently.",
-    "conflict": "Ask for the evidence and find none in the corpus.",
-    "evidence": "What the sources offer instead (anecdote, authority, mechanism) and what a real test would need.",
-    "resolution": "Absence of evidence is not evidence of absence: what would change the picture.",
-    "takeaway": "How to treat the claim until it is checked."
+    "hook": "Two confident, opposite answers to the same question: \"Frontier model improvements have become incremental rather than exponential\".",
+    "conflict": "The sources do not agree, and both sides have a case.",
+    "evidence": "Lay the studies side by side (METR time horizons): design, sample, what was measured.",
+    "resolution": "Where the disagreement comes from, and which answer applies to which situation.",
+    "takeaway": "The conditions under which the claim holds, instead of a yes or no."
    },
    "coherence": {
     "score": 0.8,
-    "basis": "review",
-    "explanation": "One question about one measured trend."
+    "basis": "heuristic",
+    "explanation": "One claim, one question. Unreviewed."
    },
    "scores": {
     "coherence": 0.8,
     "relevance": 0.68,
-    "curiosity": 0.5,
-    "stakes": 0.7,
-    "depth": 0.35,
+    "curiosity": 1,
+    "stakes": 0.4,
+    "depth": 0.48,
     "originality": 1,
-    "evidence": 0,
-    "editorial": 0.61,
-    "overall": 0.37,
-    "explanation": "editorial 0.61 = mean of coherence 0.8 (review), relevance 0.68 (7 sources, 6 channels), curiosity 0.5 (gap), stakes 0.7 (lean: pro), depth 0.35 (0 studies, 1 claim); evidence 0 = no decisive evidence; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
+    "evidence": 0.4,
+    "editorial": 0.67,
+    "overall": 0.56,
+    "explanation": "editorial 0.67 = mean of coherence 0.8 (heuristic), relevance 0.68 (7 sources, 6 channels), curiosity 1 (conflict), stakes 0.4 (lean: calibrating), depth 0.48 (1 study, 1 claim); evidence 0.4 = strongest METR time horizons at 0.4 (direct) across 1 independent document; overall = 0.6 editorial + 0.4 evidence, scaled by originality. Heuristics from corpus counts and the audit, not audience data."
    },
    "readiness": "needs-research",
-   "readinessWhy": "Essential evidence is missing: No study in the corpus checks the claim; the story is the search for evidence.",
+   "readinessWhy": "Essential evidence is missing: The strongest study that bears on the central conclusion is weaker than 0.5 (0.4 after applicability); it cannot carry a narrative.",
    "blocking": [
-    "No study in the corpus checks the claim; the story is the search for evidence."
+    "The strongest study that bears on the central conclusion is weaker than 0.5 (0.4 after applicability); it cannot carry a narrative."
    ],
-   "reviewed": true,
+   "reviewed": false,
    "audit": {
     "central": {
      "id": "central",
-     "text": "7 sources claim \"The length of tasks AI agents can complete autonomously has been doubling roughly every seven months\"; no study in the corpus has checked it.",
-     "kind": "attribution",
-     "modality": "universal",
+     "text": "The evidence does not support \"Frontier model improvements have become incremental rather than exponential\"",
+     "kind": "fact",
+     "modality": "plain",
      "status": "supported",
-     "decision": "approved",
-     "review": false,
+     "decision": "qualify",
+     "review": true,
      "verbatim": true,
-     "strength": 0,
-     "independent": 0,
-     "supporting": [],
-     "contradicting": [],
-     "qualifying": [],
-     "context": [
+     "strength": 0.4,
+     "independent": 1,
+     "supporting": [
       {
        "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-        "source": "43xzqv9Tw-Q"
+        "kind": "study",
+        "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+        "cite": "ai-coding/sources/2503.14499.txt#L284-L288"
        },
        "cited": true,
-       "role": "statement",
-       "by": "AI Agent Capabilities Are Doubling Every Three Months",
-       "verdict": null,
-       "confidence": null,
-       "note": "The length of tasks that AI can do is doubling about every 7 months"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-        "source": "RhfqQKe22ZA"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Why Agent Hype can fall short of reality – Joel Becker, METR",
-       "verdict": null,
-       "confidence": null,
-       "note": "the time horizon of models is doubling every something like six to seven months"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-        "source": "Sf9vENm2GnE"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
-       "verdict": null,
-       "confidence": null,
-       "note": "plotted with log log scaled y- axis, it looks remarkably steady um in its exponential pattern."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-        "source": "XFCkrYHHfpQ"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "How Agents Use Context Engineering",
-       "verdict": null,
-       "confidence": null,
-       "note": "the task length is doubling around every seven months"
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-        "source": "fuRmxFZ-umE"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "AI Safety (CS 2881) Lecture 7: Lab vs Field: Guest lecture by Joel Becker",
-       "verdict": null,
-       "confidence": null,
-       "note": "if you plot that over calendar time you see something that kind of looks exponential."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-        "source": "k1t2xyWMUdY"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "How METR measures Long Tasks and Experienced Open Source Dev Productivity - Joel Becker, METR",
-       "verdict": null,
-       "confidence": null,
-       "note": "if capabilities are measured by time horizon keep keep doubling, it does seem very very challenging to keep up with that."
-      },
-      {
-       "ref": {
-        "kind": "statement",
-        "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-        "source": "ujkD4SxPKOI"
-       },
-       "cited": true,
-       "role": "statement",
-       "by": "AI Just Crossed the Terrifying Line - Now What?",
-       "verdict": null,
-       "confidence": null,
-       "note": "largely invisible to the public, their capabilities have increased exponentially"
+       "role": "supports",
+       "by": "METR time horizons",
+       "verdict": "wrong",
+       "confidence": 0.4,
+       "note": "Through early 2025 METR's measured time horizon kept rising exponentially, from 2 seconds for GPT-2 to 110 minutes for o3, with o3 above the long-run trend; it covers models only up to early 2025 and one benchmark suite.",
+       "applicability": "direct",
+       "basis": "heuristic",
+       "why": "the verdict bears on the claim as worded"
       }
      ],
+     "contradicting": [],
+     "qualifying": [],
+     "context": [],
      "problems": [],
-     "limitations": [
-      "Reports what the sources said, not whether it is true."
+     "limitations": [],
+     "suggestions": [
+      "The strongest support is weak (0.4); say \"one study suggests\" or find stronger evidence."
      ],
-     "suggestions": [],
-     "explanation": "supported (approved): no direct support, 7 source statements."
+     "explanation": "supported (qualify): 1 supporting (1 independent, strongest 0.4)."
     },
     "findings": [
      {
-      "role": "belief",
+      "role": "evidence",
       "validation": {
        "id": "f0",
-       "text": "7 sources claim \"The length of tasks AI agents can complete autonomously has been doubling roughly every seven months\"; no study in the corpus has checked it.",
-       "kind": "attribution",
-       "modality": "universal",
+       "text": "The evidence does not support \"Frontier model improvements have become incremental rather than exponential\"",
+       "kind": "fact",
+       "modality": "plain",
        "status": "supported",
-       "decision": "approved",
-       "review": false,
+       "decision": "qualify",
+       "review": true,
        "verbatim": true,
-       "strength": 0,
-       "independent": 0,
-       "supporting": [],
-       "contradicting": [],
-       "qualifying": [],
-       "context": [
+       "strength": 0.4,
+       "independent": 1,
+       "supporting": [
         {
          "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "source": "43xzqv9Tw-Q"
+          "kind": "study",
+          "claim": "ai-coding/frontier-model-improvements-have-become-incremental",
+          "cite": "ai-coding/sources/2503.14499.txt#L284-L288"
          },
          "cited": true,
-         "role": "statement",
-         "by": "AI Agent Capabilities Are Doubling Every Three Months",
-         "verdict": null,
-         "confidence": null,
-         "note": "The length of tasks that AI can do is doubling about every 7 months"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "source": "RhfqQKe22ZA"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Why Agent Hype can fall short of reality – Joel Becker, METR",
-         "verdict": null,
-         "confidence": null,
-         "note": "the time horizon of models is doubling every something like six to seven months"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "source": "Sf9vENm2GnE"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "Joel Becker: Reconciling Impressive AI Benchmark Performance, Limited Developer Productivity Impacts",
-         "verdict": null,
-         "confidence": null,
-         "note": "plotted with log log scaled y- axis, it looks remarkably steady um in its exponential pattern."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "source": "XFCkrYHHfpQ"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "How Agents Use Context Engineering",
-         "verdict": null,
-         "confidence": null,
-         "note": "the task length is doubling around every seven months"
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "source": "fuRmxFZ-umE"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "AI Safety (CS 2881) Lecture 7: Lab vs Field: Guest lecture by Joel Becker",
-         "verdict": null,
-         "confidence": null,
-         "note": "if you plot that over calendar time you see something that kind of looks exponential."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "source": "k1t2xyWMUdY"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "How METR measures Long Tasks and Experienced Open Source Dev Productivity - Joel Becker, METR",
-         "verdict": null,
-         "confidence": null,
-         "note": "if capabilities are measured by time horizon keep keep doubling, it does seem very very challenging to keep up with that."
-        },
-        {
-         "ref": {
-          "kind": "statement",
-          "claim": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "source": "ujkD4SxPKOI"
-         },
-         "cited": true,
-         "role": "statement",
-         "by": "AI Just Crossed the Terrifying Line - Now What?",
-         "verdict": null,
-         "confidence": null,
-         "note": "largely invisible to the public, their capabilities have increased exponentially"
+         "role": "supports",
+         "by": "METR time horizons",
+         "verdict": "wrong",
+         "confidence": 0.4,
+         "note": "Through early 2025 METR's measured time horizon kept rising exponentially, from 2 seconds for GPT-2 to 110 minutes for o3, with o3 above the long-run trend; it covers models only up to early 2025 and one benchmark suite.",
+         "applicability": "direct",
+         "basis": "heuristic",
+         "why": "the verdict bears on the claim as worded"
         }
        ],
+       "contradicting": [],
+       "qualifying": [],
+       "context": [],
        "problems": [],
-       "limitations": [
-        "Reports what the sources said, not whether it is true."
+       "limitations": [],
+       "suggestions": [
+        "The strongest support is weak (0.4); say \"one study suggests\" or find stronger evidence."
        ],
-       "suggestions": [],
-       "explanation": "supported (approved): no direct support, 7 source statements."
+       "explanation": "supported (qualify): 1 supporting (1 independent, strongest 0.4)."
       }
      }
     ]

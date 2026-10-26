@@ -1697,7 +1697,7 @@
           "denied": 2,
           "tally": {
             "right": 0,
-            "wrong": 6,
+            "wrong": 7,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
@@ -1716,7 +1716,9 @@
           ],
           "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2503.14499.txt"
+          ]
         },
         {
           "id": "ai-coding/investing-upfront-comprehensive-written-context-requirements",
@@ -1837,6 +1839,7 @@
           "note": "Instruction-following and task horizon rose sharply from Claude 3.7 to 4.x and later; METR's horizon metric shows the same trend.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2503.14499.txt",
             "ai-coding/sources/anthropic-work-at-anthropic.txt"
           ]
         },
@@ -2587,9 +2590,9 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.6,
           "videos": [
             "43xzqv9Tw-Q",
             "RhfqQKe22ZA",
@@ -2599,9 +2602,11 @@
             "k1t2xyWMUdY",
             "ujkD4SxPKOI"
           ],
-          "note": "METR's 2025 time-horizon study found ~7-month doubling (faster in 2024-25); later measurements stayed on or above trend, with wide error bars.",
-          "source": null,
-          "documents": []
+          "note": "METR timed human experts on 170 software and research tasks (HCAST, RE-Bench, SWAA) and regressed 11 frontier models' 50%-success time horizons on release date from 2019 to early 2025, finding a doubling every 207 days (95% CI 166-240); the measurement is the claim's own source, a preprint by the lab, on a fixed benchmark suite at 50% reliability, not real-world work.",
+          "source": "ai-coding/sources/2503.14499.txt#L272-L276",
+          "documents": [
+            "ai-coding/sources/2503.14499.txt"
+          ]
         },
         {
           "id": "ai-coding/loading-capabilities-demand-skills-read-only",
@@ -4022,7 +4027,9 @@
           ],
           "note": "METR noted a faster ~4-month doubling for 2024-25 models; later data roughly held, though the sample is small and uncertain.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2503.14499.txt"
+          ]
         },
         {
           "id": "ai-coding/agents-reliable-success-task-horizon-several",
@@ -4037,16 +4044,18 @@
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
+          "strongest": "source",
           "effective": "right",
-          "confidence": 0.5,
+          "confidence": 0.65,
           "videos": [
             "43xzqv9Tw-Q",
             "fuRmxFZ-umE"
           ],
-          "note": "METR's own analysis: 80%-success horizons are roughly 4-5x shorter than 50% horizons.",
-          "source": null,
-          "documents": []
+          "note": "On METR's task suite the 80%-success time horizon doubles at a similar rate (204 vs 207 days) but is 4-6x shorter than the 50% horizon, so models that sometimes succeed on hard tasks cannot reliably do tasks of moderate length.",
+          "source": "ai-coding/sources/2503.14499.txt#L312-L317",
+          "documents": [
+            "ai-coding/sources/2503.14499.txt"
+          ]
         },
         {
           "id": "ai-coding/displacing-entry-level-work-raising-unemployment",
@@ -5942,6 +5951,7 @@
           "source": "ai-coding/sources/2507.09089v2.txt#L484-L489",
           "documents": [
             "ai-coding/sources/2501.06972.txt",
+            "ai-coding/sources/2503.14499.txt",
             "ai-coding/sources/2507.09089v2.txt",
             "ai-coding/sources/2507.15003.txt",
             "ai-coding/sources/2607.21652v1.txt"
@@ -10559,7 +10569,7 @@
           "denied": 2,
           "tally": {
             "right": 0,
-            "wrong": 6,
+            "wrong": 7,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
@@ -10578,7 +10588,9 @@
           ],
           "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2503.14499.txt"
+          ]
         },
         {
           "id": "ai-coding/ide-based-assistants-like-cursor-obsolete",
@@ -11528,6 +11540,7 @@
             "note": "Instruction-following and task horizon rose sharply from Claude 3.7 to 4.x and later; METR's horizon metric shows the same trend.",
             "source": null,
             "documents": [
+              "ai-coding/sources/2503.14499.txt",
               "ai-coding/sources/anthropic-work-at-anthropic.txt"
             ]
           },
@@ -11545,10 +11558,10 @@
           "evidenceRecord": {
             "method": "source",
             "verdict": "partly",
-            "note": "Anthropic transcripts Feb->Aug 2025: max consecutive tool calls rose from 9.8 to 21.2, human turns fell from 6.2 to 4.1 and task complexity rose from 3.2 to 3.8, but usage shifts could explain part of this and reliability isn't measured.",
-            "source": "ai-coding/sources/anthropic-work-at-anthropic.txt#L124-L127",
-            "confidence": 0.35,
-            "date": "2026-10-14"
+            "confidence": 0.4,
+            "note": "Newer models do complete much longer tasks than older ones (time horizons doubling every 204-207 days at both 50% and 80% success), but even their 80% horizons are 4-6x shorter than their 50% ones, so 'reliably' holds only for much shorter tasks; it measures benchmark tasks, not specifications.",
+            "source": "ai-coding/sources/2503.14499.txt#L312-L317",
+            "date": "2026-10-26"
           }
         },
         {
@@ -12428,6 +12441,53 @@
             "source": "ai-coding/sources/2507.09089v2.txt#L1122-L1130",
             "confidence": 0.45,
             "date": "2026-10-14"
+          }
+        },
+        {
+          "claim": {
+            "id": "ai-coding/growth-agents-task-horizons-accelerated-recently",
+            "text": "Growth in agents' task horizons accelerated recently, faster than the long-run seven-month doubling",
+            "topic": "ai-coding",
+            "asserted": 2,
+            "denied": 0,
+            "tally": {
+              "right": 2,
+              "wrong": 0,
+              "partly": 0,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "prior",
+            "effective": "right",
+            "confidence": 0.5,
+            "videos": [
+              "43xzqv9Tw-Q",
+              "Sf9vENm2GnE"
+            ],
+            "note": "METR noted a faster ~4-month doubling for 2024-25 models; later data roughly held, though the sample is small and uncertain.",
+            "source": null,
+            "documents": [
+              "ai-coding/sources/2503.14499.txt"
+            ]
+          },
+          "prior": "right",
+          "evidence": "partly",
+          "method": "source",
+          "overrides": false,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "right",
+            "note": "METR noted a faster ~4-month doubling for 2024-25 models; later data roughly held, though the sample is small and uncertain.",
+            "confidence": 0.55,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "partly",
+            "confidence": 0.4,
+            "note": "o3 sits above the 2019-2025 trend line (p = 0.006), which the authors say only 'may imply' a faster trend in 2024 and early 2025; one model above the line suggests rather than establishes an acceleration.",
+            "source": "ai-coding/sources/2503.14499.txt#L284-L288",
+            "date": "2026-10-26"
           }
         },
         {
@@ -14285,7 +14345,7 @@
           "denied": 2,
           "tally": {
             "right": 0,
-            "wrong": 6,
+            "wrong": 7,
             "partly": 0,
             "untestable": 0,
             "unknown": 0
@@ -14304,7 +14364,9 @@
           ],
           "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
           "source": null,
-          "documents": []
+          "documents": [
+            "ai-coding/sources/2503.14499.txt"
+          ]
         },
         {
           "id": "ai-coding/open-weight-coding-models-now-handle",
@@ -15539,35 +15601,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/length-tasks-agents-can-complete-autonomously",
-          "text": "The length of tasks AI agents can complete autonomously has been doubling roughly every seven months",
-          "topic": "ai-coding",
-          "asserted": 7,
-          "denied": 0,
-          "tally": {
-            "right": 5,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "43xzqv9Tw-Q",
-            "RhfqQKe22ZA",
-            "Sf9vENm2GnE",
-            "XFCkrYHHfpQ",
-            "fuRmxFZ-umE",
-            "k1t2xyWMUdY",
-            "ujkD4SxPKOI"
-          ],
-          "note": "METR's 2025 time-horizon study found ~7-month doubling (faster in 2024-25); later measurements stayed on or above trend, with wide error bars.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/llms-propose-outdated-library-versions-models",
           "text": "LLMs propose outdated library versions and models because of their training cutoff, so their technology choices must be checked",
           "topic": "ai-coding",
@@ -16010,35 +16043,6 @@
             "tFffUnSq7VA"
           ],
           "note": "Model strengths do differ by task in benchmarks and practice, but the specific pairing is personal preference and shifts each release.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/frontier-model-improvements-have-become-incremental",
-          "text": "Frontier model improvements have become incremental rather than exponential",
-          "topic": "ai-coding",
-          "asserted": 5,
-          "denied": 2,
-          "tally": {
-            "right": 0,
-            "wrong": 6,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "wrong",
-          "confidence": 0.5,
-          "videos": [
-            "3I6QYkccd3o",
-            "43xzqv9Tw-Q",
-            "EO3_qN_Ynsk",
-            "LUaPqGpmwBw",
-            "WJS2YDZO-vc",
-            "bpWPEhO7RqE",
-            "uRuLgar5XZw"
-          ],
-          "note": "METR's task-horizon metric kept doubling roughly every 7 months through 2025-26 and coding benchmarks rose sharply; perceived per-release gains feel smaller but the trend is steep.",
           "source": null,
           "documents": []
         },
@@ -17409,30 +17413,6 @@
           "documents": []
         },
         {
-          "id": "ai-coding/agents-reliable-success-task-horizon-several",
-          "text": "Agents' reliable (80%-success) task horizon is several times shorter than their 50%-success horizon",
-          "topic": "ai-coding",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 2,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "43xzqv9Tw-Q",
-            "fuRmxFZ-umE"
-          ],
-          "note": "METR's own analysis: 80%-success horizons are roughly 4-5x shorter than 50% horizons.",
-          "source": null,
-          "documents": []
-        },
-        {
           "id": "ai-coding/agents-should-implement-work-thin-vertical",
           "text": "AI agents should implement work in thin vertical slices rather than layer by layer, to get early end-to-end feedback",
           "topic": "ai-coding",
@@ -17842,30 +17822,6 @@
             "WTLrlkp5Y3c"
           ],
           "note": "Copilot Pro's $10 tier is the cheapest headline price and GitHub integration is real; 'best fit' depends on team needs.",
-          "source": null,
-          "documents": []
-        },
-        {
-          "id": "ai-coding/growth-agents-task-horizons-accelerated-recently",
-          "text": "Growth in agents' task horizons accelerated recently, faster than the long-run seven-month doubling",
-          "topic": "ai-coding",
-          "asserted": 2,
-          "denied": 0,
-          "tally": {
-            "right": 2,
-            "wrong": 0,
-            "partly": 0,
-            "untestable": 0,
-            "unknown": 0
-          },
-          "strongest": "prior",
-          "effective": "right",
-          "confidence": 0.5,
-          "videos": [
-            "43xzqv9Tw-Q",
-            "Sf9vENm2GnE"
-          ],
-          "note": "METR noted a faster ~4-month doubling for 2024-25 models; later data roughly held, though the sample is small and uncertain.",
           "source": null,
           "documents": []
         },
@@ -21076,7 +21032,7 @@
       "testable": 10,
       "novelty": 0.7229258241758243,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.4166666666666667,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/benchmarks-overstate-real-world-usefulness-because",
@@ -21184,9 +21140,9 @@
       "rating": null,
       "assertions": 4,
       "testable": 4,
-      "novelty": 0.8214285714285714,
+      "novelty": 0.9107142857142858,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-reliable-success-task-horizon-several",
@@ -21195,7 +21151,7 @@
         "ai-coding/length-tasks-agents-can-complete-autonomously"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21926,7 +21882,7 @@
       "testable": 9,
       "novelty": 0.6019624819624819,
       "redundancy": 0,
-      "thinEvidence": 0.3,
+      "thinEvidence": 0.2,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assistance-must-reliable-save-experts-time",
@@ -22340,7 +22296,7 @@
       "testable": 7,
       "novelty": 0.2364125457875458,
       "redundancy": 0,
-      "thinEvidence": 0.375,
+      "thinEvidence": 0.25,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/coding-productivity-gains-appear-only-after",
@@ -22353,7 +22309,7 @@
       "wrong": [
         "ai-coding/frontier-model-improvements-have-become-incremental"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22978,9 +22934,9 @@
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.48252976190476193,
+      "novelty": 0.49681547619047617,
       "redundancy": 0,
-      "thinEvidence": 0.125,
+      "thinEvidence": 0,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assistance-must-reliable-save-experts-time",
@@ -23096,9 +23052,9 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 1.8308630952380953,
+      "novelty": 1.8451488095238096,
       "redundancy": 0,
-      "thinEvidence": 0.18181818181818182,
+      "thinEvidence": 0,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/assistance-must-reliable-save-experts-time",
@@ -23504,7 +23460,7 @@
       "testable": 11,
       "novelty": 0.8978365384615383,
       "redundancy": 0,
-      "thinEvidence": 0.36363636363636365,
+      "thinEvidence": 0.2727272727272727,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/acceptance-rate-counts-generated-lines-poor",
@@ -23521,7 +23477,7 @@
       "wrong": [
         "ai-coding/frontier-model-improvements-have-become-incremental"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23627,9 +23583,9 @@
       "rating": null,
       "assertions": 7,
       "testable": 7,
-      "novelty": 0.6428571428571428,
+      "novelty": 0.6571428571428571,
       "redundancy": 0,
-      "thinEvidence": 0.8571428571428571,
+      "thinEvidence": 0.7142857142857143,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-should-keep-notes-external-scratchpad",
@@ -23641,7 +23597,7 @@
         "ai-coding/summarizing-pruning-conversation-history-keeps-long"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24080,7 +24036,7 @@
       "testable": 12,
       "novelty": 0.3877450980392157,
       "redundancy": 0,
-      "thinEvidence": 0.5,
+      "thinEvidence": 0.4166666666666667,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/cheaper-software-production-will-increase-total",
@@ -24098,7 +24054,7 @@
         "ai-coding/frontier-model-improvements-have-become-incremental",
         "ai-coding/open-weight-coding-models-now-handle"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24623,9 +24579,9 @@
       "rating": null,
       "assertions": 11,
       "testable": 11,
-      "novelty": 0.8783630952380952,
+      "novelty": 0.9676488095238096,
       "redundancy": 0,
-      "thinEvidence": 0.2727272727272727,
+      "thinEvidence": 0.09090909090909091,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/agents-reliable-success-task-horizon-several",
@@ -25248,9 +25204,9 @@
       "rating": null,
       "assertions": 10,
       "testable": 10,
-      "novelty": 0.6962202380952381,
+      "novelty": 0.7105059523809525,
       "redundancy": 0,
-      "thinEvidence": 0.3,
+      "thinEvidence": 0.2,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/assistance-must-reliable-save-experts-time",
@@ -25553,7 +25509,7 @@
         "ai-coding/when-agent-writes-both-code-tests"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26622,7 +26578,7 @@
       "testable": 11,
       "novelty": 0.7936067404817405,
       "redundancy": 0,
-      "thinEvidence": 0.45454545454545453,
+      "thinEvidence": 0.36363636363636365,
       "worthWatching": "mixed",
       "right": [
         "ai-coding/cheaper-software-production-will-increase-total",
@@ -26685,9 +26641,9 @@
       "rating": null,
       "assertions": 9,
       "testable": 8,
-      "novelty": 1.0627164502164503,
+      "novelty": 1.0770021645021646,
       "redundancy": 0,
-      "thinEvidence": 1,
+      "thinEvidence": 0.8888888888888888,
       "worthWatching": "new and sound",
       "right": [
         "ai-coding/coding-agents-deliberately-deceive-users-hide",
@@ -26698,7 +26654,7 @@
         "ai-coding/sandboxed-agents-can-escape-coordinate-through"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
