@@ -1,0 +1,468 @@
+---
+// The site as a tree: every page template, the object (from the Objects tab) it is the page of, and what it is for;
+// then the three states a story can be in on the site; then every link each page emits and why (read off the
+// templates in src/pages and src/components). Each box links to a live example on this dev server: the first public
+// topic with a live video if there is one, else the first with a matter page.
+import { commissionKey, commissionOf } from '../config/site';
+import { contentGraph, inquiryMatters, matterPath, type Node, urlOf } from '../lib/content-graph';
+import { loadDatasets } from '../lib/datasets';
+import { scriptDirs } from '../lib/script';
+import { publicTopicNames } from '../lib/topics';
+import { href } from '../lib/url';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
+
+const g = contentGraph();
+const nodes = [...g.nodes.values()];
+const liveVideo = nodes.find((n) => n.kind === 'video' && n.public);
+const liveShort = nodes.find((n) => n.kind === 'short' && n.public);
+const topics = publicTopicNames();
+const topic = liveVideo?.topic ?? topics.find((t) => inquiryMatters(g, t).length) ?? topics[0] ?? 'heat-pumps';
+const matters = inquiryMatters(g, topic);
+const videoStory: Node | undefined = liveVideo && g.nodes.get(liveVideo.story!);
+const matter = videoStory ? urlOf(g, videoStory.id) : (matters[0]?.href ?? matterPath(topic, { id: 'claim:example' }));
+const follow = matters.find((m) => m.follow.length)?.follow[0]?.href;
+const inst = commissionOf(topic);
+const instKey = inst ? commissionKey(inst) : 'spending';
+const hasData = loadDatasets(topic).length > 0;
+const script = scriptDirs().find((d) => d.topic === topic) ?? scriptDirs()[0];
+const slug = script?.slug ?? '<slug>';
+const scriptTopic = script?.topic ?? topic;
+const packaged = !!script && existsSync(join(script.dir, 'video', 'review', 'review.json'));
+
+type Page = {
+  level: number;
+  t: string;
+  path: string;
+  obj: string; // the object on the Objects tab this is the page of
+  why: string;
+  href?: string;
+  dev?: boolean;
+  dashed?: boolean; // exists only when its file or upload does
+  out?: boolean; // not a page of the site
+};
+const pub: Page[] = [
+  { level: 0, t: 'Home', path: '/', obj: 'the Record', why: 'the latest findings and the institutions', href: '/' },
+  {
+    level: 1,
+    t: 'Inquiries: the docket',
+    path: '/inquiries/',
+    obj: 'every Topic',
+    why: 'every inquiry under its institution with its matters; a list, not a level of the trail',
+    href: '/inquiries/',
+  },
+  {
+    level: 1,
+    t: 'Institutions',
+    path: '/institutions/',
+    obj: 'every Institution',
+    why: 'the directory of channels and their remits',
+    href: '/institutions/',
+  },
+  {
+    level: 2,
+    t: 'Institution',
+    path: '/commissions/<key>/',
+    obj: 'one Institution',
+    why: 'seal, remit, channel, its inquiries and its docket of matters',
+    href: `/commissions/${instKey}/`,
+  },
+  {
+    level: 3,
+    t: 'Inquiry: the full report',
+    path: '/<topic>/',
+    obj: 'one Topic',
+    why: 'every source as a numbered exhibit, every claim and verdict',
+    href: `/${topic}/`,
+  },
+  {
+    level: 4,
+    t: 'Data',
+    path: '/<topic>/data/',
+    obj: 'the Topic’s Datasets',
+    why: 'each dataset as chart, table, CSV and JSON; built only when the topic has one',
+    href: hasData ? `/${topic}/data/` : undefined,
+    dashed: !hasData,
+  },
+  {
+    level: 4,
+    t: 'Matter: the landing page',
+    path: '/<topic>/<story slug>/',
+    obj: 'one Story',
+    why: 'the answer, the video, the article, the evidence, the exhibits, the tool, what to read next',
+    href: matter ?? undefined,
+  },
+  {
+    level: 5,
+    t: 'Video on YouTube',
+    path: liveVideo?.url ?? 'https://youtu.be/<id>',
+    obj: 'the Story’s Build, once live',
+    why: 'shown on the matter page behind a poster; its description links the matter page',
+    href: liveVideo?.url,
+    dashed: !liveVideo,
+    out: true,
+  },
+  {
+    level: 5,
+    t: 'Short on YouTube',
+    path: liveShort?.url ?? 'https://youtube.com/shorts/<id>',
+    obj: 'one Short, once live',
+    why: 'listed under the video; its description links the video, then the matter page',
+    href: liveShort?.url,
+    dashed: !liveShort,
+    out: true,
+  },
+  {
+    level: 5,
+    t: 'Follow-up matter (a chain)',
+    path: '/<topic>/<next story slug>/',
+    obj: 'a Story with partOf',
+    why: 'its own answer and evidence; the video is on its first question’s page',
+    href: follow,
+    dashed: !follow,
+  },
+  {
+    level: 1,
+    t: 'About',
+    path: '/about/',
+    obj: 'the method',
+    why: 'how an inquiry is built, the labels, the publisher, the disclosure',
+    href: '/about/',
+  },
+  {
+    level: 1,
+    t: 'Moved matter',
+    path: '/<topic>/<old slug>/',
+    obj: 'a renamed Story',
+    why: 'a noindex redirect from moved.json; a public URL never disappears',
+    dashed: true,
+  },
+];
+const dev: Page[] = [
+  {
+    level: 0,
+    t: 'Admin',
+    path: '/admin',
+    obj: '',
+    why: 'the board, the pages, the path, the maps',
+    href: '/admin',
+    dev: true,
+  },
+  {
+    level: 1,
+    t: 'Board',
+    path: '/admin#board',
+    obj: 'every Story in production',
+    why: 'one row per video, who acts next, the What next? popover',
+    href: '/admin#board',
+    dev: true,
+  },
+  {
+    level: 1,
+    t: 'Story ideas',
+    path: '/<topic>/stories/',
+    obj: 'a Topic’s Stories',
+    why: 'every candidate with its evidence audit and readiness',
+    href: `/${topic}/stories/`,
+    dev: true,
+  },
+  {
+    level: 1,
+    t: 'Script',
+    path: '/<topic>/scripts/<slug>/',
+    obj: 'one Script and Storyboard',
+    why: 'the narration with the evidence behind every sentence',
+    href: script ? `/${scriptTopic}/scripts/${slug}/` : undefined,
+    dev: true,
+  },
+  {
+    level: 1,
+    t: 'Review video',
+    path: '/<topic>/review/<slug>',
+    obj: 'one Build and its Ledger',
+    why: 'watch the package; approve, send back, accept the draft, upload, go live',
+    href: packaged ? `/${scriptTopic}/review/${slug}` : undefined,
+    dev: true,
+  },
+  {
+    level: 2,
+    t: 'Review Short',
+    path: '/<topic>/review/<slug>/shorts/<short>',
+    obj: 'one Short',
+    why: 'the same page for a Short',
+    dev: true,
+  },
+];
+
+// The three states of a story on the site.
+const states = [
+  {
+    t: 'Under examination',
+    d: 'readiness is not ready: the matter page is built and listed (marked Under examination), but the story is not a public node: urlOf is null, so nothing features it, no call to action may point at it and no description links it.',
+  },
+  {
+    t: 'Ready, no video',
+    d: 'a public node: listed, featured and related like any matter; the page shows the answer and the evidence, and the article and tool once released; no video box, no "coming soon".',
+  },
+  {
+    t: 'Live video',
+    d: 'the ledger says published: the video (and its live Shorts) on the page behind a poster, video JSON-LD, and the matter sorts first in every list (matterOrder), so home and the docket lead with it. A follow-up has no video of its own and is never featured.',
+  },
+];
+
+// Every link a page emits, and why: read off the template named. `to` is the target page as named above.
+type Link = { to: string; why: string };
+const links: { page: string; file: string; links: Link[] }[] = [
+  {
+    page: 'Every page',
+    file: 'SiteHeader, SiteFooter, ReportHeader',
+    links: [
+      { to: 'Home', why: 'the header logo; the 404 and About point home too' },
+      { to: 'Inquiries, Institutions, About', why: 'the nav; Inquiries first, the topic list a visitor scans for' },
+      {
+        to: 'Institution, Inquiry',
+        why: 'the report header’s trail: each level above the page (a phone shows only the parent)',
+      },
+      { to: 'About #publisher, the channel, GitHub', why: 'the footer, with the disclosure once' },
+    ],
+  },
+  {
+    page: 'Home',
+    file: 'src/pages/index.astro, InstitutionCard',
+    links: [
+      {
+        to: 'Matter (six)',
+        why: 'Latest findings: the first six first questions in matterOrder (a live video first, then ready, then score), each with its share card and a label strip linking its #evidence-<label>',
+      },
+      { to: 'Institution', why: 'one card per institution that publishes a topic' },
+      { to: 'Inquiry', why: 'each card lists the institution’s inquiries' },
+      {
+        to: 'Matter (featured)',
+        why: 'each card features its institution’s first matter in matterOrder, never a follow-up: the best thing it has',
+      },
+      { to: 'Institutions', why: 'the full directory' },
+    ],
+  },
+  {
+    page: 'Inquiries',
+    file: 'src/pages/inquiries.astro, MatterList',
+    links: [
+      { to: 'Institution', why: 'each group’s heading, with the seal' },
+      { to: 'Inquiry', why: 'each inquiry under its institution, with its counts' },
+      { to: 'Matter (all)', why: 'every matter of every inquiry in matterOrder' },
+      { to: 'Institutions, About', why: 'the footer: the institutions with no inquiry yet' },
+    ],
+  },
+  {
+    page: 'Institutions',
+    file: 'src/pages/institutions.astro, InstitutionCard',
+    links: [{ to: 'Institution, Inquiry, Matter (featured)', why: 'the same cards as home, for every institution' }],
+  },
+  {
+    page: 'Institution',
+    file: 'src/pages/commissions/[id].astro, MatterList',
+    links: [
+      { to: 'Inquiry', why: 'its public inquiries, as cards and in the text' },
+      {
+        to: 'Matter (all)',
+        why: 'the docket: every matter of its inquiries in matterOrder, a follow-up under its first question',
+      },
+      { to: 'YouTube channel', why: 'only when the institution has a handle' },
+    ],
+  },
+  {
+    page: 'Inquiry',
+    file: 'src/pages/[topic]/index.astro, MatterList, SourceLink',
+    links: [
+      {
+        to: 'Matter (all)',
+        why: '#matters: every matter of the topic in matterOrder, marked Video or Under examination',
+      },
+      { to: 'Matter (one)', why: 'a recap group heading whose title is a story links to that matter' },
+      { to: 'Data', why: 'when the topic has a dataset: all its figures in one place' },
+      { to: 'outside: every source', why: 'the exhibits, numbered as in public-record.json, each to its original' },
+      { to: 'About #verdicts', why: 'how to read the labels' },
+      { to: 'Story ideas (dev only)', why: 'guarded by import.meta.env.DEV' },
+    ],
+  },
+  {
+    page: 'Data',
+    file: 'src/pages/[topic]/data/index.astro',
+    links: [
+      { to: 'Inquiry', why: 'the page it belongs beside' },
+      { to: 'CSV and JSON files', why: 'one download per dataset, written at build' },
+    ],
+  },
+  {
+    page: 'Matter',
+    file: 'src/pages/[topic]/[story].astro, VideoEmbed, NextSteps, MatterList',
+    links: [
+      { to: 'Video on YouTube', why: 'the poster facade once the video is live; chapter links seek into it' },
+      { to: 'Short on YouTube', why: 'each live Short, under the video' },
+      { to: 'Matter (first question)', why: 'a follow-up says the video is on its first question’s page, #video' },
+      { to: 'Matter (follow-ups)', why: 'Questions that follow: the chain, in order' },
+      {
+        to: 'Matter (related, up to four)',
+        why: 'pins from cta.json, then chain members, then the most shared claims, then the same inquiry, then the same institution',
+      },
+      {
+        to: 'Next: tool, article, evidence, data, video, inquiry, reference, paid',
+        why: 'the calls to action from cta.json, checked by cta.ts: one primary, at most two secondaries; a destination on this page is an anchor; a paid link is disclosed and rel=sponsored',
+      },
+      { to: 'Data', why: 'an article figure or the calculator names the table it reads' },
+      { to: 'Inquiry #sources, #matters', why: 'the exhibits are numbered as in the full report; all matters' },
+      { to: 'About #labels', why: 'how to read the finding labels' },
+    ],
+  },
+  {
+    page: 'Video and Short (outside)',
+    file: 'video/review/description.txt, from cta.json',
+    links: [
+      { to: 'Matter', why: 'the Links block always links the matter page; the disclosure once' },
+      {
+        to: 'Video on YouTube',
+        why: 'a Short’s description links the live video first; the related video is set in Studio',
+      },
+    ],
+  },
+];
+
+const W = 330,
+  H = 54,
+  ROW = 64,
+  IND = 34,
+  LEFT = 6,
+  TOP = 6,
+  WHY = 430;
+const x = (p: Page) => LEFT + p.level * IND;
+const y = (i: number) => TOP + i * ROW;
+const lines = (pages: Page[]) =>
+  pages.flatMap((p, i) => {
+    if (p.level === 0) return [];
+    let j = i - 1;
+    while (j >= 0 && pages[j].level >= p.level) j--;
+    return [`M${x(pages[j]) + 14} ${y(j) + H} V${y(i) + H / 2} H${x(p) - 2}`];
+  });
+const width = LEFT + 5 * IND + W + 12 + WHY;
+const heightOf = (pages: Page[]) => TOP + pages.length * ROW;
+const small = 'text-sm text-muted-foreground';
+---
+
+<p class={`mt-1 max-w-prose ${small}`}>
+  The site is a tree: Record, institution, inquiry, matter, with the data page beside its inquiry. The inquiry page is
+  the page of a <strong>Topic</strong> and the matter page the page of a <strong>Story</strong>, the same objects as on
+  the Objects tab; the video and its Shorts are the Story's Build, on YouTube. Every link is built from a content-graph
+  id by <code>urlOf</code>, never from a title. Dashed boxes exist only when their file or upload does. Each box links
+  to an example on this dev server (or to YouTube).
+</p>
+{
+  [
+    { id: 'public', title: 'Public pages (built into dist/) and the videos', pages: pub },
+    { id: 'dev', title: 'Working pages (dev server only, never built)', pages: dev },
+  ].map((part) => (
+    <section class="mt-6" aria-labelledby={`sitemap-${part.id}`}>
+      <h3 id={`sitemap-${part.id}`} class="font-semibold">
+        {part.title}
+      </h3>
+      <svg
+        class="mt-2 w-full max-w-5xl"
+        viewBox={`0 0 ${width} ${heightOf(part.pages)}`}
+        role="img"
+        aria-labelledby={`sitemap-${part.id}-t`}
+      >
+        <title id={`sitemap-${part.id}-t`}>
+          {part.title}, as a tree of page templates with their paths, their object and what each is for
+        </title>
+        <g style="fill: none; stroke: var(--muted-foreground); stroke-width: 1.3">
+          {lines(part.pages).map((d) => (
+            <path d={d} />
+          ))}
+        </g>
+        {part.pages.map((p, i) => (
+          <g>
+            <a href={p.href ? (p.out ? p.href : href(p.href)) : undefined}>
+              <rect
+                x={x(p)}
+                y={y(i)}
+                width={W}
+                height={H}
+                rx="7"
+                stroke-dasharray={p.dashed ? '5 4' : undefined}
+                style={`fill: var(${p.dev ? '--accent' : p.out ? '--muted' : '--card'}); stroke: var(--border); stroke-width: 1.5`}
+              />
+              <text x={x(p) + 10} y={y(i) + 21} style="font-size: 13px; font-weight: 600; fill: var(--foreground)">
+                {p.t}
+              </text>
+              <text
+                x={x(p) + 10}
+                y={y(i) + 40}
+                style={`font-size: 11px; font-family: var(--font-mono); fill: var(${p.href ? '--primary' : '--muted-foreground'})`}
+              >
+                {p.path.length > 44 ? `${p.path.slice(0, 43)}…` : p.path}
+              </text>
+            </a>
+            <text
+              x={LEFT + 5 * IND + W + 12}
+              y={y(i) + 21}
+              style="font-size: 11px; font-weight: 600; fill: var(--foreground)"
+            >
+              {p.obj}
+            </text>
+            <text x={LEFT + 5 * IND + W + 12} y={y(i) + 37} style="font-size: 11px; fill: var(--muted-foreground)">
+              {p.why}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </section>
+  ))
+}
+
+<h3 class="mt-8 font-semibold">A story on the site: three states</h3>
+<ul class="mt-2 grid max-w-4xl gap-2 text-sm">
+  {
+    states.map((s) => (
+      <li class="rounded-lg border bg-card p-3">
+        <strong>{s.t}</strong>
+        <span class="text-muted-foreground"> {s.d}</span>
+      </li>
+    ))
+  }
+</ul>
+
+<h3 class="mt-8 font-semibold">Every link each page makes, and why</h3>
+<p class={`mt-1 max-w-prose ${small}`}>
+  Read off the templates named in the first column. Lists of matters are always <code>MatterList</code> in
+  <code>matterOrder</code>; a list that mixes kinds of page marks each with its icon.
+</p>
+<div class="mt-3 overflow-x-auto">
+  <table class="w-full max-w-5xl text-sm">
+    <thead class="text-left text-xs text-muted-foreground uppercase">
+      <tr>
+        <th class="py-1 pr-3 font-medium">From</th>
+        <th class="py-1 pr-3 font-medium">To</th>
+        <th class="py-1 font-medium">Why</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        links.flatMap((p) =>
+          p.links.map((l, i) => (
+            <tr class={`align-top ${i === 0 ? 'border-t' : ''}`}>
+              <th scope="row" class="py-1 pr-3 text-left font-medium">
+                {i === 0 && (
+                  <>
+                    {p.page}
+                    <div class="font-mono text-[11px] font-normal text-muted-foreground">{p.file}</div>
+                  </>
+                )}
+              </th>
+              <td class="py-1 pr-3 whitespace-nowrap">{l.to}</td>
+              <td class="py-1 text-muted-foreground">{l.why}</td>
+            </tr>
+          )),
+        )
+      }
+    </tbody>
+  </table>
+</div>

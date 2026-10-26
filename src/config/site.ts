@@ -13,6 +13,7 @@ export const site = {
   locale: 'en-US',
   url: 'https://commonwealthofreason.com/', // the canonical public URL; used where Astro's href() is not available (the review package)
   nav: [
+    { label: 'Inquiries', href: '/inquiries/' },
     { label: 'Institutions', href: '/institutions/' },
     { label: 'About', href: '/about/' },
   ],

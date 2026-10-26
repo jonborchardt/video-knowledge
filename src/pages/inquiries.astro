@@ -1,0 +1,99 @@
+---
+// The docket: every public inquiry of the Commonwealth under the institution that holds it, with the matters each has
+// taken up (MatterList, in matterOrder: a live video first). A list, not a level of the tree: the trail stays Record,
+// institution, inquiry, matter. It exists so a visitor scanning for a topic finds it in one click from the nav
+// without the institutions being flattened away.
+import Base from '../layouts/Base.astro';
+import KindIcon from '../components/KindIcon.astro';
+import MatterList from '../components/MatterList.astro';
+import SourceIcons from '../components/SourceIcons.astro';
+import { contentGraph, inquiryMatters } from '../lib/content-graph';
+import { commissionKey, commissions, site } from '../config/site';
+import { breadcrumbJsonLd, collectionJsonLd } from '../lib/seo';
+import { loadTopic, publicTopicNames } from '../lib/topics';
+import { href } from '../lib/url';
+
+const names = new Set(publicTopicNames());
+const graph = contentGraph();
+const fmt = (n: number) => n.toLocaleString('en-US');
+const docket = Object.values(commissions)
+  .map((c) => ({
+    c,
+    key: commissionKey(c),
+    inquiries: c.topics
+      .filter((n) => names.has(n))
+      .map((n) => {
+        const t = loadTopic(n);
+        const items = inquiryMatters(graph, n);
+        return { t, items, videos: items.filter((m) => m.video).length };
+      }),
+  }))
+  .filter((d) => d.inquiries.length);
+const total = docket.flatMap((d) => d.inquiries).length;
+const description = `Every public inquiry of ${site.name}, under the institution that holds it, with the matters each has taken up.`;
+---
+
+<Base
+  title={`Inquiries · ${site.name}`}
+  description={description}
+  jsonLd={[
+    collectionJsonLd(`Public inquiries of ${site.name}`, description, '/inquiries/', Astro.site!),
+    breadcrumbJsonLd(
+      [
+        { name: site.name, path: '/' },
+        { name: 'Inquiries', path: '/inquiries/' },
+      ],
+      Astro.site!,
+    ),
+  ]}
+>
+  <SourceIcons />
+  <header class="grid gap-3 border-b pb-8">
+    <div class="eyebrow text-muted-foreground"><a href={href('/')}>{site.publicRecord}</a></div>
+    <h1 class="text-display font-bold">The public inquiries</h1>
+    <p class="max-w-prose text-lg">
+      {total === 1 ? 'The one inquiry' : `The ${fmt(total)} inquiries`} the Commonwealth has opened, each under the institution
+      that holds it, with every matter it has taken up. A matter with a video comes first; one under examination has its evidence
+      still being weighed.
+    </p>
+  </header>
+
+  {
+    docket.map(({ c, key, inquiries }) => (
+      <section aria-labelledby={`inst-${key}`} class="grid gap-4">
+        <h2 id={`inst-${key}`} class="flex items-center gap-3 text-featured font-bold">
+          <img class="size-10" src={href(`/commissions/${key}.png`)} alt="" width="256" height="256" loading="lazy" />
+          <a class="no-underline hover:underline" href={href(`/commissions/${key}/`)}>
+            {c.ceremonialName}
+          </a>
+        </h2>
+        {inquiries.map(({ t, items, videos }) => (
+          <section aria-labelledby={`inq-${t.name}`} class="grid gap-2 border-l-2 pl-4">
+            <h3 id={`inq-${t.name}`} class="flex items-baseline gap-2 text-title font-bold">
+              <KindIcon kind="inquiry" class="text-muted-foreground" />
+              <a href={href(`/${t.name}/`)}>{t.label}</a>
+            </h3>
+            <p class="font-mono text-xs text-muted-foreground">
+              {fmt(t.counted)} sources · {fmt(t.claims.length)} claims · {fmt(t.studies)} studies · {fmt(items.length)}{' '}
+              {items.length === 1 ? 'matter' : 'matters'}
+              {videos > 0 && ` · ${fmt(videos)} with a video`}
+            </p>
+            {items.length > 0 ? (
+              <MatterList items={items} />
+            ) : (
+              <p class="text-sm text-muted-foreground">No matter before the institution yet; the record is open.</p>
+            )}
+          </section>
+        ))}
+      </section>
+    ))
+  }
+
+  <footer class="grid gap-2 border-y-4 border-double py-5 text-sm text-muted-foreground">
+    <div class="eyebrow text-gold">{site.publicRecord}</div>
+    <p class="max-w-prose">
+      <a href={href('/institutions/')}>The institutions</a>, including those with no inquiry open yet, and{' '}
+      <a href={href('/about/')}>how an inquiry is built</a>.
+    </p>
+  </footer>
+</Base>

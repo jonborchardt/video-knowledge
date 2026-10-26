@@ -24,6 +24,7 @@ const storyPages = publicTopicNames().flatMap((topic) =>
 const pages = [
   'index.html',
   'about/index.html',
+  'inquiries/index.html',
   'institutions/index.html',
   ...Object.keys(commissions).map((k) => `commissions/${k}/index.html`),
   ...publicTopicNames().map((n) => `${n}/index.html`),
@@ -76,7 +77,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       (d) => d.isDirectory() && !['_astro', 'og', 'stamps'].includes(d.name),
     );
     expect(dirs.map((d) => d.name).sort()).toEqual(
-      ['about', 'commissions', 'institutions', ...publicTopicNames()].sort(),
+      ['about', 'commissions', 'inquiries', 'institutions', ...publicTopicNames()].sort(),
     );
     for (const n of topicNames()) {
       expect(existsSync(join(DIST, n, 'stories')), `${n}/stories`).toBe(false);
@@ -90,7 +91,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
         e.isDirectory() ? files(join(d, e.name)) : [join(d, e.name)],
       );
     expect(files(DIST).filter((f) => f.endsWith('.mp4'))).toEqual([]);
-    expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain(`href="${BASE}production/"`);
+    expect(readFileSync(join(DIST, 'index.html'), 'utf8')).not.toContain(`href="${BASE}admin`);
   });
 
   it('the directory lists every institution, links only real channels and features a story', () => {
@@ -337,7 +338,7 @@ describe.skipIf(!existsSync(DIST))('built site', () => {
       expect(sitemap).toContain(`<loc>${SITE}${BASE}${p.replace('index.html', '')}</loc>`);
     }
     expect(sitemap).not.toContain('404');
-    expect(sitemap).not.toContain('/production/');
+    expect(sitemap).not.toContain('/admin');
   });
 
   it('about page marks its nav link as current', () => {

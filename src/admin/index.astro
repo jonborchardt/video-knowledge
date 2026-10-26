@@ -1,45 +1,19 @@
 ---
-// Every working page the public nav leaves out, all dev-only (astro.config.mjs): the production board, each topic's
-// story ideas, and per script its script page, the review page of its video and the review page of each of its Shorts.
-import { existsSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
+// The admin page, dev-only (astro.config.mjs): the production board (Board.astro: the board, stages, pipeline and
+// artifacts tabs), the external services, and the maps of the workflow and the site.
 import TabBar from '../components/TabBar.astro';
+import Board from './Board.astro';
 import Base from '../layouts/Base.astro';
-import { readJson } from '../lib/io';
-import { FILES, type Script, scriptDirs } from '../lib/script';
-import { storyTopicNames } from '../lib/stories';
-import { href } from '../lib/url';
+import ObjectsDiagram from './ObjectsDiagram.astro';
+import PathDiagram from './PathDiagram.astro';
+import PlansDiagram from './PlansDiagram.astro';
 import { serviceGroups } from './services';
+import SiteMapDiagram from './SiteMapDiagram.astro';
 
-/** The review package's title and build kind, or null when nothing is packaged yet. */
-const packageOf = (dir: string) => {
-  const rp = readJson<{ title: string; status: string }>(join(dir, 'video', 'review', 'review.json'));
-  // a draft's working title carries a [PRIVATE REVIEW] prefix; the kind already says it is a draft
-  return rp
-    ? {
-        title: rp.title.replace(/^\[[^\]]*\]\s*/, ''),
-        kind: rp.status === 'release build' ? 'release build' : 'draft build',
-      }
-    : null;
-};
-const scripts = scriptDirs().map((d) => {
-  const shortsDir = join(d.dir, 'shorts');
-  return {
-    ...d,
-    title: readJson<Script>(join(d.dir, FILES.script))?.title ?? d.slug,
-    pkg: packageOf(d.dir),
-    shorts: existsSync(shortsDir)
-      ? readdirSync(shortsDir, { withFileTypes: true })
-          .filter((e) => e.isDirectory())
-          .map((e) => ({ slug: e.name, pkg: packageOf(join(shortsDir, e.name)) }))
-      : [],
-  };
-});
 const small = 'text-sm text-muted-foreground';
 // One icon per kind of page, from the sprite in the template (the SourceIcons style: 16px, currentColor).
 const ico = 'size-4 shrink-0';
 const row = 'flex items-center gap-2';
-const KIND: Record<string, string> = { 'draft build': 'text-warning', 'release build': 'text-success' };
 
 // The whole workflow, top to bottom: `you` steps are a person's, the rest an agent's or a CLI's; `planned` is not built
 // yet. Keep it current: a change to a stage, a halt a person resolves or a human step changes this list (CLAUDE.md).
@@ -259,41 +233,22 @@ const edges = flow.slice(1).map((s, i) => {
   return { d: `M${mid(a.you)} ${y1} V${m} H${mid(s.you)} V${y2 - 2}`, label: i === back ? 'accept the draft' : '' };
 });
 const tabs = [
-  { id: 'videos', label: 'Videos' },
-  { id: 'flow', label: 'Workflow' },
+  { id: 'board', label: 'Board' },
+  { id: 'stages', label: 'Stages' },
+  { id: 'pipeline', label: 'Pipeline' },
+  { id: 'artifacts', label: 'Artifacts' },
   { id: 'services', label: 'External services' },
+  { id: 'path', label: 'Your path' },
+  { id: 'flow', label: 'Every step' },
+  { id: 'objects', label: 'Objects' },
+  { id: 'sitemap', label: 'Site map' },
+  { id: 'plans', label: 'Plans 1 to 4' },
 ];
 const fig = { width: 780, height: yOf(flow.length) };
 ---
 
 <Base title="Admin" noindex>
   <svg aria-hidden="true" width="0" height="0" class="absolute">
-    <symbol id="adm-board" viewBox="0 0 16 16">
-      <rect x="1.5" y="2" width="13" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
-      <path d="M6 2v12M10.5 2v12" stroke="currentColor" stroke-width="1.2"></path>
-    </symbol>
-    <symbol id="adm-ideas" viewBox="0 0 16 16">
-      <path
-        d="M8 1.8a4.4 4.4 0 0 0-2.6 8c.5.4.8 1 .8 1.6v.6h3.6v-.6c0-.6.3-1.2.8-1.6A4.4 4.4 0 0 0 8 1.8z"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.3"
-        stroke-linejoin="round"></path>
-      <path d="M6.3 14.2h3.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path>
-    </symbol>
-    <symbol id="adm-script" viewBox="0 0 16 16">
-      <path d="M3.5 1.5h6l3 3v10h-9z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"
-      ></path>
-      <path d="M5.5 7.5h5M5.5 10h5M5.5 12.5h3" stroke="currentColor" stroke-width="1.2"></path>
-    </symbol>
-    <symbol id="adm-video" viewBox="0 0 16 16">
-      <rect x="1" y="3" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
-      <path d="M6.5 5.8v4.4L10.3 8z" fill="currentColor"></path>
-    </symbol>
-    <symbol id="adm-short" viewBox="0 0 16 16">
-      <rect x="4" y="1" width="8" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"></rect>
-      <path d="M7 6.3v3.4L9.8 8z" fill="currentColor"></path>
-    </symbol>
     <symbol id="adm-youtube" viewBox="0 0 16 16">
       <rect x="1" y="3" width="14" height="10" rx="3.5" fill="currentColor"></rect>
       <path d="M6.6 5.8v4.4L10.4 8z" style="fill: var(--card)"></path>
@@ -345,108 +300,63 @@ const fig = { width: 780, height: yOf(flow.length) };
 
   <TabBar tabs={tabs} label="Admin sections" />
 
-  <section id="videos" class="mt-6">
-    <p class={`mt-2 ${row}`}>
-      <svg class={ico} aria-hidden="true"><use href="#adm-board"></use></svg>
-      <a href={href('/production/')}>Production board</a>
-      <span class={small}>every video, who acts next, and the next step's command or prompt</span>
-    </p>
-    <p class={`mt-4 max-w-prose ${small}`}>Each script has up to three kinds of page:</p>
-    <ul class="mt-2 grid max-w-prose gap-1 text-sm">
-      <li class={row}>
-        <svg class={ico} aria-hidden="true"><use href="#adm-script"></use></svg>
-        <span><strong>Script</strong>: the narration, the evidence behind every sentence, the storyboard.</span>
-      </li>
-      <li class={row}>
-        <svg class={ico} aria-hidden="true"><use href="#adm-video"></use></svg>
-        <span
-          ><strong>Review video</strong>: watch the packaged landscape video, see its QA and script findings at their
-          moment, approve it or send it back, upload and publish it.</span
-        >
-      </li>
-      <li class={row}>
-        <svg class={ico} aria-hidden="true"><use href="#adm-short"></use></svg>
-        <span
-          ><strong>Review Short</strong>: the same for one of the video's vertical Shorts, made before the video
-          launches and approved on its own; they launch together, the video first.</span
-        >
-      </li>
-    </ul>
-    <p class={`mt-2 ${small}`}>
-      <span class="text-warning">draft build</span>: the draft voice, review only.{' '}
-      <span class="text-success">release build</span>: the release voice, can be approved and published.
-    </p>
+  <Board />
 
-    {
-      storyTopicNames().map((name) => (
-        <section class="mt-8" aria-labelledby={`topic-${name}`}>
-          <h2 id={`topic-${name}`} class="text-title font-semibold">
-            {name}
-          </h2>
-          <p class={`mt-1 ${row}`}>
-            <svg class={ico} aria-hidden="true">
-              <use href="#adm-ideas" />
-            </svg>
-            <a href={href(`/${name}/stories/`)}>Story ideas</a>
-            <span class={small}>the topic's story candidates and their evidence check</span>
-          </p>
-          <ul class="mt-3 grid gap-3">
-            {scripts
-              .filter((d) => d.topic === name)
-              .map((d) => (
-                <li class="rounded-lg border bg-card p-3 text-card-foreground">
-                  <div class="font-medium">{d.title}</div>
-                  <div class={`${small} font-mono text-xs`}>{d.slug}</div>
-                  <ul class="mt-2 grid gap-1 text-sm">
-                    <li class={row}>
-                      <svg class={ico} aria-hidden="true">
-                        <use href="#adm-script" />
-                      </svg>
-                      <a href={href(`/${name}/scripts/${d.slug}/`)}>Script</a>
-                    </li>
-                    <li class={row}>
-                      <svg class={ico} aria-hidden="true">
-                        <use href="#adm-video" />
-                      </svg>
-                      {d.pkg ? (
-                        <>
-                          <a href={href(`/${name}/review/${d.slug}`)}>Review video</a>
-                          <span class={KIND[d.pkg.kind]}>{d.pkg.kind}</span>
-                        </>
-                      ) : (
-                        <span class={small}>Review video: not packaged yet</span>
-                      )}
-                    </li>
-                    {d.shorts.map((s) => (
-                      <li class={row}>
-                        <svg class={ico} aria-hidden="true">
-                          <use href="#adm-short" />
-                        </svg>
-                        {s.pkg ? (
-                          <span>
-                            <a href={href(`/${name}/review/${d.slug}/shorts/${s.slug}`)}>Review Short: {s.pkg.title}</a>{' '}
-                            <span class={KIND[s.pkg.kind]}>{s.pkg.kind}</span>
-                          </span>
-                        ) : (
-                          <span class={small}>Review Short {s.slug}: not packaged yet</span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
+  <section id="services" class="mt-6" aria-labelledby="services-h">
+    <h2 id="services-h" class="text-title font-semibold">External services</h2>
+    <p class={`mt-1 max-w-prose ${small}`}>
+      Where the channels, the upload credentials, the API, the release voice and the hosting are managed. Links open in
+      a new tab; the frequent ones are first and in bold. Credentials live in <code>.env</code> and <code
+        >.secrets/</code
+      >, never here.
+    </p>
+    <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        serviceGroups.map((g, i) => (
+          <section class="rounded-lg border bg-card p-3 text-card-foreground" aria-labelledby={`service-${i}`}>
+            <h3 id={`service-${i}`} class={`${row} font-medium`}>
+              <svg class={ico} aria-hidden="true">
+                <use href={`#adm-${g.icon}`} />
+              </svg>
+              {g.title}
+            </h3>
+            {g.ids.length > 0 && (
+              <dl class={`mt-1 ${small} text-xs`}>
+                {g.ids.map((id) => (
+                  <div>
+                    <dt class="inline">{id.label}:</dt> <dd class="inline font-mono break-all">{id.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            <ul class="mt-2 grid gap-1 text-sm">
+              {g.links.map((l) => (
+                <li>
+                  <a href={l.url} target="_blank" rel="noopener noreferrer" class={l.primary ? 'font-semibold' : ''}>
+                    {l.label}
+                    <span class="sr-only"> (opens in a new tab)</span>
+                  </a>{' '}
+                  <span class={small}>{l.d}</span>
                 </li>
               ))}
-          </ul>
-        </section>
-      ))
-    }
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="path" class="mt-6" aria-labelledby="path-h">
+    <h2 id="path-h" class="text-title font-semibold">Your path: one story, found to posted</h2>
+    <PathDiagram />
   </section>
 
   <section id="flow" class="mt-6" aria-labelledby="flow-h">
-    <h2 id="flow-h" class="text-title font-semibold">The workflow</h2>
+    <h2 id="flow-h" class="text-title font-semibold">Every step of the workflow</h2>
     <p class={`mt-1 max-w-prose ${small}`}>
-      What you do, and what the agents and CLIs do between your steps. A red row on the board means /produce stopped (a
-      revision limit, a story that left the list, a <code>stop:</code> step): fix what it names and paste the same prompt
-      again.
+      The full list behind Your path: what you do, and what the agents and CLIs do between your steps. A red row on the
+      board means /produce stopped (a revision limit, a story that left the list, a <code>stop:</code> step): fix what it
+      names and paste the same prompt again.
     </p>
     <svg
       class="mt-4 w-full max-w-3xl"
@@ -520,47 +430,18 @@ const fig = { width: 780, height: yOf(flow.length) };
     </svg>
   </section>
 
-  <section id="services" class="mt-6" aria-labelledby="services-h">
-    <h2 id="services-h" class="text-title font-semibold">External services</h2>
-    <p class={`mt-1 max-w-prose ${small}`}>
-      Where the channels, the upload credentials, the API, the release voice and the hosting are managed. Links open in
-      a new tab; the frequent ones are first and in bold. Credentials live in <code>.env</code> and <code
-        >.secrets/</code
-      >, never here.
-    </p>
-    <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        serviceGroups.map((g, i) => (
-          <section class="rounded-lg border bg-card p-3 text-card-foreground" aria-labelledby={`service-${i}`}>
-            <h3 id={`service-${i}`} class={`${row} font-medium`}>
-              <svg class={ico} aria-hidden="true">
-                <use href={`#adm-${g.icon}`} />
-              </svg>
-              {g.title}
-            </h3>
-            {g.ids.length > 0 && (
-              <dl class={`mt-1 ${small} text-xs`}>
-                {g.ids.map((id) => (
-                  <div>
-                    <dt class="inline">{id.label}:</dt> <dd class="inline font-mono break-all">{id.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            )}
-            <ul class="mt-2 grid gap-1 text-sm">
-              {g.links.map((l) => (
-                <li>
-                  <a href={l.url} target="_blank" rel="noopener noreferrer" class={l.primary ? 'font-semibold' : ''}>
-                    {l.label}
-                    <span class="sr-only"> (opens in a new tab)</span>
-                  </a>{' '}
-                  <span class={small}>{l.d}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
-      }
-    </div>
+  <section id="objects" class="mt-6" aria-labelledby="objects-h">
+    <h2 id="objects-h" class="text-title font-semibold">The objects and how they relate</h2>
+    <ObjectsDiagram />
+  </section>
+
+  <section id="sitemap" class="mt-6" aria-labelledby="sitemap-h">
+    <h2 id="sitemap-h" class="text-title font-semibold">The site: what links where, and why</h2>
+    <SiteMapDiagram />
+  </section>
+
+  <section id="plans" class="mt-6" aria-labelledby="plans-h">
+    <h2 id="plans-h" class="text-title font-semibold">What plans 1 to 4 added</h2>
+    <PlansDiagram />
   </section>
 </Base>

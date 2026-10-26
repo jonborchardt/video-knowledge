@@ -1,0 +1,1008 @@
+---
+// The production board's four tabs of the admin page (index.astro), each a `main > section` with its tab's id:
+// Board, one row per video across topics (a chain is one row; its follow-up questions get none), in the state of who
+// acts next (src/lib/production.ts columnOf), sortable and filterable, the strip in a row the production stages;
+// Stages, the same videos and their Shorts grouped by that state, each linking the page where the work happens;
+// Pipeline, each topic's research pipeline; Artifacts, artifact-by-artifact inspection of every script directory.
+import NextStep from '../components/NextStep.astro';
+import { site } from '../config/site';
+import {
+  type ArticleState,
+  board,
+  type Check,
+  type Column,
+  COLUMNS,
+  columnOf,
+  type Health,
+  mainState,
+  PRODUCTION_STAGES,
+  type OutputView,
+  shortColumnOf,
+  type ShortRow,
+  type StoryRow,
+} from '../lib/production';
+import { contentGraph, storyNode } from '../lib/content-graph';
+import { loadCta, resolveCtas } from '../lib/cta';
+import { loadLedger } from '../lib/publish';
+import { storySlug } from '../lib/script';
+import { href } from '../lib/url';
+
+const topics = board();
+const rows = topics.flatMap((t) => t.stories.map((s) => ({ ...s, topic: t.topic })));
+const productions = rows.filter((s) => s.production);
+// One row per video, in board order (who acts next), best first within a state; follow-ups ride on their chain.
+const videos = rows
+  .filter((r) => columnOf(r))
+  .sort(
+    (a, b) =>
+      COLUMNS.indexOf(columnOf(a)!) - COLUMNS.indexOf(columnOf(b)!) || b.story.scores.overall - a.story.scores.overall,
+  );
+// Table headers; a type makes the column sortable (the script below reads a cell's data-sort, else its text).
+const SORTABLE = [
+  ['Topic', 'text'],
+  ['Title', 'text'],
+  ['Question', 'text'],
+  ['Overall', 'num'],
+  ['Editorial', 'num'],
+  ['Evidence', 'num'],
+  ['Claims', 'num'],
+  ['State', 'num'],
+  ['Outputs', ''],
+  ['Article', ''],
+  ['Next', ''],
+  ['Notes', ''],
+] as const;
+type Row = (typeof rows)[number];
+// A chain's row carries every question it answers and the claims of all of them.
+const followUps = (r: Row) =>
+  (r.story.chain ?? [])
+    .map((c) => rows.find((x) => x.topic.name === r.topic.name && x.story.id === c.id)?.story)
+    .filter((s) => s?.partOf === r.story.id);
+// Halts /produce stops on (.claude/skills/produce/SKILL.md): a person must act; every other halt is its next step.
+// A failed publishing step is the same kind of stop: the ledger's last event says what went wrong.
+const stopped = (r: StoryRow) =>
+  (!!r.production &&
+    (['revision-limit', 'story-left'].includes(r.production.halt?.kind ?? '') || r.next.startsWith('stop:'))) ||
+  !!mainState(r.production)?.failed;
+const outputs = (r: StoryRow): OutputView[] => r.production?.publish?.outputs ?? [];
+// An output chip's colour: red when its last step failed, amber when the build or metadata on disk is ahead of the platform.
+const outputColour = (o: OutputView) =>
+  o.state.failed
+    ? 'text-destructive'
+    : o.state.status.endsWith('-behind') || o.state.due
+      ? 'text-warning'
+      : o.state.status === 'published'
+        ? 'text-success'
+        : '';
+const claimsOf = (r: Row) => new Set([r.story, ...followUps(r)].flatMap((s) => s?.claims ?? [])).size;
+const HEALTH: Record<Health, { label: string; colour: string }> = {
+  done: { label: 'done', colour: 'text-success' },
+  current: { label: 'current', colour: 'text-success' },
+  pending: { label: 'pending', colour: 'text-warning' },
+  stale: { label: 'stale', colour: 'text-warning' },
+  blocked: { label: 'blocked', colour: 'text-destructive' },
+  missing: { label: 'missing', colour: 'text-muted-foreground' },
+};
+// The article's side track: never red, since it never stops /produce.
+const ARTICLE: Record<ArticleState, string> = {
+  none: 'text-muted-foreground',
+  writing: 'text-warning',
+  review: 'text-warning',
+  blocked: 'text-warning',
+  released: 'text-success',
+  changed: 'text-warning',
+  stale: 'text-warning',
+};
+const COLUMN: Record<Column, { label: string; help: string; colour: string }> = {
+  'needs-research': {
+    label: 'Needs research',
+    help: 'essential evidence missing (scripts/briefs/sources.md)',
+    colour: 'text-primary',
+  },
+  'needs-review': { label: 'Needs review', help: 'a person settles the listed points', colour: 'text-warning' },
+  ready: { label: 'Ready to produce', help: 'start it with /produce', colour: 'text-success' },
+  producing: {
+    label: 'In production',
+    help: '/produce is on it; the strip shows the stage, red means it stopped and needs you',
+    colour: '',
+  },
+  'draft-review': {
+    label: 'Draft review',
+    help: 'the draft build (edge voice) is packaged: watch it on the review page, send it back with notes or accept it with video final',
+    colour: 'text-warning',
+  },
+  'your-review': {
+    label: 'Your review',
+    help: 'the release build is packaged: upload it privately and record the upload (publish.json)',
+    colour: 'text-success',
+  },
+  uploaded: {
+    label: 'Uploaded',
+    help: 'the release build is uploaded privately: watch it, then approve it with every checklist item ticked (publish.json)',
+    colour: 'text-warning',
+  },
+  'changes-requested': {
+    label: 'Changes requested',
+    help: 'a reviewer sent this build back: paste the send-back prompt (it carries the notes) into Claude Code',
+    colour: 'text-warning',
+  },
+  approved: {
+    label: 'Approved',
+    help: 'the uploaded build is approved and its Shorts are done: set it public or schedule it, then record that (publish.json)',
+    colour: 'text-success',
+  },
+  shorts: {
+    label: 'Shorts',
+    help: 'approved, but its Shorts are not: find the candidates (shorts discover), review them (scripts/briefs/shorts.md), produce and approve each; they launch with the video',
+    colour: 'text-warning',
+  },
+  scheduled: { label: 'Scheduled', help: 'scheduled on YouTube (publish.json)', colour: 'text-success' },
+  published: { label: 'Published', help: 'live (publish.json)', colour: 'text-success' },
+  parked: { label: 'Parked', help: 'production.json', colour: 'text-muted-foreground' },
+};
+const badge =
+  'inline-block rounded-sm border border-current px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] whitespace-nowrap uppercase';
+const small = 'text-sm text-muted-foreground';
+// A filter tag: a hidden checkbox in a chip that fills when checked; the focus ring follows the keyboard.
+const tag =
+  'cursor-pointer rounded-full border px-2 py-0.5 text-xs select-none hover:bg-muted has-checked:border-primary has-checked:bg-primary has-checked:text-primary-foreground has-focus-visible:ring-2 has-focus-visible:ring-ring';
+const mono = 'font-mono text-xs [overflow-wrap:anywhere]';
+const blob = (file: string) => `${site.repo}/blob/main/${file}`;
+const day = (iso?: string) => (iso ? iso.slice(0, 10) : '');
+const chip = (c: Check) => `${c.name}: ${c.health}`;
+// The ledger's events for one output, for the audit trail (the view carries states; the file carries the log).
+const ledgerEvents = (p: NonNullable<StoryRow['production']>, output: string) =>
+  loadLedger(p.topic, p.story)?.outputs[output]?.events ?? [];
+const rowHealth = (r: StoryRow): Health =>
+  r.production ? r.production.health : r.story.readiness === 'ready' ? 'current' : 'pending';
+// The production stages in a row: what has run, the stage it is at, and what is still to come.
+// Where the work of a state happens: the story ideas page while the story is researched or settled, the script page
+// while /produce runs, the review page once there is a package; the Artifacts tab's inspection block is the fallback.
+const PAGE: Record<Column, 'stories' | 'script' | 'review' | 'artifacts'> = {
+  'needs-research': 'stories',
+  'needs-review': 'stories',
+  ready: 'stories',
+  producing: 'script',
+  parked: 'script',
+  'draft-review': 'review',
+  'your-review': 'review',
+  'changes-requested': 'review',
+  uploaded: 'review',
+  approved: 'review',
+  shorts: 'artifacts', // the video's block lists its Shorts, each with its next step
+  scheduled: 'review',
+  published: 'review',
+};
+const workPageOf = (r: Row, c: Column) =>
+  PAGE[c] === 'stories' || !r.production
+    ? href(`/${r.topic.name}/stories/`)
+    : PAGE[c] === 'script'
+      ? href(`/${r.topic.name}/scripts/${r.production.slug}/`)
+      : PAGE[c] === 'artifacts'
+        ? `#${r.topic.name}-${r.production.slug}`
+        : href(`/${r.topic.name}/review/${storySlug(r.story.id)}`);
+const shortPageOf = (r: Row, s: ShortRow, c: Column) =>
+  PAGE[c] === 'review' && s.slug
+    ? href(`/${r.topic.name}/review/${storySlug(r.story.id)}/shorts/${s.slug}`)
+    : `#${r.topic.name}-${r.production!.slug}`;
+// The Stages tab: every video and Short in each state, in board order.
+const stages = COLUMNS.map((c) => ({
+  c,
+  videos: videos.filter((r) => columnOf(r) === c),
+  shorts: videos.flatMap((r) => r.shorts.filter((s) => shortColumnOf(s) === c).map((s) => ({ r, s }))),
+}));
+// The side track: the article is a step owed beside a video's state, not a state of its own (its own Board column).
+const side = [
+  {
+    id: 'article',
+    label: 'Article',
+    help: 'the companion article, a side track once the script is locked: writer, reviewer, validate, lock',
+    items: videos
+      .filter((r) => r.production?.article && r.production.article.next !== 'none')
+      .map((r) => ({ r, state: r.production!.article!.state, next: r.production!.article!.next })),
+  },
+];
+const stripOf = (r: StoryRow) => {
+  const col = columnOf(r);
+  const at =
+    col && ['uploaded', 'approved', 'scheduled', 'published'].includes(col)
+      ? PRODUCTION_STAGES.length
+      : r.production
+        ? PRODUCTION_STAGES.indexOf(r.production.stage)
+        : -1;
+  return PRODUCTION_STAGES.map((s, i) => ({ s, state: i < at ? 'done' : i === at ? 'current' : 'todo' }));
+};
+// The video's calls to action as its description will carry them (scripts/briefs/cta.md): the primary, and any the
+// value checks dropped. Public topics only: the graph holds no other.
+const graph = contentGraph();
+function ctaNotes(topic: string, id: string): string[] {
+  const node = storyNode(topic, id);
+  if (!graph.stories.has(node)) return [];
+  const file = loadCta(topic, id);
+  const c = resolveCtas(file, graph, node);
+  return [
+    `call to action${file ? '' : ' (default, no cta.json)'}: ${c.primary.type}: ${c.primary.text}`,
+    ...c.dropped.map((d) => `call to action dropped (${d.cta.type}): ${d.why}`),
+    ...c.problems.map((p) => `cta.json: ${p}`),
+  ];
+}
+---
+
+<section id="board" class="mt-6 grid gap-3">
+  <h2 class="text-featured font-semibold">Board</h2>
+  <p class="max-w-prose text-muted-foreground">
+    One row per video; its state is whoever acts next. A chain of questions is one row; its follow-up questions have
+    none. Click a header to sort; filter by text, topic or state. The state comes from the committed artifacts:
+    readiness from <code>stories.json</code>, then the first production stage whose file is missing or not current
+    (re-running the library on today's inputs must reproduce the file, the test <code>lock</code> applies). The strip in each
+    row is the production stages: what has run (filled), the stage it is at, and what is still to come; red means <code
+      >/produce</code
+    > stopped and a person must act. Only <code>production.json</code> is hand-written (queued, parked), because no artifact
+    records those.
+  </p>
+  <form id="story-filter" class="grid gap-2 text-sm">
+    <div class="flex flex-wrap items-center gap-2">
+      <input
+        type="search"
+        name="q"
+        placeholder="Filter by text"
+        aria-label="Filter stories by text"
+        class="min-w-48 flex-1 rounded-sm border bg-card px-2 py-1"
+      />
+      <label class={tag}>
+        <input type="checkbox" name="stopped" aria-label="Stopped only" class="sr-only" /> stopped
+      </label>
+      <output name="count" class="ml-auto font-mono text-xs text-muted-foreground">{videos.length} videos</output>
+    </div>
+    {
+      (
+        [
+          [
+            'topic',
+            'Topic',
+            topics.map(({ topic: t }) => [t.name, t.label, videos.filter((r) => r.topic.name === t.name).length]),
+          ],
+          ['state', 'State', COLUMNS.map((c) => [c, COLUMN[c].label, videos.filter((r) => columnOf(r) === c).length])],
+        ] as const
+      ).map(([name, legend, options]) => (
+        <fieldset class="flex flex-wrap items-center gap-1.5">
+          <legend class="float-left mr-1 eyebrow text-muted-foreground">{legend}</legend>
+          {options.map(([value, label, n]) => (
+            <label class:list={[tag, !n && 'opacity-50']}>
+              <input type="checkbox" name={name} value={value} aria-label={`${legend}: ${label}`} class="sr-only" />{' '}
+              {label} <span class="font-mono text-xs opacity-70">{n}</span>
+            </label>
+          ))}
+        </fieldset>
+      ))
+    }
+  </form>
+  <div class="mx-[calc(50%-50vw+1rem)] overflow-x-auto pb-3">
+    <table id="story-table" class="w-full min-w-[72rem] text-sm">
+      <thead class="text-left text-xs text-muted-foreground uppercase">
+        <tr>
+          {
+            SORTABLE.map(([label, type]) => (
+              <th class="py-1 pr-3 align-bottom font-medium" data-type={type || undefined}>
+                {type ? (
+                  <button type="button" class="uppercase hover:text-foreground">
+                    {label}
+                  </button>
+                ) : (
+                  label
+                )}
+              </th>
+            ))
+          }
+        </tr>
+      </thead>
+      <tbody class="align-top">
+        {
+          videos.map((r) => {
+            const c = columnOf(r)!;
+            const h = rowHealth(r);
+            const notes = [
+              ...(r.decision ? [`${r.decision.decision} ${day(r.decision.date)}: ${r.decision.note}`] : []),
+              ...(r.production?.blockers ?? []),
+              ...(r.production ? [] : r.story.blocking),
+              ...(r.production ? ctaNotes(r.topic.name, r.story.id) : []),
+              ...(r.shortsNext ? [`Shorts not found yet: ${r.shortsNext}`] : []),
+            ];
+            return (
+              <tr
+                class="border-t"
+                data-topic={r.topic.name}
+                data-state={c}
+                data-stopped={stopped(r) ? '' : undefined}
+                data-search={[
+                  r.topic.label,
+                  r.story.title,
+                  r.story.question,
+                  ...followUps(r).map((s) => s?.question),
+                  COLUMN[c].label,
+                  r.production?.stage,
+                  ...outputs(r).flatMap((o) => [o.id, o.kind, o.state.status, o.state.id]),
+                  r.next,
+                  ...notes,
+                ]
+                  .join(' ')
+                  .toLowerCase()}
+              >
+                <td class="py-2 pr-3 whitespace-nowrap">{r.topic.label}</td>
+                <td class="max-w-64 py-2 pr-3">
+                  <a class="leading-snug font-medium text-primary" href={workPageOf(r, c)}>
+                    {r.story.title}
+                  </a>
+                  {followUps(r).length > 0 && (
+                    <ul class="mt-1 grid gap-0.5 text-xs text-muted-foreground">
+                      {followUps(r).map((s) => (
+                        <li>then: {s?.question ?? '(follow-up not listed)'}</li>
+                      ))}
+                    </ul>
+                  )}
+                </td>
+                <td class="max-w-64 py-2 pr-3 text-muted-foreground" title={r.story.whyWatch}>
+                  {r.story.question}
+                </td>
+                {(['overall', 'editorial', 'evidence'] as const).map((k) => (
+                  <td
+                    class="py-2 pr-3 font-mono tabular-nums"
+                    data-sort={r.story.scores[k]}
+                    title={r.story.scores.explanation}
+                  >
+                    {r.story.scores[k].toFixed(2)}
+                  </td>
+                ))}
+                <td
+                  class="py-2 pr-3 font-mono tabular-nums"
+                  data-sort={claimsOf(r)}
+                  title="claims across every question in the video"
+                >
+                  {claimsOf(r)}
+                </td>
+                <td class="py-2 pr-3" data-sort={COLUMNS.indexOf(c)}>
+                  <div class="grid w-40 gap-1">
+                    <span class:list={['font-medium', COLUMN[c].colour]} title={COLUMN[c].help}>
+                      {COLUMN[c].label}
+                    </span>
+                    {r.production && (
+                      <a
+                        class:list={[badge, 'justify-self-start', HEALTH[h].colour]}
+                        href={`#${r.topic.name}-${r.production.slug}`}
+                        title="inspect the artifacts (Artifacts tab)"
+                      >
+                        {r.production.stage} · {HEALTH[h].label} · r{r.production.versions.length || '0'}
+                      </a>
+                    )}
+                    <ol class="flex gap-px" aria-label="Production stages">
+                      {stripOf(r).map(({ s, state }) => (
+                        <li
+                          class:list={[
+                            'h-1.5 flex-1 rounded-xs',
+                            state === 'done'
+                              ? 'bg-success'
+                              : state === 'current'
+                                ? stopped(r)
+                                  ? 'bg-destructive'
+                                  : 'bg-warning'
+                                : 'bg-border',
+                          ]}
+                          title={`${s}: ${state}`}
+                        />
+                      ))}
+                    </ol>
+                  </div>
+                </td>
+                <td class="py-2 pr-3">
+                  {outputs(r).length > 0 && (
+                    <ul class="grid gap-1" aria-label="Outputs">
+                      {outputs(r).map((o) => (
+                        <li>
+                          <span class:list={[badge, outputColour(o)]} title={o.state.next}>
+                            {o.kind}: {o.state.status}
+                            {o.state.failed ? ' failed' : o.state.due ? ' due' : ''}
+                          </span>
+                          {o.state.url && (
+                            <a class:list={[mono, 'ml-1 text-primary']} href={o.state.url}>
+                              {o.state.id}
+                            </a>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {r.shorts.some((s) => shortColumnOf(s)) && (
+                    <ul class="mt-1 grid gap-1" aria-label="Shorts">
+                      {r.shorts
+                        .filter((s) => shortColumnOf(s))
+                        .map((s) => (
+                          <li>
+                            <a class:list={[badge, 'text-primary']} href={shortPageOf(r, s, shortColumnOf(s)!)}>
+                              short: {COLUMN[shortColumnOf(s)!].label}
+                            </a>
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </td>
+                <td class="py-2 pr-3" title={r.production?.article?.next}>
+                  {r.production?.article && (
+                    <div class="grid justify-items-start gap-1">
+                      <span class:list={[badge, ARTICLE[r.production.article.state]]}>
+                        {r.production.article.state}
+                      </span>
+                      {r.production.article.next !== 'none' && (
+                        <NextStep
+                          id={`article-${r.topic.name}-${r.story.id.replace(/\W+/g, '-')}`}
+                          next={r.production.article.next}
+                          topic={r.topic.name}
+                          story={r.story.id}
+                        />
+                      )}
+                    </div>
+                  )}
+                </td>
+                <td class="py-2 pr-3" title={r.next}>
+                  <NextStep
+                    id={`next-${r.topic.name}-${r.story.id.replace(/\W+/g, '-')}`}
+                    next={r.next}
+                    topic={r.topic.name}
+                    story={r.story.id}
+                    upload={r.production?.upload}
+                    notes={mainState(r.production)?.requested?.notes}
+                    stage={
+                      r.decision
+                        ? undefined
+                        : (r.production?.stage ?? (r.story.readiness === 'ready' ? 'ready' : undefined))
+                    }
+                  />
+                </td>
+                <td class="min-w-80 py-2 text-xs">
+                  {stopped(r) && (
+                    <p class="text-destructive">
+                      stopped ({r.production!.halt?.kind ?? 'stop'}): {r.production!.halt?.why ?? r.next}
+                    </p>
+                  )}
+                  {notes.length > 0 && (
+                    <details class="group text-muted-foreground">
+                      <summary class="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                        <span class="line-clamp-2 group-open:hidden">{notes.join(' · ')}</span>
+                        <span class="text-primary">
+                          <span class="group-open:hidden">show more</span>
+                          <span class="hidden group-open:inline">show less</span>
+                        </span>
+                      </summary>
+                      <ul class="grid gap-0.5">
+                        {notes.map((n) => (
+                          <li>{n}</li>
+                        ))}
+                      </ul>
+                    </details>
+                  )}
+                </td>
+              </tr>
+            );
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="stages" class="mt-6 grid gap-6">
+  <h2 class="text-featured font-semibold">Stages</h2>
+  <p class="max-w-prose text-muted-foreground">
+    The same videos grouped by who acts next, with the Shorts in each state under their video. A title opens the page
+    where that work happens: story ideas, the script, or the review page.
+  </p>
+  <ul class="flex flex-wrap gap-1.5 text-xs" aria-label="Stages">
+    {
+      stages.map(({ c, videos: v, shorts: s }) => (
+        <li>
+          <a class:list={[tag, 'inline-block', !(v.length + s.length) && 'opacity-50']} href={`#stage-${c}`}>
+            {COLUMN[c].label} <span class="font-mono opacity-70">{v.length + s.length}</span>
+          </a>
+        </li>
+      ))
+    }
+    {
+      side.map(({ id, label, items }) => (
+        <li>
+          <a class:list={[tag, 'inline-block', !items.length && 'opacity-50']} href={`#stage-${id}`}>
+            {label} <span class="font-mono opacity-70">{items.length}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  {
+    stages
+      .filter(({ videos: v, shorts: s }) => v.length + s.length)
+      .map(({ c, videos: v, shorts: s }) => (
+        <div id={`stage-${c}`} class="grid gap-2 rounded-lg border bg-card p-3 text-card-foreground">
+          <h3 class:list={['text-title font-semibold', COLUMN[c].colour]}>{COLUMN[c].label}</h3>
+          <p class={small}>{COLUMN[c].help}</p>
+          <ul class="grid gap-2 text-sm">
+            {v.map((r) => (
+              <li class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-2">
+                <span class={small}>{r.topic.label}</span>
+                <a class="font-medium text-primary" href={workPageOf(r, c)}>
+                  {r.story.title}
+                </a>
+                {r.production && (
+                  <span class:list={[badge, HEALTH[rowHealth(r)].colour]}>
+                    {r.production.stage} · {HEALTH[rowHealth(r)].label}
+                  </span>
+                )}
+                {stopped(r) && (
+                  <span class="text-xs text-destructive">stopped: {r.production!.halt?.why ?? r.next}</span>
+                )}
+                <NextStep
+                  id={`stage-${c}-${r.topic.name}-${r.story.id.replace(/\W+/g, '-')}`}
+                  next={r.next}
+                  topic={r.topic.name}
+                  story={r.story.id}
+                  upload={r.production?.upload}
+                  notes={mainState(r.production)?.requested?.notes}
+                  stage={
+                    r.decision
+                      ? undefined
+                      : (r.production?.stage ?? (r.story.readiness === 'ready' ? 'ready' : undefined))
+                  }
+                />
+              </li>
+            ))}
+            {s.map(({ r, s }) => (
+              <li class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-2">
+                <span class={small}>{r.topic.label}</span>
+                <a class="font-medium text-primary" href={shortPageOf(r, s, c)}>
+                  Short {s.slug ?? s.key}
+                </a>
+                <span class={small}>of {r.story.title}</span>
+                {s.production && (
+                  <span class:list={[badge, HEALTH[s.production.health].colour]}>
+                    {s.production.stage} · {HEALTH[s.production.health].label}
+                  </span>
+                )}
+                <NextStep
+                  id={`stage-${c}-${r.topic.name}-${(s.id ?? `${r.story.id}-${s.key}`).replace(/\W+/g, '-')}`}
+                  next={s.next}
+                  topic={r.topic.name}
+                  story={s.id ?? r.story.id}
+                  upload={s.production?.upload}
+                  notes={mainState(s.production)?.requested?.notes}
+                  stage={s.production?.stage ?? (s.readiness === 'ready' ? 'ready' : undefined)}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+  }
+  {
+    side.map(
+      ({ id, label, help, items }) =>
+        items.length > 0 && (
+          <div id={`stage-${id}`} class="grid gap-2 rounded-lg border bg-card p-3 text-card-foreground">
+            <h3 class="text-title font-semibold">{label}</h3>
+            <p class={small}>{help}</p>
+            <ul class="grid gap-2 text-sm">
+              {items.map(({ r, state, next }) => (
+                <li class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-2">
+                  <span class={small}>{r.topic.label}</span>
+                  <a class="font-medium text-primary" href={workPageOf(r, columnOf(r)!)}>
+                    {r.story.title}
+                  </a>
+                  {state && <span class={badge}>{state}</span>}
+                  <NextStep
+                    id={`stage-${id}-${r.topic.name}-${r.story.id.replace(/\W+/g, '-')}`}
+                    next={next}
+                    topic={r.topic.name}
+                    story={r.story.id}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ),
+    )
+  }
+</section>
+
+<section id="pipeline" class="mt-6 grid gap-3">
+  <h2 class="text-featured font-semibold">Research pipeline</h2>
+  <p class="max-w-prose text-muted-foreground">
+    One card per topic, from sources to story candidates: sources listed against fetched, fetched against extracted,
+    documents against recorded verdicts, the report against the store, stories.json against a fresh discover, and the
+    candidates reviewed. Open a chip for the detail and the file; Next is the command or brief that moves the topic on.
+  </p>
+  {
+    topics.map(({ topic: t, checks, stories, rejected, next }) => (
+      <div class="grid gap-2 rounded-lg border bg-card p-3 text-card-foreground sm:grid-cols-[14rem_1fr]">
+        <div>
+          <a class="font-semibold text-primary" href={href(`/${t.name}/`)}>
+            {t.label}
+          </a>
+          <p class={small}>
+            {t.counted} sources · {t.claims.length} claims · {t.studies} studies · {stories.length} stories · {rejected}{' '}
+            rejected
+          </p>
+          <a class="text-sm text-primary" href={href(`/${t.name}/stories/`)}>
+            Story ideas
+          </a>
+        </div>
+        <div class="grid gap-2">
+          <ul class="flex flex-wrap gap-2" aria-label="Research pipeline">
+            {checks.map((c) => (
+              <li>
+                <details>
+                  <summary
+                    class:list={[
+                      badge,
+                      HEALTH[c.health].colour,
+                      'cursor-pointer list-none [&::-webkit-details-marker]:hidden',
+                    ]}
+                    title={c.detail}
+                  >
+                    {chip(c)}
+                  </summary>
+                  <p class="mt-1 max-w-prose text-sm">
+                    {c.detail}
+                    {c.file && (
+                      <>
+                        {' '}
+                        <a class={mono} href={blob(c.file)}>
+                          {c.file}
+                        </a>
+                      </>
+                    )}
+                  </p>
+                </details>
+              </li>
+            ))}
+          </ul>
+          <p class="text-sm">
+            <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{next}</code>
+          </p>
+          <NextStep id={`next-${t.name}`} next={next} topic={t.name} />
+        </div>
+      </div>
+    ))
+  }
+</section>
+
+<section id="artifacts" class="mt-6 grid gap-6">
+  <h2 class="text-featured font-semibold">Artifacts: every file of every video</h2>
+  <p class="max-w-prose text-muted-foreground">
+    One block per script directory: the health of each artifact in pipeline order (current means re-running the library
+    on today's inputs reproduces the file; stale means it would not; pending, an agent step is owed; blocked, a gate
+    says so), its revisions, its publishing ledger, its Shorts and its fingerprints. The Board's stage badge jumps here.
+  </p>
+  {productions.length === 0 && <p class={small}>No script directory yet.</p>}
+  {
+    productions.map(({ production: p, ...r }) => (
+      <article id={`${p!.topic}-${p!.slug}`} class="grid gap-3 rounded-lg border bg-card p-4 text-card-foreground">
+        <div class="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <div class="eyebrow text-muted-foreground">
+              {p!.topic} / {p!.story}
+            </div>
+            <h3 class="text-title font-semibold">
+              <a class="text-primary" href={href(`/${p!.topic}/scripts/${p!.slug}/`)}>
+                {p!.dir}
+              </a>
+            </h3>
+            <p class={small}>
+              {p!.model ?? 'no model recorded'} · script {p!.fingerprints.script ?? '—'} · package{' '}
+              {p!.fingerprints.package ?? '—'}
+            </p>
+          </div>
+          <span class:list={[badge, HEALTH[p!.health].colour]}>
+            {p!.stage} · {HEALTH[p!.health].label}
+          </span>
+        </div>
+
+        <ol class="flex flex-wrap gap-1 text-xs" aria-label="Stages">
+          {PRODUCTION_STAGES.map((s, i) => {
+            const at = PRODUCTION_STAGES.indexOf(p!.stage);
+            return (
+              <li
+                class:list={[
+                  'rounded-sm border px-1.5 py-0.5 font-mono',
+                  i < at
+                    ? 'border-success text-success'
+                    : i === at
+                      ? 'border-current font-semibold'
+                      : 'text-muted-foreground',
+                ]}
+              >
+                {s}
+              </li>
+            );
+          })}
+        </ol>
+
+        <p class="text-sm">
+          <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{p!.next}</code>
+        </p>
+        <NextStep
+          id={`next-script-${p!.topic}-${p!.slug}`}
+          next={p!.next}
+          topic={p!.topic}
+          story={p!.story}
+          upload={p!.upload}
+          notes={mainState(p)?.requested?.notes}
+          stage={p!.stage}
+        />
+        {p!.blockers.length > 0 && (
+          <ul class="list-disc pl-5 text-sm text-warning">
+            {p!.blockers.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+        )}
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="text-left text-xs text-muted-foreground uppercase">
+              <tr>
+                <th class="py-1 pr-3 font-medium">Artifact</th>
+                <th class="py-1 pr-3 font-medium">Health</th>
+                <th class="py-1 pr-3 font-medium">Detail</th>
+                <th class="py-1 font-medium">Date</th>
+              </tr>
+            </thead>
+            <tbody class="align-top">
+              {p!.checks.map((c) => (
+                <tr class="border-t">
+                  <td class="py-1.5 pr-3 whitespace-nowrap">
+                    {c.file ? (
+                      <a class={mono} href={blob(c.file)}>
+                        {c.name}
+                      </a>
+                    ) : (
+                      <span class={mono}>{c.name}</span>
+                    )}
+                  </td>
+                  <td class="py-1.5 pr-3">
+                    <span class:list={[badge, HEALTH[c.health].colour]}>{HEALTH[c.health].label}</span>
+                  </td>
+                  <td class="py-1.5 pr-3">{c.detail}</td>
+                  <td class:list={['py-1.5 whitespace-nowrap', mono, 'text-muted-foreground']}>{day(c.date)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {p!.versions.length > 0 && (
+          <div>
+            <h4 class="mb-1 text-sm font-semibold">Revisions</h4>
+            <ol class="grid gap-1 text-sm">
+              {p!.versions.map((v) => (
+                <li class="flex flex-wrap items-center gap-2">
+                  <span class={mono}>r{v.revision}</span>
+                  <span class={[mono, 'text-muted-foreground'].join(' ')}>{day(v.date)}</span>
+                  <span
+                    class:list={[
+                      badge,
+                      v.status === 'passed'
+                        ? 'text-success'
+                        : v.status === 'blocked'
+                          ? 'text-destructive'
+                          : 'text-warning',
+                    ]}
+                  >
+                    {v.status}
+                  </span>
+                  <span class="text-muted-foreground">
+                    {v.blocking} blocking, {v.warnings} warnings
+                  </span>
+                  {v.reviewed && <span class={badge}>reviewed</span>}
+                  {v.locked && <span class:list={[badge, 'text-success']}>locked</span>}
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+
+        {p!.publish && (
+          <div class="grid gap-2">
+            <h4 class="text-sm font-semibold">Publishing</h4>
+            {p!.publish.outputs.map((o) => (
+              <details open={o.state.status !== 'not-uploaded'}>
+                <summary class="cursor-pointer text-sm">
+                  <span class={mono}>{o.id}</span> <span class="text-muted-foreground">{o.kind}</span>{' '}
+                  <span class:list={[badge, outputColour(o)]}>{o.state.status}</span>
+                  {o.id === p!.publish!.main && <span class:list={[badge, 'ml-1']}>main</span>}
+                </summary>
+                <p class="mt-1 text-sm">
+                  <span class="eyebrow text-muted-foreground">Next</span> <code class={mono}>{o.state.next}</code>
+                </p>
+                {o.metadata && (
+                  <dl class="mt-1 grid gap-x-4 gap-y-0.5 text-xs sm:grid-cols-[auto_1fr]">
+                    <dt class="text-muted-foreground">title</dt>
+                    <dd>{o.metadata.title}</dd>
+                    <dt class="text-muted-foreground">tags</dt>
+                    <dd>{o.metadata.tags.join(', ') || '—'}</dd>
+                    <dt class="text-muted-foreground">thumbnail</dt>
+                    <dd class={mono}>
+                      {o.metadata.thumbnail ? `${o.metadata.thumbnail.file} (${o.metadata.thumbnail.sha})` : '—'}
+                    </dd>
+                    <dt class="text-muted-foreground">metadata sha</dt>
+                    <dd class={mono}>{o.metadata.sha}</dd>
+                  </dl>
+                )}
+                {o.state.superseded.length > 0 && (
+                  <p class="mt-1 text-xs text-muted-foreground">superseded uploads: {o.state.superseded.join(', ')}</p>
+                )}
+                {(() => {
+                  const events = ledgerEvents(p!, o.id);
+                  return events.length > 0 ? (
+                    <table class="mt-1 w-full text-xs">
+                      <thead class="text-left text-muted-foreground uppercase">
+                        <tr>
+                          <th class="py-0.5 pr-3 font-medium">When</th>
+                          <th class="py-0.5 pr-3 font-medium">Event</th>
+                          <th class="py-0.5 pr-3 font-medium">By</th>
+                          <th class="py-0.5 font-medium">Detail</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {events.map((e) => (
+                          <tr class="border-t">
+                            <td class:list={['py-0.5 pr-3 whitespace-nowrap', mono]}>{e.at.slice(0, 16)}</td>
+                            <td class="py-0.5 pr-3">{e.type}</td>
+                            <td class="py-0.5 pr-3">{e.by}</td>
+                            <td class="py-0.5 [overflow-wrap:anywhere]">
+                              {[
+                                e.id &&
+                                  (e.url ? (
+                                    <a class="text-primary" href={e.url}>
+                                      {e.id}
+                                    </a>
+                                  ) : (
+                                    e.id
+                                  )),
+                                e.build && `build ${e.build}${e.buildStatus ? ` (${e.buildStatus})` : ''}`,
+                                e.visibility,
+                                e.publishAt && `at ${e.publishAt}`,
+                                e.metadata && `metadata ${e.metadata}`,
+                                e.fields && e.fields.join(', '),
+                                e.error && `${e.step}: ${e.error}${e.retryable ? ' (retryable)' : ''}`,
+                                e.note,
+                              ]
+                                .filter(Boolean)
+                                .map((x) => (
+                                  <span class="mr-2">{x}</span>
+                                ))}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : null;
+                })()}
+              </details>
+            ))}
+          </div>
+        )}
+
+        {(r.shorts.length > 0 || r.shortsNext) && (
+          <div class="grid gap-2">
+            <h4 class="text-sm font-semibold">Shorts</h4>
+            {r.shortsNext && (
+              <p class="text-sm">
+                <code class={mono}>{r.shortsNext}</code>
+              </p>
+            )}
+            <ul class="grid gap-2 text-sm" aria-label="Shorts">
+              {r.shorts.map((s) => (
+                <li class="grid gap-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class={mono}>{s.slug ?? s.key}</span>
+                    <span
+                      class:list={[
+                        badge,
+                        s.production
+                          ? HEALTH[s.production.health].colour
+                          : s.readiness === 'ready'
+                            ? 'text-success'
+                            : s.readiness === 'rejected'
+                              ? 'text-muted-foreground'
+                              : 'text-warning',
+                      ]}
+                    >
+                      {s.production ? s.production.stage : s.readiness}
+                    </span>
+                    {s.production?.stage === 'packaged' && s.slug && (
+                      <a
+                        class="text-primary"
+                        href={href(`/${r.topic.name}/review/${storySlug(r.story.id)}/shorts/${s.slug}`)}
+                      >
+                        Watch and review
+                      </a>
+                    )}
+                    {s.format && <span class="text-muted-foreground">{s.format}</span>}
+                    {s.blocking.length > 0 && !s.production && (
+                      <span class="text-muted-foreground">{s.blocking[0]}</span>
+                    )}
+                  </div>
+                  {s.readiness !== 'rejected' && (
+                    <NextStep
+                      id={`next-short-${r.topic.name}-${(s.id ?? `${r.story.id}-${s.key}`).replace(/\W+/g, '-')}`}
+                      next={s.next}
+                      topic={r.topic.name}
+                      story={s.id ?? r.story.id}
+                      upload={s.production?.upload}
+                      notes={mainState(s.production)?.requested?.notes}
+                      stage={s.production?.stage ?? (s.readiness === 'ready' ? 'ready' : undefined)}
+                    />
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <dl class="grid gap-x-4 gap-y-1 text-xs sm:grid-cols-[auto_1fr]">
+          {Object.entries(p!.fingerprints).map(([k, v]) => (
+            <>
+              <dt class="font-mono text-muted-foreground uppercase">{k}</dt>
+              <dd class="font-mono">{v ?? '—'}</dd>
+            </>
+          ))}
+        </dl>
+      </article>
+    ))
+  }
+</section>
+
+<script>
+  // The stories table: click a header to sort (numbers high first, text A-Z first; again to reverse), and the form
+  // above it filters rows by text, topic tags, state tags and whether /produce stopped.
+  const table = document.getElementById('story-table') as HTMLTableElement;
+  const body = table.tBodies[0];
+  const heads = [...table.tHead!.rows[0].cells];
+  const form = document.getElementById('story-filter') as HTMLFormElement;
+  const field = (n: string) => form.elements.namedItem(n) as HTMLInputElement;
+  // A tag group with nothing checked filters nothing.
+  const checked = (n: string) =>
+    [...form.querySelectorAll<HTMLInputElement>(`input[name=${n}]:checked`)].map((i) => i.value);
+
+  table.tHead!.addEventListener('click', (e) => {
+    const th = (e.target as Element).closest('th');
+    if (!th?.dataset.type || !(e.target as Element).closest('button')) return;
+    const i = heads.indexOf(th);
+    const num = th.dataset.type === 'num';
+    const down = th.getAttribute('aria-sort') ? th.getAttribute('aria-sort') === 'ascending' : num;
+    heads.forEach((h) => h.removeAttribute('aria-sort'));
+    th.setAttribute('aria-sort', down ? 'descending' : 'ascending');
+    const key = (r: HTMLTableRowElement) => r.cells[i].dataset.sort ?? r.cells[i].textContent!.trim();
+    const rows = [...body.rows].sort((a, b) => {
+      const d = num ? Number(key(a)) - Number(key(b)) : key(a).localeCompare(key(b));
+      return down ? -d : d;
+    });
+    body.append(...rows);
+  });
+
+  form.addEventListener('submit', (e) => e.preventDefault());
+  form.addEventListener('input', () => {
+    const q = field('q').value.trim().toLowerCase();
+    const topic = checked('topic');
+    const state = checked('state');
+    const stopped = field('stopped').checked;
+    let shown = 0;
+    for (const r of body.rows) {
+      r.hidden = !(
+        (!topic.length || topic.includes(r.dataset.topic!)) &&
+        (!state.length || state.includes(r.dataset.state!)) &&
+        (!stopped || r.dataset.stopped !== undefined) &&
+        (!q || r.dataset.search!.includes(q))
+      );
+      if (!r.hidden) shown++;
+    }
+    (form.elements.namedItem('count') as HTMLOutputElement).value =
+      shown === body.rows.length ? `${shown} videos` : `${shown} of ${body.rows.length} videos`;
+  });
+</script>

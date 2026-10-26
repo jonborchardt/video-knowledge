@@ -170,6 +170,7 @@ export interface Production {
   fingerprints: { script: string | null; package: string | null; validation: string | null; storyboard: string | null };
   model: string | null;
   clearance: Clearance | null; // from the build report, once there is one
+  build: Build | null; // the build packaged in video/review/: a draft (edge voice, accepted by `video final`) or the release
   publish: { main: string | null; outputs: OutputView[] } | null; // the ledger's outputs and their states, once there is a package or a ledger
   upload: UploadMetadata | null; // what the upload form takes for the main output, once there is something to upload or update
   halt: { kind: HaltKind; stage: ProductionStage; why: string } | null; // the first halt, if any
@@ -1004,6 +1005,7 @@ export function productionOf(topic: string, storyId: string, root = ROOT): Produ
     checks,
     versions,
     clearance: vr && release ? vr.clearance : null,
+    build: stage === 'packaged' ? currentBuild(dir) : null, // its own package: c.build is the parent's for a Short
     publish,
     upload: main && (stage === 'packaged' || main.state.status !== 'not-uploaded') ? main.metadata : null,
     halt,
@@ -1255,17 +1257,20 @@ const publishing = (s: StoryRow) => {
 
 /** The board's columns, one card per video, grouped by who acts next: research, a person settling a story, a person
  *  starting `/produce`, `/produce` itself (every stage from package to scored; the card's strip shows which), a person
- *  uploading the package, then the publishing ledger's states (a live or scheduled video wins whatever its stage), and
- *  the parked decision in production.json. */
+ *  watching the draft build (uploaded or not) and accepting it with `video final`, a person uploading the release
+ *  package, then the publishing ledger's states (a live or scheduled video wins whatever its stage), the Shorts an
+ *  approved video still owes before it goes live, and the parked decision in production.json. */
 export const COLUMNS = [
   'needs-research',
   'needs-review',
   'ready',
   'producing',
+  'draft-review',
   'your-review',
   'changes-requested',
   'uploaded',
   'approved',
+  'shorts',
   'scheduled',
   'published',
   'parked',
@@ -1274,15 +1279,39 @@ export type Column = (typeof COLUMNS)[number];
 /** The card's column, or null for a chain's follow-up question, which is answered on its first question's card. */
 export function columnOf(r: StoryRow): Column | null {
   if (r.decision?.decision === 'parked') return 'parked';
-  const main = mainState(r.production);
-  if (main?.live) return 'published';
-  if (main?.status === 'scheduled' || main?.status === 'approved' || main?.status === 'changes-requested')
-    return main.status;
-  if (main?.status === 'uploaded' || main?.status === 'metadata-behind') return 'uploaded';
+  const c = buildColumn(r.production);
+  if (c) return c === 'approved' && shortsOwed(r) ? 'shorts' : c;
   if (r.story.partOf) return null;
-  if (r.production) return r.production.stage === 'packaged' ? 'your-review' : 'producing';
+  if (r.production) return producingColumn(r.production);
   return r.story.readiness === 'rejected' ? 'parked' : r.story.readiness;
 }
+/** A Short's column under its parent's row: the same states, a rejected candidate none. */
+export function shortColumnOf(s: ShortRow): Column | null {
+  if (s.readiness === 'rejected') return null;
+  return buildColumn(s.production) ?? (s.production ? producingColumn(s.production) : s.readiness);
+}
+/** An approved video waits for its Shorts: candidates not found or not reviewed, or a Short not yet approved. */
+const shortsOwed = (r: StoryRow) =>
+  !!r.shortsNext ||
+  r.shorts.some((s) => {
+    const c = shortColumnOf(s);
+    return c && !['approved', 'scheduled', 'published', 'parked'].includes(c);
+  });
+/** The ledger's say, once the main output is uploaded: it wins whatever the production stage. A draft build stays
+ *  at draft review until `video final` replaces it, uploaded or not. */
+function buildColumn(p: Production | null): Column | null {
+  const main = mainState(p);
+  const c: Column | null = main?.live
+    ? 'published'
+    : main?.status === 'scheduled' || main?.status === 'approved' || main?.status === 'changes-requested'
+      ? main.status
+      : main?.status === 'uploaded' || main?.status === 'metadata-behind'
+        ? 'uploaded'
+        : null;
+  return c === 'uploaded' && p?.build?.status === 'draft' ? 'draft-review' : c;
+}
+const producingColumn = (p: Production): Column =>
+  p.stage !== 'packaged' ? 'producing' : p.build?.status === 'draft' ? 'draft-review' : 'your-review';
 
 export function board(root = ROOT): TopicBoard[] {
   const decisions = loadDecisions(root);

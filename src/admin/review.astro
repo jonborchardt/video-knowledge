@@ -50,7 +50,7 @@ const sentenceStarts = JSON.stringify(v.sentences.map((s) => [s.at.seconds, s.at
 
 <Base title={`Review · ${title}`} noindex>
   <nav class={small} aria-label="Breadcrumb">
-    <a class="text-muted-foreground" href={href('/production/')}>Production board</a> /{' '}
+    <a class="text-muted-foreground" href={href('/admin#board')}>Board</a> /{' '}
     <a class="text-muted-foreground" href={href(`/${topic}/scripts/${storySlug(v.parent?.storyId ?? storyId)}/`)}
       >Script</a
     > / Review
@@ -113,7 +113,7 @@ const sentenceStarts = JSON.stringify(v.sentences.map((s) => [s.at.seconds, s.at
 
   {
     !v.pkg ? (
-      <p class="mt-6">No review package yet: the production board says what comes first.</p>
+      <p class="mt-6">No review package yet: the board says what comes first.</p>
     ) : (
       <>
         <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">

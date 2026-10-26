@@ -8,15 +8,14 @@ import { movedRedirects } from './src/lib/content-graph.ts';
 // wrangler.jsonc); DEPLOY_TARGET=pages builds the GitHub Pages mirror at https://jonborchardt.github.io/video-knowledge/.
 const pages = process.env.DEPLOY_TARGET === 'pages';
 
-// The working pages (production board, story ideas, scripts, the admin index) live in src/admin/ and are routed only
-// by the dev server: a build never emits them, so nothing admin-like reaches the public site.
+// The working pages (the admin index with the production board, story ideas, scripts, the review page) live in
+// src/admin/ and are routed only by the dev server: a build never emits them, so nothing admin-like reaches the site.
 const admin = {
   name: 'admin-pages',
   hooks: {
     'astro:config:setup': ({ command, injectRoute }) => {
       if (command !== 'dev') return;
       injectRoute({ pattern: '/admin', entrypoint: './src/admin/index.astro' });
-      injectRoute({ pattern: '/production', entrypoint: './src/admin/production.astro' });
       injectRoute({ pattern: '/[topic]/stories', entrypoint: './src/admin/stories.astro' });
       injectRoute({ pattern: '/[topic]/scripts/[slug]', entrypoint: './src/admin/script.astro' });
       injectRoute({ pattern: '/[topic]/review/[...path]', entrypoint: './src/admin/review.astro', prerender: false });

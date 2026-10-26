@@ -60,14 +60,18 @@ const { tabs, label } = Astro.props;
     return p;
   });
   const isPanel = (id: string) => panels.some((p) => p.id === id);
+  // A hash inside a panel (a deep link to a block of it) opens that panel and scrolls to the block.
+  const panelOf = (id: string) => (isPanel(id) ? id : document.getElementById(id)?.closest('main > section')?.id);
   function show(id: string) {
-    if (!isPanel(id)) id = panels[0].id;
+    const target = !isPanel(id) && panelOf(id) ? document.getElementById(id) : null;
+    id = panelOf(id) ?? panels[0].id;
     panels.forEach((p, i) => {
       const on = p.id === id;
       p.hidden = !on;
       tabs[i].setAttribute('aria-selected', String(on));
       tabs[i].tabIndex = on ? 0 : -1;
     });
+    target?.scrollIntoView();
   }
   tabs.forEach((b, i) => {
     b.addEventListener('click', () => {
@@ -84,7 +88,7 @@ const { tabs, label } = Astro.props;
     });
   });
   // Only panel hashes switch tabs; the skip link's #main, for one, must not reset to the first tab.
-  addEventListener('hashchange', () => isPanel(location.hash.slice(1)) && show(location.hash.slice(1)));
+  addEventListener('hashchange', () => panelOf(location.hash.slice(1)) && show(location.hash.slice(1)));
   show(location.hash.slice(1));
   document.querySelector('[data-tab-init]')?.remove(); // the pre-paint stylesheet; `hidden` takes over from here
 </script>

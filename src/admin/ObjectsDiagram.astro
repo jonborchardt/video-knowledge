@@ -1,0 +1,340 @@
+---
+// Every object the repo keeps, the file that holds it and how it points at the next one, laid out in the columns the
+// work moves through (identity, research, stories, script stage, video, publishing). Positions are computed from the
+// lists below; a new object is one entry and, if it points somewhere, one edge. The table under it is the content
+// graph's view of the same objects (src/lib/content-graph.ts).
+type Box = { id: string; t: string; d: string[]; you?: boolean };
+type Col = { title: string; dir: string; boxes: Box[] };
+const cols: Col[] = [
+  {
+    title: 'Identity',
+    dir: 'src/config/site.ts',
+    boxes: [
+      { id: 'inst', t: 'Institution', d: ['commissions in site.ts: a YouTube', 'channel and the topics it publishes'] },
+    ],
+  },
+  {
+    title: 'Research',
+    dir: 'topics/<topic>/',
+    boxes: [
+      { id: 'topic', t: 'Topic (inquiry)', d: ['store/topics.json: the watcher store;', 'never hand-edited'] },
+      {
+        id: 'source',
+        t: 'Source',
+        d: ['a video, post or study: store/videos/*.json', 'and its text in sources/*.txt'],
+      },
+      { id: 'claim', t: 'Claim', d: ['canonical, one line, mechanism-level;', 'shared by every source that makes it'] },
+      {
+        id: 'verdict',
+        t: 'Verdict',
+        d: ['per claim, cites a passage', '(<file>.txt#L10-L24); npm run record-sources'],
+      },
+      { id: 'report', t: 'Report', d: ['report.json by npm run report', '(needs the watcher checkout)'] },
+      {
+        id: 'record',
+        t: 'Public record',
+        d: ['public-record.json: exhibit numbers that', 'never renumber, revisions you explain'],
+        you: true,
+      },
+      {
+        id: 'dataset',
+        t: 'Dataset',
+        d: ['data/<id>.json: evidence numbers with', 'a cite per point; shown on /data/'],
+      },
+    ],
+  },
+  {
+    title: 'Stories',
+    dir: 'topics/<topic>/',
+    boxes: [
+      {
+        id: 'story',
+        t: 'Story (matter)',
+        d: ['stories.json, derived: a question, its', 'claims, an evidence audit, readiness'],
+      },
+      {
+        id: 'sreview',
+        t: 'Story review',
+        d: ['story-review.json: the semantic pass,', 'pruning, chains (up to 3 questions)'],
+        you: true,
+      },
+      { id: 'decision', t: 'Decision', d: ['production.json: queued or parked,', 'with a note'], you: true },
+    ],
+  },
+  {
+    title: 'Script stage',
+    dir: 'topics/<topic>/scripts/<slug>/',
+    boxes: [
+      {
+        id: 'pkg',
+        t: 'Evidence package',
+        d: ['evidence-package.json: the claims,', 'passages and roles a writer may use'],
+      },
+      {
+        id: 'script',
+        t: 'Script',
+        d: ['script.json + script-review.json (another', 'agent) + validation; release.json locks'],
+      },
+      { id: 'sb', t: 'Storyboard', d: ['storyboard.json: scenes, chart points', 'with cites, timing per sentence'] },
+      {
+        id: 'article',
+        t: 'Article',
+        d: ['article.json + review + validation;', 'article-release.json is what the site shows'],
+      },
+      {
+        id: 'cta',
+        t: 'Calls to action',
+        d: ['cta.json from cta.md: destinations in the', 'content graph; a paid one needs your name'],
+      },
+    ],
+  },
+  {
+    title: 'Video',
+    dir: '.../<slug>/video/',
+    boxes: [
+      {
+        id: 'render',
+        t: 'Render plan',
+        d: ['render.json: scenes to kinds, cues;', 'bespoke graphics in src/video/bespoke/'],
+      },
+      { id: 'build', t: 'Build', d: ['segment.mp4 named by its sha; build-report;', 'review/: the package you watch'] },
+      {
+        id: 'music',
+        t: 'Soundtrack',
+        d: ['music.json: cues over scene anchors;', 'music/<composition>/ cleared by hand'],
+      },
+      {
+        id: 'short',
+        t: 'Short',
+        d: ['shorts/<slug>/: a nested production from', 'one scene; shorts.json + shorts-review.json'],
+      },
+    ],
+  },
+  {
+    title: 'Publishing',
+    dir: '.../<slug>/publish.json',
+    boxes: [
+      {
+        id: 'ledger',
+        t: 'Ledger',
+        d: ['publish.json: per output an event log', '(uploaded, approved, scheduled, published)'],
+      },
+      {
+        id: 'yt',
+        t: 'YouTube video',
+        d: ['output youtube: private upload, then', 'go-live; a Short is output short:<slug>'],
+      },
+    ],
+  },
+];
+type Edge = { from: string; to: string; label: string };
+const edges: Edge[] = [
+  { from: 'inst', to: 'topic', label: 'publishes' },
+  { from: 'topic', to: 'source', label: 'has' },
+  { from: 'source', to: 'claim', label: 'makes' },
+  { from: 'verdict', to: 'claim', label: 'judges' },
+  { from: 'verdict', to: 'report', label: 'summed in' },
+  { from: 'report', to: 'record', label: 'numbered by' },
+  { from: 'claim', to: 'story', label: 'grouped into' },
+  { from: 'sreview', to: 'story', label: 'settles' },
+  { from: 'story', to: 'pkg', label: 'packaged as' },
+  { from: 'pkg', to: 'script', label: 'written from' },
+  { from: 'script', to: 'sb', label: 'planned as' },
+  { from: 'pkg', to: 'article', label: 'written from' },
+  { from: 'sb', to: 'render', label: 'drafts' },
+  { from: 'render', to: 'build', label: 'renders' },
+  { from: 'music', to: 'build', label: 'mixed into' },
+  { from: 'sb', to: 'short', label: 'one scene' },
+  { from: 'build', to: 'ledger', label: 'sha = build' },
+  { from: 'short', to: 'ledger', label: 'output' },
+  { from: 'ledger', to: 'yt', label: 'records' },
+  { from: 'dataset', to: 'source', label: 'cites' },
+  { from: 'cta', to: 'build', label: 'description links' },
+];
+const W = 196,
+  H = 66,
+  GAP = 28, // between columns
+  ROW = 92,
+  TOP = 44,
+  LEFT = 8;
+const pos = new Map<string, { x: number; y: number; col: number; row: number }>();
+cols.forEach((c, ci) =>
+  c.boxes.forEach((b, ri) => pos.set(b.id, { x: LEFT + ci * (W + GAP), y: TOP + ri * ROW, col: ci, row: ri })),
+);
+const box = (id: string) => {
+  const b = pos.get(id);
+  if (!b) throw new Error(`ObjectsDiagram: no box ${id}`);
+  return b;
+};
+// An edge between columns leaves the right side and enters the left side, with its elbow in the gutter; one that skips a
+// column runs over the top of the boxes. Inside a column, adjacent boxes are joined by a short vertical, others by a
+// run down the column's left edge. The label sits beside the elbow or the vertical run.
+const paths = edges.map((e) => {
+  const a = box(e.from),
+    b = box(e.to);
+  if (a.col === b.col) {
+    const down = b.row > a.row;
+    if (Math.abs(b.row - a.row) === 1) {
+      const y1 = down ? a.y + H : a.y,
+        y2 = down ? b.y - 3 : b.y + H + 3;
+      const x = a.x + W / 2 + (down ? -40 : 40);
+      return { d: `M${x} ${y1} V${y2}`, lx: x + 6, ly: (y1 + y2) / 2 + 4, label: e.label, anchor: 'start' };
+    }
+    const y1 = a.y + H - 12,
+      y2 = b.y + 12,
+      x = a.x - 10;
+    return {
+      d: `M${a.x} ${y1} H${x} V${y2} H${a.x - 3}`,
+      lx: x - 4,
+      ly: (y1 + y2) / 2 + 4,
+      label: e.label,
+      anchor: 'end',
+    };
+  }
+  const x1 = a.x + W,
+    x2 = b.x - 3,
+    y1 = a.y + H / 2,
+    y2 = b.y + H / 2;
+  if (b.col === a.col + 1) {
+    const gx = a.x + W + GAP / 2;
+    return { d: `M${x1} ${y1} H${gx} V${y2} H${x2}`, lx: gx, ly: y2 - 6, label: e.label, anchor: 'middle' };
+  }
+  // a skip: out to the gutter, up over the headers' baseline, across, down the gutter next to the target
+  const gx = a.x + W + GAP / 2 + 5,
+    fx = b.x - GAP / 2 - 5,
+    top = TOP - 8;
+  return {
+    d: `M${x1} ${y1} H${gx} V${top} H${fx} V${y2} H${x2}`,
+    lx: fx,
+    ly: y2 - 6,
+    label: e.label,
+    anchor: 'middle',
+  };
+});
+const width = LEFT * 2 + cols.length * W + (cols.length - 1) * GAP;
+const height = TOP + Math.max(...cols.map((c) => c.boxes.length)) * ROW + 8;
+
+const graph = [
+  ['institution', 'inst:<key>', 'commissions in site.ts', '/commissions/<key>/'],
+  ['inquiry', '<topic>', 'report.json label', '/<topic>/'],
+  ['story (matter)', '<topic>/<story-id>', 'stories.json', '/<topic>/<story slug>/'],
+  ['video', '<topic>/<story-id>#youtube', 'publish.json', 'its watch URL once live'],
+  ['short', '<topic>/<story-id>#short:<slug>', 'publish.json', 'its watch URL once live'],
+  ['article', '<topic>/<story-id>#article', 'article-release.json', 'matter page #article'],
+  ['chart', '<story slug>/<scene-id>', 'a storyboard chart an article figures', 'matter page #article'],
+  ['dataset', 'data:<topic>/<id>', 'topics/<topic>/data/<id>.json', '/<topic>/data/#<id>'],
+  ['tool', 'tool:<id>', 'src/tools/ registry', 'matter page #tool'],
+];
+const small = 'text-sm text-muted-foreground';
+---
+
+<p class={`mt-1 max-w-prose ${small}`}>
+  Each box is one kind of object and the file that holds it, in the column of the stage that makes it. A gold box is one
+  you write by hand; everything else is written by a CLI or an agent and is derived (never hand-edited). Arrows read as
+  "from, label, to": a verdict <em>judges</em> a claim; evidence belongs to the claim, not the source, so a new source never
+  re-judges old claims.
+</p>
+<div class="mt-4 overflow-x-auto">
+  <svg class="w-full min-w-[72rem]" viewBox={`0 0 ${width} ${height}`} role="img" aria-labelledby="objects-title">
+    <title id="objects-title">
+      The objects of the repo and their relations, from institution and topic through claims, stories, scripts, video
+      builds and the publishing ledger
+    </title>
+    <defs>
+      <marker id="obj-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path d="M0 0 L10 5 L0 10 z" style="fill: var(--muted-foreground)"></path>
+      </marker>
+    </defs>
+    <g style="font-weight: 600; font-size: 13px; fill: var(--muted-foreground); letter-spacing: 0.08em">
+      {
+        cols.map((c, i) => (
+          <g>
+            <text x={LEFT + i * (W + GAP)} y="16">
+              {c.title.toUpperCase()}
+            </text>
+            <text x={LEFT + i * (W + GAP)} y="31" style="font-weight: 400; font-size: 10.5px; letter-spacing: 0">
+              {c.dir}
+            </text>
+          </g>
+        ))
+      }
+    </g>
+    <g style="fill: none; stroke: var(--muted-foreground); stroke-width: 1.3">
+      {paths.map((p) => <path d={p.d} marker-end="url(#obj-arrow)" />)}
+    </g>
+    {
+      cols.flatMap((c) =>
+        c.boxes.map((b) => {
+          const p = box(b.id);
+          return (
+            <g>
+              <rect
+                x={p.x}
+                y={p.y}
+                width={W}
+                height={H}
+                rx="7"
+                style={`fill: var(${b.you ? '--accent' : '--card'}); stroke: var(--border); stroke-width: 1.5`}
+              />
+              <text x={p.x + 10} y={p.y + 20} style="font-size: 13px; font-weight: 600; fill: var(--foreground)">
+                {b.t}
+              </text>
+              {b.d.map((line, j) => (
+                <text x={p.x + 10} y={p.y + 37 + j * 13} style="font-size: 10px; fill: var(--muted-foreground)">
+                  {line}
+                </text>
+              ))}
+            </g>
+          );
+        }),
+      )
+    }
+    <g style="font-size: 10.5px; fill: var(--foreground); font-style: italic">
+      {
+        paths.map((p) => (
+          <text
+            x={p.lx}
+            y={p.ly}
+            text-anchor={p.anchor}
+            style="paint-order: stroke; stroke: var(--background); stroke-width: 3px"
+          >
+            {p.label}
+          </text>
+        ))
+      }
+    </g>
+  </svg>
+</div>
+
+<h3 class="mt-8 font-semibold">The same objects as the site sees them: the content graph</h3>
+<p class={`mt-1 max-w-prose ${small}`}>
+  <code>src/lib/content-graph.ts</code> rebuilds this graph at every build from the files above and <code>urlOf</code>
+  is the only way a page, a description or a package makes a link (from an id, never a title). Edges: publishes (institution
+  to inquiry), in (story to inquiry), partOf (a chained question to its first), madeFrom (video, Short or article to its story),
+  derivedFrom (Short to video), cites (article to chart or dataset), uses (story to tool), shares-claims (story to story,
+  weighted).
+</p>
+<div class="mt-3 overflow-x-auto">
+  <table class="w-full max-w-4xl text-sm">
+    <thead class="text-left text-xs text-muted-foreground uppercase">
+      <tr>
+        <th class="py-1 pr-3 font-medium">Node</th>
+        <th class="py-1 pr-3 font-medium">Id</th>
+        <th class="py-1 pr-3 font-medium">Built from</th>
+        <th class="py-1 font-medium">Its link (urlOf)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        graph.map((r) => (
+          <tr class="border-t">
+            <td class="py-1 pr-3 font-medium">{r[0]}</td>
+            <td class="py-1 pr-3 font-mono text-xs">{r[1]}</td>
+            <td class="py-1 pr-3 text-muted-foreground">{r[2]}</td>
+            <td class="py-1 font-mono text-xs">{r[3]}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>

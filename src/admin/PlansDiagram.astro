@@ -1,0 +1,161 @@
+---
+// What the four site plans (docs/superpowers/plans/2026-10-24-*.md, merged 2026-10-25) added, laid over the pipeline
+// that already existed: one row per plan, one column per part of the pipeline it touched, and a last column for the
+// steps that are now yours. An empty cell means the plan left that part alone.
+const parts = ['Research', 'Stories and script', 'Video and Shorts', 'Publishing', 'Site', 'What you now do'] as const;
+type Row = { t: string; sub: string; cells: string[][] };
+const before: Row = {
+  t: 'Before (2026-10-24)',
+  sub: 'the pipeline the plans build on; none of it changed',
+  cells: [
+    ['store, verdicts, report.json'],
+    ['stories.json, story-review.json;', 'script, review, storyboard, lock'],
+    ['render.json, Remotion, music, QA,', 'the review package; Shorts'],
+    ['publish.json, the YouTube uploader;', 'the board and the review page'],
+    [
+      'a directory home, institution pages,',
+      'the inquiry report, a bare matter page',
+      'that knew nothing of the video',
+    ],
+    ['/produce, review, approve, go live'],
+  ],
+};
+const plans: Row[] = [
+  {
+    t: 'Plan 1: the Public Record',
+    sub: 'one landing page per matter, in the Commonwealth identity',
+    cells: [
+      [
+        'public-record.json: exhibit numbers that',
+        'never renumber; a revision for every',
+        'changed finding, with your note',
+      ],
+      [],
+      [],
+      ['outputs.ts: the site reads publish.json,', 'so a video shows only once it is live'],
+      [
+        'the matter page: answer first, video,',
+        'evidence by finding label, exhibits;',
+        'ReportHeader trail; share cards per story',
+      ],
+      ['npm run report -- note <topic> <claim>', '"<why>" for each revised finding', '(the build fails without one)'],
+    ],
+  },
+  {
+    t: 'Plan 2: Articles',
+    sub: 'a companion article per video, to the script’s standard',
+    cells: [
+      [],
+      [
+        'article.json (a writer) + article-review.json',
+        '(another agent); validate reuses the script',
+        'checks; a side track after the lock',
+      ],
+      [],
+      [],
+      ['the released text in the matter page’s', '#article slot; the page title and', 'description come from it'],
+      [
+        'npm run article -- lock <topic> <story>',
+        '--approved-by "<you>"; later correct --note',
+        '(a public-record revision) or reaffirm',
+      ],
+    ],
+  },
+  {
+    t: 'Plan 3: Charts, data, calculators',
+    sub: 'the verified numbers shown, inspected and reused',
+    cells: [
+      [
+        'datasets topics/<topic>/data/<id>.json:',
+        'evidence numbers with a cite per point;',
+        'reference data never decides a verdict',
+      ],
+      ['article table and figure blocks name', 'a storyboard chart or a dataset'],
+      [],
+      [],
+      [
+        'Chart.astro (static SVG + table);',
+        '/<topic>/data/ with CSV and JSON;',
+        'calculators in src/tools/ (#tool slot)',
+      ],
+      ['review a tool’s justification and', 'defaults in the pull request; refresh', 'reference data and commit it'],
+    ],
+  },
+  {
+    t: 'Plan 4: Relationships and calls to action',
+    sub: 'everything made from a story joined by stable ids',
+    cells: [
+      [],
+      [
+        'cta.json from scripts/briefs/cta.md:',
+        'one primary, two secondaries, checked',
+        'against the graph (npm run links -- cta)',
+      ],
+      [],
+      [
+        'the description’s Links block from',
+        'cta.json; links.json per build;',
+        'a changed link is a push, not a render',
+      ],
+      [
+        'content-graph.ts and urlOf; related',
+        'matters; MatterList in one order; KindIcon;',
+        'public-urls.json and moved.json redirects',
+      ],
+      [
+        'npm run links -- freeze after a build',
+        'adds a page; a moved.json entry when a',
+        'story id changes; approve any paid link',
+      ],
+    ],
+  },
+];
+const small = 'text-sm text-muted-foreground';
+---
+
+<p class={`mt-1 max-w-prose ${small}`}>
+  One row per plan, one column per part of the pipeline it touched. The first row is what existed; the last column is
+  what the plan added to your own steps. Nothing above the research layer changed: the store, the verdicts and the
+  script stage are the same, the plans read what they write.
+</p>
+<div class="mt-4 overflow-x-auto">
+  <table class="w-full text-xs">
+    <thead class="text-left text-muted-foreground uppercase">
+      <tr>
+        <th class="py-1 pr-3 align-bottom font-medium">Plan</th>
+        {
+          parts.map((p) => (
+            <th class={`py-1 pr-3 align-bottom font-medium ${p.startsWith('What') ? 'text-primary' : ''}`}>{p}</th>
+          ))
+        }
+      </tr>
+    </thead>
+    <tbody>
+      {
+        [before, ...plans].map((r, i) => (
+          <tr class="border-t align-top">
+            <th scope="row" class="py-2 pr-3 text-left font-medium">
+              <div class="text-sm">{r.t}</div>
+              <div class="font-normal text-muted-foreground">{r.sub}</div>
+            </th>
+            {r.cells.map((c, j) => (
+              <td class={`py-2 pr-3 ${j === parts.length - 1 ? 'bg-accent rounded-sm' : ''}`}>
+                {c.length ? (
+                  <p class={i === 0 ? 'text-muted-foreground' : ''}>{c.join(' ')}</p>
+                ) : (
+                  <span class="text-muted-foreground" aria-label="unchanged">
+                    &middot;
+                  </span>
+                )}
+              </td>
+            ))}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
+<p class={`mt-3 max-w-prose ${small}`}>
+  The plans themselves are in <code>docs/superpowers/plans/</code> (untracked); the rules they left behind are in CLAUDE.md
+  under Rules.
+</p>

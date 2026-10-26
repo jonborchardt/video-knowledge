@@ -1,0 +1,154 @@
+---
+// The simple path, one story from found to posted, as the board's columns: each step says the column the card is in,
+// who acts, what to do, where, and the exact text to run or paste. The example ids are the first ready story's; a
+// Short's id is <story-id>/shorts/<slug>. The detailed workflow under it is the full list of stages.
+import { loadStories } from '../lib/stories';
+import { publicTopicNames } from '../lib/topics';
+import { href } from '../lib/url';
+
+// Example ids: the first ready story of the first public topic that has one, else placeholders.
+const ex = publicTopicNames()
+  .flatMap((t) => (loadStories(t)?.stories ?? []).filter((s) => s.readiness === 'ready').map((s) => ({ t, s })))
+  .at(0);
+const topic = ex?.t ?? '<topic>';
+const story = ex?.s.id ?? '<story-id>';
+
+type Where = { label: string; href: string };
+type Step = {
+  col: string; // the board's column label(s), as the board prints them
+  who: 'you' | 'agent' | 'planned';
+  t: string;
+  d: string;
+  run?: string; // the text to run or paste
+  where?: Where;
+  done: string; // what the board shows when the step is done
+};
+const board: Where = { label: 'the board tab', href: '/admin#board' };
+const steps: Step[] = [
+  {
+    col: 'Needs research / Needs review',
+    who: 'agent',
+    t: 'A story is found',
+    d: 'npm run stories -- discover writes the candidates with their evidence audit. A card in Needs research names the missing evidence; one in Needs review names the points a person settles. Both offer a prompt in What next?: paste it into Claude Code.',
+    run: `npm run stories -- discover ${topic}`,
+    where: { label: `story ideas for ${topic}`, href: `/${topic}/stories/` },
+    done: 'the card reads Ready to produce',
+  },
+  {
+    col: 'Ready to produce',
+    who: 'you',
+    t: 'Start it',
+    d: 'Copy the prompt from the card’s What next?, put your name after Approver: (it signs the lock), paste it into a Claude Code session in this repo and leave. Nothing else is needed from you until the package.',
+    run: `/produce ${topic} ${story}\nApprover: <your name>`,
+    where: board,
+    done: 'the card moves to In production',
+  },
+  {
+    col: 'In production',
+    who: 'agent',
+    t: '/produce runs the stages',
+    d: 'package, script, review, storyboard, graphics, lock, render, music, QA, package: the strip on the card shows the stage. A red row means it stopped (a revision limit, a story that left the list, a stop: step): fix what the step names and paste the same prompt again. Once the script is locked, the article is written and reviewed on the side (the Article column); you release it with the command below.',
+    run: `npm run article -- lock ${topic} ${story} --approved-by "<your name>"`,
+    where: board,
+    done: 'the card moves to Your review',
+  },
+  {
+    col: 'Your review',
+    who: 'you',
+    t: 'Upload the draft privately',
+    d: 'Open the card’s Watch and review link. The page plays the package and lists every QA check and finding at its moment. Press Upload privately; the ledger records it.',
+    where: board,
+    done: 'the card moves to Uploaded (draft build)',
+  },
+  {
+    col: 'Uploaded (draft)',
+    who: 'you',
+    t: 'Watch it, then accept or send back',
+    d: 'Watch the private upload with the checklist. Send back: Request changes with one note per line (start a note with [m:ss sc20 s31] to place it); the card moves to Changes requested and its What next? is the send-back prompt carrying your notes, back to the step above. Accept: Accept the draft runs video final, which re-narrates the same words in the release voice and repackages; the card returns to Your review and you upload the release build.',
+    run: `/produce ${topic} ${story}\nApprover: <your name>\nNotes:\n- [0:42 sc5 s12] the chart label is cut off`,
+    done: 'the release build is Uploaded',
+  },
+  {
+    col: 'Uploaded (release) to Approved',
+    who: 'you',
+    t: 'Approve the release build',
+    d: 'Tick every checklist item and approve with your name. The approval binds this mp4 and this title: a new render or a changed title asks again. A title or thumbnail edit is a Push (an updated event), never a re-render.',
+    done: 'the card reads Approved',
+  },
+  {
+    col: 'Approved (its Shorts in production)',
+    who: 'you',
+    t: 'Make the Shorts before launch',
+    d: 'Discover the candidates, have the shorts.md agent write shorts-review.json (keep, slug, hook), then start each ready Short like a video. Each gets its own row under the video and its own review page: upload, watch, approve. At most three.',
+    run: `npm run shorts -- discover ${topic} ${story}\n/produce ${topic} ${story}/shorts/<slug>\nApprover: <your name>`,
+    where: board,
+    done: 'every Short you keep reads Approved',
+  },
+  {
+    col: 'Scheduled / Published',
+    who: 'you',
+    t: 'Go live',
+    d: 'On the review page: Go live now, or at a time (at least five minutes ahead). The video first, then each Short (go-live refuses a Short before its video). A scheduled video goes public on YouTube at the time; Sync afterwards records published. The matter page shows the video from the next build of the site.',
+    run: `npm run publish -- go-live ${topic} ${story} --at 2026-11-01T15:00:00Z\nnpm run publish -- sync ${topic} ${story}`,
+    done: 'the card reads Published',
+  },
+  {
+    col: 'Published',
+    who: 'you',
+    t: 'After launch',
+    d: 'Set each Short’s related video in YouTube Studio (the API has no field) and record it. Push a changed title, tags or thumbnail. Rebuild the site, freeze the URL list if a page was added, commit. A corrected article: article -- correct with a note.',
+    run: `npm run publish -- updated ${topic} ${story}/shorts/<slug> --fields relatedVideo\nnpm run build && npm run links -- freeze`,
+    where: { label: 'external services', href: '/admin#services' },
+    done: 'nothing left on the card; the board stops /produce on a live video',
+  },
+  {
+    col: 'Published',
+    who: 'planned',
+    t: 'Post about it',
+    d: 'No posting is built. A post is another output of the same ledger with the generic flow (make it, approve it, record where it went), so a hand-written post can already be recorded; the X accounts are in the brand kit’s accounts.json.',
+    run: `npm run publish -- add ${topic} ${story} x-1 --kind post\nnpm run publish -- approve ${topic} ${story} --output x-1 --by "<your name>"\nnpm run publish -- published ${topic} ${story} --output x-1 --url <post url>`,
+    done: 'the output x-1 reads published',
+  },
+];
+const WHO = {
+  you: { label: 'YOU', cls: 'bg-accent text-foreground' },
+  agent: { label: 'AGENT / CLI', cls: 'bg-muted text-muted-foreground' },
+  planned: { label: 'PLANNED', cls: 'border border-dashed text-muted-foreground' },
+};
+const small = 'text-sm text-muted-foreground';
+const badge = 'inline-block rounded-sm px-1.5 py-1 font-mono text-[11px] leading-none tracking-[.06em] uppercase';
+---
+
+<p class={`mt-1 max-w-prose ${small}`}>
+  One story, from found to posted, as the board sees it. Each step names the column the card sits in, who acts, what to
+  do and the exact text to run or paste. Gold is yours; the rest is an agent or a CLI. The ids in the examples are the
+  first ready story's: <code>{topic}</code> / <code>{story}</code>.
+</p>
+<ol class="mt-4 grid max-w-4xl gap-3">
+  {
+    steps.map((s, i) => (
+      <li class={`rounded-lg border p-3 ${s.who === 'you' ? 'border-l-4 border-l-primary bg-card' : 'bg-card'}`}>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-mono text-xs text-muted-foreground">{String(i + 1).padStart(2, '0')}</span>
+          <span class={`${badge} ${WHO[s.who].cls}`}>{WHO[s.who].label}</span>
+          <strong>{s.t}</strong>
+          <span class={`${small} ml-auto`}>
+            board: <span class="font-medium text-foreground">{s.col}</span>
+          </span>
+        </div>
+        <p class={`mt-2 max-w-prose ${small}`}>{s.d}</p>
+        {s.run && (
+          <pre class="mt-2 overflow-x-auto rounded-sm bg-muted p-2 font-mono text-xs leading-relaxed">{s.run}</pre>
+        )}
+        <p class={`mt-2 ${small}`}>
+          {s.where && (
+            <>
+              Where: <a href={href(s.where.href)}>{s.where.label}</a>.{' '}
+            </>
+          )}
+          Done when: {s.done}.
+        </p>
+      </li>
+    ))
+  }
+</ol>

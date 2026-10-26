@@ -206,7 +206,7 @@ npm run video -- preview <topic> <story-id>    # Remotion studio on the same com
 ```
 
 Commit `render.json`, `narration.json`, `timeline.json`, `music.json`, `mix.json` and the build report; the audio,
-chunks, frames, contact sheet and mp4 are ignored. The production board (`/production/` on the dev server) reads the build report: a
+chunks, frames, contact sheet and mp4 are ignored. The production board (`/admin#board` on the dev server) reads the build report: a
 render of every storyboard scene that passes QA against the locked fingerprints is `rendered`, with a soundtrack
 mixed in it is `scored`, with a current review package `packaged`; anything less is `video`. QA is integrity and
 consistency only; a person reviews the contact sheet and the video before any publication decision.
@@ -323,7 +323,7 @@ Short; the related-video link has no API and is set in YouTube Studio, then reco
 
 ## Production board
 
-`/production/` on the dev server (never on the public site) shows what stage every topic, story and script is in. Everything on it is derived at
+The Board, Stages, Pipeline and Artifacts tabs of `/admin` on the dev server (never on the public site) show what stage every topic, story and script is in. Everything on them is derived at
 build time by `src/lib/production.ts` from the committed files: the research pipeline per topic (sources listed vs
 fetched, fetched vs extracted, documents vs recorded verdicts, report vs store, stories.json vs a fresh `discover`,
 candidates reviewed), each story's readiness, and for each `topics/<topic>/scripts/<slug>/` the health of every artifact.

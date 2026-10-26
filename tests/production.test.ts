@@ -12,6 +12,8 @@ import {
   board,
   checkDecisions,
   columnOf,
+  shortColumnOf,
+  type ShortRow,
   boardNext,
   mainState,
   topicBoard,
@@ -311,8 +313,16 @@ describe('upload values', () => {
 });
 
 describe('board columns', () => {
-  const row = (story: object, production: object | null = null, decision: object | null = null) =>
-    ({ story: { readiness: 'ready', ...story }, production, decision, next: '' }) as unknown as StoryRow;
+  const row = (story: object, production: object | null = null, decision: object | null = null, shorts: object = {}) =>
+    ({
+      story: { readiness: 'ready', ...story },
+      production,
+      decision,
+      next: '',
+      shorts: [],
+      shortsNext: null,
+      ...shorts,
+    }) as unknown as StoryRow;
   it('one card per video, in the column of whoever acts next', () => {
     expect(columnOf(row({}))).toBe('ready');
     expect(columnOf(row({ readiness: 'needs-research' }))).toBe('needs-research');
@@ -332,6 +342,49 @@ describe('board columns', () => {
     expect(columnOf(at('changes-requested'))).toBe('changes-requested');
     expect(columnOf(at('published', 'validate'))).toBe('published'); // live stays live when the script is edited
     expect(columnOf(at('metadata-behind', 'validate', true))).toBe('published'); // and when its thumbnail changes
+  });
+  it('a draft build is at draft review until final replaces it, uploaded or not', () => {
+    const draft = { stage: 'packaged', build: { sha: 'd', status: 'draft' } };
+    expect(columnOf(row({}, draft))).toBe('draft-review');
+    const uploaded = (status: string) => ({
+      ...draft,
+      publish: { main: 'youtube', outputs: [{ id: 'youtube', state: { status } }] },
+    });
+    expect(columnOf(row({}, uploaded('not-uploaded')))).toBe('draft-review');
+    expect(columnOf(row({}, uploaded('uploaded')))).toBe('draft-review');
+    expect(columnOf(row({}, uploaded('changes-requested')))).toBe('changes-requested'); // sent back: paste the prompt
+    expect(columnOf(row({}, { ...draft, build: { sha: 'r', status: 'release' } }))).toBe('your-review');
+  });
+  it('an approved video waits in shorts while any Short is owed', () => {
+    const approved = {
+      stage: 'packaged',
+      publish: { main: 'youtube', outputs: [{ id: 'youtube', state: { status: 'approved' } }] },
+    };
+    expect(columnOf(row({}, approved))).toBe('approved');
+    expect(columnOf(row({}, approved, null, { shortsNext: 'npm run shorts -- discover t s' }))).toBe('shorts');
+    const short = (readiness: string, production: object | null = null) => ({ readiness, production, next: '' });
+    expect(columnOf(row({}, approved, null, { shorts: [short('needs-review')] }))).toBe('shorts');
+    expect(columnOf(row({}, approved, null, { shorts: [short('ready', { stage: 'packaged' })] }))).toBe('shorts');
+    expect(columnOf(row({}, approved, null, { shorts: [short('rejected')] }))).toBe('approved');
+    const done = {
+      stage: 'packaged',
+      publish: { main: 'youtube', outputs: [{ id: 'youtube', state: { status: 'approved' } }] },
+    };
+    expect(columnOf(row({}, approved, null, { shorts: [short('ready', done)] }))).toBe('approved');
+  });
+  it('a Short sits in the same columns under its parent; a rejected candidate in none', () => {
+    const short = (readiness: string, production: object | null = null) =>
+      ({ readiness, production, next: '' }) as unknown as ShortRow;
+    expect(shortColumnOf(short('rejected'))).toBeNull();
+    expect(shortColumnOf(short('needs-review'))).toBe('needs-review');
+    expect(shortColumnOf(short('ready'))).toBe('ready');
+    expect(shortColumnOf(short('ready', { stage: 'render' }))).toBe('producing');
+    expect(shortColumnOf(short('ready', { stage: 'packaged' }))).toBe('your-review');
+    const uploaded = {
+      stage: 'packaged',
+      publish: { main: 'youtube', outputs: [{ id: 'youtube', state: { status: 'uploaded' } }] },
+    };
+    expect(shortColumnOf(short('ready', uploaded))).toBe('uploaded');
   });
 
   it('production.json holds queued and parked only', () => {

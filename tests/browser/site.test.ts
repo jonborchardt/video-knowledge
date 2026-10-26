@@ -19,7 +19,8 @@ const WIDTHS = [320, 375, 768, 1024, 1440]; // the named breakpoints; the sweep 
 const WCAG = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const FOCUSABLE =
   'a[href], button:not([disabled]), input:not([disabled]), select, textarea, summary, [tabindex]:not([tabindex="-1"])';
-const isTopic = (p: string) => /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions|institutions)\//.test(p);
+const isTopic = (p: string) =>
+  /^[^/]+\/index\.html$/.test(p) && !/^(about|commissions|inquiries|institutions)\//.test(p);
 
 let server: Awaited<ReturnType<typeof preview>>;
 let origin = '';
@@ -60,7 +61,7 @@ it('has the built site to check (npm run build), one page per template', () => {
   expect(pages.length, 'no pages in dist/: run npm run build').toBeGreaterThan(0);
   if (process.env.WEB_QUALITY_FULL !== '1')
     expect(pages, 'representativePages() lost a template').toHaveLength(
-      pages.some((p) => readFileSync(join(DIST, p), 'utf8').includes('data-article')) ? 8 : 7,
+      pages.some((p) => readFileSync(join(DIST, p), 'utf8').includes('data-article')) ? 9 : 8,
     );
 });
 
