@@ -47,6 +47,10 @@
     "ai-coding/generated-code-drifts-codebase-established-conventions|asserts|ai-coding/sources/coderabbit-ai-vs-human-code-report.txt#L14-L40": {
       "level": "partial",
       "reason": "issues flagged by the vendor's own review taxonomy on PRs labelled by co-authorship signals, not violations of each repository's stated conventions"
+    },
+    "ai-coding/specs-code-workflows-ignore-generated-not|asserts|ai-coding/sources/2607.09902.txt#L543-L556": {
+      "level": "partial",
+      "reason": "a cross-project association between merging pull requests without review and later corrective maintenance of agentic code (R2 6%); it is not causal and has no spec dimension, so it bears on unreviewed merging, not on whether a good spec lets you ignore the code"
     }
   },
   "stories": {
@@ -244,7 +248,7 @@
       "whyWatch": "Eight sources say spec-to-code without reading the output fails, two say it works; the corpus has the understanding-loss experiment and little else.",
       "tension": "A workflow argument with one adjacent experiment.",
       "evidenceNeeded": "Outcomes of teams that ship generated code unread versus teams that review it, on defects and later change cost.",
-      "research": "The code-ownership experiment shows authors understand AI-assisted code less and the vibe-coding review only recommends reading code before committing; nothing measures a spec-only workflow (the spec as source of truth, generated code unread) against a reviewed one on defects, incidents or later change cost."
+      "research": "The post-merge fate study links merging agentic code without review to more later corrective maintenance, but only as a project-level association (R2 6%) with no measure of spec quality; the code-ownership experiment shows understanding loss and the vibe-coding review only recommends reading code. Unblocking needs a comparison of spec-driven teams that ship generated code unread against teams that review it, on defects, incidents or later change cost, holding spec quality fixed."
     },
     "conflict:generated-code-drifts-codebase-established-conventions": {
       "coherence": {

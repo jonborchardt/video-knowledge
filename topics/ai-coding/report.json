@@ -110,6 +110,7 @@
           "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt"
           ]
@@ -2496,6 +2497,7 @@
           "documents": [
             "ai-coding/sources/2507.00788.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/4859137.txt"
           ]
@@ -2654,25 +2656,26 @@
           "asserted": 2,
           "denied": 0,
           "tally": {
-            "right": 0,
+            "right": 1,
             "wrong": 0,
-            "partly": 2,
+            "partly": 1,
             "untestable": 0,
             "unknown": 0
           },
-          "strongest": "prior",
-          "effective": "partly",
-          "confidence": 0.5,
+          "strongest": "source",
+          "effective": "right",
+          "confidence": 0.55,
           "videos": [
             "Zdus-d4ehN0",
             "j-ZEhEiHzjg"
           ],
-          "note": "CodeRabbit's 2025 PR analysis found ~1.7x more issues in AI-authored PRs, and security studies agree; results depend heavily on review and tooling, and some studies find parity.",
-          "source": null,
+          "note": "Tracking lines merged over a year in 182 repositories, agentic lines were changed by bug-fixing commits more often than human lines (4.0% vs 2.7% by 180 days; corrective-maintenance hazard 49% higher), while adaptive, perfective and preventive maintenance did not differ; observational and attribution is heuristic, but a large post-merge comparison against human code in the same projects.",
+          "source": "ai-coding/sources/2607.09902.txt#L372-L384",
           "documents": [
             "ai-coding/sources/2302.06590.txt",
             "ai-coding/sources/2507.09089v2.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/4859137.txt",
             "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt",
@@ -2973,6 +2976,7 @@
           "documents": [
             "ai-coding/sources/2310.02059.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
           ]
@@ -3633,6 +3637,7 @@
           "documents": [
             "ai-coding/sources/2501.06972.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt"
           ]
         },
@@ -11852,6 +11857,60 @@
         },
         {
           "claim": {
+            "id": "ai-coding/generated-code-contains-more-defects-human",
+            "text": "AI-generated code contains more defects than human-written code",
+            "topic": "ai-coding",
+            "asserted": 2,
+            "denied": 0,
+            "tally": {
+              "right": 1,
+              "wrong": 0,
+              "partly": 1,
+              "untestable": 0,
+              "unknown": 0
+            },
+            "strongest": "source",
+            "effective": "right",
+            "confidence": 0.55,
+            "videos": [
+              "Zdus-d4ehN0",
+              "j-ZEhEiHzjg"
+            ],
+            "note": "Tracking lines merged over a year in 182 repositories, agentic lines were changed by bug-fixing commits more often than human lines (4.0% vs 2.7% by 180 days; corrective-maintenance hazard 49% higher), while adaptive, perfective and preventive maintenance did not differ; observational and attribution is heuristic, but a large post-merge comparison against human code in the same projects.",
+            "source": "ai-coding/sources/2607.09902.txt#L372-L384",
+            "documents": [
+              "ai-coding/sources/2302.06590.txt",
+              "ai-coding/sources/2507.09089v2.txt",
+              "ai-coding/sources/2603.28592v3.txt",
+              "ai-coding/sources/2607.09902.txt",
+              "ai-coding/sources/2607.21652v1.txt",
+              "ai-coding/sources/4859137.txt",
+              "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt",
+              "ai-coding/sources/cui-demirer-copilot-field-experiments.txt"
+            ]
+          },
+          "prior": "partly",
+          "evidence": "right",
+          "method": "source",
+          "overrides": true,
+          "priorRecord": {
+            "method": "prior",
+            "verdict": "partly",
+            "note": "CodeRabbit's 2025 PR analysis found ~1.7x more issues in AI-authored PRs, and security studies agree; results depend heavily on review and tooling, and some studies find parity.",
+            "confidence": 0.55,
+            "date": "2026-10-14"
+          },
+          "evidenceRecord": {
+            "method": "source",
+            "verdict": "right",
+            "confidence": 0.55,
+            "note": "Tracking lines merged over a year in 182 repositories, agentic lines were changed by bug-fixing commits more often than human lines (4.0% vs 2.7% by 180 days; corrective-maintenance hazard 49% higher), while adaptive, perfective and preventive maintenance did not differ; observational and attribution is heuristic, but a large post-merge comparison against human code in the same projects.",
+            "source": "ai-coding/sources/2607.09902.txt#L372-L384",
+            "date": "2026-10-26"
+          }
+        },
+        {
+          "claim": {
             "id": "ai-coding/rankings-best-coding-tool-roundups-mostly",
             "text": "Rankings in 'best AI coding tool' roundups mostly reflect reviewer opinion rather than repeatable benchmarks",
             "topic": "ai-coding",
@@ -11925,6 +11984,7 @@
             "documents": [
               "ai-coding/sources/2310.02059.txt",
               "ai-coding/sources/2603.28592v3.txt",
+              "ai-coding/sources/2607.09902.txt",
               "ai-coding/sources/2607.21652v1.txt",
               "ai-coding/sources/coderabbit-ai-vs-human-code-report.txt"
             ]
@@ -13514,6 +13574,7 @@
           "documents": [
             "ai-coding/sources/2501.06972.txt",
             "ai-coding/sources/2603.28592v3.txt",
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt"
           ]
         },
@@ -13937,6 +13998,7 @@
           "note": "Ignoring code entirely leads to drift and debt in real codebases; but spec-driven approaches with code review do work.",
           "source": null,
           "documents": [
+            "ai-coding/sources/2607.09902.txt",
             "ai-coding/sources/2607.21652v1.txt",
             "ai-coding/sources/More_Code_Less_Understanding_On_the_Impact_of_AI_Assistants_on_Developers_Productivity_and_Code_Ownership.txt"
           ]
@@ -20799,7 +20861,7 @@
       "wrong": [
         "ai-coding/developers-should-read-correct-generated-plans"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21171,7 +21233,7 @@
         "ai-coding/having-agent-plan-research-before-implementing"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21283,7 +21345,7 @@
         "ai-coding/self-reported-code-maintainability-tends-decline"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21565,7 +21627,7 @@
       "wrong": [
         "ai-coding/goal-loop-commands-prompt-agent-until"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -21695,7 +21757,7 @@
       "wrong": [
         "ai-coding/assisted-development-specification-not-code-should"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22406,7 +22468,7 @@
         "ai-coding/time-boxing-attempts-get-solve-task"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -22835,7 +22897,7 @@
         "ai-coding/security-data-critical-code-auth-payments"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23599,7 +23661,7 @@
         "ai-coding/system-design-architecture-judgment-remain-human"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -23707,12 +23769,12 @@
       "channel": "Sajjaad Khader",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.7777777777777778,
+      "score": 0.8333333333333334,
       "scaled": 2,
       "rating": null,
       "assertions": 9,
       "testable": 9,
-      "novelty": 0.7147654428904429,
+      "novelty": 0.8647654428904429,
       "redundancy": 0,
       "thinEvidence": 0.6666666666666666,
       "worthWatching": "mixed",
@@ -23905,7 +23967,7 @@
       "wrong": [
         "ai-coding/specs-code-workflows-ignore-generated-not"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24201,7 +24263,7 @@
         "ai-coding/app-generation-governed-low-code-platform",
         "ai-coding/enterprise-grade-applications-can-idea-production"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24350,7 +24412,7 @@
         "ai-coding/vibe-coded-apps-work-prototypes-but"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24595,7 +24657,7 @@
       "wrong": [
         "ai-coding/generated-changes-should-pass-human-review"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24669,7 +24731,7 @@
         "ai-coding/speeds-generation-human-attention-review-understanding"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -24984,12 +25046,12 @@
       "channel": "Native Notify",
       "topic": "ai-coding",
       "watched": false,
-      "score": 0.875,
+      "score": 0.9375,
       "scaled": 2,
       "rating": null,
       "assertions": 8,
       "testable": 8,
-      "novelty": 0.4531891025641025,
+      "novelty": 0.6031891025641026,
       "redundancy": 0,
       "thinEvidence": 0.25,
       "worthWatching": "mixed",
@@ -25132,7 +25194,7 @@
         "ai-coding/specs-code-workflows-ignore-generated-not"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25365,7 +25427,7 @@
         "ai-coding/updating-agent-rules-workflows-after-each"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25395,7 +25457,7 @@
       "wrong": [
         "ai-coding/summarizing-pruning-conversation-history-keeps-long"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25689,7 +25751,7 @@
         "ai-coding/helps-little-can-hurt-when-working"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -25987,7 +26049,7 @@
         "ai-coding/reliably-useful-generating-tests-documentation"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26099,7 +26161,7 @@
         "ai-coding/tools-slowed-experienced-open-source-developers"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26183,7 +26245,7 @@
         "ai-coding/top-down-usage-mandates-unrealistic-productivity"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-21",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -26852,7 +26914,7 @@
       "wrong": [
         "ai-coding/goal-loop-commands-prompt-agent-until"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -27030,7 +27092,7 @@
         "ai-coding/specs-code-workflows-ignore-generated-not"
       ],
       "wrong": [],
-      "lastJudged": "2026-10-15",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     },
     {
@@ -27093,7 +27155,7 @@
         "ai-coding/ide-based-assistants-like-cursor-obsolete",
         "ai-coding/specs-code-workflows-ignore-generated-not"
       ],
-      "lastJudged": "2026-10-14",
+      "lastJudged": "2026-10-26",
       "supersededBy": null
     }
   ],

@@ -1,0 +1,899 @@
+                                                                                                                         Do These Violent Delights Have Violent Ends?
+                                                                                                                         Measuring the Post-Merge Fate of Agentic Code
+
+                                                                                                                                    Chunqiu Steven Xia                                                           Courtney Miller
+
+                                                                                                                         University of Illinois Urbana-Champaign                                         George Washington University
+                                                                                                                                        Urbana, IL, USA                                                        Washington, DC, USA
+
+                                                                                                                                     chunqiu2@illinois.edu                                                   courtney.miller@gwu.edu
+
+arXiv:2607.09902v1 [cs.SE] 10 Jul 2026                                                                                      Abstract—Agentic coding tools are increasingly used to make       5%         4.0%  4.6%
+                                                                                                     Cumulative Incidenceautonomous repository-level changes to real-world projects. Prior    4% 3.5%    2.9%  3.3%
+                                                                                                                         work has largely evaluated these contributions at the pre-           3% 2.6%
+                                                                                                                         merge stage, through outcomes such as pull request acceptance
+                                                                                                                         and review effort. Far less is known about what happens to           2% 2.1%                                       Agentic
+                                                                                                                         agentic code post-merge. Yet merge success alone does not reveal     1% 1.6%                                       Human
+                                                                                                                         whether a contribution will remain stable or require bug fixes                                                300
+                                                                                                                         and other corrective maintenance downstream. We conduct a            0%         100 200
+                                                                                                                         longitudinal empirical analysis of agentic and human contribu-               0        Days Since Merge
+                                                                                                                         tions across 182 repositories, tracking their post-merge fate over
+                                                                                                                         time, characterizing the intent of subsequent modifications, and     Fig. 1: CIF for corrective terminations. Dots represent time
+                                                                                                                         analyzing the defects and vulnerabilities they introduce. While      points of 10/30/90/180 days since merge.
+                                                                                                                         the overall maintenance rates are similar, agentic contributions
+                                                                                                                         require significantly higher rates of corrective maintenance and        In fields like medicine and aviation, performance claims
+                                                                                                                         introduce more security weaknesses and dependency vulnerabil-        about tools that carry safety risks are expected to be substanti-
+                                                                                                                         ities. We also find statistically significant evidence that agentic  ated before the tool is relied on. Medical devices like surgical
+                                                                                                                         maintenance burden is associated with repository characteristics.    robots must clear thorough regulatory review processes for
+                                                                                                                         In particular, each 10 percentage-point increase in a project’s      safety and effectiveness before they can get FDA approval
+                                                                                                                         no-review rate is associated with roughly a 6% increase in           for use. Agentic coding tools face no comparable bar before
+                                                                                                                         agentic maintenance burden on average. As coding agents become       bold sweeping promises are made and they are deployed to
+                                                                                                                         pervasive in software development, our findings highlight the        write code for banks, hospitals, and other critical systems.
+                                                                                                                         need to evaluate and design agentic tools not only to produce        And whatever scrutiny the output receives largely occurs post-
+                                                                                                                         mergeable changes, but to produce contributions that remain          merge by the people who already paid for the tool and now po-
+                                                                                                                         secure and maintainable.                                             tentially face another cost much greater. The actualized burden
+                                                                                                                                                                                              of this is already a common complaint among developers [6],
+                                                                                                                                                   I. INTRODUCTION                            with many describing a dynamic where generation is cheap
+                                                                                                                                                                                              and then the arduous work of review and clean up falls on
+                                                                                                                            The case for adopting Generative AI (GenAI) agentic coding        their shoulders [7]. While practitioners have articulated this
+                                                                                                                         tools is made almost entirely based on tool-centric metrics:         loudly and clearly, it has been argued largely from anecdote
+                                                                                                                         how much the tools produce and what their output looks like          rather than measured in the code itself.
+                                                                                                                         at merge. Microsoft reports GenAI produces close to 30% of
+                                                                                                                         its codebase [1], Meta aims for agentic coding tools to handle          Almost everything we know about agentic code quality
+                                                                                                                         half of its development by late 2026 [2], and Google reports         comes from measurements taken at or before merge: per-
+                                                                                                                         that 75% of their new code is produced by GenAI [3]. In a            formance on benchmarks [8], pre-merge checks, and pull
+                                                                                                                         recent survey of more than 200 technology decision-makers,           request acceptance rates and review outcomes [9], [10]. But
+                                                                                                                         67% claim that agentic coding tools write over half of their         merge only marks the beginning of a contribution’s life in a
+                                                                                                                         organization’s weekly code [4]. These are the numbers used to        project. What happens to agentic code after merge, and how it
+                                                                                                                         justify adoption. They say little about that code’s sustainability,  compares to human code over time, remains largely unstudied.
+                                                                                                                         reliability, security, or maintainability in the long term post-
+                                                                                                                         merge. What happens to agentic code once it becomes part of          Our work. To bridge this gap, we present the first longitudinal
+                                                                                                                         the software system remains largely unstudied.                       empirical study of the post-merge lifecycle of agentic and
+                                                                                                                                                                                              human code in real-world open source projects by exploring
+                                                                                                                            This tool-centric framing has revived evaluation metrics that     the following research questions (RQs):
+                                                                                                                         are weak proxies for the quality of what actually ships: lines
+                                                                                                                         of code written, number of merged pull requests, percentage of       RQ1a Does agentic code require more post-merge mainte-
+                                                                                                                         code written by GenAI, and even “tokenmaxxing" (amount of
+                                                                                                                         vendor tokens spent) [5]. Such metrics make for impressive
+                                                                                                                         growth graphs, but they reveal little about how that change
+                                                                                                                         behaves as it evolves with the project.
+        nance compared to human code?                              nance intent, line-level survival outcome, and static analysis
+RQ1b Does agentic code require different types of post-merge       findings. (2) A comprehensive post-merge comparison of agen-
+                                                                   tic and human contributions, covering overall maintenance
+        maintenance compared to human code?                        activity, the composition and rate of corrective maintenance,
+RQ1c Does agentic code require different types of corrective       the accumulation of corrective burden as agentic code share
+                                                                   grows over time, and some of the project characteristics
+        maintenance and introduce more defects compared to         associated with agentic maintenance burden.
+        human code?
+ RQ2 Does corrective maintenance burden increase in projects                   II. BACKGROUND AND RELATED WORK
+        as the proportion of agentic code increases over time?
+ RQ3 What project characteristics are associated with in-          A. LLMs and Coding Agents
+        creased agentic maintenance burden?
+                                                                      With the recent rise of large language models (LLMs) and
+   We study 182 repositories with sustained agentic contribu-      their high benchmark performance on software engineering
+tions, tracking what happens to agentic and human contri-          tasks [11], developers have started adopting LLMs as part
+butions over time. We collect commits merged over a one-           of their development workflows. Initially, LLM-based coding
+year window from May 1st 2025 to May 31st 2026. For each           assistants such as GitHub Copilot [12] and Cursor [13]
+commit, we identify whether it was contributed by an agentic       were developed to be integrated into developers’ IDEs. These
+coding tool or human, and we classify its maintenance purpose      coding assistants provide inline code completion suggestions
+at two levels: a high-level maintenance class (e.g., corrective    based on the surrounding code context which users could
+or perfective) and a finer-grained operational intent (e.g., bug   accept, modify, or reject. More recently, autonomous coding
+fix, feature, or refactor). For each line in a commit, we perform  agents have emerged to move beyond inline completion to
+a line-level lifecycle analysis that tracks whether the line       perform repository-level development tasks, e.g., feature im-
+survived or was terminated, when, and by which later commit,       plementation, refactoring, code execution, and pull request
+letting us connect every termination to the intent of the commit   submission. Tools like Anthropic’s Claude Code [14] and
+responsible for it. For each commit we also run Semgrep            OpenAI’s Codex [15] have access to the full codebase
+to identify source-code vulnerabilities and OSV-Scanner to         with a chat-based interface that allows the user to interact
+identify dependency vulnerabilities, and we use SonarQube to       and collaborate to perform development tasks. In this sense,
+take weekly snapshots of each repository over the observation      the usage of coding agents shifts the developer’s role from
+window. We then apply survival analysis, longitudinal panel        manual coding toward high-level task orchestration with the
+models, and meta-regression to answer our RQs.                     promise of drastically improving developer efficiency [16].
+                                                                   GITHUB reports more than 1 million open-source repositories
+   Our findings show that while agentic code does not have         used GenAI coding tools between 2024 and 2025 [17], and
+a different maintenance burden in aggregate, that flat trend       OpenAI reports more than 5 million weekly Codex users as of
+results from significant heterogeneity in the agentic main-        June 2026 [18], with a similar number of users being estimated
+tenance burden across projects. The composition of main-           for Claude Code [19]. These numbers suggest the adoption
+tenance also differs: agentic code receives a 46% higher           of coding agents shows no sign of slowing down. However,
+corrective maintenance rate and a 45% higher bug-fixing rate       despite this rapid adoption and the promise of improved de-
+on average (cf. Figure 1), and agentic contributions introduce     veloper productivity, our understanding of how coding agents
+more security weaknesses and dependency vulnerabilities at         affect software development remains limited. Questions about
+merge. Agentic corrective maintenance burden also accumu-          how developers interact with agentic contributions, how those
+lates: within a project, a higher share of agentic code in one     contributions differ from human code, and what longitudinal
+month is associated with a higher corrective maintenance rate      maintenance, correctness, and security risks they introduce
+the following month, including corrective work performed by        must be continually examined.
+human developers.
+                                                                   B. Coding Agents Impact on Software Development
+   Our model demonstrates the cross-project variation in main-
+tenance burden is not random: a project’s agentic maintenance         Driven by the recent adoption of GenAI-based tools, re-
+burden is associated with characteristics of the project itself.   searchers have begun evaluating their impact on software
+Of the project characteristics we evaluate, a project’s no-        development. Initial research mainly focuses on LLM-based
+review merge rate has the strongest relationship with agentic      coding assistants across areas of code quality [20], [21], [22],
+maintenance burden, with each 10 percentage-point increase in      code security [23], [24], [25], maintainability [26], [27], and
+a project’s no-review rate being associated with a roughly 6%      usability and productivity [28], [29], [30], [31], [32], [33],
+increase in agentic maintenance burden on average. Weaker          [34], [35]. These studies report mixed productivity effects,
+test infrastructure and higher technical debt also both point      ranging from moderate gains [35], [36], [37], [38] to measur-
+in the same direction without reaching significance, together      able decreases [39], [40]. At the same time, growing evidence
+suggesting a picture where weaker engineering safeguards are       raises concerns about the trustworthiness of generated code,
+associated with higher agentic maintenance burden.                 including security vulnerabilities [41], [23], regressions [42],
+                                                                   code smells [43], and outdated API usage [44].
+   In summary, this paper makes the following contributions:
+(1) A longitudinal dataset of agentic and human contributions
+across 182 repositories, linking each commit to its mainte-
+Metric                 Mean Min Max                               Agents considered
+
+Stars                  4,867.2 10 45,401                             Claude Code, Codex, GitHub Copilot, Cursor, Devin,
+                                                                     Aider, OpenHands, Cline, Roo Code, Windsurf,
+Forks                  945.6  0 15,123                               Sweep, Replit Agent, Jules, Gemini, Amazon Q
+
+Human contributors     70.1 1 443                                  TABLE II: GenAI coding agents targeted in study.
+
+Unique AI agents used  2.4 1  5
+
+Commits                2,273.5 153 19,934
+
+AI-coauthored commits 169.8   1 2,397
+
+Human commits          1,860.7 42 18,711
+
+TABLE I: Descriptive statistics of our dataset.                   Maintenance Class  Operational Intent
+
+   More recently, following the adoption trend, researchers       Corrective         Security fix, Revert, Bug fix
+have begun studying the impact of autonomous coding agents        Adaptive           Dependency update
+on software development [45], [46]. Watanabe et al. [9] found     Perfective         Performance, Feature, Documentation, Resource
+that more than 80% of Claude Code pull requests were              Preventive         Refactor, Test, Style/Formatting
+eventually merged, with less than 50% of agentic pull requests    Management         Merge/Release/Versioning, Build/Config/CI
+requiring additional human revisions. He et al. [47] studied
+the impact of Cursor adoption across 807 GITHUB reposi-           TABLE III: Two levels of maintenance intent categories.
+tories and found that although project development velocity
+increased temporarily, code complexity and static analysis        dataset [49] which contains pull requests (PRs) made by AI-
+warnings also increased persistently, ultimately slowing project  coding agents on public GITHUB repositories. This yields an
+velocity in the long term. Researchers have also begun collect-   initial set of 2,860 projects with at least 10 stars and at least
+ing datasets of real-world agentic coding tool usage, including   one human and one agentic PR. We remove 29 projects from
+AIDev [48], which captures more than 450,000 agentic pull         the top and bottom 1% of the star distribution to reduce the
+requests, and Agents in the Wild [49], which continuously         influence of extreme popularity outliers. Next, to filter out
+tracks agentic pull requests on GITHUB. Using and build-          projects without sustained agentic activity, we exclude 2,631
+ing on these datasets, recent studies have examined agentic       projects without at least 10 agentic and 10 human PRs overall,
+pull-request outcomes and failure modes [50], [51], review        at least three months of agentic PRs, and at least 10 commits
+dynamics [52], [53], [10], code change characteristics [54],      per month over the past six months. We further filter out one
+[55], and repository-level outcomes [56], [57]. Taken together,   non-source-code project. Lastly, we remove 17 extremely large
+these studies show that while autonomous coding agents can        projects, whose size hinders our lifecycle and static analysis
+produce mergeable pull requests at a high rate, they may also     to end with 182 total projects in our dataset.
+strain the review process and increase project complexity.
+                                                                  2 Commit & PR Collection & Classification. For
+   However, most existing work focuses on the pre-merge           each project in our dataset, we collect all commits
+stage. A few studies include brief post-merge analyses, but       merged during our observation window. To identify agen-
+only through narrow windows. Rahman and Shihab [58]               tic commits, we use a simple classification procedure that
+focus purely on agentic code survival and use only coarse         matches commit author name, email, and commit signa-
+modification intent while Liu et al. [46] focuses on the persis-  ture against known agent names (e.g., Co-authored-by:
+tence of static-analysis issues introduced by agentic commits.    Claude <noreply@anthropic.com>). Table II lists the AI
+Both provide post-merge signals, but neither reconstructs the     coding agents that we specifically target. In addition, we
+broader maintenance trajectory of agentic contributions. Our      collect basic PR review metrics including the number of
+study addresses this gap by following agentic and human code      comments and review threads.
+after merge, identifying the later commits that modify them,
+characterizing the intent of those changes, measuring defects     3 Commit Maintenance Intent Classification. We clas-
+and vulnerabilities introduced, and studying how agentic code     sify the maintenance intent of each commit at two levels
+share and project characteristics affect maintenance burden.      (cf. Table III): (1) high-level maintenance class and (2) low-
+                                                                  level operational intent. For maintenance class, we extend the
+                            III. METHODS                          classic Swanson’s taxonomy [59], [60] with an additional man-
+                                                                  agement category for commits related to merging, release, and
+   Table I shows the overall summary characteristics of the       versioning which are not captured by the original taxonomy.
+repositories in our dataset. We conduct our longitudinal anal-    For operational intent, we borrow concepts from prior large-
+ysis over an observation window from May 1st 2025 to              scale study [61], [62] as classification signals.
+May 31st 2026. We start at May 2025 because that is when
+we observe a meaningful increase in agentic contributions.           We first classify each commit into the low-level operational
+Figure 2 shows the overview of our data collection approach.      intent and then map that intent to the high-level maintenance
+                                                                  class according to Table III. We begin by tagging the modified
+1 Project Identification. We start by identifying projects        files by file types (source code, test, doc, config, dependency,
+with agentic contributions. We use the Agents in the Wild         and resource) based on file extensions and paths. We then
+                                                                  use these file-type tags to assign scores to specific intents.
+                                                                  For example, a commit that modifies only test files will have
+                                                                  scores added to the test intent. Next, we analyze the commit
+                                                                              TODO: repo the same as the commit
+                                                                              Also make the spacing between each number and the
+                                                                              label consistent
+
+                      jetpack                                                                       [feat]: implement … 3ds01fd                                 Create …  1cju87c
+                                                                                                         Regular-User authored
+                           1.8K 881   [feat]: implement … 3ds01fd    Feature                                                     git blame -line …              Regular-User authored
+                                           Regular-User authored
+                      rolldown
+                                      [ﬁx]: change …        98df918  Bug Fix LLM-based                                           [ﬁx]: change …        98df918
+                           13.8K 802       claude authored                                                                            claude authored
+                                                                                    classification                                                                        ﬁle_1
+                      codecarbon      [doc]: update …       20fe98h                                                              Terminated!
+                                           codex authored            Doc                                                                                                     ﬁle_2
+                           1.9K 296                                                                                                                                          ﬁle_3
+                                      Create …              1cju87c  Mixed    Feature                                            git blame -line …                           ﬁle_4
+1 Project Identification
+                                      Regular-User authored                                                                                                                5 Static Analysis
+
+                                                                                                                                 survived!
+
+                                      2 Commit & PR Collection       3 Commit Maintenance           4 Lifecycle Analysis
+                                        & Classification               Intent Classification
+
+                                                            Fig. 2: Overview of the data collection process.
+
+message subject by first checking for conventional commit                     5 Static Analysis. To study changes in code quality metrics
+prefixes [63] and mapping them to operational intents. We                     and static warnings, we apply static analysis tools to our
+then apply keyword regexes commonly associated with each                      collected dataset. We use three widely used static analysis
+operational intent on the commit subject text. Finally, we                    tools: (1) Semgrep [66], rule-based analysis tool for detecting
+obtain a score distribution over all operational intents and                  security weaknesses in source code; (2) OSV-Scanner [67],
+determine a primary intent by selecting the intent with the                   dependency scanner for identifying known dependency vul-
+highest score. We also categorize commits as mixed if there                   nerabilities; and (3) SonarQube [68], software quality analysis
+are multiple intents with the same score or as unknown if no                  tool for tech-debt metrics. We apply both Semgrep and OSV-
+intent receives a sufficiently high score.                                    Scanner after each commit in our dataset. For each commit,
+                                                                              we identify all changed files and create two versions of those
+   To handle unknown or mixed commits, we perform an                          files: before the commit and after the commit. We then run
+LLM-based reclassification. Specifically, we prompt the LLM                   the analysis tools on both versions and obtain two sets of
+(we use MiniMax-M2.7 [64]) with the commit message sub-                       static findings. To measure the overall repository maintenance
+ject, body, and modified filenames and ask it to classify the                 metrics, we use SonarQube to analyze weekly snapshots of
+operational intent. To validate our commit intent classifier, one             each repository during our observation window.
+author manually labeled a random sample of 100 commits
+and compared the human labels against the classifier outputs,                        IV. RQ1: DOES AGENTIC CODE REQUIRE MORE
+yielding a Cohen’s kappa [65] of 0.94.                                                           MAINTENANCE POST-MERGE?
+
+4 Lifecycle Analysis. To study the lifecycle of agentic code                     We measure differences in overall maintenance (RQ1a),
+at scale, we track all introduced lines and determine whether                 types of maintenance (RQ1b), and types of corrective mainte-
+they have been modified during our observation window. For                    nance received and introduced defects (RQ1c).
+each line added by a commit, we classify it as (1) survived: not
+modified or removed by any future commits; or (2) terminated:                 A. Research Methods
+modified or removed by a future commit. For each terminated
+line, we also identify the exact commit, referred to as the                   Does agentic code require more maintenance? (RQ1a). We
+terminal commit, that performed the modification.                             first ask whether agentic contributions are maintained at a dif-
+                                                                              ferent overall rate than human contributions. We model post-
+   At a high level, our lifecycle analysis consists of a diff-                merge maintenance as line-level time-to-event data, treating
+tracking pass followed by a git blame-based verification                      each line introduced by an origin commit as a subject observed
+pass. First, for each added line in a commit, we replay                       from its date of merge until it is either: (1) terminated by a
+subsequent commits in topological order and update each                       later commit, our event-of-interest representing maintenance
+line’s current file and line number as later diffs shift the                  activity, or (2) right-censored, meaning that it does not expe-
+surrounding code. When a later diff touches the tracked line’s                rience an event before the end of our observation window.
+current location, we provisionally mark the line as terminated
+and record the modifying commit as the terminal commit;                          We use survival analysis, a branch of statistical analysis
+otherwise, the line remains survived. The diff-tracking pass                  for modeling time-to-event data [69]. Specifically, we use
+provides an efficient first approximation of each line’s location             the Kaplan-Meier estimator [70], a standard non-parametric
+and possible terminal commit. Next, we use git blame at                       method for estimating survival functions [71]. We estimate the
+the end of the observation window to determine whether the                    agentic maintenance burden with a Cox proportional hazards
+original line is still present. If the line is still attributed to            model and report the hazard ratio (HR) where HR > 1
+the origin commit, we mark it as survived. For lines that are                 indicates a higher termination rate for agentic lines than for
+not found in the final blame output, we verify or recover the                 human lines and HR < 1 indicates a lower termination rate.
+earliest terminal commit by checking candidate commits via
+iterative git blames. To make this tractable at scale, we                     Does agentic code require different types of maintenance?
+cache blame results, batch full-file blame calls, and parallelize             (RQ1b). We next ask whether the composition of maintenance
+blame verification across threads.                                            differs between agentic and human code. We first test whether
+                                                                              the distribution of maintenance types differs using a Rao-Scott
+cluster-corrected chi-square test [72]. We perform this test at    standard errors by repository in the survival models, applying
+the maintenance-action level where each terminal commit that       the Rao-Scott correction in the chi-square tests, and including
+terminates either agentic or human lines counts as one main-       the random intercept in the GLMMs.
+tenance action. This captures the composition of maintenance
+work performed on each group of code. We exclude terminal             The Cox and Fine-Gray models use the same specification:
+commits that maintain code from both groups in the same            authorship group as the focal covariate, file primary role as a
+action, because such commits would violate the independence-       covariate, stratification by repository, and repository-clustered
+of-observations assumption. In total, we excluded 46,320           standard errors. We assess the proportional-hazards assump-
+cross-group actions and retained 157,388 human and 13,729          tion for every survival model with the Grambsch-Therneau
+agentic maintenance actions for analysis.                          test and scaled Schoenfeld residual plots [78]. For the overall
+                                                                   corrective Cox model, the test flagged a minor proportional-
+   To estimate whether the risk of experiencing each mainte-       hazards violation. A time-split robustness check at 21 days
+nance type differs by authorship, we use Fine-Gray competing-      found no statistically distinguishable difference between the
+risks regression [73]. Unlike standard survival analysis, which    early and late agentic effects, so we report the time-averaged
+models a single event-of-interest, our setting allows each         hazard ratio as the primary estimate. For each Fine-Gray
+subject, i.e., line, to be terminated by exactly one of several    model, we verify the minimum events-per-variable threshold
+mutually exclusive maintenance intent types that compete with      of 10 following common statistical best practices [79], which
+one another. Fine-Gray regression addresses this by modeling       all categories meet. Because agentic lines skew younger, we
+the subdistribution hazard, i.e., the effect of authorship group   conduct a calendar-period sensitivity check by re-estimating
+on the cumulative incidence of a given type while treating         survival on the overlapping window in which both groups are
+the other types as competing events. We fit one Fine-Gray          well represented (August 2025 to May 2026) and comparing
+model for each maintenance class and operational intent. We        the agentic-human survival gap at 90, 180, and 270 days
+pair each model with its cumulative incidence function (CIF)       against the full-window model. The gaps match in sign and
+which estimates the probability that a line has been terminated    magnitude, indicating that no calendar adjustment is needed.
+by that maintenance intent over time.
+                                                                      The static analysis GLMMs are fit at the commit level with
+Does agentic code require different types of corrective            a repository random intercept and a log-exposure offset for
+maintenance and introduce more defects? (RQ1c). Lastly, we         the number of relevant changed lines: source-code lines for
+focus specifically on differences in corrective maintenance and    Semgrep findings and dependency-file lines for OSV-Scanner
+introduced defects between agentic and human contributions.        findings. We assess fit with DHARMa simulated residuals and
+We test whether the distribution of corrective operational         a Pearson overdispersion check [80].
+intents differs between the two groups using the same chi-
+square test as RQ1b. We then estimate corrective maintenance       Limitations. First, our authorship classification relies on
+burden using four Cox proportional hazards models: one             commit-level heuristic signals which may misclassify author-
+for overall corrective maintenance and one for each of the         ship in either direction. In addition, human contributions in
+three corrective operational intents to compare the corrective     our dataset may have unobservable AI assistance such as IDE
+termination hazard of agentic and human lines.                     inline suggestions or pasted agentic outputs. This makes the
+                                                                   human baseline a lower bound on true AI involvement and may
+   To measure defects directly, we use static analysis to count    bias estimated differences between agentic and human contri-
+the static findings each contribution introduces, with Semgrep     butions toward the null. Second, our maintenance intent labels
+for source-code security-related findings and OSV-Scanner          are obtained from a rule-based and LLM-assisted classification
+for dependency findings. For each tool, we fit two Poisson         pipeline. Particularly, commits near category boundaries (e.g.,
+generalized linear mixed models (GLMMs) [74] to answer             corrective versus perfective) may be mislabeled. Third, not
+whether agentic commits introduce more findings per unit of        every line termination necessarily reflects a defect or quality
+code changed overall, and whether they introduce more high-        problem; we mitigate this by separately analyzing different
+severity findings.                                                 maintenance intents. Fourth, our static analysis results are
+                                                                   limited to weaknesses and vulnerabilities detectable by the
+Modeling Considerations. Because we estimate the total effect      rule-based tools we use and may include false positives.
+of authorship, we adjust for confounders in our modeling           Finally, our study spans from May 2025 to May 2026 and
+formulas [75]. We treat file primary role and repository as        focuses on active open-source projects with sustained agentic
+confounders: file role reflects the task a contribution serves,    contributions. As such, longer-horizon maintenance beyond
+while repositories differ in both their level of agentic adoption  our observation window is unobserved, and our findings may
+and their baseline maintenance behavior. Repository is a high-     not generalize to closed-source software or projects with
+cardinality confounder, which we handle using the mechanism        minimal agentic adoption.
+appropriate for each model family: stratification by reposi-
+tory in the Cox and Fine-Gray models [76], and a reposi-           B. Results
+tory random intercept in the Poisson GLMMs [77]. Within-
+repository correlation additionally threatens the independence-    Does agentic code require more maintenance? (RQ1a). Our
+of-observations assumption. We address this by clustering          results indicate that agentic code does not carry a uniformly
+                               3.4M                                   Agentic 16% 16%       34%    31%
+14M openai-agents-js
+
+                19.5M               mise                              Human 9%  18%            38% 27% 8%
+                 2.3M       ngx-vest-forms                                  0%   20%       40% 60% 80% 100%
+                                                                                           Terminal line share
+                                  feldera                                                   Perfective Preventive Management
+
+                            dynatrace-mcp
+
+63.2M                            TBE-Web                              Corrective Adaptive
+                              sentry-cocoa
+                52M                                                   Fig. 4: Line-level termination maintenance class proportion.
+                            google_workspace_mcp
+
+                            PeerBanHelper
+
+                            MoviePilot                                Maintenance Intent           sHR (95% CI)
+                                     0% 25% 50% 75% 100%
+                                                                      Corrective                   1.46 [1.02, 2.08]∗
+                                     Origin commit survival rate         Security fix              1.18 [0.81, 1.72]
+                                                                         Revert                    1.39 [0.55, 3.49]
+Agentic Human Bot Survived                        Agentic  Human         Bug fix                   1.45 [1.02, 2.07]∗
+
+(a) Flow of survival and termi- (b) Survival rates of 10 se-
+
+nation events.              lected repositories.                      Adaptive                     1.00 [0.77, 1.31]
+                                                                         Dependency update         1.00 [0.77, 1.31]
+
+       Fig. 3: Post-merge maintenance rate.                           Perfective                   0.98 [0.65, 1.50]
+                                                                         Performance               1.34 [0.65, 2.80]
+higher overall maintenance burden. Agentic lines are not                 Feature                   0.71 [0.49, 1.02]
+significantly more or less likely to be terminated than human            Documentation             1.17 [0.86, 1.59]
+lines (HR = 1.11, 95% CI: 0.85–1.45, p = 0.45). Although                 Resource                  1.81 [0.68, 4.83]
+the HR suggests an ∼11% higher termination rate for agentic
+lines, the confidence interval includes 1, so the difference is       Preventive                   1.11 [0.69, 1.78]
+not statistically significant. This null result is not due to sparse     Refactor                  0.75 [0.54, 1.04]
+data: in the raw survival rate, agentic lines survive at least as        Test                      1.54 [0.96, 2.47]
+often as human lines (75.8% vs. 65.6%, cf. Figure 3a).                   Style/Formatting          0.48 [0.33, 0.68]∗∗∗
+
+   The flat HR is not evidence that authorship does not               Management                   0.39 [0.25, 0.60]∗∗∗
+matter but rather that its effect is highly project-dependent.           Merge/Release/Versioning  0.28 [0.16, 0.51]∗∗∗
+Authorship effects vary widely across per-repository survival            Build/Config/CI           0.58 [0.34, 0.99]∗
+distributions (cf. Figure 3b) and this heterogeneity washes out
+in the aggregate. We treat this heterogeneity as a key finding                  Note: ∗p < 0.05;∗∗ p < 0.01;∗∗∗ p < 0.001
+in its own right and return to it in more detail in RQ2.
+                                                                      TABLE IV: Fine-Gray regression modeling summary.
+   The Sankey flow reveals an asymmetry in who performs ter-
+minations: although human commits vastly outnumber agentic               The Fine-Gray models confirm this difference appears in
+commits, nearly half of agentic line terminations are performed       risk as well: agentic lines have a significantly higher risk
+by agentic commits themselves (cf. Figure 3a). This suggests          of experiencing corrective maintenance and lower risk of
+that agents tend to operate on existing agentic code and in           management maintenance (cf. Table IV). These are the only
+a different part of the codebase than humans. Thus, similar           maintenance classes in which the two groups diverge signif-
+overall termination rates do not imply that the underlying            icantly. Adaptive, perfective, and preventive maintenance, by
+maintenance patterns are the same. We therefore next examine          contrast, are indistinguishable once file role is accounted for.
+what kinds of maintenance each group attracts.                        At the operational intent level, the elevated corrective risk is
+                                                                      specific to bug fixes: agentic lines reach a higher cumulative
+    Key Insight: Agentic contributions do not carry a uni-            incidence of bug-fix termination almost immediately after
+    form post-merge maintenance burden. Their termina-                merge and stay there, with 4.0% of agentic lines changed
+    tion behavior varies substantially across repositories,           by a bug-fixing commit by 180 days compared with 2.7%
+    making project context critical for interpreting post-            of human lines (cf. Figure 5). Conversely, agentic lines are
+    merge maintenance.                                                significantly less likely to be terminated by style/formatting,
+                                                                      merge/release/versioning, and build/config/CI commits.
+Does agentic code require different types of maintenance?
+(RQ1b). We find that the composition of maintenance does                  Key Insight: Agentic and human contributions un-
+differ significantly. Agentic and human code receive signifi-             dergo different types of maintenance, with agentic
+cantly different mixes of maintenance (Rao-Scott chi-square               code receiving more corrective maintenance.
+= 910.6, p < 0.001, Cramér’s V = 0.07), driven by agentic
+code receiving a higher share of bug fixes and a lower share          Does agentic code require different types of corrective
+of feature work and refactoring (cf. Figure 4).                       maintenance and introduce more defects? (RQ1c). We find
+                                                                      that agentic lines receive corrective maintenance at a 49%
+                                                                      higher rate than human lines (cf. Table V). This gap appears
+                                                                      throughout the post-merge period: both groups accumulate
+                                                               4.0%                                       Cox PH        HR (95% CI)         Poisson GLMM                                                   RR (95% CI)
+                                                               2.7%
+Cumulative Incidence          4%              3.4%                                                        Corrective    1.49 [1.05, 2.12]∗  Static find.                                                   1.14 [1.08, 1.21]∗∗∗
+                                        2.9%  2.3%                                                        Bug fix       1.51 [1.06, 2.16]∗  High-sev. static find.                                         1.51 [1.33, 1.70]∗∗∗
+                                                                                                          Security fix  1.20 [0.82, 1.75]   Dep. find.                                                     1.10 [1.06, 1.15]∗∗∗
+                              3%                                                                          Revert        1.42 [0.57, 3.54]   High-sev. dep. find.                                           1.15 [1.08, 1.23]∗∗∗
+                                   2.0%
+
+                              2%                                                                                                            Note: ∗p < 0.05;∗∗ p < 0.01;∗∗∗ p < 0.001
+
+                              1%      1.6%                                   Agentic                      TABLE V: Cox PH and Poisson GLM models for corrective
+                                  1.1%                                       Human                        maintenance and static analysis findings.
+                                                                        300
+                              0%
+
+                                  0 100 200
+
+                                                     Days Since Merge                                     8                                                                                  16
+
+                                                                                                          7 7.1                                                                              14                                   13.4
+Fig. 5: CIF for bug fix. Dots represent time points of                                                    Findings per 100 commits                                                                                       8.9
+10/30/90/180 days.                                                                                        6                                                        Findings per 100 commits  12 11.9 11.1
+
+                                                                                                          5 4.5 4.3                                                                          10
+
+                                                                                                          4                                                                                   8
+
+                                                                                                          3 2.9                                                                              6
+
+                                                                                                          2                                                                                  4
+
+                            100% 13%                                                                      1                                                                                  2
+
+Corrective termination lines 75%              17%                          11%                            0 IntroduAcgedenRteicmoved  IntroduHceudmRaenmoved                                 0 IntroduAcgedenRteicmoved  IntroduHceudmRaenmoved
+                                                                        89%                                    Severity shade                                                                 Severity shade
+
+                                                               54% 46%                                                  Low Medium High                                                         Low Medium High Critical
+
+                              50% 85%         81%                                                            (a) Semgrep findings.                                                              (b) OSV-Scanner findings.
+
+                              25%
+
+                              0% Agentic                       Agentic, n=442,249 Human, n=1,558,245         Fig. 7: Static analysis findings per 100 commits.
+                                                               Terminated by Agentic Terminated by Human
+                                              Human
+
+                                  Bug fix Security fix Revert
+
+                              (a) Proportion of the line-level (b) Authorship of bug-fix ter-                Key Insight: Agentic code faces higher corrective-
+                              corrective operational intent. minations.                                      maintenance risk, driven primarily by bug fixes. Agen-
+                                                                                                             tic commits also introduce weaknesses and vulnerabil-
+                                      Fig. 6: Post-merge corrective maintenance.                             ities at higher rates, especially high-severity findings.
+
+fixes fastest in the first few weeks, the agentic curve rises                                                V. RQ2: DOES CORRECTIVE MAINTENANCE BURDEN
+above the human curve early, and the two stay roughly
+parallel thereafter (cf. Figure 1). This elevated corrective                                               INCREASE IN PROJECTS AS THE PROPORTION OF AGENTIC
+maintenance rate is concentrated in bug fixes. Agentic lines
+show a 51% higher bug-fix termination rate, while the security-                                                             CODE INCREASES OVER TIME?
+fix and revert effects are directionally higher but not significant
+(cf. Table V). The composition of corrective work, however, is                                               We now examine whether corrective maintenance accumu-
+similar across groups: the bug-fix/security-fix/revert split does                                         lates as agentic code share increases. To do so, we conduct a
+not differ significantly (Rao-Scott chi-square = 8.45, p = 0.385,                                         longitudinal panel study that analyzes how increases in agentic
+Cramér’s V = 0.01; cf. Figure 6a). Together these findings                                                code share affect repository-level corrective maintenance.
+suggest agentic code is corrected more but not differently.
+                                                                                                          A. Research Methods
+   We also find close to half of the bug-fix terminations on
+agentic lines come from agentic commits (cf. Figure 6b),                                                     We ask whether repositories experience more corrective
+echoing the RQ1a pattern of agents operating on existing                                                  maintenance as agentic code accounts for a larger share
+agentic code. Still, more than half of agentic bug fixes are                                              of their codebase over time. We construct a longitudinal
+performed by humans, indicating that agentic contributions                                                panel dataset that follows repositories month by month, al-
+continue to draw substantial human corrective effort.                                                     lowing us to relate changes in agentic code share to sub-
+                                                                                                          sequent corrective maintenance activity. We use repository-
+   Additionally, we examine the source-code and dependency                                                month as the unit of analysis. For each repository i
+findings introduced by agentic and human code. Agentic                                                    and month m, we measure corrective maintenance using
+contributions introduce Semgrep security-related findings at                                              two outcomes: (1) corrective_commit_ratei,m: number of
+1.14 times and high-severity findings (ERROR) at 1.51 times                                               corrective commits / total number of commits and (2)
+the human per-source-line rate (cf. Figure 7a and Table V). The                                           human_corrective_commit_ratei,m: the number of human cor-
+same holds for dependency vulnerabilities: agentic contribu-                                              rective commits / total number of human commits. At the same
+tions introduce OSV-Scanner findings at 1.10 times and high-                                              time, we compute the agentic_code_sharei,m as the percentage
+severity findings (HIGH/CRITICAL) at 1.15 times the human                                                 of the repository’s code, measure at the end of the month,
+per-dependency-line rate (cf. Figure 7b and Table V).                                                     that was written by agents. Using these monthly measures,
+                                                                                                          we fit panel models based on Binomial generalized linear
+                                                                                                          mixed models (GLMMs) [74] and report odds ratios (ORs).
+                                                                                                          In our setting, OR > 1 indicates that the predictor increases
+                                                                                                          corrective maintenance rate, while OR < 1 means predictor
+                                                                                                          decreases corrective maintenance rate. Our key predictor is
+Predicted corrective commit rate  25%       Corrective commit rate          human corrective commits in the following month respectively.
+                                            Human corrective commit rate    This indicates greater agentic code presence is associated not
+                                                                            only with higher repository-level corrective burden but also
+                                  20%                                       with higher corrective burden for human developers.
+
+                                  15%          5 10 15                          Key Insight: Corrective maintenance burden in-
+                                         0  Lagged Agentic code share (pp)      creases with agentic code share, including corrective
+                                                                                maintenance performed by human developers.
+Fig. 8: Predicted corrective maintenance rates as a function
+of lagged agentic code share. Slopes show Binomial GLMM’s                        VI. RQ3: WHAT PROJECT CHARACTERISTICS ARE
+predicted rates for all corrective commits and human corrective                ASSOCIATED WITH AGENTIC MAINTENANCE BURDEN?
+commits across repo-months, with shaded bands indicating
+95% confidence intervals.                                                      RQ1 shows that the maintenance burden of agentic code
+                                                                            varies substantially across projects. This heterogeneity sug-
+                                                                            gests that project characteristics may affect the agentic mainte-
+                                                                            nance burden. In this research question, we concretely examine
+                                                                            which project characteristics explain differences in post-merge
+                                                                            maintenance burden between agentic and human contributions.
+
+lagged agentic code share (agentic_code_sharei,m−1) which                   A. Research Methods
+captures the agentic code share at the end of the previous
+month. We use lagged agentic code share because our goal is                    To examine which project characteristics explain variation
+to measure how prior agentic code presence is associated with               in agentic maintenance burden, we use a two-stage meta-
+corrective maintenance activity in the following month.                     regression approach. The key idea is to first estimate a separate
+                                                                            agentic maintenance burden for each project and then test
+Modeling Considerations. For the Binomial GLMMs used in                     whether project characteristics explain why this burden is
+our panel analysis, we first control for commit volume using                larger in some projects than in others. In stage one, for each
+the log-transformed number of commits: total and human                      project in our dataset, we fit a Cox PH model to measure the
+commits for the overall and human corrective commit rate                    agentic maintenance burden relative to human lines, expressed
+models respectively. We include a random intercept for each                 as a hazard ratio (HR). This follows RQ1a, but instead of
+repository, allowing each repository to have its own baseline               estimating a single HR for the entire dataset, we compute an
+corrective commit rate. We also include an observation-level                HR and Standard Error (SE) for each project. In stage two,
+random effect (OLRE) [81] to account for overdispersion in                  we use each project’s HR as the outcome weighted by their
+the binomial response, absorb extra-binomial variation and                  uncertainty (SE) to model whether the different project charac-
+reduce the risk of understated standard errors. Additionally,               teristics explain variation in agentic maintenance burden using
+we performed model diagnostics to assess fit and robust-                    a random-effects meta-regression model. We operationalize
+ness, including singular-fit checks, residual diagnostics, Pear-            six project characteristics, each corresponding to a hypothesis
+son overdispersion tests, and grouped-binomial zero-success                 about factors that may affect agentic maintenance burden:
+checks comparing the observed number of zero-corrective
+repository-months against the fitted model expectation.                      Technical Debt: We use the technical debt index computed
+                                                                             by SonarQube at the start of the observation window. This
+Limitations. Our model uses one-month lag which captures                     is a proxy for the project’s baseline maintenance practices.
+only a coarse temporal relationship where we do not model                    We expect projects with high technical debt indexes to have
+corrective maintenance that may respond to agentic code over                 a harder time integrating new agentic code cleanly.
+shorter or longer windows. Additionally, our metric of correc-               Number of Contributors: We count the number of non-bot
+tive commit rate only measures one aspect of corrective burden               contributors with at least one commit during the observation
+but not the size, complexity, or review effort to perform those              window. We expect projects with more contributors to have
+fixes. As such, our findings should be generalized cautiously.               lower agentic maintenance burden as more maintainers may
+                                                                             have more review bandwidth to catch issues pre-merge.
+B. Results                                                                   Agentic Source Code Share: We measure the fraction of
+                                                                             agentic churn that occurs in files classified as source code.
+   Both the overall corrective commit rate and the human                     We expect projects with higher agentic source-code share
+corrective commit rate increase as lagged agentic code share                 to have higher agentic maintenance burden, because agentic
+rises (cf. Figure 8). Repositories with more existing agentic                activity concentrated in source code is more directly exposed
+code are more likely to spend the following month on both                    to post-merge maintenance than activities in lower-stake
+overall corrective maintenance (OR = 1.08, 95% CI: 1.05–                     documentation, configuration, or resource changes.
+1.12, p < 0.001) and human corrective maintenance (OR =                      Test File Change Share: We measure the share of changed
+1.09, 95% CI: 1.05–1.13, p < 0.001). A 10 percentage-point                   files classified as tests. We expect projects with higher test
+increase in lagged agentic code share is associated with ∼8.0%               file change share to have lower agentic maintenance burden
+and ∼8.6% higher odds of corrective commit overall and
+Covariate                  HR multiplier (95% CI)                 each 10 percentage-point increase in a project’s no-review
+                                                                  rate is associated with roughly a 6% increase in agentic
+Technical Debt             1.47 [0.92, 2.36]                      maintenance burden, on average. Technical debt and limited
+Number of Contributors     1.00 [1.00, 1.00]                      test infrastructure show non-significant effects in the same
+Agentic Source Code Share  0.72 [0.46, 1.13]                      direction (cf. Table VI), suggesting a coherent pattern in which
+Test File Change Share     1.90 [0.85, 4.26]                      weaker engineering safeguards are associated with increased
+Agentic Line Churn Share   0.73 [0.40, 1.34]                      agentic maintenance burden.
+No Review Rate             1.75 [1.01, 3.04]∗
+                                                                      Key Insight: Agentic maintenance burden is associ-
+Note: ∗p < 0.05;∗∗ p < 0.01;∗∗∗ p < 0.001                             ated with project characteristics and particularly, hav-
+                                                                      ing higher no-review rate is associated with increased
+TABLE VI: Random-effect meta-regression model with I2 =               agentic maintenance burden.
+100%, R2 = 6.0%.
+                                                                               VII. DISCUSSION AND IMPLICATIONS
+ since projects with stronger test infrastructure can catch and
+ stabilize agentic code faster.                                   The Real Asymmetry. The adoption of agentic coding tools
+ Agentic Line Churn Share: We measure the fraction of             shattered a core symmetry between code generation and review
+ total line churn in the project by agentic contributions.        that software development long relied on: code generation and
+ We expect projects with higher agentic line-churn share to       code review were both constrained by human labor. Before
+ have higher agentic maintenance burden, because heavier          GenAI, developers could only produce code as fast as they
+ agentic adoption can become load-bearing in the codebase         could understand, write, and revise it; reviewers, in turn, could
+ and therefore more likely to be revisited and modified.          only approve code as fast as they could understand its behavior
+ No Review Rate: We measure the proportion of merged pull         and consequences. The entire pitch of agentic coding tools
+ requests during the observation window that received no code     is that they decouple generation output velocity from human
+ review. We expect projects with higher no-review rate to have    labor: a person can now produce far more code per unit of
+ higher agentic maintenance burden, because weaker review         human effort than they could have by hand. But review did
+ processes are less able to catch problematic or low quality      not get the same decoupling. The result is a generation-review
+ agentic contributions (i.e., AI slop).                           velocity asymmetry that exists by construction: generation has
+                                                                  been severed from the human constraint that used to pace it,
+Modeling Considerations. For stage one, we fit the Cox            while review remains bound to human comprehension.
+PH models similar to RQ1a. However, we do not stratify
+or cluster based on repository because we compute a sep-             This asymmetry is starkly visible in practice today. As teams
+arate HR for each repository. We then filter out projects         adopt agentic tools, pull request volume increases while review
+with fewer than 100 tracked lines or 10 termination events        time rises and review thoroughness and rates decline [84]. Our
+in either groups (5 projects). This avoids unstable project-      results help show the cost of this asymmetry.
+level HR estimates driven by sparse data. For the stage two
+random-effects meta-regression model, we use the Knapp-           Why a Full-Lifecycle View is Needed to See It. Although
+Hartung correction [82] following standard best practices.        we do not measure the generation-review asymmetry directly,
+To determine which covariates to operationalize, we conduct       we do measure its consequences. Observing the consequences
+several exploratory analyses, including data visualization and    requires following agentic code throughout its entire lifecycle
+LASSO-based screening [83] of candidate covariates. Based         rather than stopping at merge [9], [50], [51], [52], [53], [10],
+on these analyses, we select the six covariates described above.  or only looking after merge [46], [58]. Initially, agentic code
+We perform standard model diagnostics, including checks for       looks reassuring with a similar overall maintenance rate to
+multicollinearity, influential projects, and residual normality.  human code (Section IV-B). That similarity does not survive
+                                                                  a closer look. Agentic code receives more corrective mainte-
+Limitations. Our covariates are necessarily incomplete and        nance with more bug fixes (Section IV-B), introduces more
+proxy-based: some relevant project characteristics, such as       security weaknesses and dependency vulnerabilities (Sec-
+review quality, are not directly observable in our dataset.       tion IV-B), and is associated with higher overall corrective
+Accordingly, the meta-regression should be interpreted as         burden in projects as its share grows (Section V). Additionally,
+identifying associations rather than fully explaining cross-      projects that merge agentic code without review show the
+project variation in agentic maintenance burden.                  largest agentic maintenance burden of all (Section VI).
+
+B. Results                                                           Because these consequences are only visible when tracing
+                                                                  agentic code across its full lifecycle, precisely where most
+   Across 177 projects, we find statistically significant ev-     current evaluation does not look, adoption-informing metrics
+idence that agentic maintenance burden is associated with         must expand beyond generation velocity and pre-merge perfor-
+project characteristics rather than varying at random (F (6,      mance. Today, success is often measured through visible and
+170) = 2.86, p < 0.05). The rate of merging code without          easy-to-count signals: pull request volume, code generated,
+review emerges as the strongest individual predictor (cf. Ta-     percentage of agentic code, and token consumption. But our
+ble VI), with higher no-review rates being associated with
+significantly higher agentic maintenance burden. In particular,
+results show that those measures are blind to the outcome that    but it does not by itself resolve the deeper asymmetry if
+matters most for software development: whether the code is        humans remain accountable for final judgment. Instead, it
+reliable, secure, and maintainable after merge.                   defers the cost while projects build a growing dependence on
+                                                                  increasingly automated generation processes. We cannot come
+The Review Side Cannot Close the Gap. Faced with the              to a conclusion about the impacts of this tension with our data,
+generation-review asymmetry, the response across the software     but we raise it as a central question for longitudinal work on
+industry has been to treat it as a review-side problem and to     agentic tooling adoption.
+adjust review processes until they keep pace with how fast
+code is produced by agentic tools [85]. These responses cluster      If the asymmetry cannot be resolved until the entities
+into two broad strategies and neither closes the gap on its own.  controlling the output velocity of both processes are matched,
+                                                                  and we continue to build a dependence on GenAI on the
+   The first is to scale human review, which runs into a limit    generation side, what does that mean for the moment when
+at every point on its range no matter how much you attempt to     this asymmetry comes to a head and we are forced to make a
+scale it, because a human remains the final checkpoint. At the    decision? This question is not abstract. In a growing number
+extreme, projects that merge agentic code without review at       of settings, declining to adopt is no longer a realistic option.
+high rates are precisely the projects where agentic maintenance   Shopify and Duolingo have made agentic code use a baseline
+burden is the highest (Section VI). Short of that extreme,        expectation [88], [89], Meta has set internal GenAI-use targets
+lighter and faster review removes fewer defects [86], and agen-   which include goals for agentic code changes and broad
+tic code introduces more defects to begin with (Section IV).      adoption among engineers [90], and developers at companies
+                                                                  such as Microsoft report being evaluated in part by how much
+   The second option is to automate review. Automation can        agentic tooling they use [91]. Where opting out is unavailable,
+resolve the asymmetry, but the asymmetry is created exactly       teams cannot avoid the asymmetry; they can only manage it.
+because review is the last checkpoint where a human decides       If this mechanism holds, the choice is narrowed in advance: a
+whether an agents output is acceptable, and automating it         team that leans on generation to stay ahead of review builds a
+surrenders that decision making autonomy to the same kind         dependence that makes the tool harder to question later, at the
+of system that produced the code rather than restoring human      exact moment when such questioning and critical reflection
+control of the generation velocity. We do not claim that          would matter most.
+automated review is inherently worse than human review; our
+data does not measure that. This point is instead structural:        The risk itself lies in the misconception that a stable hy-
+review is currently the only thing that keeps the rate of what    brid approach exists without sufficient evidence while rapidly
+enters a project tied, however loosely, to a rate a person can    developing a dependence on the technology. If we as a
+keep up with. Automating it removes all human control over        collective are serious about preserving human control over
+development velocity and once a project depends on running at     digital infrastructure and decision making autonomy, then gen-
+the automated rate, restoring a human-based checkpoint means      eration velocity must remain governable by humans. The tools
+falling behind on a volume of output the project has already      themselves must be designed to respect the limits of human
+organized itself around, which makes it an extremely difficult    comprehension, validation, and accountability. We must fix the
+decision to walk back in practice.                                tools, not merely stretch the process around them.
+
+   Even if one is willing to cede human decision making           A. Implications for Research and Practice
+autonomy, GenAI automated review systems do not magically
+solve the problem. These review systems are themselves               For researchers, our results argue that lifecycle-spanning
+software that must be evaluated and secured. Recently, the        evaluation of agentic code should become a standard com-
+popular Claude Code GitHub action used for automated pull         plement to pre-merge benchmarks. Merge-time success is
+request review has been shown to expose CI/CD secrets after       not enough: evaluations should also measure whether agentic
+encountering untrusted content [87]. In other words, building     contributions remain durable, secure, and maintainable. This
+automated review tools does not alleviate the problem, but        aligns with recent practitioner calls for standardized first-class
+instead can introduce additional development burdens.             outcome metrics of post-merge maintenance durability, e.g.,
+                                                                  code durability, and code turnover rate.
+Fix the Tool, Not the Process. At this point our argument
+moves from what we measured to what we believe the mech-             For practitioners, our results argue for protecting review
+anism implies. If agentic tools increase generation velocity      rather than treating it as something to compress. Recognize
+while human review continues to bound review velocity, then       that review alone, so long as it remains a process humans have
+the two sides of the development pipeline are no longer paced     ultimate decision making autonomy over, cannot indefinitely
+by the same constraint. That mismatch cannot be absorbed          absorb a source no longer bound by human effort.
+by review indefinitely. This is why a hybrid configuration
+that keeps humans in control of review while GenAI controls          For organizations making GenAI adoption decisions, our
+generation is not sustainable. Eventually, the two process        results urge caution and reflection on what metrics are being
+velocities must be brought under the same control, or the         used to define the success and to ensure their visibility is in
+system breaks down under its own backlog. Adding GenAI            alignment with the metrics of success for the organization’s
+to the review side may help with triage or prioritization,        software development practices.
+   For tool builders, our results argue that the decisive measure                  [10] K. Watanabe, R. Tsuchida, T. Monno, B. Huang, K. Yamasaki, Y. Fan,
+of a coding agent is not whether its output merges, but what                             K. Shimari, and K. Matsumoto, “How ai coding agents communicate:
+it costs the project over time. The intervention is therefore to                         A study of pull request description characteristics and human review
+reduce that cost at the source: tools should be designed not                             responses,” arXiv preprint arXiv:2602.17084, 2026.
+just to generate more code, but to generate code that survives,
+imposes less maintenance burden, and remains sustainable                           [11] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P. de Oliveira Pinto, J. Kaplan,
+post-merge.                                                                              H. Edwards, Y. Burda, N. Joseph, G. Brockman, A. Ray, R. Puri,
+                                                                                         G. Krueger, M. Petrov, H. Khlaaf, G. Sastry, P. Mishkin, B. Chan,
+                         VIII. CONCLUSION                                                S. Gray, N. Ryder, M. Pavlov, A. Power, L. Kaiser, M. Bavarian,
+                                                                                         C. Winter, P. Tillet, F. P. Such, D. Cummings, M. Plappert, F. Chantzis,
+   In this work, we conducted a longitudinal post-merge study                            E. Barnes, A. Herbert-Voss, W. H. Guss, A. Nichol, A. Paino, N. Tezak,
+of agentic and human contributions across 182 repositories                               J. Tang, I. Babuschkin, S. Balaji, S. Jain, W. Saunders, C. Hesse,
+using line-level survival, maintenance intent, static analysis                           A. N. Carr, J. Leike, J. Achiam, V. Misra, E. Morikawa, A. Rad-
+findings, and project characteristics. Our results show that                             ford, M. Knight, M. Brundage, M. Murati, K. Mayer, P. Welinder,
+while agentic code does not exhibit uniformly higher overall                             B. McGrew, D. Amodei, S. McCandlish, I. Sutskever, and W. Zaremba,
+maintenance, it receives more corrective maintenance, and                                “Evaluating large language models trained on code,” arXiv preprint
+introduces more security weaknesses and dependency vul-                                  arXiv:2107.03374, 2021.
+nerabilities than human contributions. At the project level,
+increasing agentic code share is associated with higher cor-                       [12] GitHub, “Github copilot your ai pair programmer,” https://github.com/f
+rective maintenance rates and projects that merge more code                              eatures/copilot, accessed Jun. 2026.
+without review show larger agentic maintenance burdens. As
+generation becomes cheaper, the relevant question is no longer                     [13] Cursor, “Cursor: Ai coding agent,” https://cursor.com/, accessed Jun.
+whether agents can write mergeable code, but whether their                               2026.
+contributions remain reliable, secure, and maintainable after
+merge.                                                                             [14] Anthropic, “Claude code by anthropic | ai coding agent, terminal, ide,”
+                                                                                         https://claude.com/product/claude-code, accessed Jun. 2026.
+                     IX. DATA AVAILABILITY
+                                                                                   [15] OpenAI, “Codex | ai coding partner from openai | openai,” https://open
+   We provide our complete artifact for reproduction:                                    ai.com/codex/, accessed Jun. 2026.
+https://github.com/post-merge-reality/post-merge-reality
+                                                                                   [16] C. Miller, R. Choudhuri, M. Ulloa, S. Haniyur, R. DeLine, M.-A. Storey,
+                             REFERENCES                                                  E. Murphy-Hill, C. Bird, and J. L. Butler, ““maybe we need some
+                                                                                         more examples:” individual and team drivers of developer genai tool
+ [1] J. Novet and J. Vanian. (2025) Satya nadella says as much as 30%                    use,” in Proc. Int’l Conf. Software Engineering (ICSE), 2026. ACM
+      of Microsoft code is written by AI. CNBC. [Online]. Available:                     Distinguished Paper Award.
+      https://www.cnbc.com/2025/04/29/satya- nadella- says- as- much- as- 30p
+      ercent-of-microsoft-code-is-written-by-ai.html                               [17] GitHub, “Octoverse: A new developer joins github every second as ai
+                                                                                         leads typescript to #1,” GitHub, Tech. Rep., 2025. [Online]. Available:
+ [2] C. Mauran. (2025) Mark zuckerberg wants AI to do half of                            https://github.blog/news- insights/octoverse/octoverse- a- new- developer
+      Meta’s coding by 2026. Mashable. [Online]. Available: https:                       -joins-github-every-second-as-ai-leads-typescript-to-1/
+      //mashable.com/article/llamacon-mark-zuckerberg-ai-writes-meta-code
+                                                                                   [18] OpenAI, “Codex for every role, tool, and workflow,” https://openai.com
+ [3] H. Langley. (2026) Google says 75% of the company’s new code is AI-                 /index/codex-for-every-role-tool-workflow/, 2026.
+      generated. Business Insider. [Online]. Available: https://www.businessin
+      sider.com/google-ai-generated-code-75-gemini-agents-software-2026-4          [19] J. Bort, “Anthropic’s claude popularity with paying consumers is sky-
+                                                                                         rocketing,” TechCrunch, 2026, https://techcrunch.com/2026/03/28/anth
+ [4] J. Young. (2026) Introducing the state of AI coding 2026. New Relic.                ropics-claude-popularity-with-paying-consumers-is-skyrocketing/.
+      [Online]. Available: https://newrelic.com/blog/ai/state-of-ai-coding-202
+      6                                                                            [20] N. Nguyen and S. Nadi, “An empirical evaluation of github copilot’s
+                                                                                         code suggestions,” in Proc. Conf. Mining Software Repositories (MSR),
+ [5] E. Glover. (2026) What is tokenmaxxing? the AI workplace trend                      2022, pp. 1–5.
+      explained. Built In. [Online]. Available: https://builtin.com/articles/ai-t
+      okenmaxxing                                                                  [21] B. Yetistiren, I. Ozsoy, and E. Tuzun, “Assessing the quality of github
+                                                                                         copilot’s code generation,” in Proceedings of the 18th international con-
+ [6] GitLab Inc. (2026) GitLab research reveals organizations are generating             ference on predictive models and data analytics in software engineering,
+      AI code faster than they can control it. GitLab. [Online]. Available:              2022, pp. 62–71.
+      https://ir.gitlab.com/news/news- details/2026/GitLab- Research- Reveals
+      -Organizations-Are-Generating-AI-Code-Faster-Than-They-Can-Contr             [22] M. Borek and R. Nowak, “Quality evaluation of tabby coding assistant
+      ol-It/default.aspx                                                                 using real source code snippets,” arXiv preprint arXiv:2504.08650, 2025.
+
+ [7] S. Baltes, M. Cheong, and C. Treude, ““an endless stream of ai slop":         [23] O. Asare, M. Nagappan, and N. Asokan, “Is github’s copilot as bad
+      The growing burden of ai-assisted software development,” arXiv preprint            as humans at introducing vulnerabilities in code?” Empirical Software
+      arXiv:2603.27249, 2026.                                                            Engineering, vol. 28, no. 6, p. 129, 2023.
+
+ [8] C. E. Jimenez, J. Yang, A. Wettig, S. Yao, K. Pei, O. Press, and K. R.        [24] H. Pearce, B. Ahmad, B. Tan, B. Dolan-Gavitt, and R. Karri, “Asleep at
+      Narasimhan, “SWE-bench: Can language models resolve real-world                     the keyboard? assessing the security of github copilot’s code contribu-
+      github issues?” in The Twelfth International Conference on Learning                tions,” in 2022 IEEE Symposium on Security and Privacy (SP). IEEE
+      Representations, 2024.                                                             Computer Society, 2022, pp. 754–768.
+
+ [9] M. Watanabe, H. Li, Y. Kashiwa, B. Reid, H. Iida, and A. E. Hassan,           [25] N. Perry, M. Srivastava, D. Kumar, and D. Boneh, “Do users write
+      “On the use of agentic coding: An empirical study of pull requests on              more insecure code with ai assistants?” in Proceedings of the 2023 ACM
+      github,” ACM Transactions on Software Engineering and Methodology,                 SIGSAC conference on computer and communications security, 2023.
+      2025.
+                                                                                   [26] M. Borg, D. Hewett, N. Hagatulah, N. Couderc, E. Söderberg, D. Gra-
+                                                                                         ham, U. Kini, and D. Farley, “Echoes of ai: Investigating the downstream
+                                                                                         effects of ai assistants on software maintainability,” Empirical Software
+                                                                                         Engineering, vol. 31, no. 6, p. 161, 2026.
+
+                                                                                   [27] D. G. Paul, H. Zhu, and I. Bayley, “Investigating the smells of llm
+                                                                                         generated code,” arXiv preprint arXiv:2510.03029, 2025.
+
+                                                                                   [28] L. Chretien and N. Albarran, “Impact of ai-tooling on the engineering
+                                                                                         workspace,” arXiv preprint arXiv:2406.07683, 2024.
+
+                                                                                   [29] K. K. Ng, L. Fauzi, L. Leow, and J. Ng, “Harnessing the potential of
+                                                                                         gen-ai coding assistants in public sector software development,” arXiv
+                                                                                         preprint arXiv:2409.17434, 2024.
+
+                                                                                   [30] E. Paradis, K. Grey, Q. Madison, D. Nam, A. Macvean, V. Meimand,
+                                                                                         N. Zhang, B. Ferrari-Church, and S. Chandra, “How much does ai
+                                                                                         impact development speed? an enterprise-based randomized controlled
+                                                                                         trial,” in 2025 IEEE/ACM 47th International Conference on Software
+                                                                                         Engineering: Software Engineering in Practice (ICSE-SEIP), 2025.
+[31] M. I. H. Shihab, C. Hundhausen, A. Tariq, S. Haque, Y. Qiao, and               [52] M. A. Haider and T. Zimmermann, “Understanding dominant themes in
+      B. W. Mulanda, “The effects of github copilot on computing students’                reviewing agentic ai-authored code,” arXiv preprint arXiv:2601.19287,
+      programming effectiveness, efficiency, and processes in brownfield cod-             2026.
+      ing tasks,” in Proceedings of the 2025 ACM Conference on International
+      Computing Education Research V. 1, 2025, pp. 407–420.                         [53] D. S. D. Minh, H. T. Kiet, N. L. P. Quy, P. P. Hoa, T. C. Nguyen,
+                                                                                          N. D. H. Duong, and T. B. Tran, “Early-stage prediction of review effort
+[32] A. Ziegler, E. Kalliamvakou, X. A. Li, A. Rice, D. Rifkin, S. Simister,              in ai-generated pull requests,” arXiv preprint arXiv:2601.00753, 2026.
+      G. Sittampalam, and E. Aftandilian, “Productivity assessment of neural
+      code completion,” in Proceedings of the 6th ACM SIGPLAN interna-              [54] S. Haque, S. Ingale, and C. Csallner, “Do autonomous agents contribute
+      tional symposium on machine programming, 2022, pp. 21–29.                           test code? a study of tests in agentic pull requests,” arXiv preprint
+                                                                                          arXiv:2601.03556, 2026.
+[33] P. Vaithilingam, T. Zhang, and E. L. Glassman, “Expectation vs. experi-
+      ence: Evaluating the usability of code generation tools powered by large      [55] K. Horikawa, H. Li, Y. Kashiwa, B. Adams, H. Iida, and A. E. Hassan,
+      language models,” in CHI conference on human factors in computing                   “Agentic refactoring: An empirical study of ai coding agents,” arXiv
+      systems extended abstracts, 2022, pp. 1–7.                                          preprint arXiv:2511.04824, 2025.
+
+[34] S. Imai, “Is github copilot a substitute for human pair-programming? an        [56] S. Agarwal, H. He, and B. Vasilescu, “Ai ides or autonomous agents?
+      empirical study,” in Proceedings of the ACM/IEEE 44th International                 measuring the impact of coding agents on software development,” arXiv
+      Conference on Software Engineering: Companion Proceedings, 2022.                    preprint arXiv:2601.13597, 2026.
+
+[35] S. Peng, E. Kalliamvakou, P. Cihon, and M. Demirer, “The impact of ai          [57] S. T. Cynthia, A. Muttakin, and B. Roy, “Beyond bug fixes: An empirical
+      on developer productivity: Evidence from github copilot,” arXiv preprint            investigation of post-merge code quality issues in agent-generated pull
+      arXiv:2302.06590, 2023.                                                             requests,” arXiv preprint arXiv:2601.20109, 2026.
+
+[36] F. Song, A. Agarwal, and W. Wen, “The impact of generative ai on               [58] M. Rahman and E. Shihab, “Will it survive? deciphering the fate of ai-
+      collaborative open-source software development: Evidence from github                generated code in open source,” arXiv preprint arXiv:2601.16809, 2026.
+      copilot,” arXiv preprint arXiv:2410.02091, 2024.
+                                                                                    [59] E. B. Swanson, “The dimensions of maintenance,” in Proc. Int’l Conf.
+[37] K. Z. Cui, M. Demirer, S. Jaffe, L. Musolff, S. Peng, and T. Salz, “The              Software Engineering (ICSE), 1976.
+      effects of generative ai on high-skilled work: Evidence from three field
+      experiments with software developers,” Management Science, 2026.              [60] E. Varga, Unraveling Software Maintenance and Evolution. Springer,
+                                                                                          2018.
+[38] R. Pandey, P. Singh, R. Wei, and S. Shankar, “Transforming software
+      development: Evaluating the efficiency and challenges of github copilot       [61] A. Hindle, D. M. German, and R. Holt, “What do large commits tell us?
+      in real-world projects,” arXiv preprint arXiv:2406.17910, 2024.                     a taxonomical study of large commits,” in Proc. Conf. Mining Software
+                                                                                          Repositories (MSR), 2008.
+[39] J. Becker, N. Rush, E. Barnes, and D. Rein, “Measuring the impact of
+      early-2025 ai on experienced open-source developer productivity,” arXiv       [62] S. Wang, C. Bansal, and N. Nagappan, “Large-scale intent analysis for
+      preprint arXiv:2507.09089, 2025.                                                    identifying large-review-effort code changes,” Information and Software
+                                                                                          Technology, vol. 130, p. 106408, 2021.
+[40] F. Xu, P. K. Medappa, M. M. Tunc, M. Vroegindeweij, and J. C. Fransoo,
+      “Ai-assisted programming decreases the productivity of experienced            [63] Q. Zeng, Y. Zhang, Z. Qiu, and H. Liu, “A first look at conventional com-
+      developers by increasing the technical debt and maintenance burden,”                mits classification,” in Proc. Int’l Conf. Software Engineering (ICSE),
+      arXiv preprint arXiv:2510.10165, 2025.                                              2025.
+
+[41] S. H. Ambati, N. Ridley, E. Branca, and N. Stakhanova, “Navigating (in)        [64] “MiniMax M2.7,” https://www.minimax.io/models/text/m27/, accessed
+      security of ai-generated code,” in 2024 IEEE international conference               Jun. 2026.
+      on cyber security and resilience (CSR). IEEE, 2024, pp. 1–8.
+                                                                                    [65] J. Cohen, “A coefficient of agreement for nominal scales,” Educational
+[42] S. Li, Y. Cheng, J. Chen, J. Xuan, S. He, and W. Shang, “Assessing                   and psychological measurement, vol. 20, no. 1, pp. 37–46, 1960.
+      the performance of ai-generated code: A case study on github copilot,”
+      in Proc. Int’l Symp. Software Reliability Engineering (ISSRE). IEEE,          [66] Semgrep, “Semgrep app security platform,” https://semgrep.dev/,
+      2024, pp. 216–227.                                                                  accessed Jun. 2026.
+
+[43] M. L. Siddiq, S. H. Majumder, M. R. Mim, S. Jajodia, and J. C. Santos,         [67] OSV-Scanner, “Osv-scanner,” https://google.github.io/osv- scanner/,
+      “An empirical study of code smells in transformer-based code generation             accessed Jun. 2026.
+      techniques,” in 2022 IEEE 22nd International Working Conference on
+      Source Code Analysis and Manipulation (SCAM). IEEE, 2022.                     [68] SonarQube, “Sonarqube: Fight ai slop & verify ai code | sonar,” https:
+                                                                                          //www.sonarsource.com/products/sonarqube/, accessed Jun. 2026.
+[44] M. F. Kharma, S. Choi, M. Alkhanafseh, and D. Mohaisen, “Security and
+      quality in llm-generated code: A multi-language, multi-model analysis,”       [69] S. P. Jenkins, “Survival analysis,” Unpublished manuscript, Institute for
+      IEEE Transactions on Dependable and Secure Computing, 2026.                         Social and Economic Research, University of Essex, Colchester, UK,
+                                                                                          vol. 42, pp. 54–56, 2005.
+[45] D. Ogenrwot and J. Businge, “Patchtrack: A comprehensive analysis
+      of chatgpt’s influence on pull request outcomes,” Empirical Software          [70] E. L. Kaplan and P. Meier, “Nonparametric estimation from incomplete
+      Engineering, vol. 31, no. 5, p. 136, 2026.                                          observations,” Journal of the American statistical association, 1958.
+
+[46] Y. Liu, R. Widyasari, Y. Zhao, I. C. Irsan, J. Chen, and D. Lo, “Debt          [71] D. R. Cox and D. Oakes, Analysis of survival data. CRC press, 1984.
+      behind the ai boom: A large-scale empirical study of ai-generated code        [72] J. N. Rao and A. J. Scott, “The analysis of categorical data from complex
+      in the wild,” arXiv preprint arXiv:2603.28592, 2026.
+                                                                                          sample surveys: chi-squared tests for goodness of fit and independence in
+[47] H. He, C. Miller, S. Agarwal, C. Kästner, and B. Vasilescu, “Speed                   two-way tables,” Journal of the American statistical association, vol. 76,
+      at the cost of quality: How cursor ai increases short-term velocity and             no. 374, pp. 221–230, 1981.
+      long-term complexity in open-source projects,” in Proc. Conf. Mining          [73] J. P. Fine and R. J. Gray, “A proportional hazards model for the
+      Software Repositories (MSR), 2026.                                                  subdistribution of a competing risk,” Journal of the American statistical
+                                                                                          association, vol. 94, no. 446, pp. 496–509, 1999.
+[48] H. Li, H. Zhang, and A. E. Hassan, “The rise of ai teammates in software       [74] C. E. McCulloch, S. R. Searle, and J. M. Neuhaus, Generalized, linear,
+      engineering (se) 3.0: How autonomous coding agents are reshaping                    and mixed models. John Wiley & Sons, 2008.
+      software engineering,” arXiv preprint arXiv:2507.15003, 2025.                 [75] T. J. VanderWeele, “Principles of confounder selection,” European
+                                                                                          journal of epidemiology, vol. 34, no. 3, pp. 211–219, 2019.
+[49] C. Mürtz and M. N. Müller, “Agents in the wild - dashboard,”                   [76] B. Zhou, A. Latouche, V. Rocha, and J. Fine, “Competing risks regres-
+      https://insights.logicstar.ai, 2025, interactive web dashboard. Code                sion for stratified data,” Biometrics, vol. 67, no. 2, pp. 661–670, 2011.
+      available at https://github.com/logic-star-ai/insights. [Online]. Available:  [77] B. M. Bolker, M. E. Brooks, C. J. Clark, S. W. Geange, J. R. Poulsen,
+      https://doi.org/10.5281/zenodo.15846865                                             M. H. H. Stevens, and J.-S. S. White, “Generalized linear mixed models:
+                                                                                          a practical guide for ecology and evolution,” Trends in ecology &
+[50] S. R. O. Peralta, F. Hoshi, H. Washizaki, N. Ubayashi, I. Kondo, Y. Higo,            evolution, vol. 24, no. 3, pp. 127–135, 2009.
+      H. Mukai, N. Yoshida, K. Kusama, H. Tanaka et al., “Why are agentic           [78] P. M. Grambsch and T. M. Therneau, “Proportional hazards tests and
+      pull requests merged or rejected? an empirical study,” arXiv preprint               diagnostics based on weighted residuals,” Biometrika, 1994.
+      arXiv:2605.22534, 2026.                                                       [79] P. Peduzzi, J. Concato, A. R. Feinstein, and T. R. Holford, “Importance
+                                                                                          of events per independent variable in proportional hazards regression
+[51] S. Nakashima, Y. Ishimoto, M. Kondo, S. Mclntosh, and Y. Kamei,                      analysis ii. accuracy and precision of regression estimates,” Journal of
+      “Why agentic-prs get rejected: A comparative study of coding agents,”               clinical epidemiology, vol. 48, no. 12, pp. 1503–1510, 1995.
+      arXiv preprint arXiv:2602.04226, 2026.                                        [80] F. Hartig, “Dharma: residual diagnostics for hierarchical (multi-
+                                                                                          level/mixed) regression models,” CRAN: contributed packages, 2016.
+[81] X. A. Harrison, “Using observation-level random effects to model
+      overdispersion in count data in ecology and evolution,” PeerJ, vol. 2, p.
+      e616, 2014.
+
+[82] J. Hartung and G. Knapp, “A refined method for the meta-analysis of
+      controlled clinical trials with binary outcome,” Statistics in medicine,
+      vol. 20, no. 24, pp. 3875–3889, 2001.
+
+[83] R. Tibshirani, “Regression shrinkage and selection via the lasso,” Jour-
+      nal of the Royal Statistical Society Series B: Statistical Methodology,
+      vol. 58, no. 1, pp. 267–288, 1996.
+
+[84] F. Research. (2026) Ten takeaways from the ai engineering report
+      2026: The acceleration whiplash. Faros. [Online]. Available: https:
+      //www.faros.ai/blog/ai-acceleration-whiplash-takeaways
+
+[85] S. Roy Choudhary, S. Mahajan, W. Bond, J. Wang, and A. Utture.
+      (2025) uReview: Scalable, trustworthy GenAI for code review at Uber.
+      Uber. [Online]. Available: https://www.uber.com/us/en/blog/ureview/
+
+[86] S. McIntosh, Y. Kamei, B. Adams, and A. E. Hassan, “An empirical
+      study of the impact of modern code review practices on software
+      quality,” Empirical Software Engineering, vol. 21, no. 5, 2016.
+
+[87] Microsoft Defender Security Research Team, D. Edry, and A. Eliahu.
+      (2026) Securing CI/CD in an agentic world: Claude Code GitHub
+      action case. Microsoft Security Blog. [Online]. Available: https:
+      //www.microsoft.com/en- us/security/blog/2026/06/05/securing- ci- cd- i
+      n-agentic-world-claude-code-github-action-case/
+
+[88] A. Palmer. (2025) Shopify ceo: Prove AI can’t do jobs before
+      asking for more headcount. CNBC. [Online]. Available: https:
+      //www.cnbc.com/2025/04/07/shopify- ceo- prove- ai- cant- do- jobs- befor
+      e-asking-for-more-headcount.html
+
+[89] S. Shibu. (2025) Duolingo launches 148 ai-written courses, replacing
+      humans. Entrepreneur. [Online]. Available: https://www.entrepreneur.c
+      om/business- news/duolingo- will- replace- contract- workers- with- ai- ceo
+      -says/490812
+
+[90] H. Langley. (2026) Meta’s AI push ties employee goals to AI tool
+      adoption. Business Insider. [Online]. Available: https://www.businessin
+      sider.com/meta-ai-push-employee-goals-tool-adoption-2-026-3
+
+[91] A. Stewart. (2025) Microsoft internal memo: ‘using AI is no longer
+      optional.’. Business Insider. [Online]. Available: https://www.businessin
+      sider.com/microsoft- internal- memo- using- ai- no- longer- optional- githu
+      b-copilot-2025-6
+
