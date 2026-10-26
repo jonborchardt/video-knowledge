@@ -35,6 +35,10 @@
     "heat-pumps/real-world-heat-pump-efficiency-lower|asserts|heat-pumps/sources/cee-2018-field-assessment-ducted-ductless.txt#L413-L419": {
       "level": "partial",
       "reason": "three Minnesota sites compared at the 17F and 47F rating points only, not seasonal efficiency against the rating; it shows the claim failing in a narrower setting, like Cadmus shows it holding in one"
+    },
+    "heat-pumps/heat-pumps-need-more-maintenance-repairs|asserts|heat-pumps/sources/consumerreports-2026-heat-pump-reliability.txt#L10-L11": {
+      "level": "partial",
+      "reason": "a large owner survey measures how often heat pumps break (29 percent by year eight) and ranks them among the least reliable products CR rates, but it does not put a gas furnace figure beside it in the same passage, so the comparison is implied, not measured head to head"
     }
   },
   "stories": {
@@ -355,7 +359,18 @@
         "Heat Pump vs Furnace: Which Needs More Repairs?",
         "What Owning a Heat Pump Costs in Upkeep"
       ],
-      "research": "the only evidence is seven repair visits on prototype units in the DOE cold-climate challenge (0.2); repair-frequency or maintenance-cost data for many installed heat pumps against gas furnaces, such as a large owner reliability survey or program warranty records, would unblock it"
+      "tension": "A survey of owners of 13,753 heat pumps ranks them among the least reliable products Consumer Reports rates, while the DOE cold-climate field test found its few repair calls minor and not unusual next to the homes' previous systems.",
+      "evidenceNeeded": "Breakdown and repair rates for heat pumps and gas furnaces measured the same way in the same kind of homes; until then, a large owner survey with an implied comparison against a small prototype field test.",
+      "premise": "Do heat pumps break down more than gas furnaces? Consumer Reports' member survey of 13,753 heat pumps installed between 2009 and 2025 found 29 percent broke or stopped working by the end of year eight and calls heat pumps one of the least reliable products it rates; that is a self-selected owner survey, its furnace comparison is a ranking rather than a head-to-head count, and a heat pump also runs for cooling. The DOE Cold Climate Heat Pump Challenge points the other way, but on seven repair calls among prototype units in a small field test, mostly minor control, sensor or condensate fixes the team judged not atypical next to the homes' previous systems. Neither is a direct, like-for-like count against gas furnaces, so the honest answer is a lean, not a verdict.",
+      "arc": {
+        "hook": "One survey of thousands of owners says heat pumps are among the least reliable things in the house; a federal field test says their repair calls were routine.",
+        "conflict": "A big owner survey and a small prototype field test, measuring different things, land on opposite sides.",
+        "evidence": "Consumer Reports: 13,753 member-owned heat pumps, 29 percent broken by year eight, ranked among its least reliable products, self-reported and not a same-survey furnace count. PNNL: seven repair calls on prototype cold-climate units, mostly minor fixes, judged not atypical versus the previous systems, a small sample.",
+        "resolution": "The large survey leans toward heat pumps breaking more often, but neither source counts heat pumps and furnaces side by side, and a heat pump does the air conditioner's job too.",
+        "takeaway": "Expect a heat pump to need repairs; how that compares with a furnace is suggested by owner surveys, not yet measured head to head."
+      },
+      "qualificationsAccepted": true,
+      "research": "the evidence is a Consumer Reports owner survey of heat pumps alone (0.4, its furnace comparison only a ranking) and seven repair calls on DOE challenge prototypes (0.2); breakdown or repair rates for heat pumps and gas furnaces counted the same way in one study, such as a same-survey owner comparison or program warranty and service records, would unblock it"
     },
     "conflict:installing-heat-pump-can-require-costly": {
       "reject": "a single-claim chapter of decision:does-the-upfront-cost-eat-the-savings, where the panel and service costs sit beside the other installation costs"
