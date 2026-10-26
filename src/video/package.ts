@@ -296,7 +296,7 @@ export function renderDescription(
   // The institution's page sits before the inquiry record (after it when a call to action took the record's place).
   const c = commissionOf(tl.topic);
   const block = links.links.map((l) => `${l.text}: ${l.url}`);
-  const at = links.links.findIndex((l) => l.type === 'inquiry-record');
+  const at = links.links.findIndex((l) => l.type === 'inquiry-record' || l.type === 'inquiry');
   if (c) block.splice(at < 0 ? block.length : at, 0, `${c.name}: ${absolute(`/commissions/${commissionKey(c)}/`)}`);
   // a Short (brand/design.md 2.6): the hook, the links, the studies, #Shorts; the uploader adds the full video once live
   const body = pkg.short

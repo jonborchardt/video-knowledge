@@ -157,6 +157,26 @@ describe('links that cannot silently break', () => {
     ]);
     expect(as('nobody-claims-this')).not.toContain('Commonwealth of Reason:');
   });
+  it('the institution line sits right before the record, whether it is typed inquiry or inquiry-record', () => {
+    for (const type of ['inquiry', 'inquiry-record'] as const) {
+      const links: DescriptionLinks = {
+        cta: 'default',
+        links: [
+          { type: 'matter', node: null, url: 'https://x.test/m/', text: 'Matter' },
+          { type, node: null, url: 'https://x.test/rec/', text: 'Record' },
+        ],
+      };
+      const d = renderDescription(
+        { status: 'release build', short: null, chapters: [], sources: { studies: [] } } as unknown as ReviewPackage,
+        { pkg: { question: 'Is it?' } } as unknown as Segment,
+        { title: 'T', topic: 'heat-pumps' } as Timeline,
+        { music: null } as unknown as BuildReport,
+        links,
+      ).split('\n');
+      const i = d.indexOf('Record: https://x.test/rec/');
+      expect(d[i - 1]).toBe(`Commission on Spending: ${site.url}commissions/spending/`);
+    }
+  });
   it('packaging refuses a description over 5000 bytes', () => {
     const tags = ['Commission on Spending'];
     expect(() => assertWithinLimits({ title: 't', description: 'x'.repeat(5000), tags })).not.toThrow();
